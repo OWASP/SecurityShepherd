@@ -1,0 +1,363 @@
+package utils;
+
+import java.math.BigInteger;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+
+/**
+ * Class is used to validate various inputs
+ * <br/><br/>
+ * This file is part of the Security Shepherd Project.
+ * 
+ * The Security Shepherd project is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.<br/>
+ * 
+ * The Security Shepherd project is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.<br/>
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * @author Mark Denihan
+ *
+ */
+public class Validate 
+{
+	private static org.apache.log4j.Logger log = Logger.getLogger(Validate.class);
+	/**
+	 * Session is checked for credentials and ensures that they have not been modified and that they are valid
+	 * @param ses HttpSession from users browser
+	 * @return Boolean value that reflects the validity of the users session
+	 */
+	public static boolean validateSession(HttpSession ses)
+	{
+		boolean result = false;
+		if (ses == null)
+		{
+			log.debug("No Session Found");
+		}
+		else
+		{
+			if (ses.getAttribute("logout") != null) 
+			{
+				log.debug("Logout Attibute Found: Invalidating session...");
+			    ses.invalidate(); // make servlet engine forget the session
+			}
+			else
+			{
+				log.debug("Active Session Found");
+				if (ses.getAttribute("userRole") != null)
+				{
+					try 
+					{
+						log.debug("Session holder is "+ses.getAttribute("userName").toString());
+						String role = (String) ses.getAttribute("userRole");
+						result = (role.compareTo("player") == 0 || role.compareTo("admin") == 0);
+						if(!result)
+							log.fatal("User Role Parameter Tampered. Role = " + role);
+					} 
+					catch (Exception e) 
+					{
+						log.fatal("Tampered Parameter Detected!!! Could not Decrypt stamp");
+					}
+				}
+				else
+				{
+					log.debug("Session has no credentials");
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Session is checked for credentials and ensures that they have not been modified and that they are valid for an administrator
+	 * @param ses HttpSession from users browser
+	 * @return Boolean value that reflects the validity of the admins session
+	 */
+	public static boolean validateAdminSession(HttpSession ses)
+	{
+		boolean result = false;
+		String userName = new String();
+		if (ses == null)
+		{
+			log.debug("No Session Found");
+		}
+		else
+		{
+			if (ses.getAttribute("logout") != null) 
+			{
+				log.debug("Logout Attibute Found: Invalidating session...");
+			    ses.invalidate(); // make servlet engine forget the session
+			}
+			else
+			{
+				log.debug("Active Session Found");
+				if (ses.getAttribute("userRole") != null && ses.getAttribute("userName") != null)
+				{
+					try 
+					{
+						userName = (String) ses.getAttribute("userName");
+						log.debug("Session holder is " + userName);
+						String role = (String) ses.getAttribute("userRole");
+						result = (role.compareTo("admin") == 0);
+						if(!result)
+							log.fatal("User" + userName + " attemping Admin functions!");
+					} 
+					catch (Exception e) 
+					{
+						log.fatal("Tampered Parameter Detected!!! Could not parameters");
+					}
+				}
+				else
+				{
+					log.debug("Session has no credentials");
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Finds CSRF token from user's cookies[], validates.
+	 * @param userCookies All of the user's cookies from their browser
+	 * @return csrfCookie
+	 */
+	public static Cookie getToken (Cookie[] userCookies)
+	{
+		int i = 0;
+		Cookie theToken = null;
+		for(i = 0; i < userCookies.length; i++)
+		{
+			if(userCookies[i].getName().compareTo("token") == 0)
+			{
+				theToken = userCookies[i];
+				break; //End Loop, because we found the token
+			}
+		}
+		if(theToken != null)
+		{
+			log.debug("Found Cookie " + theToken.getName() + " with value " + theToken.getValue());
+			//The Token is currently designed to be a random Big Integer. If the Big Integer Case does not work, the token has been modified. Potentially in a malicious manner
+			try
+			{
+				BigInteger theTokenCasted = new BigInteger(theToken.getValue());
+				BigInteger tenGrand = new BigInteger("10000");
+				BigInteger tenGrandNeg = new BigInteger("-10000");
+				if(!(theTokenCasted.compareTo(tenGrand) > 0 || theTokenCasted.compareTo(tenGrandNeg) < 0))
+				{
+					log.error("CSRF Cookie Token was modified in some mannor!");
+					theToken = null;
+				}
+			}
+			catch (Exception e)
+			{
+				log.error("CSRF Cookie Token was modified in some mannor: " + e.toString());
+				theToken = null;
+			}
+		}
+		return theToken;
+	}
+	
+	/**
+	 * Finds JSession token from user's cookies[], validates and returns.
+	 * @param userCookies Cookies from users browser
+	 * @return JSession Id
+	 */
+	public static Cookie getSessionId (Cookie[] userCookies)
+	{
+		int i = 0;
+		Cookie theSessionId = null;
+		for(i = 0; i < userCookies.length; i++)
+		{
+			if(userCookies[i].getName().compareTo("JSESSIONID") == 0)
+			{
+				theSessionId = userCookies[i];
+				break; //End Loop, because we found the theSessionId
+			}
+		}
+		return theSessionId;
+	}
+
+	/**
+	 * This method compares the two submitted tokens after ensuring they are not null and not empty.
+	 * @param cookieToken CSRF cookie Token
+	 * @param requestToken CSRF request Token
+	 * @return A boolean value stating weather or not the tokens are valid
+	 */
+	public static boolean validateTokens (Cookie cookieToken, Object requestToken)
+	{
+		boolean result = false;
+		boolean cookieNull = (cookieToken == null);
+		boolean requestNull = (requestToken == null);
+		if(!cookieNull && !requestNull)
+		{
+			try
+			{
+				String theRequest = (String)requestToken;
+				String theCookie = cookieToken.getValue();
+				boolean cookieEmpty = theCookie.isEmpty();
+				boolean requestEmpty = theRequest.isEmpty();
+				
+				if(!cookieEmpty && !requestEmpty)
+					result = theRequest.compareTo(theCookie) == 0;
+				else if (cookieEmpty)
+					log.error("Cookie Token Empty");
+				else if (requestEmpty)
+					log.error("Request Token Empty");
+				
+				if(!result)
+					log.error("CSRF Tokens did not match");
+			}
+			catch(Exception e)
+			{
+				log.error("CSRF in Request Error: " + e.toString());
+			}
+		}
+		else
+		{
+			if(cookieNull)
+				log.error("Cookie Token was Null");
+			else if (requestNull)
+				log.error("Request Token was Null");
+		}	
+		return result;
+	}
+	
+	/**
+	 * Used to validate user creation requests
+	 * @param userName User Name
+	 * @param passWord User Password
+	 * @param userAddress User address
+	 * @return Boolean value stating weather or not these supplied attributes make a valid user
+	 */
+	public static boolean isValidUser(String userName, String passWord, String userAddress)
+	{
+		boolean result = false;
+		result = userName.length() > 4 && passWord.length() >= 8 && userName.length() <= 32 && passWord.length() <= 512 && userAddress.length() <= 128;
+		if (!result)
+		{
+			log.debug("Invalid Data detected in Validate.isValidUser()");
+		}
+		return result;
+	}
+
+	/**
+	 * Used to validate user creation requests
+	 * @param userName User Name
+	 * @param passWord User Password
+	 * @return Boolean value stating weather or not these supplied attributes make a valid user
+	 */
+	public static boolean isValidUser(String userName, String passWord)
+	{
+		boolean result = false;
+		result = userName.length() > 4 && passWord.length() > 7 && userName.length() <= 32 && passWord.length() <= 512;
+		if (!result)
+		{
+			log.debug("Invalid Data detected in Validate.isValidUser()");
+		}
+		return result;
+	}
+	
+	/**
+	 * Validates class year when creating classes. Class year should be YY/YY, eg 11/12. So the first year must be less than the second.	
+	 * @param classYear Class Year in YY/YY format, eg 11/12.
+	 * @return Boolean value stating weather or not these supplied attributes make a valid class year
+	 */
+	public static boolean isValidClassYear(String classYear)
+	{
+		boolean result = false;
+		result = classYear.length() == 5;
+		if(result)
+		{
+			try
+			{
+				result = Integer.parseInt(classYear.substring(0, 2)) < Integer.parseInt(classYear.substring(3, 5));
+			}
+			catch(Exception e)
+			{
+				log.error("Could not parse classYear");
+				result = false;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Email validation
+	 * @param email
+	 * @return Boolean reflect email validity
+	 */
+	public static boolean isValidEmailAddress(String email) 
+	{
+	   boolean result = true;
+	   try 
+	   {
+	      InternetAddress emailAddr = new InternetAddress(email);
+	      emailAddr.validate();
+	   } 
+	   catch (AddressException ex)
+	   {
+	      result = false;
+	   }
+	   return result;
+	}
+	
+	/**
+	 * Validates objects received through a function request. Also ensures max length is not too high.
+	 * @param input Object to validate
+	 * @param maxLength Maximum length of object
+	 * @return Boolean value reflecting if valid or not
+	 */
+	public static String validateParameter (Object input, int maxLength)
+	{
+		String result = new String();
+		try
+		{
+			result = (String) input;
+			if(result.length() > maxLength)
+			{
+				log.debug("Parameter Too Long");
+				result = new String();
+			}
+		}
+		catch(Exception e)
+		{
+			log.debug("Invalid String Parameter: " + e.toString());
+		}
+		return result;
+	}
+	
+	/**
+	 * Validates file name attributes to defend against path traversal
+	 * @param fileName File name to validate
+	 * @return Boolean value reflecting if valid or not
+	 */
+	/*
+	public static String validateFileName(String fileName) 
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "fileName: " + fileName);
+		fileName = fileName.replaceAll(" ", "").replaceAll("\\.", "").replaceAll("/", "").replaceAll("\\\\", "").replaceAll("\n", "");
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "fileName: " + fileName);
+		return fileName;
+	}
+	*/
+	
+	public static boolean validHostUrl(String hostUrl)
+	{
+		//TODO - Pull other validation steps into this
+		boolean result;
+		result = hostUrl.endsWith("/");
+		if (!result)
+			log.error("Url Doesn't end with a forward slash. Very likely wrong");
+		return result; 
+	}
+}

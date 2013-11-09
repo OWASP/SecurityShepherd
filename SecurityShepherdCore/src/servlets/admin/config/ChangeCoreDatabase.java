@@ -1,0 +1,132 @@
+package servlets.admin.config;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Encoder;
+
+import dbProcs.Setter;
+
+import utils.Validate;
+
+/**
+ * This class is responsible for requests to configure the applications core database sign on information.
+ * <br/>
+ * <br/>
+ * This file is part of the Security Shepherd Project.
+ * 
+ * The Security Shepherd project is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.<br/>
+ * 
+ * The Security Shepherd project is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.<br/>
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * @author Mark Denihan
+ *
+ */
+public class ChangeCoreDatabase extends HttpServlet
+{
+	private static final long serialVersionUID = 1L;
+	private static org.apache.log4j.Logger log = Logger.getLogger(ChangeHostAddress.class);
+	
+	/**
+	 * If this method is called by a valid administrator the site.properties file that contains the database information required to make a connection is updated 
+	 * @param csrfToken
+	 */
+	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	throws ServletException, IOException
+	{
+		log.debug("*** servlets.Admin.config.ChangeCoreDatabase ***");
+		Encoder encoder = ESAPI.encoder();
+		PrintWriter out = response.getWriter();  
+		out.print(getServletInfo());
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateAdminSession(ses))
+		{
+			Cookie tokenCookie = Validate.getToken(request.getCookies());
+			Object tokenParmeter = request.getParameter("csrfToken");
+			if(Validate.validateTokens(tokenCookie, tokenParmeter))
+			{
+				try
+				{
+					log.debug("Getting ApplicationRoot");
+					String ApplicationRoot = getServletContext().getRealPath("");
+					log.debug("Servlet root = " + ApplicationRoot );
+					
+					log.debug("Getting Parameters");
+					String url = Validate.validateParameter(request.getParameter("databaseUrl"), 256);
+					log.debug("url = " + url);
+					String userName = Validate.validateParameter(request.getParameter("databaseUsername"), 256);
+					log.debug("userName = " + userName);
+					String password = Validate.validateParameter(request.getParameter("databasePassword"), 256);
+					log.debug("password = " + password);
+					
+					boolean validData = !url.isEmpty() && !userName.isEmpty() && !password.isEmpty();
+					if(Setter.setCoreDatabaseInfo(ApplicationRoot, url, userName, password))
+					{
+						out.write("<h2 class='title'>Core Database Info Updated</h2>" +
+								"<p>The Core Database properties have sucessfully been updated!</p>");
+					}
+					else
+					{
+						//Validation Error Responses
+						String errorMessage = "An Error Occured ";
+						if(!validData)
+						{
+							log.error("Invalid Application Address");
+							errorMessage += "Invalid Host Address. Please try again";
+						}
+						else
+						{
+							log.error("Unexpected Failure");
+							errorMessage = "An Error Occured";
+						}
+						out.print("<h2 class=\"title\">Core Database Info Update Failure</h2><br>" +
+								"<p><font color=\"red\">" +
+								encoder.encodeForHTML(errorMessage) +
+								"</font><p>");
+					}
+				}
+				catch (Exception e)
+				{
+					log.error("Core Database Info Update Error: " + e.toString());
+					out.print("<h2 class=\"title\">Core Database Info Update Failure</h2><br>" +
+							"<p>" +
+							"<font color=\"red\">An error occured! Please try again.</font>" +
+							"<p>");
+				}
+			}
+			else
+			{
+				log.debug("CSRF tokens did not match");
+				out.print("<h2 class=\"title\">Core Database Info Update Failure</h2><br>" +
+					"<p>" +
+					"<font color=\"red\">An error occured! CSRF Tokens did not match.</font>" +
+					"<p>");
+			}
+		}
+		else
+		{
+			out.print("<h2 class=\"title\">Core Database Info Update Failure</h2><br>" +
+					"<p>" +
+					"<font color=\"red\">An error occured! Please log in or try non administrator functions!</font>" +
+					"<p>");
+		}
+		log.debug("*** servlets.Admin.config.ChangeCoreDatabase END ***");
+	}
+}
