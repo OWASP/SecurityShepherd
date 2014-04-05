@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="lib/esapi-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/org.json-20120521.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

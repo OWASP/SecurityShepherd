@@ -154,4 +154,14 @@
 		<servlet-name>/challenges/vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4</servlet-name>
 		<url-pattern>/challenges/vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/mobile/templateServlet</servlet-name>
+		<servlet-class>servlets.mobile.templateServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/mobile/templateServlet</servlet-name>
+		<url-pattern>/mobile/templateServlet</url-pattern>
+	</servlet-mapping>
+	
 </web-app>
