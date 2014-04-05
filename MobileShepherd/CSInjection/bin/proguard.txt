@@ -1,0 +1,6 @@
+# view AndroidManifest.xml #generated:17
+-keep class com.app.mobshep.csinjection.CSInjection { <init>(...); }
+
+# view AndroidManifest.xml #generated:27
+-keep class com.app.mobshep.csinjection.Splash { <init>(...); }
+
