@@ -1,0 +1,976 @@
+_____________________________________________________________________
+- Program class: com/app/mobshep/csinjection/CSInjection
+  Superclass:    android/app/Activity
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x21
+    = public class com.app.mobshep.csinjection.CSInjection extends android.app.Activity
+
+Interfaces (count = 1):
+  - Class [android/view/View$OnClickListener]
+
+Constant Pool (count = 214):
+  - Integer [2130903040]
+  - Integer [2131230721]
+  - Integer [2131230722]
+  - Integer [2131230725]
+  - Integer [2131230726]
+  - Integer [2131230727]
+  - Integer [2131230728]
+  - Integer [2131230729]
+  - Integer [2131230730]
+  - Integer [2131230731]
+  - String []
+  - String [']
+  - String [' AND memPass =']
+  - String [A hint has appeared!]
+  - String [An error occurred.]
+  - String [CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)]
+  - String [DROP TABLE IF EXISTS Members]
+  - String [Empty Fields Detected.]
+  - String [INSERT INTO Members VALUES( 1,'Admin',20,'A3B922DF010PQSI827')]
+  - String [Invalid Credentials!]
+  - String [Key]
+  - String [Logged in!]
+  - String [Login]
+  - String [Members]
+  - String [SELECT * FROM MEMBERS WHERE memName = ']
+  - String [Summary]
+  - String [dnmwiuqodj72tf7gsvkjxq0jxnq9ws83.]
+  - String [tag1]
+  - String [tag2]
+  - String [tag3]
+  - Class [android/app/Activity]
+  - Class [android/database/Cursor]
+  - Class [android/database/sqlite/SQLiteDatabase]
+  - Class [android/os/Bundle]
+  - Class [android/text/Editable]
+  - Class [android/view/View]
+  - Class [android/view/View$OnClickListener]
+  - Class [android/widget/Button]
+  - Class [android/widget/EditText]
+  - Class [android/widget/TabHost]
+  - Class [android/widget/TabHost$TabSpec]
+  - Class [android/widget/TextView]
+  - Class [android/widget/Toast]
+  - Class [com/app/mobshep/csinjection/CSInjection]
+  - Class [java/lang/Exception]
+  - Class [java/lang/String]
+  - Class [java/lang/StringBuilder]
+  - Fieldref [com/app/mobshep/csinjection/CSInjection.a Landroid/widget/TabHost;]
+  - Fieldref [com/app/mobshep/csinjection/CSInjection.b Landroid/widget/Button;]
+  - Fieldref [com/app/mobshep/csinjection/CSInjection.c Landroid/widget/EditText;]
+  - Fieldref [com/app/mobshep/csinjection/CSInjection.d Landroid/widget/EditText;]
+  - Fieldref [com/app/mobshep/csinjection/CSInjection.e Landroid/widget/EditText;]
+  - Fieldref [com/app/mobshep/csinjection/CSInjection.f I]
+  - Fieldref [com/app/mobshep/csinjection/CSInjection.g Landroid/widget/TextView;]
+  - Methodref [android/app/Activity.<init> ()V]
+  - Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+  - Methodref [android/database/sqlite/SQLiteDatabase.close ()V]
+  - Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
+  - Methodref [android/database/sqlite/SQLiteDatabase.rawQuery (Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;]
+  - Methodref [android/view/View.getId ()I]
+  - Methodref [android/widget/Button.setOnClickListener (Landroid/view/View$OnClickListener;)V]
+  - Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
+  - Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
+  - Methodref [android/widget/TabHost.addTab (Landroid/widget/TabHost$TabSpec;)V]
+  - Methodref [android/widget/TabHost.newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
+  - Methodref [android/widget/TabHost.setup ()V]
+  - Methodref [android/widget/TabHost$TabSpec.setContent (I)Landroid/widget/TabHost$TabSpec;]
+  - Methodref [android/widget/TabHost$TabSpec.setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
+  - Methodref [android/widget/TextView.setVisibility (I)V]
+  - Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+  - Methodref [android/widget/Toast.show ()V]
+  - Methodref [com/app/mobshep/csinjection/CSInjection.a ()V]
+  - Methodref [com/app/mobshep/csinjection/CSInjection.a (Ljava/lang/String;Ljava/lang/String;)Z]
+  - Methodref [com/app/mobshep/csinjection/CSInjection.findViewById (I)Landroid/view/View;]
+  - Methodref [com/app/mobshep/csinjection/CSInjection.openOrCreateDatabase (Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
+  - Methodref [com/app/mobshep/csinjection/CSInjection.setContentView (I)V]
+  - Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
+  - Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
+  - Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+  - Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+  - InterfaceMethodref [android/database/Cursor.getCount ()I]
+  - InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
+  - NameAndType [<init> ()V]
+  - NameAndType [<init> (Ljava/lang/String;)V]
+  - NameAndType [a ()V]
+  - NameAndType [a (Ljava/lang/String;Ljava/lang/String;)Z]
+  - NameAndType [a Landroid/widget/TabHost;]
+  - NameAndType [addTab (Landroid/widget/TabHost$TabSpec;)V]
+  - NameAndType [append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+  - NameAndType [b Landroid/widget/Button;]
+  - NameAndType [c Landroid/widget/EditText;]
+  - NameAndType [close ()V]
+  - NameAndType [contentEquals (Ljava/lang/CharSequence;)Z]
+  - NameAndType [d Landroid/widget/EditText;]
+  - NameAndType [e Landroid/widget/EditText;]
+  - NameAndType [execSQL (Ljava/lang/String;)V]
+  - NameAndType [f I]
+  - NameAndType [findViewById (I)Landroid/view/View;]
+  - NameAndType [g Landroid/widget/TextView;]
+  - NameAndType [getCount ()I]
+  - NameAndType [getId ()I]
+  - NameAndType [getText ()Landroid/text/Editable;]
+  - NameAndType [makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+  - NameAndType [newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
+  - NameAndType [onCreate (Landroid/os/Bundle;)V]
+  - NameAndType [openOrCreateDatabase (Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
+  - NameAndType [rawQuery (Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;]
+  - NameAndType [setContent (I)Landroid/widget/TabHost$TabSpec;]
+  - NameAndType [setContentView (I)V]
+  - NameAndType [setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
+  - NameAndType [setOnClickListener (Landroid/view/View$OnClickListener;)V]
+  - NameAndType [setText (Ljava/lang/CharSequence;)V]
+  - NameAndType [setVisibility (I)V]
+  - NameAndType [setup ()V]
+  - NameAndType [show ()V]
+  - NameAndType [toString ()Ljava/lang/String;]
+  - Utf8 []
+  - Utf8 [']
+  - Utf8 [' AND memPass =']
+  - Utf8 [()I]
+  - Utf8 [()Landroid/text/Editable;]
+  - Utf8 [()Ljava/lang/String;]
+  - Utf8 [()V]
+  - Utf8 [(I)Landroid/view/View;]
+  - Utf8 [(I)Landroid/widget/TabHost$TabSpec;]
+  - Utf8 [(I)V]
+  - Utf8 [(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+  - Utf8 [(Landroid/os/Bundle;)V]
+  - Utf8 [(Landroid/view/View$OnClickListener;)V]
+  - Utf8 [(Landroid/view/View;)V]
+  - Utf8 [(Landroid/widget/TabHost$TabSpec;)V]
+  - Utf8 [(Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
+  - Utf8 [(Ljava/lang/CharSequence;)V]
+  - Utf8 [(Ljava/lang/CharSequence;)Z]
+  - Utf8 [(Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
+  - Utf8 [(Ljava/lang/String;)Ljava/lang/StringBuilder;]
+  - Utf8 [(Ljava/lang/String;)V]
+  - Utf8 [(Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
+  - Utf8 [(Ljava/lang/String;Ljava/lang/String;)Z]
+  - Utf8 [(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;]
+  - Utf8 [<init>]
+  - Utf8 [A hint has appeared!]
+  - Utf8 [An error occurred.]
+  - Utf8 [CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)]
+  - Utf8 [Code]
+  - Utf8 [DROP TABLE IF EXISTS Members]
+  - Utf8 [Empty Fields Detected.]
+  - Utf8 [I]
+  - Utf8 [INSERT INTO Members VALUES( 1,'Admin',20,'A3B922DF010PQSI827')]
+  - Utf8 [Invalid Credentials!]
+  - Utf8 [Key]
+  - Utf8 [Landroid/widget/Button;]
+  - Utf8 [Landroid/widget/EditText;]
+  - Utf8 [Landroid/widget/TabHost;]
+  - Utf8 [Landroid/widget/TextView;]
+  - Utf8 [Logged in!]
+  - Utf8 [Login]
+  - Utf8 [Members]
+  - Utf8 [SELECT * FROM MEMBERS WHERE memName = ']
+  - Utf8 [StackMapTable]
+  - Utf8 [Summary]
+  - Utf8 [a]
+  - Utf8 [addTab]
+  - Utf8 [android/app/Activity]
+  - Utf8 [android/database/Cursor]
+  - Utf8 [android/database/sqlite/SQLiteDatabase]
+  - Utf8 [android/os/Bundle]
+  - Utf8 [android/text/Editable]
+  - Utf8 [android/view/View]
+  - Utf8 [android/view/View$OnClickListener]
+  - Utf8 [android/widget/Button]
+  - Utf8 [android/widget/EditText]
+  - Utf8 [android/widget/TabHost]
+  - Utf8 [android/widget/TabHost$TabSpec]
+  - Utf8 [android/widget/TextView]
+  - Utf8 [android/widget/Toast]
+  - Utf8 [append]
+  - Utf8 [b]
+  - Utf8 [c]
+  - Utf8 [close]
+  - Utf8 [com/app/mobshep/csinjection/CSInjection]
+  - Utf8 [contentEquals]
+  - Utf8 [d]
+  - Utf8 [dnmwiuqodj72tf7gsvkjxq0jxnq9ws83.]
+  - Utf8 [e]
+  - Utf8 [execSQL]
+  - Utf8 [f]
+  - Utf8 [findViewById]
+  - Utf8 [g]
+  - Utf8 [getCount]
+  - Utf8 [getId]
+  - Utf8 [getText]
+  - Utf8 [java/lang/Exception]
+  - Utf8 [java/lang/String]
+  - Utf8 [java/lang/StringBuilder]
+  - Utf8 [makeText]
+  - Utf8 [newTabSpec]
+  - Utf8 [onClick]
+  - Utf8 [onCreate]
+  - Utf8 [openOrCreateDatabase]
+  - Utf8 [rawQuery]
+  - Utf8 [setContent]
+  - Utf8 [setContentView]
+  - Utf8 [setIndicator]
+  - Utf8 [setOnClickListener]
+  - Utf8 [setText]
+  - Utf8 [setVisibility]
+  - Utf8 [setup]
+  - Utf8 [show]
+  - Utf8 [tag1]
+  - Utf8 [tag2]
+  - Utf8 [tag3]
+  - Utf8 [toString]
+
+Fields (count = 7):
+  - Field:        a Landroid/widget/TabHost;
+    Access flags: 0x2
+      = private android.widget.TabHost a
+  - Field:        b Landroid/widget/Button;
+    Access flags: 0x2
+      = private android.widget.Button b
+  - Field:        c Landroid/widget/EditText;
+    Access flags: 0x2
+      = private android.widget.EditText c
+  - Field:        d Landroid/widget/EditText;
+    Access flags: 0x2
+      = private android.widget.EditText d
+  - Field:        e Landroid/widget/EditText;
+    Access flags: 0x2
+      = private android.widget.EditText e
+  - Field:        f I
+    Access flags: 0x2
+      = private int f
+  - Field:        g Landroid/widget/TextView;
+    Access flags: 0x2
+      = private android.widget.TextView g
+
+Methods (count = 5):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public CSInjection()
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 10, locals = 1, stack = 2):
+      [0] aload_0 v0
+      [1] invokespecial #55
+        - Methodref [android/app/Activity.<init> ()V]
+      [4] aload_0 v0
+      [5] iconst_0
+      [6] putfield #53
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.f I]
+      [9] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  - Method:       onCreate(Landroid/os/Bundle;)V
+    Access flags: 0x4
+      = protected void onCreate(android.os.Bundle)
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 261, locals = 3, stack = 4):
+      [0] aload_0 v0
+      [1] aload_1 v1
+      [2] invokespecial #56
+        - Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+      [5] aload_0 v0
+      [6] ldc #1
+        - Integer [2130903040]
+      [8] invokevirtual #76
+        - Methodref [com/app/mobshep/csinjection/CSInjection.setContentView (I)V]
+      [11] aload_0 v0
+      [12] aload_0 v0
+      [13] ldc #2
+        - Integer [2131230721]
+      [15] invokevirtual #74
+        - Methodref [com/app/mobshep/csinjection/CSInjection.findViewById (I)Landroid/view/View;]
+      [18] checkcast #40
+        - Class [android/widget/TabHost]
+      [21] putfield #48
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.a Landroid/widget/TabHost;]
+      [24] aload_0 v0
+      [25] astore_1 v1
+      [26] aload_1 v1
+      [27] ldc #24
+        - String [Members]
+      [29] iconst_0
+      [30] aconst_null
+      [31] invokevirtual #75
+        - Methodref [com/app/mobshep/csinjection/CSInjection.openOrCreateDatabase (Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
+      [34] dup
+      [35] astore_2 v2
+      [36] ldc #17
+        - String [DROP TABLE IF EXISTS Members]
+      [38] invokevirtual #58
+        - Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
+      [41] aload_2 v2
+      [42] ldc #16
+        - String [CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)]
+      [44] invokevirtual #58
+        - Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
+      [47] aload_1 v1
+      [48] ldc #24
+        - String [Members]
+      [50] iconst_0
+      [51] aconst_null
+      [52] invokevirtual #75
+        - Methodref [com/app/mobshep/csinjection/CSInjection.openOrCreateDatabase (Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
+      [55] dup
+      [56] astore_2 v2
+      [57] ldc #19
+        - String [INSERT INTO Members VALUES( 1,'Admin',20,'A3B922DF010PQSI827')]
+      [59] invokevirtual #58
+        - Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
+      [62] aload_2 v2
+      [63] invokevirtual #57
+        - Methodref [android/database/sqlite/SQLiteDatabase.close ()V]
+      [66] goto +16 (target=82)
+      [69] astore_2 v2
+      [70] aload_1 v1
+      [71] ldc #15
+        - String [An error occurred.]
+      [73] iconst_1
+      [74] invokestatic #70
+        - Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+      [77] dup
+      [78] astore_1 v1
+      [79] invokevirtual #71
+        - Methodref [android/widget/Toast.show ()V]
+      [82] aload_0 v0
+      [83] dup
+      [84] astore_1 v1
+      [85] aload_1 v1
+      [86] ldc #8
+        - Integer [2131230729]
+      [88] invokevirtual #74
+        - Methodref [com/app/mobshep/csinjection/CSInjection.findViewById (I)Landroid/view/View;]
+      [91] checkcast #38
+        - Class [android/widget/Button]
+      [94] putfield #49
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.b Landroid/widget/Button;]
+      [97] aload_1 v1
+      [98] aload_1 v1
+      [99] ldc #6
+        - Integer [2131230727]
+      [101] invokevirtual #74
+        - Methodref [com/app/mobshep/csinjection/CSInjection.findViewById (I)Landroid/view/View;]
+      [104] checkcast #39
+        - Class [android/widget/EditText]
+      [107] putfield #50
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.c Landroid/widget/EditText;]
+      [110] aload_1 v1
+      [111] aload_1 v1
+      [112] ldc #7
+        - Integer [2131230728]
+      [114] invokevirtual #74
+        - Methodref [com/app/mobshep/csinjection/CSInjection.findViewById (I)Landroid/view/View;]
+      [117] checkcast #39
+        - Class [android/widget/EditText]
+      [120] putfield #51
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.d Landroid/widget/EditText;]
+      [123] aload_1 v1
+      [124] aload_1 v1
+      [125] ldc #10
+        - Integer [2131230731]
+      [127] invokevirtual #74
+        - Methodref [com/app/mobshep/csinjection/CSInjection.findViewById (I)Landroid/view/View;]
+      [130] checkcast #39
+        - Class [android/widget/EditText]
+      [133] putfield #52
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.e Landroid/widget/EditText;]
+      [136] aload_1 v1
+      [137] aload_1 v1
+      [138] ldc #4
+        - Integer [2131230725]
+      [140] invokevirtual #74
+        - Methodref [com/app/mobshep/csinjection/CSInjection.findViewById (I)Landroid/view/View;]
+      [143] checkcast #42
+        - Class [android/widget/TextView]
+      [146] putfield #54
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.g Landroid/widget/TextView;]
+      [149] aload_1 v1
+      [150] getfield #49
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.b Landroid/widget/Button;]
+      [153] aload_1 v1
+      [154] invokevirtual #61
+        - Methodref [android/widget/Button.setOnClickListener (Landroid/view/View$OnClickListener;)V]
+      [157] aload_0 v0
+      [158] getfield #48
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.a Landroid/widget/TabHost;]
+      [161] invokevirtual #66
+        - Methodref [android/widget/TabHost.setup ()V]
+      [164] aload_0 v0
+      [165] getfield #48
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.a Landroid/widget/TabHost;]
+      [168] ldc #28
+        - String [tag1]
+      [170] invokevirtual #65
+        - Methodref [android/widget/TabHost.newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
+      [173] dup
+      [174] astore_1 v1
+      [175] ldc #3
+        - Integer [2131230722]
+      [177] invokevirtual #67
+        - Methodref [android/widget/TabHost$TabSpec.setContent (I)Landroid/widget/TabHost$TabSpec;]
+      [180] pop
+      [181] aload_1 v1
+      [182] ldc #26
+        - String [Summary]
+      [184] invokevirtual #68
+        - Methodref [android/widget/TabHost$TabSpec.setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
+      [187] pop
+      [188] aload_0 v0
+      [189] getfield #48
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.a Landroid/widget/TabHost;]
+      [192] aload_1 v1
+      [193] invokevirtual #64
+        - Methodref [android/widget/TabHost.addTab (Landroid/widget/TabHost$TabSpec;)V]
+      [196] aload_0 v0
+      [197] getfield #48
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.a Landroid/widget/TabHost;]
+      [200] ldc #29
+        - String [tag2]
+      [202] invokevirtual #65
+        - Methodref [android/widget/TabHost.newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
+      [205] dup
+      [206] astore_1 v1
+      [207] ldc #5
+        - Integer [2131230726]
+      [209] invokevirtual #67
+        - Methodref [android/widget/TabHost$TabSpec.setContent (I)Landroid/widget/TabHost$TabSpec;]
+      [212] pop
+      [213] aload_1 v1
+      [214] ldc #23
+        - String [Login]
+      [216] invokevirtual #68
+        - Methodref [android/widget/TabHost$TabSpec.setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
+      [219] pop
+      [220] aload_0 v0
+      [221] getfield #48
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.a Landroid/widget/TabHost;]
+      [224] aload_1 v1
+      [225] invokevirtual #64
+        - Methodref [android/widget/TabHost.addTab (Landroid/widget/TabHost$TabSpec;)V]
+      [228] aload_0 v0
+      [229] getfield #48
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.a Landroid/widget/TabHost;]
+      [232] ldc #30
+        - String [tag3]
+      [234] invokevirtual #65
+        - Methodref [android/widget/TabHost.newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
+      [237] dup
+      [238] astore_1 v1
+      [239] ldc #9
+        - Integer [2131230730]
+      [241] invokevirtual #67
+        - Methodref [android/widget/TabHost$TabSpec.setContent (I)Landroid/widget/TabHost$TabSpec;]
+      [244] pop
+      [245] aload_1 v1
+      [246] ldc #21
+        - String [Key]
+      [248] invokevirtual #68
+        - Methodref [android/widget/TabHost$TabSpec.setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
+      [251] pop
+      [252] aload_0 v0
+      [253] getfield #48
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.a Landroid/widget/TabHost;]
+      [256] aload_1 v1
+      [257] invokevirtual #64
+        - Methodref [android/widget/TabHost.addTab (Landroid/widget/TabHost$TabSpec;)V]
+      [260] return
+      Code attribute exceptions (count = 1):
+      - ExceptionInfo (26 -> 66: 69):
+      - Class [java/lang/Exception]
+      Code attribute attributes (attribute count = 1):
+      - Stack map table attribute (count = 2):
+        - [69] Var: [a:com/app/mobshep/csinjection/CSInjection][a:com/app/mobshep/csinjection/CSInjection], Stack: [a:java/lang/Exception]
+        - [82] Var: -1, Stack: (empty)
+  - Method:       onClick(Landroid/view/View;)V
+    Access flags: 0x1
+      = public void onClick(android.view.View)
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 187, locals = 4, stack = 3):
+      [0] aload_1 v1
+      [1] invokevirtual #60
+        - Methodref [android/view/View.getId ()I]
+      [4] tableswitch (1 offsets, default=182) (target=186)
+        2131230729: offset = 20, target = 24
+        default: offset = 182, target = 186
+      [24] aload_0 v0
+      [25] getfield #50
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.c Landroid/widget/EditText;]
+      [28] invokevirtual #62
+        - Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
+      [31] invokeinterface #82
+        - InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
+      [36] astore_1 v1
+      [37] aload_0 v0
+      [38] getfield #51
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.d Landroid/widget/EditText;]
+      [41] invokevirtual #62
+        - Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
+      [44] invokeinterface #82
+        - InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
+      [49] astore_2 v2
+      [50] aload_0 v0
+      [51] aload_1 v1
+      [52] aload_2 v2
+      [53] invokespecial #73
+        - Methodref [com/app/mobshep/csinjection/CSInjection.a (Ljava/lang/String;Ljava/lang/String;)Z]
+      [56] ifeq +24 (target=80)
+      [59] aload_0 v0
+      [60] getfield #52
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.e Landroid/widget/EditText;]
+      [63] ldc #27
+        - String [dnmwiuqodj72tf7gsvkjxq0jxnq9ws83.]
+      [65] invokevirtual #63
+        - Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
+      [68] aload_0 v0
+      [69] ldc #22
+        - String [Logged in!]
+      [71] iconst_1
+      [72] invokestatic #70
+        - Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+      [75] dup
+      [76] astore_3 v3
+      [77] invokevirtual #71
+        - Methodref [android/widget/Toast.show ()V]
+      [80] aload_0 v0
+      [81] aload_1 v1
+      [82] aload_2 v2
+      [83] invokespecial #73
+        - Methodref [com/app/mobshep/csinjection/CSInjection.a (Ljava/lang/String;Ljava/lang/String;)Z]
+      [86] ifne +29 (target=115)
+      [89] aload_0 v0
+      [90] ldc #20
+        - String [Invalid Credentials!]
+      [92] iconst_0
+      [93] invokestatic #70
+        - Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+      [96] dup
+      [97] astore_3 v3
+      [98] invokevirtual #71
+        - Methodref [android/widget/Toast.show ()V]
+      [101] aload_0 v0
+      [102] dup
+      [103] getfield #53
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.f I]
+      [106] iconst_1
+      [107] iadd
+      [108] putfield #53
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.f I]
+      [111] aload_0 v0
+      [112] invokespecial #72
+        - Methodref [com/app/mobshep/csinjection/CSInjection.a ()V]
+      [115] aload_1 v1
+      [116] ldc #11
+        - String []
+      [118] invokevirtual #77
+        - Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
+      [121] ifne +12 (target=133)
+      [124] aload_2 v2
+      [125] ldc #11
+        - String []
+      [127] invokevirtual #77
+        - Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
+      [130] ifeq +30 (target=160)
+      [133] aload_0 v0
+      [134] ldc #18
+        - String [Empty Fields Detected.]
+      [136] iconst_0
+      [137] invokestatic #70
+        - Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+      [140] dup
+      [141] astore_3 v3
+      [142] invokevirtual #71
+        - Methodref [android/widget/Toast.show ()V]
+      [145] aload_0 v0
+      [146] dup
+      [147] getfield #53
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.f I]
+      [150] iconst_1
+      [151] iadd
+      [152] putfield #53
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.f I]
+      [155] aload_0 v0
+      [156] invokespecial #72
+        - Methodref [com/app/mobshep/csinjection/CSInjection.a ()V]
+      [159] return
+      [160] aload_0 v0
+      [161] ldc #20
+        - String [Invalid Credentials!]
+      [163] iconst_0
+      [164] invokestatic #70
+        - Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+      [167] dup
+      [168] astore_3 v3
+      [169] invokevirtual #71
+        - Methodref [android/widget/Toast.show ()V]
+      [172] aload_0 v0
+      [173] dup
+      [174] getfield #53
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.f I]
+      [177] iconst_1
+      [178] iadd
+      [179] putfield #53
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.f I]
+      [182] aload_0 v0
+      [183] invokespecial #72
+        - Methodref [com/app/mobshep/csinjection/CSInjection.a ()V]
+      [186] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 1):
+      - Stack map table attribute (count = 6):
+        - [24] Var: -1, Stack: (empty)
+        - [80] Var: ...[a:java/lang/String][a:java/lang/String], Stack: (empty)
+        - [115] Var: ..., Stack: (empty)
+        - [133] Var: -2, Stack: (empty)
+        - [160] Var: ..., Stack: (empty)
+        - [186] Var: -1, Stack: (empty)
+  - Method:       a(Ljava/lang/String;Ljava/lang/String;)Z
+    Access flags: 0x2
+      = private boolean a(java.lang.String,java.lang.String)
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 69, locals = 4, stack = 4):
+      [0] aload_0 v0
+      [1] ldc #24
+        - String [Members]
+      [3] iconst_0
+      [4] aconst_null
+      [5] invokevirtual #75
+        - Methodref [com/app/mobshep/csinjection/CSInjection.openOrCreateDatabase (Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
+      [8] pop
+      [9] aload_0 v0
+      [10] ldc #24
+        - String [Members]
+      [12] iconst_0
+      [13] aconst_null
+      [14] invokevirtual #75
+        - Methodref [com/app/mobshep/csinjection/CSInjection.openOrCreateDatabase (Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
+      [17] astore_3 v3
+      [18] new #47
+        - Class [java/lang/StringBuilder]
+      [21] dup
+      [22] ldc #25
+        - String [SELECT * FROM MEMBERS WHERE memName = ']
+      [24] invokespecial #78
+        - Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
+      [27] aload_1 v1
+      [28] invokevirtual #79
+        - Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [31] ldc #13
+        - String [' AND memPass =']
+      [33] invokevirtual #79
+        - Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [36] aload_2 v2
+      [37] invokevirtual #79
+        - Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [40] ldc #12
+        - String [']
+      [42] invokevirtual #79
+        - Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [45] invokevirtual #80
+        - Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+      [48] astore_1 v1
+      [49] aload_3 v3
+      [50] aload_1 v1
+      [51] aconst_null
+      [52] invokevirtual #59
+        - Methodref [android/database/sqlite/SQLiteDatabase.rawQuery (Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;]
+      [55] dup
+      [56] astore_1 v1
+      [57] invokeinterface #81
+        - InterfaceMethodref [android/database/Cursor.getCount ()I]
+      [62] ifgt +5 (target=67)
+      [65] iconst_0
+      [66] ireturn
+      [67] iconst_1
+      [68] ireturn
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 1):
+      - Stack map table attribute (count = 1):
+        - [67] Var: -3, Stack: (empty)
+  - Method:       a()V
+    Access flags: 0x2
+      = private void a()
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 29, locals = 2, stack = 3):
+      [0] aload_0 v0
+      [1] getfield #53
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.f I]
+      [4] iconst_3
+      [5] ificmple +23 (target=28)
+      [8] aload_0 v0
+      [9] ldc #14
+        - String [A hint has appeared!]
+      [11] iconst_0
+      [12] invokestatic #70
+        - Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+      [15] dup
+      [16] astore_1 v1
+      [17] invokevirtual #71
+        - Methodref [android/widget/Toast.show ()V]
+      [20] aload_0 v0
+      [21] getfield #54
+        - Fieldref [com/app/mobshep/csinjection/CSInjection.g Landroid/widget/TextView;]
+      [24] iconst_0
+      [25] invokevirtual #69
+        - Methodref [android/widget/TextView.setVisibility (I)V]
+      [28] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 1):
+      - Stack map table attribute (count = 1):
+        - [28] Var: -1, Stack: (empty)
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
+- Program class: com/app/mobshep/csinjection/Splash
+  Superclass:    android/app/Activity
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x21
+    = public class com.app.mobshep.csinjection.Splash extends android.app.Activity
+
+Interfaces (count = 0):
+
+Constant Pool (count = 35):
+  - Integer [2130903041]
+  - Class [android/app/Activity]
+  - Class [com/app/mobshep/csinjection/Splash]
+  - Class [com/app/mobshep/csinjection/a]
+  - Class [java/lang/Thread]
+  - Methodref [android/app/Activity.<init> ()V]
+  - Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+  - Methodref [android/app/Activity.onPause ()V]
+  - Methodref [com/app/mobshep/csinjection/Splash.finish ()V]
+  - Methodref [com/app/mobshep/csinjection/Splash.setContentView (I)V]
+  - Methodref [com/app/mobshep/csinjection/a.<init> (Lcom/app/mobshep/csinjection/Splash;)V]
+  - Methodref [java/lang/Thread.start ()V]
+  - NameAndType [<init> ()V]
+  - NameAndType [<init> (Lcom/app/mobshep/csinjection/Splash;)V]
+  - NameAndType [finish ()V]
+  - NameAndType [onCreate (Landroid/os/Bundle;)V]
+  - NameAndType [onPause ()V]
+  - NameAndType [setContentView (I)V]
+  - NameAndType [start ()V]
+  - Utf8 [()V]
+  - Utf8 [(I)V]
+  - Utf8 [(Landroid/os/Bundle;)V]
+  - Utf8 [(Lcom/app/mobshep/csinjection/Splash;)V]
+  - Utf8 [<init>]
+  - Utf8 [Code]
+  - Utf8 [android/app/Activity]
+  - Utf8 [com/app/mobshep/csinjection/Splash]
+  - Utf8 [com/app/mobshep/csinjection/a]
+  - Utf8 [finish]
+  - Utf8 [java/lang/Thread]
+  - Utf8 [onCreate]
+  - Utf8 [onPause]
+  - Utf8 [setContentView]
+  - Utf8 [start]
+
+Fields (count = 0):
+
+Methods (count = 3):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public Splash()
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 5, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #6
+        - Methodref [android/app/Activity.<init> ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  - Method:       onCreate(Landroid/os/Bundle;)V
+    Access flags: 0x4
+      = protected void onCreate(android.os.Bundle)
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 25, locals = 2, stack = 3):
+      [0] aload_0 v0
+      [1] aload_1 v1
+      [2] invokespecial #7
+        - Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+      [5] aload_0 v0
+      [6] ldc #1
+        - Integer [2130903041]
+      [8] invokevirtual #10
+        - Methodref [com/app/mobshep/csinjection/Splash.setContentView (I)V]
+      [11] new #4
+        - Class [com/app/mobshep/csinjection/a]
+      [14] dup
+      [15] aload_0 v0
+      [16] invokespecial #11
+        - Methodref [com/app/mobshep/csinjection/a.<init> (Lcom/app/mobshep/csinjection/Splash;)V]
+      [19] dup
+      [20] astore_1 v1
+      [21] invokevirtual #12
+        - Methodref [java/lang/Thread.start ()V]
+      [24] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  - Method:       onPause()V
+    Access flags: 0x4
+      = protected void onPause()
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 9, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #8
+        - Methodref [android/app/Activity.onPause ()V]
+      [4] aload_0 v0
+      [5] invokevirtual #9
+        - Methodref [com/app/mobshep/csinjection/Splash.finish ()V]
+      [8] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
+- Program class: com/app/mobshep/csinjection/a
+  Superclass:    java/lang/Thread
+  Major version: 0x32
+  Minor version: 0x0
+  Access flags:  0x30
+    = final class com.app.mobshep.csinjection.a extends java.lang.Thread
+
+Interfaces (count = 0):
+
+Constant Pool (count = 43):
+  - String [com.app.mobshep.csinjection.CSInjection]
+  - Class [android/content/Intent]
+  - Class [com/app/mobshep/csinjection/Splash]
+  - Class [com/app/mobshep/csinjection/a]
+  - Class [java/lang/InterruptedException]
+  - Class [java/lang/Thread]
+  - Class [java/lang/Throwable]
+  - Long [5000]
+  - Fieldref [com/app/mobshep/csinjection/a.a Lcom/app/mobshep/csinjection/Splash;]
+  - Methodref [android/content/Intent.<init> (Ljava/lang/String;)V]
+  - Methodref [com/app/mobshep/csinjection/Splash.startActivity (Landroid/content/Intent;)V]
+  - Methodref [com/app/mobshep/csinjection/a.sleep (J)V]
+  - Methodref [java/lang/InterruptedException.printStackTrace ()V]
+  - Methodref [java/lang/Thread.<init> ()V]
+  - NameAndType [<init> ()V]
+  - NameAndType [<init> (Ljava/lang/String;)V]
+  - NameAndType [a Lcom/app/mobshep/csinjection/Splash;]
+  - NameAndType [printStackTrace ()V]
+  - NameAndType [sleep (J)V]
+  - NameAndType [startActivity (Landroid/content/Intent;)V]
+  - Utf8 [()V]
+  - Utf8 [(J)V]
+  - Utf8 [(Landroid/content/Intent;)V]
+  - Utf8 [(Lcom/app/mobshep/csinjection/Splash;)V]
+  - Utf8 [(Ljava/lang/String;)V]
+  - Utf8 [<init>]
+  - Utf8 [Code]
+  - Utf8 [Lcom/app/mobshep/csinjection/Splash;]
+  - Utf8 [StackMapTable]
+  - Utf8 [a]
+  - Utf8 [android/content/Intent]
+  - Utf8 [com.app.mobshep.csinjection.CSInjection]
+  - Utf8 [com/app/mobshep/csinjection/Splash]
+  - Utf8 [com/app/mobshep/csinjection/a]
+  - Utf8 [java/lang/InterruptedException]
+  - Utf8 [java/lang/Thread]
+  - Utf8 [java/lang/Throwable]
+  - Utf8 [printStackTrace]
+  - Utf8 [run]
+  - Utf8 [sleep]
+  - Utf8 [startActivity]
+
+Fields (count = 1):
+  - Field:        a Lcom/app/mobshep/csinjection/Splash;
+    Access flags: 0x1002
+      = private synthetic com.app.mobshep.csinjection.Splash a
+
+Methods (count = 2):
+  - Method:       <init>(Lcom/app/mobshep/csinjection/Splash;)V
+    Access flags: 0x0
+      = a(com.app.mobshep.csinjection.Splash)
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 10, locals = 2, stack = 2):
+      [0] aload_0 v0
+      [1] aload_1 v1
+      [2] putfield #10
+        - Fieldref [com/app/mobshep/csinjection/a.a Lcom/app/mobshep/csinjection/Splash;]
+      [5] aload_0 v0
+      [6] invokespecial #15
+        - Methodref [java/lang/Thread.<init> ()V]
+      [9] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  - Method:       run()V
+    Access flags: 0x11
+      = public final void run()
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 73, locals = 3, stack = 3):
+      [0] ldc2_w #8
+        - Long [5000]
+      [3] invokestatic #13
+        - Methodref [com/app/mobshep/csinjection/a.sleep (J)V]
+      [6] goto +48 (target=54)
+      [9] dup
+      [10] astore_1 v1
+      [11] invokevirtual #14
+        - Methodref [java/lang/InterruptedException.printStackTrace ()V]
+      [14] new #2
+        - Class [android/content/Intent]
+      [17] dup
+      [18] ldc #1
+        - String [com.app.mobshep.csinjection.CSInjection]
+      [20] invokespecial #11
+        - Methodref [android/content/Intent.<init> (Ljava/lang/String;)V]
+      [23] astore_2 v2
+      [24] aload_0 v0
+      [25] getfield #10
+        - Fieldref [com/app/mobshep/csinjection/a.a Lcom/app/mobshep/csinjection/Splash;]
+      [28] aload_2 v2
+      [29] invokevirtual #12
+        - Methodref [com/app/mobshep/csinjection/Splash.startActivity (Landroid/content/Intent;)V]
+      [32] return
+      [33] astore_1 v1
+      [34] new #2
+        - Class [android/content/Intent]
+      [37] dup
+      [38] ldc #1
+        - String [com.app.mobshep.csinjection.CSInjection]
+      [40] invokespecial #11
+        - Methodref [android/content/Intent.<init> (Ljava/lang/String;)V]
+      [43] astore_2 v2
+      [44] aload_0 v0
+      [45] getfield #10
+        - Fieldref [com/app/mobshep/csinjection/a.a Lcom/app/mobshep/csinjection/Splash;]
+      [48] aload_2 v2
+      [49] invokevirtual #12
+        - Methodref [com/app/mobshep/csinjection/Splash.startActivity (Landroid/content/Intent;)V]
+      [52] aload_1 v1
+      [53] athrow
+      [54] new #2
+        - Class [android/content/Intent]
+      [57] dup
+      [58] ldc #1
+        - String [com.app.mobshep.csinjection.CSInjection]
+      [60] invokespecial #11
+        - Methodref [android/content/Intent.<init> (Ljava/lang/String;)V]
+      [63] astore_2 v2
+      [64] aload_0 v0
+      [65] getfield #10
+        - Fieldref [com/app/mobshep/csinjection/a.a Lcom/app/mobshep/csinjection/Splash;]
+      [68] aload_2 v2
+      [69] invokevirtual #12
+        - Methodref [com/app/mobshep/csinjection/Splash.startActivity (Landroid/content/Intent;)V]
+      [72] return
+      Code attribute exceptions (count = 2):
+      - ExceptionInfo (0 -> 6: 9):
+      - Class [java/lang/InterruptedException]
+      - ExceptionInfo (0 -> 14: 33):
+      Code attribute attributes (attribute count = 1):
+      - Stack map table attribute (count = 3):
+        - [9] Var: ..., Stack: [a:java/lang/InterruptedException]
+        - [33] Var: ..., Stack: [a:java/lang/Throwable]
+        - [54] Var: ..., Stack: (empty)
+
+Class file attributes (count = 0):
+

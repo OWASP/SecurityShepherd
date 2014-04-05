@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">InsecureData</string>
+    <string name="action_settings">Settings</string>
+    
+    <!-- Defind Strings for challenge 1, Introduction -->
+    <string name="titleIntro1">Insecure Data 1</string>
+    <string name="introMessage"> Storing plaintext values or using broken encryption on these values leaves them vulnerable on the client side database. Therefore any device that has been stolen, which has apps installed which convieniently store credentials for email, social networks or online transactions can allow an attacker access to these credentials by finding the files assosiated with the SQLite database these apps use."</string>
+	<string name="revealKey1">The Key is:</string>
+	<string name="keyButtonIntro">Reveal Key</string>
+	
+	<!-- Generic Application wide Strings -->
+	<string name="pword">Password</string>
+	<string name="uname">Username</string>
+	<string name="login">Login</string>
+	<string name="selectData">Select Data</string>
+	<string name="insertData">Insert Data</string>
+	<string name="status">Insert data!</string>	
+	<string name="hint">The key can be revealed by logging in as JohnSmith, using his password which has been stored on the device in the app\'s data folder, somewhere in there lies the password.</string>
+</resources>

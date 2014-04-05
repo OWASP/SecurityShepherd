@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BrokenCrypto</string>
+    <string name="action_settings">Settings</string>
+   
+	<!-- Defind Strings for challenge 6, BC -->
+	<string name="titleIntro6">Broken Crypto</string>
+	<string name="BCDescrip">When developing Apps, developers can make the mistake of developing their on crypto. Creating effective cryptographic algorithms is a great challenge which takes much time and research. As a result most developers who are not qualified to develop crypto will ultimatly make poor algorithms if they try. Another example of this is when an App uses a known broken algorithm such as DES, Lucifer or MD5.</string>
+	<string name="PFrag">Packet Fragment</string>
+	
+	<!-- Generic Application wide Strings -->
+	<string name="pword">Password</string>
+	<string name="uname">Username</string>
+	<string name="login">Login</string>
+	<string name="selectData">Select Data</string>
+	<string name="insertData">Insert Data</string>
+	<string name="status">status</string>	
+	
+</resources>

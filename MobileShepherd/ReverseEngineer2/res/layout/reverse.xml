@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"     
+    android:id="@+id/background" 
+    android:background="@drawable/background">
+
+    <TabHost
+        android:id="@+id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                
+                     
+                <RelativeLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/tvIntro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/titleIntro9"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <TextView
+                        android:id="@+id/tvIntro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="49dp"
+                        android:text="@string/RIntro"
+                        android:textColor="#DA70D6" />
+
+                </RelativeLayout>
+
+           
+                <RelativeLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                     <Button
+                         android:id="@+id/bRevealKey"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignParentTop="true"
+                         android:layout_centerHorizontal="true"
+                         android:layout_marginTop="140dp"
+                         android:text="Reveal Key"
+                         android:textColor="#DA70D6" />
+
+                     <EditText
+                         android:id="@+id/etPassword"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignBottom="@+id/bRevealKey"
+                         android:layout_centerHorizontal="true"
+                         android:layout_marginBottom="68dp"
+                         android:ems="10"
+                         android:inputType="textPassword"
+                         android:hint="Password"
+                         android:textColor="#DA70D6" />
+
+                     <TextView
+                         android:id="@+id/tvKey1"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_above="@+id/etPassword"
+                         android:layout_alignLeft="@+id/bRevealKey"
+                         android:layout_marginBottom="16dp"
+                         android:text="Admin Password:"
+                         android:textColor="#DA70D6" />
+                     
+                </RelativeLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+</LinearLayout>

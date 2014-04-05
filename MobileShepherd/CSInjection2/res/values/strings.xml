@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CSInjection2</string>
+    <string name="action_settings">Settings</string>
+   
+	<!-- Defind Strings for challenge -->
+	<string name="titleIntro6">Client Side Injection 2</string>
+	<string name="BCDescrip">Instead of storing user details on an a server for authentication, the developers of this App have decided to store details locally to cut costs on maintaining a backend service. Multiple users are registered on this App.</string>
+	<string name="PFrag">CSinjection 2</string>
+	
+	<!-- Generic Application wide Strings -->
+	<string name="pword">Password</string>
+	<string name="uname">Username</string>
+	<string name="login">Login</string>
+	<string name="selectData">Select Data</string>
+	<string name="insertData">Insert Data</string>
+	<string name="status">status</string>	
+
+	<!--  Preferences -->
+	<string name="dialog_based_preferences">Server Preferences</string>
+		
+	<string name="server_title">Server Address</string>
+    <string name="server_summary">Enter Server address here</string>
+    <string name="server_dialog_title">Enter Server Address</string>
+    
+    <string name="database_title">Database Address</string>
+    <string name="database_summary">Enter database address here</string>
+    <string name="database_dialog_title">Enter Database Address</string>
+    
+	<string name="launch_preferences">App preferences</string>    
+	<string name="title_intent_preference">Restart Challenge</string>
+    <string name="summary_intent_preference">Restarts the current Challenge</string>    
+        
+	<string name="title_test_preference">Test Server Connection</string>
+    <string name="summary_test_preference">Tests the specified Server connection</string>    
+    
+    <string name="title_parent_preference">Enable Hints</string>
+    <string name="preference_attributes">Hints</string>
+    <string name="lookup">Look Up User</string>
+    
+	
+</resources>
