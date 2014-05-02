@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import com.sun.xml.internal.messaging.saaj.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 import dbProcs.Database;
 
@@ -52,7 +52,8 @@ public class b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a ex
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
+		Base64 base64 = new Base64();
 		out.print(getServletInfo());
 		String htmlOutput = new String();
 		log.debug("Broken Auth and Session Management Challenge Three - Change Password - Servlet");
@@ -78,7 +79,7 @@ public class b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a ex
 			if(passNewObj != null)
 				subNewPass = (String) passNewObj;
 			log.debug("subName = " + subName);
-			subName = Base64.base64Decode(Base64.base64Decode(subName));
+			subName = base64.decode(base64.decode(subName).toString()).toString();
 			log.debug("subName Decoded = " + subName);
 			log.debug("subPass = " + subNewPass);
 			
