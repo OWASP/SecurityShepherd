@@ -7,6 +7,8 @@ import java.security.SecureRandom;
 
 import org.apache.log4j.Logger;
 
+import org.apache.commons.codec.binary.Base64;
+
 import servlets.OneTimePad;
 
 /**
@@ -101,6 +103,32 @@ public class Hash
 			result = bigInt.toString();
 			log.debug("Generated String = " + result);
 			
+		}
+		catch(Exception e)
+		{
+			log.error("Random Number Error : " + e.toString());
+		}
+		return result;
+	}
+	
+	/**
+	 * Creates a psedorandom base64 string
+	 * @return Random String
+	 */
+	public static String randomBase64String() 
+	{
+		String result = new String();
+		try
+		{
+			byte byteArray[] = new byte[32];
+			SecureRandom psn1 = SecureRandom.getInstance("SHA1PRNG");
+			
+			Base64 base64 = new Base64();
+			psn1.setSeed(psn1.nextLong());
+			psn1.nextBytes(byteArray);
+			result = new String(byteArray);
+			result = base64.encode(byteArray).toString();
+			log.debug("Generated String = " + result);
 		}
 		catch(Exception e)
 		{
