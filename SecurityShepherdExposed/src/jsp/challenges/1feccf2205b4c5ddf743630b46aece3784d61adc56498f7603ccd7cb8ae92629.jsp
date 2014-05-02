@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdLogManager" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" errorPage="" %>
 <%
 
 //No Quotes In level Name

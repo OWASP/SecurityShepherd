@@ -156,6 +156,43 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>/challenges/1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629</servlet-name>
+		<servlet-class>servlets.challenges.SqlInjection4</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629</servlet-name>
+		<url-pattern>/challenges/1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62</servlet-name>
+		<servlet-class>servlets.challenges.SqlInjection5</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62</servlet-name>
+		<url-pattern>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62CouponCheck</servlet-name>
+		<servlet-class>servlets.challenges.SqlInjection5CouponCheck</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62CouponCheck</servlet-name>
+		<url-pattern>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62CouponCheck</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62VipCouponCheck</servlet-name>
+		<servlet-class>servlets.challenges.SqlInjection5VipCheck</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62VipCouponCheck</servlet-name>
+		<url-pattern>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62VipCouponCheck</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
 		<servlet-name>/mobile/templateServlet</servlet-name>
 		<servlet-class>servlets.mobile.templateServlet</servlet-class>
 	</servlet>

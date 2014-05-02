@@ -497,25 +497,24 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-DROP SCHEMA IF EXISTS `DucksAndTv` ;
-CREATE SCHEMA IF NOT EXISTS `DucksAndTv` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-USE `DucksAndTv` ;
+DROP SCHEMA IF EXISTS `SQLiC5Shop` ;
+CREATE SCHEMA IF NOT EXISTS `SQLiC5Shop` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `SQLiC5Shop` ;
 
 -- -----------------------------------------------------
--- Table `DucksAndTv`.`items`
+-- Table `SQLiC5Shop`.`items`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `DucksAndTv`.`items` (
+CREATE TABLE IF NOT EXISTS `SQLiC5Shop`.`items` (
   `itemId` INT NOT NULL,
   `itemName` VARCHAR(45) NULL,
   `itemCost` INT NULL,
   PRIMARY KEY (`itemId`))
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
--- Table `DucksAndTv`.`coupons`
+-- Table `SQLiC5Shop`.`coupons`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `DucksAndTv`.`coupons` (
+CREATE TABLE IF NOT EXISTS `SQLiC5Shop`.`coupons` (
   `couponId` INT NOT NULL,
   `perCentOff` INT NULL,
   `couponCode` VARCHAR(128) NULL,
@@ -524,16 +523,15 @@ CREATE TABLE IF NOT EXISTS `DucksAndTv`.`coupons` (
   INDEX `fk_coupons_items_idx` (`itemId` ASC),
   CONSTRAINT `fk_coupons_items`
     FOREIGN KEY (`itemId`)
-    REFERENCES `DucksAndTv`.`items` (`itemId`)
+    REFERENCES `SQLiC5Shop`.`items` (`itemId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
--- Table `DucksAndTv`.`vipCoupons`
+-- Table `SQLiC5Shop`.`vipCoupons`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `DucksAndTv`.`vipCoupons` (
+CREATE TABLE IF NOT EXISTS `SQLiC5Shop`.`vipCoupons` (
   `vipCouponId` INT NOT NULL,
   `perCentOff` INT NULL,
   `couponCode` VARCHAR(128) NULL,
@@ -542,46 +540,47 @@ CREATE TABLE IF NOT EXISTS `DucksAndTv`.`vipCoupons` (
   INDEX `fk_vipCoupons_items1_idx` (`itemId` ASC),
   CONSTRAINT `fk_vipCoupons_items1`
     FOREIGN KEY (`itemId`)
-    REFERENCES `DucksAndTv`.`items` (`itemId`)
+    REFERENCES `SQLiC5Shop`.`items` (`itemId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
--- Data for table `DucksAndTv`.`items`
+-- Data for table `SQLiC5Shop`.`items`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `DucksAndTv`;
-INSERT INTO `DucksAndTv`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'Desk Duck', 30);
-INSERT INTO `DucksAndTv`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'TV', 60000);
+USE `SQLiC5Shop`;
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'MeGusta', 30);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Troll', 3000);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Rage', 45);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'NotBad', 15);
 
 COMMIT;
 
-
 -- -----------------------------------------------------
--- Data for table `DucksAndTv`.`coupons`
+-- Data for table `SQLiC5Shop`.`coupons`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `DucksAndTv`;
-INSERT INTO `DucksAndTv`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeADuck', 1);
-INSERT INTO `DucksAndTv`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'ForTheLoveOfGodTakeADuck', 1);
-INSERT INTO `DucksAndTv`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeATv', 2);
-INSERT INTO `DucksAndTv`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffTv', 2);
+USE `SQLiC5Shop`;
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeARage', 1);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'RageMemeForFree', 1);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeATroll', 2);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffTroll', 2);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeANotBad', 4);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffNotBad', 4);
 
 COMMIT;
 
-
 -- -----------------------------------------------------
--- Data for table `DucksAndTv`.`vipCoupons`
+-- Data for table `SQLiC5Shop`.`vipCoupons`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `DucksAndTv`;
-INSERT INTO `DucksAndTv`.`vipCoupons` (`vipCouponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (861267, 100, 'NowYouHaveASuperFreeTvHuzz4YourgonaGetLoads0fPoints', 2);
+USE `SQLiC5Shop`;
+INSERT INTO `SQLiC5Shop`.`vipCoupons` (`vipCouponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (861267, 100, 'spcil\/|Pse3cr3etCouponStu.f4rU176', 2);
 
 COMMIT;
 
@@ -630,44 +629,44 @@ COMMIT;
 
 DROP USER 'DnTPubUser'@'localhost';
 CREATE USER 'DnTPubUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTPubUser'@'localhost';
-GRANT SELECT ON `DucksAndTv`.`coupons` TO 'DnTPubUser'@'localhost';
+GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPubUser'@'localhost';
+GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPubUser'@'localhost';
 DROP USER 'DnTPubUser'@'193.1.201.100';
 CREATE USER 'DnTPubUser'@'193.1.201.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTPubUser'@'193.1.201.100';
-GRANT SELECT ON `DucksAndTv`.`coupons` TO 'DnTPubUser'@'193.1.201.100';
+GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPubUser'@'193.1.201.100';
+GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPubUser'@'193.1.201.100';
 DROP USER 'DnTPubUser'@'192.168.57.100';
 CREATE USER 'DnTPubUser'@'192.168.57.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTPubUser'@'192.168.57.100';
-GRANT SELECT ON `DucksAndTv`.`coupons` TO 'DnTPubUser'@'192.168.57.100';
+GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPubUser'@'192.168.57.100';
+GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPubUser'@'192.168.57.100';
 
 DROP USER 'DnTVipUser'@'localhost';
 CREATE USER 'DnTVipUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTVipUser'@'localhost';
-GRANT SELECT ON `DucksAndTv`.`vipCoupons` TO 'DnTVipUser'@'localhost';
+GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTVipUser'@'localhost';
+GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTVipUser'@'localhost';
 DROP USER 'DnTVipUser'@'193.1.201.100';
 CREATE USER 'DnTVipUser'@'193.1.201.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTVipUser'@'193.1.201.100';
-GRANT SELECT ON `DucksAndTv`.`vipCoupons` TO 'DnTVipUser'@'193.1.201.100';
+GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTVipUser'@'193.1.201.100';
+GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTVipUser'@'193.1.201.100';
 DROP USER 'DnTVipUser'@'192.168.57.100';
 CREATE USER 'DnTVipUser'@'192.168.57.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTVipUser'@'192.168.57.100';
-GRANT SELECT ON `DucksAndTv`.`vipCoupons` TO 'DnTVipUser'@'192.168.57.100';
+GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTVipUser'@'192.168.57.100';
+GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTVipUser'@'192.168.57.100';
 
 DROP USER 'DnTPurUser'@'localhost';
 CREATE USER 'DnTPurUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTPurUser'@'localhost';
-GRANT SELECT ON `DucksAndTv`.`coupons` TO 'DnTPurUser'@'localhost';
-GRANT SELECT ON `DucksAndTv`.`vipCoupons` TO 'DnTPurUser'@'localhost';
+GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPurUser'@'localhost';
+GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPurUser'@'localhost';
+GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTPurUser'@'localhost';
 DROP USER 'DnTPurUser'@'193.1.201.100';
 CREATE USER 'DnTPurUser'@'193.1.201.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTPurUser'@'193.1.201.100';
-GRANT SELECT ON `DucksAndTv`.`coupons` TO 'DnTPurUser'@'localhost';
-GRANT SELECT ON `DucksAndTv`.`vipCoupons` TO 'DnTPurUser'@'193.1.201.100';
+GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPurUser'@'193.1.201.100';
+GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPurUser'@'localhost';
+GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTPurUser'@'193.1.201.100';
 DROP USER 'DnTPurUser'@'192.168.57.100';
 CREATE USER 'DnTPurUser'@'192.168.57.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTPurUser'@'192.168.57.100';
-GRANT SELECT ON `DucksAndTv`.`vipCoupons` TO 'DnTPurUser'@'192.168.57.100';
+GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPurUser'@'192.168.57.100';
+GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTPurUser'@'192.168.57.100';
 
 
 DROP USER 'developerDavid'@'localhost';
