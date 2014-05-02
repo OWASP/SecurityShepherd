@@ -53,9 +53,10 @@ CREATE  TABLE IF NOT EXISTS `core`.`modules` (
   `moduleResult` VARCHAR(256) NULL ,
   `moduleHash` VARCHAR(256) NULL ,
   `moduleStatus` VARCHAR(16) NULL DEFAULT 'open' ,
-  `incrementalRank` INT NULL ,
+  `incrementalRank` INT NULL DEFAULT 200,
   `scoreValue` INT NOT NULL DEFAULT 50 ,
   `scoreBonus` INT NOT NULL DEFAULT 5 ,
+  `hardcodedKey` TINYINT(1) NULL DEFAULT TRUE,
   PRIMARY KEY (`moduleId`) )
 ENGINE = InnoDB;
 
@@ -616,7 +617,7 @@ DELIMITER ;
 
 DELIMITER $$
 USE `core`$$
-CREATE PROCEDURE `core`.`moduleCreate` (IN theModuleName VARCHAR(64), theModuleType VARCHAR(16), theModuleCategory VARCHAR(64), theModuleSolution VARCHAR(256))
+CREATE PROCEDURE `core`.`moduleCreate` (IN theModuleName VARCHAR(64), theModuleType VARCHAR(16), theModuleCategory VARCHAR(64), isHardcodedKey BOOLEAN, theModuleSolution VARCHAR(256))
 BEGIN
 DECLARE theId VARCHAR(64);
 DECLARE theDate DATETIME;
@@ -626,6 +627,10 @@ SELECT NOW() FROM DUAL
 IF (theModuleSolution IS NULL) THEN
     SELECT SHA2(theDate, 256) FROM DUAL
         INTO theModuleSolution;
+END IF;
+IF (isHardcodedKey IS NULL) THEN
+    SELECT TRUE FROM DUAL
+        INTO isHardcodedKey;
 END IF;
 IF (theModuleType = 'lesson' OR theModuleType = 'challenge') THEN
     -- Increment sequence for users table
@@ -637,9 +642,9 @@ IF (theModuleType = 'lesson' OR theModuleType = 'challenge') THEN
         WHERE tableName = 'modules'
         INTO theId;
     INSERT INTO modules (
-        moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash
+        moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, hardcodedKey
     )VALUES(
-        theId, theModuleName, theModuleType, theModuleCategory, theModuleSolution, SHA2(CONCAT(theModuleName, theId), 256)
+        theId, theModuleName, theModuleType, theModuleCategory, theModuleSolution, SHA2(CONCAT(theModuleName, theId), 256), isHardcodedKey
     );
     COMMIT;
     SELECT moduleId, moduleHash FROM modules

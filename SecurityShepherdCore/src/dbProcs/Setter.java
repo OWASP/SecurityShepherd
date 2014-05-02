@@ -128,21 +128,23 @@ public class Setter
 	 * @param challengeType The type of module to create
 	 * @param challengeCategory The category of the new challenge
 	 * @param challengeSolution The solution of the new challenge
+	 * @param isUserSpecificKey Is the Key for this level a user specific key or is it hardcoded
 	 * @return The new module identifier
 	 */
-	public static String createModule(String applicationRoot, String challengeName, String challengeType, String challengeCategory, String challengeSolution) 
+	public static String createModule(String applicationRoot, String challengeName, String challengeType, String challengeCategory, String challengeSolution, boolean isUserSpecificKey) 
 	{
 		log.debug("*** Setter.createModule ***");
 		String moduleId = null;
 		Connection conn = Database.getConnection(applicationRoot);
 		try
 		{
-			CallableStatement callstmt = conn.prepareCall("call moduleCreate(?, ?, ?, ?)");
+			CallableStatement callstmt = conn.prepareCall("call moduleCreate(?, ?, ?, ?, ?)");
 			log.debug("Prepairing moduleCreate procedure");
 			callstmt.setString(1, challengeName);
 			callstmt.setString(2, challengeType);
 			callstmt.setString(3, challengeCategory);
 			callstmt.setString(4, challengeSolution);
+			callstmt.setBoolean(5, isUserSpecificKey);
 			ResultSet resultSet = callstmt.executeQuery();
 			log.debug("Retrieving new moduleId");
 			//moduleCreate should return the new modules ID
