@@ -128,7 +128,7 @@ public class Setter
 	 * @param challengeType The type of module to create
 	 * @param challengeCategory The category of the new challenge
 	 * @param challengeSolution The solution of the new challenge
-	 * @param isUserSpecificKey Is the Key for this level a user specific key or is it hardcoded
+	 * @param isUserSpecificKey Is the Key for this level a user specific key or is it hard coded
 	 * @return The new module identifier
 	 */
 	public static String createModule(String applicationRoot, String challengeName, String challengeType, String challengeCategory, String challengeSolution, boolean isUserSpecificKey) 
