@@ -51,4 +51,12 @@ public class SqlFilter
 			input = input.replaceAll("or", "").replaceAll("true", "").replaceAll("and", "").replaceAll("false", "").replaceAll("is", "");
 		return input;
 	}
+	
+	public static String levelFour (String input)
+	{
+		log.debug("Filtering input at SQL levelFour");
+		input = input.toLowerCase();
+		input = input.replaceAll("'", "");
+		return input;
+	}
 }
