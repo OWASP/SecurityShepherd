@@ -56,7 +56,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`modules` (
   `incrementalRank` INT NULL DEFAULT 200,
   `scoreValue` INT NOT NULL DEFAULT 50 ,
   `scoreBonus` INT NOT NULL DEFAULT 5 ,
-  `hardcodedKey` TINYINT(1) NULL DEFAULT TRUE,
+  `hardcodedKey` TINYINT(1) NOT NULL DEFAULT TRUE,
   PRIMARY KEY (`moduleId`) )
 ENGINE = InnoDB;
 
