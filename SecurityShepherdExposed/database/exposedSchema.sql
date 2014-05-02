@@ -585,6 +585,49 @@ INSERT INTO `DucksAndTv`.`vipCoupons` (`vipCouponId`, `perCentOff`, `couponCode`
 
 COMMIT;
 
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+DROP SCHEMA IF EXISTS `SqlChalFourSuperSecure` ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalFourSuperSecure` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `SqlChalFourSuperSecure` ;
+
+-- ======================================================
+-- SQL Injection Challenge 4
+-- ======================================================
+
+-- -----------------------------------------------------
+-- Table `SqlChalFourSuperSecure`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SqlChalFourSuperSecure`.`users` (
+  `idusers` INT NOT NULL AUTO_INCREMENT,
+  `userName` VARCHAR(45) NOT NULL,
+  `userPassword` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idusers`),
+  UNIQUE INDEX `userName_UNIQUE` (`userName` ASC))
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `SqlChalFourSuperSecure`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `SqlChalFourSuperSecure`;
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (1, 'admin', "98y\'98hsadsoi!111,.,22ee");
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (2, 'player', '87iueeundsedssda');
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (3, 'user', 'password');
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (4, 'mark', 'password');
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (5, 'sean', 'password');
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (6, 'denihan', 'password');
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (7, 'duggan', 'password');
+
+COMMIT;
+
 DROP USER 'DnTPubUser'@'localhost';
 CREATE USER 'DnTPubUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
 GRANT SELECT ON `DucksAndTv`.`items` TO 'DnTPubUser'@'localhost';
@@ -679,3 +722,8 @@ GRANT SELECT ON `directObjectRefChalTwo`.`users` TO 'd3nn1sM4nely'@'localhost';
 DROP USER 'HoneyNetRocks'@'localhost';
 CREATE USER 'HoneyNetRocks'@'localhost' IDENTIFIED BY 'yourMotherIsVeryFr1d4y';
 GRANT SELECT ON `lessonTwoTimeInjection`.`menu` TO 'HoneyNetRocks';
+
+DROP USER 'secureDood'@'localhost';
+CREATE USER  'secureDood'@'localhost' IDENTIFIED BY 'iCantEv3n';
+GRANT SELECT ON `SqlChalFourSuperSecure`.`users` TO 'secureDood'@'localhost';
+
