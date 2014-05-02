@@ -633,7 +633,7 @@ IF (theModuleType = 'lesson' OR theModuleType = 'challenge') THEN
         currVal = currVal + 1
         WHERE tableName = 'modules';
     COMMIT;
-    SELECT SHA(CONCAT(currVal, tableName)) FROM sequence
+    SELECT SHA(CONCAT(currVal, tableName, theDate, theModuleName)) FROM sequence
         WHERE tableName = 'modules'
         INTO theId;
     INSERT INTO modules (
@@ -649,16 +649,6 @@ ELSE
 END IF;
 
 END
-
-
-
-
-
-
-
-
-
-
 
 $$
 
