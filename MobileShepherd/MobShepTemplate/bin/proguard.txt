@@ -1,15 +1,9 @@
-# view AndroidManifest.xml #generated:37
--keep class com.app.mobshep.About { <init>(...); }
-
-# view AndroidManifest.xml #generated:47
--keep class com.app.mobshep.Credits { <init>(...); }
-
-# view AndroidManifest.xml #generated:58
+# view AndroidManifest.xml #generated:43
 -keep class com.app.mobshep.Preferences { <init>(...); }
 
-# view AndroidManifest.xml #generated:27
+# view AndroidManifest.xml #generated:30
 -keep class com.app.mobshep.Splash { <init>(...); }
 
-# view AndroidManifest.xml #generated:17
+# view AndroidManifest.xml #generated:19
 -keep class com.app.mobshep.template { <init>(...); }
 

@@ -1,137 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:orientation="vertical" >
 
-    <TabHost
-        android:id="@+id/tabhost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </TabWidget>
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <RelativeLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
                     <TextView
                         android:id="@+id/tvIntro"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginTop="24dp"
-                        android:text="@string/titleIntro9"
+                        android:layout_marginTop="128dp"
+                        android:text="Reverse Engineer this APK file to find the key!"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" />
-
-                    <TextView
-                        android:id="@+id/tvIntro"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="49dp"
-                        android:text="@string/RIntro"
-                        android:textColor="#DA70D6" />
-                </RelativeLayout>
                 
-                <RelativeLayout
-                    android:id="@+id/tab2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <Button
-                        android:id="@+id/bLogin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/etPassword"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/login"
-                        android:textColor="#DA70D6" />
-
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etPassword"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="50dp"
-                        android:text="@string/login"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
-                    <EditText
-                        android:id="@+id/etUsername"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tvTitle"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="25dp"
-                        android:ems="10"
-                        android:hint="Username"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
-                    <EditText
-                        android:id="@+id/etPassword"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etUsername"
-                        android:layout_below="@+id/etUsername"
-                        android:ems="10"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" >
-
-                        <requestFocus />
-                    </EditText>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/tab3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <EditText
-                        android:id="@+id/tvKey1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="26dp"
-                        android:ems="10"
-                        android:text="The key will be revealed to logged in users."
-                        android:textColor="#DA70D6" >
-
-                        <requestFocus />
-                    </EditText>
-
-                </RelativeLayout>
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
-
-</LinearLayout>
+</RelativeLayout>

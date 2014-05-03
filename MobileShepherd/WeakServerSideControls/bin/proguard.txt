@@ -1,0 +1,9 @@
+# view AndroidManifest.xml #generated:43
+-keep class com.app.mobshep.WSSC.Preferences { <init>(...); }
+
+# view AndroidManifest.xml #generated:30
+-keep class com.app.mobshep.WSSC.Splash { <init>(...); }
+
+# view AndroidManifest.xml #generated:19
+-keep class com.app.mobshep.WSSC.WeakServerSideControls { <init>(...); }
+

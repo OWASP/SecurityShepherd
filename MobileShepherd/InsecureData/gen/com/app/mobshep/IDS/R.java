@@ -26,21 +26,17 @@ public final class R {
         public static final int splash=0x7f020002;
     }
     public static final class id {
-        public static final int Splash=0x7f08000d;
-        public static final int bLogin=0x7f08000b;
+        public static final int Splash=0x7f080009;
+        public static final int bLogin=0x7f080006;
         public static final int background=0x7f080000;
-        public static final int etName=0x7f080009;
-        public static final int etPass=0x7f08000a;
-        public static final int exit=0x7f08000e;
-        public static final int hintView=0x7f080005;
-        public static final int key=0x7f08000c;
-        public static final int tab1=0x7f080002;
-        public static final int tab3=0x7f080006;
-        public static final int tab4=0x7f080008;
+        public static final int etName=0x7f080004;
+        public static final int etPass=0x7f080005;
+        public static final int exit=0x7f08000a;
+        public static final int tab1=0x7f080007;
+        public static final int tab2=0x7f080002;
         public static final int tabhost=0x7f080001;
-        public static final int tvIntro2=0x7f080003;
-        public static final int tvKey2=0x7f080007;
-        public static final int tvTitle=0x7f080004;
+        public static final int tvKey2=0x7f080008;
+        public static final int tvTitle=0x7f080003;
     }
     public static final class layout {
         public static final int ids=0x7f030000;
@@ -52,21 +48,16 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
-        public static final int hint=0x7f05000c;
-        public static final int insertData=0x7f05000a;
-        public static final int introMessage=0x7f050003;
-        public static final int keyButtonIntro=0x7f050005;
-        public static final int login=0x7f050008;
+        public static final int keyButtonIntro=0x7f050004;
+        public static final int login=0x7f050007;
         /**  Generic Application wide Strings 
          */
-        public static final int pword=0x7f050006;
-        public static final int revealKey1=0x7f050004;
-        public static final int selectData=0x7f050009;
-        public static final int status=0x7f05000b;
+        public static final int pword=0x7f050005;
+        public static final int revealKey1=0x7f050003;
         /**  Defind Strings for challenge 1, Introduction 
          */
         public static final int titleIntro1=0x7f050002;
-        public static final int uname=0x7f050007;
+        public static final int uname=0x7f050006;
     }
     public static final class style {
         /** 

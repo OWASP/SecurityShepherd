@@ -1246,21 +1246,14 @@ android.support.v4.widget.ViewDragHelper$Callback -> android.support.v4.widget.a
     boolean tryCaptureView(android.view.View,int) -> a
     int clampViewPositionHorizontal(android.view.View,int,int) -> a
     int clampViewPositionVertical(android.view.View,int,int) -> b
-com.app.mobshep.IDS2.About -> com.app.mobshep.IDS2.About:
-    void onCreate(android.os.Bundle) -> onCreate
-com.app.mobshep.IDS2.Credits -> com.app.mobshep.IDS2.Credits:
-    void onCreate(android.os.Bundle) -> onCreate
 com.app.mobshep.IDS2.Insecure_Data_Storage2 -> com.app.mobshep.IDS2.Insecure_Data_Storage2:
-    int loginAttempts -> a
-    android.widget.TabHost th -> b
-    android.widget.TextView Intro -> c
-    android.widget.EditText keyView -> d
-    android.widget.Button login -> e
-    android.widget.EditText password -> f
-    android.widget.EditText username -> g
-    android.widget.TextView hintView -> h
+    android.widget.TabHost th -> a
+    android.widget.EditText keyView -> b
+    android.widget.Button login -> c
+    android.widget.EditText password -> d
+    android.widget.EditText username -> e
     void onCreate(android.os.Bundle) -> onCreate
-    void checkAttempts() -> a
+    void populateTable() -> a
     void referenceXML() -> b
 com.app.mobshep.IDS2.Insecure_Data_Storage2$1 -> com.app.mobshep.IDS2.a:
     com.app.mobshep.IDS2.Insecure_Data_Storage2 this$0 -> a

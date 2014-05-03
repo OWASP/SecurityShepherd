@@ -28,49 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-               <RelativeLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textColor="#DA70D6" >
-
-                    <TextView
-                        android:id="@+id/tvIntroBroken"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_below="@+id/tvTitle"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/BCDescrip"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="#DA70D6" />
-
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="28dp"
-                        android:text="@string/titleIntro6"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
-   
-                    
-                     <TextView
-                        android:id="@+id/hView"
-         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tvIntroBroken"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="110dp"
-                        android:visibility="invisible"
-                        android:textColor="#DA70D6"
-                        android:text="If this statement returns a result, admin is logged in:SELECT * FROM MEMBERS WHERE username ='admin' AND password = '**********';"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                </RelativeLayout>
+            
 
                 <RelativeLayout
                     android:id="@+id/tab2"
@@ -102,26 +60,33 @@
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" />
 
-                    <EditText
-                        android:id="@+id/etPass"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:ems="10"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
                     <Button
                         android:id="@+id/bLogin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/etPass"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="46dp"
+                        android:filterTouchesWhenObscured="true"
                         android:text="@string/login"
                         android:textColor="#DA70D6" />
+
+                    <EditText
+                        android:id="@+id/etPass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/etName"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="35dp"
+                        android:ems="10"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" >
+
+                        <requestFocus />
+                    </EditText>
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -137,7 +102,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="58dp"
-                        android:text="The key is only shown to authenticated users."
+                        android:hint="The key is only shown to authenticated users."
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" />
                 </RelativeLayout>

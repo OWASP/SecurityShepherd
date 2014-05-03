@@ -6,15 +6,11 @@
     
 	
 	<!-- Defind Strings for challenge 2, IDS -->
-	<string name="titleIntro2">Insecure Data Storage 2</string>
-	<string name="introMessage2">The Key is located as an encoded String in the SQLite database. Getting to the file involves following steps in the previous challenge.</string>
-		
+	<string name="titleIntro2">Insecure Data Storage 2</string>		
 
 	<!-- Defind Strings for challenge 3, IDS2 -->
 	<string name="titleIntro3">Insecure Data Storage 2</string>
 	<string name="status2">Status</string>
-	<string name="descripIDS2">The Key is located as an encoded String in the SQLite database. Getting to the file involves following steps in the previous challenge.</string>
-	<string name="hint">The data has been encoded, but not encrypted... </string>
 	
 	
 	<!-- Generic Application wide Strings -->

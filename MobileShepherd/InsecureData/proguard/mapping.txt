@@ -1247,21 +1247,16 @@ android.support.v4.widget.ViewDragHelper$Callback -> android.support.v4.widget.a
     int clampViewPositionHorizontal(android.view.View,int,int) -> a
     int clampViewPositionVertical(android.view.View,int,int) -> b
 com.app.mobshep.IDS.Insecure_Data_Storage -> com.app.mobshep.IDS.Insecure_Data_Storage:
-    int loginAttempts -> a
-    android.widget.TabHost th -> b
-    android.widget.TextView Intro -> c
-    android.widget.EditText keyView -> d
-    android.widget.Button login -> e
-    android.widget.EditText password -> f
-    android.widget.EditText username -> g
-    android.widget.TextView hintView -> h
+    android.widget.TabHost th -> a
+    android.widget.EditText keyView -> b
+    android.widget.Button login -> c
+    android.widget.EditText password -> d
+    android.widget.EditText username -> e
     void onCreate(android.os.Bundle) -> onCreate
     void populateTable() -> a
-    void checkAttempts() -> b
-    void referenceXML() -> c
+    void referenceXML() -> b
 com.app.mobshep.IDS.Insecure_Data_Storage$1 -> com.app.mobshep.IDS.a:
     com.app.mobshep.IDS.Insecure_Data_Storage this$0 -> a
-    java.lang.String val$pword -> b
     void onClick(android.view.View) -> onClick
 com.app.mobshep.IDS.Splash -> com.app.mobshep.IDS.Splash:
     void onCreate(android.os.Bundle) -> onCreate

@@ -1,6 +1,7 @@
 package com.app.mobshep.IDS3;
 
 import android.app.Activity;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -10,20 +11,17 @@ import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
 
 public class Insecure_Data_Storage3 extends Activity {
 
-	int loginAttempts = 0;
 	TabHost th;
-	TextView Intro;
 	EditText keyView;
 	Button insert;
 	Button select;
 	Button login;
 	EditText password;
 	EditText username;
-	TextView message;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +32,15 @@ public class Insecure_Data_Storage3 extends Activity {
 		th.setup();
 
 		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag1");
+		TabSpec specs = th.newTabSpec("Tab 1");
+
 		specs.setContent(R.id.tab1);
-		specs.setIndicator("Summary"); // give the tab a name
-		th.addTab(specs);
-
-		specs = th.newTabSpec("tag2");
-		specs.setContent(R.id.tab3);
-		specs.setIndicator("Key");
-		th.addTab(specs);
-
-		specs = th.newTabSpec("tag3");
-		specs.setContent(R.id.tab4);
 		specs.setIndicator("Login");
+		th.addTab(specs);
+		
+		specs = th.newTabSpec("Tab 2");
+		specs.setContent(R.id.tab2);
+		specs.setIndicator("Key");
 		th.addTab(specs);
 		
 		populateTable();
@@ -63,30 +57,28 @@ public class Insecure_Data_Storage3 extends Activity {
 				String CheckName = username.getText().toString();
 				String CheckPass = password.getText().toString();
 
+				DatabaseUtils.sqlEscapeString(CheckName);
+				DatabaseUtils.sqlEscapeString(CheckPass);
+				
 				if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
 					Toast toast2 = Toast.makeText(Insecure_Data_Storage3.this,
 							"Blank fields detected!", Toast.LENGTH_SHORT);
-					loginAttempts = loginAttempts + 1;
-					//checkAttempts();
 					toast2.show();
 				}
-				if (CheckName.contentEquals("Peter")
-						&& CheckPass.contentEquals("hotFires333")) {
+				if (CheckName.contentEquals("Chris")
+						&& CheckPass.contentEquals("monkey")) {
 
 					Toast toast3 = Toast.makeText(Insecure_Data_Storage3.this,
 							"Logged in!", Toast.LENGTH_SHORT);
 					toast3.show();
 
 					keyView.setText("" + "" + ""
-							+ "kdoww0opqlakfmncjks873ry7y2tfvm23m32owic9d0");
-
+							+ "The Key is: 18e7ab691d");
 				}
 
 				else {
 					Toast toast4 = Toast.makeText(Insecure_Data_Storage3.this,
 							"Invalid Credentials!", Toast.LENGTH_SHORT);
-					loginAttempts = loginAttempts + 1;
-					//checkAttempts();
 					toast4.show();
 
 				}
@@ -103,7 +95,7 @@ public class Insecure_Data_Storage3 extends Activity {
 			db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
 
 			db = openOrCreateDatabase("Members", MODE_PRIVATE, null);
-			db.execSQL("INSERT INTO Members VALUES( 1,'UGV0ZXI=',MzA=,'dW9Maau9ymwIDDgGSULSoA==')");
+			db.execSQL("INSERT INTO Members VALUES( 9,'YellowMellow',55,'PASSWORD')");
 			db.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -113,8 +105,8 @@ public class Insecure_Data_Storage3 extends Activity {
 		}
 	}
 
+
 	public void referenceXML() {
-		Intro = (TextView) findViewById(R.id.tvIntro2);
 		keyView = (EditText) findViewById(R.id.tvKey2);
 		th = (TabHost) findViewById(R.id.tabhost);
 		login = (Button) findViewById(R.id.bLogin);
@@ -123,16 +115,4 @@ public class Insecure_Data_Storage3 extends Activity {
 
 	}
 
-	/*
-	public void checkAttempts() {
-		if (loginAttempts > 4) {
-			// add a hint
-			Toast toast = Toast.makeText(Insecure_Data_Storage3.this,
-					"A hint has appeared!", Toast.LENGTH_SHORT);
-			toast.show();
-			hintView.setVisibility(View.VISIBLE);
-		}
-	}
-*/
-	
 }

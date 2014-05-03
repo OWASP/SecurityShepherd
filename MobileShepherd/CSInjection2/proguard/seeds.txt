@@ -1,8 +1,4 @@
-com.app.mobshep.About
-com.app.mobshep.About: About()
-com.app.mobshep.Broken_Cryptography
-com.app.mobshep.Broken_Cryptography: Broken_Cryptography()
-com.app.mobshep.Credits
-com.app.mobshep.Credits: Credits()
-com.app.mobshep.Splash
-com.app.mobshep.Splash: Splash()
+com.app.mobshep.csinjection2.CSInjection2
+com.app.mobshep.csinjection2.CSInjection2: CSInjection2()
+com.app.mobshep.csinjection2.Splash
+com.app.mobshep.csinjection2.Splash: Splash()

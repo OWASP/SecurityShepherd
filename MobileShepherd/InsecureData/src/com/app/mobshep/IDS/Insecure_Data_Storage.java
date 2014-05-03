@@ -10,21 +10,16 @@ import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
 
 public class Insecure_Data_Storage extends Activity {
 
-	int loginAttempts = 0;
 	TabHost th;
-	TextView Intro;
 	EditText keyView;
 	Button insert;
 	Button select;
 	Button login;
 	EditText password;
 	EditText username;
-	TextView message;
-	TextView hintView;
 	
 	
 	@Override
@@ -36,34 +31,19 @@ public class Insecure_Data_Storage extends Activity {
 		th.setup();
         populateTable();
         
-        StringBuilder sb = new StringBuilder();
-        sb.append("B");
-        sb.append("a");
-        sb.append("t");
-        sb.append("t");
-        sb.append("e");
-        sb.append("r");
-        sb.append("y");
-        sb.append("7");
-        sb.append("7");
-        sb.append("7");
-        final String pword = sb.toString();
+  
         
 		// Set up each tab
 		TabSpec specs = th.newTabSpec("tag1");
-		specs.setContent(R.id.tab1);
-		specs.setIndicator("Summary"); // give the tab a name
-		th.addTab(specs);
-
-		specs = th.newTabSpec("tag3");
-		specs.setContent(R.id.tab3);
-		specs.setIndicator("Key");
-		th.addTab(specs);
-
-		specs = th.newTabSpec("tag4");
-		specs.setContent(R.id.tab4);
+		specs.setContent(R.id.tab2);
 		specs.setIndicator("Login");
 		th.addTab(specs);
+
+		specs = th.newTabSpec("tag2");
+		specs.setContent(R.id.tab1);
+		specs.setIndicator("Key");
+		th.addTab(specs);
+	
 
 		login.setOnClickListener(new View.OnClickListener() {
 
@@ -80,19 +60,17 @@ public class Insecure_Data_Storage extends Activity {
 				if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
 					Toast toast2 = Toast.makeText(Insecure_Data_Storage.this,
 							"Blank fields detected!", Toast.LENGTH_SHORT);
-					loginAttempts = loginAttempts + 1;
-					checkAttempts();
 					toast2.show();
 				}
-				if (CheckName.contentEquals("JohnSmith")
-						&& CheckPass.contentEquals(pword)) {
+				if (CheckName.contentEquals("Admin")
+						&& CheckPass.contentEquals("OrcsExplosion")) {
 
 					Toast toast3 = Toast.makeText(Insecure_Data_Storage.this,
 							"Logged in!", Toast.LENGTH_SHORT);
 					toast3.show();
 
 					keyView.setText("" + "" + ""
-							+ "18e7ab691d0cd167dc6c680fe6d8010bc0df19da");
+							+ "The Key is Battery777");
 
 				}
 
@@ -108,8 +86,6 @@ public class Insecure_Data_Storage extends Activity {
 				else {
 					Toast toast4 = Toast.makeText(Insecure_Data_Storage.this,
 							"Invalid Credentials!", Toast.LENGTH_SHORT);
-					loginAttempts = loginAttempts + 1;
-					checkAttempts();
 					toast4.show();
 
 				}
@@ -126,7 +102,7 @@ public class Insecure_Data_Storage extends Activity {
 			db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
 
 			db = openOrCreateDatabase("Members", MODE_PRIVATE, null);
-			db.execSQL("INSERT INTO Members VALUES( 2,'JohnSmith',45,'Battery777')");
+			db.execSQL("INSERT INTO Members VALUES( 2,'Admin',45,'OrcsExplosion')");
 			db.execSQL("INSERT INTO Members VALUES( 3,'GraveyBones',23,'super')");
 			db.execSQL("INSERT INTO Members VALUES( 4,'EpicTrees',35,'root')");
 			db.execSQL("INSERT INTO Members VALUES( 5,'FallenComrade',36,'password')");
@@ -143,24 +119,13 @@ public class Insecure_Data_Storage extends Activity {
 		}
 	}
 
-	public void checkAttempts() {
-		if (loginAttempts >= 3) {
-			// add a hint
-			Toast toast = Toast.makeText(Insecure_Data_Storage.this,
-					"A hint has appeared!", Toast.LENGTH_SHORT);
-			toast.show();
-			hintView.setVisibility(View.VISIBLE);
-		}
-	}
 
 	public void referenceXML() {
-		Intro = (TextView) findViewById(R.id.tvIntro2);
 		keyView = (EditText) findViewById(R.id.tvKey2);
 		th = (TabHost) findViewById(R.id.tabhost);
 		login = (Button) findViewById(R.id.bLogin);
 		username = (EditText) findViewById(R.id.etName);
 		password = (EditText) findViewById(R.id.etPass);
-		hintView = (TextView) findViewById(R.id.hintView);
 
 	}
 

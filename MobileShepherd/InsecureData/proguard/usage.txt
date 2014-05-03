@@ -860,7 +860,8 @@ com.app.mobshep.IDS.BuildConfig
 com.app.mobshep.IDS.Insecure_Data_Storage:
     android.widget.Button insert
     android.widget.Button select
-    android.widget.TextView message
+com.app.mobshep.IDS.Manifest
+com.app.mobshep.IDS.Manifest$permission
 com.app.mobshep.IDS.R
 com.app.mobshep.IDS.R$attr
 com.app.mobshep.IDS.R$dimen

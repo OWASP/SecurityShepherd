@@ -1,9 +1,13 @@
 package com.app.mobshep.csinjection2;
 
+import java.io.File;
+
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.database.sqlite.SQLiteException;
+import net.sqlcipher.database.*;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,9 +22,10 @@ public class CSInjection2 extends Activity implements OnClickListener {
 
 	TabHost th;
 	TextView Intro;
-	Button Query;
-	EditText etQuery;
-	int loginAttempts = 0;
+	Button Login;
+	EditText username;
+	EditText password;
+	EditText key;
 	TextView hintView;
 
 	@Override
@@ -29,120 +34,163 @@ public class CSInjection2 extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.broken);
 		th = (TabHost) findViewById(R.id.tabhost);
-		populateTable();
+		generateDBPass();
+		populateTable(this, "P93Eid3D33DE0ZanbffGp01Sirjw2");
 		referenceXML();
 		th.setup();
 
-		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag1");
-		specs.setContent(R.id.tab1);
-		specs.setIndicator("Summary");
+		TabSpec specs = th.newTabSpec("tag2");
+		specs.setContent(R.id.tab2);
+		specs.setIndicator("Login");
 		th.addTab(specs);
 
-		specs = th.newTabSpec("tag2");
-		specs.setContent(R.id.tab2);
-		specs.setIndicator("Search");
+		specs = th.newTabSpec("tag3");
+		specs.setContent(R.id.tab3);
+		specs.setIndicator("Key");
 		th.addTab(specs);
 	}
 
+
+
 	private void referenceXML() {
 		// TODO Auto-generated method stub
-		Query = (Button) findViewById(R.id.bQuery);
-		etQuery = (EditText) findViewById(R.id.etQuery);
-		Query.setOnClickListener(this);
+		Login = (Button) findViewById(R.id.bLogin);
+		// Login.setFilterTouchesWhenObscured(true);
+		username = (EditText) findViewById(R.id.etName);
+		password = (EditText) findViewById(R.id.etPass);
+		key = (EditText) findViewById(R.id.etKey);
+		Login.setOnClickListener(this);
 
 	}
 
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 
-		case (R.id.bQuery):
+case (R.id.bLogin):
+			
+	
+	
+	
+			String unsanitizeName = username.getText().toString();
+			String unsanitizePass = password.getText().toString();
+			
+			String sanitizeName = unsanitizeName.replace("OR", "/* */");
+			sanitizeName = sanitizeName.replace("or", "/* */");
+			sanitizeName = sanitizeName.replace("Or", "/* */");
+			sanitizeName = sanitizeName.replace("oR", "/* */");
+			sanitizeName = sanitizeName.replace("SELECT", "/* */");
+			sanitizeName = sanitizeName.replace("AND", "/* */");
+			sanitizeName = sanitizeName.replace("UPDATE", "/* */");
+			sanitizeName = sanitizeName.replace("DROP", "/* */");
+			sanitizeName = sanitizeName.replace("1=1", "/* */");
+			sanitizeName = sanitizeName.replace("1 = 1", "/* */");
+			
+			
+			String sanitizePass = unsanitizePass.replace("OR", "/* */");
+			sanitizePass = sanitizePass.replace("or", "/* */");
+			sanitizePass = sanitizePass.replace("Or", "/* */");
+			sanitizePass = sanitizePass.replace("oR", "/* */");
+			sanitizePass = sanitizePass.replace("SELECT", "/* */");
+			sanitizePass = sanitizePass.replace("AND", "/* */");
+			sanitizePass = sanitizePass.replace("UPDATE", "/* */");
+			sanitizePass = sanitizePass.replace("DROP", "/* */");
+			sanitizePass = sanitizePass.replace("1=1", "/* */");
+			sanitizePass = sanitizePass.replace("1 = 1", "/* */");
+			
 
-			String getQuery = etQuery.getText().toString();
-
-		if (getQuery == "Admin") {
-			Toast denied = Toast.makeText(CSInjection2.this,
-					"Cannot lookup that username.", Toast.LENGTH_LONG);
-			denied.show();
-
-			} else {
-				doQuery(getQuery);
+			if (login(sanitizeName, sanitizePass) == true) {
+				key.setText("The Key is: SourHatsAndAngryCats.");
+				Toast toast = Toast.makeText(CSInjection2.this, "Logged in as:" + sanitizeName,
+						Toast.LENGTH_LONG);
+				toast.show();
 			}
 
+			if (login(sanitizeName, sanitizePass) == false) {
+				Toast toast = Toast.makeText(CSInjection2.this,
+						"Invalid Credentials!", Toast.LENGTH_SHORT);
+				toast.show();
+
+			}
+
+			if (sanitizeName.contentEquals("") || sanitizePass.contentEquals("")) {
+				Toast toast2 = Toast.makeText(CSInjection2.this,
+						"Empty Fields Detected.", Toast.LENGTH_SHORT);
+				toast2.show();
+
+			}
+
+			else {
+
+				Toast toast = Toast.makeText(CSInjection2.this,
+						"Invalid Credentials, "  + sanitizeName, Toast.LENGTH_SHORT);
+				toast.show();
+			}
 		}
 	}
 
-	private void doQuery(String getQuery) {
-
-		SQLiteDatabase db = openOrCreateDatabase("Members", MODE_PRIVATE, null);
-		db = openOrCreateDatabase("Members", MODE_PRIVATE, null);
-
-		String query = ("SELECT memName, memAge, DOB, Location, Team FROM MEMBERS WHERE memName = '"
-				+ getQuery + "'");
+	private boolean login(String username, String password) {
 		try {
+			
+			String dbPath = this.getDatabasePath("Users.db").getPath();
+
+			try{
+				
+			
+			SQLiteDatabase db = SQLiteDatabase.openDatabase(dbPath, "P93Eid3D33DE0ZanbffGpo101Sirjw2", null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+
+			String query = ("SELECT * FROM Users WHERE memName = '"
+					+ username + "' AND memPass ='" + password + "'");
 			Cursor cursor = db.rawQuery(query, null);
-
-			if (cursor != null && cursor.getCount() > 0)
-				{cursor.moveToFirst();
 			
-			String output = " Name: " + cursor.getString(0) + " Age: "
-					+ cursor.getString(1) + " DOB " + cursor.getString(2)
-					+ " Location: " + cursor.getString(3) + " Team: "
-					+ cursor.getString(4);
-			
-			etQuery.setText(output);
+			if (cursor.getCount() <= 0) {
+				return false;
+			}
 
-		}
-			 else {
-	                Toast.makeText(getApplicationContext(), "No Record Found", 1000).show();
-	            }
-
-
+			}catch(Exception e){
+				Toast error = Toast.makeText(CSInjection2.this, "An Error occured",
+						Toast.LENGTH_SHORT);
+				error.show();
+			}
 		} catch (SQLiteException e) {
-			Toast nouser = Toast.makeText(CSInjection2.this, "User not found.",Toast.LENGTH_SHORT);
-			nouser.show();
+			e.printStackTrace();
+			Toast error = Toast.makeText(CSInjection2.this, "An Error occured",
+					Toast.LENGTH_SHORT);
+			error.show();
 		}
 
-	
-
-		//etQuery.setText(output);
-		// return contact
+		return true;
 
 	}
 
-	public void populateTable() {
+	public void populateTable(Context context, String dbpassword) {
 		try {
+			SQLiteDatabase.loadLibs(context);
 
-			SQLiteDatabase db = openOrCreateDatabase("Members", MODE_PRIVATE,
-					null);
-			db.execSQL("DROP TABLE IF EXISTS Members");
-			db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR, DOB TEXT, Location TEXT , Team TEXT)");
+			String dbPath = context.getDatabasePath("Users.db").getPath();
 
-			db = openOrCreateDatabase("Members", MODE_PRIVATE, null);
-			db.execSQL("INSERT INTO Members VALUES( 1,'Admin',20,'PurpleDonkeysSunday', '12/04/1994', 'Cornwall', 'Blue')");
-			db.execSQL("INSERT INTO MEMBERS VALUES (2, 'User1', 0, 'hellodnmuiw', '12/12/1980', 'London', 'Red')");
-			db.execSQL("INSERT INTO MEMBERS VALUES (3, 'sean', 24, 'qawsedrftgyh', '04/04/1980', 'Donegal', 'Red')");
-			db.execSQL("INSERT INTO MEMBERS VALUES (4, 'kevin', 25, 'chelsea', 'NULL', 'Dublin', 'Blue')");
-			db.execSQL("INSERT INTO MEMBERS VALUES (5, 'conor', 24, 'Password1234', 'NULL', 'Dublin', 'Red')");
-			db.execSQL("INSERT INTO MEMBERS VALUES (6, 'peter', 29, 'Pa88w0rd', 'NULL', 'Instanbul', 'Blue')");
-			db.execSQL("INSERT INTO MEMBERS VALUES (7, 'Napier', 18, 'password', 'NULL', 'New York', 'Red')");
+			File dbPathFile = new File(dbPath);
+			if (!dbPathFile.exists())
+				dbPathFile.getParentFile().mkdirs();
 
+			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
+					dbpassword, null);
+
+			db.execSQL("DROP TABLE IF EXISTS Users");
+			db.execSQL("CREATE TABLE Users(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
+
+			db.execSQL("INSERT INTO Users VALUES( 1,'Admin',20,'A3B922DF010PQSI827')");
 			db.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			Toast toast = Toast.makeText(CSInjection2.this,
+			Toast error = Toast.makeText(CSInjection2.this,
 					"An error occurred.", Toast.LENGTH_LONG);
-			toast.show();
+			error.show();
+
 		}
 	}
-
-	public void checkAttempts() {
-		if (loginAttempts > 3) {
-			// add a hint
-			Toast toast = Toast.makeText(CSInjection2.this,
-					"A hint has appeared!", Toast.LENGTH_SHORT);
-			toast.show();
-			hintView.setVisibility(View.VISIBLE);
-		}
+	
+	private void generateDBPass() {
+		// TODO Auto-generated method stub
+		
 	}
 }

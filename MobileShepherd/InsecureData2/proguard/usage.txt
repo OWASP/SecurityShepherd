@@ -860,8 +860,8 @@ com.app.mobshep.IDS2.BuildConfig
 com.app.mobshep.IDS2.Insecure_Data_Storage2:
     android.widget.Button insert
     android.widget.Button select
-    android.widget.TextView message
-    99:113:public void populateTable()
+com.app.mobshep.IDS2.Manifest
+com.app.mobshep.IDS2.Manifest$permission
 com.app.mobshep.IDS2.R
 com.app.mobshep.IDS2.R$attr
 com.app.mobshep.IDS2.R$dimen

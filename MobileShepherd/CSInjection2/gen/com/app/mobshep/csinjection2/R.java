@@ -26,25 +26,20 @@ public final class R {
         public static final int splash=0x7f020002;
     }
     public static final class id {
-        public static final int Splash=0x7f080008;
-        public static final int about=0x7f080009;
-        public static final int bQuery=0x7f080006;
-        public static final int background=0x7f080000;
-        public static final int credits=0x7f08000a;
-        public static final int etQuery=0x7f080007;
-        public static final int exit=0x7f08000b;
-        public static final int tab1=0x7f080002;
-        public static final int tab2=0x7f080005;
-        public static final int tabhost=0x7f080001;
-        public static final int tvIntroBroken=0x7f080003;
-        public static final int tvTitle=0x7f080004;
+        public static final int Splash=0x7f070009;
+        public static final int bLogin=0x7f070006;
+        public static final int background=0x7f070000;
+        public static final int etKey=0x7f070008;
+        public static final int etName=0x7f070004;
+        public static final int etPass=0x7f070005;
+        public static final int tab2=0x7f070002;
+        public static final int tab3=0x7f070007;
+        public static final int tabhost=0x7f070001;
+        public static final int tvTitle=0x7f070003;
     }
     public static final class layout {
         public static final int broken=0x7f030000;
         public static final int splash=0x7f030001;
-    }
-    public static final class menu {
-        public static final int firstkey=0x7f070000;
     }
     public static final class string {
         public static final int BCDescrip=0x7f050003;
@@ -60,7 +55,6 @@ public final class R {
         public static final int insertData=0x7f050009;
         public static final int launch_preferences=0x7f050012;
         public static final int login=0x7f050007;
-        public static final int lookup=0x7f050019;
         public static final int preference_attributes=0x7f050018;
         /**  Generic Application wide Strings 
          */
