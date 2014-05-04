@@ -21,12 +21,10 @@ import android.widget.Toast;
 public class CSInjection2 extends Activity implements OnClickListener {
 
 	TabHost th;
-	TextView Intro;
 	Button Login;
 	EditText username;
 	EditText password;
 	EditText key;
-	TextView hintView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +32,17 @@ public class CSInjection2 extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.broken);
 		th = (TabHost) findViewById(R.id.tabhost);
-		generateDBPass();
 		populateTable(this, "P93Eid3D33DE0ZanbffGp01Sirjw2");
 		referenceXML();
 		th.setup();
 
-		TabSpec specs = th.newTabSpec("tag2");
-		specs.setContent(R.id.tab2);
+		TabSpec specs = th.newTabSpec("tag1");
+		specs.setContent(R.id.tab1);
 		specs.setIndicator("Login");
 		th.addTab(specs);
 
-		specs = th.newTabSpec("tag3");
-		specs.setContent(R.id.tab3);
+		specs = th.newTabSpec("tag2");
+		specs.setContent(R.id.tab2);
 		specs.setIndicator("Key");
 		th.addTab(specs);
 	}
@@ -187,10 +184,5 @@ case (R.id.bLogin):
 			error.show();
 
 		}
-	}
-	
-	private void generateDBPass() {
-		// TODO Auto-generated method stub
-		
 	}
 }

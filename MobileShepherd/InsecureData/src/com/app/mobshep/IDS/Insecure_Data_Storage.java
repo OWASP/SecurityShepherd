@@ -35,12 +35,12 @@ public class Insecure_Data_Storage extends Activity {
         
 		// Set up each tab
 		TabSpec specs = th.newTabSpec("tag1");
-		specs.setContent(R.id.tab2);
+		specs.setContent(R.id.tab1);
 		specs.setIndicator("Login");
 		th.addTab(specs);
 
 		specs = th.newTabSpec("tag2");
-		specs.setContent(R.id.tab1);
+		specs.setContent(R.id.tab2);
 		specs.setIndicator("Key");
 		th.addTab(specs);
 	

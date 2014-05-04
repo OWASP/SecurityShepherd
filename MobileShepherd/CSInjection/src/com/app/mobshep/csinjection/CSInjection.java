@@ -15,18 +15,15 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class CSInjection extends Activity implements OnClickListener {
 
 	TabHost th;
-	TextView Intro;
 	Button Login;
 	EditText username;
 	EditText password;
 	EditText key;
-	TextView hintView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +35,12 @@ public class CSInjection extends Activity implements OnClickListener {
 		referenceXML();
 		th.setup();
 
-		TabSpec specs = th.newTabSpec("tag2");
+		TabSpec specs = th.newTabSpec("tag1");
 		specs.setContent(R.id.tab2);
 		specs.setIndicator("Login");
 		th.addTab(specs);
 
-		specs = th.newTabSpec("tag3");
+		specs = th.newTabSpec("tag2");
 		specs.setContent(R.id.tab3);
 		specs.setIndicator("Key");
 		th.addTab(specs);

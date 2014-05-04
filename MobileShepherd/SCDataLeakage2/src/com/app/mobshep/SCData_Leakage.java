@@ -24,7 +24,6 @@ import android.widget.ToggleButton;
 public class SCData_Leakage extends Activity implements OnClickListener {
 
 	TabHost th;
-	TextView Intro;
 	EditText keyView;
 	EditText Username;
 	EditText Password;

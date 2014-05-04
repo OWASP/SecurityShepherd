@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="20" />
     <permission android:protectionLevel="dangerous" android:icon="@drawable/ic_launcher" android:name="com.app.mobshep.template.START_ACTIVITY" android:logo="@drawable/ic_launcher"></permission>
     

@@ -32,8 +32,8 @@ public final class R {
         public static final int etKey=0x7f070008;
         public static final int etName=0x7f070004;
         public static final int etPass=0x7f070005;
-        public static final int tab2=0x7f070002;
-        public static final int tab3=0x7f070007;
+        public static final int tab1=0x7f070002;
+        public static final int tab2=0x7f070007;
         public static final int tabhost=0x7f070001;
         public static final int tvTitle=0x7f070003;
     }

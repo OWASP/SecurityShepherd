@@ -53,22 +53,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/etPass"
+                        android:layout_alignRight="@+id/etPass"
                         android:layout_below="@+id/tvTitle"
                         android:layout_marginTop="25dp"
                         android:ems="10"
                         android:hint="Username"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
-                    <Button
-                        android:id="@+id/bLogin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/etPass"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="46dp"
-                        android:filterTouchesWhenObscured="true"
-                        android:text="@string/login"
                         android:textColor="#DA70D6" />
 
                     <EditText
@@ -86,6 +76,17 @@
 
                         <requestFocus />
                     </EditText>
+
+                    <Button
+                        android:id="@+id/bLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/etPass"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="42dp"
+                        android:filterTouchesWhenObscured="true"
+                        android:text="@string/login"
+                        android:textColor="#DA70D6" />
 
                 </RelativeLayout>
 

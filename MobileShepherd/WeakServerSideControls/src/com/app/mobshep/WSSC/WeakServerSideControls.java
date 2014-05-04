@@ -9,18 +9,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class WeakServerSideControls extends Activity implements OnClickListener {
 
 	TabHost th;
-	TextView Intro;
 	Button Login;
 	Button Config;
 	EditText username;
 	EditText password;
 	EditText key;
+	String shepherdAddress = null ;
+	String shepherdDBAddress = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +32,12 @@ public class WeakServerSideControls extends Activity implements OnClickListener 
 		th.setup();
 
 		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag2");
+		TabSpec specs = th.newTabSpec("tag1");
 		specs.setContent(R.id.tab2);
 		specs.setIndicator("Tab 2");
 		th.addTab(specs);
 
-		specs = th.newTabSpec("tag3");
+		specs = th.newTabSpec("tag2");
 		specs.setContent(R.id.tab3);
 		specs.setIndicator("Tab 3");
 		th.addTab(specs);

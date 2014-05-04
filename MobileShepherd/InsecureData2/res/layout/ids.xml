@@ -62,13 +62,17 @@
                         android:id="@+id/etPass"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/etName"
                         android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
+                        android:layout_marginTop="28dp"
                         android:ems="10"
                         android:hint="Password"
                         android:inputType="textPassword"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
+                        android:textColor="#DA70D6" >
+
+                        <requestFocus />
+                    </EditText>
 
                     <Button
                         android:id="@+id/bLogin"
@@ -76,9 +80,9 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/etPass"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="34dp"
                         android:text="@string/login"
                         android:textColor="#DA70D6" />
-
                   
                 </RelativeLayout>
                 

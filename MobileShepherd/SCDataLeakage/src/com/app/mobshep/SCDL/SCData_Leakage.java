@@ -24,7 +24,6 @@ import android.widget.Toast;
 public class SCData_Leakage extends Activity implements OnClickListener {
 
 	TabHost th;
-	TextView Intro;
 	EditText keyView;
 	EditText Username;
 	EditText Password;
@@ -41,12 +40,12 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 		th.setup();
 
 		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag2");
+		TabSpec specs = th.newTabSpec("tag1");
 		specs.setContent(R.id.tab2);
 		specs.setIndicator("Log in");
 		th.addTab(specs);
 
-		specs = th.newTabSpec("tag3");
+		specs = th.newTabSpec("tag2");
 		specs.setContent(R.id.tab3);
 		specs.setIndicator("Key");
 		th.addTab(specs);
@@ -94,12 +93,12 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 			
 			else if (CheckName.contentEquals("") || CheckPass.contentEquals(""))
 			{
-				Toast blanks = Toast.makeText(SCData_Leakage.this, "Blank Fields Detected.", toast.LENGTH_SHORT);
+				Toast blanks = Toast.makeText(SCData_Leakage.this, "Blank Fields Detected.", Toast.LENGTH_SHORT);
 				blanks.show();
 			}
 			
 			else {
-				Toast invalid = Toast.makeText(SCData_Leakage.this, "Invalid Credentials!", toast.LENGTH_SHORT);
+				Toast invalid = Toast.makeText(SCData_Leakage.this, "Invalid Credentials!", Toast.LENGTH_SHORT);
 				invalid.show();
 			}
 		}
