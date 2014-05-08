@@ -65,15 +65,15 @@ public class Insecure_Data_Storage3 extends Activity {
 							"Blank fields detected!", Toast.LENGTH_SHORT);
 					toast2.show();
 				}
-				if (CheckName.contentEquals("Chris")
-						&& CheckPass.contentEquals("monkey")) {
+				if (CheckName.contentEquals("NoSalt")
+						&& CheckPass.contentEquals("starfish123")) {
 
 					Toast toast3 = Toast.makeText(Insecure_Data_Storage3.this,
 							"Logged in!", Toast.LENGTH_SHORT);
 					toast3.show();
 
 					keyView.setText("" + "" + ""
-							+ "The Key is: 18e7ab691d");
+							+ "The Key is: WaterWaterNoWhere");
 				}
 
 				else {
@@ -95,7 +95,7 @@ public class Insecure_Data_Storage3 extends Activity {
 			db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
 
 			db = openOrCreateDatabase("Members", MODE_PRIVATE, null);
-			db.execSQL("INSERT INTO Members VALUES( 9,'YellowMellow',55,'PASSWORD')");
+			db.execSQL("INSERT INTO Members VALUES( 9,'Tm9TYWx0',55,'MGUzYTBjOGMzYTU3MWE4NTVjOTU4ODEzZDliODUxYTE=')");
 			db.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

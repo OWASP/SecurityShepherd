@@ -73,7 +73,7 @@ public class Insecure_Data_Storage2 extends Activity {
 					toast3.show();
 
 					keyView.setText("" + "" + ""
-							+ "The Key is: 18e7ab691d");
+							+ "The Key is: WarshipsAndWrenches");
 				}
 
 				else {

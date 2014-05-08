@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
@@ -24,14 +23,18 @@ public class CSInjection extends Activity implements OnClickListener {
 	EditText username;
 	EditText password;
 	EditText key;
+	String dbPass = "37e44d547f20a9f3ca9ac7d625486b7b";
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.broken);
 		th = (TabHost) findViewById(R.id.tabhost);
-		populateTable(this, "c05efef5cae2938343ca8016e05caf73");
+		populateTable(this, "dbPass");
 		referenceXML();
 		th.setup();
 
@@ -101,7 +104,7 @@ public class CSInjection extends Activity implements OnClickListener {
 			String dbPath = this.getDatabasePath("Members.db").getPath();
 
 			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-					"c05efef5cae2938343ca8016e05caf73", null);
+					dbPass, null);
 
 			String query = ("SELECT * FROM MEMBERS WHERE memName = '"
 					+ username + "' AND memPass ='" + password + "'");
@@ -135,7 +138,7 @@ public class CSInjection extends Activity implements OnClickListener {
 				dbPathFile.getParentFile().mkdirs();
 
 			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-					password, null);
+					dbPass, null);
 			
 			
 
