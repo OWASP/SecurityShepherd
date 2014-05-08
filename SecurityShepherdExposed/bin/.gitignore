@@ -8,4 +8,8 @@
 !.gitignore
 /jsp
 /servlets
+/ESAPI.properties
+/log4j.properties
+/dbProcs
+/jsp
 /utils

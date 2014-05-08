@@ -2,9 +2,9 @@
 <%
 
 //No Quotes In level Name
-String levelName = "level name";
+String levelName = "LevelName";
 //Alphanumeric Only
-String levelHash = " ";
+String levelHash = "LevelHash";
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "Download the file and play with it to extract the key for this level!";
 
@@ -32,13 +32,8 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-<<<<<<< HEAD
 	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-=======
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
-	</script> 
->>>>>>> refs/remotes/origin/master
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
