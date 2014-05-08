@@ -6,3 +6,6 @@
 
 # Don't ignore .gitignore
 !.gitignore
+/jsp
+/servlets
+/utils
