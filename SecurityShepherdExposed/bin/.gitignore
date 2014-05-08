@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# Don't ignore directories, so we can recurse into them
+!*/
+
+# Don't ignore .gitignore
+!.gitignore
+/dbProcs
+/jsp
+/servlets
+/utils
