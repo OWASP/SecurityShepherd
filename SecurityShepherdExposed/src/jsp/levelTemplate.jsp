@@ -32,9 +32,13 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
+<<<<<<< HEAD
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+=======
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 	</script> 
+>>>>>>> refs/remotes/origin/master
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>

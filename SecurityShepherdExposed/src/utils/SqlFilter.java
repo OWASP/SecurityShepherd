@@ -54,9 +54,12 @@ public class SqlFilter
 	
 	public static String levelFour (String input)
 	{
-		log.debug("Filtering input at SQL levelFour");
 		input = input.toLowerCase();
-		input = input.replaceAll("'", "");
+		while(input.contains("'"))
+		{
+			log.debug("Scrubbing ' from input");
+			input = input.replaceAll("'", "");
+		}
 		return input;
 	}
 }

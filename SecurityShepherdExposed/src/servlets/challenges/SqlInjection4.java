@@ -68,7 +68,7 @@ public class SqlInjection4 extends HttpServlet
 			log.debug("Filtered to " + theUserName);
 			String thePassword = request.getParameter("thePassword");
 			log.debug("thePassword Submitted - " + thePassword);
-			theUserName = SqlFilter.levelFour(thePassword);
+			thePassword = SqlFilter.levelFour(thePassword);
 			log.debug("Filtered to " + thePassword);
 			String ApplicationRoot = getServletContext().getRealPath("");
 			log.debug("Servlet root = " + ApplicationRoot );
@@ -83,17 +83,24 @@ public class SqlInjection4 extends HttpServlet
 			htmlOutput = "<h2 class='title'>Login Result</h2>";
 			
 			log.debug("Opening Result Set from query");
-			while(resultSet.next())
+			if(resultSet.next())
 			{
 				log.debug("Signed in as " + resultSet.getString(1));
-				htmlOutput += "<p>Signed in as " + encoder.encodeForHTML(resultSet.getString(1)) + "</p>"
-						+ "<p>As you are the admin, here is the result key:<br><br><a>"
-						+ encoder.encodeForHTML(levelResult) + "</a>";
+				htmlOutput += "<p>Signed in as " + encoder.encodeForHTML(resultSet.getString(1)) + "</p>";
+				if(resultSet.getString(1).equalsIgnoreCase("admin"))
+				{
+					htmlOutput += "<p>As you are the admin, here is the result key:"
+								+ "<a>"	+ encoder.encodeForHTML(levelResult) + "</a>";
+				}
+				else
+				{
+					htmlOutput += "<p>But admins have all the fun</p>";
+				}
 				i++;
 			}
 			if(i == 0)
 			{
-				htmlOutput = "<p>You didn't log in. This site is super secure so hax won't work!</p>";
+				htmlOutput = "<h2 class='title'>Login Result</h2><p>You didn't log in. This site is super secure so hax won't work!</p>";
 			}
 		}
 		catch (SQLException e)

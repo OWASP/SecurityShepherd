@@ -30,7 +30,7 @@ String levelHash = "1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae9
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	<script>
 	/*
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -54,16 +54,20 @@ String levelHash = "1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae9
 				<h2>Super Secure Payments</h2>
 				<form id="leForm" action="javascript:;" autocomplete="off">
 					<table>
-					<tr><td>
+					<tr><td colspan="2">
 						Please sign in to make your very secure payments.
 					</td></tr>
 					<tr><td>
-						<input style="width: 400px;" id="theUserName" type="text" />
+						UserName: 
+					</td><td>
+						<input style="width: 200px;" id="theUserName" type="text" />
 					</td></tr>
 					<tr><td>
-						<input style="width: 400px;" id="thePassword" type="password" />
+						Password: 
+					</td><td>
+						<input style="width: 200px;" id="thePassword" type="password" />
 					</td></tr>
-					<tr><td>
+					<tr><td colspan="2">
 						<div id="submitButton"><input type="submit" value="Get user"/></div>
 						<p style="display: none;" id="loadingSign">Loading...</p>
 					</td></tr>

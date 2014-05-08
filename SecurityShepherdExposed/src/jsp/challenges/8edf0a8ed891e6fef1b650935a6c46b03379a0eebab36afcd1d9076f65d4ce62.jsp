@@ -32,7 +32,7 @@ String levelBlurb = "Not used - See Below";
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 </head>
 <body>
@@ -57,32 +57,32 @@ String levelBlurb = "Not used - See Below";
 					</tr>
 					<!-- Rage Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/rage.jpg"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/rage.png"/></td>
 						<td>$45</td>
-						<td><input type="text" style="width: 20px" value="0" id="numberOfRage"/>
+						<td><input type="text" style="width: 20px" value="0" id="numberOfRage" autocomplete="off"/>
 					</tr>
 					<!-- NotBad Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/notbad.jpg"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/notbad.jpeg"/></td>
 						<td>$15</td>
-						<td><input type="text" style="width: 20px" value="0" id="numberOfNotBad"/>
+						<td><input type="text" style="width: 20px" value="0" id="numberOfNotBad" autocomplete="off"/>
 					</tr>
 					<!-- Troll Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/troll.jpg"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/troll.png"/></td>
 						<td>$3000</td>
-						<td><input type="text" style="width: 20px" value="0" id="numberOfTroll"/>
+						<td><input type="text" style="width: 20px" value="0" id="numberOfTroll" autocomplete="off"/>
 					</tr>
 					<!-- MeGusta Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/megusta.jpg"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/megusta.png"/></td>
 						<td>$30</td>
-						<td><input type="text" style="width: 20px" value="0" id="numberOfMegusta"/>
+						<td><input type="text" style="width: 20px" value="0" id="numberOfMegusta" autocomplete="off"/>
 					</tr>
 					</table>
 					Please select how many things you would like to buy and click submit
 					<table>
-					<tr><td>Coupon Code:</td><td><input type="text" id="couponCode"/></td></tr>
+					<tr><td>Coupon Code:</td><td><input type="text" id="couponCode" autocomplete="off"/></td></tr>
 					<tr><td colspons = 2>			
 						<div id="submitButton">
 						<input type="submit" value="Place Order"/></div>
@@ -100,6 +100,7 @@ String levelBlurb = "Not used - See Below";
 				var theTrollAmount = $("#numberOfTroll").val();
 				var theRageAmount = $("#numberOfRage").val();
 				var theNotBadAmount = $("#numberOfNotBad").val();
+				var theCouponCode = $("#couponCode").val();
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
 				$("#resultsDiv").hide("slow", function(){

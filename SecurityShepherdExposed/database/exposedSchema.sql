@@ -566,8 +566,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `SQLiC5Shop`;
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeARage', 1);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'RageMemeForFree', 1);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeARage', 3);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'RageMemeForFree', 3);
 INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeATroll', 2);
 INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffTroll', 2);
 INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeANotBad', 4);
@@ -617,13 +617,14 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `SqlChalFourSuperSecure`;
-INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (1, 'admin', "98y\'98hsadsoi!111,.,22ee");
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (1, 'adam', '87i2ueeu2ndsedssda');
 INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (2, 'player', '87iueeundsedssda');
 INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (3, 'user', 'password');
 INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (4, 'mark', 'password');
 INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (5, 'sean', 'password');
 INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (6, 'denihan', 'password');
-INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (7, 'duggan', 'password');
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (7, 'admin', "98y\'98hsadsoi!111,.,22ee");
+INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPassword`) VALUES (8, 'duggan', 'password');
 
 COMMIT;
 
