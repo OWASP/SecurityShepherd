@@ -50,7 +50,7 @@ public class miuewonmxiwohnx extends Activity implements OnClickListener {
 		case R.id.bRevealKey:
 			String Check = iourewsdxc.getText().toString();
 			jdiewjdwjddewdewdw.setText(Check);
-																																															if (Check.contentEquals("Winterbones")) {jdiewjdwjddewdewdw.setText("FireStone32Electric11");
+																																															if (Check.contentEquals("Winterbones")) {jdiewjdwjddewdewdw.setText("FireStoneElectric");
 			} else {
 				jdiewjdwjddewdewdw.setText("Invalid Password Entered");
 			}

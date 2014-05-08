@@ -1246,6 +1246,8 @@ INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCat
 INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`) VALUES ('53a53a66cb3bf3e4c665c442425ca90e29536edd', 'Insecure Data Storage', 'lesson', 'Mobile', 'Battery777', 'ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f', 'open', '31', '50', '5');
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998', 'SQL Injection 4', 'challenge', 'Injection', 'd316e80045d50bdf8ed49d48f130b4acf4a878c82faef34daff8eb1b98763b6f', '1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629', 'open', '200', '50', '5', 1);
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('a84bbf8737a9ca749d81d5226fc87e0c828138ee', 'SQL Injection 5', 'challenge', 'Injection', '343f2e424d5d7a2eff7f9ee5a5a72fd97d5a19ef7bff3ef2953e033ea32dd7ee', '8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62', 'open', '200', '50', '5', 1);
+INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('307f78f18fd6a87e50ed6705231a9f24cd582574', 'Insecure Data Storage 2', 'challenge', 'InsecureData', 'WarshipsAndWrenches', '362f84cf26bf96aeae358d5d0bbee31e9291aaa5367594c29b3af542a7572c01', 'open', '200', '50', '5', 0);
+
 
 COMMIT;
 

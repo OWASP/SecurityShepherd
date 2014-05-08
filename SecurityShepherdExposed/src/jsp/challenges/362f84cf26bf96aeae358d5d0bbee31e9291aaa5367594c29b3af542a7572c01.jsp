@@ -2,10 +2,10 @@
 <%
 
 //No Quotes In level Name
-String levelName = "level name";
+String levelName = "Insecure Data Storage 2";
 //Alphanumeric Only
-String levelHash = " ";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+String levelHash = "362f84cf26bf96aeae358d5d0bbee31e9291aaa5367594c29b3af542a7572c01";
+//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "Download the file and play with it to extract the key for this level!";
 
 /**
@@ -32,9 +32,8 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
-	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
