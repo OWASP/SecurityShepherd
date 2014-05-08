@@ -16,7 +16,6 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import dbProcs.Database;
-import utils.ShepherdLogManager;
 
 /**
  * Level : SQL Injection 5
