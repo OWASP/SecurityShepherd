@@ -6,3 +6,9 @@
 
 # Don't ignore .gitignore
 !.gitignore
+/servlets
+/ESAPI.properties
+/log4j.properties
+/dbProcs
+/jsp
+/utils
