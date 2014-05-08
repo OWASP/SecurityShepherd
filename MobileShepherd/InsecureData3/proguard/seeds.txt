@@ -62,10 +62,6 @@ android.support.v4.widget.SlidingPaneLayout: void setShadowDrawable(android.grap
 android.support.v4.widget.SlidingPaneLayout: void setShadowResource(int)
 android.support.v4.widget.SlidingPaneLayout$SavedState
 android.support.v4.widget.SlidingPaneLayout$SavedState: android.os.Parcelable$Creator CREATOR
-com.app.mobshep.IDS2.About
-com.app.mobshep.IDS2.About: About()
-com.app.mobshep.IDS2.Credits
-com.app.mobshep.IDS2.Credits: Credits()
 com.app.mobshep.IDS2.Insecure_Data_Storage2
 com.app.mobshep.IDS2.Insecure_Data_Storage2: Insecure_Data_Storage2()
 com.app.mobshep.IDS2.R$dimen: int activity_horizontal_margin
@@ -81,18 +77,11 @@ com.app.mobshep.IDS2.R$id: int credits
 com.app.mobshep.IDS2.R$id: int etName
 com.app.mobshep.IDS2.R$id: int etPass
 com.app.mobshep.IDS2.R$id: int exit
-com.app.mobshep.IDS2.R$id: int hintView
-com.app.mobshep.IDS2.R$id: int key
 com.app.mobshep.IDS2.R$id: int tab1
-com.app.mobshep.IDS2.R$id: int tab3
-com.app.mobshep.IDS2.R$id: int tab4
+com.app.mobshep.IDS2.R$id: int tab2
 com.app.mobshep.IDS2.R$id: int tabhost
-com.app.mobshep.IDS2.R$id: int textView1
-com.app.mobshep.IDS2.R$id: int tvIntro2
 com.app.mobshep.IDS2.R$id: int tvKey2
 com.app.mobshep.IDS2.R$id: int tvTitle
-com.app.mobshep.IDS2.R$layout: int about
-com.app.mobshep.IDS2.R$layout: int credits
 com.app.mobshep.IDS2.R$layout: int ids
 com.app.mobshep.IDS2.R$layout: int splash
 com.app.mobshep.IDS2.R$menu: int firstkey

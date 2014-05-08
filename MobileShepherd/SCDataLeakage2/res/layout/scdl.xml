@@ -27,83 +27,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-                <RelativeLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <TextView
-                        android:id="@+id/tvIntro2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_below="@+id/tvTitle"
-                        android:text="@string/introMessage3"
-                        android:textColor="#DA70D6" />
-
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="25dp"
-                        android:text="@string/titleIntro3"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-                </RelativeLayout>
-                
-                
-                <RelativeLayout
+               <RelativeLayout
                     android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
-
-                    <EditText
-                        android:id="@+id/etName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView1"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        android:ems="10"
-                        android:hint="Username"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" >
-
-                        <requestFocus />
-                    </EditText>
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignRight="@+id/textView1"
-                        android:layout_below="@+id/etName"
-                        android:text="Password"
-                        android:textColor="#DA70D6" />
-
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etName"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="32dp"
-                        android:text="Username"
-                        android:textColor="#DA70D6" />
-
-                    <EditText
-                        android:id="@+id/etPass"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etName"
-                        android:layout_alignRight="@+id/etName"
-                        android:layout_below="@+id/textView2"
-                        android:layout_marginTop="16dp"
-                        android:textColor="#DA70D6"
-                        android:ems="10"
-                        android:hint="Password" />
 
                     <TextView
                         android:id="@+id/textView3"
@@ -121,10 +48,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/etPass"
-                        android:layout_alignRight="@+id/etPass"
+                        android:layout_alignRight="@+id/etName"
                         android:layout_centerVertical="true"
                         android:text="@string/login"
-                        android:textColor="#DA70D6" />
+                        android:textColor="#DA70D6"
+                        android:filterTouchesWhenObscured="true"  />
 
                     <ToggleButton
                         android:id="@+id/tbPassword"
@@ -133,7 +61,34 @@
                         android:layout_below="@+id/textView3"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="28dp"
-                        android:text="ToggleButton" />
+                        android:text="ToggleButton" 
+                        android:filterTouchesWhenObscured="true" />
+
+                    
+                    <EditText
+                        android:id="@+id/etPass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/bLogin"
+                        android:layout_alignLeft="@+id/etName"
+                        android:layout_alignRight="@+id/etName"
+                        android:layout_marginBottom="25dp"
+                        android:ems="10"
+                        android:hint="Password"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <EditText
+                        android:id="@+id/etName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/etPass"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="18dp"
+                        android:ems="10"
+                        android:hint="Username"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
 
                 </RelativeLayout>
 
@@ -144,6 +99,7 @@
 
                     <EditText
                         android:id="@+id/tvKey2"
+                        android:paddingTop="30dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/descripIDS2"

@@ -49923,25 +49923,19 @@ _____________________________________________________________________
 
 Interfaces (count = 0):
 
-Constant Pool (count = 193):
+Constant Pool (count = 145):
   + Integer [2130903040]
   + Integer [2131230721]
   + Integer [2131230722]
-  + Integer [2131230723]
+  + Integer [2131230724]
   + Integer [2131230725]
   + Integer [2131230726]
   + Integer [2131230727]
   + Integer [2131230728]
-  + Integer [2131230729]
-  + Integer [2131230730]
-  + Integer [2131230731]
-  + String [7]
-  + String [A hint has appeared!]
-  + String [B]
   + String [CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)]
   + String [DROP TABLE IF EXISTS Members]
   + String [Data already inserted]
-  + String [INSERT INTO Members VALUES( 2,'JohnSmith',45,'Battery777')]
+  + String [INSERT INTO Members VALUES( 2,'Admin',45,'OrcsExplosion')]
   + String [INSERT INTO Members VALUES( 3,'GraveyBones',23,'super')]
   + String [INSERT INTO Members VALUES( 4,'EpicTrees',35,'root')]
   + String [INSERT INTO Members VALUES( 5,'FallenComrade',36,'password')]
@@ -49952,35 +49946,23 @@ Constant Pool (count = 193):
   + String [Key]
   + String [Login]
   + String [Members]
-  + String [Summary]
-  + String [a]
-  + String [e]
-  + String [r]
-  + String [t]
   + String [tag1]
-  + String [tag3]
-  + String [tag4]
-  + String [y]
+  + String [tag2]
   + Class [android/app/Activity]
   + Class [android/database/sqlite/SQLiteDatabase]
   + Class [android/widget/Button]
   + Class [android/widget/EditText]
   + Class [android/widget/TabHost]
   + Class [android/widget/TabHost$TabSpec]
-  + Class [android/widget/TextView]
   + Class [android/widget/Toast]
   + Class [com/app/mobshep/IDS/Insecure_Data_Storage]
   + Class [com/app/mobshep/IDS/a]
   + Class [java/lang/Exception]
-  + Class [java/lang/StringBuilder]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a I]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/TabHost;]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.c Landroid/widget/TextView;]
+  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a Landroid/widget/TabHost;]
+  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/EditText;]
+  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.c Landroid/widget/Button;]
   + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.d Landroid/widget/EditText;]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.e Landroid/widget/Button;]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.f Landroid/widget/EditText;]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.g Landroid/widget/EditText;]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.h Landroid/widget/TextView;]
+  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.e Landroid/widget/EditText;]
   + Methodref [android/app/Activity.<init> ()V]
   + Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
   + Methodref [android/database/sqlite/SQLiteDatabase.close ()V]
@@ -49991,35 +49973,27 @@ Constant Pool (count = 193):
   + Methodref [android/widget/TabHost.setup ()V]
   + Methodref [android/widget/TabHost$TabSpec.setContent (I)Landroid/widget/TabHost$TabSpec;]
   + Methodref [android/widget/TabHost$TabSpec.setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
-  + Methodref [android/widget/TextView.setVisibility (I)V]
   + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
   + Methodref [android/widget/Toast.show ()V]
   + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.a ()V]
-  + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.c ()V]
+  + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.b ()V]
   + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.findViewById (I)Landroid/view/View;]
   + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.openOrCreateDatabase (Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
   + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.setContentView (I)V]
-  + Methodref [com/app/mobshep/IDS/a.<init> (Lcom/app/mobshep/IDS/Insecure_Data_Storage;Ljava/lang/String;)V]
-  + Methodref [java/lang/StringBuilder.<init> ()V]
-  + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-  + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+  + Methodref [com/app/mobshep/IDS/a.<init> (Lcom/app/mobshep/IDS/Insecure_Data_Storage;)V]
   + NameAndType [<init> ()V]
-  + NameAndType [<init> (Lcom/app/mobshep/IDS/Insecure_Data_Storage;Ljava/lang/String;)V]
+  + NameAndType [<init> (Lcom/app/mobshep/IDS/Insecure_Data_Storage;)V]
   + NameAndType [a ()V]
-  + NameAndType [a I]
+  + NameAndType [a Landroid/widget/TabHost;]
   + NameAndType [addTab (Landroid/widget/TabHost$TabSpec;)V]
-  + NameAndType [append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-  + NameAndType [b Landroid/widget/TabHost;]
-  + NameAndType [c ()V]
-  + NameAndType [c Landroid/widget/TextView;]
+  + NameAndType [b ()V]
+  + NameAndType [b Landroid/widget/EditText;]
+  + NameAndType [c Landroid/widget/Button;]
   + NameAndType [close ()V]
   + NameAndType [d Landroid/widget/EditText;]
-  + NameAndType [e Landroid/widget/Button;]
+  + NameAndType [e Landroid/widget/EditText;]
   + NameAndType [execSQL (Ljava/lang/String;)V]
-  + NameAndType [f Landroid/widget/EditText;]
   + NameAndType [findViewById (I)Landroid/view/View;]
-  + NameAndType [g Landroid/widget/EditText;]
-  + NameAndType [h Landroid/widget/TextView;]
   + NameAndType [makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
   + NameAndType [newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
   + NameAndType [onCreate (Landroid/os/Bundle;)V]
@@ -50028,11 +50002,8 @@ Constant Pool (count = 193):
   + NameAndType [setContentView (I)V]
   + NameAndType [setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
   + NameAndType [setOnClickListener (Landroid/view/View$OnClickListener;)V]
-  + NameAndType [setVisibility (I)V]
   + NameAndType [setup ()V]
   + NameAndType [show ()V]
-  + NameAndType [toString ()Ljava/lang/String;]
-  + Utf8 [()Ljava/lang/String;]
   + Utf8 [()V]
   + Utf8 [(I)Landroid/view/View;]
   + Utf8 [(I)Landroid/widget/TabHost$TabSpec;]
@@ -50041,22 +50012,17 @@ Constant Pool (count = 193):
   + Utf8 [(Landroid/os/Bundle;)V]
   + Utf8 [(Landroid/view/View$OnClickListener;)V]
   + Utf8 [(Landroid/widget/TabHost$TabSpec;)V]
-  + Utf8 [(Lcom/app/mobshep/IDS/Insecure_Data_Storage;Ljava/lang/String;)V]
+  + Utf8 [(Lcom/app/mobshep/IDS/Insecure_Data_Storage;)V]
   + Utf8 [(Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
   + Utf8 [(Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
-  + Utf8 [(Ljava/lang/String;)Ljava/lang/StringBuilder;]
   + Utf8 [(Ljava/lang/String;)V]
   + Utf8 [(Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
-  + Utf8 [7]
   + Utf8 [<init>]
-  + Utf8 [A hint has appeared!]
-  + Utf8 [B]
   + Utf8 [CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)]
   + Utf8 [Code]
   + Utf8 [DROP TABLE IF EXISTS Members]
   + Utf8 [Data already inserted]
-  + Utf8 [I]
-  + Utf8 [INSERT INTO Members VALUES( 2,'JohnSmith',45,'Battery777')]
+  + Utf8 [INSERT INTO Members VALUES( 2,'Admin',45,'OrcsExplosion')]
   + Utf8 [INSERT INTO Members VALUES( 3,'GraveyBones',23,'super')]
   + Utf8 [INSERT INTO Members VALUES( 4,'EpicTrees',35,'root')]
   + Utf8 [INSERT INTO Members VALUES( 5,'FallenComrade',36,'password')]
@@ -50068,11 +50034,9 @@ Constant Pool (count = 193):
   + Utf8 [Landroid/widget/Button;]
   + Utf8 [Landroid/widget/EditText;]
   + Utf8 [Landroid/widget/TabHost;]
-  + Utf8 [Landroid/widget/TextView;]
   + Utf8 [Login]
   + Utf8 [Members]
   + Utf8 [StackMapTable]
-  + Utf8 [Summary]
   + Utf8 [a]
   + Utf8 [addTab]
   + Utf8 [android/app/Activity]
@@ -50081,9 +50045,7 @@ Constant Pool (count = 193):
   + Utf8 [android/widget/EditText]
   + Utf8 [android/widget/TabHost]
   + Utf8 [android/widget/TabHost$TabSpec]
-  + Utf8 [android/widget/TextView]
   + Utf8 [android/widget/Toast]
-  + Utf8 [append]
   + Utf8 [b]
   + Utf8 [c]
   + Utf8 [close]
@@ -50092,259 +50054,139 @@ Constant Pool (count = 193):
   + Utf8 [d]
   + Utf8 [e]
   + Utf8 [execSQL]
-  + Utf8 [f]
   + Utf8 [findViewById]
-  + Utf8 [g]
-  + Utf8 [h]
   + Utf8 [java/lang/Exception]
-  + Utf8 [java/lang/StringBuilder]
   + Utf8 [makeText]
   + Utf8 [newTabSpec]
   + Utf8 [onCreate]
   + Utf8 [openOrCreateDatabase]
-  + Utf8 [r]
   + Utf8 [setContent]
   + Utf8 [setContentView]
   + Utf8 [setIndicator]
   + Utf8 [setOnClickListener]
-  + Utf8 [setVisibility]
   + Utf8 [setup]
   + Utf8 [show]
-  + Utf8 [t]
   + Utf8 [tag1]
-  + Utf8 [tag3]
-  + Utf8 [tag4]
-  + Utf8 [toString]
-  + Utf8 [y]
+  + Utf8 [tag2]
 
-Fields (count = 8):
-  + Field:        a I
+Fields (count = 5):
+  + Field:        a Landroid/widget/TabHost;
     Access flags: 0x0
-      = int a
-  + Field:        b Landroid/widget/TabHost;
+      = android.widget.TabHost a
+  + Field:        b Landroid/widget/EditText;
     Access flags: 0x0
-      = android.widget.TabHost b
-  + Field:        c Landroid/widget/TextView;
+      = android.widget.EditText b
+  + Field:        c Landroid/widget/Button;
     Access flags: 0x0
-      = android.widget.TextView c
+      = android.widget.Button c
   + Field:        d Landroid/widget/EditText;
     Access flags: 0x0
       = android.widget.EditText d
-  + Field:        e Landroid/widget/Button;
+  + Field:        e Landroid/widget/EditText;
     Access flags: 0x0
-      = android.widget.Button e
-  + Field:        f Landroid/widget/EditText;
-    Access flags: 0x0
-      = android.widget.EditText f
-  + Field:        g Landroid/widget/EditText;
-    Access flags: 0x0
-      = android.widget.EditText g
-  + Field:        h Landroid/widget/TextView;
-    Access flags: 0x0
-      = android.widget.TextView h
+      = android.widget.EditText e
 
-Methods (count = 5):
+Methods (count = 4):
   - Method:       <init>()V
     Access flags: 0x1
       = public Insecure_Data_Storage()
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 10, locals = 1, stack = 2):
+    + Code attribute instructions (code length = 5, locals = 1, stack = 1):
       [0] aload_0 v0
-      [1] invokespecial #58
+      [1] invokespecial #40
         + Methodref [android/app/Activity.<init> ()V]
-      [4] aload_0 v0
-      [5] iconst_0
-      [6] putfield #50
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a I]
-      [9] return
+      [4] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 0):
   + Method:       onCreate(Landroid/os/Bundle;)V
     Access flags: 0x4
       = protected void onCreate(android.os.Bundle)
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 234, locals = 5, stack = 5):
+    + Code attribute instructions (code length = 106, locals = 3, stack = 4):
       [0] aload_0 v0
       [1] aload_1 v1
-      [2] invokespecial #59
+      [2] invokespecial #41
         + Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
       [5] aload_0 v0
       [6] ldc #1
         + Integer [2130903040]
-      [8] invokevirtual #75
+      [8] invokevirtual #56
         + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.setContentView (I)V]
       [11] aload_0 v0
-      [12] invokevirtual #72
-        + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.c ()V]
+      [12] invokevirtual #53
+        + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.b ()V]
       [15] aload_0 v0
-      [16] getfield #51
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/TabHost;]
-      [19] invokevirtual #65
+      [16] getfield #35
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a Landroid/widget/TabHost;]
+      [19] invokevirtual #47
         + Methodref [android/widget/TabHost.setup ()V]
       [22] aload_0 v0
-      [23] invokevirtual #71
+      [23] invokevirtual #52
         + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.a ()V]
-      [26] new #49
-        + Class [java/lang/StringBuilder]
-      [29] dup
-      [30] invokespecial #77
-        + Methodref [java/lang/StringBuilder.<init> ()V]
-      [33] astore_2 v2
-      [34] aload_2 v2
-      [35] ldc #14
-        + String [B]
-      [37] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [40] pop
-      [41] aload_2 v2
-      [42] ldc #30
-        + String [a]
-      [44] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [47] pop
-      [48] aload_2 v2
-      [49] ldc #33
-        + String [t]
-      [51] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [54] pop
-      [55] aload_2 v2
-      [56] ldc #33
-        + String [t]
-      [58] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [61] pop
-      [62] aload_2 v2
-      [63] ldc #31
-        + String [e]
-      [65] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [68] pop
-      [69] aload_2 v2
-      [70] ldc #32
-        + String [r]
-      [72] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [75] pop
-      [76] aload_2 v2
-      [77] ldc #37
-        + String [y]
-      [79] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [82] pop
-      [83] aload_2 v2
-      [84] ldc #12
-        + String [7]
-      [86] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [89] pop
-      [90] aload_2 v2
-      [91] ldc #12
-        + String [7]
-      [93] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [96] pop
-      [97] aload_2 v2
-      [98] ldc #12
-        + String [7]
-      [100] invokevirtual #78
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [103] pop
-      [104] aload_2 v2
-      [105] invokevirtual #79
-        + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
-      [108] astore_3 v3
-      [109] aload_0 v0
-      [110] getfield #51
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/TabHost;]
-      [113] ldc #34
+      [26] aload_0 v0
+      [27] getfield #35
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a Landroid/widget/TabHost;]
+      [30] ldc #23
         + String [tag1]
-      [115] invokevirtual #64
+      [32] invokevirtual #46
         + Methodref [android/widget/TabHost.newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
-      [118] astore v4
-      [120] aload v4
-      [122] ldc #3
+      [35] astore_2 v2
+      [36] aload_2 v2
+      [37] ldc #3
         + Integer [2131230722]
-      [124] invokevirtual #66
+      [39] invokevirtual #48
         + Methodref [android/widget/TabHost$TabSpec.setContent (I)Landroid/widget/TabHost$TabSpec;]
-      [127] pop
-      [128] aload v4
-      [130] ldc #29
-        + String [Summary]
-      [132] invokevirtual #67
-        + Methodref [android/widget/TabHost$TabSpec.setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
-      [135] pop
-      [136] aload_0 v0
-      [137] getfield #51
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/TabHost;]
-      [140] aload v4
-      [142] invokevirtual #63
-        + Methodref [android/widget/TabHost.addTab (Landroid/widget/TabHost$TabSpec;)V]
-      [145] aload_0 v0
-      [146] getfield #51
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/TabHost;]
-      [149] ldc #35
-        + String [tag3]
-      [151] invokevirtual #64
-        + Methodref [android/widget/TabHost.newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
-      [154] astore v4
-      [156] aload v4
-      [158] ldc #6
-        + Integer [2131230726]
-      [160] invokevirtual #66
-        + Methodref [android/widget/TabHost$TabSpec.setContent (I)Landroid/widget/TabHost$TabSpec;]
-      [163] pop
-      [164] aload v4
-      [166] ldc #26
-        + String [Key]
-      [168] invokevirtual #67
-        + Methodref [android/widget/TabHost$TabSpec.setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
-      [171] pop
-      [172] aload_0 v0
-      [173] getfield #51
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/TabHost;]
-      [176] aload v4
-      [178] invokevirtual #63
-        + Methodref [android/widget/TabHost.addTab (Landroid/widget/TabHost$TabSpec;)V]
-      [181] aload_0 v0
-      [182] getfield #51
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/TabHost;]
-      [185] ldc #36
-        + String [tag4]
-      [187] invokevirtual #64
-        + Methodref [android/widget/TabHost.newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
-      [190] astore v4
-      [192] aload v4
-      [194] ldc #8
-        + Integer [2131230728]
-      [196] invokevirtual #66
-        + Methodref [android/widget/TabHost$TabSpec.setContent (I)Landroid/widget/TabHost$TabSpec;]
-      [199] pop
-      [200] aload v4
-      [202] ldc #27
+      [42] pop
+      [43] aload_2 v2
+      [44] ldc #21
         + String [Login]
-      [204] invokevirtual #67
+      [46] invokevirtual #49
         + Methodref [android/widget/TabHost$TabSpec.setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
-      [207] pop
-      [208] aload_0 v0
-      [209] getfield #51
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/TabHost;]
-      [212] aload v4
-      [214] invokevirtual #63
+      [49] pop
+      [50] aload_0 v0
+      [51] getfield #35
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a Landroid/widget/TabHost;]
+      [54] aload_2 v2
+      [55] invokevirtual #45
         + Methodref [android/widget/TabHost.addTab (Landroid/widget/TabHost$TabSpec;)V]
-      [217] aload_0 v0
-      [218] getfield #54
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.e Landroid/widget/Button;]
-      [221] new #47
+      [58] aload_0 v0
+      [59] getfield #35
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a Landroid/widget/TabHost;]
+      [62] ldc #24
+        + String [tag2]
+      [64] invokevirtual #46
+        + Methodref [android/widget/TabHost.newTabSpec (Ljava/lang/String;)Landroid/widget/TabHost$TabSpec;]
+      [67] astore_2 v2
+      [68] aload_2 v2
+      [69] ldc #7
+        + Integer [2131230727]
+      [71] invokevirtual #48
+        + Methodref [android/widget/TabHost$TabSpec.setContent (I)Landroid/widget/TabHost$TabSpec;]
+      [74] pop
+      [75] aload_2 v2
+      [76] ldc #20
+        + String [Key]
+      [78] invokevirtual #49
+        + Methodref [android/widget/TabHost$TabSpec.setIndicator (Ljava/lang/CharSequence;)Landroid/widget/TabHost$TabSpec;]
+      [81] pop
+      [82] aload_0 v0
+      [83] getfield #35
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a Landroid/widget/TabHost;]
+      [86] aload_2 v2
+      [87] invokevirtual #45
+        + Methodref [android/widget/TabHost.addTab (Landroid/widget/TabHost$TabSpec;)V]
+      [90] aload_0 v0
+      [91] getfield #37
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.c Landroid/widget/Button;]
+      [94] new #33
         + Class [com/app/mobshep/IDS/a]
-      [224] dup
-      [225] aload_0 v0
-      [226] aload_3 v3
-      [227] invokespecial #76
-        + Methodref [com/app/mobshep/IDS/a.<init> (Lcom/app/mobshep/IDS/Insecure_Data_Storage;Ljava/lang/String;)V]
-      [230] invokevirtual #62
+      [97] dup
+      [98] aload_0 v0
+      [99] invokespecial #57
+        + Methodref [com/app/mobshep/IDS/a.<init> (Lcom/app/mobshep/IDS/Insecure_Data_Storage;)V]
+      [102] invokevirtual #44
         + Methodref [android/widget/Button.setOnClickListener (Landroid/view/View$OnClickListener;)V]
-      [233] return
+      [105] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 0):
   + Method:       a()V
@@ -50353,85 +50195,85 @@ Methods (count = 5):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 99, locals = 3, stack = 4):
       [0] aload_0 v0
-      [1] ldc #28
+      [1] ldc #22
         + String [Members]
       [3] iconst_0
       [4] aconst_null
-      [5] invokevirtual #74
+      [5] invokevirtual #55
         + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.openOrCreateDatabase (Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
       [8] astore_1 v1
       [9] aload_1 v1
-      [10] ldc #16
+      [10] ldc #10
         + String [DROP TABLE IF EXISTS Members]
-      [12] invokevirtual #61
+      [12] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [15] aload_1 v1
-      [16] ldc #15
+      [16] ldc #9
         + String [CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)]
-      [18] invokevirtual #61
+      [18] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [21] aload_0 v0
-      [22] ldc #28
+      [22] ldc #22
         + String [Members]
       [24] iconst_0
       [25] aconst_null
-      [26] invokevirtual #74
+      [26] invokevirtual #55
         + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.openOrCreateDatabase (Ljava/lang/String;ILandroid/database/sqlite/SQLiteDatabase$CursorFactory;)Landroid/database/sqlite/SQLiteDatabase;]
       [29] astore_1 v1
       [30] aload_1 v1
-      [31] ldc #18
-        + String [INSERT INTO Members VALUES( 2,'JohnSmith',45,'Battery777')]
-      [33] invokevirtual #61
+      [31] ldc #12
+        + String [INSERT INTO Members VALUES( 2,'Admin',45,'OrcsExplosion')]
+      [33] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [36] aload_1 v1
-      [37] ldc #19
+      [37] ldc #13
         + String [INSERT INTO Members VALUES( 3,'GraveyBones',23,'super')]
-      [39] invokevirtual #61
+      [39] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [42] aload_1 v1
-      [43] ldc #20
+      [43] ldc #14
         + String [INSERT INTO Members VALUES( 4,'EpicTrees',35,'root')]
-      [45] invokevirtual #61
+      [45] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [48] aload_1 v1
-      [49] ldc #21
+      [49] ldc #15
         + String [INSERT INTO Members VALUES( 5,'FallenComrade',36,'password')]
-      [51] invokevirtual #61
+      [51] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [54] aload_1 v1
-      [55] ldc #22
+      [55] ldc #16
         + String [INSERT INTO Members VALUES( 6,'Ironfist',82,'hd7832dh8d')]
-      [57] invokevirtual #61
+      [57] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [60] aload_1 v1
-      [61] ldc #23
+      [61] ldc #17
         + String [INSERT INTO Members VALUES( 7,'Jumper',18,'bananarama')]
-      [63] invokevirtual #61
+      [63] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [66] aload_1 v1
-      [67] ldc #24
+      [67] ldc #18
         + String [INSERT INTO Members VALUES( 8,'99chips',32,'catsrcool')]
-      [69] invokevirtual #61
+      [69] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [72] aload_1 v1
-      [73] ldc #25
+      [73] ldc #19
         + String [INSERT INTO Members VALUES( 9,'regularVeg',40,'111111111111')]
-      [75] invokevirtual #61
+      [75] invokevirtual #43
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
       [78] aload_1 v1
-      [79] invokevirtual #60
+      [79] invokevirtual #42
         + Methodref [android/database/sqlite/SQLiteDatabase.close ()V]
       [82] goto +16 (target=98)
       [85] astore_1 v1
       [86] aload_0 v0
-      [87] ldc #17
+      [87] ldc #11
         + String [Data already inserted]
       [89] iconst_1
-      [90] invokestatic #69
+      [90] invokestatic #50
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
       [93] astore_2 v2
       [94] aload_2 v2
-      [95] invokevirtual #70
+      [95] invokevirtual #51
         + Methodref [android/widget/Toast.show ()V]
       [98] return
       Code attribute exceptions (count = 1):
@@ -50445,109 +50287,58 @@ Methods (count = 5):
     Access flags: 0x1
       = public void b()
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 29, locals = 2, stack = 3):
-      [0] aload_0 v0
-      [1] getfield #50
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a I]
-      [4] iconst_3
-      [5] ificmplt +23 (target=28)
-      [8] aload_0 v0
-      [9] ldc #13
-        + String [A hint has appeared!]
-      [11] iconst_0
-      [12] invokestatic #69
-        + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
-      [15] astore_1 v1
-      [16] aload_1 v1
-      [17] invokevirtual #70
-        + Methodref [android/widget/Toast.show ()V]
-      [20] aload_0 v0
-      [21] getfield #57
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.h Landroid/widget/TextView;]
-      [24] iconst_0
-      [25] invokevirtual #68
-        + Methodref [android/widget/TextView.setVisibility (I)V]
-      [28] return
-      Code attribute exceptions (count = 0):
-      Code attribute attributes (attribute count = 1):
-      + Stack map table attribute (count = 1):
-        - [28] Var: ..., Stack: (empty)
-  + Method:       c()V
-    Access flags: 0x1
-      = public void c()
-    Class member attributes (count = 1):
-    + Code attribute instructions (code length = 92, locals = 1, stack = 3):
+    + Code attribute instructions (code length = 66, locals = 1, stack = 3):
       [0] aload_0 v0
       [1] aload_0 v0
-      [2] ldc #4
-        + Integer [2131230723]
-      [4] invokevirtual #73
+      [2] ldc #8
+        + Integer [2131230728]
+      [4] invokevirtual #54
         + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.findViewById (I)Landroid/view/View;]
-      [7] checkcast #44
-        + Class [android/widget/TextView]
-      [10] putfield #52
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.c Landroid/widget/TextView;]
+      [7] checkcast #28
+        + Class [android/widget/EditText]
+      [10] putfield #36
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/EditText;]
       [13] aload_0 v0
       [14] aload_0 v0
-      [15] ldc #7
-        + Integer [2131230727]
-      [17] invokevirtual #73
+      [15] ldc #2
+        + Integer [2131230721]
+      [17] invokevirtual #54
         + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.findViewById (I)Landroid/view/View;]
-      [20] checkcast #41
-        + Class [android/widget/EditText]
-      [23] putfield #53
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.d Landroid/widget/EditText;]
+      [20] checkcast #29
+        + Class [android/widget/TabHost]
+      [23] putfield #35
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a Landroid/widget/TabHost;]
       [26] aload_0 v0
       [27] aload_0 v0
-      [28] ldc #2
-        + Integer [2131230721]
-      [30] invokevirtual #73
+      [28] ldc #6
+        + Integer [2131230726]
+      [30] invokevirtual #54
         + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.findViewById (I)Landroid/view/View;]
-      [33] checkcast #42
-        + Class [android/widget/TabHost]
-      [36] putfield #51
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/TabHost;]
+      [33] checkcast #27
+        + Class [android/widget/Button]
+      [36] putfield #37
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.c Landroid/widget/Button;]
       [39] aload_0 v0
       [40] aload_0 v0
-      [41] ldc #11
-        + Integer [2131230731]
-      [43] invokevirtual #73
+      [41] ldc #4
+        + Integer [2131230724]
+      [43] invokevirtual #54
         + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.findViewById (I)Landroid/view/View;]
-      [46] checkcast #40
-        + Class [android/widget/Button]
-      [49] putfield #54
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.e Landroid/widget/Button;]
+      [46] checkcast #28
+        + Class [android/widget/EditText]
+      [49] putfield #39
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.e Landroid/widget/EditText;]
       [52] aload_0 v0
       [53] aload_0 v0
-      [54] ldc #9
-        + Integer [2131230729]
-      [56] invokevirtual #73
-        + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.findViewById (I)Landroid/view/View;]
-      [59] checkcast #41
-        + Class [android/widget/EditText]
-      [62] putfield #56
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.g Landroid/widget/EditText;]
-      [65] aload_0 v0
-      [66] aload_0 v0
-      [67] ldc #10
-        + Integer [2131230730]
-      [69] invokevirtual #73
-        + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.findViewById (I)Landroid/view/View;]
-      [72] checkcast #41
-        + Class [android/widget/EditText]
-      [75] putfield #55
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.f Landroid/widget/EditText;]
-      [78] aload_0 v0
-      [79] aload_0 v0
-      [80] ldc #5
+      [54] ldc #5
         + Integer [2131230725]
-      [82] invokevirtual #73
+      [56] invokevirtual #54
         + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.findViewById (I)Landroid/view/View;]
-      [85] checkcast #44
-        + Class [android/widget/TextView]
-      [88] putfield #57
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.h Landroid/widget/TextView;]
-      [91] return
+      [59] checkcast #28
+        + Class [android/widget/EditText]
+      [62] putfield #38
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.d Landroid/widget/EditText;]
+      [65] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 0):
 
@@ -50564,22 +50355,23 @@ _____________________________________________________________________
 Interfaces (count = 1):
   + Class [android/view/View$OnClickListener]
 
-Constant Pool (count = 102):
+Constant Pool (count = 95):
   + String []
-  + String [18e7ab691d0cd167dc6c680fe6d8010bc0df19da]
   + String [99chips]
+  + String [Admin]
   + String [Blank fields detected!]
   + String [EpicTrees]
   + String [FallenComrade]
   + String [GraveyBones]
   + String [Invalid Credentials!]
   + String [IronFist]
-  + String [JohnSmith]
   + String [Jumper]
   + String [Logged in!]
   + String [Logging in...]
+  + String [OrcsExplosion]
   + String [RegularVeg]
   + String [That Account is locked.]
+  + String [The Key is Battery777]
   + Class [android/text/Editable]
   + Class [android/view/View$OnClickListener]
   + Class [android/widget/EditText]
@@ -50588,29 +50380,23 @@ Constant Pool (count = 102):
   + Class [com/app/mobshep/IDS/a]
   + Class [java/lang/Object]
   + Class [java/lang/String]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a I]
+  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/EditText;]
   + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.d Landroid/widget/EditText;]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.f Landroid/widget/EditText;]
-  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.g Landroid/widget/EditText;]
+  + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.e Landroid/widget/EditText;]
   + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-  + Fieldref [com/app/mobshep/IDS/a.b Ljava/lang/String;]
   + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
   + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
   + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
   + Methodref [android/widget/Toast.show ()V]
-  + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.b ()V]
   + Methodref [java/lang/Object.<init> ()V]
   + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
   + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
   + NameAndType [<init> ()V]
-  + NameAndType [a I]
   + NameAndType [a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-  + NameAndType [b ()V]
-  + NameAndType [b Ljava/lang/String;]
+  + NameAndType [b Landroid/widget/EditText;]
   + NameAndType [contentEquals (Ljava/lang/CharSequence;)Z]
   + NameAndType [d Landroid/widget/EditText;]
-  + NameAndType [f Landroid/widget/EditText;]
-  + NameAndType [g Landroid/widget/EditText;]
+  + NameAndType [e Landroid/widget/EditText;]
   + NameAndType [getText ()Landroid/text/Editable;]
   + NameAndType [makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
   + NameAndType [setText (Ljava/lang/CharSequence;)V]
@@ -50622,30 +50408,29 @@ Constant Pool (count = 102):
   + Utf8 [()V]
   + Utf8 [(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
   + Utf8 [(Landroid/view/View;)V]
-  + Utf8 [(Lcom/app/mobshep/IDS/Insecure_Data_Storage;Ljava/lang/String;)V]
+  + Utf8 [(Lcom/app/mobshep/IDS/Insecure_Data_Storage;)V]
   + Utf8 [(Ljava/lang/CharSequence;)V]
   + Utf8 [(Ljava/lang/CharSequence;)Z]
-  + Utf8 [18e7ab691d0cd167dc6c680fe6d8010bc0df19da]
   + Utf8 [99chips]
   + Utf8 [<init>]
+  + Utf8 [Admin]
   + Utf8 [Blank fields detected!]
   + Utf8 [Code]
   + Utf8 [EpicTrees]
   + Utf8 [FallenComrade]
   + Utf8 [GraveyBones]
-  + Utf8 [I]
   + Utf8 [Invalid Credentials!]
   + Utf8 [IronFist]
-  + Utf8 [JohnSmith]
   + Utf8 [Jumper]
   + Utf8 [Landroid/widget/EditText;]
   + Utf8 [Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-  + Utf8 [Ljava/lang/String;]
   + Utf8 [Logged in!]
   + Utf8 [Logging in...]
+  + Utf8 [OrcsExplosion]
   + Utf8 [RegularVeg]
   + Utf8 [StackMapTable]
   + Utf8 [That Account is locked.]
+  + Utf8 [The Key is Battery777]
   + Utf8 [a]
   + Utf8 [android/text/Editable]
   + Utf8 [android/view/View$OnClickListener]
@@ -50656,8 +50441,7 @@ Constant Pool (count = 102):
   + Utf8 [com/app/mobshep/IDS/a]
   + Utf8 [contentEquals]
   + Utf8 [d]
-  + Utf8 [f]
-  + Utf8 [g]
+  + Utf8 [e]
   + Utf8 [getText]
   + Utf8 [java/lang/Object]
   + Utf8 [java/lang/String]
@@ -50667,236 +50451,198 @@ Constant Pool (count = 102):
   + Utf8 [show]
   + Utf8 [toString]
 
-Fields (count = 2):
+Fields (count = 1):
   + Field:        a Lcom/app/mobshep/IDS/Insecure_Data_Storage;
     Access flags: 0x1010
       = final synthetic com.app.mobshep.IDS.Insecure_Data_Storage a
-  + Field:        b Ljava/lang/String;
-    Access flags: 0x1012
-      = private final synthetic java.lang.String b
 
 Methods (count = 2):
-  - Method:       <init>(Lcom/app/mobshep/IDS/Insecure_Data_Storage;Ljava/lang/String;)V
+  - Method:       <init>(Lcom/app/mobshep/IDS/Insecure_Data_Storage;)V
     Access flags: 0x0
-      = a(com.app.mobshep.IDS.Insecure_Data_Storage,java.lang.String)
+      = a(com.app.mobshep.IDS.Insecure_Data_Storage)
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 15, locals = 3, stack = 2):
+    + Code attribute instructions (code length = 10, locals = 2, stack = 2):
       [0] aload_0 v0
       [1] aload_1 v1
       [2] putfield #28
         + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
       [5] aload_0 v0
-      [6] aload_2 v2
-      [7] putfield #29
-        + Fieldref [com/app/mobshep/IDS/a.b Ljava/lang/String;]
-      [10] aload_0 v0
-      [11] invokespecial #35
+      [6] invokespecial #33
         + Methodref [java/lang/Object.<init> ()V]
-      [14] return
+      [9] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 0):
   + Method:       onClick(Landroid/view/View;)V
     Access flags: 0x1
       = public void onClick(android.view.View)
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 275, locals = 6, stack = 3):
+    + Code attribute instructions (code length = 233, locals = 6, stack = 3):
       [0] aload_0 v0
       [1] getfield #28
         + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-      [4] ldc #13
+      [4] ldc #12
         + String [Logging in...]
       [6] iconst_0
-      [7] invokestatic #32
+      [7] invokestatic #31
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
       [10] astore_2 v2
       [11] aload_2 v2
-      [12] invokevirtual #33
+      [12] invokevirtual #32
         + Methodref [android/widget/Toast.show ()V]
       [15] aload_0 v0
       [16] getfield #28
         + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
       [19] getfield #27
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.g Landroid/widget/EditText;]
-      [22] invokevirtual #30
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.e Landroid/widget/EditText;]
+      [22] invokevirtual #29
         + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
-      [25] invokeinterface #37
+      [25] invokeinterface #35
         + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
       [30] astore_3 v3
       [31] aload_0 v0
       [32] getfield #28
         + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
       [35] getfield #26
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.f Landroid/widget/EditText;]
-      [38] invokevirtual #30
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.d Landroid/widget/EditText;]
+      [38] invokevirtual #29
         + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
-      [41] invokeinterface #37
+      [41] invokeinterface #35
         + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
       [46] astore v4
       [48] aload_3 v3
       [49] ldc #1
         + String []
-      [51] invokevirtual #36
+      [51] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
       [54] ifne +13 (target=67)
       [57] aload v4
       [59] ldc #1
         + String []
-      [61] invokevirtual #36
+      [61] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [64] ifeq +40 (target=104)
+      [64] ifeq +20 (target=84)
       [67] aload_0 v0
       [68] getfield #28
         + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
       [71] ldc #4
         + String [Blank fields detected!]
       [73] iconst_0
-      [74] invokestatic #32
+      [74] invokestatic #31
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
       [77] astore v5
-      [79] aload_0 v0
-      [80] getfield #28
-        + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-      [83] dup
-      [84] getfield #24
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a I]
-      [87] iconst_1
-      [88] iadd
-      [89] putfield #24
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a I]
-      [92] aload_0 v0
-      [93] getfield #28
-        + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-      [96] invokevirtual #34
-        + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.b ()V]
-      [99] aload v5
-      [101] invokevirtual #33
+      [79] aload v5
+      [81] invokevirtual #32
         + Methodref [android/widget/Toast.show ()V]
-      [104] aload_3 v3
-      [105] ldc #10
-        + String [JohnSmith]
-      [107] invokevirtual #36
+      [84] aload_3 v3
+      [85] ldc #3
+        + String [Admin]
+      [87] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [110] ifeq +44 (target=154)
-      [113] aload v4
-      [115] aload_0 v0
-      [116] getfield #29
-        + Fieldref [com/app/mobshep/IDS/a.b Ljava/lang/String;]
-      [119] invokevirtual #36
+      [90] ifeq +42 (target=132)
+      [93] aload v4
+      [95] ldc #13
+        + String [OrcsExplosion]
+      [97] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [122] ifeq +32 (target=154)
-      [125] aload_0 v0
-      [126] getfield #28
+      [100] ifeq +32 (target=132)
+      [103] aload_0 v0
+      [104] getfield #28
         + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-      [129] ldc #12
+      [107] ldc #11
         + String [Logged in!]
-      [131] iconst_0
-      [132] invokestatic #32
+      [109] iconst_0
+      [110] invokestatic #31
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
-      [135] astore v5
-      [137] aload v5
-      [139] invokevirtual #33
+      [113] astore v5
+      [115] aload v5
+      [117] invokevirtual #32
         + Methodref [android/widget/Toast.show ()V]
-      [142] aload_0 v0
-      [143] getfield #28
+      [120] aload_0 v0
+      [121] getfield #28
         + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-      [146] getfield #25
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.d Landroid/widget/EditText;]
-      [149] ldc #2
-        + String [18e7ab691d0cd167dc6c680fe6d8010bc0df19da]
-      [151] invokevirtual #31
+      [124] getfield #25
+        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.b Landroid/widget/EditText;]
+      [127] ldc #16
+        + String [The Key is Battery777]
+      [129] invokevirtual #30
         + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
-      [154] aload_3 v3
-      [155] ldc #5
+      [132] aload_3 v3
+      [133] ldc #5
         + String [EpicTrees]
-      [157] invokevirtual #36
+      [135] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [160] ifne +57 (target=217)
-      [163] aload_3 v3
-      [164] ldc #7
+      [138] ifne +57 (target=195)
+      [141] aload_3 v3
+      [142] ldc #7
         + String [GraveyBones]
-      [166] invokevirtual #36
+      [144] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [169] ifne +48 (target=217)
-      [172] aload_3 v3
-      [173] ldc #6
+      [147] ifne +48 (target=195)
+      [150] aload_3 v3
+      [151] ldc #6
         + String [FallenComrade]
-      [175] invokevirtual #36
+      [153] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [178] ifne +39 (target=217)
-      [181] aload_3 v3
-      [182] ldc #9
+      [156] ifne +39 (target=195)
+      [159] aload_3 v3
+      [160] ldc #9
         + String [IronFist]
-      [184] invokevirtual #36
+      [162] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [187] ifne +30 (target=217)
-      [190] aload_3 v3
-      [191] ldc #11
+      [165] ifne +30 (target=195)
+      [168] aload_3 v3
+      [169] ldc #10
         + String [Jumper]
-      [193] invokevirtual #36
+      [171] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [196] ifne +21 (target=217)
-      [199] aload_3 v3
-      [200] ldc #3
+      [174] ifne +21 (target=195)
+      [177] aload_3 v3
+      [178] ldc #2
         + String [99chips]
-      [202] invokevirtual #36
+      [180] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [205] ifne +12 (target=217)
-      [208] aload_3 v3
-      [209] ldc #14
+      [183] ifne +12 (target=195)
+      [186] aload_3 v3
+      [187] ldc #14
         + String [RegularVeg]
-      [211] invokevirtual #36
+      [189] invokevirtual #34
         + Methodref [java/lang/String.contentEquals (Ljava/lang/CharSequence;)Z]
-      [214] ifeq +23 (target=237)
-      [217] aload_0 v0
-      [218] getfield #28
+      [192] ifeq +23 (target=215)
+      [195] aload_0 v0
+      [196] getfield #28
         + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-      [221] ldc #15
+      [199] ldc #15
         + String [That Account is locked.]
-      [223] iconst_0
-      [224] invokestatic #32
+      [201] iconst_0
+      [202] invokestatic #31
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
-      [227] astore v5
-      [229] aload v5
-      [231] invokevirtual #33
+      [205] astore v5
+      [207] aload v5
+      [209] invokevirtual #32
         + Methodref [android/widget/Toast.show ()V]
-      [234] goto +40 (target=274)
-      [237] aload_0 v0
-      [238] getfield #28
+      [212] goto +20 (target=232)
+      [215] aload_0 v0
+      [216] getfield #28
         + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-      [241] ldc #8
+      [219] ldc #8
         + String [Invalid Credentials!]
-      [243] iconst_0
-      [244] invokestatic #32
+      [221] iconst_0
+      [222] invokestatic #31
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
-      [247] astore v5
-      [249] aload_0 v0
-      [250] getfield #28
-        + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-      [253] dup
-      [254] getfield #24
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a I]
-      [257] iconst_1
-      [258] iadd
-      [259] putfield #24
-        + Fieldref [com/app/mobshep/IDS/Insecure_Data_Storage.a I]
-      [262] aload_0 v0
-      [263] getfield #28
-        + Fieldref [com/app/mobshep/IDS/a.a Lcom/app/mobshep/IDS/Insecure_Data_Storage;]
-      [266] invokevirtual #34
-        + Methodref [com/app/mobshep/IDS/Insecure_Data_Storage.b ()V]
-      [269] aload v5
-      [271] invokevirtual #33
+      [225] astore v5
+      [227] aload v5
+      [229] invokevirtual #32
         + Methodref [android/widget/Toast.show ()V]
-      [274] return
+      [232] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
       + Stack map table attribute (count = 6):
         - [67] Var: ...[a:android/widget/Toast][a:java/lang/String][a:java/lang/String], Stack: (empty)
-        - [104] Var: ..., Stack: (empty)
-        - [154] Var: ..., Stack: (empty)
-        - [217] Var: ..., Stack: (empty)
-        - [237] Var: ..., Stack: (empty)
-        - [274] Var: ..., Stack: (empty)
+        - [84] Var: ..., Stack: (empty)
+        - [132] Var: ..., Stack: (empty)
+        - [195] Var: ..., Stack: (empty)
+        - [215] Var: ..., Stack: (empty)
+        - [232] Var: ..., Stack: (empty)
 
 Class file attributes (count = 0):
 

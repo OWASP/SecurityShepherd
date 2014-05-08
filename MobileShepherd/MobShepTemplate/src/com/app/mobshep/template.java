@@ -32,12 +32,7 @@ public class template extends Activity implements OnClickListener {
 		th.setup();
 
 		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag1");
-		specs.setContent(R.id.tab1);
-		specs.setIndicator("Tab 1");
-		th.addTab(specs);
-
-		specs = th.newTabSpec("tag2");
+		TabSpec specs = th.newTabSpec("tag2");
 		specs.setContent(R.id.tab2);
 		specs.setIndicator("Tab 2");
 		th.addTab(specs);
@@ -73,8 +68,6 @@ public class template extends Activity implements OnClickListener {
 			startActivity(gotoMain);
 			
 			break;
-		
-		
 		
 		case (R.id.bLogin):
 

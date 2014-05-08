@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 public class Splash extends Activity {
-
+	
 	@Override
 	protected void onCreate(Bundle Mobile) {
 		// TODO Auto-generated method stub
@@ -22,8 +22,9 @@ public class Splash extends Activity {
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.app.mobshep.csinjection2.CSInjection2");
-					startActivity(gotoMain);
+					Intent goToMain = new Intent(Splash.this, CSInjection2.class);
+					startActivity(goToMain);
+					
 				}
 
 			}

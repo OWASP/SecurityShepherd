@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">InsecureData3</string>
+    <string name="app_name">InsecureData2</string>
     <string name="action_settings">Settings</string>
     
 	
 	<!-- Defind Strings for challenge 2, IDS -->
-	<string name="titleIntro">Insecure Data Storage 3</string>
-	<string name="introMessage">This App encrypts some of it\'s data using DES in ECB mode. While this would be a better solution than simply encoding sensitive data. DES is a block cipher which uses a key during the encryption and decryption process. Mobile Apps can store keys on the device too. There is no real solution to secure sensitive data on a Mobile App. Once it\'s on the App a malicious user or App can access it.</string>
-			
+	<string name="titleIntro2">Insecure Data Storage 2</string>		
+
+	<!-- Defind Strings for challenge 3, IDS2 -->
+	<string name="titleIntro3">Insecure Data Storage 2</string>
+	<string name="status2">Status</string>
+	
 	
 	<!-- Generic Application wide Strings -->
 	<string name="pword">Password</string>

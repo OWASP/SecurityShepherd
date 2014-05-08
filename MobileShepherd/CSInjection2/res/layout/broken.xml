@@ -27,69 +27,85 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
-  			
-  			<RelativeLayout
+
+            
+
+                <RelativeLayout
                     android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textColor="#DA70D6" >
-
-                    <TextView
-                        android:id="@+id/tvIntroBroken"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_below="@+id/tvTitle"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/BCDescrip"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="#DA70D6" />
-
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="28dp"
-                        android:text="@string/titleIntro6"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
-                </RelativeLayout>
-                
-               <RelativeLayout
-                    android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:textColor="#DA70D6" >
 
-
-                    <Button
-                        android:id="@+id/bQuery"
+                    <TextView
+                        android:id="@+id/tvTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="24dp"
-                        android:text="Button" />
+                        android:layout_alignLeft="@+id/etName"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="81dp"
+                        android:text="@string/login"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
 
                     <EditText
-                        android:id="@+id/etQuery"
+                        android:id="@+id/etName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/bQuery"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_below="@+id/tvTitle"
+                        android:layout_marginTop="25dp"
                         android:ems="10"
-                        android:hint="Enter a Username"
+                        android:hint="Username"
                         android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <EditText
+                        android:id="@+id/etPass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/etName"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="45dp"
+                        android:ems="10"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" >
+
+                        <requestFocus />
+                    </EditText>
+
+                    <Button
+                        android:id="@+id/bLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/etPass"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="32dp"
+                        android:filterTouchesWhenObscured="true"
+                        android:text="@string/login"
                         android:textColor="#DA70D6" />
 
                 </RelativeLayout>
 
-              
+                <RelativeLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#DA70D6" >
+
+                    <EditText
+                        android:id="@+id/etKey"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="58dp"
+                        android:hint="The key is only shown to authenticated users."
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+                </RelativeLayout>
             </FrameLayout>
         </LinearLayout>
     </TabHost>

@@ -24,7 +24,6 @@ import android.widget.ToggleButton;
 public class SCData_Leakage extends Activity implements OnClickListener {
 
 	TabHost th;
-	TextView Intro;
 	EditText keyView;
 	EditText Username;
 	EditText Password;
@@ -42,19 +41,14 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 		th.setup();
 
 		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag1");
-		specs.setContent(R.id.tab1);
-		specs.setIndicator("Summary"); // give the tab a name
-		th.addTab(specs);
-
-		specs = th.newTabSpec("tag2");
+		TabSpec specs = th.newTabSpec("tag2");
 		specs.setContent(R.id.tab2);
 		specs.setIndicator("Log in");
 		th.addTab(specs);
 
 		specs = th.newTabSpec("tag3");
 		specs.setContent(R.id.tab3);
-		specs.setIndicator("Instructions");
+		specs.setIndicator("Key");
 		th.addTab(specs);
 
 	}
@@ -69,7 +63,6 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 		Password = (EditText) findViewById(R.id.etPass);
 		Username = (EditText) findViewById(R.id.etName);
 
-		Intro = (TextView) findViewById(R.id.tvIntro2);
 		keyView = (EditText) findViewById(R.id.tvKey2);
 
 		th = (TabHost) findViewById(R.id.tabhost);

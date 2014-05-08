@@ -22,61 +22,16 @@
                 android:layout_height="wrap_content" >
             </TabWidget>
 
-            <FrameLayout
+           <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-               <RelativeLayout
+
+
+                
+                <RelativeLayout
                     android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="25dp"
-                        android:text="@string/titleIntro"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
-                  
-
-                    <TextView
-                        android:id="@+id/tvIntro2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_below="@+id/tvTitle"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/introMessage"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="#DA70D6" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/tab3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <EditText
-                        android:id="@+id/tvKey2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="52dp"
-                        android:text="The key will appear here when the login has been successful."
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/tab4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
 
@@ -124,18 +79,27 @@
                         android:text="@string/login"
                         android:textColor="#DA70D6" />
 
+                  
+                </RelativeLayout>
+                
+                <RelativeLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
                     <EditText
-                        android:id="@+id/key"
+                        android:id="@+id/tvKey2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="49dp"
-                        android:text="The key is: "
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="52dp"
+                        android:hint="The key will appear here when the login has been successful."
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6"
-                        android:visibility="invisible" />
+                        android:textColor="#DA70D6" />
                 </RelativeLayout>
+                
+                
             </FrameLayout>
         </LinearLayout>
     </TabHost>

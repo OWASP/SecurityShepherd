@@ -6,8 +6,8 @@
    
 	<!-- Defind Strings for challenge -->
 	<string name="titleIntro6">Client Side Injection 2</string>
-	<string name="BCDescrip">Instead of storing user details on an a server for authentication, the developers of this App have decided to store details locally to cut costs on maintaining a backend service. Multiple users are registered on this App.</string>
-	<string name="PFrag">CSinjection 2</string>
+	<string name="BCDescrip">Client Side Injection occurrs when an App does not sanitize input from a user. In this case the App contains a login which uses a query to check if a row exists in a table. The data being passed into the query by the user is username and password. If the query returns a result, the user will be logged in. SQL Injection can be used to bypass this login and get the key.</string>
+	<string name="PFrag">CSinjection</string>
 	
 	<!-- Generic Application wide Strings -->
 	<string name="pword">Password</string>
@@ -37,7 +37,6 @@
     
     <string name="title_parent_preference">Enable Hints</string>
     <string name="preference_attributes">Hints</string>
-    <string name="lookup">Look Up User</string>
     
 	
 </resources>

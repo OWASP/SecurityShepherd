@@ -12,9 +12,6 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -23,18 +20,15 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class SCData_Leakage extends Activity implements OnClickListener {
 
 	TabHost th;
-	TextView Intro;
 	EditText keyView;
 	EditText Username;
 	EditText Password;
 	Button Login;
 	TextView message;
-	ToggleButton passToggle;
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
 	@Override
@@ -47,16 +41,11 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 
 		// Set up each tab
 		TabSpec specs = th.newTabSpec("tag1");
-		specs.setContent(R.id.tab1);
-		specs.setIndicator("Summary");
-		th.addTab(specs);
-
-		specs = th.newTabSpec("tag2");
 		specs.setContent(R.id.tab2);
 		specs.setIndicator("Log in");
 		th.addTab(specs);
 
-		specs = th.newTabSpec("tag3");
+		specs = th.newTabSpec("tag2");
 		specs.setContent(R.id.tab3);
 		specs.setIndicator("Key");
 		th.addTab(specs);
@@ -67,13 +56,9 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 		Login = (Button) findViewById(R.id.bLogin);
 		Login.setOnClickListener(this);
 
-		passToggle = (ToggleButton) findViewById(R.id.tbPassword);
-		passToggle.setOnClickListener(this);
-
 		Password = (EditText) findViewById(R.id.etPass);
 		Username = (EditText) findViewById(R.id.etName);
 
-		Intro = (TextView) findViewById(R.id.tvIntro2);
 		keyView = (EditText) findViewById(R.id.tvKey2);
 
 		th = (TabHost) findViewById(R.id.tabhost);
@@ -100,22 +85,24 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 
 			if (CheckName.contentEquals("Admin")
 					&& CheckPass.contentEquals("DeliciousGuac5Lief")) {
-				keyView.setText("jdlyot869thsllza110tkif");
+				keyView.setText("SilentButSteadyRedLed");
 				Toast toasty = Toast.makeText(SCData_Leakage.this,
 						"Logged in!", Toast.LENGTH_LONG);
 				toasty.show();
 			}
-
-		case R.id.tbPassword:
-			if (passToggle.isChecked()) {
-				Password.setInputType(InputType.TYPE_CLASS_TEXT
-						| InputType.TYPE_TEXT_VARIATION_PASSWORD);
+			
+			else if (CheckName.contentEquals("") || CheckPass.contentEquals(""))
+			{
+				Toast blanks = Toast.makeText(SCData_Leakage.this, "Blank Fields Detected.", Toast.LENGTH_SHORT);
+				blanks.show();
 			}
-
+			
 			else {
-				Password.setInputType(InputType.TYPE_CLASS_TEXT);
+				Toast invalid = Toast.makeText(SCData_Leakage.this, "Invalid Credentials!", Toast.LENGTH_SHORT);
+				invalid.show();
 			}
 		}
+
 
 	}
 
@@ -123,7 +110,7 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 	private void logDetails(String checkName, String checkPass) {
 		// TODO Auto-generated method stub
 
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		//DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		// get current date time with Date()
 		Date date = new Date();
 
@@ -163,8 +150,8 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 			FileOutputStream fileOut = new FileOutputStream(location);
 			OutputStreamWriter writer = new OutputStreamWriter(fileOut);
 			String EOL = System.getProperty("line.seperator");
-			writer.append("admin"+ EOL);
-			writer.append("deliciousGuac4Lief"+ EOL);
+			writer.append("Admin"+ EOL);
+			writer.append("DeliciousGuac5Lief"+ EOL);
 			writer.append(date + EOL);
 			
 			writer.close();
@@ -173,41 +160,11 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}	
 		
-		File location2 = new File("/sdcard/externalLogs2" + date);
-		try {
-			location2.createNewFile();
-			FileOutputStream fileOut = new FileOutputStream(location);
-			OutputStreamWriter writer = new OutputStreamWriter(fileOut);
-			String EOL = System.getProperty("line.seperator");
-			writer.append("admin" + EOL);
-			writer.append("deliciousGuac5Life"+ EOL);
-			writer.append(date + EOL);
-			
-			writer.close();
-			fileOut.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-		
-		File location3 = new File("/sdcard/externalLogs3" + date);
-		try {
-			location3.createNewFile();
-			FileOutputStream fileOut = new FileOutputStream(location);
-			OutputStreamWriter writer = new OutputStreamWriter(fileOut);
-			String EOL = System.getProperty("line.seperator");
-			writer.append("admin"+ EOL);
-			writer.append("deliciousguac5Lief"+ EOL);
-			writer.append(date + EOL);
-			
-			writer.close();
-			fileOut.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
 		
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	private void setupBadLogsInternal() {
 		// get current date time with Date()
 		Date date = new Date();
@@ -218,8 +175,8 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(
 					filename, Context.MODE_WORLD_READABLE)));
-			writer.write("admin" + EOL);
-			writer.write("deliciousGuac4Lief" + EOL);
+			writer.write("Admin" + EOL);
+			writer.write("DeliciousGuac5Lief" + EOL);
 			writer.write(date + EOL);
 
 		} catch (Exception e) {
@@ -235,45 +192,6 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 			}
 		}
 
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(
-					filename, Context.MODE_WORLD_READABLE)));
-			writer.write("admin" + EOL);
-			writer.write("deliciousguac4life" + EOL);
-			writer.write(date + EOL);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			}
-		}
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(
-					filename, Context.MODE_WORLD_READABLE)));
-			writer.write("admin" + EOL);
-			writer.write("DeliciousGuac5life" + EOL);
-			writer.write(date + EOL);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			}
-		}
 	}
 
 }

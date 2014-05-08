@@ -22,7 +22,7 @@ public class Splash extends Activity {
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.app.mobshep.IDS3.Insecure_Data_Storage3");
+					Intent gotoMain = new Intent("com.app.mobshep.IDS2.Insecure_Data_Storage2");
 					startActivity(gotoMain);
 				}
 
