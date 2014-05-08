@@ -60,18 +60,6 @@
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" />
 
-                    <Button
-                        android:id="@+id/bLogin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@+id/etPass"
-                        android:layout_marginTop="51dp"
-                        android:filterTouchesWhenObscured="true"
-                        android:text="@string/login"
-                        android:textColor="#DA70D6" />
-
                     <EditText
                         android:id="@+id/etPass"
                         android:layout_width="wrap_content"
@@ -87,6 +75,17 @@
 
                         <requestFocus />
                     </EditText>
+
+                    <Button
+                        android:id="@+id/bLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/etPass"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="48dp"
+                        android:filterTouchesWhenObscured="true"
+                        android:text="@string/login"
+                        android:textColor="#DA70D6" />
 
                 </RelativeLayout>
 

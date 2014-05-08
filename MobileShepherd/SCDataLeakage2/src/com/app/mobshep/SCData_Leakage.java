@@ -108,8 +108,8 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 			saveBitmap(bitmap);
 
 			if (CheckName.contentEquals("Admin")
-					&& CheckPass.contentEquals("HoleyMoley66")) {
-				keyView.setText("ju87yr65fceskosehur6gtg67seqp");
+					&& CheckPass.contentEquals("HoleyMoley")) {
+				keyView.setText("UpsideDownPizzaDip");
 				Toast toasty = Toast.makeText(SCData_Leakage.this, "Logged in!.", Toast.LENGTH_LONG);
 				toasty.show();	
 			}

@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class CSInjection3 extends Activity implements OnClickListener {
@@ -82,6 +81,9 @@ case (R.id.bLogin):
 			sanitizeName = sanitizeName.replace("1=1", "/* */");
 			sanitizeName = sanitizeName.replace("1 = 1", "/* */");
 			sanitizeName = sanitizeName.replace("'", "/* */");
+			sanitizeName =sanitizeName.replace("/*", ".");
+
+			
 			
 			
 			
@@ -95,7 +97,8 @@ case (R.id.bLogin):
 			sanitizePass = sanitizePass.replace("DROP", "/* */");
 			sanitizePass = sanitizePass.replace("1=1", "/* */");
 			sanitizePass = sanitizePass.replace("1 = 1", "/* */");
-			sanitizeName = sanitizeName.replace("'", "/* */");
+			sanitizePass = sanitizePass.replace("'", "/* */");
+			sanitizePass =sanitizePass.replace("/*", ".");
 
 			
 
@@ -148,13 +151,17 @@ case (R.id.bLogin):
 			}
 
 			}catch(Exception e){
+				key.setText("");
 				Toast error = Toast.makeText(CSInjection3.this, "An Error occured",
 						Toast.LENGTH_SHORT);
 				error.show();
 			}
 		} catch (SQLiteException e) {
+			key.setText("");
+			
 			e.printStackTrace();
-			Toast error = Toast.makeText(CSInjection3.this, "An Error occured",
+			
+			Toast error = Toast.makeText(CSInjection3.this, "An SQL Error occured",
 					Toast.LENGTH_SHORT);
 			error.show();
 		}

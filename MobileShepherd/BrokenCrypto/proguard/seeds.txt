@@ -1,4 +1,0 @@
-com.app.mobshep.BrokenCrypto.Broken_Cryptography
-com.app.mobshep.BrokenCrypto.Broken_Cryptography: Broken_Cryptography()
-com.app.mobshep.BrokenCrypto.Splash
-com.app.mobshep.BrokenCrypto.Splash: Splash()

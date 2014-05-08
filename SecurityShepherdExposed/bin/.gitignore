@@ -1,6 +1,8 @@
-/ESAPI.properties
-/log4j.properties
-/dbProcs
-/servlets
-/utils
-/jsp
+# Ignore everything
+*
+
+# Don't ignore directories, so we can recurse into them
+!*/
+
+# Don't ignore .gitignore
+!.gitignore

@@ -1,6 +1,0 @@
-# view AndroidManifest.xml #generated:17
--keep class com.app.mobshep.BrokenCrypto.Broken_Cryptography { <init>(...); }
-
-# view AndroidManifest.xml #generated:27
--keep class com.app.mobshep.BrokenCrypto.Splash { <init>(...); }
-
