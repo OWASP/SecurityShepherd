@@ -47,8 +47,8 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 				To obtain the result key you must obtain <em>Brendan's</em> answer to his security question. 
 				<br />
 				<br />
-				<h3>User Look Up</h3>
-				<p>Use the following form to look users up by their pin number;</p>
+				<h3>Get Your Authentication Number</h3>
+				<p>Put in your pin number to get your current authentication number</p>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>Please enter your Pin number: </td>	
