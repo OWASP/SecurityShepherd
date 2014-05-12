@@ -191,6 +191,15 @@
 		<url-pattern>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62VipCouponCheck</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>/challenges/d0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2</servlet-name>
+		<servlet-class>servlets.challenges.SqlInjection6</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/d0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2</servlet-name>
+		<url-pattern>/challenges/d0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2</url-pattern>
+	</servlet-mapping>
+	
 	
 	<servlet>
 		<servlet-name>/mobile/templateServlet</servlet-name>

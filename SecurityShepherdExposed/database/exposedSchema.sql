@@ -628,60 +628,72 @@ INSERT INTO `SqlChalFourSuperSecure`.`users` (`idusers`, `userName`, `userPasswo
 
 COMMIT;
 
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- SqlChalSix Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+DROP SCHEMA IF EXISTS `SqlChalSix` ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalSix` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `SqlChalSix` ;
+
+-- -----------------------------------------------------
+-- Table `SqlChalSix`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SqlChalSix`.`users` (
+  `idusers` INT NOT NULL,
+  `userName` VARCHAR(45) NOT NULL,
+  `userPin` VARCHAR(16) NOT NULL,
+  `userQuestion` VARCHAR(128) NOT NULL,
+  `userAnswer` VARCHAR(256) NOT NULL,
+  `userAge` VARCHAR(16) NOT NULL,
+  PRIMARY KEY (`idusers`))
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `SqlChalSix`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `SqlChalSix`;
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (1, 'George', '8367', 'What is your favourite Flower', 'A Red Rose', '23');
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (2, 'Brendan', '4685', 'What is the answer to this level?', '17f999a8b3fbfde54124d6e94b256a264652e5087b14622e1644c884f8a33f82', '98');
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (3, 'Sean', '1254', 'Your favourite Viking', 'Thor', '25');
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (4, 'Anthony', '7844', 'What game do I suck at?', 'All of the games', '84');
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (5, 'Owen', '4648', 'Favourite Sandwhich Topping', 'Peanutbutter', '33');
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (6, 'Eoin', '2653', 'Where did I holiday in the summer of 69?', 'The Dark Side of the Moon', '12');
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (7, 'David', '3598', 'This is how we get ants', 'Don\'t get me started', '6');
+
+COMMIT;
+
+DROP USER 'userLookUuuup'@'localhost';
+CREATE USER 'userLookUuuup'@'localhost' IDENTIFIED BY 'youMomaSoTh1n';
+GRANT SELECT ON `SqlChalSix`.`users`  TO 'userLookUuuup'@'localhost';
+
 DROP USER 'DnTPubUser'@'localhost';
 CREATE USER 'DnTPubUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
 GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPubUser'@'localhost';
 GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPubUser'@'localhost';
-DROP USER 'DnTPubUser'@'193.1.201.100';
-CREATE USER 'DnTPubUser'@'193.1.201.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPubUser'@'193.1.201.100';
-GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPubUser'@'193.1.201.100';
-DROP USER 'DnTPubUser'@'192.168.57.100';
-CREATE USER 'DnTPubUser'@'192.168.57.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPubUser'@'192.168.57.100';
-GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPubUser'@'192.168.57.100';
 
 DROP USER 'DnTVipUser'@'localhost';
 CREATE USER 'DnTVipUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
 GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTVipUser'@'localhost';
 GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTVipUser'@'localhost';
-DROP USER 'DnTVipUser'@'193.1.201.100';
-CREATE USER 'DnTVipUser'@'193.1.201.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTVipUser'@'193.1.201.100';
-GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTVipUser'@'193.1.201.100';
-DROP USER 'DnTVipUser'@'192.168.57.100';
-CREATE USER 'DnTVipUser'@'192.168.57.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTVipUser'@'192.168.57.100';
-GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTVipUser'@'192.168.57.100';
 
 DROP USER 'DnTPurUser'@'localhost';
 CREATE USER 'DnTPurUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
 GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPurUser'@'localhost';
 GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPurUser'@'localhost';
 GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTPurUser'@'localhost';
-DROP USER 'DnTPurUser'@'193.1.201.100';
-CREATE USER 'DnTPurUser'@'193.1.201.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPurUser'@'193.1.201.100';
-GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPurUser'@'localhost';
-GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTPurUser'@'193.1.201.100';
-DROP USER 'DnTPurUser'@'192.168.57.100';
-CREATE USER 'DnTPurUser'@'192.168.57.100' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
-GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPurUser'@'192.168.57.100';
-GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTPurUser'@'192.168.57.100';
-
-
-DROP USER 'developerDavid'@'localhost';
-CREATE USER 'developerDavid'@'localhost' IDENTIFIED BY 'poster1ReflectionIsLi2kelyMirror';
-GRANT SELECT ON `bugTrackingBug`.`projectBugs` TO 'developerDavid'@'localhost';
-GRANT SELECT ON `bugTrackingBug`.`projects` TO 'developerDavid'@'localhost';
-DROP USER 'developerDavid'@'193.1.201.100';
-CREATE USER 'developerDavid'@'193.1.201.100' IDENTIFIED BY 'poster1ReflectionIsLi2kelyMirror';
-GRANT SELECT ON `bugTrackingBug`.`projectBugs` TO 'developerDavid'@'193.1.201.100';
-GRANT SELECT ON `bugTrackingBug`.`projects` TO 'developerDavid'@'193.1.201.100';
-DROP USER 'developerDavid'@'192.168.57.100';
-CREATE USER 'developerDavid'@'192.168.57.100' IDENTIFIED BY 'poster1ReflectionIsLi2kelyMirror';
-GRANT SELECT ON `bugTrackingBug`.`projectBugs` TO 'developerDavid'@'192.168.57.100';
-GRANT SELECT ON `bugTrackingBug`.`projects` TO 'developerDavid'@'192.168.57.100';
 
 
 DROP USER 'firstBloodyMessL'@'localhost';
