@@ -1,13 +1,13 @@
 package com.app.mobshep.csinjection2;
 
 import java.io.File;
+import java.io.IOException;
 
+import net.sqlcipher.database.SQLiteDatabase;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-
 import android.database.sqlite.SQLiteException;
-import net.sqlcipher.database.*;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class CSInjection2 extends Activity implements OnClickListener {
@@ -25,6 +24,7 @@ public class CSInjection2 extends Activity implements OnClickListener {
 	EditText username;
 	EditText password;
 	EditText key;
+	String dbPassword="P93Eid3D33DE0ZanbffGpo101Sirjw2";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class CSInjection2 extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.broken);
 		th = (TabHost) findViewById(R.id.tabhost);
-		populateTable(this, "P93Eid3D33DE0ZanbffGp01Sirjw2");
+		populateTable(this, dbPassword);
 		referenceXML();
 		th.setup();
 
@@ -94,7 +94,6 @@ case (R.id.bLogin):
 			sanitizePass = sanitizePass.replace("1=1", "/* */");
 			sanitizePass = sanitizePass.replace("1 = 1", "/* */");
 			
-
 			if (login(sanitizeName, sanitizePass) == true) {
 				key.setText("The Key is: SourHatsAndAngryCats.");
 				Toast toast = Toast.makeText(CSInjection2.this, "Logged in as:" + sanitizeName,
@@ -116,13 +115,8 @@ case (R.id.bLogin):
 
 			}
 
-			else {
-
-				Toast toast = Toast.makeText(CSInjection2.this,
-						"Invalid Credentials, "  + sanitizeName, Toast.LENGTH_SHORT);
-				toast.show();
-			}
 		}
+	
 	}
 
 	private boolean login(String username, String password) {
@@ -133,7 +127,7 @@ case (R.id.bLogin):
 			try{
 				
 			
-			SQLiteDatabase db = SQLiteDatabase.openDatabase(dbPath, "P93Eid3D33DE0ZanbffGpo101Sirjw2", null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+			SQLiteDatabase db = SQLiteDatabase.openDatabase(dbPath, dbPassword, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
 
 			String query = ("SELECT * FROM Users WHERE memName = '"
 					+ username + "' AND memPass ='" + password + "'");
@@ -144,6 +138,7 @@ case (R.id.bLogin):
 			}
 
 			}catch(Exception e){
+				key.setText("The key will be shown to logged in users.");
 				Toast error = Toast.makeText(CSInjection2.this, "An Error occured",
 						Toast.LENGTH_SHORT);
 				error.show();
@@ -175,7 +170,7 @@ case (R.id.bLogin):
 			db.execSQL("DROP TABLE IF EXISTS Users");
 			db.execSQL("CREATE TABLE Users(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
 
-			db.execSQL("INSERT INTO Users VALUES( 1,'Admin',20,'A3B922DF010PQSI827')");
+			db.execSQL("INSERT INTO Users VALUES( 1,'Admin',20,'Roderigo')");
 			db.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

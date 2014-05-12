@@ -6,7 +6,9 @@ String levelName = "Reverse Engineering";
 //Alphanumeric Only
 String levelHash = "19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Download the file and play with it to extract the key for this level!";
+String levelBlurb = "Reverse Engineering an Android APK file can reveal encryption keys, API keys, Hidden Admin functionality,
+ Algorithms and much more. An attacker can do this to get an idea of how the Application functions from a white box perspective.
+In some cases APK source code is not encrypted or obfusticated. The key can be found within the source code of the App. ";
 
 /**
  * <br/><br/>
@@ -45,7 +47,8 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 				
 				<%= levelBlurb %>
 				<br/>
-					
+					Once you have the APK file, open up dex2jar. Running the following command will convert the APK to a jar file: .
+					Now open JD-GUI and select your new jar file. You can now view the source code of the APK.  
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

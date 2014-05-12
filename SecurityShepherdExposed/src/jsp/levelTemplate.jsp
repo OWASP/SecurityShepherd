@@ -5,7 +5,7 @@
 String levelName = "LevelName";
 //Alphanumeric Only
 String levelHash = "LevelHash";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "Download the file and play with it to extract the key for this level!";
 
 /**

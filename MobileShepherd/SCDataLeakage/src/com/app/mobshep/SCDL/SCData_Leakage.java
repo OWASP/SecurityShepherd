@@ -78,6 +78,7 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 			String CheckPass = Password.getText().toString();
 
 			logDetails(CheckName, CheckPass);
+			logButton("Login");
 
 			Toast toast = Toast.makeText(SCData_Leakage.this, "Logging in...",
 					Toast.LENGTH_LONG);
@@ -136,12 +137,38 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 		}
 
 	}
+	
+	@SuppressWarnings("deprecation")
+	private void logButton(String buttonName) {
+		// TODO Auto-generated method stub
+
+		Date date = new Date();
+
+		String filename = "Failed Login" + date.toString();
+		String EOL = System.getProperty("line.seperator");
+		BufferedWriter writer = null;
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(
+					filename, Context.MODE_WORLD_READABLE)));
+			writer.write(buttonName + "button clicked at:" + EOL);
+			writer.write(date + EOL);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
 
 	
 	private void setupBadLogsExternal() {
 		// TODO Auto-generated method stub
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-		// get current date time with Date()
 		Date date = new Date();
 		
 		File location = new File("/sdcard/externalLogs" + date);

@@ -1,7 +1,5 @@
 package com.app.mobshep.csinjection;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -18,9 +16,6 @@ public class Splash extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(Mobile);
 		setContentView(R.layout.splash);
-		
-		
-		
 		
 		
 		// implement a thread to move on from the intro screen to input screen

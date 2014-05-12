@@ -13,6 +13,13 @@
         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
+                <permission
+        android:name="com.app.mobshep.CSI2.START_ACTIVITY"
+        android:icon="@drawable/ic_launcher"
+        android:logo="@drawable/ic_launcher"
+        android:protectionLevel="dangerous" >
+    </permission>
+        
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -21,7 +28,8 @@
        
         <activity
             android:name="com.app.mobshep.csinjection2.CSInjection2"
-            android:label="@string/app_name"  >
+            android:label="@string/app_name"
+            android:permission="com.app.mobshep.CSI2.START_ACTIVITY"  >
             <intent-filter>
                 <action android:name="com.app.mobshep.csinjection2.CSInjection2" />
                 <category android:name="android.intent.category.DEFAULT" />
