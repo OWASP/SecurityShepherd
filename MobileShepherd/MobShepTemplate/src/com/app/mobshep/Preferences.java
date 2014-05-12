@@ -19,11 +19,6 @@ public class Preferences extends Activity {
 		PrefsFragment mPrefsFragment = new PrefsFragment();
 		mFragmentTransaction.replace(android.R.id.content, mPrefsFragment);
 		mFragmentTransaction.commit();
-	
-//  We could have condensed the 5 lines into 1 line of code. 		
-//		getFragmentManager().beginTransaction()
-//				.replace(android.R.id.content, new PrefsFragment()).commit();
-
 	}
 
 	public static class PrefsFragment extends PreferenceFragment {

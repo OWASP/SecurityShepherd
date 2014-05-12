@@ -2,10 +2,10 @@
 <%
 
 //No Quotes In level Name
-String levelName = "LevelName";
+String levelName = "Unintended Data Leakage 2";
 //Alphanumeric Only
-String levelHash = "LevelHash";
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+String levelHash = "bf16081ed057b2d1bc97f4b9da897149819a159a8114d4867c7f8f327f5453a8";
+//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "Download the file and play with it to extract the key for this level!";
 
 /**
@@ -25,27 +25,28 @@ String levelBlurb = "Download the file and play with it to extract the key for t
  * You should have received a copy of the GNU General Public License
  * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * @author YourName
+ * @author Sean Duggan
  */
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-
+	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	
+	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= levelName %>Insecure Data Storage 3</h2>
 			<p> 
 				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				
 				<%= levelBlurb %>
 				<br/>
+					
 				<br/>
-				<a href="<%=levelHash%>/DownloadMe.zip">Download Me</a>
 				<% /* IF you need a form - Present it like this */ %>
 				<%
 				/*

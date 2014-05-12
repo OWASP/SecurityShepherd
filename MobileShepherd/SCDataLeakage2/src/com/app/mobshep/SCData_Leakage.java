@@ -41,12 +41,12 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 		th.setup();
 
 		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag2");
+		TabSpec specs = th.newTabSpec("tag1");
 		specs.setContent(R.id.tab2);
 		specs.setIndicator("Log in");
 		th.addTab(specs);
 
-		specs = th.newTabSpec("tag3");
+		specs = th.newTabSpec("tag2");
 		specs.setContent(R.id.tab3);
 		specs.setIndicator("Key");
 		th.addTab(specs);
