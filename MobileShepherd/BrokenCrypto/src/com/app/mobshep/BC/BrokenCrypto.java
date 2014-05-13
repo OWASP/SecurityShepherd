@@ -1,34 +1,26 @@
-package com.app.mobshep.WSSC;
+package com.app.mobshep.BC;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-public class WeakServerSideControls extends Activity implements OnClickListener {
+public class BrokenCrypto extends Activity implements OnClickListener {
 
 	TabHost th;
+	TextView Intro;
 	Button Login;
 	Button Config;
 	EditText username;
 	EditText password;
 	EditText key;
-	String shepherdAddress = null ;
-	String shepherdDBAddress = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +32,14 @@ public class WeakServerSideControls extends Activity implements OnClickListener 
 		th.setup();
 
 		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag1");
+		TabSpec specs = th.newTabSpec("tag2");
 		specs.setContent(R.id.tab2);
-		specs.setIndicator("Tab 2");
+		specs.setIndicator("Login");
 		th.addTab(specs);
 
-		specs = th.newTabSpec("tag2");
+		specs = th.newTabSpec("tag3");
 		specs.setContent(R.id.tab3);
-		specs.setIndicator("Tab 3");
+		specs.setIndicator("Key");
 		th.addTab(specs);
 	}
 
@@ -69,9 +61,6 @@ public class WeakServerSideControls extends Activity implements OnClickListener 
 		
 		case (R.id.bConfig):
 			
-			//Intent preferenceIntent = new Intent(getActivity(), Preferences.class);
-			//startActivity(preferenceIntent);
-			
 			Intent gotoMain = new Intent(this, Preferences.class);
 			startActivity(gotoMain);
 			
@@ -85,47 +74,22 @@ public class WeakServerSideControls extends Activity implements OnClickListener 
 			if (CheckName.contentEquals("user")
 					&& CheckPass.contentEquals("pass")) {
 				key.setText("Key is revealed.");
-				Toast toast = Toast.makeText(WeakServerSideControls.this, "Logged in!", Toast.LENGTH_LONG);
+				Toast toast = Toast.makeText(BrokenCrypto.this, "Logged in!", Toast.LENGTH_LONG);
 				toast.show();	
 			}
 			
 			if (CheckName.contentEquals("")
 					|| CheckPass.contentEquals("")) {
-				Toast toast2 = Toast.makeText(WeakServerSideControls.this, "Empty Fields Detected.", Toast.LENGTH_LONG);
+				Toast toast2 = Toast.makeText(BrokenCrypto.this, "Empty Fields Detected.", Toast.LENGTH_LONG);
 				toast2.show();
 			}
 
 			else{
 
-				Toast toast = Toast.makeText(WeakServerSideControls.this,
+				Toast toast = Toast.makeText(BrokenCrypto.this,
 						"Invalid Credentials!", Toast.LENGTH_LONG);
 				toast.show();
 			}
 		}
 	}
-	
-	public void makeGetRequest(String url)
-	{
-		JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-			    new Response.Listener<JSONObject>() 
-			    {
-			        @Override
-			        public void onResponse(JSONObject response) {   
-			                        // display response     
-			            Log.d("Response", response.toString());
-			        }
-			    }, 
-			    new Response.ErrorListener() 
-			    {
-			         @Override
-			         public void onErrorResponse(VolleyError error) {            
-			            Log.d("Error.Response", response);
-			       }
-			    }
-			);
-			 
-			// add it to the RequestQueue   
-			queue.add(getRequest);
-	}
-	
 }

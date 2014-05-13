@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+    <TabHost
+        android:id="@+id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#DA70D6" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <RelativeLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:textColor="#DA70D6" >
+
+                    <EditText
+                        android:id="@+id/etName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_below="@+id/tvTitle"
+                        android:layout_marginTop="25dp"
+                        android:ems="10"
+                        android:hint="Username"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <Button
+                        android:id="@+id/bLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/bConfig"
+                        android:layout_below="@+id/etPass"
+                        android:text="@string/login"
+                        android:textColor="#DA70D6" />
+
+                     <Button
+                         android:id="@+id/bConfig"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_below="@+id/bLogin"
+                         android:layout_centerHorizontal="true"
+                         android:layout_marginTop="16dp"
+                         android:text="Config"
+                         android:textColor="#DA70D6" />
+
+                     <TextView
+                         android:id="@+id/tvTitle"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignLeft="@+id/etName"
+                         android:layout_alignParentTop="true"
+                         android:layout_marginTop="44dp"
+                         android:text="@string/login"
+                         android:textAppearance="?android:attr/textAppearanceLarge"
+                         android:textColor="#DA70D6" />
+
+                     <EditText
+                         android:id="@+id/etPass"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_below="@+id/etName"
+                         android:layout_centerHorizontal="true"
+                         android:layout_marginTop="27dp"
+                         android:ems="10"
+                         android:hint="Password"
+                         android:inputType="textPassword"
+                         android:textAppearance="?android:attr/textAppearanceLarge"
+                         style="@android:style/Widget.Holo.Light.EditText"
+                         android:textColor="#DA70D6" >
+
+                         <requestFocus />
+                     </EditText>
+                    
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/tab3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#DA70D6" >
+
+                    <EditText
+                        android:id="@+id/etKey"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="58dp"
+                        android:hint="The key is only shown to authenticated users."
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+                </RelativeLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+</LinearLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etName"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="81dp"
+                        android:text="Register"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <EditText
+                        android:id="@+id/etRName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_below="@+id/tvTitle"
+                        android:layout_marginTop="25dp"
+                        android:ems="10"
+                        android:hint="Username"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <EditText
+                        android:id="@+id/etRPass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:ems="10"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <EditText
+                        android:id="@+id/etRCPass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Confirm Password"
+                        android:inputType="textPassword" >
+
+                        <requestFocus
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </EditText>
+
+                    <Button
+                        android:id="@+id/bRegister"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/bConfig"
+                        android:layout_below="@+id/etPass"
+                        android:text="Register!"
+                        android:textColor="#DA70D6" />
+                    
+
+          
+    
+
+</LinearLayout>
