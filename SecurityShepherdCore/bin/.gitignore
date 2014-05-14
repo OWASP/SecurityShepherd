@@ -1,6 +1,6 @@
-/jsp
-/log4j.properties
-/ESAPI.properties
 /dbProcs
 /servlets
 /utils
+/ESAPI.properties
+/log4j.properties
+/jsp

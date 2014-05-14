@@ -93,7 +93,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				</form>
 				
 				<div id="resultsDiv">
-					<%= Getter.getCsrfForum(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, "z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e")) %>
+					<%= Getter.getCsrfForumWithIframe(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, "z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e")) %>
 				</div>
 			</p>
 		</div>

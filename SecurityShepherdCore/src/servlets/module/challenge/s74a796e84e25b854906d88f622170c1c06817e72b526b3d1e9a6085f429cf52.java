@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import utils.Validate;
-import utils.XssFilter;
 import dbProcs.Getter;
 import dbProcs.Setter;
 
@@ -62,8 +61,7 @@ public class s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52 ex
 				{
 					String myMessage = request.getParameter("myMessage");
 					log.debug("User Submitted - " + myMessage);
-					myMessage = XssFilter.levelFour(myMessage);
-					log.debug("After Filtering - " + myMessage);
+					myMessage = Validate.makeValidUrl(myMessage);
 					
 					log.debug("Updating User's Stored Message");
 					String ApplicationRoot = getServletContext().getRealPath("");
@@ -75,7 +73,7 @@ public class s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52 ex
 					String classId = null;
 					if(ses.getAttribute("userClass") != null)
 						classId = (String)ses.getAttribute("userClass");
-					String htmlOutput = Getter.getCsrfForum(ApplicationRoot, classId, moduleId);
+					String htmlOutput = Getter.getCsrfForumWithImg(ApplicationRoot, classId, moduleId);
 					
 					log.debug("Outputing HTML");
 					out.write(htmlOutput);

@@ -429,13 +429,72 @@ public class Getter
 	}
 	
 	/**
-	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks against each other.
+	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks against each other. URLs are contained in IMG tags
 	 * @param ApplicationRoot The current running context of the application
 	 * @param classId Identifier of the class to populate the forum with
 	 * @param moduleId The module in which to return the forum for
 	 * @return A HTML table of a Class's CSRF Submissions for a specific module
 	 */
-	public static String getCsrfForum (String ApplicationRoot, String classId, String moduleId)
+	public static String getCsrfForumWithImg (String ApplicationRoot, String classId, String moduleId)
+	{
+		log.debug("*** Getter.getCsrfForum ***");
+		log.debug("Getting stored messages from class: " + classId);
+		Encoder encoder = ESAPI.encoder();
+		String htmlOutput = new String();
+		Connection conn = Database.getConnection(ApplicationRoot);
+		try
+		{
+			if(classId != null)
+			{
+				CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)");
+				log.debug("Gathering resultMessageByClass ResultSet");
+				callstmt.setString(1, classId);
+				callstmt.setString(2, moduleId);
+				ResultSet resultSet = callstmt.executeQuery();
+				log.debug("resultMessageByClass executed");
+				
+				//Table Header
+				htmlOutput = "<table><tr><th>User Name</th><th>Image</th></tr>";
+				
+				log.debug("Opening Result Set from resultMessageByClass");
+				int counter = 0;
+				while(resultSet.next())
+				{
+					counter++;
+					//Table content
+					htmlOutput += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td><img src=\"" + encoder.encodeForHTMLAttribute(resultSet.getString(2)) + "\"/></td></tr>";
+				}
+				if(counter > 0)
+					log.debug("Added a " + counter + " row table");
+				else
+					log.debug("No results from query");
+				//Table end
+				htmlOutput += "</table>";
+			}
+			else
+			{
+				log.error("User with Null Class detected");
+				htmlOutput = "<p><font color='red'>You must be assigned to a class to use this function. Please contact your administrator.</font></p>";
+			}
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not execute query: " + e.toString());
+			htmlOutput = "<p>Sorry! An Error Occured. Please contact administrator</p>";
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END getCsrfForum ***");
+		return htmlOutput;
+	}
+	
+	/**
+	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks against each other. URLs are contained in IFRAME tags
+	 * @param ApplicationRoot The current running context of the application
+	 * @param classId Identifier of the class to populate the forum with
+	 * @param moduleId The module in which to return the forum for
+	 * @return A HTML table of a Class's CSRF Submissions for a specific module
+	 */
+	public static String getCsrfForumWithIframe (String ApplicationRoot, String classId, String moduleId)
 	{
 		log.debug("*** Getter.getCsrfForum ***");
 		log.debug("Getting stored messages from class: " + classId);
@@ -462,7 +521,7 @@ public class Getter
 				{
 					counter++;
 					//Table content
-					htmlOutput += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td>" + resultSet.getString(2) + "</td></tr>";
+					htmlOutput += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td><iframe sandbox=\"allow-scripts allow-forms\" src=\"" + encoder.encodeForHTMLAttribute(resultSet.getString(2)) + "\"></iframe></td></tr>";
 				}
 				if(counter > 0)
 					log.debug("Added a " + counter + " row table");

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-// Cross Site Request Forgery Challenge 3
+// Cross Site Request Forgery Challenge 6
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -22,7 +22,7 @@
  * @author Mark Denihan
  */
  
-System.out.println("Cross Site Request Forgery Challenge 3 Accessed");
+System.out.println("Cross Site Request Forgery Challenge 6 Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -35,7 +35,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(CSRFChallenge3.jsp): tokenCookie Error:" + htmlE.toString());
+	System.out.println("DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -57,13 +57,13 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross Site Request Forgery Challenge Three</title>
+	<title>Security Shepherd - Cross Site Request Forgery Challenge Six</title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Cross Site Request Forgery Challenge Three</h2>
+			<h2 class="title">Cross Site Request Forgery Challenge Six</h2>
 			<p> 
 				To complete this challenge, you must get your CSRF counter above 0. The request to increment your counter is as follows
 				<br/>
@@ -93,7 +93,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				</form>
 				
 				<div id="resultsDiv">
-					<%= Getter.getCsrfForum(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, "z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c")) %>
+					<%= Getter.getCsrfForumWithIframe(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, "z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c")) %>
 				</div>
 			</p>
 		</div>

@@ -41,7 +41,7 @@ public class XssFilter
 		input = input.replaceAll("onload", "o.oad");
 		input = input.replaceAll("onerror", "o.err");
 		input = input.replaceAll("ondblclick", "o.dbl");
-		return input;
+		return screwHtmlEncodings(input);
 	}
 	
 	public static String levelThree (String input)
@@ -60,7 +60,7 @@ public class XssFilter
 			input = input.replaceAll("onmousemove", "");
 			input = input.replaceAll("onmouseout", "");
 		}
-		return input;
+		return screwHtmlEncodings(input);
 	}
 	
 	public static String levelFour (String input)
@@ -86,6 +86,17 @@ public class XssFilter
 				input = input.replaceAll(javascriptTriggers[i], replacement);
 			}
 		}
+		return screwHtmlEncodings(input);
+	}
+	
+	/**
+	 * Use this to cripple HTML encoded attacks. This is can be used to limit the vectors of attack for success
+	 * @param input The string you want to remove HTML encoding from
+	 * @return A string without HTML encoding
+	 */
+	private static String screwHtmlEncodings(String input)
+	{
+		input = input.replaceAll("&", "!").replaceAll(":", "!");
 		return input;
 	}
 }

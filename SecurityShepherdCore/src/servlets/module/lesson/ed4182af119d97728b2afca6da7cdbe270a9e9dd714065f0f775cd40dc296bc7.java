@@ -70,10 +70,9 @@ public class ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7 ex
 					log.debug("falseId = " + falseId);
 					String messageForAdmin = request.getParameter("messageForAdmin").toLowerCase();
 					log.debug("User Submitted - " + messageForAdmin);
-					messageForAdmin = XssFilter.levelFour(messageForAdmin);
-					log.debug("Filtered to - " + messageForAdmin);
+					
 					String htmlOutput = new String();
-					boolean validLessonAttack = FindXSS.findCsrf(messageForAdmin, falseId);					
+					boolean validLessonAttack = FindXSS.findCsrfAttackUrl(messageForAdmin, "/root/grantComplete/csrflesson", "userId", falseId);
 					
 					if(validLessonAttack)
 					{
@@ -87,7 +86,7 @@ public class ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7 ex
 					htmlOutput += "<h2 class='title'>Message Sent</h2>" +
 						"<p><table><tr><td>Sent To: </td><td>administrator@SecurityShepherd.com</td></tr>" +
 						"<tr><td>Message: </td><td> " +
-						messageForAdmin +
+						"<img src=\"" + encoder.encodeForHTMLAttribute(messageForAdmin) + "\"/>" +
 						"</td></tr></table></p>";
 					log.debug("outputing HTML");
 					out.write(htmlOutput);
