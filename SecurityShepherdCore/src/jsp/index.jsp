@@ -200,6 +200,13 @@ if (request.getSession() != null)
 		</div>
 		<script src="js/toggle.js"></script>
 		<script src="js/ajaxCalls.js"></script>
+		
+		<% //Hide UI Scripts from Users (Blocked at session level anyway, just stops spiders finding the links)
+		if (userRole.compareTo("admin") == 0){ %>
+			<script src="js/adminToggle.js"></script>
+			<script src="js/adminAjaxCalls.js"></script>
+		<% } %>
+		
 		<script>
 		$(".challenge").click(function(){
 			var whatFile = $(this).attr('id');
