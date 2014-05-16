@@ -1,6 +1,8 @@
 package utils;
 
 import org.apache.log4j.Logger;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Encoder;
 
 /**
  * Provides a number of filters that are used in different XSS challenges.
@@ -87,6 +89,22 @@ public class XssFilter
 			}
 		}
 		return screwHtmlEncodings(input);
+	}
+	
+	/**
+	 * Encodes for HTML, but doesnt escape ambersands
+	 * @param input
+	 * @return
+	 */
+	public static String encodeForHtml (String input)
+	{
+		log.debug("Filtering input at XSS white list");
+		Encoder encoder = ESAPI.encoder();
+		input = encoder.encodeForHTML(input);
+		//Unencode a few things to open security holes
+		input = input.replaceAll("&amp;", "&").replaceFirst("&quot;", "\"").replaceAll("&#x23;", "#").replaceFirst("&#x3d;", "=").replaceAll("&#x3b;", ";");
+		//Encode lowercase "on" and upercase "on" to complicate the required attack vectors to pass
+		return input.replaceAll("on", "&#x6f;&#x6e;").replaceAll("ON", "&#x4f;&#x4e;");
 	}
 	
 	/**
