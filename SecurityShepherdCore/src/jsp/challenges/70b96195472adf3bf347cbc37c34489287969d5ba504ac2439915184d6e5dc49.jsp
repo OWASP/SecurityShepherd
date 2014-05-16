@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-// Cross Site Request Forgery Challenge 2
+// Cross Site Request Forgery Challenge 4
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -21,8 +21,8 @@
  * 
  * @author Mark Denihan
  */
- 
-System.out.println("Cross Site Request Forgery Challenge 2 Accessed");
+ String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
+System.out.println("Cross Site Request Forgery Challenge 4 Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -35,7 +35,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(CSRFChallenge2.jsp): tokenCookie Error:" + htmlE.toString());
+	System.out.println("DEBUG(CSRFChallenge4.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -68,9 +68,9 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				To complete this challenge, you must get your CSRF counter above 0. The request to increment your counter is as follows
 				<br/>
 				<br/>
-				<a> POST /user/csrfchallengef/plusplus</a>
+				<a> POST /user/csrfchallengefour/plusplus</a>
 				<br/>
-				With the following parameter; <a>userId = exampleId</a>
+				With the following parameters; <a>userId = exampleId</a> and <a>csrf = yourCsrfToken</a>
 				<br/>
 				<br/>
 				Where exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>
@@ -93,7 +93,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				</form>
 				
 				<div id="resultsDiv">
-					<%= Getter.getCsrfForumWithIframe(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, "z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e")) %>
+					<%= Getter.getCsrfForumWithIframe(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, levelHash)) %>
 				</div>
 			</p>
 		</div>
@@ -106,7 +106,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 					var ajaxCall = $.ajax({
 						dataType: "text",
 						type: "POST",
-						url: "z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e",
+						url: "<%= levelHash %>",
 						data: {
 							myMessage: theMessage,
 							csrfToken: "<%= csrfToken %>"
