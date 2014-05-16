@@ -488,4 +488,23 @@
 		<servlet-name>/disableFeedback</servlet-name>
 		<url-pattern>/disableFeedback</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751</servlet-name>
+		<servlet-class>servlets.module.challenge.XssChallengeFour</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751</servlet-name>
+		<url-pattern>/challenges/06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671</servlet-name>
+		<servlet-class>servlets.module.challenge.XssChallengeFive</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671</servlet-name>
+		<url-pattern>/challenges/f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

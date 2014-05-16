@@ -1,5 +1,8 @@
 package utils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
@@ -105,6 +108,35 @@ public class XssFilter
 		input = input.replaceAll("&amp;", "&").replaceFirst("&quot;", "\"").replaceAll("&#x23;", "#").replaceFirst("&#x3d;", "=").replaceAll("&#x3b;", ";");
 		//Encode lowercase "on" and upercase "on" to complicate the required attack vectors to pass
 		return input.replaceAll("on", "&#x6f;&#x6e;").replaceAll("ON", "&#x4f;&#x4e;");
+	}
+	
+	/**
+	 * Whitelists for specific URL types but doesnt sanitise it
+	 * @param input
+	 * @return
+	 */
+	public static String badUrlValidate (String input)
+	{
+		String howToMakeAUrlUrl = new String("https://www.google.com/search?q=What+does+a+HTTP+link+look+like");
+		input = input.toLowerCase();
+		if (input.startsWith("http"))
+		{
+			try 
+			{
+				URL theUrl = new URL(input);
+			} 
+			catch (MalformedURLException e) 
+			{
+				log.debug("Could not Cast URL from input: " + e.toString());
+				input = howToMakeAUrlUrl;
+			}
+		}
+		else
+		{
+			log.debug("Was not a HTTP url");
+			input = howToMakeAUrlUrl;
+		}
+		return input;
 	}
 	
 	/**
