@@ -1,7 +1,7 @@
-# view AndroidManifest.xml #generated:43
+# view AndroidManifest.xml #generated:44
 -keep class com.app.mobshep.Preferences { <init>(...); }
 
-# view AndroidManifest.xml #generated:30
+# view AndroidManifest.xml #generated:31
 -keep class com.app.mobshep.Splash { <init>(...); }
 
 # view AndroidManifest.xml #generated:19

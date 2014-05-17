@@ -29,46 +29,11 @@
                 android:layout_height="match_parent" >
 
                 <RelativeLayout
-                    android:id="@+id/tab2"
+                    android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:textColor="#DA70D6" >
-
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etName"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="81dp"
-                        android:text="@string/login"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
-                    <EditText
-                        android:id="@+id/etName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etPass"
-                        android:layout_below="@+id/tvTitle"
-                        android:layout_marginTop="25dp"
-                        android:ems="10"
-                        android:hint="Username"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
-                    <EditText
-                        android:id="@+id/etPass"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:ems="10"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
 
                     <Button
                         android:id="@+id/bLogin"
@@ -88,11 +53,50 @@
                          android:layout_marginTop="16dp"
                          android:text="Config"
                          android:textColor="#DA70D6" />
+
+                     <TextView
+                         android:id="@+id/tvTitle"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignLeft="@+id/etName"
+                         android:layout_alignParentTop="true"
+                         android:layout_marginTop="36dp"
+                         android:text="@string/login"
+                         android:textAppearance="?android:attr/textAppearanceLarge"
+                         android:textColor="#DA70D6" />
+
+                     <EditText
+                         android:id="@+id/etName"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignLeft="@+id/etPass"
+                         android:layout_below="@+id/tvTitle"
+                         android:layout_marginTop="22dp"
+                         android:ems="10"
+                         android:hint="Username"
+                         android:textAppearance="?android:attr/textAppearanceLarge"
+                         android:textColor="#DA70D6" >
+
+                         <requestFocus />
+                     </EditText>
+
+                     <EditText
+                         android:id="@+id/etPass"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_below="@+id/etName"
+                         android:layout_centerHorizontal="true"
+                         android:layout_marginTop="37dp"
+                         android:ems="10"
+                         android:hint="Password"
+                         android:inputType="textPassword"
+                         android:textAppearance="?android:attr/textAppearanceLarge"
+                         android:textColor="#DA70D6" />
                     
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/tab3"
+                    android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="#DA70D6" >
