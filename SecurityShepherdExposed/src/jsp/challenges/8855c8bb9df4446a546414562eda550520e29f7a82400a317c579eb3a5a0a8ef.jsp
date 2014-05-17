@@ -6,7 +6,7 @@ String levelName = "Client Side Injection 2";
 //Alphanumeric Only
 String levelHash = "8855c8bb9df4446a546414562eda550520e29f7a82400a317c579eb3a5a0a8ef";
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Download the file and play with it to extract the key for this level!";
+String levelBlurb = "An ineffective defence against Client Side Injection is Filtering user input. This technique involves trying to predict the query which an attacker would execute and then replacing key words like SELECT, WHERE, FROM with a dot or blank space. Filtering will make it slightly harder for an attacker to perform injection but it generally will not stop them as there are wasy of bypassing filtering. ";
 
 /**
  * <br/><br/>
