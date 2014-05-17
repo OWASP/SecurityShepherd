@@ -95,7 +95,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 				<br/>
 				<a> GET /root/grantComplete/csrfLesson?userId=exampleId </a>
 				<br />
-				To complete this lesson, send an administrator a message with an embedded <a>&lt;img&gt;</a> tag that will force them to submit the request described above, replacing the exampleId attribute with your temp userId: <a><%= falseId %></a>
+				To complete this lesson, send an administrator a message with a image URL, that will show in an embedded <a>&lt;img&gt;</a> tag that will force them to submit the request described above, replacing the exampleId attribute with your temp userId: <a><%= falseId %></a>
 				<br />
 				<br />
 				<br />
@@ -103,7 +103,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>message</a> that you want to send to one of Security Shepherds 24 hour administrators.
+						Please enter the <a>URL of the image</a> that you want to send to one of Security Shepherds 24 hour administrators.
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="messageForAdmin" type="text"/>

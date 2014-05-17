@@ -2,6 +2,9 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -13,11 +16,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import utils.Validate;
+import dbProcs.Database;
 import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * Cross Site Request Forgery Challenge One - Does not return reslut key
+ * Cross Site Request Forgery Challenge Six - Does not return result Key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -36,18 +40,20 @@ import dbProcs.Setter;
  * @author Mark Denihan
  *
  */
-public class s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52 extends HttpServlet
+public class CsrfChallengeSixGetToken extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeSixGetToken.class);
+	private static final String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
 	/**
-	 * Allows users to set their CSRF attack string to complete this module
+	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
+	 * forces the victim to submit a post request to the CSRFChallengeTargetTwo
 	 * @param myMessage To Be stored as the users message for this module
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doGet (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
-		log.debug("Cross-SiteForegery Challenge One Servlet");
+		log.debug("Cross-SiteForegery Challenge Get Token Six Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -55,35 +61,35 @@ public class s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52 ex
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
-				Cookie tokenCookie = Validate.getToken(request.getCookies());
-				Object tokenParmeter = request.getParameter("csrfToken");
-				if(Validate.validateTokens(tokenCookie, tokenParmeter))
+				String htmlOutput = new String("Your csrf Token for this Challenge is: ");
+				String userId = request.getParameter("userId").toString();
+				Connection conn = Database.getConnection(getServletContext().getRealPath(""));
+				try
 				{
-					String myMessage = request.getParameter("myMessage");
-					log.debug("User Submitted - " + myMessage);
-					myMessage = Validate.makeValidUrl(myMessage);
-					
-					log.debug("Updating User's Stored Message");
-					String ApplicationRoot = getServletContext().getRealPath("");
-					String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, this.getClass().getSimpleName());
-					String userId = (String)ses.getAttribute("userStamp");
-					Setter.setStoredMessage(ApplicationRoot, myMessage, userId, moduleId);
-					
-					log.debug("Retrieving user's class's forum");
-					String classId = null;
-					if(ses.getAttribute("userClass") != null)
-						classId = (String)ses.getAttribute("userClass");
-					String htmlOutput = Getter.getCsrfForumWithImg(ApplicationRoot, classId, moduleId);
-					
-					log.debug("Outputing HTML");
-					out.write(htmlOutput);
+					log.debug("Prepairing setCsrfChallengeSixToken call");
+					PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfToken FROM csrfTokens WHERE userId LIKE ?");
+					callstmnt.setString(1, userId);
+					log.debug("Executing setCsrfChallengeSixTokenQuery");
+					ResultSet rs = callstmnt.executeQuery();
+					int i = 0;
+					while(rs.next())
+					{
+						i++;
+						htmlOutput += rs.getString(1) + " <br/>";
+					}
+					log.debug("Returned " + i + " CSRF Tokens for ID: " + userId);
 				}
+				catch (Exception e)
+				{
+					log.debug("Could not retrieve Challenge CSRF Tokens");
+				}
+					
 			}
 		}
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Cross Site Request Forgery Challenge 2 - " + e.toString());
 		}
 	}
+
 }

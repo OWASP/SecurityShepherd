@@ -17,6 +17,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ExposedServer;
+import utils.FindXSS;
 import utils.Hash;
 import utils.Validate;
 import dbProcs.Getter;
@@ -108,23 +109,7 @@ public class f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f ex
 							}
 							String csrfAttack = csrfUrl.getQuery().substring(csrfStart, csrfEnd);
 							log.debug("csrfAttack Found to be: " + csrfAttack);
-							URL theAttack = new URL(csrfAttack);
-							log.debug("theAttack Host: " + theAttack.getHost());
-							log.debug("theAttack Port: " + theAttack.getPort());
-							log.debug("theAttack Path: " + theAttack.getPath());
-							log.debug("theAttack Query: " + theAttack.getQuery());
-							validAttack = theAttack.getHost().equals(ExposedServer.getSecureHost().toLowerCase());
-							if(!validAttack)
-								log.debug("Invalid Solutoin: Bad Host");
-							validAttack = new Integer(theAttack.getPort()).toString().equals(ExposedServer.getSecurePort().toLowerCase()) && validAttack;
-							if(!validAttack)
-								log.debug("Invalid Solutoin: Bad Port or Above");
-							validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase("/root/grantComplete/unvalidatedredirectlesson") && validAttack;
-							if(!validAttack)
-								log.debug("Invalid Solutoin: Bad Path or Above");
-							validAttack = theAttack.getQuery().toLowerCase().equalsIgnoreCase(("userId=" + tempId).toLowerCase()) && validAttack;
-							if(!validAttack)
-								log.debug("Invalid Solutoin: Bad Query or Above");
+							validAttack = FindXSS.findCsrfAttackUrl(csrfAttack, "/root/grantComplete/unvalidatedredirectlesson", "userId", tempId);
 						}
 					}
 					catch(MalformedURLException e)

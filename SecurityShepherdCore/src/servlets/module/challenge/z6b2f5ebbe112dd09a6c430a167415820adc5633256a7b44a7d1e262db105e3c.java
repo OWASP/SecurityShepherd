@@ -13,12 +13,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import utils.Validate;
-import utils.XssFilter;
 import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * Cross Site Request Foregery Challenge Three - Does not return result key
+ * Cross Site Request Foregery Challenge Six - Does not return result key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -49,7 +48,7 @@ public class z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c ex
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
-		log.debug("Cross-SiteForegery Challenge Three Servlet");
+		log.debug("Cross-SiteForegery Challenge Six Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -63,8 +62,7 @@ public class z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c ex
 				{
 					String myMessage = request.getParameter("myMessage");
 					log.debug("User Submitted - " + myMessage);
-					myMessage = XssFilter.levelFour(myMessage);
-					log.debug("After Filtering - " + myMessage);
+					myMessage = Validate.makeValidUrl(myMessage);
 					
 					log.debug("Updating User's Stored Message");
 					String ApplicationRoot = getServletContext().getRealPath("");
@@ -76,7 +74,7 @@ public class z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c ex
 					String classId = null;
 					if(ses.getAttribute("userClass") != null)
 						classId = (String)ses.getAttribute("userClass");
-					String htmlOutput = Getter.getCsrfForum(ApplicationRoot, classId, moduleId);
+					String htmlOutput = Getter.getCsrfForumWithIframe(ApplicationRoot, classId, moduleId);
 					
 					log.debug("Outputing HTML");
 					out.write(htmlOutput);
@@ -86,7 +84,7 @@ public class z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Cross Site Request Forgery Challenge 3 - " + e.toString());
+			log.fatal("Cross Site Request Forgery Challenge 6 - " + e.toString());
 		}
 	}
 

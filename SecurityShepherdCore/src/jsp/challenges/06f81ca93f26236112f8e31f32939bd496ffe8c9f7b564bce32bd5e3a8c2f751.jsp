@@ -1,7 +1,10 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
-<%
-// Cross Site Request Forgery Challenge 6
+<% 
+// Cross Site Scripting Challenge 4
+
+String levelName = new String("Cross Site Scripting Four");
+String levelHash = "06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751";
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -22,7 +25,7 @@
  * @author Mark Denihan
  */
  
-System.out.println("Cross Site Request Forgery Challenge 6 Accessed");
+System.out.println(levelName + " Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -35,7 +38,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
+	System.out.println("DEBUG(" + levelName + ".jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -44,71 +47,53 @@ if (Validate.validateSession(ses) && tokenCookie != null)
 // Getting Session Variables
 //This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
 Encoder encoder = ESAPI.encoder();
-String ApplicationRoot = getServletContext().getRealPath("");
 String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
-String userClass = null;
-if(ses.getAttribute("userClass") != null)
-{
-	userClass = encoder.encodeForHTML(ses.getAttribute("userClass").toString());
-}
-String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
+
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross Site Request Forgery Challenge Six</title>
+	<title>Security Shepherd - <%= encoder.encodeForHTML(levelName) %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Cross Site Request Forgery Challenge Six</h2>
+			<h2 class="title"><%= encoder.encodeForHTML(levelName) %></h2>
 			<p> 
-				To complete this challenge, you must get your CSRF counter above 0. The request to increment your counter is as follows
-				<br/>
-				<br/>
-				<a> POST /user/csrfchallengethree/plusplus</a>
-				<br/>
-				With the following parameters; <a>userid=exampleId & csrftoken=exampleToken</a>
-				<br/>
-				<br/>
-				Where the csrfToken parameter is generated dynamically upon user sign in and exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>
-				<br/>
-				<br/>
-				You can use the CSRF forum below to post a message with HTML.				
+				Demonstrate a XSS vulnerability in the following form by executing a javascript alert command. 
+				The developers have heard that escaping is a better way of fixing XSS issues but they are not totally clear on how to implement it.
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter your <a>Message</a> that you would like to share with your class
+						Please enter the <a>URL</a> that you wish to post to your public profile;
 					</td></tr>
 					<tr><td>
-						<input style="width: 400px;" id="myMessage" type="text"/>
+						<input style="width: 400px;" id="searchTerm" autocomplete="off" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Post Message"/></div>
+						<div id="submitButton"><input type="submit" value="Make Post"/></div>
 						<p style="display: none;" id="loadingSign">Loading...</p>
 					</td></tr>
 					</table>
 				</form>
 				
-				<div id="resultsDiv">
-					<%= Getter.getCsrfForumWithIframe(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, "z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c")) %>
-				</div>
+				<div id="resultsDiv"></div>
 			</p>
 		</div>
 		<script>
 			$("#leForm").submit(function(){
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
-				var theMessage = $("#myMessage").val();
+				var theSearchTerm = $("#searchTerm").val();
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						dataType: "text",
 						type: "POST",
-						url: "z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c",
+						url: "<%= levelHash %>",
 						data: {
-							myMessage: theMessage,
+							searchTerm: theSearchTerm,
 							csrfToken: "<%= csrfToken %>"
 						},
 						async: false

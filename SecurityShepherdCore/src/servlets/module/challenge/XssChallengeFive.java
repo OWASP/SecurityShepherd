@@ -1,4 +1,4 @@
-package servlets.module.lesson;
+package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,12 +17,11 @@ import org.owasp.esapi.Encoder;
 import dbProcs.Getter;
 
 import utils.FindXSS;
+import utils.Hash;
 import utils.Validate;
 import utils.XssFilter;
-
 /**
- * Cross Site Request Forgery Lesson
- * Currently does not use user specific result key because of current CSRF blanket rule
+ * Cross Site Scripting Challenge Five control class.
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -41,22 +40,21 @@ import utils.XssFilter;
  * @author Mark Denihan
  *
  */
-public class ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7 extends HttpServlet
+public class XssChallengeFive extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(XssChallengeFive.class);
+	private static final String levelHash = "f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671";
 	/**
-	 * User submission is parsed for a valid HTML IMG tag. The SRC attribute of this tag is then used to construct a URL object. This URL object is then checked to ensure a valid attack
-	 * @param falseId User's session stored tempId
-	 * @param messageForAdmin CSRF Submission
+	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotely exploited, and there fore only is executable against the person initiating the function.
+	 * @param searchTerm To be spat back out at the user after been encoded for wrong HTML Context
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
-		log.debug("Cross-Site Request Forgery Lesson Servlet");
+		log.debug("Cross-Site Scripting Challenge Five Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -66,29 +64,32 @@ public class ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7 ex
 				Object tokenParmeter = request.getParameter("csrfToken");
 				if(Validate.validateTokens(tokenCookie, tokenParmeter))
 				{
-					String falseId = (String) ses.getAttribute("falseId");
-					log.debug("falseId = " + falseId);
-					String messageForAdmin = request.getParameter("messageForAdmin").toLowerCase();
-					log.debug("User Submitted - " + messageForAdmin);
-					
 					String htmlOutput = new String();
-					boolean validLessonAttack = FindXSS.findCsrfAttackUrl(messageForAdmin, "/root/grantComplete/csrflesson", "userId", falseId);
+					String userPost = new String();
+					String searchTerm = request.getParameter("searchTerm");
+					log.debug("User Submitted - " + searchTerm);
+					searchTerm = XssFilter.badUrlValidate(searchTerm);
+					userPost = "<a href=\"" + searchTerm + "\">Your HTTP Link!</a>";
+					log.debug("After WhiteListing - " + searchTerm);
 					
-					if(validLessonAttack)
+					if(FindXSS.search(userPost))
 					{
+						Encoder encoder = ESAPI.encoder();
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>The administrator recieved your messege and submitted the GET request embbeded in it<br />" +
+								"<p>You successfully executed the javascript alert command!<br />" +
 								"The result key for this lesson is <a>" +
-								encoder.encodeForHTML(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), this.getClass().getSimpleName())) +
-								"</a>";
+								encoder.encodeForHTML(
+										Hash.generateUserSolution(
+												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash),
+											(String)ses.getAttribute("userName")
+										)
+								) + "</a>";
 					}
-					log.debug("Adding searchTerm to Html: " + messageForAdmin);
-					htmlOutput += "<h2 class='title'>Message Sent</h2>" +
-						"<p><table><tr><td>Sent To: </td><td>administrator@SecurityShepherd.com</td></tr>" +
-						"<tr><td>Message: </td><td> " +
-						"<img src=\"" + encoder.encodeForHTMLAttribute(messageForAdmin) + "\"/>" +
-						"</td></tr></table></p>";
-					log.debug("outputing HTML");
+					log.debug("Adding searchTerm to Html: " + searchTerm);
+					htmlOutput += "<h2 class='title'>Your New Post!</h2>" +
+						"<p>You just posted the following link;</p> " +
+						userPost +
+						"</p>";
 					out.write(htmlOutput);
 				}
 			}
@@ -96,8 +97,7 @@ public class ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7 ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Cross Site Request Forgery Lesson - " + e.toString());
+			log.fatal("Cross Site Scripting Challenge 4 - " + e.toString());
 		}
-		log.debug("End Cross-Site Request Forgery Lesson Servlet");
 	}
 }

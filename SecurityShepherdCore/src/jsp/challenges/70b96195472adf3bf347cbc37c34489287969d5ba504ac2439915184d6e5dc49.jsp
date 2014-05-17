@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-// Cross Site Request Forgery Challenge 6
+// Cross Site Request Forgery Challenge 4
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -21,8 +21,8 @@
  * 
  * @author Mark Denihan
  */
- 
-System.out.println("Cross Site Request Forgery Challenge 6 Accessed");
+ String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
+System.out.println("Cross Site Request Forgery Challenge 4 Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -35,7 +35,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
+	System.out.println("DEBUG(CSRFChallenge4.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -57,23 +57,23 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross Site Request Forgery Challenge Six</title>
+	<title>Security Shepherd - Cross Site Request Forgery Challenge Four</title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Cross Site Request Forgery Challenge Six</h2>
+			<h2 class="title">Cross Site Request Forgery Challenge Four</h2>
 			<p> 
 				To complete this challenge, you must get your CSRF counter above 0. The request to increment your counter is as follows
 				<br/>
 				<br/>
-				<a> POST /user/csrfchallengethree/plusplus</a>
+				<a> POST /user/csrfchallengefour/plusplus</a>
 				<br/>
-				With the following parameters; <a>userid=exampleId & csrftoken=exampleToken</a>
+				With the following parameters; <a>userId = exampleId</a> and <a>csrf = yourCsrfToken</a>
 				<br/>
 				<br/>
-				Where the csrfToken parameter is generated dynamically upon user sign in and exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>
+				Where exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>
 				<br/>
 				<br/>
 				You can use the CSRF forum below to post a message with HTML.				
@@ -83,7 +83,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 						Please enter your <a>Message</a> that you would like to share with your class
 					</td></tr>
 					<tr><td>
-						<input style="width: 400px;" id="myMessage" type="text"/>
+						<input style="width: 400px;" id="myMessageAris" type="text"/>
 					</td></tr>
 					<tr><td>
 						<div id="submitButton"><input type="submit" value="Post Message"/></div>
@@ -93,7 +93,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				</form>
 				
 				<div id="resultsDiv">
-					<%= Getter.getCsrfForumWithIframe(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, "z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c")) %>
+					<%= Getter.getCsrfForumWithIframe(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, levelHash)) %>
 				</div>
 			</p>
 		</div>
@@ -101,12 +101,12 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 			$("#leForm").submit(function(){
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
-				var theMessage = $("#myMessage").val();
+				var theMessage = $("#myMessageAris").val();
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						dataType: "text",
 						type: "POST",
-						url: "z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c",
+						url: "<%= levelHash %>",
 						data: {
 							myMessage: theMessage,
 							csrfToken: "<%= csrfToken %>"

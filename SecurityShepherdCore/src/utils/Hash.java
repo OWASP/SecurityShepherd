@@ -120,14 +120,14 @@ public class Hash
 		String result = new String();
 		try
 		{
-			byte byteArray[] = new byte[32];
+			byte byteArray[] = new byte[256];
 			SecureRandom psn1 = SecureRandom.getInstance("SHA1PRNG");
 			
 			Base64 base64 = new Base64();
 			psn1.setSeed(psn1.nextLong());
 			psn1.nextBytes(byteArray);
 			result = new String(byteArray);
-			result = base64.encode(byteArray).toString();
+			result = base64.encode(thisString(thisString(byteArray.toString())).getBytes()).toString();
 			log.debug("Generated String = " + result);
 		}
 		catch(Exception e)

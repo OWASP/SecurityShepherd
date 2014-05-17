@@ -17,7 +17,7 @@ import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * Cross Site Request Forgery Challenge One - Does not return reslut key
+ * Cross Site Request Forgery Challenge Four - Does not return result Key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -36,18 +36,20 @@ import dbProcs.Setter;
  * @author Mark Denihan
  *
  */
-public class s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52 extends HttpServlet
+public class CsrfChallengeFour extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeFour.class);
+	private static final String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
 	/**
-	 * Allows users to set their CSRF attack string to complete this module
+	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
+	 * forces the victim to submit a post request to the CSRFChallengeTargetTwo
 	 * @param myMessage To Be stored as the users message for this module
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
-		log.debug("Cross-SiteForegery Challenge One Servlet");
+		log.debug("Cross-SiteForegery Challenge Four Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -65,7 +67,7 @@ public class s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52 ex
 					
 					log.debug("Updating User's Stored Message");
 					String ApplicationRoot = getServletContext().getRealPath("");
-					String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, this.getClass().getSimpleName());
+					String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);
 					String userId = (String)ses.getAttribute("userStamp");
 					Setter.setStoredMessage(ApplicationRoot, myMessage, userId, moduleId);
 					
@@ -73,7 +75,7 @@ public class s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52 ex
 					String classId = null;
 					if(ses.getAttribute("userClass") != null)
 						classId = (String)ses.getAttribute("userClass");
-					String htmlOutput = Getter.getCsrfForumWithImg(ApplicationRoot, classId, moduleId);
+					String htmlOutput = Getter.getCsrfForumWithIframe(ApplicationRoot, classId, moduleId);
 					
 					log.debug("Outputing HTML");
 					out.write(htmlOutput);
@@ -83,7 +85,8 @@ public class s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52 ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Cross Site Request Forgery Challenge 2 - " + e.toString());
+			log.fatal("Cross Site Request Forgery Challenge Four - " + e.toString());
 		}
 	}
+
 }

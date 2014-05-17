@@ -1,6 +1,11 @@
 package utils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.log4j.Logger;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Encoder;
 
 /**
  * Provides a number of filters that are used in different XSS challenges.
@@ -41,7 +46,7 @@ public class XssFilter
 		input = input.replaceAll("onload", "o.oad");
 		input = input.replaceAll("onerror", "o.err");
 		input = input.replaceAll("ondblclick", "o.dbl");
-		return input;
+		return screwHtmlEncodings(input);
 	}
 	
 	public static String levelThree (String input)
@@ -60,7 +65,7 @@ public class XssFilter
 			input = input.replaceAll("onmousemove", "");
 			input = input.replaceAll("onmouseout", "");
 		}
-		return input;
+		return screwHtmlEncodings(input);
 	}
 	
 	public static String levelFour (String input)
@@ -86,6 +91,62 @@ public class XssFilter
 				input = input.replaceAll(javascriptTriggers[i], replacement);
 			}
 		}
+		return screwHtmlEncodings(input);
+	}
+	
+	/**
+	 * Encodes for HTML, but doesnt escape ambersands
+	 * @param input
+	 * @return
+	 */
+	public static String encodeForHtml (String input)
+	{
+		log.debug("Filtering input at XSS white list");
+		Encoder encoder = ESAPI.encoder();
+		input = encoder.encodeForHTML(input);
+		//Unencode a few things to open security holes
+		input = input.replaceAll("&amp;", "&").replaceFirst("&quot;", "\"").replaceAll("&#x23;", "#").replaceFirst("&#x3d;", "=").replaceAll("&#x3b;", ";");
+		//Encode lowercase "on" and upercase "on" to complicate the required attack vectors to pass
+		return input.replaceAll("on", "&#x6f;&#x6e;").replaceAll("ON", "&#x4f;&#x4e;");
+	}
+	
+	/**
+	 * Whitelists for specific URL types but doesnt sanitise it
+	 * @param input
+	 * @return
+	 */
+	public static String badUrlValidate (String input)
+	{
+		String howToMakeAUrlUrl = new String("https://www.google.com/search?q=What+does+a+HTTP+link+look+like");
+		input = input.toLowerCase();
+		if (input.startsWith("http"))
+		{
+			try 
+			{
+				URL theUrl = new URL(input);
+			} 
+			catch (MalformedURLException e) 
+			{
+				log.debug("Could not Cast URL from input: " + e.toString());
+				input = howToMakeAUrlUrl;
+			}
+		}
+		else
+		{
+			log.debug("Was not a HTTP url");
+			input = howToMakeAUrlUrl;
+		}
+		return input;
+	}
+	
+	/**
+	 * Use this to cripple HTML encoded attacks. This is can be used to limit the vectors of attack for success
+	 * @param input The string you want to remove HTML encoding from
+	 * @return A string without HTML encoding
+	 */
+	private static String screwHtmlEncodings(String input)
+	{
+		input = input.replaceAll("&", "!").replaceAll(":", "!");
 		return input;
 	}
 }

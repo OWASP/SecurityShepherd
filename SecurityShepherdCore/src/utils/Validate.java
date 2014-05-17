@@ -360,4 +360,20 @@ public class Validate
 			log.error("Url Doesn't end with a forward slash. Very likely wrong");
 		return result; 
 	}
+	
+	/**
+	 * Quick method to prevent data and javascript URLs
+	 * @param theUrl
+	 * @return
+	 */
+	public static String makeValidUrl(String theUrl)
+	{
+		theUrl = theUrl.toLowerCase();
+		if (!theUrl.startsWith("http"))
+		{
+			theUrl = "http" + theUrl;
+			log.debug("Transformed to: " + theUrl);
+		}
+		return theUrl;
+	}
 }
