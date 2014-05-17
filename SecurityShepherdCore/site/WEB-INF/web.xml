@@ -539,8 +539,8 @@
 		<servlet-class>servlets.module.challenge.CsrfChallengeTargetFive</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>/user/csrfchallengefour/plusplus</servlet-name>
-		<url-pattern>/user/csrfchallengefour/plusplus</url-pattern>
+		<servlet-name>/user/csrfchallengefive/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengefive/plusplus</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
