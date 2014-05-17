@@ -17,7 +17,7 @@ import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * Cross Site Request Forgery Challenge Four - Does not return result Key
+ * Cross Site Request Forgery Challenge Five - Does not return result Key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -36,11 +36,11 @@ import dbProcs.Setter;
  * @author Mark Denihan
  *
  */
-public class CsrfChallengeFour extends HttpServlet
+public class CsrfChallengeFive extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeFour.class);
-	private static final String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
+	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeFive.class);
+	private static final String levelHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
 	/**
 	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
 	 * forces the victim to submit a post request to the CSRFChallengeTargetTwo
@@ -49,7 +49,7 @@ public class CsrfChallengeFour extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
-		log.debug("Cross-SiteForegery Challenge Four Servlet");
+		log.debug("Cross-SiteForegery Challenge Five Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -85,7 +85,6 @@ public class CsrfChallengeFour extends HttpServlet
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Cross Site Request Forgery Challenge Four - " + e.toString());
 		}
 	}
 

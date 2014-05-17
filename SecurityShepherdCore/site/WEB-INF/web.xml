@@ -525,4 +525,21 @@
 		<url-pattern>/user/csrfchallengefour/plusplus</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>/challenges/2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeFive</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569</servlet-name>
+		<url-pattern>/challenges/2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/user/csrfchallengefive/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetFive</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengefour/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengefour/plusplus</url-pattern>
+	</servlet-mapping>
 </web-app>

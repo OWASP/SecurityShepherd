@@ -68,7 +68,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				To complete this challenge, you must get your CSRF counter above 0. The request to increment your counter is as follows
 				<br/>
 				<br/>
-				<a> POST /user/csrfchallengef/plusplus</a>
+				<a> POST /user/csrfchallengetwo/plusplus</a>
 				<br/>
 				With the following parameter; <a>userId = exampleId</a>
 				<br/>

@@ -17,7 +17,7 @@ import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * Cross Site Request Forgery Challenge Target Four - Does not return Result key
+ * Cross Site Request Forgery Challenge Target Five - Does not return Result key
  * <br/><br/>
  * Weak Nonce Variety can be broken
  * <br/><br/>
@@ -38,11 +38,12 @@ import dbProcs.Setter;
  * @author Mark Denihan
  *
  */
-public class CsrfChallengeTargetFour extends HttpServlet
+public class CsrfChallengeTargetFive extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static final String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
-	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeTargetFour.class);
+	private static String moduleHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
+	private static final String[] csrfArray ={"c4ca4238a0b923820dcc509a6f75849b", "c81e728d9d4c2f636f067f89cc14862c", "eccbc87e4b5ce2fe28308fd9f2a7baf3"};
+	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeTargetFive.class);
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Two as complete.
 	 * @param userId User identifier to be incremented
@@ -50,29 +51,30 @@ public class CsrfChallengeTargetFour extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
-		log.debug("Cross-SiteForegery Challenge Four Target Servlet");
+		log.debug("CSRF Challenge Five Target Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String storedToken = new String();
 		try
 		{
+			String csrfTokenName = "csrfChallengeFiveNonce";
 			boolean result = false;
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
 				//Get CSRF Token From session
-				if(ses.getAttribute("csrfChallengeFourNonce") == null || ses.getAttribute("csrfChallengeFourNonce").toString().isEmpty())
+				if(ses.getAttribute(csrfTokenName) == null || ses.getAttribute(csrfTokenName).toString().isEmpty())
 				{
 					log.debug("No CSRF Token assoiated with user");
 					Random random = new Random();
 					int newToken = random.nextInt(3);
 					out.write("No CSRF Token Detected for this Challenge. You're token is now " + newToken + "<br><br>");
-					storedToken = "" + newToken;
-					ses.setAttribute("csrfChallengeFourNonce", newToken);
+					storedToken = csrfArray[newToken];
+					ses.setAttribute(csrfTokenName, storedToken);
 				}
 				else
 				{
-					storedToken = "" + ses.getAttribute("csrfChallengeFourNonce");
+					storedToken = "" + ses.getAttribute(csrfTokenName);
 				}
 				String userId = (String)ses.getAttribute("userStamp");
 				
@@ -94,7 +96,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 							log.debug(userName + " is been CSRF'd by " + attackerName);
 							
 							log.debug("Attemping to Increment ");
-							String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);
+							String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, moduleHash);
 							result = Setter.updateCsrfCounter(ApplicationRoot, moduleId, plusId);
 						}
 						else
@@ -129,7 +131,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 		catch(Exception e)
 		{
 				out.write("An Error Occured! You must be getting funky!");
-				log.fatal("Cross Site Request Forgery Target Challenge 2 - " + e.toString());
+				log.fatal("Cross Site Request Forgery Target Challenge 5 - " + e.toString());
 		}
 	}
 }
