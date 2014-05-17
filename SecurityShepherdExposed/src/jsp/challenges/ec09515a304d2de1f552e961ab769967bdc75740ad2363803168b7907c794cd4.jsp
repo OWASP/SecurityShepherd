@@ -6,7 +6,11 @@ String levelName = "Insecure Data Storage 3";
 //Alphanumeric Only
 String levelHash = "ec09515a304d2de1f552e961ab769967bdc75740ad2363803168b7907c794cd4";
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Download the file and play with it to extract the key for this level!";
+String levelBlurb = "There are other ways to store data insecurely. Using known broken hashing algorithms can lead to pain for the Apps users. Not only are they susceptible to collisions, where two different passwords can potentially generate the same hash and be interpreted as the same password, the developer would have to assume their users use strong passwords. 
+
+This is generally never the case and once a hashed value has been cracked, an attacker merely needs to update their tables. This method still uses no key, Therefore one would assume it is not truly encryption?
+
+Hashing algorithms are useful for comparing two different files but should not be used for storage of passwords.";
 
 /**
  * <br/><br/>

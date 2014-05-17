@@ -1,7 +1,9 @@
 package com.app.mobshep;
 
+
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,6 +13,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 public class template extends Activity implements OnClickListener {
 
@@ -28,47 +31,56 @@ public class template extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.broken);
 		th = (TabHost) findViewById(R.id.tabhost);
-		referenceXML();
+
+		referenceXML(); // Link up Java -> XML references + declare
+						// onClickListeners.
+		checkDevice();
+
 		th.setup();
 
 		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag2");
-		specs.setContent(R.id.tab2);
-		specs.setIndicator("Tab 2");
+		TabSpec specs = th.newTabSpec("tag1");
+		specs.setContent(R.id.tab1);
+		specs.setIndicator("Tab 1");
 		th.addTab(specs);
 
-		specs = th.newTabSpec("tag3");
-		specs.setContent(R.id.tab3);
-		specs.setIndicator("Tab 3");
+		specs = th.newTabSpec("tag2");
+		specs.setContent(R.id.tab2);
+		specs.setIndicator("Tab 2");
 		th.addTab(specs);
 	}
 
 	private void referenceXML() {
 		// TODO Auto-generated method stub
 		Login = (Button) findViewById(R.id.bLogin);
-		Config=(Button)findViewById(R.id.bConfig);
-		username = (EditText)findViewById(R.id.etName);
-		password = (EditText)findViewById(R.id.etPass);
-		key = (EditText)findViewById(R.id.etKey);
+		Config = (Button) findViewById(R.id.bConfig);
+		username = (EditText) findViewById(R.id.etName);
+		password = (EditText) findViewById(R.id.etPass);
+		key = (EditText) findViewById(R.id.etKey);
 		Login.setOnClickListener(this);
 		Config.setOnClickListener(this);
-		
+	}
 
+	public void checkDevice() {
+		if (Build.BRAND.equalsIgnoreCase("generic")
+				|| Build.BOARD.equalsIgnoreCase("sdk")) {
+			Toast tamper = Toast.makeText(template.this,
+					"This App has been tampered with.", Toast.LENGTH_LONG);
+			tamper.show();
+
+		}
 	}
 
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
-		
+
 		case (R.id.bConfig):
-			
-			//Intent preferenceIntent = new Intent(getActivity(), Preferences.class);
-			//startActivity(preferenceIntent);
-			
+
 			Intent gotoMain = new Intent(this, Preferences.class);
 			startActivity(gotoMain);
-			
+
 			break;
-		
+
 		case (R.id.bLogin):
 
 			String CheckName = username.getText().toString();
@@ -77,17 +89,18 @@ public class template extends Activity implements OnClickListener {
 			if (CheckName.contentEquals("user")
 					&& CheckPass.contentEquals("pass")) {
 				key.setText("Key is revealed.");
-				Toast toast = Toast.makeText(template.this, "Logged in!", Toast.LENGTH_LONG);
-				toast.show();	
+				Toast toast = Toast.makeText(template.this, "Logged in!",
+						Toast.LENGTH_LONG);
+				toast.show();
 			}
-			
-			if (CheckName.contentEquals("")
-					|| CheckPass.contentEquals("")) {
-				Toast toast2 = Toast.makeText(template.this, "Empty Fields Detected.", Toast.LENGTH_LONG);
+
+			if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
+				Toast toast2 = Toast.makeText(template.this,
+						"Empty Fields Detected.", Toast.LENGTH_LONG);
 				toast2.show();
 			}
 
-			else{
+			else {
 
 				Toast toast = Toast.makeText(template.this,
 						"Invalid Credentials!", Toast.LENGTH_LONG);

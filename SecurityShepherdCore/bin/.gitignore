@@ -1,7 +1,6 @@
-/testing
-/utils
-/servlets
-/dbProcs
 /jsp
-/ESAPI.properties
 /log4j.properties
+/ESAPI.properties
+/dbProcs
+/servlets
+/utils

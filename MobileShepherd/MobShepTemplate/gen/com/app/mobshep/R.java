@@ -28,18 +28,18 @@ public final class R {
     public static final class id {
         public static final int Splash=0x7f08000a;
         public static final int about=0x7f08000b;
-        public static final int bConfig=0x7f080007;
-        public static final int bLogin=0x7f080006;
+        public static final int bConfig=0x7f080005;
+        public static final int bLogin=0x7f080003;
         public static final int background=0x7f080000;
         public static final int credits=0x7f08000c;
         public static final int etKey=0x7f080009;
-        public static final int etName=0x7f080004;
-        public static final int etPass=0x7f080005;
+        public static final int etName=0x7f080007;
+        public static final int etPass=0x7f080004;
         public static final int exit=0x7f08000d;
-        public static final int tab2=0x7f080002;
-        public static final int tab3=0x7f080008;
+        public static final int tab1=0x7f080002;
+        public static final int tab2=0x7f080008;
         public static final int tabhost=0x7f080001;
-        public static final int tvTitle=0x7f080003;
+        public static final int tvTitle=0x7f080006;
     }
     public static final class layout {
         public static final int broken=0x7f030000;
@@ -109,6 +109,8 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f060001;
-        public static final int TabFont=0x7f060002;
+        public static final int ShepherdTabWidget=0x7f060003;
+        public static final int ShepherdTabWidgetText=0x7f060004;
+        public static final int ShepherdTheme=0x7f060002;
     }
 }

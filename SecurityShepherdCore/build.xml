@@ -1,7 +1,7 @@
 <project default="build.deploy.war">
 	
 	<!-- Server Base is the location of the "/Servers" directory that the server package deploys. It is the loction of your tomcat server -->
-	<property name="serverBase" value="C:\Users\IBM_ADMIN\Dropbox\College\4th Year\Project\Environment\Servers" />
+	<property name="serverBase" value="C:\Users\IBM_ADMIN\SecurityShepherdServerBase" />
 	<property name="tomcat" value="${serverBase}\applicationServers\tomcatCore\webapps" />
 	<property name="lib.dir" value="lib" />
 	<property name="projectName" value="ROOT" />
