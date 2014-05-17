@@ -675,6 +675,30 @@ INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestio
 
 COMMIT;
 
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+DROP SCHEMA IF EXISTS `csrfChallengeSix` ;
+CREATE SCHEMA IF NOT EXISTS `csrfChallengeSix` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `csrfChallengeSix` ;
+
+-- -----------------------------------------------------
+-- Table `csrfChallengeSix`.`csrfTokens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csrfChallengeSix`.`csrfTokens` (
+  `userId` VARCHAR(64) NOT NULL,
+  `csrfTokenscol` VARCHAR(256) NULL,
+  PRIMARY KEY (`userId`))
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+commit;
+
 DROP USER 'userLookUuuup'@'localhost';
 CREATE USER 'userLookUuuup'@'localhost' IDENTIFIED BY 'youMomaSoTh1n';
 GRANT SELECT ON `SqlChalSix`.`users`  TO 'userLookUuuup'@'localhost';
@@ -738,4 +762,9 @@ GRANT SELECT ON `lessonTwoTimeInjection`.`menu` TO 'HoneyNetRocks';
 DROP USER 'secureDood'@'localhost';
 CREATE USER  'secureDood'@'localhost' IDENTIFIED BY 'iCantEv3n';
 GRANT SELECT ON `SqlChalFourSuperSecure`.`users` TO 'secureDood'@'localhost';
+
+DROP USER 'csrfChalSixer'@'localhost';
+CREATE USER  'csrfChalSixer'@'localhost' IDENTIFIED BY 'c4n1bUplZ';
+GRANT SELECT ON `csrfChallengeSix`.`csrfTokens` TO 'secureDood'@'localhost';
+
 

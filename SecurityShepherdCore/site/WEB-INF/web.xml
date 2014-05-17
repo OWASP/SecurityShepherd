@@ -542,4 +542,31 @@
 		<servlet-name>/user/csrfchallengefour/plusplus</servlet-name>
 		<url-pattern>/user/csrfchallengefour/plusplus</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeSix</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3</servlet-name>
+		<url-pattern>/challenges/7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/user/csrfchallengesix/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetSix</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengesix/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengesix/plusplus</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/user/csrfchallengesix/getToken</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeSixGetToken</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengesix/getToken</servlet-name>
+		<url-pattern>/user/csrfchallengesix/getToken</url-pattern>
+	</servlet-mapping>
 </web-app>

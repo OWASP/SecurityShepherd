@@ -844,4 +844,49 @@ public class Setter
 			return false;
 		}
 	}
+	
+	public static boolean setCsrfChallengeSixCsrfToken (String userId, String csrfToken, String ApplicationRoot)
+	{
+		log.debug("*** setCsrfChallengeSixToken ***");
+		boolean result = false;
+		Connection conn = Database.getConnection(ApplicationRoot);
+		try
+		{
+			boolean updateToken = false;
+			log.debug("Prepairing setCsrfChallengeSixToken call");
+			PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfToken FROM csrfTokens WHERE userId = ?");
+			callstmnt.setString(1, userId);
+			log.debug("Executing setCsrfChallengeSixToken");
+			ResultSet rs = callstmnt.executeQuery();
+			if(rs.next())
+			{
+				//Need to Update CSRF token rather than Insert
+				log.debug("CSRF token Found for Challenge 6... Updating");
+				updateToken = true;
+			}
+			else
+			{
+				log.debug("No CSRF token Found for Challenge 6... Creating");
+			}
+			rs.close();
+			
+			String whatToDo = new String();
+			if(updateToken)
+				whatToDo = "UPDATE `csrfChallengeSix`.`csrfTokens` SET csrfTokenscol = ? WHERE userId = ?";
+			else
+				whatToDo = "INSERT INTO `csrfChallengeSix`.`csrfTokens` (`csrfTokenscol`, `userId`) VALUES (?, ?)";
+			callstmnt = conn.prepareStatement(whatToDo);
+			callstmnt.setString(1, csrfToken);
+			callstmnt.setString(2, userId);
+			callstmnt.execute();
+			result = true;
+			callstmnt.close();
+		}
+		catch(SQLException e)
+		{
+			log.error("CsrfChallenge6 TokenUpdate Failure: " + e.toString());
+		}
+		Database.closeConnection(conn);		
+		return result;
+	}
 }

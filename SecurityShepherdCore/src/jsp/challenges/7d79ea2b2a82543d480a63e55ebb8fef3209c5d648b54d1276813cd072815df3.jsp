@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-// Cross Site Request Forgery Challenge 5
+// Cross Site Request Forgery Challenge 6
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -21,8 +21,8 @@
  * 
  * @author Mark Denihan
  */
- String levelHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
-System.out.println("Cross Site Request Forgery Challenge 5 Accessed");
+ String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
+System.out.println("Cross Site Request Forgery Challenge 6 Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -35,7 +35,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(CSRFChallenge5.jsp): tokenCookie Error:" + htmlE.toString());
+	System.out.println("DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -52,28 +52,36 @@ if(ses.getAttribute("userClass") != null)
 	userClass = encoder.encodeForHTML(ses.getAttribute("userClass").toString());
 }
 String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
+
+//Set CSRF Challenge 6 CsrfToken
+String csrfChal6Token = Hash.randomString();
+ses.setAttribute("csrfChallengeSixNonce", csrfChal6Token);
+Setter.setCsrfChallengeSixCsrfToken(userId, csrfChal6Token, ApplicationRoot);
+String getYourTokenUrl = encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl() + "/user/csrfchallengesix/getToken?userId=" + userId);
+
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross Site Request Forgery Challenge Five</title>
+	<title>Security Shepherd - Cross Site Request Forgery Challenge Six</title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Cross Site Request Forgery Challenge Five</h2>
+			<h2 class="title">Cross Site Request Forgery Challenge Six</h2>
 			<p> 
 				To complete this challenge, you must get your CSRF counter above 0. The request to increment your counter is as follows
 				<br/>
 				<br/>
-				<a> POST /user/csrfchallengefive/plusplus</a>
+				<a> POST /user/csrfchallengesix/plusplus</a>
 				<br/>
 				With the following parameters; <a>userId = exampleId</a> and <a>csrf = yourCsrfToken</a>
 				<br/>
 				<br/>
-				Where exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>
+				Where exampleId is the ID of the user who's CSRF counter is been incremented. 
+				Your ID is <%= userId %> and you can retrieve your CSRF token <a href="<%= getYourTokenUrl %>">here</a>
 				<br/>
 				<br/>
 				You can use the CSRF forum below to post a message with HTML.				
