@@ -6,7 +6,7 @@ String levelName = "Client Side Injection 3";
 //Alphanumeric Only
 String levelHash = "cfe68711def42bb0b201467b859322dd2750f633246842280dc68c858d208425";
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Download the file and play with it to extract the key for this level!";
+String levelBlurb = "";
 
 /**
  * <br/><br/>

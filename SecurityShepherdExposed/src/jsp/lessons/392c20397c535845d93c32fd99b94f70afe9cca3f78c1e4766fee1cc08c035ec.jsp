@@ -39,7 +39,7 @@ String levelBlurb = "Apps won't always use a SQLite database to store data, in s
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %>Insecure Data Storage 3</h2>
+			<h2 class="title"><%= levelName %></h2>
 			<p> 
 				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				

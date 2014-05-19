@@ -6,7 +6,7 @@ String levelName = "Client Side Injection 2";
 //Alphanumeric Only
 String levelHash = "8855c8bb9df4446a546414562eda550520e29f7a82400a317c579eb3a5a0a8ef";
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "An ineffective defence against Client Side Injection is Filtering user input. This technique involves trying to predict the query which an attacker would execute and then replacing key words like SELECT, WHERE, FROM with a dot or blank space. Filtering will make it slightly harder for an attacker to perform injection but it generally will not stop them as there are wasy of bypassing filtering. ";
+String levelBlurb = "";
 
 /**
  * <br/><br/>
@@ -39,13 +39,13 @@ String levelBlurb = "An ineffective defence against Client Side Injection is Fil
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %>Client Side Injection 2</h2>
+			<h2 class="title"><%= levelName %></h2>
 			<p> 
 				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				
 				<%= levelBlurb %>
 				<br/>
-					
+				An ineffective defence against Client Side Injection is Filtering user input. This technique involves trying to predict the query which an attacker would execute and then replacing key words like SELECT, WHERE, FROM with a dot or blank space. Filtering will make it slightly harder for an attacker to perform injection but it generally will not stop them as there are wasy of bypassing filtering. 
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

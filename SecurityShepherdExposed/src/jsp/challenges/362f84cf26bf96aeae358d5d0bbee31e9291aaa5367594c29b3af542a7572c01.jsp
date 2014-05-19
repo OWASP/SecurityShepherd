@@ -6,9 +6,7 @@ String levelName = "Insecure Data Storage 2";
 //Alphanumeric Only
 String levelHash = "362f84cf26bf96aeae358d5d0bbee31e9291aaa5367594c29b3af542a7572c01";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "The data stored on the device will rarely show up as plain text. In order to make the credentials unreadable this App could perform an operation to the user credentials in order to make it look like this: ZxhhbXBsZQ==.
-
-Unfortunately this is not a viable defence and will not slow down an attacker targeting your data through a vulnerability in an insecure App.";
+String levelBlurb = "";
 
 /**
  * <br/><br/>
@@ -46,6 +44,9 @@ Unfortunately this is not a viable defence and will not slow down an attacker ta
 				
 				<%= levelBlurb %>
 				<br/>
+				The data stored on the device will rarely show up as plain text. In order to make the credentials unreadable this App could perform an operation to the user credentials in order to make it look like this: ZxhhbXBsZQ==.
+				<br/>
+				Unfortunately this is not a viable defence and will not slow down an attacker targeting your data through a vulnerability in an insecure App.
 				<br/>
 					
 				<% /* IF you need a form - Present it like this */ %>
