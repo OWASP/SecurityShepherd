@@ -2,11 +2,11 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Client Side Injection";
+String levelName = "Mobile Client Side Injection";
 //Alphanumeric Only
 String levelHash = "f758a97011ec4452cc0707e546a7c0f68abc6ef2ab747ea87e0892767152eae1";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Client Side Injection occurs when the user can execute SQLite commands through inputs in order to change the query run by the App. This APK encrypts it's databases using AES. It would be difficult to steal login details but a lot easier to use SQL Injection to bypass the login. We don't need to know  the user credentials. We do know that the APK uses a textbook example of running SQL by appending the Username and Password to a String in a Select statement in order to verify if a username and password exist. If this statement returns true, the user is logged in.";
+//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+String levelBlurb = "";
 
 /**
  * <br/><br/>
@@ -32,7 +32,7 @@ String levelBlurb = "Client Side Injection occurs when the user can execute SQLi
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 	</script> 
 </head>
@@ -45,7 +45,9 @@ String levelBlurb = "Client Side Injection occurs when the user can execute SQLi
 				
 				<%= levelBlurb %>
 				<br/>
-					
+<a>Client Side Injection</a>occurs when the user can execute <a>SQLite</a> commands through inputs in order to change the query run by the App. This APK encrypts it's databases using <a>AES</a>. It would be difficult to steal login details by attacking the encryption but a lot easier to use SQL Injection to bypass the login. A security system is only as strongest as it's weakest link.
+<br/>
+We don't need to know  the user credentials. We do know that the APK uses a textbook example of running SQL by appending the Username and Password to a String in a Select statement in order to verify if a username and password exist. If this statement returns true, the user is logged in.
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

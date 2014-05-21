@@ -1,6 +1,6 @@
 # view AndroidManifest.xml #generated:29
 -keep class com.app.mobshep.SCDL.SCData_Leakage { <init>(...); }
 
-# view AndroidManifest.xml #generated:38
+# view AndroidManifest.xml #generated:39
 -keep class com.app.mobshep.SCDL.Splash { <init>(...); }
 

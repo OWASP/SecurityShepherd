@@ -2,7 +2,7 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Reverse Engineering 2";
+String levelName = "Mobile Reverse Engineering 2";
 //Alphanumeric Only
 String levelHash = "5bc811f9e744a71393a277c51bfd8fbb5469a60209b44fa3485c18794df4d5b1";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -45,7 +45,7 @@ String levelBlurb = "";
 				
 				<%= levelBlurb %>
 				<br/>
-				ProGuard is a tool which now comes with the Android SDK and can be used to optimize, shrink and obfuscation code. The obfuscation makes the code harder to read for anyone who reverse engineers the APK. Although ProGuard is an excellent tool, it will not secure your code. 
+				ProGuard is a tool which now comes with the Android SDK and can be used to optimize, shrink and obfuscate code. The obfuscation makes the code harder to read for anyone who reverse engineers the APK. Although ProGuard is an excellent tool, it will not secure your code. 
 				ProGuard should generally be used all the time due to the other benefits it comes with, but it will only slow down an attacker and cannot prevent attackers from finding sensitive information.
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>

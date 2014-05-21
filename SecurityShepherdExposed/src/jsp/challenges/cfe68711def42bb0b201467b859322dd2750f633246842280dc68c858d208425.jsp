@@ -5,7 +5,7 @@
 String levelName = "Client Side Injection 3";
 //Alphanumeric Only
 String levelHash = "cfe68711def42bb0b201467b859322dd2750f633246842280dc68c858d208425";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
 /**
@@ -32,20 +32,20 @@ String levelBlurb = "";
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %>template</h2>
+			<h2 class="title"><%= levelName %></h2>
 			<p> 
 				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				
 				<%= levelBlurb %>
 				<br/>
-					
+				To do...
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

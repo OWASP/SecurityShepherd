@@ -5,8 +5,8 @@
 String levelName = "Unintended Data Leakage";
 //Alphanumeric Only
 String levelHash = "392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Apps won't always use a SQLite database to store data, in some cases logs can yield useful information about the App and it's users. Use this information to find out the login credentials of the Admin. ";
+//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+String levelBlurb = "";
 
 /**
  * <br/><br/>
@@ -32,7 +32,7 @@ String levelBlurb = "Apps won't always use a SQLite database to store data, in s
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 	</script> 
 </head>
@@ -45,7 +45,7 @@ String levelBlurb = "Apps won't always use a SQLite database to store data, in s
 				
 				<%= levelBlurb %>
 				<br/>
-					
+				Apps won't always use a SQLite database to store data, in some cases logs can yield useful information about the App and it's users. Use this information to find out the login credentials of the Admin. 
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

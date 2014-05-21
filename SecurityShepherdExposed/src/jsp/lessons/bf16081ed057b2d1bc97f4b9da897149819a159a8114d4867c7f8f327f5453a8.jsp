@@ -2,11 +2,11 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Unintended Data Leakage 2";
+String levelName = "Mobile Unintended Data Leakage 2";
 //Alphanumeric Only
 String levelHash = "bf16081ed057b2d1bc97f4b9da897149819a159a8114d4867c7f8f327f5453a8";
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Download the file and play with it to extract the key for this level!";
+String levelBlurb = "";
 
 /**
  * <br/><br/>

@@ -2,15 +2,11 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Insecure Data Storage 3";
+String levelName = "Mobile Insecure Data Storage 3";
 //Alphanumeric Only
 String levelHash = "ec09515a304d2de1f552e961ab769967bdc75740ad2363803168b7907c794cd4";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "There are other ways to store data insecurely. Using known broken hashing algorithms can lead to pain for the Apps users. Not only are they susceptible to collisions, where two different passwords can potentially generate the same hash and be interpreted as the same password, the developer would have to assume their users use strong passwords. 
-
-This is generally never the case and once a hashed value has been cracked, an attacker merely needs to update their tables. This method still uses no key, Therefore one would assume it is not truly encryption?
-
-Hashing algorithms are useful for comparing two different files but should not be used for storage of passwords.";
+//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+String levelBlurb = "";
 
 /**
  * <br/><br/>
@@ -36,20 +32,24 @@ Hashing algorithms are useful for comparing two different files but should not b
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %>Insecure Data Storage 3</h2>
+			<h2 class="title"><%= levelName %></h2>
 			<p> 
 				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				
 				<%= levelBlurb %>
 				<br/>
-					
+				There are other ways to store data insecurely. Using known broken hashing algorithms can lead to pain for the Apps users. Not only are they susceptible to collisions, where two different passwords can potentially generate the same hash and be interpreted as the same password, the developer would have to assume their users use strong passwords. 
+
+				This is generally never the case and once a hashed value has been cracked, an attacker merely needs to update their tables. This method still uses no key, Therefore one would assume it is not truly encryption?
+
+				Hashing algorithms are useful for comparing two different files but should not be used for storage of passwords.
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

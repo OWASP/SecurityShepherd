@@ -2,7 +2,7 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Insecure Data Storage 2";
+String levelName = "Mobile Insecure Data Storage 2";
 //Alphanumeric Only
 String levelHash = "362f84cf26bf96aeae358d5d0bbee31e9291aaa5367594c29b3af542a7572c01";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -25,7 +25,7 @@ String levelBlurb = "";
  * You should have received a copy of the GNU General Public License
  * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * @author YourName
+ * @author Sean Duggan
  */
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -34,6 +34,7 @@ String levelBlurb = "";
 	<title>Security Shepherd - <%= levelName %></title>
 	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
+	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
@@ -44,11 +45,10 @@ String levelBlurb = "";
 				
 				<%= levelBlurb %>
 				<br/>
-				The data stored on the device will rarely show up as plain text. In order to make the credentials unreadable this App could perform an operation to the user credentials in order to make it look like this: ZxhhbXBsZQ==.
-				<br/>
+				The data stored on the device will rarely show up as plain text. In order to make the credentials unreadable this App could perform an operation to the user credentials in order to make it look like this: <a>ZxhhbXBsZQ==</a>.
+
 				Unfortunately this is not a viable defence and will not slow down an attacker targeting your data through a vulnerability in an insecure App.
 				<br/>
-					
 				<% /* IF you need a form - Present it like this */ %>
 				<%
 				/*

@@ -22,36 +22,23 @@
                 android:layout_height="wrap_content" >
             </TabWidget>
 
-           <FrameLayout
+            <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-             
-                
-                
                 <RelativeLayout
                     android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
 
-                    <Button
-                        android:id="@+id/bLogin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etPass"
-                        android:layout_alignRight="@+id/etPass"
-                        android:layout_centerVertical="true"
-                        android:text="@string/login"
-                        android:textColor="#DA70D6" />
-
                     <EditText
                         android:id="@+id/etName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/bLogin"
+                        android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="67dp"
+                        android:layout_marginTop="153dp"
                         android:ems="10"
                         android:hint="Username"
                         android:textColor="#DA70D6" />
@@ -60,13 +47,25 @@
                         android:id="@+id/etPass"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/bLogin"
                         android:layout_alignLeft="@+id/etName"
-                        android:layout_marginBottom="30dp"
+                        android:layout_below="@+id/etName"
+                        android:layout_marginTop="57dp"
                         android:ems="10"
                         android:hint="Password"
-                        android:textColor="#DA70D6" />
+                        android:textColor="#DA70D6" >
 
+                        <requestFocus />
+                    </EditText>
+
+                    <Button
+                        android:id="@+id/bLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_alignRight="@+id/etPass"
+                        android:layout_below="@+id/etPass"
+                        android:layout_marginTop="51dp"
+                        android:text="@string/login" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -84,7 +83,6 @@
                         android:ems="10"
                         android:hint="@string/descripIDS2"
                         android:textColor="#DA70D6" />
-
                 </RelativeLayout>
             </FrameLayout>
         </LinearLayout>

@@ -27,6 +27,7 @@
         android:theme="@style/AppTheme" >
        
         <activity
+            android:theme="@style/ShepherdTheme"
             android:name="com.app.mobshep.csinjection2.CSInjection2"
             android:label="@string/app_name"
             android:permission="com.app.mobshep.CSI2.START_ACTIVITY"  >

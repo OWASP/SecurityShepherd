@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 public class miuewonmxiwohnx extends Activity implements OnClickListener {
 
-	TabHost wqiuoeuwoiqjmxxk;
 	TextView jdiewjdwjddewdewdw;
 	Button joiuwhiunwjdewniuewnmiux;
 	EditText iourewsdxc;
@@ -22,7 +21,6 @@ public class miuewonmxiwohnx extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reverse);
-		wqiuoeuwoiqjmxxk = (TabHost) findViewById(R.id.tabhost);
 
 		joiuwhiunwjdewniuewnmiux = (Button) findViewById(R.id.bRevealKey);
 		iourewsdxc = (EditText) findViewById(R.id.etPassword);
@@ -30,18 +28,7 @@ public class miuewonmxiwohnx extends Activity implements OnClickListener {
 
 		joiuwhiunwjdewniuewnmiux.setOnClickListener(this);
 
-		wqiuoeuwoiqjmxxk.setup();
 
-		// Set up each tab
-		TabSpec djiuwqjniuwqnwq = wqiuoeuwoiqjmxxk.newTabSpec("tag1");
-		djiuwqjniuwqnwq.setContent(R.id.tab1);
-		djiuwqjniuwqnwq.setIndicator("Summary"); 
-		wqiuoeuwoiqjmxxk.addTab(djiuwqjniuwqnwq);
-
-		djiuwqjniuwqnwq = wqiuoeuwoiqjmxxk.newTabSpec("tag2");
-		djiuwqjniuwqnwq.setContent(R.id.tab2);
-		djiuwqjniuwqnwq.setIndicator("Key");
-		wqiuoeuwoiqjmxxk.addTab(djiuwqjniuwqnwq);
 	}
 
 	public void onClick(View v) {

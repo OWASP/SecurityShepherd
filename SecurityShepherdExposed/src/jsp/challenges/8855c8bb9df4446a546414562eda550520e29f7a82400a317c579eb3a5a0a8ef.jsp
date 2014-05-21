@@ -2,10 +2,10 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Client Side Injection 2";
+String levelName = "Client Side Injecction 2";
 //Alphanumeric Only
 String levelHash = "8855c8bb9df4446a546414562eda550520e29f7a82400a317c579eb3a5a0a8ef";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
 /**
@@ -32,7 +32,7 @@ String levelBlurb = "";
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 	</script> 
 </head>

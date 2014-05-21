@@ -2,9 +2,9 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Mobile Reverse Engineering 1";
+String levelName = "Mobile Insecure Data Storage";
 //Alphanumeric Only
-String levelHash = "19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9";
+String levelHash = "ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
@@ -45,13 +45,9 @@ String levelBlurb = "";
 				
 				<%= levelBlurb %>
 				<br/>
-				One of the biggest dangers to Apps is reverse engineering. This is easily done and can reveal source code, API keys, Encryption Keys, Hidden Admin Functionality, Hard Coded Passwords etc...
+				Insecure Data Storage occurs when an App stores sensitive data such as user credentials, API keys, Credit Card information insecurely. This issue occurs in numerous ways. Generally, for storing Client side information, an App will use an Sqlite database. This is could be favoured the additional costs out of encrypting the data or storing it on a back end service. As a result, any user can access the data stored by the App.
 
-				There are two tools you will need to reverse engineer an APK. <a>Dex2Jar</a> and <a>JD-GUI</a>.
-
-				Once you have these tools and the target APK, use dex2jar to convert the APK to a jar file then open the .jar file with JD-GUI.
-
-				Find the key in the source code of the APK <a>Reverse Engineer</a>.
+				Insecure Data Storage becomes a danger when Apps cache sensitive data, their user's phone is stolen and the attacker steals this information from local databases. This is made worse by the popularity of rooting devices which makes it much easier for an attacker to access this information.
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

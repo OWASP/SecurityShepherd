@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.R.color;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 		setContentView(R.layout.scdl);
 		referenceXML();
 		th.setup();
+		
 
 		// Set up each tab
 		TabSpec specs = th.newTabSpec("tag1");
@@ -55,7 +57,8 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 	public void referenceXML() {
 		Login = (Button) findViewById(R.id.bLogin);
 		Login.setOnClickListener(this);
-
+		//Login.setBackgroundColor(color.background_light);
+		
 		Password = (EditText) findViewById(R.id.etPass);
 		Username = (EditText) findViewById(R.id.etName);
 
