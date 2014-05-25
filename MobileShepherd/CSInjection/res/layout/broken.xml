@@ -57,6 +57,7 @@
                         android:layout_below="@+id/tvTitle"
                         android:layout_marginTop="25dp"
                         android:ems="10"
+                        android:background="@drawable/edittext"
                         android:hint="Username"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" />
@@ -71,6 +72,7 @@
                         android:ems="10"
                         android:hint="Password"
                         android:inputType="textPassword"
+                        android:background="@drawable/edittext"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" >
 
@@ -84,9 +86,10 @@
                         android:layout_below="@+id/etPass"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="42dp"
+                        android:background="@drawable/button"
                         android:filterTouchesWhenObscured="true"
                         android:text="@string/login"
-                        android:textColor="#DA70D6" />
+                         />
 
                 </RelativeLayout>
 
@@ -102,6 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
+                        android:background="@drawable/edittext"
                         android:layout_marginTop="58dp"
                         android:hint="The key is only shown to authenticated users."
                         android:textAppearance="?android:attr/textAppearanceLarge"

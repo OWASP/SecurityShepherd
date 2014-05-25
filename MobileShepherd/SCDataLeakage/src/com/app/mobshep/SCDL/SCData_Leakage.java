@@ -9,7 +9,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.R.color;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -97,11 +96,13 @@ public class SCData_Leakage extends Activity implements OnClickListener {
 			
 			else if (CheckName.contentEquals("") || CheckPass.contentEquals(""))
 			{
+				Password.setText("");
 				Toast blanks = Toast.makeText(SCData_Leakage.this, "Blank Fields Detected.", Toast.LENGTH_SHORT);
 				blanks.show();
 			}
 			
 			else {
+				Password.setText("");
 				Toast invalid = Toast.makeText(SCData_Leakage.this, "Invalid Credentials!", Toast.LENGTH_SHORT);
 				invalid.show();
 			}
