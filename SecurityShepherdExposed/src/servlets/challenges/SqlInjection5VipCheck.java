@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
+import utils.ShepherdExposedLogManager;
 import dbProcs.Database;
 
 /**
@@ -35,7 +36,8 @@ public class SqlInjection5VipCheck extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
-
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		Encoder encoder = ESAPI.encoder();

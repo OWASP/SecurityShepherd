@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: createNewClass.jsp *************************");
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: createNewClass.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -34,7 +34,7 @@ try
 }
 catch(Exception htmlE)
 {
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(createNewClass.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(createNewClass.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateAdminSession ensures a valid session, and valid administrator credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -48,7 +48,7 @@ String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString())
 String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
 String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 String ApplicationRoot = getServletContext().getRealPath("");
-	%>
+%>
 	<div id="formDiv" class="post">
 		<h1 class="title">Create New Class</h1>
 		<div class="entry">

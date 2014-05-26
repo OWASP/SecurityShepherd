@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: enableFeedback.jsp *************************");
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: enableFeedback.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -34,7 +34,7 @@ try
 }
 catch(Exception htmlE)
 {
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(enableFeedback.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(enableFeedback.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateAdminSession ensures a valid session, and valid administrator credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -45,7 +45,7 @@ if (Validate.validateAdminSession(ses) && tokenCookie != null)
 Encoder encoder = ESAPI.encoder();
 String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
-	%>
+%>
 	<h1 class="title">Enable Feedback</h1>
 	Enable feedback to force users to submit feedback on each module before they can complete them
 	

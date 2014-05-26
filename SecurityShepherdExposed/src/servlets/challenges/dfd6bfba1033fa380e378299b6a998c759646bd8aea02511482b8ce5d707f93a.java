@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import utils.Hash;
+import utils.ShepherdExposedLogManager;
 
 /**
  * Session Management Challenge One
@@ -52,6 +53,8 @@ public class dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a ex
 		out.print(getServletInfo());
 		try
 		{
+			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+			ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 			log.debug("Broken Auth and Session Management Challenge One Servlet");
 			Cookie userCookies[] = request.getCookies();
 			int i = 0;

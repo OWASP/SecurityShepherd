@@ -1,10 +1,12 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
 <%
 
 //No Quotes In level Name
 String levelName = "SQL Injection 4";
 //Alphanumeric Only
 String levelHash = "1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629";
+
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
 
 /**
  * <br/><br/>

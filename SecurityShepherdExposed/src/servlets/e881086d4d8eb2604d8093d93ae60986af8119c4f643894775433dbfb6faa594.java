@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import utils.ShepherdExposedLogManager;
 import dbProcs.Getter;
 
 /**
@@ -48,6 +49,8 @@ extends HttpServlet
 		out.print(getServletInfo());
 		try
 		{
+			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+			ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 			String aUserName = request.getParameter("aUserName");
 			log.debug("User Submitted - " + aUserName);
 			String ApplicationRoot = getServletContext().getRealPath("");

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: scoreboard.jsp *************************");
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: scoreboard.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -34,7 +34,7 @@ if (request.getSession() != null) //Session If
 	}
 	catch(Exception htmlE)
 	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(scoreboard.jsp): tokenCookie Error:" + htmlE.toString());
+		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(scoreboard.jsp): tokenCookie Error:" + htmlE.toString());
 	}
 	// validateAdminSession ensures a valid session, and valid administrator credentials
 	// Also, if tokenCookie != null, then the page is good to continue loading
@@ -47,19 +47,18 @@ if (request.getSession() != null) //Session If
 		String ApplicationRoot = getServletContext().getRealPath("");
 		if (!ModulePlan.isOpenFloor()) //Floor Plan If
 		{
-			ResultSet classList = Getter.getClassInfo(ApplicationRoot);
-			boolean showClasses = true;
-			try
-			{
-				showClasses = classList.next();
-			}
-			catch(SQLException e)
-			{
-				ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
-				showClasses = false;
-			}
-			
-			%>
+	ResultSet classList = Getter.getClassInfo(ApplicationRoot);
+	boolean showClasses = true;
+	try
+	{
+		showClasses = classList.next();
+	}
+	catch(SQLException e)
+	{
+		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
+		showClasses = false;
+	}
+%>
 			<style type="text/css">
 				div.Numbers {clear:both}
 				
@@ -72,7 +71,7 @@ if (request.getSession() != null) //Session If
 				.static{position:static}
 				.absolute{position:absolute}	
 			</style>
-			<script src="<%= encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl()) %>js/jqueryUI.js"></script>
+			<script src="<%=encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl())%>js/jqueryUI.js"></script>
 			<div id="formDiv" class="post">
 				<h1 class="title">Scoreboard</h1>
 				<div class="entry">
@@ -80,34 +79,34 @@ if (request.getSession() != null) //Session If
 					<form id="theForm" action="javascript:;">
 							<p>Select the class you would like to show the scoreboard for</p>
 							<div id="badData"></div>
-							<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
+							<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
 							<table align="center">
 								<tr>
 									<td>
 									<select id="classId">
 										<option value=""></option>
 										<%
-										if(showClasses)
-										{
-											try
-											{
-												do
-												{
-													String classId = encoder.encodeForHTMLAttribute(classList.getString(1));
-													String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
-													%>
+											if(showClasses)
+																		{
+																			try
+																			{
+																				do
+																				{
+																					String classId = encoder.encodeForHTMLAttribute(classList.getString(1));
+																					String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+										%>
 														<option value="<%=classId%>"><%=classYearName%></option>
 													<%
-												}
-												while(classList.next());
-											}
-											catch(SQLException e)
-											{
-												ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
-												showClasses = false;
-											}
-										}
-										%>
+														}
+																							while(classList.next());
+																						}
+																						catch(SQLException e)
+																						{
+																							ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+																							showClasses = false;
+																						}
+																					}
+													%>
 									</select>
 									</td>
 								</tr>

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: upgradePlayer.jsp *************************");
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: upgradePlayer.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -34,7 +34,7 @@ try
 }
 catch(Exception htmlE)
 {
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(upgradePlayers.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(upgradePlayers.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateAdminSession ensures a valid session, and valid administrator credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -57,17 +57,17 @@ try
 }
 catch(SQLException e)
 {
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
 	showClasses = false;
 }
-	%>
+%>
 	<div id="formDiv" class="post">
 		<h1 class="title">Upgrade Players</h1>
 		<div class="entry">
 			<form id="theForm" action="javascript:;">
 				<p>Please select the player that you would like to upgrade to an administrator</p>
 				<div id="badData"></div>
-				<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
+				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
 				<table align="center">
 					<tr>
 						<td>
@@ -77,28 +77,28 @@ catch(SQLException e)
 							<select id="selectClass">
 								<option value="">Unassigned Players</option>
 								<%
-								if(showClasses)
-								{
-									try
-									{
-										do
-										{
-											String classId = encoder.encodeForHTML(classList.getString(1));
-											String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
-											%>
+									if(showClasses)
+														{
+															try
+															{
+																do
+																{
+																	String classId = encoder.encodeForHTML(classList.getString(1));
+																	String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+								%>
 												<option value="<%=classId%>"><%=classYearName%></option>
 											<%
-										}
-										while(classList.next());
-										classList.first();
-									}
-									catch(SQLException e)
-									{
-										ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
-										showClasses = false;
-									}
-								}
-								%>
+												}
+																			while(classList.next());
+																			classList.first();
+																		}
+																		catch(SQLException e)
+																		{
+																			ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+																			showClasses = false;
+																		}
+																	}
+											%>
 							</select>
 						</td>
 					</tr>

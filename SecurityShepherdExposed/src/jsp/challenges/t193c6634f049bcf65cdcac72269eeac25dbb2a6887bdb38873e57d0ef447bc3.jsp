@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
 <%
 // Broken Authentication and Session Management Challenge Three
 
@@ -21,7 +22,7 @@
  * @author Mark Denihan
  */
 
-System.out.println("Session Management Challenge Three Accessed");
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Session Management Challenge Three Accessed");
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

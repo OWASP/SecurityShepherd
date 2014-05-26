@@ -1,4 +1,5 @@
-<%@ page import="org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" %>
+<%@ page import="org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, utils.ShepherdExposedLogManager" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
 <%
 /**
  * This file assigns the tracking cookie for the exposed server
@@ -25,14 +26,14 @@ Encoder encoder = ESAPI.encoder();
 String parameter = (String)request.getParameter("ThreadSequenceId");
 try
 {
-	System.out.println("Parameter = " + parameter);
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Parameter = " + parameter);
 	Cookie cookie = new Cookie("JSESSIONID3", parameter);
-    System.out.println("Cookie Value = " + cookie.getValue());
+    ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cookie Value = " + cookie.getValue());
     response.addCookie(cookie);
 }
 catch(Exception e)
 {
-	System.out.println("Parameter Decription Fail: " + parameter);
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Parameter Decription Fail: " + parameter);
 	parameter = "";
 }
 %>

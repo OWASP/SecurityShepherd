@@ -16,8 +16,8 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
+import utils.ShepherdExposedLogManager;
 import utils.SqlFilter;
-
 import dbProcs.Database;
 
 /**
@@ -54,6 +54,8 @@ public class ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b exte
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String htmlOutput = new String();

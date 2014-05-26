@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
+import utils.ShepherdExposedLogManager;
 import utils.SqlFilter;
 import dbProcs.Database;
 
@@ -58,6 +59,8 @@ public class b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6 ex
 		Encoder encoder = ESAPI.encoder();
 		try
 		{
+			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+			ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 			String theUserName = request.getParameter("theUserName");
 			log.debug("User Submitted - " + theUserName);
 			theUserName = SqlFilter.levelThree(theUserName);

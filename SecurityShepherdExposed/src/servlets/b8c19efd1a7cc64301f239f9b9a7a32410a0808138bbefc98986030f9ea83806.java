@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import utils.Hash;
+import utils.ShepherdExposedLogManager;
 
 /**
  * Session Management Lesson
@@ -44,6 +45,8 @@ public class b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806 ex
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try

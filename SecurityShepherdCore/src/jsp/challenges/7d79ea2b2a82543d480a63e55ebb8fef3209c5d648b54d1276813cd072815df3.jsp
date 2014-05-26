@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-// Cross Site Request Forgery Challenge 6
+	// Cross Site Request Forgery Challenge 6
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -22,7 +22,7 @@
  * @author Mark Denihan
  */
  String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cross Site Request Forgery Challenge 6 Accessed");
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cross Site Request Forgery Challenge 6 Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -35,7 +35,7 @@ try
 }
 catch(Exception htmlE)
 {
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -58,7 +58,6 @@ String csrfChal6Token = Hash.randomString().trim();
 ses.setAttribute("csrfChallengeSixNonce", csrfChal6Token);
 Setter.setCsrfChallengeSixCsrfToken(userId, csrfChal6Token, ApplicationRoot);
 String getYourTokenUrl = encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl() + "/user/csrfchallengesix/getToken?userId=" + userId);
-
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">

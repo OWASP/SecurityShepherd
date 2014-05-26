@@ -23,7 +23,7 @@
  * @author Mark Denihan
  */
 
-System.out.println("Insecure Direct Object References Challenge One Accessed");
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Insecure Direct Object References Challenge One Accessed");
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
 

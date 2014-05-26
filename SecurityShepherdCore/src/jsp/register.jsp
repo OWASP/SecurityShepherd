@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
 
 <%
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: register.jsp *************************");
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: register.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -64,7 +64,7 @@ if(ses.getAttribute("errorMessage") != null)
 	}
 	catch(Exception e)
 	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Register.jsp error");
+		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Register.jsp error");
 	}
 }
 %>
@@ -88,18 +88,22 @@ if(ses.getAttribute("errorMessage") != null)
 	<div id="content">
 		<div class="post" id="registerDiv">
 			<h1 class="title">Register</h1>
-			<% if(!errorMessage.isEmpty()) {%>
-				<p><strong><font color="red"><%= errorMessage %></font></strong></p>
-			<% } %>
+			<%
+				if(!errorMessage.isEmpty()) {
+			%>
+				<p><strong><font color="red"><%=errorMessage%></font></strong></p>
+			<%
+				}
+			%>
 			<div id="badData"></div>
 			<form id="leForm" action="javascript:;">
 				<div align="center">
 				<br/>
 				<table>
-					<tr><td><p>Username<font color="red"><small>* </small></font>:</p></td><td><input type="text" id="userName" value="<%= userName %>"/></td></tr>
+					<tr><td><p>Username<font color="red"><small>* </small></font>:</p></td><td><input type="text" id="userName" value="<%=userName%>"/></td></tr>
 					<tr><td><p>Password<font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWord" autocomplete="OFF" /></td></tr>
 					<tr><td><p>Confirm Password<font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWordConfirm" autocomplete="OFF" /></td></tr>
-					<tr><td><p>Email Address:</p></td><td><input type="text" id="userAddress" value="<%= userAddress %>"/></td></tr>
+					<tr><td><p>Email Address:</p></td><td><input type="text" id="userAddress" value="<%=userAddress%>"/></td></tr>
 					<tr><td><p>Confirm Address:</p></td><td><input type="text" id="userAddressCnf" /></td></tr>
 				</table>
 				
@@ -211,7 +215,7 @@ if(ses.getAttribute("errorMessage") != null)
 						passWordConfirm: thePassAgain,
 						userAddress: theEmail,
 						userAddressCnf: theEmailAgain,
-						csrfToken: "<%= csrfToken %>"
+						csrfToken: "<%=csrfToken%>"
 					},
 					async: false
 				});
@@ -243,10 +247,10 @@ if(ses.getAttribute("errorMessage") != null)
 </body>
 </html>
 <%
-}
+	}
 else
 {
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody is trying to register");
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody is trying to register");
 %>
 Registration is not available currently
 <%

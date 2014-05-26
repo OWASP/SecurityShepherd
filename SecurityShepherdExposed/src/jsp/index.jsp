@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 
 <%
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Exposed Index has been accessed");
+
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.

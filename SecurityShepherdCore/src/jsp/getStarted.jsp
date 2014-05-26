@@ -1,8 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-
-/**
+	/**
  * This file is part of the Security Shepherd Project.
  * 
  * The Security Shepherd project is free software: you can redistribute it and/or modify
@@ -33,7 +32,7 @@ try
 }
 catch(Exception htmlE)
 {
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(getStarted.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(getStarted.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -61,7 +60,7 @@ int i = 0;
 //IF Change Password is True, Stick up a form
 if(!changePassword)
 {
-	%>
+%>
 	<div id="getStarted" style="display:none;">
 	<div class="post">
 		<h1 class="title">Lets Get Started</h1>

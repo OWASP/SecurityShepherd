@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
 <%
 
 //No Quotes In level Name
@@ -7,6 +7,8 @@ String levelName = "Client Side Injection 3";
 String levelHash = "cfe68711def42bb0b201467b859322dd2750f633246842280dc68c858d208425";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
+
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
 
 /**
  * <br/><br/>

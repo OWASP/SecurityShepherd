@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ExposedServer, utils.ShepherdLogManager" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ExposedServer,utils.ShepherdExposedLogManager" %>
 
 <%
 	response.sendRedirect(ExposedServer.getUrl());

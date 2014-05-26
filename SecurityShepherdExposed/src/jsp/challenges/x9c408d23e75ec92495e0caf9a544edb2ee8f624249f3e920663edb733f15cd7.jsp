@@ -23,7 +23,7 @@
  * @author Mark Denihan
  */
 
-System.out.println("Insecure Cryptographic Storage Challenge 1 Accessed");
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Insecure Cryptographic Storage Challenge 1 Accessed");
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">

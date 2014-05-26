@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
 <%
 // Broken Authentication and Session Management Lesson
 
@@ -21,7 +22,7 @@
  * @author Mark Denihan
  */
 
-System.out.println("Session Management Lesson Accessed");
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Session Management Lesson Accessed");
 %>
 <script>
 	document.cookie="lessonComplete=lessonNotComplete";

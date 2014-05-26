@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
+import utils.ShepherdExposedLogManager;
 import utils.SqlFilter;
 import dbProcs.Database;
 
@@ -55,6 +56,8 @@ public class SqlInjection4 extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("SQL Injection 4 Servlet Access");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());

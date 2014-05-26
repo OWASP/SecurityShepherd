@@ -13,6 +13,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.Hash;
+import utils.ShepherdExposedLogManager;
 
 /**
  * Insecure Direct Object Lesson
@@ -45,6 +46,8 @@ public class fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100 ex
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Direct Object Refernce Lesson");
 		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());

@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
 import org.apache.commons.codec.binary.Base64;
 
+import utils.ShepherdExposedLogManager;
 import dbProcs.Database;
 
 /**
@@ -52,6 +52,8 @@ public class b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a ex
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		PrintWriter out = response.getWriter();
 		Base64 base64 = new Base64();
 		out.print(getServletInfo());
