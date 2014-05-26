@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import utils.Hash;
-
+import utils.ShepherdLogManager;
 import dbProcs.Getter;
 
 /**
@@ -48,6 +48,8 @@ public class Login extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
     throws ServletException, IOException
     {
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("**** servlets.Login ***");
 		HttpSession ses = request.getSession(true);
 		try 

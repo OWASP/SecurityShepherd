@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import utils.ShepherdLogManager;
 import utils.Validate;
 
 /**
@@ -40,6 +41,8 @@ public class CsrfLessonTarget extends HttpServlet
 	public void doGet (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Cross-Site Request Forgery Lesson Target Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());

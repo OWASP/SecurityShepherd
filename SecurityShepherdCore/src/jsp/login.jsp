@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
 
 <%
-System.out.println("Sombody Conntected to login.jsp ...");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody Conntected to login.jsp ...");
 
 /**
  * This file is part of the Security Shepherd Project.

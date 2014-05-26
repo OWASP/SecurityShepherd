@@ -25,7 +25,7 @@ String levelHash = "f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd
  * @author Mark Denihan
  */
  
-System.out.println(levelName + " Accessed");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -38,7 +38,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(" + levelName + ".jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(" + levelName + ".jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-System.out.println("DEBUG: setHostAddress.jsp *************************");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: setHostAddress.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -34,7 +34,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(setHostAddress.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(setHostAddress.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateAdminSession ensures a valid session, and valid administrator credentials
 // Also, if tokenCookie != null, then the page is good to continue loading

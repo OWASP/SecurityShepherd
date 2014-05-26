@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
 
 <%
-System.out.println("DEBUG: register.jsp *************************");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: register.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -64,7 +64,7 @@ if(ses.getAttribute("errorMessage") != null)
 	}
 	catch(Exception e)
 	{
-		System.out.println("Register.jsp error");
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Register.jsp error");
 	}
 }
 %>
@@ -246,7 +246,7 @@ if(ses.getAttribute("errorMessage") != null)
 }
 else
 {
-System.out.println("Sombody is trying to register");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody is trying to register");
 %>
 Registration is not available currently
 <%

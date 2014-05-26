@@ -22,7 +22,7 @@
  * @author Mark Denihan
  */
  
-System.out.println("Cross Site Scripting Challenge 2 Accessed");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cross Site Scripting Challenge 2 Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -35,7 +35,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(XSSChallenge2.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(XSSChallenge2.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading

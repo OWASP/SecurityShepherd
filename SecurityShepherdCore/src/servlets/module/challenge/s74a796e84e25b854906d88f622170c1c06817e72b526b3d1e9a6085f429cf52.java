@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import utils.ShepherdLogManager;
 import utils.Validate;
 import dbProcs.Getter;
 import dbProcs.Setter;
@@ -47,6 +48,8 @@ public class s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52 ex
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Cross-SiteForegery Challenge One Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());

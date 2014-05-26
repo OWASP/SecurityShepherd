@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
+import utils.ShepherdLogManager;
 import utils.Validate;
 import dbProcs.Database;
 import dbProcs.Getter;
@@ -55,6 +56,8 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 	public void doGet (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Cross-SiteForegery Challenge Get Token Six Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());

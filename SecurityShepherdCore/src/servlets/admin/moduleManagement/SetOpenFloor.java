@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import utils.ModulePlan;
+import utils.ShepherdLogManager;
 import utils.Validate;
 /**
  * This control class is responsible for achieve the server functionality section of the Open Floor Schema
@@ -45,6 +46,8 @@ public class SetOpenFloor extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.SetOpenFloor ***");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());

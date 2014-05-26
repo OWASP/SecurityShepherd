@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-System.out.println("Insufficient Transport Layer Protection Lesson Accessed");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Insufficient Transport Layer Protection Lesson Accessed");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -32,7 +32,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(Insufficient Transport Layer Protection.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(Insufficient Transport Layer Protection.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -40,7 +40,7 @@ if (Validate.validateSession(ses) && tokenCookie != null)
 {
 // Getting Session Variables
 String userName = (String) ses.getAttribute("userName");
-System.out.println("Broadcast Triggered by: " + userName);
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Broadcast Triggered by: " + userName);
 Broadcaster.sendBroadcast();
 %>
 

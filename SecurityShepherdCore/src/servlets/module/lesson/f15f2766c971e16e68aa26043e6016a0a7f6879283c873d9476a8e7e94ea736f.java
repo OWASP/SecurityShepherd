@@ -19,6 +19,7 @@ import org.owasp.esapi.Encoder;
 import utils.ExposedServer;
 import utils.FindXSS;
 import utils.Hash;
+import utils.ShepherdLogManager;
 import utils.Validate;
 import dbProcs.Getter;
 /**
@@ -55,6 +56,8 @@ public class f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f ex
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Unvalidated Redirects and Forwards Lesson Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());

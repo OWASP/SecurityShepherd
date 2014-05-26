@@ -22,7 +22,7 @@
  * @author Mark Denihan
  */
  String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
-System.out.println("Cross Site Request Forgery Challenge 6 Accessed");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cross Site Request Forgery Challenge 6 Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -35,7 +35,7 @@ try
 }
 catch(Exception htmlE)
 {
-	System.out.println("DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading

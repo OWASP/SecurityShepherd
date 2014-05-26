@@ -15,9 +15,9 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import dbProcs.Getter;
-
 import utils.FindXSS;
 import utils.Hash;
+import utils.ShepherdLogManager;
 import utils.Validate;
 import utils.XssFilter;
 
@@ -52,6 +52,8 @@ public class d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa ex
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Cross-Site Scripting Challenge One Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());

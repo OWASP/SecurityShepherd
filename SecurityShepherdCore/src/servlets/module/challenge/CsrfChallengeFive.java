@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import utils.ShepherdLogManager;
 import utils.Validate;
 import dbProcs.Getter;
 import dbProcs.Setter;
@@ -49,6 +50,8 @@ public class CsrfChallengeFive extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Cross-SiteForegery Challenge Five Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());

@@ -15,6 +15,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ExposedServer;
+import utils.ShepherdLogManager;
 import utils.Validate;
 
 /**
@@ -49,6 +50,8 @@ public class ChangeVulnerableAppRoot extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.config.ChangeVulnerableAppRoot ***");
 		Encoder encoder = ESAPI.encoder();
 		PrintWriter out = response.getWriter();  
