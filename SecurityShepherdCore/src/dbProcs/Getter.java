@@ -1085,6 +1085,39 @@ public class Getter
 	}
 	
 	/**
+	 * Returns true if a module has a hardcoded key, false if server encyrpts it
+	 * @param ApplicationRoot The current running context of the application
+	 * @param moduleId The id of the module 
+	 * @return
+	 */
+	public static boolean getModuleKeyType (String ApplicationRoot, String moduleId)
+	{
+		log.debug("*** Getter.getModuleKeyType ***");
+		boolean theKeyType = true;
+		Connection conn = Database.getConnection(ApplicationRoot);
+		try
+		{
+			PreparedStatement prepstmt = conn.prepareStatement("SELECT hardcodedKey FROM modules WHERE moduleId = ?");
+			prepstmt.setString(1, moduleId);
+			ResultSet moduleFind = prepstmt.executeQuery();
+			moduleFind.next();
+			theKeyType = moduleFind.getBoolean(1);
+			if(theKeyType)
+				log.debug("Module has hardcoded Key");
+			else
+				log.debug("Module has user specific Key");
+		}
+		catch(Exception e)
+		{
+			log.error("Module did not exist: " + e.toString());
+			theKeyType = true;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END getModuleKeyType ***");
+		return theKeyType;
+	}
+	
+	/**
 	 * @param ApplicationRoot The current runing context of the application
 	 * @param moduleId Identifier of module
 	 * @return The solution key for a module

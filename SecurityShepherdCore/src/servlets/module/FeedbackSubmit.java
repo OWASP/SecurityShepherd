@@ -108,13 +108,9 @@ public class FeedbackSubmit extends HttpServlet
 					}
 					if(notNull && storedResult != null)
 					{
-						//Identify if solution is a user Specific key (Does it need to be decrypted?)
-						String theCategory = Getter.getModuleCategory(ApplicationRoot, moduleId);
-						//Data is good, Add result
 						boolean validKey = false;
-						if(theCategory.equalsIgnoreCase("Injection") || theCategory.equalsIgnoreCase("Insecure Cryptographic Storage") || theCategory.equalsIgnoreCase("CSRF")
-								|| moduleId.equalsIgnoreCase("2dc909fd89c2b03059b1512e7b54ce5d1aaa4bb4")
-								|| moduleId.equalsIgnoreCase("82e8e9e2941a06852b90c97087309b067aeb2c4c"))
+						//Identify if solution is a user Specific key (Does it need to be decrypted?)
+						if(Getter.getModuleKeyType(ApplicationRoot, moduleId))
 							validKey = storedResult.compareTo(solutionKey) == 0;
 						else
 						{
