@@ -101,4 +101,34 @@ public class Database
 	   }
 	   return conn;
 	} 
+	
+	/**
+	 * This method is used by the application to get a connection to the secure database sever
+	 * @param ApplicationRoot The running context of the application.
+	 * @return A connection to the secure database server
+	 */
+	public static Connection getcsrfChallengeSixConnection(String ApplicationRoot)
+	{
+	   Connection conn = null;
+	   try
+	   {
+		   String props = ApplicationRoot+"/WEB-INF/csrfChallengeSix.properties";
+		  
+		   String DriverType = FileInputProperties.readfile(props, "DriverType"); 
+		   Class.forName(DriverType).newInstance();
+		   
+		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
+		   
+		   String username=FileInputProperties.readfile(props, "databaseUsername");
+		   String password=FileInputProperties.readfile(props, "databasePassword");
+		   
+		   conn = DriverManager.getConnection(connectionURL,username,password);
+	   }
+	   catch(Exception e)
+	   {
+		   log.fatal("Unable to create database connection: " + e.toString());
+		   e.printStackTrace();
+	   }
+	   return conn;
+	} 
 }

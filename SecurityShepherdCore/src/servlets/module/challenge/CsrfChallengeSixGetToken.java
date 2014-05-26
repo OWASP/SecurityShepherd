@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Encoder;
 
 import utils.Validate;
 import dbProcs.Database;
@@ -63,11 +65,12 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 			{
 				String htmlOutput = new String("Your csrf Token for this Challenge is: ");
 				String userId = request.getParameter("userId").toString();
-				Connection conn = Database.getConnection(getServletContext().getRealPath(""));
+				Encoder encoder = ESAPI.encoder();
+				Connection conn = Database.getcsrfChallengeSixConnection(getServletContext().getRealPath(""));
 				try
 				{
 					log.debug("Prepairing setCsrfChallengeSixToken call");
-					PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfToken FROM csrfTokens WHERE userId LIKE ?");
+					PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfTokenscol FROM csrfchallengesix.csrfTokens WHERE userId LIKE ?");
 					callstmnt.setString(1, userId);
 					log.debug("Executing setCsrfChallengeSixTokenQuery");
 					ResultSet rs = callstmnt.executeQuery();
@@ -75,14 +78,17 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 					while(rs.next())
 					{
 						i++;
-						htmlOutput += rs.getString(1) + " <br/>";
+						htmlOutput += encoder.encodeForHTML("\"" + rs.getString(1) + "\"") + " <br/>";
 					}
 					log.debug("Returned " + i + " CSRF Tokens for ID: " + userId);
+					conn.close();
 				}
 				catch (Exception e)
 				{
 					log.debug("Could not retrieve Challenge CSRF Tokens");
+					htmlOutput = "Was unable to retrieve CSRF Token. Funky";
 				}
+				out.write(htmlOutput);
 					
 			}
 		}

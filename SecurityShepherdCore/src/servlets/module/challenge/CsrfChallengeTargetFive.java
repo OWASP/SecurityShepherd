@@ -68,8 +68,8 @@ public class CsrfChallengeTargetFive extends HttpServlet
 					log.debug("No CSRF Token assoiated with user");
 					Random random = new Random();
 					int newToken = random.nextInt(3);
-					out.write("No CSRF Token Detected for this Challenge. You're token is now " + newToken + "<br><br>");
 					storedToken = csrfArray[newToken];
+					out.write("No CSRF Token Detected for this Challenge. You're token is now " + storedToken + "<br><br>");
 					ses.setAttribute(csrfTokenName, storedToken);
 				}
 				else
@@ -78,9 +78,9 @@ public class CsrfChallengeTargetFive extends HttpServlet
 				}
 				String userId = (String)ses.getAttribute("userStamp");
 				
-				String plusId = request.getParameter("userId");
+				String plusId = request.getParameter("userId").trim();;
 				log.debug("User Submitted - " + plusId);
-				String csrfToken = request.getParameter("csrfToken");
+				String csrfToken = request.getParameter("csrfToken").trim();;
 				log.debug("csrfToken Submitted - " + csrfToken);
 				
 				if(!userId.equals(plusId))

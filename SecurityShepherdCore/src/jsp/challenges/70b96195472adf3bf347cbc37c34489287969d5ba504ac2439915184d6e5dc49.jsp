@@ -70,7 +70,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				<br/>
 				<a> POST /user/csrfchallengefour/plusplus</a>
 				<br/>
-				With the following parameters; <a>userId = exampleId</a> and <a>csrf = yourCsrfToken</a>
+				With the following parameters; <a>userId = exampleId</a> and <a>csrfToken = yourCsrfToken</a>
 				<br/>
 				<br/>
 				Where exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>

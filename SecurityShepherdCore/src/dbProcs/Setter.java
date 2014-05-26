@@ -849,12 +849,12 @@ public class Setter
 	{
 		log.debug("*** setCsrfChallengeSixToken ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getcsrfChallengeSixConnection(ApplicationRoot);
 		try
 		{
 			boolean updateToken = false;
 			log.debug("Prepairing setCsrfChallengeSixToken call");
-			PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfToken FROM csrfTokens WHERE userId = ?");
+			PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?");
 			callstmnt.setString(1, userId);
 			log.debug("Executing setCsrfChallengeSixToken");
 			ResultSet rs = callstmnt.executeQuery();

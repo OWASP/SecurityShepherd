@@ -54,7 +54,7 @@ if(ses.getAttribute("userClass") != null)
 String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 
 //Set CSRF Challenge 6 CsrfToken
-String csrfChal6Token = Hash.randomString();
+String csrfChal6Token = Hash.randomString().trim();
 ses.setAttribute("csrfChallengeSixNonce", csrfChal6Token);
 Setter.setCsrfChallengeSixCsrfToken(userId, csrfChal6Token, ApplicationRoot);
 String getYourTokenUrl = encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl() + "/user/csrfchallengesix/getToken?userId=" + userId);

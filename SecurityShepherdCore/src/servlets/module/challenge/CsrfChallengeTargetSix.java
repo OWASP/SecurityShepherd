@@ -77,11 +77,12 @@ public class CsrfChallengeTargetSix extends HttpServlet
 				{
 					storedToken = "" + ses.getAttribute(csrfTokenName);
 				}
-				
-				String plusId = request.getParameter("userId");
+				log.debug("Victom is - " + userId);
+				String plusId = request.getParameter("userId").trim();
 				log.debug("User Submitted - " + plusId);
-				String csrfToken = request.getParameter("csrfToken");
-				log.debug("csrfToken Submitted - " + csrfToken);
+				String csrfToken = request.getParameter("csrfToken").trim();
+				log.debug("csrfToken Submitted - '" + csrfToken + "'");
+				log.debug("storedCsrf Token is - '" + storedToken + "'");
 				
 				if(!userId.equals(plusId))
 				{

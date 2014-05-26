@@ -76,9 +76,9 @@ public class CsrfChallengeTargetFour extends HttpServlet
 				}
 				String userId = (String)ses.getAttribute("userStamp");
 				
-				String plusId = request.getParameter("userId");
+				String plusId = (String)request.getParameter("userId").trim();
 				log.debug("User Submitted - " + plusId);
-				String csrfToken = request.getParameter("csrfToken");
+				String csrfToken = (String)request.getParameter("csrfToken").trim();;
 				log.debug("csrfToken Submitted - " + csrfToken);
 				
 				if(!userId.equals(plusId))

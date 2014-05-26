@@ -765,6 +765,7 @@ GRANT SELECT ON `SqlChalFourSuperSecure`.`users` TO 'secureDood'@'localhost';
 
 DROP USER 'csrfChalSixer'@'localhost';
 CREATE USER  'csrfChalSixer'@'localhost' IDENTIFIED BY 'c4n1bUplZ';
-GRANT SELECT ON `csrfChallengeSix`.`csrfTokens` TO 'secureDood'@'localhost';
-
+GRANT SELECT ON `csrfChallengeSix`.`csrfTokens` TO 'csrfChalSixer'@'localhost';
+GRANT INSERT ON `csrfChallengeSix`.`csrfTokens` TO 'csrfChalSixer'@'localhost';
+GRANT UPDATE ON `csrfChallengeSix`.`csrfTokens` TO 'csrfChalSixer'@'localhost';
 
