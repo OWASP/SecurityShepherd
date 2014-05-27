@@ -3,13 +3,26 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Mobile Reverse Engineering 1";
+String levelName = "Mobile Reverse Engineering Lesson";
 //Alphanumeric Only
 String levelHash = "19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
-ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
+try
+{
+	if (request.getSession() != null)
+	{
+		HttpSession ses = request.getSession();
+		String userName = (String) ses.getAttribute("decyrptedUserName");
+		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + userName);
+	}
+}
+catch (Exception e)
+{
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
+}
 
 /**
  * <br/><br/>

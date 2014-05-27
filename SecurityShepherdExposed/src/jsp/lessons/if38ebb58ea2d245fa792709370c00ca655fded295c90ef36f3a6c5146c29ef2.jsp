@@ -23,8 +23,21 @@
  * @author Mark Denihan
  */
 
-ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Insecure Cryptographic Storage Lesson Accessed");
-%>
+ try
+ {
+ 	if (request.getSession() != null)
+ 	{
+ 		HttpSession ses = request.getSession();
+ 		String userName = (String) ses.getAttribute("decyrptedUserName");
+ 		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + userName);
+ 	}
+ }
+ catch (Exception e)
+ {
+ 	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
+ 	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
+ }
+ %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

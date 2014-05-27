@@ -2,7 +2,7 @@
 <%
 // Broken Authentication and Session Management Lesson
 
-/**
+/*
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -22,7 +22,22 @@
  * @author Mark Denihan
  */
 
-ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Session Management Lesson Accessed");
+String levelName = "Session Management Lesson Accessed";
+
+ try
+ {
+ 	if (request.getSession() != null)
+ 	{
+ 		HttpSession ses = request.getSession();
+ 		String userName = (String) ses.getAttribute("decyrptedUserName");
+ 		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + userName);
+ 	}
+ }
+ catch (Exception e)
+ {
+ 	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
+ 	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
+ }
 %>
 <script>
 	document.cookie="lessonComplete=lessonNotComplete";

@@ -8,6 +8,21 @@ String levelHash = "bf16081ed057b2d1bc97f4b9da897149819a159a8114d4867c7f8f327f54
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
+try
+{
+	if (request.getSession() != null)
+	{
+		HttpSession ses = request.getSession();
+		String userName = (String) ses.getAttribute("decyrptedUserName");
+		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + userName);
+	}
+}
+catch (Exception e)
+{
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
+	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
+}
+
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
