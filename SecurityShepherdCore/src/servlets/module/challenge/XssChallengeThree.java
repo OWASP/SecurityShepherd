@@ -20,9 +20,8 @@ import utils.Hash;
 import utils.ShepherdLogManager;
 import utils.Validate;
 import utils.XssFilter;
-
 /**
- * Cross Site Scripting Challenge One
+ * Cross Site Scripting Challenge Three control class.
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -41,10 +40,13 @@ import utils.XssFilter;
  * @author Mark Denihan
  *
  */
-public class d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa extends HttpServlet 
+public class XssChallengeThree extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(XssChallengeThree.class);
+	private static String levelName = "Cross Site Scripting Challenge Three";
+	private static String levelHash = "ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e";
+	private static String levelResult = ""; //Pulled from DB using levelHash
 	/**
 	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotly deployed, and therfore only is executable against the person initating the funciton.
 	 * @param searchTerm To be spat back out at the user after been filtered
@@ -54,7 +56,7 @@ public class d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa ex
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Cross-Site Scripting Challenge One Servlet");
+		log.debug(levelName + " Servlet Accessed");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -68,7 +70,7 @@ public class d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa ex
 				{
 					String searchTerm = request.getParameter("searchTerm");
 					log.debug("User Submitted - " + searchTerm);
-					searchTerm = XssFilter.levelOne(searchTerm);
+					searchTerm = XssFilter.levelThree(searchTerm);
 					log.debug("After Filtering - " + searchTerm);
 					String htmlOutput = new String();
 					if(FindXSS.search(searchTerm))
@@ -79,7 +81,7 @@ public class d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa ex
 								"The result key for this lesson is <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
-												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), this.getClass().getSimpleName()
+												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
 												), (String)ses.getAttribute("userName")
 										)
 								) +
@@ -98,8 +100,7 @@ public class d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Cross Site Scripting Challenge One" + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
-		log.debug("Cross-Site Scripting Lesson Servlet");
 	}
 }

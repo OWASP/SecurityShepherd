@@ -11,18 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
-import dbProcs.Getter;
-import utils.FindXSS;
-import utils.Hash;
 import utils.ShepherdLogManager;
 import utils.Validate;
-import utils.XssFilter;
+import dbProcs.Getter;
+import dbProcs.Setter;
 
 /**
- * Cross Site Scripting Challenge Two
+ * Cross Site Request Foregery Challenge Three - Does not return result key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -41,20 +37,23 @@ import utils.XssFilter;
  * @author Mark Denihan
  *
  */
-public class t227357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888 extends HttpServlet
+public class CsrfChallengeThree extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(t227357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeThree.class);
+	private static String levelName = "Cross Site Request Foregery Challenge Three";
+	private static String levelHash = "z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c";
 	/**
-	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotly deployed, and therfore only is executable against the person initating the funciton.
-	 * @param searchTerm To be spat back out at the user after been filtered
+	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
+	 * forces the victim to submit a post request to the CSRFChallengeTargetThree
+	 * @param myMessage To Be stored as the users message for this module
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Cross-Site Scripting Challenge Two Servlet");
+		log.debug(levelName + " Servlet Accessed");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -66,32 +65,23 @@ public class t227357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888 e
 				Object tokenParmeter = request.getParameter("csrfToken");
 				if(Validate.validateTokens(tokenCookie, tokenParmeter))
 				{
-					String searchTerm = request.getParameter("searchTerm");
-					log.debug("User Submitted - " + searchTerm);
-					searchTerm = XssFilter.levelTwo(searchTerm);
-					log.debug("After Filtering - " + searchTerm);
-					String htmlOutput = new String();
-					if(FindXSS.search(searchTerm))
-					{
-						Encoder encoder = ESAPI.encoder();
-						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>You successfully executed the javascript alert command!<br />" +
-								"The result key for this lesson is <a>" +
-								encoder.encodeForHTML(
-										Hash.generateUserSolution(
-												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), this.getClass().getSimpleName()
-												), (String)ses.getAttribute("userName")
-										)
-								) +
-								"</a>";
-						log.debug("XSS Challenge Two completed");
-					}
-					log.debug("Adding searchTerm to Html: " + searchTerm);
-					htmlOutput += "<h2 class='title'>Search Results</h2>" +
-						"<p>Sorry but there were no results found that related to " +
-						searchTerm +
-						"</p>";
-					log.debug("outputing HTML");
+					String myMessage = request.getParameter("myMessage");
+					log.debug("User Submitted - " + myMessage);
+					myMessage = Validate.makeValidUrl(myMessage);
+					
+					log.debug("Updating User's Stored Message");
+					String ApplicationRoot = getServletContext().getRealPath("");
+					String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);
+					String userId = (String)ses.getAttribute("userStamp");
+					Setter.setStoredMessage(ApplicationRoot, myMessage, userId, moduleId);
+					
+					log.debug("Retrieving user's class's forum");
+					String classId = null;
+					if(ses.getAttribute("userClass") != null)
+						classId = (String)ses.getAttribute("userClass");
+					String htmlOutput = Getter.getCsrfForumWithIframe(ApplicationRoot, classId, moduleId);
+					
+					log.debug("Outputing HTML");
 					out.write(htmlOutput);
 				}
 			}
@@ -99,7 +89,11 @@ public class t227357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888 e
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Cross Site Scripting Challenge 2 - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
+	}
+	public static String getLevelHash()
+	{
+		return levelHash;
 	}
 }

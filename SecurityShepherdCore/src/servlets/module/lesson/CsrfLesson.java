@@ -21,7 +21,7 @@ import utils.Validate;
 import utils.XssFilter;
 
 /**
- * Cross Site Request Forgery Lesson
+ * CSRF Lesson
  * Currently does not use user specific result key because of current CSRF blanket rule
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -41,10 +41,12 @@ import utils.XssFilter;
  * @author Mark Denihan
  *
  */
-public class ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7 extends HttpServlet
+public class CsrfLesson extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfLesson.class);
+	private static String levelName = "CSRF Lesson";
+	private static String levelHash = "ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7";
 	/**
 	 * User submission is parsed for a valid HTML IMG tag. The SRC attribute of this tag is then used to construct a URL object. This URL object is then checked to ensure a valid attack
 	 * @param falseId User's session stored tempId
@@ -55,7 +57,7 @@ public class ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7 ex
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Cross-Site Request Forgery Lesson Servlet");
+		log.debug(levelName + " Servlet Accessed");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		Encoder encoder = ESAPI.encoder();
@@ -81,7 +83,7 @@ public class ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7 ex
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +
 								"<p>The administrator recieved your messege and submitted the GET request embbeded in it<br />" +
 								"The result key for this lesson is <a>" +
-								encoder.encodeForHTML(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), this.getClass().getSimpleName())) +
+								encoder.encodeForHTML(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash)) +
 								"</a>";
 					}
 					log.debug("Adding searchTerm to Html: " + messageForAdmin);
@@ -98,8 +100,8 @@ public class ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7 ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Cross Site Request Forgery Lesson - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
-		log.debug("End Cross-Site Request Forgery Lesson Servlet");
+		log.debug("End of " + levelName + " Servlet");
 	}
 }

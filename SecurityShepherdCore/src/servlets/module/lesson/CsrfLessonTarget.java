@@ -37,7 +37,7 @@ import utils.Validate;
 public class CsrfLessonTarget extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfLesson.class);
 	public void doGet (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{

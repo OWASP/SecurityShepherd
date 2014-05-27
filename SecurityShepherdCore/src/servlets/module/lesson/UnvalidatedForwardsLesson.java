@@ -42,11 +42,12 @@ import dbProcs.Getter;
  * @author Mark Denihan
  *
  */
-public class f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f extends HttpServlet
+public class UnvalidatedForwardsLesson extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f.class);
-
+	private static org.apache.log4j.Logger log = Logger.getLogger(UnvalidatedForwardsLesson.class);
+	private static String levelName = "Unvalidated Redirects and Forwards Lesson";
+	private static String levelHash = "f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f";
 	
 	/**
 	 * User submission is parsed for a valid URL. This is then used to construct a URL object. This URL object is then checked to ensure a valid attack
@@ -58,7 +59,7 @@ public class f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f ex
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Unvalidated Redirects and Forwards Lesson Servlet");
+		log.debug(levelName +" Servlet Accessed");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		Encoder encoder = ESAPI.encoder();
@@ -132,7 +133,7 @@ public class f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f ex
 								"The result key for this lesson is <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
-												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), this.getClass().getSimpleName()
+												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
 												), (String)ses.getAttribute("userName")
 										)
 								) +
@@ -156,8 +157,8 @@ public class f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Unvalidated Redirects and Forwards Lesson - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
-		log.debug("End Unvalidated Redirects and Forwards Lesson Servlet");
+		log.debug("End of " + levelName + " Servlet");
 	}
 }

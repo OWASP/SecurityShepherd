@@ -311,7 +311,7 @@
 	
 	<servlet>
 		<servlet-name>/lessons/zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a</servlet-name>
-		<servlet-class>servlets.module.lesson.zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a</servlet-class>
+		<servlet-class>servlets.module.lesson.XssLesson</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/lessons/zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a</servlet-name>
@@ -320,7 +320,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa</servlet-name>
-		<servlet-class>servlets.module.challenge.d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa</servlet-class>
+		<servlet-class>servlets.module.challenge.XssChallengeOne</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa</servlet-name>
@@ -329,7 +329,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/t27357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888</servlet-name>
-		<servlet-class>servlets.module.challenge.t227357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888</servlet-class>
+		<servlet-class>servlets.module.challenge.XssChallengeTwo</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/t27357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888</servlet-name>
@@ -338,7 +338,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e</servlet-name>
-		<servlet-class>servlets.module.challenge.ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e</servlet-class>
+		<servlet-class>servlets.module.challenge.XssChallengeThree</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e</servlet-name>
@@ -347,7 +347,7 @@
 	
 	<servlet>
 		<servlet-name>/lessons/ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7</servlet-name>
-		<servlet-class>servlets.module.lesson.ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7</servlet-class>
+		<servlet-class>servlets.module.lesson.CsrfLesson</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/lessons/ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7</servlet-name>
@@ -392,7 +392,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52</servlet-name>
-		<servlet-class>servlets.module.challenge.s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52</servlet-class>
+		<servlet-class>servlets.module.challenge.CsrfChallengeOne</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52</servlet-name>
@@ -401,7 +401,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e</servlet-name>
-		<servlet-class>servlets.module.challenge.z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e</servlet-class>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTwo</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e</servlet-name>
@@ -410,7 +410,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c</servlet-name>
-		<servlet-class>servlets.module.challenge.z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c</servlet-class>
+		<servlet-class>servlets.module.challenge.CsrfChallengeThree</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c</servlet-name>
@@ -419,7 +419,7 @@
 	
 	<servlet>
 		<servlet-name>/lessons/f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f</servlet-name>
-		<servlet-class>servlets.module.lesson.f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f</servlet-class>
+		<servlet-class>servlets.module.lesson.UnvalidatedForwardsLesson</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/lessons/f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f</servlet-name>

@@ -71,7 +71,7 @@ public class CsrfChallengeTargetOne extends HttpServlet
 						log.debug(userName + " is been CSRF'd by " + attackerName);
 						
 						log.debug("Attemping to Increment ");
-						String moduleHash = s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52.class.getSimpleName();
+						String moduleHash = CsrfChallengeOne.getLevelHash();
 						String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, moduleHash);
 						result = Setter.updateCsrfCounter(ApplicationRoot, moduleId, plusId);
 					}
