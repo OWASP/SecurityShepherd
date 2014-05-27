@@ -15,6 +15,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import servlets.OneTimePad;
+import utils.Hash;
 import utils.ModulePlan;
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -118,7 +119,8 @@ public class FeedbackSubmit extends HttpServlet
 						else
 						{
 							//Encrypted Solution key,  must be decrypted before compare
-							validKey = storedResult.compareTo(OneTimePad.decrypt(solutionKey, userName)) == 0;
+							String decryptedKey = Hash.decrypt(Validate.validateEncryptionKey(userName), solutionKey);
+							validKey = storedResult.compareTo(decryptedKey) == 0;
 						}
 						if(validKey)
 						{

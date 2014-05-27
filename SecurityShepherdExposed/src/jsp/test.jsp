@@ -1,5 +1,5 @@
 <%@ page import="org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, utils.ShepherdExposedLogManager" %>
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager, utils.Hash" errorPage="" %>
 <%
 /**
  * This file assigns the tracking cookie for the exposed server
@@ -35,6 +35,11 @@ catch(Exception e)
 {
 	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Parameter Decription Fail: " + parameter);
 	parameter = "";
+}
+if (request.getSession() != null)
+{
+	HttpSession ses = request.getSession();
+	ses.setAttribute("decyrptedUserName", Hash.decryptUserName(parameter));	
 }
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">

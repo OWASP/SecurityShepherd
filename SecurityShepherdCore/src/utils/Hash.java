@@ -1,12 +1,17 @@
 package utils;
 
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import org.apache.log4j.Logger;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.log4j.Logger;
 import org.apache.commons.codec.binary.Base64;
 
 import servlets.OneTimePad;
@@ -34,6 +39,7 @@ import servlets.OneTimePad;
 public class Hash 
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Hash.class);
+	public static String userNameKey = "NsH{[_pLw2Q.3gOz";
 	/**
 	 * Outputs a SHA256 digest
 	 * @param toHash String to hash
@@ -165,17 +171,47 @@ public class Hash
 	public static String generateUserSolution(String baseKey, String userSalt)
 	{
 		log.debug("Generating key for " + userSalt);
+		String key = Validate.validateEncryptionKey(userSalt);
 		String toReturn = "Key Should be here! Please refresh the home page and try again!";
 			try 
 			{
-				toReturn = OneTimePad.encrypt(baseKey, userSalt);
+				toReturn = Hash.encrypt(key, baseKey);
 				log.debug("Returning: " + toReturn);
 			} 
 			catch (Exception e) 
 			{ 
-				log.error("OneTimePad Failure: " + e.toString());
+				log.error("Encrypt Failure: " + e.toString());
 				toReturn = "Key Should be here! Please refresh the home page and try again!";
 			}
 		return toReturn;
+	}
+	
+	public static String encrypt(String key, String value)
+	throws GeneralSecurityException 
+	{
+		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
+		if (raw.length != 16) 
+		{
+			throw new IllegalArgumentException("Invalid key size.");
+		}
+		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
+		return Base64.encodeBase64String(cipher.doFinal(value.getBytes(Charset.forName("US-ASCII"))));
+	}
+
+	public static String decrypt(String key, String encrypted)
+	throws GeneralSecurityException 
+	{
+		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
+		if (raw.length != 16)
+		{
+			throw new IllegalArgumentException("Invalid key size.");
+		}
+		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
+		byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
+		return new String(original, Charset.forName("US-ASCII"));
 	}
 }
