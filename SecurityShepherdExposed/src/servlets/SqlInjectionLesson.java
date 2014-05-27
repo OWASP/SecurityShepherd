@@ -33,11 +33,14 @@ import dbProcs.Getter;
  * @author Mark Denihan
  *
  */
-public class e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594 
+public class SqlInjectionLesson 
 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjectionLesson.class);
+	private static String levelName = "SQL Injection Lesson";
+	private static String levelHash = "e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594";
+	private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific
 	/**
 	 * Uses user input in an insecure fashion when executing queries in database. Vulnerable to SQL injection.
 	 * @param aUserName User submitted filter for database results
@@ -51,6 +54,8 @@ extends HttpServlet
 		{
 			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 			ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+			log.debug(levelName + " Servlet Accessed");
+			
 			String aUserName = request.getParameter("aUserName");
 			log.debug("User Submitted - " + aUserName);
 			String ApplicationRoot = getServletContext().getRealPath("");
@@ -91,7 +96,7 @@ extends HttpServlet
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("SQL Injection Lesson - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 }

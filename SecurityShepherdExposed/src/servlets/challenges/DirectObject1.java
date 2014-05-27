@@ -39,10 +39,13 @@ import dbProcs.Database;
  * @author Mark Denihan
  *
  */
-public class o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c extends HttpServlet
+public class DirectObject1 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(DirectObject1.class);
+	private static String levelName = "Insecure Direct Object Challenge Challenge One";
+	private static String levelHash = "o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c";
+	private static String levelResult = ""; //Stored in DB. Not user Specific
 	/**
 	 * The user must abuse this functionality to revial a hidden user. The result key is hidden in this users profile.
 	 * @param userId To be used in generating the HTML output
@@ -52,7 +55,7 @@ public class o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c ex
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Direct Object Refernce Challenge One");
+		log.debug(levelName + " Servlet Accessed");
 		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		try
@@ -88,7 +91,7 @@ public class o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Insecure Direct Object Challenge - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 }

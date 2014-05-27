@@ -40,10 +40,12 @@ import dbProcs.Database;
  * @author Mark Denihan
  *
  */
-public class f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959 extends HttpServlet
+public class SessionManagement2ChangePassword extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement2ChangePassword.class);
+	private static String levelName = "Session Management Challenge Two (Change Pass)";
+	private static String levelHash = "f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959";
 	/**
 	 * A user with the submitted email address is set a new random password, the password is also returned from the database procedure and is forwards through to the HTTP response.
 	 * This response is not consumed by the client interface by default, and the user will have to discover it.
@@ -58,7 +60,7 @@ public class f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959 ex
 		out.print(getServletInfo());
 		Encoder encoder = ESAPI.encoder();
 		String htmlOutput = new String();
-		log.debug("Broken Auth and Session Management Challenge Two - Reset Password -Servlet");
+		log.debug(levelName + " Servlet accessed");
 		try
 		{
 			log.debug("Getting Challenge Parameter");
@@ -94,7 +96,7 @@ public class f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959 ex
 			}
 			catch(SQLException e)
 			{
-				log.error("SessMng2 SQL Error: " + e.toString());
+				log.error(levelName + " SQL Error: " + e.toString());
 			}
 			log.debug("Outputing HTML");
 			out.write("Changed to: " + htmlOutput);
@@ -102,7 +104,7 @@ public class f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959 ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Session Management Challenge Two - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 }

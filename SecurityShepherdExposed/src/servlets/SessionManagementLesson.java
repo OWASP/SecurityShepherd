@@ -34,10 +34,13 @@ import utils.ShepherdExposedLogManager;
  * @author Mark Denihan
  *
  */
-public class b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806 extends HttpServlet
+public class SessionManagementLesson extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagementLesson.class);
+	private static String levelName = "Session Management Lesson";
+	private static String levelHash = "b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806";
+	private static String levelResult = "6594dec9ff7c4e60d9f8945ca0d4";
 	/**
 	 * Controller is tracking the user completion through the "lessonComplete" cookie. If this cookie is changed the user can complete the level
 	 * @param lessonComplete Tracking cookie
@@ -51,7 +54,7 @@ public class b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806 ex
 		out.print(getServletInfo());
 		try
 		{
-			log.debug("Broken Auth and Session Management Lesson Servlet");
+			log.debug(levelName + " Servlet Accessed");
 			Cookie userCookies[] = request.getCookies();
 			int i = 0;
 			Cookie theCookie = null;
@@ -73,7 +76,7 @@ public class b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806 ex
 					log.debug("Lesson Complete");
 					
 					// Get key and add it to the output
-					String userKey = Hash.generateUserSolution("6594dec9ff7c4e60d9f8945ca0d4", request.getCookies());
+					String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
 					
 					htmlOutput = "<h2 class='title'>Lesson Complete</h2>" +
 							"<p>" +
@@ -96,7 +99,7 @@ public class b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806 ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Session management lesson - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 }

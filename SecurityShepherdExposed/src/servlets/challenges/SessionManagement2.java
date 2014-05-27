@@ -39,10 +39,13 @@ import dbProcs.Database;
  * @author Mark Denihan
  *
  */
-public class d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7 extends HttpServlet
+public class SessionManagement2 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement2.class);
+	private static String levelName = "Session Management Challenge Two";
+	private static String levelHash = "d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7";
+	private static String levelResult = "4ba31e5ffe29de092fe1950422a";
 	/**
 	 * The user attempts to use this funciton to sign into a sub schema. If they successfully sign in then they are able to retrieve the result key for the challenge
 	 * If they sign in with a correct user name but incorrect password then the email address of the user will be returned in a error message
@@ -58,7 +61,7 @@ public class d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7 ex
 		out.print(getServletInfo());
 		Encoder encoder = ESAPI.encoder();
 		String htmlOutput = new String();
-		log.debug("Broken Auth and Session Management Challenge Two Servlet");
+		log.debug(levelName + " Servlet accessed");
 		try
 		{
 			log.debug("Getting Challenge Parameters");
@@ -96,7 +99,7 @@ public class d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7 ex
 			{
 				log.debug("Successful Login");
 				// Get key and add it to the output
-				String userKey = Hash.generateUserSolution("4ba31e5ffe29de092fe1950422a", request.getCookies());
+				String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
 				htmlOutput = "<h2 class='title'>Welcome " + encoder.encodeForHTML(resultSet.getString(1)) + "</h2>" +
 						"<p>" +
 						"The result key is <a>" + userKey + "</a>" +
@@ -127,7 +130,7 @@ public class d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7 ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Session Management Challenge Two - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 	

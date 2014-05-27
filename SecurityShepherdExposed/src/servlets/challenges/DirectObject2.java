@@ -1,7 +1,10 @@
-package servlets;
+package servlets.challenges;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,11 +15,12 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-import utils.Hash;
 import utils.ShepherdExposedLogManager;
+import dbProcs.Database;
 
 /**
- * Insecure Direct Object Lesson
+ * Insecure Direct Object Reference Challenge Two
+ * Does not use user specific key because key is currently hardcoded into database schema
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -32,66 +36,62 @@ import utils.ShepherdExposedLogManager;
  * 
  * You should have received a copy of the GNU General Public License
  * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- * 
  * @author Mark Denihan
+ *
  */
-public class fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100 extends HttpServlet
+public class DirectObject2 extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(DirectObject2.class);
+	private static String levelName = "Insecure Direct Object Reference Challenge Two";
+	private static String levelHash = "vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4";
+	private static String levelResult = ""; //Stored in DB. Not user Specific
 	/**
-	 * System users are insecurely directed by their user name in a post request parameter. Users can abuse this to retrieve an administrator's information.
-	 * @param username User name of profile to retrieve
+	 * The user must abuse this functionality to revial a hidden user. The result key is hidden in this users profile.
+	 * @param userId To be used in generating the HTML output
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Direct Object Refernce Lesson");
+		log.debug(levelName + " Servlet Accessed");
 		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		try
 		{
-			String userName = request.getParameter("username");
-			log.debug("User Submitted - " + userName);
+			String userId = request.getParameter("userId[]");
+			log.debug("User Submitted - " + userId);
 			String ApplicationRoot = getServletContext().getRealPath("");
 			log.debug("Servlet root = " + ApplicationRoot );
 			String htmlOutput = new String();
-			if(userName.equalsIgnoreCase("guest"))
+			
+			Connection conn = Database.getChallengeConnection(ApplicationRoot, "directObjectRefChalTwo");
+			PreparedStatement prepstmt = conn.prepareStatement("SELECT userName, privateMessage FROM users WHERE userId = ?");
+			prepstmt.setString(1, userId);
+			ResultSet resultSet = prepstmt.executeQuery();
+			if(resultSet.next())
 			{
-				log.debug("Guest Profile Found");
-				htmlOutput = htmlGuest;
-			}
-			else if(userName.equalsIgnoreCase("admin"))
-			{
-				// Get key and add it to the output
-				String userKey = Hash.generateUserSolution("59e571b1e59441e76e0c85e5b49", request.getCookies());
-				log.debug("Admin Profile Found");
-				htmlOutput = htmlAdmin + userKey + "<a></a></td></tr></table>";
+				log.debug("Found user: " + resultSet.getString(1));
+				String userName = resultSet.getString(1);
+				String privateMessage = resultSet.getString(2);
+				htmlOutput = "<h2 class='title'>" + userName + "'s Message</h2>" +
+						"<p>" + privateMessage + "</p>";
 			}
 			else
 			{
 				log.debug("No Profile Found");
 				Encoder encoder = ESAPI.encoder();
-				htmlOutput = "<h2 class='title'>User: 404 - User Not Found</h2><p>User '" + encoder.encodeForHTML(userName) + "' could not be found or does not exist.</p>";
+				htmlOutput = "<h2 class='title'>User: 404 - User Not Found</h2><p>User '" + encoder.encodeForHTML(userId) + "' could not be found or does not exist.</p>";
 			}
 			log.debug("Outputting HTML");
 			out.write(htmlOutput);
+			Database.closeConnection(conn);
 		}
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Insecure Direct Object Lesson Lesson - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
-	private static String htmlGuest = "<h2 class='title'>User: Guest</h2><table><tr><th>Age:</th><td>22</td></tr>" +
-			"<tr><th>Address:</th><td>54 Kevin Street, Dublin</td></tr>" +
-			"<tr><th>Email:</th><td>guestAccount@securityShepherd.com</td></tr>" +
-			"<tr><th>Private Message:</th><td>No Private Message Set</td></tr></table>";
-	private static String htmlAdmin = "<h2 class='title'>User: Admin</h2><table><tr><th>Age:</th><td>43</td></tr>" +
-			"<tr><th>Address:</th><td>12 Bolton Street, Dublin</td></tr>" +
-			"<tr><th>Email:</th><td>administratorAccount@securityShepherd.com</td></tr>" +
-			"<tr><th>Private Message:</th>" +
-			"<td>Result Key: ";
 }

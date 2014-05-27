@@ -39,10 +39,13 @@ import dbProcs.Database;
  * @author Mark Denihan
  *
  */
-public class t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3 extends HttpServlet
+public class SessionManagement3 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement3.class);
+	private static String levelName = "Session Management Challenge Three";
+	private static String levelHash = "t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3";
+	private static String levelResult = "e62008dc47f5eb065229d48963";
 	/**
 	 * Users must use this functionality to sign in as an administrator to retrieve the result key. If the user name is valid but not the passwor, an error message with the username is returned.
 	 * @param userName Sub schema user name
@@ -57,7 +60,7 @@ public class t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3 ex
 		out.print(getServletInfo());
 		Encoder encoder = ESAPI.encoder();
 		String htmlOutput = new String();
-		log.debug("Broken Auth and Session Management Challenge Three Servlet");
+		log.debug(levelName + " Servlet Accessed");
 		try
 		{
 			log.debug("Getting Challenge Parameters");
@@ -105,7 +108,7 @@ public class t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3 ex
 					{
 						log.debug("Successful Admin Login");
 						// Get key and add it to the output
-						String userKey = Hash.generateUserSolution("e62008dc47f5eb065229d48963", request.getCookies());
+						String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
 						
 						htmlOutput = "<h2 class='title'>Welcome " + encoder.encodeForHTML(resultSet2.getString(1)) + "</h2>" +
 								"<p>" +
@@ -140,7 +143,7 @@ public class t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3 ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Session Management Challenge Three - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 	

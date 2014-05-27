@@ -34,11 +34,13 @@ import utils.ShepherdExposedLogManager;
  * @author Mark Denihan
  *
  */
-public class dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a extends HttpServlet
+public class SessionManagement1 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a.class);
-
+	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement1.class);
+	private static String levelName = "Session Management Challenge One";
+	private static String levelHash = "dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a";
+	private static String levelResult = "db7b1da5d7a43c7100a6f01bb0c";
 	/**
 	 * Users must take advance of the broken session management in this application by modifying the tracking cookie "checksum" which is encoded in base 64. They must modify this cookie to be equal to administrator to access the result key.
 	 * @param upgraeUserToAdmin Red herring 
@@ -55,7 +57,7 @@ public class dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a ex
 		{
 			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 			ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-			log.debug("Broken Auth and Session Management Challenge One Servlet");
+			log.debug(levelName + " Servlet accessed");
 			Cookie userCookies[] = request.getCookies();
 			int i = 0;
 			Cookie theCookie = null;
@@ -76,7 +78,7 @@ public class dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a ex
 				{
 					log.debug("Challenge Complete");
 					// Get key and add it to the output
-					String userKey = Hash.generateUserSolution("db7b1da5d7a43c7100a6f01bb0c", request.getCookies());
+					String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
 					htmlOutput = "<h2 class='title'>Admin Only Club</h2>" +
 							"<p>" +
 							"Welcome administrator. Your result key is as follows " +
@@ -116,7 +118,7 @@ public class dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Session Management Challenge One - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 }

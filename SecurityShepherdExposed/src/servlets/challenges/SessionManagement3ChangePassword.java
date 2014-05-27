@@ -38,12 +38,14 @@ import dbProcs.Database;
  * @author Mark Denihan
  *
  */
-public class b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a extends HttpServlet
+public class SessionManagement3ChangePassword extends HttpServlet
 {
 
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3.class);
-
+	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement3ChangePassword.class);
+	private static String levelName = "Session Management Challenge Three (Change Password)";
+	private static String levelHash = "b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a";
+	private static String levelResult = ""; //This servlet does not return a result
 	/**
 	 * Function used by Session Managment Challenge Three to change the password of the submitted user name specified in the "Current" cookie
 	 * @param current User cookie used to store the current user (encoded twice with base64)
@@ -58,7 +60,7 @@ public class b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a ex
 		Base64 base64 = new Base64();
 		out.print(getServletInfo());
 		String htmlOutput = new String();
-		log.debug("Broken Auth and Session Management Challenge Three - Change Password - Servlet");
+		log.debug(levelName + " - Change Password - Servlet");
 		try
 		{
 			log.debug("Getting Challenge Parameters");
@@ -120,7 +122,7 @@ public class b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Session Management Challenge Three - Change Password - " + e.toString());
+			log.fatal(levelName + " - Change Password - " + e.toString());
 		}
 	}
 	

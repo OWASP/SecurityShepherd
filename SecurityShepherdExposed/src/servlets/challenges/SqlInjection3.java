@@ -21,7 +21,7 @@ import utils.SqlFilter;
 import dbProcs.Database;
 
 /**
- * SQL Injection Challenge 3 - Does not use User specific keys
+ * SQL Injection Chalenge Three - Does not use user specific key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -40,53 +40,55 @@ import dbProcs.Database;
  * @author Mark Denihan
  *
  */
-public class e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a extends HttpServlet
+public class SqlInjection3 extends HttpServlet
 {
-	//SQL Challenge 2
+	//Sql Challenge 3
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a.class);
-	
+	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection3.class);
+	private static String levelName = "SQL Injection Chalenge Three";
+	private static String levelHash = "b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6";
+	private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific
 	/**
-	 * This function is used to make a call to a database and process its results. The call made to the database is secured using an insufficient privilege. 
-	 * Players must overcome this filter to complete the module
-	 * @param aUserId Used to filter database results
+	 * Users have to use SQL injection to get a specific users credit card number. The query they are injecting into by default only outputs usernames.
+	 * The input they enter is also been filtered.
+	 * @param theUserName User name used in database look up.
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+		log.debug(levelName + " Servlet Accessed");
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String htmlOutput = new String();
 		Encoder encoder = ESAPI.encoder();
 		try
 		{
-			String aUserId = request.getParameter("aUserId");
-			log.debug("User Submitted - " + aUserId);
-			aUserId = SqlFilter.levelTwo(aUserId);
-			log.debug("Filtered to " + aUserId);
+			String theUserName = request.getParameter("theUserName");
+			log.debug("User Submitted - " + theUserName);
+			theUserName = SqlFilter.levelThree(theUserName);
+			log.debug("Filtered to " + theUserName);
 			String ApplicationRoot = getServletContext().getRealPath("");
 			log.debug("Servlet root = " + ApplicationRoot );
 			
 			log.debug("Getting Connection to Database");
-			Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeTwo");
+			Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeThree");
 			Statement stmt = conn.createStatement();
 			log.debug("Gathering result set");
-			ResultSet resultSet = stmt.executeQuery("SELECT * FROM customers WHERE customerId = '" + aUserId + "'");
-			
+			ResultSet resultSet = stmt.executeQuery("SELECT customerName FROM customers WHERE customerName = '" + theUserName + "'");
+	
 			int i = 0;
 			htmlOutput = "<h2 class='title'>Search Results</h2>";
-			htmlOutput += "<table><tr><th>Name</th><th>Address</th><th>Comment</th></tr>";
+			htmlOutput += "<table><tr><th>Name</th></tr>";
 			
 			log.debug("Opening Result Set from query");
 			while(resultSet.next())
 			{
-				log.debug("Adding Customer " + resultSet.getString(2));
+				log.debug("Adding Customer " + resultSet.getString(1));
 				htmlOutput += "<tr><td>"
-					+ encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" 
-					+ encoder.encodeForHTML(resultSet.getString(3)) + "</td><td>"
-					+ encoder.encodeForHTML(resultSet.getString(4)) + "</td></tr>";
+					+ encoder.encodeForHTML(resultSet.getString(1)) + "</td></tr>";
 				i++;
 			}
 			htmlOutput += "</table>";
@@ -104,7 +106,7 @@ public class e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a ex
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("SQL Injection Lesson - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 		log.debug("outputing HTML");
 		out.write(htmlOutput);

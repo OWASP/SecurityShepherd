@@ -31,7 +31,7 @@
   
 	<servlet>
 		<servlet-name>/lessons/e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594</servlet-name>
-		<servlet-class>servlets.e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594</servlet-class>
+		<servlet-class>servlets.SqlInjectionLesson</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/lessons/e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594</servlet-name>
@@ -49,7 +49,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b</servlet-name>
-		<servlet-class>servlets.challenges.ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b</servlet-class>
+		<servlet-class>servlets.challenges.SqlInjection1</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b</servlet-name>
@@ -58,7 +58,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a</servlet-name>
-		<servlet-class>servlets.challenges.e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a</servlet-class>
+		<servlet-class>servlets.challenges.SqlInjection2</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a</servlet-name>
@@ -67,7 +67,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6</servlet-name>
-		<servlet-class>servlets.challenges.b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6</servlet-class>
+		<servlet-class>servlets.challenges.SqlInjection3</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6</servlet-name>
@@ -76,7 +76,7 @@
   	
   	<servlet>
 		<servlet-name>/lessons/b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806</servlet-name>
-		<servlet-class>servlets.b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806</servlet-class>
+		<servlet-class>servlets.SessionManagementLesson</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/lessons/b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806</servlet-name>
@@ -85,7 +85,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a</servlet-name>
-		<servlet-class>servlets.challenges.dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a</servlet-class>
+		<servlet-class>servlets.challenges.SessionManagement1</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a</servlet-name>
@@ -94,7 +94,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7</servlet-name>
-		<servlet-class>servlets.challenges.d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7</servlet-class>
+		<servlet-class>servlets.challenges.SessionManagement2</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7</servlet-name>
@@ -103,7 +103,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959</servlet-name>
-		<servlet-class>servlets.challenges.f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959</servlet-class>
+		<servlet-class>servlets.challenges.SessionManagement2ChangePassword</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959</servlet-name>
@@ -112,7 +112,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3</servlet-name>
-		<servlet-class>servlets.challenges.t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3</servlet-class>
+		<servlet-class>servlets.challenges.SessionManagement3</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3</servlet-name>
@@ -121,7 +121,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a</servlet-name>
-		<servlet-class>servlets.challenges.b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a</servlet-class>
+		<servlet-class>servlets.challenges.SessionManagement3ChangePassword</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a</servlet-name>
@@ -130,7 +130,7 @@
 	
 	<servlet>
 		<servlet-name>/lessons/fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100</servlet-name>
-		<servlet-class>servlets.fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100</servlet-class>
+		<servlet-class>servlets.DirectObjectLesson</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/lessons/fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100</servlet-name>
@@ -139,7 +139,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c</servlet-name>
-		<servlet-class>servlets.challenges.o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c</servlet-class>
+		<servlet-class>servlets.challenges.DirectObject1</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c</servlet-name>
@@ -148,7 +148,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4</servlet-name>
-		<servlet-class>servlets.challenges.vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4</servlet-class>
+		<servlet-class>servlets.challenges.DirectObject2</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4</servlet-name>

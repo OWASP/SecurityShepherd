@@ -40,12 +40,14 @@ import dbProcs.Database;
  * @author Mark Denihan
  *
  */
-public class ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b extends HttpServlet
+public class SqlInjection1 extends HttpServlet
 {
 	//SQL Challenge One
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b.class);
-	
+	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection1.class);
+	private static String levelName = "SQL Injection Challange One";
+	private static String levelHash = "ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b";
+	private static String levelResult = ""; // Stored in Vulnerable DB. Not user Specific
 	/**
 	 * This function is used to make a call to a database and process its results. The call made to the database is secured using an insufficient privilege. 
 	 * Players must overcome this filter to complete the module
@@ -56,6 +58,7 @@ public class ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b exte
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+		log.debug(levelName + " Servlet Accessed");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String htmlOutput = new String();
@@ -104,7 +107,7 @@ public class ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b exte
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("SQL Injection Lesson - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 		log.debug("outputing HTML");
 		out.write(htmlOutput);
