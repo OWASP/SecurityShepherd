@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
@@ -45,6 +46,7 @@ public class SqlInjection4 extends HttpServlet
 	//Sql Challenge 4
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection4.class);
+	private static String levelName = "SqlInjection4";
 	private static String levelResult = "d316e80045d50bdf8ed49d48f130b4acf4a878c82faef34daff8eb1b98763b6f"; 
 	private static String levelHash = "1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629";
 	/**
@@ -58,7 +60,21 @@ public class SqlInjection4 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("SQL Injection 4 Servlet Access");
+		//Attempting to recover username of session that made request
+		try
+		{
+			if (request.getSession() != null)
+			{
+				HttpSession ses = request.getSession();
+				String userName = (String) ses.getAttribute("decyrptedUserName");
+				log.debug(userName + " accessed " + levelName + " Servlet");
+			}
+		}
+		catch (Exception e)
+		{
+			log.debug(levelName + " Servlet Accessed");
+			log.error("Could not retrieve username from session");
+		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String htmlOutput = new String();

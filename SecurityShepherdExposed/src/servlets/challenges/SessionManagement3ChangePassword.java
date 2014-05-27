@@ -10,6 +10,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.codec.binary.Base64;
@@ -56,6 +57,21 @@ public class SessionManagement3ChangePassword extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+		//Attempting to recover username of session that made request
+		try
+		{
+			if (request.getSession() != null)
+			{
+				HttpSession ses = request.getSession();
+				String userName = (String) ses.getAttribute("decyrptedUserName");
+				log.debug(userName + " accessed " + levelName + " Servlet");
+			}
+		}
+		catch (Exception e)
+		{
+			log.debug(levelName + " Servlet Accessed");
+			log.error("Could not retrieve username from session");
+		}
 		PrintWriter out = response.getWriter();
 		Base64 base64 = new Base64();
 		out.print(getServletInfo());

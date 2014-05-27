@@ -8,6 +8,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -54,7 +55,21 @@ public class SessionManagementLesson extends HttpServlet
 		out.print(getServletInfo());
 		try
 		{
-			log.debug(levelName + " Servlet Accessed");
+			//Attempting to recover username of session that made request
+			try
+			{
+				if (request.getSession() != null)
+				{
+					HttpSession ses = request.getSession();
+					String userName = (String) ses.getAttribute("decyrptedUserName");
+					log.debug(userName + " accessed " + levelName + " Servlet");
+				}
+			}
+			catch (Exception e)
+			{
+				log.debug(levelName + " Servlet Accessed");
+				log.error("Could not retrieve username from session");
+			}
 			Cookie userCookies[] = request.getCookies();
 			int i = 0;
 			Cookie theCookie = null;

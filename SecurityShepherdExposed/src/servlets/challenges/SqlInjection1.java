@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
@@ -58,7 +59,21 @@ public class SqlInjection1 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug(levelName + " Servlet Accessed");
+		//Attempting to recover username of session that made request
+		try
+		{
+			if (request.getSession() != null)
+			{
+				HttpSession ses = request.getSession();
+				String userName = (String) ses.getAttribute("decyrptedUserName");
+				log.debug(userName + " accessed " + levelName + " Servlet");
+			}
+		}
+		catch (Exception e)
+		{
+			log.debug(levelName + " Servlet Accessed");
+			log.error("Could not retrieve username from session");
+		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String htmlOutput = new String();
