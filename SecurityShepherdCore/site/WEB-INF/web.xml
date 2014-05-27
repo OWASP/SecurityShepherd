@@ -247,15 +247,6 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>/generateChallengeDb</servlet-name>
-		<servlet-class>servlets.admin.builder.GenerateChallengeDb</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>/generateChallengeDb</servlet-name>
-		<url-pattern>/generateChallengeDb</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
 		<servlet-name>/openFloorModules</servlet-name>
 		<servlet-class>servlets.admin.moduleManagement.SetOpenFloor</servlet-class>
 	</servlet>

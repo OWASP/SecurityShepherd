@@ -113,18 +113,6 @@ $("#createCheatsLink").click(function(){
 	});	
 });
 
-$("#challengeBuilderLink").click(function(){
-	$("#contentDiv").hide("fast", function(){
-		$("#contentDiv").load("admin/builder/challengeWizard.jsp", function(response, status, xhr) {
-		  if (status == "error") {
-			var msg = "Sorry but there was an error: ";
-			$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
-		  }
-		  $("#contentDiv").show("fast");
-		});
-	});	
-});
-
 $("#openFloorModuleLink").click(function(){
 	$("#contentDiv").hide("fast", function(){
 		$("#contentDiv").load("admin/moduleManagement/openFloor.jsp", function(response, status, xhr) {

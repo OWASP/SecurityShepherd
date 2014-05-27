@@ -40,6 +40,7 @@ if (request.getSession() != null)
 	// Also, if tokenCookie != null, then the page is good to continue loading
 	if (Validate.validateSession(ses) && tokenCookie != null)
 	{
+		//Log User Name
 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
 		// Getting Session Variables
 		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
@@ -145,9 +146,6 @@ if (request.getSession() != null)
 										<li><a id="assignPlayersLink" href="javascript:;">Assign Players to Class</a></li>
 										<li><a id="registrationLink" href="javascript:;">Open/Close Registration</a></li>
 									</ul>
-								</li>
-								<li>
-									<a id="challengeBuilderLink" href="javascript:;">Challenge Builder</a>
 								</li>
 								<li>
 									<a id="configurationList" href="javascript:;">Configuration</a>
