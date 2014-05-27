@@ -31,6 +31,11 @@ if(request.getSession() != null)
 		ses.invalidate();
 		ses = request.getSession(true);
 	}
+	if(ses.getAttribute("userName") != null)
+	{
+		//Logging Username
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
+	}
 }
 String url = (request.getRequestURL()).toString();
 if(url.contains("register.jsp"))

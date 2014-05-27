@@ -41,6 +41,9 @@ catch(Exception htmlE)
 // Also, if tokenCookie != null, then the page is good to continue loading
 if (Validate.validateSession(ses) && tokenCookie != null)
 {
+//Logging Username
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
+
 // Getting Session Variables
 String hex = (String) ses.getAttribute("userName");
 String falseId = new Integer(hex.getBytes().hashCode() + hex.substring(0, hex.length() / 2).hashCode()).toString();

@@ -44,6 +44,9 @@ catch(Exception htmlE)
 // Also, if tokenCookie != null, then the page is good to continue loading
 if (Validate.validateSession(ses) && tokenCookie != null)
 {
+
+	//Logging Username
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
 // Getting Session Variables
 //This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
 Encoder encoder = ESAPI.encoder();

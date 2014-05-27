@@ -48,6 +48,10 @@ public class SqlInjection5 extends HttpServlet
 				String userName = (String) ses.getAttribute("decyrptedUserName");
 				log.debug(userName + " accessed " + levelName + " Servlet");
 			}
+			else
+			{
+				log.debug(levelName + " Servlet Accessed by an empty session");
+			}
 		}
 		catch (Exception e)
 		{

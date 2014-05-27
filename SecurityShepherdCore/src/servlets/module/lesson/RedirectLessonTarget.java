@@ -52,6 +52,7 @@ public class RedirectLessonTarget extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateAdminSession(ses))
 			{
+				log.debug("Current User: " + ses.getAttribute("userName").toString());
 				log.debug("RedirectLessonTarget Lesson Target Hit By Admin");
 				out.write("<p>User Marked as completed Redirect Lesson</p>");
 			}

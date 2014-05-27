@@ -53,7 +53,7 @@ public class Validate
 			}
 			else
 			{
-				log.debug("Active Session Found");
+				// log.debug("Active Session Found");
 				if (ses.getAttribute("userRole") != null)
 				{
 					try 
@@ -100,7 +100,7 @@ public class Validate
 			}
 			else
 			{
-				log.debug("Active Session Found");
+				//log.debug("Active Session Found");
 				if (ses.getAttribute("userRole") != null && ses.getAttribute("userName") != null)
 				{
 					try 

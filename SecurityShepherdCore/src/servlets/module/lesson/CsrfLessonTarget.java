@@ -51,6 +51,7 @@ public class CsrfLessonTarget extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateAdminSession(ses))
 			{
+				log.debug("Current User: " + ses.getAttribute("userName").toString());
 				log.debug("CSRF Lesson Target Hit By Admin");
 				out.write("<p>User Marked as completed CSRF Lesson</p>");
 			}

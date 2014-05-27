@@ -63,6 +63,7 @@ public class ChangeCoreHostAddress extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateAdminSession(ses))
 		{
+			log.debug("Current User: " + ses.getAttribute("userName").toString());
 			Cookie tokenCookie = Validate.getToken(request.getCookies());
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
