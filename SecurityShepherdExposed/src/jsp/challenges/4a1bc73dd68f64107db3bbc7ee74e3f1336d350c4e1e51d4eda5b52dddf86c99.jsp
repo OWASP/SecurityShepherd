@@ -1,12 +1,13 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
 <%
-
-//No Quotes In level Name
-String levelName = "LevelName";
+	//No Quotes In level Name
+String levelName = "Failure To Restrict URL Access Challenge 1";
 //Alphanumeric Only
-String levelHash = "LevelHash";
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Download the file and play with it to extract the key for this level!";
+String levelHash = "4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99";
+//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+String levelBlurb = "";
+//Logs the IP, Forwarded IP that acceeded this level with the level name in the debug for convience. If you want to log more stuff in the JSP use this as an example
+ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 
 /**
  * <br/><br/>
@@ -33,7 +34,6 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
 	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
@@ -42,15 +42,13 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 			<p> 
 				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				
-				<%= levelBlurb %>
+				To recover the result key for this level you just need to get the current server status message from an administrator's point of view!
 				<br/>
 				<br/>
-				<a href="<%=levelHash%>/DownloadMe.zip">Download Me</a>
 				<% /* IF you need a form - Present it like this */ %>
-				<%
-				/*
-				<br />
-				<br />
+				Use this form to view the status of the server <!-- from the point of view of a peasant or guest  -->
+				<br/>
+				<br/>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>			
@@ -63,26 +61,47 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 				</form>
 				
 				<div id="resultsDiv"></div>
-				*/
-				%>
 			</p>
 		</div>
 		<% /*If you need to call the Server Do it like this */ %>
-		<%
-		/*
 		<script>
 			$("#leForm").submit(function(){
-				var theVariableName = $("#variableName").val();
-				var theSecondVariableName = $("#secondVariableName").val();
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "<ChangeThis= levelHash ChangeThis>",
+						url: "<%= levelHash %>",
 						data: {
-							variableName: theVariableName, 
-							secondVariableName: theSecondVariableName
+							userData: "4816283", 
+						},
+						async: false
+					});
+					if(ajaxCall.status == 200)
+					{
+						$("#resultsDiv").html(ajaxCall.responseText);
+					}
+					else
+					{
+						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+					}
+					$("#resultsDiv").show("slow", function(){
+						$("#loadingSign").hide("fast", function(){
+							$("#submitButton").show("slow");
+						});
+					});
+				});
+			});
+			
+			$("#leAdminForm").submit(function(){
+				$("#submitButton").hide("fast");
+				$("#loadingSign").show("slow");
+				$("#resultsDiv").hide("slow", function(){
+					var ajaxCall = $.ajax({
+						type: "POST",
+						url: "<%= levelHash %>2",
+						data: {
+							userData: "4816283", 
 						},
 						async: false
 					});
@@ -102,7 +121,5 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 				});
 			});
 		</script>
-		*/
-		%>
 </body>
 </html>

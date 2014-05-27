@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: index.jsp *************************");
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: index.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -34,7 +34,7 @@ if (request.getSession() != null)
 	}
 	catch(Exception htmlE)
 	{
-		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(index.jsp): tokenCookie Error:" + htmlE.toString());
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(index.jsp): tokenCookie Error:" + htmlE.toString());
 	}
 	// validateSession ensures a valid session, and valid role credentials
 	// Also, if tokenCookie != null, then the page is good to continue loading
@@ -52,7 +52,7 @@ if (request.getSession() != null)
 		int i = 0;
 
 		String exposedServer = ExposedServer.getUrl();
-		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Exposed Server = " + exposedServer);
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Exposed Server = " + exposedServer);
 %>
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
@@ -235,7 +235,7 @@ if (request.getSession() != null)
 				}
 				else
 				{
-					$('#contentDiv').html("<p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+					$('#contentDiv').html("<p> Sorry but there was a challenge error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					$("#contentDiv").slideDown("slow");
 				}
 			});
@@ -268,7 +268,7 @@ if (request.getSession() != null)
 				}
 				else
 				{
-					$('#contentDiv').html("<p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+					$('#contentDiv').html("<p> Sorry but there was a lesson error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					$("#contentDiv").slideDown("slow");
 				}
 			});
@@ -292,7 +292,7 @@ if (request.getSession() != null)
 				}
 				else
 				{
-					$('#solutionDiv').html("<p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+					$('#solutionDiv').html("<p> Sorry but there was a show solution error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 				}
 				$("#solutionDiv").show("fast");
 			});
@@ -325,7 +325,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$('#resultResponse').html("<br/><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
+						$('#resultResponse').html("<br/><p> Sorry but there was a result form error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
 						$("#resultResponse").show("slow");
 					}
 					$("#contentDiv").slideDown("fast", function(){

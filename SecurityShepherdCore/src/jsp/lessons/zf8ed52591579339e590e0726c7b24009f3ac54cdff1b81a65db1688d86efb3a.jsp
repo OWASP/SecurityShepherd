@@ -20,7 +20,7 @@
  * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
  */
  
-ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cross Site Scripting Lesson Accessed");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cross Site Scripting Lesson Accessed");
 if (request.getSession() != null)
 {
 HttpSession ses = request.getSession();
@@ -33,7 +33,7 @@ try
 }
 catch(Exception htmlE)
 {
-	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(index.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(index.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
