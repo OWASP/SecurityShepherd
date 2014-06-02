@@ -3,7 +3,7 @@ package com.app.mobshep.RE2;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class mxoiqnmxoiqpmxomu extends Activity 
+public class rectangle extends Activity 
 {
 
 	@Override

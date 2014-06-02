@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class mjiueowjncewiucnwinc extends Activity {
+public class splash extends Activity {
 
 	@Override
 	protected void onCreate(Bundle Mobile) {
@@ -16,15 +16,16 @@ public class mjiueowjncewiucnwinc extends Activity {
 			public void run() {
 				// catch exceptions
 				try {
-					sleep(5000); 
+					sleep(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.app.mobshep.miuewonmxiwohnx");
+					Intent gotoMain = new Intent("com.app.mobshep.RE2.Reverse_Engineering2");
 					startActivity(gotoMain);
 				}
+
 			}
 		};
 

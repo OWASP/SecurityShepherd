@@ -6,11 +6,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-public class miuewonmxiwohnx extends Activity implements OnClickListener {
+public class Reverse_Engineering2 extends Activity implements OnClickListener {
 
 	TextView jdiewjdwjddewdewdw;
 	Button joiuwhiunwjdewniuewnmiux;

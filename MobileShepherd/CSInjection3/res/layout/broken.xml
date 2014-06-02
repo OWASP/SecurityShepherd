@@ -28,8 +28,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-            
-
                 <RelativeLayout
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
@@ -58,6 +56,7 @@
                         android:ems="10"
                         android:hint="Username"
                         android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:background="@drawable/edittext"
                         android:textColor="#DA70D6" />
 
                     <EditText
@@ -71,7 +70,9 @@
                         android:hint="Password"
                         android:inputType="textPassword"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" >
+                        android:textColor="#DA70D6"
+                        android:background="@drawable/edittext"
+                         >
 
                         <requestFocus />
                     </EditText>
@@ -85,8 +86,8 @@
                         android:layout_marginTop="48dp"
                         android:filterTouchesWhenObscured="true"
                         android:text="@string/login"
-                        android:textColor="#DA70D6" />
-
+                        android:background="@drawable/button"
+                         />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -104,6 +105,7 @@
                         android:layout_marginTop="58dp"
                         android:hint="The key is only shown to authenticated users."
                         android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:background="@drawable/edittext"
                         android:textColor="#DA70D6" />
                 </RelativeLayout>
             </FrameLayout>
