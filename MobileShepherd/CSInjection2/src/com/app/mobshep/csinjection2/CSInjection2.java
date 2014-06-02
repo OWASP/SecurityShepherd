@@ -170,7 +170,7 @@ case (R.id.bLogin):
 			db.execSQL("DROP TABLE IF EXISTS Users");
 			db.execSQL("CREATE TABLE Users(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
 
-			db.execSQL("INSERT INTO Users VALUES( 1,'Admin',20,'Roderigo')");
+			db.execSQL("INSERT INTO Users VALUES( 1,'Admin',20,'49c3a17ad8d8ccd93885e6a28661480d')");
 			db.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

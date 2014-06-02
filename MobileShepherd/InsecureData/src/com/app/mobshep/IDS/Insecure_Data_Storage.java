@@ -1,15 +1,25 @@
 package com.app.mobshep.IDS;
 
-import android.app.Activity;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabHost;
-import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
+import android.widget.Toast;
 
 public class Insecure_Data_Storage extends Activity {
 
@@ -20,6 +30,18 @@ public class Insecure_Data_Storage extends Activity {
 	Button login;
 	EditText password;
 	EditText username;
+
+	private static final int MY_NOTIFICATION_ID = 1;
+
+	private int mNotificationCount;
+
+	private final CharSequence tickerText = "Challenge complete get the key and submit it!";
+	private final CharSequence contentTitle = "Success!";
+	private final CharSequence contentText = "InsecureData Complete!";
+	private Intent NotificationIntent;
+	private long[] vibrate = { 0, 200, 200, 300 };
+
+	
 	
 	
 	@Override
@@ -29,10 +51,34 @@ public class Insecure_Data_Storage extends Activity {
 		setContentView(R.layout.ids);
 		referenceXML();
 		th.setup();
-        populateTable();
-        
-  
-        
+		
+		String destinationDir = "/data/data/" +getPackageName() + "/databases";
+		
+		String destinationPath = destinationDir + "Members";
+		
+		File f = new File(destinationPath);
+		
+		if (!f.exists()){
+			File directory = new File(destinationDir);
+			directory.mkdirs();
+			//assets members.db -> /databases/
+			
+			try{
+				copyDatabase(getBaseContext().getAssets().open("Members"), new FileOutputStream(destinationPath));
+			}catch(FileNotFoundException e){
+				e.printStackTrace();
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		NotificationIntent = new Intent(getApplicationContext(),
+				Insecure_Data_Storage.class);
+		PendingIntent.getActivity(getApplicationContext(), 0,
+				NotificationIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
+
 		// Set up each tab
 		TabSpec specs = th.newTabSpec("tag1");
 		specs.setContent(R.id.tab1);
@@ -43,7 +89,6 @@ public class Insecure_Data_Storage extends Activity {
 		specs.setContent(R.id.tab2);
 		specs.setIndicator("Key");
 		th.addTab(specs);
-	
 
 		login.setOnClickListener(new View.OnClickListener() {
 
@@ -69,20 +114,37 @@ public class Insecure_Data_Storage extends Activity {
 							"Logged in!", Toast.LENGTH_SHORT);
 					toast3.show();
 
-					keyView.setText("" + "" + ""
-							+ "The Key is Battery777");
+					Notification.Builder notificationBuilder = new Notification.Builder(
+							getApplicationContext())
+							.setTicker(tickerText)
+							.setSmallIcon(R.drawable.ic_launcher)
+							.setAutoCancel(true)
+							.setContentTitle(contentTitle)
+							.setContentText(
+									contentText + " (" + ++mNotificationCount
+											+ ")").setVibrate(vibrate);
+
+					// Pass the Notification to the NotificationManager:
+					NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+					mNotificationManager.notify(MY_NOTIFICATION_ID,
+							notificationBuilder.build());
 
 				}
 
-				if (CheckName.contentEquals("EpicTrees") || CheckName.contentEquals("GraveyBones") || CheckName.contentEquals("FallenComrade") || CheckName.contentEquals("IronFist") || CheckName.contentEquals("Jumper") || CheckName.contentEquals("99chips") || CheckName.contentEquals("RegularVeg"))
-						{
+				if (CheckName.contentEquals("EpicTrees")
+						|| CheckName.contentEquals("GraveyBones")
+						|| CheckName.contentEquals("FallenComrade")
+						|| CheckName.contentEquals("IronFist")
+						|| CheckName.contentEquals("Jumper")
+						|| CheckName.contentEquals("99chips")
+						|| CheckName.contentEquals("RegularVeg")) {
 
 					Toast locked = Toast.makeText(Insecure_Data_Storage.this,
 							"That Account is locked.", Toast.LENGTH_SHORT);
 					locked.show();
 
 				}
-				
+
 				else {
 					Toast toast4 = Toast.makeText(Insecure_Data_Storage.this,
 							"Invalid Credentials!", Toast.LENGTH_SHORT);
@@ -93,32 +155,19 @@ public class Insecure_Data_Storage extends Activity {
 		});
 	}
 
-	public void populateTable() {
-		try {
+	
 
-			SQLiteDatabase db = openOrCreateDatabase("Members", MODE_PRIVATE,
-					null);
-			db.execSQL("DROP TABLE IF EXISTS Members");
-			db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
-
-			db = openOrCreateDatabase("Members", MODE_PRIVATE, null);
-			db.execSQL("INSERT INTO Members VALUES( 2,'Admin',45,'OrcsExplosion')");
-			db.execSQL("INSERT INTO Members VALUES( 3,'GraveyBones',23,'super')");
-			db.execSQL("INSERT INTO Members VALUES( 4,'EpicTrees',35,'root')");
-			db.execSQL("INSERT INTO Members VALUES( 5,'FallenComrade',36,'password')");
-			db.execSQL("INSERT INTO Members VALUES( 6,'Ironfist',82,'hd7832dh8d')");
-			db.execSQL("INSERT INTO Members VALUES( 7,'Jumper',18,'bananarama')");
-			db.execSQL("INSERT INTO Members VALUES( 8,'99chips',32,'catsrcool')");
-			db.execSQL("INSERT INTO Members VALUES( 9,'regularVeg',40,'111111111111')");
-			db.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			Toast toast = Toast.makeText(Insecure_Data_Storage.this,
-					"Data already inserted", Toast.LENGTH_LONG);
-			toast.show();
+	public void copyDatabase(InputStream iStream, OutputStream oStream)
+			throws IOException {
+		byte[] buffer = new byte[1024];
+		int i;
+		while ((i = iStream.read(buffer)) > 0) {
+				oStream.write(buffer, 0 , i);
 		}
+		iStream.close();
+		oStream.close();
+		
 	}
-
 
 	public void referenceXML() {
 		keyView = (EditText) findViewById(R.id.tvKey2);

@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textColor="#DA70D6" >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -26,8 +27,6 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
-
-            
 
                 <RelativeLayout
                     android:id="@+id/tab1"
@@ -54,6 +53,7 @@
                         android:layout_alignLeft="@+id/etPass"
                         android:layout_below="@+id/tvTitle"
                         android:layout_marginTop="25dp"
+                        android:background="@drawable/edittext"
                         android:ems="10"
                         android:hint="Username"
                         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -66,6 +66,7 @@
                         android:layout_below="@+id/etName"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="45dp"
+                        android:background="@drawable/edittext"
                         android:ems="10"
                         android:hint="Password"
                         android:inputType="textPassword"
@@ -82,10 +83,9 @@
                         android:layout_below="@+id/etPass"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="32dp"
+                        android:background="@drawable/button"
                         android:filterTouchesWhenObscured="true"
-                        android:text="@string/login"
-                        android:textColor="#DA70D6" />
-
+                        android:text="@string/login" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -101,6 +101,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="58dp"
+                        android:background="@drawable/edittext"
                         android:hint="The key is only shown to authenticated users."
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" />

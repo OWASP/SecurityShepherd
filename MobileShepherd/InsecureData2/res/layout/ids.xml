@@ -55,6 +55,7 @@
                         android:layout_marginTop="25dp"
                         android:ems="10"
                         android:hint="Username"
+                        android:background="@drawable/edittext"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" />
 
@@ -67,6 +68,7 @@
                         android:layout_marginTop="28dp"
                         android:ems="10"
                         android:hint="Password"
+                        android:background="@drawable/edittext"
                         android:inputType="textPassword"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" >
@@ -82,7 +84,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="34dp"
                         android:text="@string/login"
-                        android:textColor="#DA70D6" />
+                        android:background="@drawable/button" />
                   
                 </RelativeLayout>
                 
@@ -98,6 +100,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="52dp"
+                        android:background="@drawable/edittext"
                         android:hint="The key will appear here when the login has been successful."
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#DA70D6" />
