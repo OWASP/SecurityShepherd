@@ -34,11 +34,6 @@ import org.owasp.esapi.errors.ValidationException;
 public class FindXSS
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(FindXSS.class);
-	public static String[] javascriptTriggers =  {
-		"onload", "onunload", "onblur", "onchange", "onfocus",
-		"onreset", "onselect", "onsubmit", "onabort", "onkeydown",
-		"onkeyup", "onkeypress", "onclick", "ondblclick", "onmousedown",
-		"onmousemove", "onmouseout", "onmouseover", "onmouseup", "onerror", "formaction"};
 	/**
 	 * Method used to detect valid java script in a user submission. Specifically the presence of a script that will execute an alert command.
 	 * Script tag, Url java script and java script tiggeres vectors are all including in this detection method.
@@ -79,7 +74,9 @@ public class FindXSS
 					"onload", "onunload", "onblur", "onchange", "onfocus",
 					"onreset", "onselect", "onsubmit", "onabort", "onkeydown",
 					"onkeyup", "onkeypress", "onclick", "ondblclick", "onmousedown",
-					"onmousemove", "onmouseout", "onmouseover", "onmouseup", "onerror", "formaction"};
+					"onmousemove", "onmouseout", "onmouseover", "onmouseup", "onerror", 
+					"formaction", "oninput", "onmouseenter", "onmouseleave", "ondragenter",
+					"ondragleave", "ondragend", "ondragover"};
 				String[] htmlElements = {
 					"a", "abbr", "acronym", "address", "applet", "area", "b", 
 					"base", "basefont", "bdo", "big", "blockquote", "body", "br",
