@@ -236,4 +236,22 @@
 		<url-pattern>/challenges/278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>/challenges/2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1</servlet-name>
+		<servlet-class>servlets.challenges.BrokenCrypto3</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1</servlet-name>
+		<url-pattern>/challenges/2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6</servlet-name>
+		<servlet-class>servlets.challenges.SessionManagement4</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6</servlet-name>
+		<url-pattern>/challenges/ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6</url-pattern>
+	</servlet-mapping>
+	
 </web-app>
