@@ -481,6 +481,24 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>/cancelConfigPrompt</servlet-name>
+		<servlet-class>servlets.admin.config.NoMoreQuickConfig</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/cancelConfigPrompt</servlet-name>
+		<url-pattern>/cancelConfigPrompt</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/quickConfig</servlet-name>
+		<servlet-class>servlets.admin.config.QuickConfiguration</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/quickConfig</servlet-name>
+		<url-pattern>/quickConfig</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>/challenges/06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751</servlet-name>
 		<servlet-class>servlets.module.challenge.XssChallengeFour</servlet-class>
 	</servlet>
