@@ -157,7 +157,8 @@ if (request.getSession() != null)
 										<li><a id="incrementalModulesLink" href="javascript:;">CTF Mode</a></li>
 										<li><a id="stopHereLink" href="javascript:;">Enable Module Block</a></li>
 										<li><a id="disableBlockLink" href="javascript:;">Disable Module Block</a></li>
-										<li><a id="setModuleStatusLink" href="javascript:;">Set Module Status</a></li>
+										<li><a id="setModuleStatusLink" href="javascript:;">Open and Close Modules</a></li>
+										<li><a id="openCloseByCategory" href="javascript:;">Open or Close by Category</a></li>
 										<li><a id="feedbackLink" href="javascript:;">View Feedback</a></li>
 										<li><a id="progressLink" href="javascript:;">View Progress</a></li>
 										<li><a id="scoreboardLink" href="javascript:;">Scoreboard</a></li>

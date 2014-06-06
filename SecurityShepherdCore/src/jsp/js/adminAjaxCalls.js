@@ -161,6 +161,19 @@ $("#setModuleStatusLink").click(function(){
 	});	
 });
 
+$("#openCloseByCategory").click(function(){
+	$("#contentDiv").hide("fast", function(){
+		$("#contentDiv").load("admin/moduleManagement/openCloseByCategory.jsp", function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+		  }
+		  $("#contentDiv").show("fast");
+		});
+	});	
+});
+
+
 $("#setVulnerableRootLink").click(function(){
 	$("#contentDiv").hide("fast", function(){
 		$("#contentDiv").load("admin/config/setVulnerableRoot.jsp", function(response, status, xhr) {

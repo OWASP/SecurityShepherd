@@ -870,6 +870,43 @@ public class Getter
 	}
 	
 	/**
+	 * This method returns the module categories to open or closed in a &lt;select&gt; element for administration manipulation
+	 * @param ApplicationRoot
+	 * @param userId
+	 * @param csrfToken
+	 * @return
+	 */
+	public static String getOpenCloseCategoryMenu (String ApplicationRoot)
+	{
+		log.debug("*** Getter.getOpenCloseCategoryMenu ***");
+		String theModules = new String();
+		String output = new String();
+		Encoder encoder = ESAPI.encoder();
+		Connection conn = Database.getConnection(ApplicationRoot);
+		try
+		{
+			//Get the modules
+			CallableStatement callstmt = conn.prepareCall("SELECT DISTINCT moduleCategory FROM modules ORDER BY moduleCategory");
+			ResultSet modules = callstmt.executeQuery();
+			while(modules.next())
+			{
+				String theModule = "<option value='" + encoder.encodeForHTMLAttribute(modules.getString(1)) + 
+						"'>" + encoder.encodeForHTML(modules.getString(1)) + "</option>\n";
+				theModules += theModule;
+			}
+			//This is the actual output: It assumes a <table> environment
+			output = "<select style='width: 300px; height: 200px;' multiple id='toDo'>" + theModules + "</select>\n";
+			log.debug("Module Category Menu returned");
+		}
+		catch(Exception e)
+		{
+			log.error("Module Status Menu: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		return output;
+	}
+	
+	/**
 	 * Used to gather a menu of lessons for a user, including markers for each lesson they have completed or not completed
 	 * @param ApplicationRoot The current running context of the application
 	 * @param userId Identifier of the user

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: setStatus.jsp *************************");
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: openCloseByCategory.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -34,7 +34,7 @@ try
 }
 catch(Exception htmlE)
 {
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(setStatus.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(openCloseByCategory.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateAdminSession ensures a valid session, and valid administrator credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -52,27 +52,32 @@ String ApplicationRoot = getServletContext().getRealPath("");
 		<h1 class="title">Open and Close Levels</h1>
 		<div class="entry">
 			<div id="badData"></div>
-				<form id="theForm" action="javascript:;">
-					<p>Use this form to open and close levels by name. Levels that are closed will not appear in any level listings.</p>
-					<div id="badData"></div>
-					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<div  id="submitButton" align="center">
-						<div>
-							<table>
-							<%= Getter.getModuleStatusMenu(ApplicationRoot) %>
-							</table>
-						</div>
-						<div><input type="submit" value="Update Module Status"/></div>
+			<form id="theForm" action="javascript:;">
+				<p>Use this form to open and close levels by entire categories. Levels that are closed will not appear in any level listings.</p>
+				<div id="badData"></div>
+				<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
+				<div id="submitButton" align="center">
+					<div>
+						<table>
+						<tr><td colspan="2">
+						<%= Getter.getOpenCloseCategoryMenu(ApplicationRoot) %>
+						</td></tr>
+						<tr><td>
+						<input type="submit" value="Close Categories">
+						</td><td>
+						<input type="button" id="openCategories" value="Open Categories">
+						</td></tr>
+						</table>
 					</div>
-					<div id="loadingSign" style="display: none;"><p>Loading...</p></div> 
-				</form>
+				</div>
+			</form>
+			<div id="loadingSign" style="display: none;"><p>Loading...</p></div> 
+			
 			<div id="resultDiv"></div>
 			<script>					
 			$("#theForm").submit(function(){
-				var toBeOpened = $("#toOpen").val();
-				var toBeClosed = $("#toClose").val();
+				var toDo = $("#toDo").val();
 				var theCsrfToken = $('#csrfToken').val();
-				var theModule = $("#theModule").val();
 				//The Ajax Operation
 				$("#badData").hide("fast");
 				$("#submitButton").hide("fast");
@@ -80,10 +85,44 @@ String ApplicationRoot = getServletContext().getRealPath("");
 				$("#resultDiv").hide("fast", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "setModuleStatus",
+						url: "openCloseModuleCategories",
 						data: {
-							toClose: toBeClosed,
-							toOpen: toBeOpened,
+							toOpenOrClose: toDo,
+							openOrClose: "closed",
+							csrfToken: theCsrfToken
+						},
+						async: false
+					});
+					if(ajaxCall.status == 200)
+					{
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+				});
+				$("#loadingSign").hide("fast", function(){
+					$("#submitButton").show("slow");
+				});
+			});
+			
+			$("#openCategories").click(function(){
+				var toDo = $("#toDo").val();
+				var theCsrfToken = $('#csrfToken').val();
+				//The Ajax Operation
+				$("#badData").hide("fast");
+				$("#submitButton").hide("fast");
+				$("#loadingSign").show("slow");
+				$("#resultDiv").hide("fast", function(){
+					var ajaxCall = $.ajax({
+						type: "POST",
+						url: "openCloseModuleCategories",
+						data: {
+							toOpenOrClose: toDo,
+							openOrClose: "open",
 							csrfToken: theCsrfToken
 						},
 						async: false

@@ -283,6 +283,16 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>/openCloseModuleCategories</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.OpenOrCloseByCategory</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/openCloseModuleCategories</servlet-name>
+		<url-pattern>/openCloseModuleCategories</url-pattern>
+	</servlet-mapping>
+	openCloseModuleCategories
+	
+	<servlet>
 		<servlet-name>/changeHostAddress</servlet-name>
 		<servlet-class>servlets.admin.config.ChangeHostAddress</servlet-class>
 	</servlet>

@@ -426,6 +426,36 @@ public class Setter
 	}
 	
 	/**
+	 * This method is used to set the status of all modules in a category to open or closed.
+	 * @param ApplicationRoot Used to locate database properties file
+	 * @param moduleCategory The module category to open or closed
+	 * @param openOrClosed What to set the module status to. Can only be "open" or "closed"
+	 * @return
+	 */
+	public static boolean setModuleCategoryStatusOpen (String ApplicationRoot, String moduleCategory, String openOrClosed)
+	{
+		log.debug("*** Setter.setModuleCategoryStatusOpen ***");
+		boolean result = false;
+		Connection conn = Database.getConnection(ApplicationRoot);
+		try
+		{
+			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = ? WHERE moduleCategory = ?");
+			prepstmt.setString(1, openOrClosed);
+			prepstmt.setString(2, moduleCategory);
+			prepstmt.execute();
+			log.debug("Set " + moduleCategory + " to " + openOrClosed);
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not open/close category: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END setModuleCategoryStatusOpen ***");
+		return result;
+	}
+	
+	/**
 	 * This method sets the module status to Closed. This information is absorbed by the Tournament Floor Plan
 	 * @param ApplicationRoot Current running director of the application
 	 * @param moduleId The identifer of the module that is been set to closed status
