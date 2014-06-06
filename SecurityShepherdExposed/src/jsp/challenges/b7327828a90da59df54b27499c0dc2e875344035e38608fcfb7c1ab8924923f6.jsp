@@ -22,7 +22,7 @@
  * @author Mark Denihan
  */
 
-String levelName = "SQL Injection Challenge Three Accessed";
+String levelName = "SQL Injection Challenge Three";
  try
  {
  	if (request.getSession() != null)

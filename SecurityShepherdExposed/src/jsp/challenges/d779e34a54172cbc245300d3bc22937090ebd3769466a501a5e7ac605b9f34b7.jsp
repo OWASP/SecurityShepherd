@@ -22,7 +22,7 @@
  * @author Mark Denihan
  */
 
-String levelName = "Session Management Challenge Two Accessed";
+String levelName = "Session Management Challenge Two";
  try
  {
  	if (request.getSession() != null)

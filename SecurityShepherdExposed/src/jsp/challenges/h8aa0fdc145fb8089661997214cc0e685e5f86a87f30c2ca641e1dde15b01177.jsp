@@ -22,7 +22,7 @@
  * @author Mark Denihan
  */
 
-String levelName = "Insecure Cryptographic Storage Challenge 2 Accessed";
+String levelName = "Insecure Cryptographic Storage Challenge 2";
  try
  {
  	if (request.getSession() != null)
