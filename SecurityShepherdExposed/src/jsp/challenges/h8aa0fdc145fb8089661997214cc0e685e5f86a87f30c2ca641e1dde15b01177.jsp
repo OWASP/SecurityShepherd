@@ -50,7 +50,9 @@ String levelName = "Insecure Cryptographic Storage Challenge 2 Accessed";
 		<div id="contentDiv">
 			<h2 class="title">Insecure Cryptographic Storage Challenge Two</h2>
 			<p> 
-				The result key has been encrypted to ensure that nobody can finish the challenge without knowing the secret key to decrypt it. The following form can be used to check if you have the correct result key.
+				The result key has been encrypted to ensure that nobody can finish the 
+				challenge without knowing the secret key to decrypt it. The following form 
+				can be used to check if you have the correct result key.
 				<br/>
 				<br/>
 				<form id="leForm" action="javascript:;">

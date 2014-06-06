@@ -51,8 +51,8 @@ a:hover {
 }
 
 #header {
-	width: 760px;
-	height: 288px;
+	width: 757px;
+	height: 240px;
 	margin: 0 auto;
 	background: url(images/shepherdAndSheep.jpg) no-repeat right top;
 }
@@ -81,6 +81,12 @@ a:hover {
 }
 
 #contentDiv {
+	float: right;
+	width: 685px;
+	margin: 0;
+}
+
+#configurationWizardDiv {
 	float: right;
 	width: 685px;
 	margin: 0;

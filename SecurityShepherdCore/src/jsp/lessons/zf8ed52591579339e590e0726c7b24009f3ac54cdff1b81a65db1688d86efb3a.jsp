@@ -58,18 +58,26 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 			<h2 class="title">What is Cross Site Scripting?</h2>
 			<p> 
 				<div id="lessonIntro">
-					Cross-Site Scripting, or <a>XSS</a>, occur when an application uses <a>untrusted data</a> in a web browser without sufficient <a>validation</a> or <a>escaping</a>. If this untrusted data contained a client side script, the browser will execute the script while it is interpreting the page.
+					Cross-Site Scripting, or <a>XSS</a>, issues occur when an application uses <a>untrusted data</a> in a
+					 web browser without sufficient <a>validation</a> or <a>escaping</a>. If untrusted data contains
+					  a client side script, the browser will execute the script while it is interpreting the page.
 					<br />
 					<br />
-					Attackers can use XSS attacks to execute scripts in a victim's browser which can hijack user sessions, deface web sites, or redirect the user to malicious sites. Anyone that can send data to the system, including administrators, is a possible candidate for performing XSS attacks. 
+					Attackers can use XSS attacks to execute scripts in a victim's browser which can hijack user sessions, 
+					deface web sites, or redirect the user to malicious sites. Anyone that can send data to the system, 
+					including administrators, are possible candidates for performing XSS attacks in an application. 
 					<br />
 					<br />
-					According to OWASP, XSS is the most widespread vulnerability found in web applications today. This is partially due to the variety of <a>attack vectors</a> that are available. The easiest way of showing an XSS attack executing is using a simple <a>alert box</a> as a client side scripts payload. To get an XSS attack to execute, a variety of an attack vector may be necessary to overcome insufficient escaping or validation. The following are examples of some known attack vectors, that all create the same <a>alert</a> pop up that reads "XSS".
+					According to OWASP, XSS is the most widespread vulnerability found in web applications today. 
+					This is partially due to the variety of <a>attack vectors</a> that are available. The easiest way 
+					of showing an XSS attack executing is using a simple <a>alert box</a> as a client side script pay load. 
+					To execute a XSS attack, a variety of an attack vectors may be necessary to overcome insufficient escaping 
+					or validation. The following are examples of some known attack vectors, that all create the same
+					 <a>alert</a> pop up that reads "XSS".
 					<br />
 					<br />
 					&lt;SCRIPT&gt;<a>alert(&#39;XSS&#39;)</a>&lt;/SCRIPT&gt;<br />
-					javascript:<a>alert(&#39;XSS&#39;)</a>;<br />
-					&lt;IMG SRC=&quot;example.jpg&quot; ONLOAD=&quot;<a>alert(&#39;XSS&#39;)</a>&quot;/&gt;<br />
+					&lt;IMG SRC=&quot;&#x23;&quot; ONERROR=&quot;<a>alert(&#39;XSS&#39;)</a>&quot;/&gt;<br />
 					&lt;INPUT TYPE=&quot;BUTTON&quot; ONCLICK=&quot;<a>alert(&#39;XSS&#39;)</a>&quot;/&gt;<br />
 					&lt;IFRAME SRC=&quot;javascript:<a>alert(&#39;XSS&#39;)</a>;&quot;&gt;&lt;/IFRAME&gt;<br />
 					<br />
@@ -78,7 +86,8 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 				</div>
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
-				The following search box outputs untrusted data without any validation or escaping. Try to get an alert box to execute through this function to show that there is an XSS vulnerability.
+				The following search box outputs untrusted data without any validation or escaping. 
+				Get an alert box to execute through this function to show that there is an XSS vulnerability present.
 				<br />
 				<br />				
 				<form id="leForm" action="javascript:;">

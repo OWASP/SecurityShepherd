@@ -30,7 +30,9 @@
 		<div id="contentDiv">
 			<h2 class="title">Please Wait!</h2>
 			<p> 
-				Your doing very well! An administrator has currently marked this level as closed. To find out when this level will be available, your going to have to ask the person who is in charge on the application!
+				Your doing very well! An administrator has currently marked this level as closed. 
+				To find out when this level will be available, your going to have to ask the person who 
+				is in charge on the application!
 				<br/><br/>
 				In the mean time get a coffee and brag about how far ahead you must be than everybody else!
 			</p>

@@ -72,7 +72,7 @@ catch (Exception e)
 					</table>
 				</form>
 				
-				<div id="resultsDiv"><h2>Ciphertext Example</h2><p>Try Decrypt this: IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==</p></div>
+				<div id="resultsDiv"><h2>Cipher text Example</h2><p>Try Decrypt this: IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==</p></div>
 			</p>
 		</div>
 		<% /*If you need to call the Server Do it like this */ %>

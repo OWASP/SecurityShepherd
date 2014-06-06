@@ -255,7 +255,7 @@ if(ses.getAttribute("errorMessage") != null)
 	}
 else
 {
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody is trying to register");
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody is trying to register (Registration is Closed)");
 %>
 Registration is not available currently
 <%

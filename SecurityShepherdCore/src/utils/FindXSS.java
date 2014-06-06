@@ -71,12 +71,21 @@ public class FindXSS
 						":", "&#x3a", "&#x3a;", "&#58", "&#58;"
 				};
 				String[] javascriptTriggers = {
-					"onload", "onunload", "onblur", "onchange", "onfocus",
-					"onreset", "onselect", "onsubmit", "onabort", "onkeydown",
-					"onkeyup", "onkeypress", "onclick", "ondblclick", "onmousedown",
-					"onmousemove", "onmouseout", "onmouseover", "onmouseup", "onerror", 
-					"formaction", "oninput", "onmouseenter", "onmouseleave", "ondragenter",
-					"ondragleave", "ondragend", "ondragover"};
+						"onabort", "onbeforecopy", "onbeforecut", "onbeforepaste", "oncopy", "oncut", 
+						"oninput", "onkeydown", "onkeypress", "onkeyup", "onpaste", "onbeforeunload", 
+						"onhaschange", "onload", "onoffline", "ononline", "onreadystatechange", 
+						"onreadystatechange", "onstop", "onunload", "onreset", "onsubmit", "onclick", 
+						"oncontextmenu", "ondblclick", "onlosecapture", "onmouseenter", "onmousedown", 
+						"onmouseleave", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onmousewheel",
+						"onscroll", "onmove", "onmoveend", "onmovestart", "ondrag", "ondragenter", "ondragleave",
+						"ondragover", "ondragstart", "ondrop", "onresize", "onresizeend", "onresizestart",
+						"onactivate", "onbeforeactivate", "onbeforedeactivate", "onbeforeeditfocus", "onblur",
+						"ondeactivate", "onfocus", "onfocusin", "onfocusout", "oncontrolselect", "onselect", 
+						"onselectionchange", "onselectstart", "onafterprint", "onbeforeprint", "onhelp", 
+						"onerror", "onerrorupdate", "onafterupdate", "onbeforeupdate", "oncellchange", 
+						"ondataavailable", "ondatasetchanged", "ondatasetcomplete", "onrowenter", "onrowexit",
+						"onrowsdelete", "onrowsinserted", "onbounce", "onfinish", "onstart", "onchange", 
+						"onfilterchange", "onpropertychange", "onsearch", "onmessage", "formaction", "textinput"};
 				String[] htmlElements = {
 					"a", "abbr", "acronym", "address", "applet", "area", "b", 
 					"base", "basefont", "bdo", "big", "blockquote", "body", "br",

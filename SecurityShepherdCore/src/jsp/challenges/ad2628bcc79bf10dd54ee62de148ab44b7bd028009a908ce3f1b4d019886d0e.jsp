@@ -60,7 +60,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 		<div id="contentDiv">
 			<h2 class="title">Cross Site Scripting Challenge Three</h2>
 			<p> 
-				Find a XSS vulnerability in the following form. It would appear that your input is been filtered!
+				Find a XSS vulnerability in the following form. It would appear that your input is been filtered!  Make sure your attack is formed in XHTML!
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>

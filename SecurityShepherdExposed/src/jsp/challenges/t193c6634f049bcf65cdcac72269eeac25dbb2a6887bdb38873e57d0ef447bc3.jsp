@@ -49,7 +49,9 @@ String levelName = "Session Management Challenge Three Accessed";
 		<div id="contentDiv">
 			<h2 class="title">Broken Authentication and Session Management Challenge Three</h2>
 			<p> 
-				Only an <a>admin</a> of the following sub-application can retrieve the result key to this challenge. You have been granted user privileges because the admins need somebody to boss around.
+				Only an <a>admin</a> of the following sub-application can retrieve the result key 
+				to this challenge. You have been granted user privileges because the admins need somebody 
+				to boss around.
 				<br />
 				<form id="leForm" action="javascript:;">
 					<div id="resultsDiv">

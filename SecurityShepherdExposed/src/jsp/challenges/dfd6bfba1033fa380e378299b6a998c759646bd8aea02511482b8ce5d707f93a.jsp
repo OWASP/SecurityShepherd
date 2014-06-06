@@ -56,7 +56,6 @@ String levelName = "Session Management Challenge One ";
 					<tr><td>
 						<div id="submitButton"><input type="submit" value="Admin Only Button"/></div>
 						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -90,14 +89,9 @@ String levelName = "Session Management Challenge One ";
 					{
 						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
-					document.cookie="lessonComplete=lessonNotComplete";
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){
 							$("#submitButton").show("slow");
-							if (counter == 3)
-							{
-								$("#hintButton").show("slow");
-							}
 						});
 					});
 				});

@@ -83,7 +83,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter your <a>Message</a> that you would like to share with your class
+						Please enter the HTML page you would like to share with your class
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="myMessageAris" type="text"/>

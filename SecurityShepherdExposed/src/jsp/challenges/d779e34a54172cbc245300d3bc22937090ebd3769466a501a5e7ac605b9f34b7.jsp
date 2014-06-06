@@ -76,7 +76,7 @@ String levelName = "Session Management Challenge Two Accessed";
 				<div id="forgottenPassDiv" style="display: none;">
 					<form id="leForm2" action="javascript:;">
 						<h2 class='title'>Reset Password</h2>
-						<p>Please enter your <a>email address</a>.You will be emailed with a new temporary password</p>
+						<p>Please enter your <a>email address</a>.You will be sent an email with a new temporary password</p>
 						<table>
 							<tr></td>
 								<div id="resetSubmit"><input id="resetEmail" type="text"/><input type="submit" value="Reset Password"/></div>

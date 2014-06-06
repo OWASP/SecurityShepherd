@@ -56,14 +56,14 @@ String ApplicationRoot = getServletContext().getRealPath("");
 	<div id="badData" style="display: none;"></div>
 	<div id="theStep">
 	<form action="javascript:;" id="leForm">
-	New Host Address <input type="text" id="hostAddress" style="width: 300px;"/><input type="submit" id="submitButton" value="Set Host Address"/>
+	New Host Address <input type="text" id="exposedHostAddress" style="width: 300px;"/><input type="submit" id="submitButton" value="Set Host Address"/>
 	<div id="loadingSign" style="display: none;"><p>Loading...</p></div>
 	</form>
 	</div>
 	<script>
 	$("#leForm").submit(function(){
 		$("#badData").hide("fast");
-		var theHostAddress = $("#hostAddress").val();
+		var theHostAddress = $("#exposedHostAddress").val();
 		if(theHostAddress.length > 8)
 		{
 			$("#submitButton").hide("fast");

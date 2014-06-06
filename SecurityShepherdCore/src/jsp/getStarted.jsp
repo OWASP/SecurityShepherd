@@ -67,9 +67,13 @@ if(!changePassword)
 	<div class="post">
 		<h1 class="title">Lets Get Started</h1>
 		<div class="entry">
+			<% if(ModulePlan.openFloor) { %>
 			Now that you've signed in, lets get started with some Security Shepherd modules! To start a module, click on the list headers, <span><a>Lessons</a></span> or <span><a>Modules</a></span>, in the side menu to see what modules are currently available!
+			<% } else { %>
+			Now that you've signed in, lets get started with some Security Shepherd modules! The start a module, click the &quot;Get Next Challenge&quot; button on the left!
+			<% } %>
 			<br/><br/>
-			If you cannot see the message below this paragraph, please ensure that your browser can visit <a href="<%= exposedServer %>"> the exposed server</a>.
+			If you cannot see the message below this paragraph, please ensure that your browser can visit <a href="<%= exposedServer %>"> the exposed server.</a>.
 		</div>
 		<br/>
 	<div id="cantSee">
@@ -92,7 +96,7 @@ else	//IF the  user doesnt need to change their pass, just post up the get Start
 {
 	%>
 	<div class="errorWrapper">
-		Your password is a temperary password. This means that sombody else knows it! Lets keep things secure and change your password now!
+		Your password is a temporary password. This means that somebody else knows it! Lets keep things secure and change your password now!
 		<br /><br />
 		<div class="errorMessage">
 			<form id="changePassword" method="POST" action="passwordChange">
