@@ -69,9 +69,7 @@ public class GetModule extends HttpServlet
 				String storedResult = null;
 				try
 				{
-					log.debug("Getting ApplicationRoot");
 					String ApplicationRoot = getServletContext().getRealPath("");
-					log.debug("Servlet root = " + ApplicationRoot );
 					
 					log.debug("Getting Parameters");
 					String moduleId = (String)request.getParameter("moduleId");;

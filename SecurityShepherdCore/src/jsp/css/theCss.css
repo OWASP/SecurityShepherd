@@ -171,3 +171,26 @@ a:hover {
 #footer a {
 	color: #FFFFFF;
 }
+
+.menuButton {
+	display: block;
+	border-bottom: 3px solid #A878EF;
+	background: #D4D4D4;
+	padding: 5px 5px;
+	border-radius: 5px;
+	color: black;
+	font-size: 1.5em;
+	text-align: center;
+	text-decoration: none;
+	vertical-align: middle;
+	margin-bottom: 5px;
+   }
+   
+.menuButton:hover {
+   border-top-color: #CC99FF;
+   background: #BFBFBF;
+   }
+.menuButton:active {
+   border-top-color: #8660BF;
+   background: #8660BF;
+   }

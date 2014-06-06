@@ -140,7 +140,7 @@ if (request.getSession() != null)
 				<ul>
 					<% if (userRole.compareTo("admin") == 0){ %>
 						<li>
-							<h2 id="adminList"><a href="javascript:;">Admin</a></h2>
+							<a id="adminList" href="javascript:;"><div class='menuButton'>Admin</div></a>
 							<ul id="theAdminList" style="display: none;">
 								<li>
 									<a id="cheatSheetManagementList" href="javascript:;">Cheat Sheet Management</a>
@@ -191,13 +191,13 @@ if (request.getSession() != null)
 					<% } %>
 					<% if(ModulePlan.isOpenFloor()) { %>
 						<li>
-							<h2 id="lessonList"><a href="javascript:;">Lessons</a></h2>
+							<a id="lessonList" href="javascript:;"><div class="menuButton">Lessons</div></a>
 							<ul id="theLessonList" style="display: none;">
 								<%= Getter.getLessons(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
 							</ul>
 						</li>
 						<li>
-							<h2 id="challengeList"><a href="javascript:;">Challenges</a></h2>
+							<a id="challengeList" href="javascript:;"><div class="menuButton">Challenges</div></a>
 							<ul id="theChallengeList" style="display: none;">
 								<%= Getter.getChallenges(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
 							</ul>
@@ -209,7 +209,7 @@ if (request.getSession() != null)
 							</div>
 						<% } else {%>
 						<li>
-							<h2 id="challengeList"><a href="javascript:;">Challenges</a></h2>
+							<a id="challengeList" href="javascript:;"><div class="menuButton">Challenges</div></a>
 							<ul id="theChallengeList" style="display: none;">
 							<%= Getter.getTournamentModules(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
 							</ul>

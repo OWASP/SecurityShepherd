@@ -638,8 +638,9 @@ public class Getter
 			boolean lastRow = false;
 			boolean completedModules = false;
 			
+			
 			//Preparing first Category header; "Completed"
-			output = "<li><h2 id='completedList'><a href='javascript:;'>Completed</a></h2>\n" +
+			output = "<li><a id='completedList' href='javascript:;'><div class='menuButton'>Completed</div></a>\n" +
 				"<ul id='theCompletedList' style='display: none;'>";
 			
 			while(modules.next() && !lastRow)
@@ -671,28 +672,19 @@ public class Getter
 					}
 					
 					//Second category - Uncompleted
-					output += "<h2 id='uncompletedList'><a href='javascript:;'>Next Challenge</a></h2>\n" +
-					"<ul id='theUncompletedList' style='display: none;'>";
-					output += "<li>";
 					output += "<a class='lesson' id='" 
 						+ encoder.encodeForHTMLAttribute(modules.getString(3))
 						+ "' href='javascript:;'>" 
-						+ encoder.encodeForHTML(modules.getString(1)) 
+						+ "<div class='menuButton'>Get Next Challenge</div>" 
 						+ "</a>";
-					output += "</li>";
-					output += "</ul></li>";
-					
+					output += "</li>";					
 				}
 			}
 			
 			if(!lastRow) //If true, then the user has completed all challenges
 			{
-				output += "<h2 id='uncompletedList'><a href='javascript:;'>Next Challenge</a></h2>\n" +
-				"<ul id='theUncompletedList' style='display: none;'>";
-				output += "<li>";
-				output += "<a>You've Finished It All! Well Done</a>";
-				output += "</li>";
-				output += "</ul></li>";
+				output += "<h2 id='uncompletedList'><a href='javascript:;'>You've Finished!</a></h2>\n" +
+				"</li>";
 			}
 			if(output.isEmpty()) //If this method has gone so far without any output, create a error message
 			{
