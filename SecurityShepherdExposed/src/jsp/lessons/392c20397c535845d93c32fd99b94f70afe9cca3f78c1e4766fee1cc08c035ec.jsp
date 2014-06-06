@@ -59,7 +59,31 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
-				Apps won't always use a SQLite database to store data, in some cases logs can yield useful information about the App and it's users. Use this information to find out the login credentials of the Admin. 
+				
+				
+				
+				Unintended data leakage occurs when an App inadvertantly places sensitive information or data in a location on the mobile device that is easily accessible by attackers or other Apps on the device. 
+				</br>
+				Unintended Data Leakage comes in many forms, including:
+				</br>
+				URL Caching (Both request and response)
+				</br>
+				Keyboard Press Caching
+				</br>
+				Copy/Paste buffer Caching
+				</br>
+				Application backgrounding
+				</br>
+				Logging
+				</br>
+				HTML5 data storage
+				</br>
+				Browser cookie objects
+				</br>
+				Analytics data sent to 3rd parties
+				</br>
+				
+				Apps won't always use a SQLite database to store data, in some cases logs can yield useful information about the App and it's users. Use this information to find out the key. 
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

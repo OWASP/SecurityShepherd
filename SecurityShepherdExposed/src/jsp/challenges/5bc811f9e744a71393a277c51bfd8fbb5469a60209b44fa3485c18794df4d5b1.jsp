@@ -59,8 +59,9 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
-				ProGuard is a tool which now comes with the Android SDK and can be used to optimize, shrink and obfuscate code. The obfuscation makes the code harder to read for anyone who reverse engineers the APK. Although ProGuard is an excellent tool, it will not secure your code. 
-				ProGuard should generally be used all the time due to the other benefits it comes with, but it will only slow down an attacker and cannot prevent attackers from finding sensitive information.
+				
+				The key has been hardcoded into this APK. To get to the key reverse engineer the APK and find the correct Activity which performs a conditional statement to check the validity of the key.
+				
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

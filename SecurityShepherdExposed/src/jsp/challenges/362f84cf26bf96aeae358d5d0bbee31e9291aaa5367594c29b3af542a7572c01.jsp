@@ -59,9 +59,7 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
-				The data stored on the device will rarely show up as plain text. In order to make the credentials unreadable this App could perform an operation to the user credentials in order to make it look like this: <a>ZxhhbXBsZQ==</a>.
-
-				Unfortunately this is not a viable defence and will not slow down an attacker targeting your data through a vulnerability in an insecure App.
+				This APK stores user credentials within a database, the data has not been stored in plaintext. Make the credentials readable to get the key. 
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%
