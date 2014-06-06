@@ -21,7 +21,7 @@ import utils.ShepherdLogManager;
 import utils.Validate;
 import utils.XssFilter;
 /**
- * Cross Site Scripting Challenge Five control class.
+ * Cross Site Scripting Challenge Six control class.
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -40,11 +40,12 @@ import utils.XssFilter;
  * @author Mark Denihan
  *
  */
-public class XssChallengeFive extends HttpServlet
+public class XssChallengeSix extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(XssChallengeFive.class);
-	private static final String levelHash = "f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671";
+	private static org.apache.log4j.Logger log = Logger.getLogger(XssChallengeSix.class);
+	private static final String levelHash = "d330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf";
+	private static final String levelName = "Cross-Site Scripting Challenge Five";
 	/**
 	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotely exploited, and there fore only is executable against the person initiating the function.
 	 * @param searchTerm To be spat back out at the user after been encoded for wrong HTML Context
@@ -54,7 +55,7 @@ public class XssChallengeFive extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Cross-Site Scripting Challenge Five Servlet");
+		log.debug(levelName + " Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -70,15 +71,11 @@ public class XssChallengeFive extends HttpServlet
 					String userPost = new String();
 					String searchTerm = request.getParameter("searchTerm");
 					log.debug("User Submitted - " + searchTerm);
-					searchTerm = XssFilter.badUrlValidate(searchTerm);
+					searchTerm = XssFilter.anotherBadUrlValidate(searchTerm);
 					userPost = "<a href=\"" + searchTerm + "\">Your HTTP Link!</a>";
-					log.debug("After WhiteListing - " + searchTerm);
+					log.debug("After Sanitising - " + searchTerm);
 					
 					boolean xssDetected = FindXSS.search(userPost);
-					if (!xssDetected) // Do a more complex search
-					{
-						xssDetected = FindXSS.searchForComplexLinkAttributeXss(userPost, getServletContext().getRealPath(""));
-					}
 					if(xssDetected)
 					{
 						Encoder encoder = ESAPI.encoder();
@@ -104,7 +101,7 @@ public class XssChallengeFive extends HttpServlet
 		catch(Exception e)
 		{
 			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("Cross Site Scripting Challenge 5 - " + e.toString());
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 }

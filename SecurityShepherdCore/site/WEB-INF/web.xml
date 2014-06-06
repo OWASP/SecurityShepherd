@@ -588,4 +588,14 @@
 		<servlet-name>/user/csrfchallengesix/getToken</servlet-name>
 		<url-pattern>/user/csrfchallengesix/getToken</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/d330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf</servlet-name>
+		<servlet-class>servlets.module.challenge.XssChallengeSix</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/d330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf</servlet-name>
+		<url-pattern>/challenges/d330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

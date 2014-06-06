@@ -111,7 +111,7 @@ public class XssFilter
 	}
 	
 	/**
-	 * Whitelists for specific URL types but doesnt sanitise it
+	 * Whitelists for specific URL types but doesnt sanitise it well
 	 * @param input
 	 * @return
 	 */
@@ -123,7 +123,33 @@ public class XssFilter
 		{
 			try 
 			{
-				URL theUrl = new URL(input);
+				URL theUrl = new URL(input.replaceAll("#", "&#x23;").replaceAll("<", "&#x3c;").replaceAll(">", "&#x3e;").replaceFirst("\"", "&quot;"));
+				input = theUrl.toString();
+			} 
+			catch (MalformedURLException e) 
+			{
+				log.debug("Could not Cast URL from input: " + e.toString());
+				input = howToMakeAUrlUrl;
+			}
+		}
+		else
+		{
+			log.debug("Was not a HTTP url");
+			input = howToMakeAUrlUrl;
+		}
+		return input;
+	}
+	
+	public static String anotherBadUrlValidate (String input)
+	{
+		String howToMakeAUrlUrl = new String("https://www.google.com/search?q=What+does+a+HTTP+link+look+like");
+		input = input.toLowerCase();
+		if (input.startsWith("http"))
+		{
+			try 
+			{
+				URL theUrl = new URL(input.replaceAll("#", "&#x23;").replaceFirst("<", "&#x3c;").replaceFirst(">", "&#x3e;").replaceFirst("\"", "&quot;"));
+				input = theUrl.toString();
 			} 
 			catch (MalformedURLException e) 
 			{
