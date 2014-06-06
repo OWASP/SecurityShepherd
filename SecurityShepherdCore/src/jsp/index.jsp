@@ -54,7 +54,6 @@ if (request.getSession() != null)
 		int i = 0;
 
 		String exposedServer = ExposedServer.getUrl();
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Exposed Server = " + exposedServer);
 %>
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
@@ -110,25 +109,26 @@ if (request.getSession() != null)
 			<% if(!ConfigurationHelper.alreadyConfigured() && userRole.compareTo("admin") == 0)
 			{ 
 			%>
-				<div id="configurationWizardDiv">
+				<div id="configurationWizardDiv" align="justify">
 					<h1 class="title">First Time Configuration!</h1>
-					<p>Security Shepherd wants to help you through your first time setup. If you are going to use Security Shepherd locally and for yourself you can skip this by clicking the 
-					<a>Skip</a> button! If you are going to use Security Shepherd as a service for people to connect to over the network, then you should check the values in the following form accurately depict the network location of your server.</p>
-					<form action="javascript:;" id="configurationWizard">
-						<table id="#configurationTable"><tbody>
-						<tr>
-							<td>Core Address:</td><td><input style="width: 470px;" id="coreHostAddress" autocomplete="ON" type="text" value="<%= encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl()) %>" /></td>
-						</tr><tr>
-							<td>Exposed Address:</td><td><input style="width: 470px;" id="exposedHostAddress" autocomplete="ON" type="text" value="<%= encoder.encodeForHTMLAttribute(ExposedServer.getUrl()) %>" /></td>
-						</tr><tr id="doSomthingRow">
-							<td><input value="Configure Server" type="submit"></td><td align="right"><input value="Skip" type="button" id="noSetupForMeThanks"></td>				
-						</tr><tr id="configLoading" style="display: none;">
-							<td colspan="2"> <div id="submitLoading" >Loading... </div></td>
-						</tr>
-						</tbody></table>
-					</form>
-						<div id="configResultResponse"></div>
-					
+					<div align="justify">
+						<p>Security Shepherd wants to help you through your first time setup. If you are going to use Security Shepherd locally and for yourself you can skip this by clicking the 
+						<b><a>Skip</a></b> button! If you are going to use Security Shepherd as a service for people to connect to over the network, then you should check the values in the following form accurately depict the network location of your server.</p>
+					</div>
+						<form action="javascript:;" id="configurationWizard" style="border-color:#A878EF; border-style:dashed; background-color: #D4D4D4;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;">
+							<table id="#configurationTable" align="center"><tbody>
+							<tr>
+								<td>Core Address:</td><td><input style="width: 470px;" id="coreHostAddress" autocomplete="ON" type="text" value="<%= encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl()) %>" /></td>
+							</tr><tr>
+								<td>Exposed Address:</td><td><input style="width: 470px;" id="exposedHostAddress" autocomplete="ON" type="text" value="<%= encoder.encodeForHTMLAttribute(ExposedServer.getUrl()) %>" /></td>
+							</tr><tr id="doSomthingRow">
+								<td><input value="Configure Server" type="submit"></td><td align="right"><input value="Skip" type="button" id="noSetupForMeThanks"></td>				
+							</tr><tr id="configLoading" style="display: none;">
+								<td colspan="2"> <div id="submitLoading" >Loading... </div></td>
+							</tr>
+							</tbody></table>
+						</form>
+					<div id="configResultResponse"></div>
 				</div>
 			<% 
 				}
@@ -392,11 +392,20 @@ if (request.getSession() != null)
 					if(ajaxCall.status == 200)
 					{
 						$('#configResultResponse').html(ajaxCall.responseText);
-						$("#configLoading").hide("fast", function(){
-							$("#configurationWizard").hide("slow", function(){
+						if (ajaxCall.responseText.indexOf("Please try again") >= 0) //Error Message In Response (Don't Hide Form)
+						{
+							$("#configLoading").hide("fast", function(){
 								$("#configResultResponse").show ("fast");
 							});
-						});
+						}
+						else // No Error Message
+						{
+							$("#configLoading").hide("fast", function(){
+								$("#configurationWizard").hide("slow", function(){
+									$("#configResultResponse").show ("fast");
+								});
+							});
+						}
 					}
 					else
 					{
@@ -439,6 +448,7 @@ if (request.getSession() != null)
 						$("#submitForm").show("slow");
 					});
 				});
+				$("html, body").animate({ scrollTop: 0 }, "fast");
 			});
 		});
 		<%

@@ -85,7 +85,7 @@ String getYourTokenUrl = encoder.encodeForHTMLAttribute(ExposedServer.getSecureU
 				Your ID is <%= userId %> and you can retrieve your CSRF token <a href="<%= getYourTokenUrl %>">here</a>
 				<br/>
 				<br/>
-				You can use the CSRF forum below to post a message with HTML.				
+				You can use the CSRF forum below to post web site				
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>

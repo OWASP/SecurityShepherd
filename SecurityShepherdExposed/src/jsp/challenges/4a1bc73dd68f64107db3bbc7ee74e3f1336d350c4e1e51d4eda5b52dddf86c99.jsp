@@ -54,7 +54,8 @@ catch (Exception e)
 			<p> 
 				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				
-				To recover the result key for this level you just need to get the current server status message from an administrator's point of view!
+				To recover the result key for this level you just need to obtain the current server 
+				status message from an administrator's point of view!
 				<br/>
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>

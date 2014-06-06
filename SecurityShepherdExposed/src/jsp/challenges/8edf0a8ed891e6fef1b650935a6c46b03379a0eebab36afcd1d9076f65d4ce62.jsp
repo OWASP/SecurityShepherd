@@ -58,7 +58,8 @@ catch (Exception e)
 				<br/>
 				<br/>
 				<h3>Super Meme Shopping</h3>
-				Hey customers: Due to a shipping mistake we are completely over stocked in rage memes. Use the coupon code <a>PleaseTakeARage</a> or <a>RageMemeForFree</a> to get yours for free!!!.
+				Hey customers: Due to a shipping mistake we are completely over stocked in rage Memes. 
+				Use the coupon code <a>PleaseTakeARage</a> or <a>RageMemeForFree</a> to get yours for free!!!.
 				<br />
 				<br />
 				<form id="leForm" action="javascript:;">

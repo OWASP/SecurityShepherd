@@ -299,12 +299,12 @@ public class Getter
 				if(!challengeCategory.equalsIgnoreCase(challenges.getString(2)))
 				{
 					challengeCategory = challenges.getString(2);
-					log.debug("New Category Detected: " + challengeCategory);
+					//log.debug("New Category Detected: " + challengeCategory);
 					if(rowNumber > 0) //output prepaired for Every row after row 1
 						output += "</ul></li><li><a href='javascript:;' class='challengeHeader' >" + encoder.encodeForHTML(challengeCategory)+ "</a><ul class='challengeList' style='display: none;'>";
 					else //output prepaired for First row in entire challenge
 						output += "<li><a href='javascript:;' class='challengeHeader'>" + encoder.encodeForHTML(challengeCategory)+ "</a><ul class='challengeList' style='display: none;'>";
-					log.debug("Compiling Challenge Category - " + challengeCategory);
+					//log.debug("Compiling Challenge Category - " + challengeCategory);
 				}
 				output += "<li>"; //Starts next LI element
 				if(challenges.getString(4) != null)

@@ -78,7 +78,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				Where exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>
 				<br/>
 				<br/>
-				You can use the CSRF forum below to post a message with HTML.				
+				You can use the CSRF forum below to post a web site.				
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>

@@ -71,9 +71,7 @@ public class QuickConfiguration extends HttpServlet
 				boolean coreHostValid = false;
 				boolean exposedHostValid = false;
 				try
-				{
-					String ApplicationRoot = getServletContext().getRealPath("");
-					
+				{					
 					log.debug("Getting Parameters");
 					String coreHostAddress = (String)request.getParameter("coreHostAddress");
 					log.debug("coreHostAddress = " + coreHostAddress);
@@ -143,7 +141,7 @@ public class QuickConfiguration extends HttpServlet
 								"<p>The server has been configured! Distribute this link: <a href='" +
 								encoder.encodeForHTMLAttribute(coreHostAddress) + "'>" + 
 								encoder.encodeForHTML(coreHostAddress) + "</a><br><br>"
-								+ "<input id='finishedSetup' onclick='$(\"#configurationWizardDiv\").hide(\"slow\");' "
+								+ "<input id='finishedSetup' onclick='$(\"#configurationWizardDiv\").hide(\"slow\");$(\"html, body\").animate({ scrollTop: 0 }, \"fast\");' "
 								+ "type='button' value='Click Here To Hide Config Menu'></p>");
 						ConfigurationHelper.setConfiguredFlag(true);
 						
@@ -159,7 +157,7 @@ public class QuickConfiguration extends HttpServlet
 						}
 						else if (!badCoreHostUrl)
 						{
-							errorMessage += "Core Host URL didn't end with a slash! Likely very wrong or you want to customise the platform!";
+							errorMessage += "Core Host URL didn't end with a slash! Likely very wrong or you want to customise the platform!  Please try again";
 						}
 						else if(!exposedHostValid)
 						{
@@ -168,12 +166,9 @@ public class QuickConfiguration extends HttpServlet
 						}
 						else if (!badExposedHostUrl)
 						{
-							errorMessage += "Exposed Host URL didn't end with a slash! Likely very wrong or you want to customise the platform!";
+							errorMessage += "Exposed Host URL didn't end with a slash! Likely very wrong or you want to customise the platform!  Please try again";
 						}
-						out.print("<h2 class=\"title\">Host Address Update Failure</h2><br>" +
-								"<p><font color=\"red\">" +
-								encoder.encodeForHTML(errorMessage) +
-								"</font><p>");
+						out.print("<p><font color=\"red\">" + encoder.encodeForHTML(errorMessage) + "</font><p>");
 					}
 				}
 				catch (Exception e)

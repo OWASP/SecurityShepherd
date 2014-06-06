@@ -56,7 +56,7 @@ String levelName = "SQL Injection Challenge Two";
 					This is the query you are injecting code into... But your input is been filtered!
 					<br />
 					<br />
-					<div>SELECT * FROM cusomters WHERE customerId ='<a id="userContent"></a>';</div>
+					<div>SELECT * FROM customers WHERE customerId ='<a id="userContent"></a>';</div>
 					<br />
 					<br />
 				</div>

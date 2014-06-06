@@ -68,7 +68,8 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 		<div id="contentDiv">
 			<h2 class="title">Cross Site Request Forgery Challenge Six</h2>
 			<p> 
-				To complete this challenge, you must get your CSRF counter above 0. The request to increment your counter is as follows
+				To complete this challenge, you must get your CSRF counter above 0. 
+				The request to increment your counter is as follows;
 				<br/>
 				<br/>
 				<a> POST /user/csrfchallengethree/plusplus</a>
@@ -76,10 +77,10 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				With the following parameters; <a>userid=exampleId & csrftoken=exampleToken</a>
 				<br/>
 				<br/>
-				Where the csrfToken parameter is generated dynamically upon user sign in and exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>
+				The csrfToken parameter is generated dynamically for easy user upon user interaction and the exampleId parameter is the identifier of the user who's CSRF counter is been incremented. Your identifier is <a><%= userId %></a>
 				<br/>
 				<br/>
-				You can use the CSRF forum below to post a message with HTML.				
+				You can use the CSRF forum below to post an iframe pointing at a web site.				
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>

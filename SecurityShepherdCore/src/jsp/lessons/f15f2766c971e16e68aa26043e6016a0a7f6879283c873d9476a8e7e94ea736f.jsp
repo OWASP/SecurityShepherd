@@ -61,13 +61,19 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 			<h2 class="title">What are Unvalidated Redirects and Forwards?</h2>
 			<p> 
 				<div id="lessonIntro">
-					Unvalidated redirects and forwards occur in applications that <a>redirects</a> or <a>forwards</a> it's users to a <a>target</a> that is specified by a unvalidated parameter. An unvalidated parameter that is used to redirect a user to a normally safe location can be used by an attacker to trick victims into visiting phishing pages or even have malware installed on their machines. 
+					Unvalidated redirects and forwards occur in applications that <a>redirect</a> or <a>forward</a> 
+					its users to a <a>target</a> that is specified by a unvalidated parameter. An unvalidated parameter 
+					that is used to redirect a user to a normally safe location can be used by an attacker to 
+					trick victims into visiting phishing pages or even have malware installed on their machines. 
 					<br />
 					<br />
-					This attack takes advantage of a users trust in an application. A victim is more likely to click on a link from a site that they trust than one they have never seen before. 
+					This attack takes advantage of a users trust in an application. A victim is more likely to click 
+					on a link from a site that they trust than one they have never seen before. 
 					<br />
 					<br />
-					These attacks can also be used to bypass access control schemes. This is done when a page that a user would not normally have access to, such as <a>administrator</a> pages, is included in a unvalidated redirect. 
+					These attacks can also be used to bypass access control schemes. 
+					This is done when a page that a user would not normally have access to, 
+					such as <a>administrator</a> pages, is included in a unvalidated redirect. 
 					<br/>
 					<br/>
 					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
@@ -76,7 +82,12 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
-				To mark this lesson as complete, you must exploit a <a>Cross Site Request Forgery</a> vulnerability using a <a>Unvalidated Redirect</a> security risk. The CSRF protection that has been implemented in this function is insufficient and can be bypassed easily with a unvalidated redirect vulnerability. To protect against CSRF attacks the application is checking that the requests <a>Referer</a> header is from the same host name the application is running on. This is easily bypassed when the request originates from inside the application. When a unvalidated redirect is used, the Referer header will be the URL of the redirect page.
+				To mark this lesson as complete, you must exploit this <a>Cross Site Request Forgery</a> vulnerability using an <a>Unvalidated Redirect</a> security risk. 
+				The CSRF protection that has been implemented in this function is insufficient and can be bypassed easily with 
+				an unvalidated redirect vulnerability. To protect against CSRF attacks the application is checking that the requests <a>Referer</a> HTTP header 
+				is from the same host name the application is running on. This is easily bypassed when the request originates 
+				from inside the application. When an unvalidated redirect is used, the Referer header will be the URL of 
+				the redirect page.
 				<br />
 				<br />
 				The function vulnerable to unvalidated redirects is <a>/user/redirect?to=exampleUrl</a>
