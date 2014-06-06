@@ -2,7 +2,7 @@
 	import="utils.ShepherdExposedLogManager" errorPage=""%>
 <%
 	//No Quotes In level Name
-	String levelName = "Mobile Insecure Data Storage";
+	String levelName = "";
 	//Alphanumeric Only
 	String levelHash = "ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f";
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -57,37 +57,69 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%=levelName%></h2>
+		<h2 class="title"><%=levelName%>What is Mobile Insecure Data Storage?</h2>
 		<p>
 			<%
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
 			%>
+			<p> 
+				<div id="lessonIntro">
 
 			<%=levelBlurb%>
 			<br /> Insecure Data Storage occurs when an App stores sensitive data
 			such as user credentials, API keys, Credit Card information
 			insecurely. This issue occurs in numerous ways. Generally, for
-			storing Client side information, an App will use an Sqlite database.
-			This is could be favoured the additional costs out of encrypting the
-			data or storing it on a back end service. As a result, any user can
-			access the data stored by the App. Insecure Data Storage becomes a
-			danger when Apps cache sensitive data, their user's phone is stolen
-			and the attacker steals this information from local databases. This
-			is made worse by the popularity of rooting devices which makes it
+			storing client side information, an App will use an <a>Sqlite database</a>.
+			
+			<br/>
+			This can be a favoured, cheaper method of storage instead of using a more expensive back end service.
+			 As a result, any user can access the data stored by the App. Insecure Data Storage becomes a
+			danger when a user's App caches sensitive data, their phone is stolen
+			and the attacker steals this information from local databases. Malware can also access this information easily. This
+			is made worse by the popularity of <a>rooting devices</a> which makes it
 			much easier for an attacker to access this information.
 			
 			<br/>
 			There are
 			other ways to store data insecurely. Using known broken hashing
 			algorithms can lead to pain for the Apps users. Not only are they
-			susceptible to collisions, where two different passwords can
+			susceptible to <a>collisions</a>, where two different passwords can
 			potentially generate the same hash and be interpreted as the same
-			password, the developer would have to assume their users use strong
+			password, the developer would have to assume that their user's use strong
 			passwords. This is generally never the case and once a hashed value
 			has been cracked, an attacker merely needs to update their tables.
-			This method still uses no key, Therefore one would assume it is not
+			
+			<br/>
+			This method still uses no key, Therefore one could assume it is not
 			truly encryption? Hashing algorithms are useful for comparing two
-			different files but should not be used for storage of passwords. <br />
+			different files but should not be used for storage of passwords(Unless done correctly). <br />
+			
+			<br/>
+			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+				</div>
+				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<br/>
+			
+			<br/>
+			Typically and Android App will store it's database in the <a>/data/data/com.app.exampleApp/database/</a> directory. Anyone with a rooted device can access this directory. This Android App stores it's under credentials in an <a>SQLite database</a>. The Admin password is the key.
+			
+			<br/>
+			
+			<script>
+				
+				$('#hideLesson').click(function(){
+				$("#lessonIntro").hide("slow", function(){
+					$("#showLesson").show("fast");
+				});
+			});
+			
+			$("#showLesson").click(function(){
+				$('#showLesson').hide("fast", function(){
+					$("#lessonIntro").show("slow");
+				});
+			});
+		</script>
+			
 			<%
 				/* IF you need a form - Present it like this */
 			%>
@@ -95,6 +127,9 @@
 				/*
 				<br />
 				<br />
+				
+			
+				
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>			

@@ -1,70 +1,79 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="utils.ShepherdExposedLogManager" errorPage=""%>
 <%
+	//No Quotes In level Name
+	String levelName = "Mobile Reverse Engineering 2";
+	//Alphanumeric Only
+	String levelHash = "5bc811f9e744a71393a277c51bfd8fbb5469a60209b44fa3485c18794df4d5b1";
+	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+	String levelBlurb = "";
 
-//No Quotes In level Name
-String levelName = "Mobile Reverse Engineering 2";
-//Alphanumeric Only
-String levelHash = "5bc811f9e744a71393a277c51bfd8fbb5469a60209b44fa3485c18794df4d5b1";
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "";
-
-try
-{
-	if (request.getSession() != null)
-	{
-		HttpSession ses = request.getSession();
-		String userName = (String) ses.getAttribute("decyrptedUserName");
-		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + userName);
+	try {
+		if (request.getSession() != null) {
+			HttpSession ses = request.getSession();
+			String userName = (String) ses
+					.getAttribute("decyrptedUserName");
+			ShepherdExposedLogManager.logEvent(request.getRemoteAddr(),
+					request.getHeader("X-Forwarded-For"), levelName
+							+ " has been accessed by " + userName);
+		}
+	} catch (Exception e) {
+		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(),
+				request.getHeader("X-Forwarded-For"), levelName
+						+ " has been accessed");
+		ShepherdExposedLogManager.logEvent(request.getRemoteAddr(),
+				request.getHeader("X-Forwarded-For"),
+				"Could not recover username: " + e.toString());
 	}
-}
-catch (Exception e)
-{
-	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
-	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
-}
-/**
- * <br/><br/>
- * This file is part of the Security Shepherd Project.
- * 
- * The Security Shepherd project is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
- * 
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * @author Sean Duggan
- */
+	/**
+	 * <br/><br/>
+	 * This file is part of the Security Shepherd Project.
+	 * 
+	 * The Security Shepherd project is free software: you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation, either version 3 of the License, or
+	 * (at your option) any later version.<br/>
+	 * 
+	 * The Security Shepherd project is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.<br/>
+	 * 
+	 * You should have received a copy of the GNU General Public License
+	 * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+	 *
+	 * @author Sean Duggan
+	 */
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
-	</script> 
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%=levelName%></title>
+<link href="../css/theCss.css" rel="stylesheet" type="text/css"
+	media="screen" />
+
+</script>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
-			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
-				
-				<%= levelBlurb %>
-				<br/>
-				
-				The key has been hardcoded into this APK. To get to the key reverse engineer the APK and find the correct Activity which performs a conditional statement to check the validity of the key.
-				
-				<br/>
-				<% /* IF you need a form - Present it like this */ %>
-				<%
+	<div id="contentDiv">
+		<h2 class="title"><%=levelName%></h2>
+		<p>
+			<%
+				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
+			%>
+
+			<%=levelBlurb%>
+			<br /> When an attacker reverse engineers an APK, they usually have
+			multiple <a>packages</a> containing multiple <a>activities</a>
+			containing multiple <a>methods</a> which have all been obfuscated to
+			crawl through. The key has been hard coded into this APK. To get to
+			the key reverse engineer the APK and find the correct Activity which
+			performs a conditional statement to check the validity of the key. <br />
+			<%
+				/* IF you need a form - Present it like this */
+			%>
+			<%
 				/*
 				<br />
 				<br />
@@ -80,12 +89,14 @@ catch (Exception e)
 				</form>
 				
 				<div id="resultsDiv"></div>
-				*/
-				%>
-			</p>
-		</div>
-		<% /*If you need to call the Server Do it like this */ %>
-		<%
+				 */
+			%>
+		</p>
+	</div>
+	<%
+		/*If you need to call the Server Do it like this */
+	%>
+	<%
 		/*
 		<script>
 			$("#leForm").submit(function(){
@@ -119,7 +130,7 @@ catch (Exception e)
 				});
 			});
 		</script>
-		*/
-		%>
+		 */
+	%>
 </body>
 </html>

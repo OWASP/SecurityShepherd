@@ -3,7 +3,7 @@
 
 <%
 	//No Quotes In level Name
-	String levelName = "Mobile Reverse Engineering Lesson";
+	String levelName = "";
 	//Alphanumeric Only
 	String levelHash = "19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9";
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -65,6 +65,10 @@
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
 			%>
 
+		<h2 class="title">What is Mobile Reverse Engineering?</h2>
+			<p> 
+				<div id="lessonIntro">
+
 			<%=levelBlurb%>
 			<br /> <br /> One of the biggest dangers to Apps is reverse
 			engineering. This is easily done and can reveal source code, API
@@ -83,12 +87,36 @@
 			<br/>
 			Other obfuscation techniques involve not only making the code harder to read but also making the code more confusing. Instead of a hard coded string comparison, An App could use a function to check to validity of a password.<br/>
 			
+			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+				</div>
+				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<br/>
 			
 			
 			 <br/> There are two tools you will need to reverse
 			engineer an APK. <a>Dex2Jar</a> and <a>JD-GUI</a>. Once you have
 			these tools and the target APK, use dex2jar to convert the APK to a
 			jar file then open the .jar file with JD-GUI. Find the key in the source code of the APK. <br />
+				
+				<script>
+				
+				$('#hideLesson').click(function(){
+				$("#lessonIntro").hide("slow", function(){
+					$("#showLesson").show("fast");
+				});
+			});
+			
+			$("#showLesson").click(function(){
+				$('#showLesson').hide("fast", function(){
+					$("#lessonIntro").show("slow");
+				});
+			});
+		</script>
+				
+				
+				</script>
+				
+			
 			<%
 				/* IF you need a form - Present it like this */
 			%>
