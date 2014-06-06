@@ -59,17 +59,7 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
-				There are other ways to store data insecurely. Using known broken hashing algorithms can lead 
-				to pain for the Apps users. Not only are they susceptible to collisions, where two different 
-				passwords can potentially generate the same hash and be interpreted as the same password, the 
-				developer would have to assume their users use strong passwords. 
-
-				This is generally never the case and once a hashed value has been cracked, 
-				an attacker merely needs to update their tables. This method still 
-				uses no key, Therefore one would assume it is not truly encryption?
-
-				Hashing algorithms are useful for comparing two different 
-				files but should not be used for storage of passwords.
+			
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

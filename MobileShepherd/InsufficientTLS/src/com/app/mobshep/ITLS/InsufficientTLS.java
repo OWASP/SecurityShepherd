@@ -45,6 +45,9 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 		
 		case (R.id.bSend):
 			
+			
+			
+			
 			//send the message to be intercepted to the Shepherd server
 			
 			
