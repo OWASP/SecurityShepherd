@@ -3,6 +3,8 @@ package com.app.mobshep.csinjection;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -24,12 +26,19 @@ public class CSInjection extends Activity implements OnClickListener {
 	EditText password;
 	EditText key;
 	String dbPass = "37e44d547f20a9f3ca9ac7d625486b7b";
+	
+	private static final int MY_NOTIFICATION_ID = 1;
 
+	private int mNotificationCount;
+
+	private final CharSequence tickerText = "Lesson complete, get the key and submit it!";
+	private final CharSequence contentTitle = "Success!";
+	private final CharSequence contentText = "Client Side Injection Lesson Complete!";
+	private long[] vibrate = { 0, 200, 200, 300 };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.broken);
@@ -73,6 +82,23 @@ public class CSInjection extends Activity implements OnClickListener {
 				Toast toast = Toast.makeText(CSInjection.this, "Logged in!",
 						Toast.LENGTH_LONG);
 				toast.show();
+				
+				Notification.Builder notificationBuilder = new Notification.Builder(
+						getApplicationContext())
+						.setTicker(tickerText)
+						.setSmallIcon(R.drawable.ic_launcher)
+						.setAutoCancel(true)
+						.setContentTitle(contentTitle)
+						.setContentText(
+								contentText + " (" + ++mNotificationCount
+										+ ")").setVibrate(vibrate);
+
+				// Pass the Notification to the NotificationManager:
+				NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				mNotificationManager.notify(MY_NOTIFICATION_ID,
+						notificationBuilder.build());
+
+				
 			}
 
 			if (login(CheckName, CheckPass) == false) {
@@ -100,60 +126,72 @@ public class CSInjection extends Activity implements OnClickListener {
 	}
 
 	private boolean login(String username, String password) {
+		
+		try{
 		try {
 			String dbPath = this.getDatabasePath("Members.db").getPath();
 
 			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
 					dbPass, null);
 
-			String query = ("SELECT * FROM MEMBERS WHERE memName = '"
-					+ username + "' AND memPass ='" + password + "'");
+			String query = ("SELECT * FROM MEMBERS WHERE memName = '" + username + "' AND memPass ='" + password + "'");
 			Cursor cursor = db.rawQuery(query, null);
 
 			if (cursor.getCount() <= 0) {
 				return false;
 			}
 
+			db.close();
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 			Toast error = Toast.makeText(CSInjection.this, "An Error occured",
 					Toast.LENGTH_SHORT);
 			error.show();
-			
-			
+
 		}
 
+	} catch (SQLiteException e) {
+		Toast error = Toast.makeText(CSInjection.this,
+				"An database error occurred.", Toast.LENGTH_LONG);
+		error.show();
+	}
+		
 		return true;
 
 	}
 
 	public void populateTable(Context context, String password) {
 		try {
-			SQLiteDatabase.loadLibs(context);
-			
-			String dbPath = context.getDatabasePath("Members.db").getPath();
+			try {
+				SQLiteDatabase.loadLibs(context);
 
-			File dbPathFile = new File(dbPath);
-			if (!dbPathFile.exists())
-				dbPathFile.getParentFile().mkdirs();
+				String dbPath = context.getDatabasePath("Members.db").getPath();
 
-			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-					dbPass, null);
-			
-			
+				File dbPathFile = new File(dbPath);
+				if (!dbPathFile.exists())
+					dbPathFile.getParentFile().mkdirs();
 
-			db.execSQL("DROP TABLE IF EXISTS Members");
-			db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
+				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
+						dbPass, null);
 
-			db.execSQL("INSERT INTO Members VALUES( 1,'Admin',20,'A3B922DF010PQSI827')");
-			db.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+				db.execSQL("DROP TABLE IF EXISTS Members");
+				db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
+
+				db.execSQL("INSERT INTO Members VALUES( 1,'Admin',20,'A3B922DF010PQSI827')");
+				db.close();
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Toast error = Toast.makeText(CSInjection.this,
+						"An error occurred.", Toast.LENGTH_LONG);
+				error.show();
+
+			}
+
+		} catch (SQLiteException e) {
 			Toast error = Toast.makeText(CSInjection.this,
-					"An error occurred.", Toast.LENGTH_LONG);
+					"An database error occurred.", Toast.LENGTH_LONG);
 			error.show();
-
 		}
 	}
-
 }

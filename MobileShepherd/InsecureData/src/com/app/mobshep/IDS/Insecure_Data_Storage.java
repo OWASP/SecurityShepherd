@@ -17,16 +17,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 
 public class Insecure_Data_Storage extends Activity {
 
-	TabHost th;
-	EditText keyView;
-	Button insert;
-	Button select;
 	Button login;
 	EditText password;
 	EditText username;
@@ -50,7 +44,6 @@ public class Insecure_Data_Storage extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ids);
 		referenceXML();
-		th.setup();
 		
 		String destinationDir = "/data/data/" +getPackageName() + "/databases";
 		
@@ -79,16 +72,6 @@ public class Insecure_Data_Storage extends Activity {
 		PendingIntent.getActivity(getApplicationContext(), 0,
 				NotificationIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
-		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag1");
-		specs.setContent(R.id.tab1);
-		specs.setIndicator("Login");
-		th.addTab(specs);
-
-		specs = th.newTabSpec("tag2");
-		specs.setContent(R.id.tab2);
-		specs.setIndicator("Key");
-		th.addTab(specs);
 
 		login.setOnClickListener(new View.OnClickListener() {
 
@@ -108,7 +91,7 @@ public class Insecure_Data_Storage extends Activity {
 					toast2.show();
 				}
 				if (CheckName.contentEquals("Admin")
-						&& CheckPass.contentEquals("OrcsExplosion")) {
+						&& CheckPass.contentEquals("Battery777")) {
 
 					Toast toast3 = Toast.makeText(Insecure_Data_Storage.this,
 							"Logged in!", Toast.LENGTH_SHORT);
@@ -170,8 +153,6 @@ public class Insecure_Data_Storage extends Activity {
 	}
 
 	public void referenceXML() {
-		keyView = (EditText) findViewById(R.id.tvKey2);
-		th = (TabHost) findViewById(R.id.tabhost);
 		login = (Button) findViewById(R.id.bLogin);
 		username = (EditText) findViewById(R.id.etName);
 		password = (EditText) findViewById(R.id.etPass);

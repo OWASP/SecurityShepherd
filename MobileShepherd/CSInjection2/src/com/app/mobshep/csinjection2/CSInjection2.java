@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -25,6 +27,17 @@ public class CSInjection2 extends Activity implements OnClickListener {
 	EditText password;
 	EditText key;
 	String dbPassword="P93Eid3D33DE0ZanbffGpo101Sirjw2";
+	
+	
+	private static final int MY_NOTIFICATION_ID = 1;
+
+	private int mNotificationCount;
+
+	private final CharSequence tickerText = "Challenge complete, get the key and submit it!";
+	private final CharSequence contentTitle = "Success!";
+	private final CharSequence contentText = "Client Side Injection Challenge Complete!";
+	private long[] vibrate = { 0, 200, 200, 300 };
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +86,6 @@ case (R.id.bLogin):
 			
 			String sanitizeName = unsanitizeName.replace("OR", "/* */");
 			sanitizeName = sanitizeName.replace("or", "/* */");
-			sanitizeName = sanitizeName.replace("Or", "/* */");
-			sanitizeName = sanitizeName.replace("oR", "/* */");
 			sanitizeName = sanitizeName.replace("SELECT", "/* */");
 			sanitizeName = sanitizeName.replace("AND", "/* */");
 			sanitizeName = sanitizeName.replace("UPDATE", "/* */");
@@ -85,8 +96,6 @@ case (R.id.bLogin):
 			
 			String sanitizePass = unsanitizePass.replace("OR", "/* */");
 			sanitizePass = sanitizePass.replace("or", "/* */");
-			sanitizePass = sanitizePass.replace("Or", "/* */");
-			sanitizePass = sanitizePass.replace("oR", "/* */");
 			sanitizePass = sanitizePass.replace("SELECT", "/* */");
 			sanitizePass = sanitizePass.replace("AND", "/* */");
 			sanitizePass = sanitizePass.replace("UPDATE", "/* */");
@@ -99,11 +108,29 @@ case (R.id.bLogin):
 				Toast toast = Toast.makeText(CSInjection2.this, "Logged in as:" + sanitizeName,
 						Toast.LENGTH_LONG);
 				toast.show();
+				
+				Notification.Builder notificationBuilder = new Notification.Builder(
+						getApplicationContext())
+						.setTicker(tickerText)
+						.setSmallIcon(R.drawable.ic_launcher)
+						.setAutoCancel(true)
+						.setContentTitle(contentTitle)
+						.setContentText(
+								contentText + " (" + ++mNotificationCount
+										+ ")").setVibrate(vibrate);
+
+				// Pass the Notification to the NotificationManager:
+				NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				mNotificationManager.notify(MY_NOTIFICATION_ID,
+						notificationBuilder.build());
+
+				
+				
 			}
 
 			if (login(sanitizeName, sanitizePass) == false) {
 				Toast toast = Toast.makeText(CSInjection2.this,
-						"Invalid Credentials!", Toast.LENGTH_SHORT);
+						"Invalid Credentials, " + sanitizeName, Toast.LENGTH_LONG);
 				toast.show();
 
 			}
@@ -120,8 +147,9 @@ case (R.id.bLogin):
 	}
 
 	private boolean login(String username, String password) {
-		try {
-			
+	
+		
+		try{
 			String dbPath = this.getDatabasePath("Users.db").getPath();
 
 			try{
@@ -137,18 +165,19 @@ case (R.id.bLogin):
 				return false;
 			}
 
-			}catch(Exception e){
-				key.setText("The key will be shown to logged in users.");
-				Toast error = Toast.makeText(CSInjection2.this, "An Error occured",
-						Toast.LENGTH_SHORT);
-				error.show();
-			}
+			
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 			Toast error = Toast.makeText(CSInjection2.this, "An Error occured",
 					Toast.LENGTH_SHORT);
 			error.show();
 		}
+			
+	} catch (SQLiteException e) {
+		Toast error = Toast.makeText(CSInjection2.this,
+				"An database error occurred.", Toast.LENGTH_LONG);
+		error.show();
+	}
 
 		return true;
 
@@ -156,6 +185,8 @@ case (R.id.bLogin):
 
 	public void populateTable(Context context, String dbpassword) {
 		try {
+			
+			try{
 			SQLiteDatabase.loadLibs(context);
 
 			String dbPath = context.getDatabasePath("Users.db").getPath();
@@ -179,5 +210,12 @@ case (R.id.bLogin):
 			error.show();
 
 		}
+		
+		
+	} catch (SQLiteException e) {
+		Toast error = Toast.makeText(CSInjection2.this,
+				"An database error occurred.", Toast.LENGTH_LONG);
+		error.show();
+	}
 	}
 }

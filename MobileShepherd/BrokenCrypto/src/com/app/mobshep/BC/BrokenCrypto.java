@@ -2,7 +2,9 @@ package com.app.mobshep.BC;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -12,84 +14,157 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class BrokenCrypto extends Activity implements OnClickListener {
+public class BrokenCrypto extends Activity{
 
-	TabHost th;
-	TextView Intro;
-	Button Login;
-	Button Config;
-	EditText username;
-	EditText password;
-	EditText key;
+	TextView messageOne, messageTwo, messageThree, messageFour, messageFive;
+	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.broken);
-		th = (TabHost) findViewById(R.id.tabhost);
 		referenceXML();
-		th.setup();
-
-		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag2");
-		specs.setContent(R.id.tab2);
-		specs.setIndicator("Login");
-		th.addTab(specs);
-
-		specs = th.newTabSpec("tag3");
-		specs.setContent(R.id.tab3);
-		specs.setIndicator("Key");
-		th.addTab(specs);
+		startTimerOne();
+		startTimerTwo();
+		startTimerThree();
+		startTimerFour();
+		startTimerFive();
+		
 	}
+		
+		
+	
 
 	private void referenceXML() {
 		// TODO Auto-generated method stub
-		Login = (Button) findViewById(R.id.bLogin);
-		Config=(Button)findViewById(R.id.bConfig);
-		username = (EditText)findViewById(R.id.etName);
-		password = (EditText)findViewById(R.id.etPass);
-		key = (EditText)findViewById(R.id.etKey);
-		Login.setOnClickListener(this);
-		Config.setOnClickListener(this);
-		
+		messageOne = (TextView)findViewById(R.id.tvMessage1);
+		messageTwo = (TextView)findViewById(R.id.tvMessage2);
+		messageThree = (TextView)findViewById(R.id.tvMessage3);
+		messageFour = (TextView)findViewById(R.id.tvMessage4);
+		messageFive = (TextView)findViewById(R.id.tvMessage5);
+		messageOne.setVisibility(View.INVISIBLE);
+		messageTwo.setVisibility(View.INVISIBLE);
+		messageThree.setVisibility(View.INVISIBLE);
+		messageFour.setVisibility(View.INVISIBLE);
+		messageFive.setVisibility(View.INVISIBLE);
+
 
 	}
-
-	public void onClick(View arg0) {
-		switch (arg0.getId()) {
-		
-		case (R.id.bConfig):
-			
-			Intent gotoMain = new Intent(this, Preferences.class);
-			startActivity(gotoMain);
-			
-			break;
-		
-		case (R.id.bLogin):
-
-			String CheckName = username.getText().toString();
-			String CheckPass = password.getText().toString();
-
-			if (CheckName.contentEquals("user")
-					&& CheckPass.contentEquals("pass")) {
-				key.setText("Key is revealed.");
-				Toast toast = Toast.makeText(BrokenCrypto.this, "Logged in!", Toast.LENGTH_LONG);
-				toast.show();	
-			}
-			
-			if (CheckName.contentEquals("")
-					|| CheckPass.contentEquals("")) {
-				Toast toast2 = Toast.makeText(BrokenCrypto.this, "Empty Fields Detected.", Toast.LENGTH_LONG);
-				toast2.show();
-			}
-
-			else{
-
-				Toast toast = Toast.makeText(BrokenCrypto.this,
-						"Invalid Credentials!", Toast.LENGTH_LONG);
-				toast.show();
-			}
-		}
+	
+	private void startTimerOne() {
+	    final Handler handler = new Handler();
+	    Runnable runnable = new Runnable() {
+	        public void run() {
+	           
+	                try {
+	                    Thread.sleep(2000);
+	                }    
+	                catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	                handler.post(new Runnable(){
+	                    public void run() {
+	                    	messageOne.setVisibility(View.VISIBLE);
+	                }
+	            });
+	            
+	        }
+	    };
+	    new Thread(runnable).start();
 	}
-}
+
+	private void startTimerTwo() {
+	    final Handler handler = new Handler();
+	    Runnable runnable = new Runnable() {
+	        public void run() {
+	           
+	                try {
+	                    Thread.sleep(4000);
+	                }    
+	                catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	                handler.post(new Runnable(){
+	                    public void run() {
+	                    	messageTwo.setVisibility(View.VISIBLE);
+	                }
+	            });
+	            
+	        }
+	    };
+	    new Thread(runnable).start();
+	}
+	
+	private void startTimerThree() {
+	    final Handler handler = new Handler();
+	    Runnable runnable = new Runnable() {
+	        public void run() {
+	           
+	                try {
+	                    Thread.sleep(6000);
+	                }    
+	                catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	                handler.post(new Runnable(){
+	                    public void run() {
+	                    	messageThree.setVisibility(View.VISIBLE);
+	                }
+	            });
+	            
+	        }
+	    };
+	    new Thread(runnable).start();
+	}
+	
+	private void startTimerFour() {
+	    final Handler handler = new Handler();
+	    Runnable runnable = new Runnable() {
+	        public void run() {
+	           
+	                try {
+	                    Thread.sleep(8000);
+	                }    
+	                catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	                handler.post(new Runnable(){
+	                    public void run() {
+	                    	messageFour.setVisibility(View.VISIBLE);
+	                }
+	            });
+	            
+	        }
+	    };
+	    new Thread(runnable).start();
+	}
+	
+	private void startTimerFive() {
+	    final Handler handler = new Handler();
+	    Runnable runnable = new Runnable() {
+	        public void run() {
+	           
+	                try {
+	                    Thread.sleep(10000);
+	                }    
+	                catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	                handler.post(new Runnable(){
+	                    public void run() {
+	                    	messageFive.setVisibility(View.VISIBLE);
+	                }
+	            });
+	            
+	        }
+	    };
+	    new Thread(runnable).start();
+	}
+	
+	
+	
+	}
+
+

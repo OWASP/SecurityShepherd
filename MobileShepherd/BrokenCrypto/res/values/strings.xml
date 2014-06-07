@@ -1,42 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Template</string>
+    <string name="app_name">BrokenCrypto</string>
     <string name="action_settings">Settings</string>
-   
-	<!-- Defind Strings for challenge -->
-	<string name="titleIntro6">Title</string>
-	<string name="BCDescrip">This is a template to use when creating Mobile Shepherd lessons.</string>
-	<string name="PFrag">Template</string>
-	
-	<!-- Generic Application wide Strings -->
-	<string name="pword">Password</string>
-	<string name="uname">Username</string>
-	<string name="login">Login</string>
-	<string name="selectData">Select Data</string>
-	<string name="insertData">Insert Data</string>
-	<string name="status">status</string>	
-
-	<!--  Preferences -->
-	<string name="dialog_based_preferences">Server Preferences</string>
-		
-	<string name="server_title">Server Address</string>
-    <string name="server_summary">Enter Server address here</string>
-    <string name="server_dialog_title">Enter Server Address</string>
-    
-    <string name="database_title">Database Address</string>
-    <string name="database_summary">Enter database address here</string>
-    <string name="database_dialog_title">Enter Database Address</string>
-    
-	<string name="launch_preferences">App preferences</string>    
-	<string name="title_intent_preference">Restart Challenge</string>
-    <string name="summary_intent_preference">Restarts the current Challenge</string>    
+    <string name="message1">&lt;~87cURD]hbp+@gH`ASs%AG@_n*Eb-A6F`))2DJ()#+Cf&gt;,E+O-*FD5Z2/0JY=+CT/5Df0,/@ ps6tEb/Zi+EV:.F(HJ8ARfalF&lt;GF3F)tc&amp;ATKCFFD;,62+EqO;+EV:.+Cf&gt;,E+O-*FD5Z2+Wsj &quot;@&lt;&lt;W&amp;D]j=DFWbd&gt;Bl7]N~&gt;</string>
+    <string name="message2">&lt;~8LJ?tDJsV&gt;F*2M7/0JVEG9D*DCht5&lt;AKYc+Dg*=&lt;Afu2/AU,D3@&lt;Q3)GAh@`+@0gbD_*#AD e3u4FD,B0+Dk[uDBO.7+CT;%+DG_:Bln\',B-;/)DfBN(+EVNEFE2XLA7][gF*1u$FCcS5F`JU IF(KA&gt;F!,=2F)tc&amp;ATL;\'~&gt;</string>
+    <string name="message3">&lt;~=(Q2a+EV:*F=2,PARTY*+Ws?g+EV:.Gp$U*DBNqADffP5FDi:EF!,R&lt;AKYT\'Ci&quot;$6Bl7Q+C
+LqcP+&gt;YfbA7]4+3B(J,2Do&amp;V2e4XO2)m:%1GL^GA2IaNAhG3)ARfXrA8HNB+DGF1F)Po,Df0,
+/A8c%#+DkP)@:s-oFDi:BART*lFD,6,AKYi$F)tc&amp;ATKCFG@_n4DJs_AG@_n1@&lt;Q3)FDi:9D/
+aN6G%Df~&gt;</string>
+    <string name="message4">&lt;~8K`+gBl7]/G@_n*CiX)qA9f;2@&lt;Q3)FDi:9D/aN6G%De*F`\a7+Cf&gt;,E+O-*FD5Z2+Dtb%A
+9/l%+E2@8H=\WM@3BN0BmO&gt;5GA(]#BHVM5Cht5)Ea`[&quot;+E)CC+CT),ART+p+Co\1DIdQtDJ()
+(F`(`2/g+,,BlbD,Df'H)FD5i2Df-\ABl%T.@V$[#G%G\:GA2/4Bl5&amp;%+Cno+/c~&gt;
         
-	<string name="title_test_preference">Test Server Connection</string>
-    <string name="summary_test_preference">Tests the specified Server connection</string>    
-    
-    <string name="title_parent_preference">Enable Hints</string>
-    <string name="preference_attributes">Hints</string>
-    
-	
+    </string>
+    <string name="message5">&lt;~&lt;+ohcF)Pu7ATAo8BPDN1@rH4\'ATVX.Bl@l3BlbD8G%G\F+EV:.+EMI&gt;DImi2H#IgJBOQ\'q+ EVNEFD,B+CERP-+CQC1ATo8&lt;DesQ&lt;Bl@l3AoD]4F(Jj(EbTE(+E)CC+Cf(nFE8T~&gt;</string>
+
+
 </resources>
