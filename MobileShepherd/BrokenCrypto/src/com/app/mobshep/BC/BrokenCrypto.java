@@ -1,22 +1,14 @@
 package com.app.mobshep.BC;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class BrokenCrypto extends Activity{
 
-	TextView messageOne, messageTwo, messageThree, messageFour, messageFive;
+	EditText messageOne, messageTwo, messageThree, messageFour, messageFive;
 	
 
 
@@ -39,11 +31,11 @@ public class BrokenCrypto extends Activity{
 
 	private void referenceXML() {
 		// TODO Auto-generated method stub
-		messageOne = (TextView)findViewById(R.id.tvMessage1);
-		messageTwo = (TextView)findViewById(R.id.tvMessage2);
-		messageThree = (TextView)findViewById(R.id.tvMessage3);
-		messageFour = (TextView)findViewById(R.id.tvMessage4);
-		messageFive = (TextView)findViewById(R.id.tvMessage5);
+		messageOne = (EditText)findViewById(R.id.tvMessage1);
+		messageTwo = (EditText)findViewById(R.id.tvMessage2);
+		messageThree = (EditText)findViewById(R.id.tvMessage3);
+		messageFour = (EditText)findViewById(R.id.tvMessage4);
+		messageFive = (EditText)findViewById(R.id.tvMessage5);
 		messageOne.setVisibility(View.INVISIBLE);
 		messageTwo.setVisibility(View.INVISIBLE);
 		messageThree.setVisibility(View.INVISIBLE);

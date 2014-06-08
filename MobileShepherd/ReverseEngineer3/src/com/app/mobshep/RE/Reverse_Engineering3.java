@@ -54,6 +54,10 @@ public class Reverse_Engineering3 extends Activity {
 			Toast toast = Toast.makeText(Reverse_Engineering3.this, "Invalid Key",
 					Toast.LENGTH_LONG);
 			toast.show();
+			
+			Toast remove = Toast.makeText(Reverse_Engineering3.this, theKey,
+					Toast.LENGTH_LONG);
+			remove.show();
 		}
 	}
 	
