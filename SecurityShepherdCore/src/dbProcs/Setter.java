@@ -426,6 +426,60 @@ public class Setter
 	}
 	
 	/**
+	 * This method sets every module status to Open.
+	 * @param ApplicationRoot Current running director of the application
+	 * @param moduleId The identifer of the module that is been set to open status
+	 * @return Boolean result depicting success of statement
+	 */
+	public static boolean openAllModules (String ApplicationRoot)
+	{
+		log.debug("*** Setter.openAllModules ***");
+		boolean result = false;
+		Connection conn = Database.getConnection(ApplicationRoot);
+		try
+		{
+			PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open'");
+			callstmt.execute();
+			log.debug("All modules Set to open");
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not open all modules: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END setModuleStatusOpen ***");
+		return result;
+	}
+	
+	/**
+	 * This method sets every module status to Closed.
+	 * @param ApplicationRoot Current running director of the application
+	 * @param moduleId The identifer of the module that is been set to open status
+	 * @return Boolean result depicting success of statement
+	 */
+	public static boolean closeAllModules (String ApplicationRoot)
+	{
+		log.debug("*** Setter.closeAllModules ***");
+		boolean result = false;
+		Connection conn = Database.getConnection(ApplicationRoot);
+		try
+		{
+			PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed'");
+			callstmt.execute();
+			log.debug("All modules Set to closed");
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not close all modules: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END closeAllModules ***");
+		return result;
+	}
+	
+	/**
 	 * This method is used to set the status of all modules in a category to open or closed.
 	 * @param ApplicationRoot Used to locate database properties file
 	 * @param moduleCategory The module category to open or closed
@@ -452,6 +506,94 @@ public class Setter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END setModuleCategoryStatusOpen ***");
+		return result;
+	}
+	
+	/**
+	 * This is used to only open Mobile category levels
+	 * @param ApplicationRoot Used to locate database properties file
+	 * @return
+	 */
+	public static boolean openOnlyMobileCategories (String ApplicationRoot)
+	{
+		log.debug("*** Setter.openOnlyMobileCategories ***");
+		boolean result = false;
+		Connection conn = Database.getConnection(ApplicationRoot);
+		final String webModuleCategoryHardcodedWhereClause = new String(""
+				+ "moduleCategory = 'CSRF'"
+				+ " OR " + "moduleCategory = 'Failure to Restrict URL Access'"
+				+ " OR " + "moduleCategory = 'Injection'"
+				+ " OR " + "moduleCategory = 'Insecure Cryptographic Storage'"
+				+ " OR " + "moduleCategory = 'Insecure Direct Object References'"
+				+ " OR " + "moduleCategory = 'Session Management'"
+				+ " OR " + "moduleCategory = 'Unvalidated Redirects and Forwards'"
+				+ " OR " + "moduleCategory = 'XSS'");
+		final String mobileModuleCategoryHardcodedWhereClause = new String(""
+				+ "moduleCategory = 'Mobile Data Leakage'"
+				+ " OR " + "moduleCategory = 'Mobile Injection'"
+				+ " OR " + "moduleCategory = 'Mobile Insecure Data Storage'"
+				+ " OR " + "moduleCategory = 'Mobile Reverse Engineer'"
+				+ " OR " + "moduleCategory = 'Mobile Broken Crypto'");
+		try
+		{
+			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed' WHERE " + webModuleCategoryHardcodedWhereClause);
+			prepstmt.execute();
+			log.debug("Web Levels have been closed");
+			prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE " + mobileModuleCategoryHardcodedWhereClause);
+			prepstmt.execute();
+			log.debug("Mobile Levels have been opened");
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not only open Mobile Levels: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END openOnlyMobileCategories ***");
+		return result;
+	}
+	
+	/**
+	 * This is used to only open Mobile category levels
+	 * @param ApplicationRoot Used to locate database properties file
+	 * @return
+	 */
+	public static boolean openOnlyWebCategories (String ApplicationRoot)
+	{
+		log.debug("*** Setter.openOnlyWebCategories ***");
+		boolean result = false;
+		Connection conn = Database.getConnection(ApplicationRoot);
+		final String webModuleCategoryHardcodedWhereClause = new String(""
+				+ "moduleCategory = 'CSRF'"
+				+ " OR " + "moduleCategory = 'Failure to Restrict URL Access'"
+				+ " OR " + "moduleCategory = 'Injection'"
+				+ " OR " + "moduleCategory = 'Insecure Cryptographic Storage'"
+				+ " OR " + "moduleCategory = 'Insecure Direct Object References'"
+				+ " OR " + "moduleCategory = 'Session Management'"
+				+ " OR " + "moduleCategory = 'Unvalidated Redirects and Forwards'"
+				+ " OR " + "moduleCategory = 'XSS'");
+		final String mobileModuleCategoryHardcodedWhereClause = new String(""
+				+ "moduleCategory = 'Mobile Data Leakage'"
+				+ " OR " + "moduleCategory = 'Mobile Injection'"
+				+ " OR " + "moduleCategory = 'Mobile Insecure Data Storage'"
+				+ " OR " + "moduleCategory = 'Mobile Reverse Engineer'"
+				+ " OR " + "moduleCategory = 'Mobile Broken Crypto'");
+		try
+		{
+			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE " + webModuleCategoryHardcodedWhereClause);
+			prepstmt.execute();
+			log.debug("Web Levels have been opened");
+			prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed' WHERE " + mobileModuleCategoryHardcodedWhereClause);
+			prepstmt.execute();
+			log.debug("Mobile Levels have been closed");
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not only open Web levels: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END openOnlyWebCategories ***");
 		return result;
 	}
 	

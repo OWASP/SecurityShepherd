@@ -40,6 +40,7 @@ public class Register extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(Register.class);
+	private static String defaultClass = new String();
 	/**
 	 * Initiated by register.jsp. If successful a player is added to the system, otherwise there is no change.
 	 * Adding the player to the database is handled by the dbProcs.Setter class. Email is stored for future application expansion
@@ -107,10 +108,19 @@ public class Register extends HttpServlet
 					else
 						userValidate = (Validate.isValidUser(userName, passWord, userAddress));
 					if(basicValidation && userValidate)
-					{ 
+					{
 						//Data is good, Add user
-						log.debug("Adding player to database, with null classId");
-						Setter.userCreate(ApplicationRoot, null, userName, passWord, "player", userAddress, false);
+						//Any Class Set to Add them to?
+						if(defaultClass.isEmpty())
+						{
+							log.debug("Adding player to database, with null classId");
+							Setter.userCreate(ApplicationRoot, null, userName, passWord, "player", userAddress, false);
+						}
+						else //defaultClass is not empty, so It must be set to a class!
+						{
+							log.debug("Adding player to database, to class " + defaultClass);
+							Setter.userCreate(ApplicationRoot, defaultClass, userName, passWord, "player", userAddress, false);
+						}
 						response.sendRedirect("login.jsp");
 					}
 					else
@@ -166,5 +176,15 @@ public class Register extends HttpServlet
 	throws ServletException, IOException
 	{
 		response.sendRedirect("index.jsp");
+	}
+	
+	public static String getDefaultClass ()
+	{
+		return defaultClass;
+	}
+	
+	public static void setDefaultClass (String newDefaultClass)
+	{
+		defaultClass = newDefaultClass;
 	}
 }

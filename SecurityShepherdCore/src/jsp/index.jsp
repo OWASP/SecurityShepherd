@@ -171,6 +171,7 @@ if (request.getSession() != null)
 										<li><a id="upgradePlayersLink" href="javascript:;">Upgrade Player to Admin</a></li>
 										<li><a id="addPlayersLink" href="javascript:;">Add Players</a></li>
 										<li><a id="createNewClassLink" href="javascript:;">Create Class</a></li>
+										<li><a id="setDefaultClassForRegistrationLink" href="javascript:;">Set Default Player Class</a></li>
 										<li><a id="assignPlayersLink" href="javascript:;">Assign Players to Class</a></li>
 										<li><a id="registrationLink" href="javascript:;">Open/Close Registration</a></li>
 									</ul>
@@ -402,7 +403,7 @@ if (request.getSession() != null)
 						else // No Error Message
 						{
 							$("#configLoading").hide("fast", function(){
-								$("#configurationWizard").hide("slow", function(){
+								$("#configurationWizard").slideUp("slow", function(){
 									$("#configResultResponse").show ("fast");
 								});
 							});
@@ -426,7 +427,7 @@ if (request.getSession() != null)
 		});
 		
 		$("#noSetupForMeThanks").click(function(){
-			$("#configurationWizardDiv").hide("slow", function(){
+			$("#configurationWizardDiv").slideUp("slow", function(){
 				var ajaxCall = $.ajax({
 					type: "POST",
 					url: "cancelConfigPrompt",
@@ -444,11 +445,6 @@ if (request.getSession() != null)
 					$('#resultResponse').html("<br/><p> Config Splash Cancel Failed!: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
 					$("#resultResponse").show("slow");
 				}
-				$("#contentDiv").slideDown("fast", function(){
-					$("#submitLoading").hide("fast", function(){
-						$("#submitForm").show("slow");
-					});
-				});
 				$("html, body").animate({ scrollTop: 0 }, "fast");
 			});
 		});

@@ -111,6 +111,16 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>/setDefaultRegistrationClass</servlet-name>
+		<servlet-class>servlets.admin.userManagement.SetDefaultClass</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/setDefaultRegistrationClass</servlet-name>
+		<url-pattern>/setDefaultRegistrationClass</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
 		<servlet-name>/getPlayersByClass</servlet-name>
 		<servlet-class>servlets.admin.userManagement.GetPlayersByClass</servlet-class>
 	</servlet>
@@ -144,6 +154,42 @@
 	<servlet-mapping>
 		<servlet-name>/getProgress</servlet-name>
 		<url-pattern>/getProgress</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/openEveryModules</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.OpenAllModules</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/openEveryModules</servlet-name>
+		<url-pattern>/openEveryModules</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/closeEveryModules</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.CloseAllModules</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/closeEveryModules</servlet-name>
+		<url-pattern>/closeEveryModules</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/openWebModules</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.OpenWebModules</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/openWebModules</servlet-name>
+		<url-pattern>/openWebModules</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/openMobileModules</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.OpenMobileModules</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/openMobileModules</servlet-name>
+		<url-pattern>/openMobileModules</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>

@@ -159,23 +159,6 @@ SELECT userId, userName, userRole, badLoginCount, tempPassword, classId FROM `us
     AND suspendedUntil < theDate ;
 END
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $$
 
 DELIMITER ;
@@ -194,18 +177,6 @@ SELECT userName FROM `users`
     WHERE userName = theName
     AND theDate > suspendedUntil;
 END
-
-
-
-
-
-
-
-
-
-
-
-
 
 $$
 
@@ -269,16 +240,6 @@ IF (untilDate < theDate) THEN
 END IF;
 END
 
-
-
-
-
-
-
-
-
-
-
 $$
 
 DELIMITER ;
@@ -294,9 +255,6 @@ COMMIT;
 SELECT userName, suspendedUntil FROM `users`
     WHERE userName = theName;
 END
-
-
-
 
 $$
 
@@ -375,21 +333,6 @@ BEGIN
     END IF;
 END
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $$
 
 DELIMITER ;
@@ -430,8 +373,6 @@ UPDATE users SET
     AND suspendedUntil < theDate;
 COMMIT;
 END
-
-
 
 $$
 
@@ -874,10 +815,6 @@ UPDATE results SET
 COMMIT;
 END
 
-
-
-
-
 $$
 
 DELIMITER ;
@@ -932,9 +869,6 @@ UPDATE results SET
 COMMIT;
 END
 
-
-
-
 $$
 
 DELIMITER ;
@@ -963,9 +897,6 @@ DECLARE theId VARCHAR(64);
         (theId, theModule, theDate, theSheet);
     COMMIT;
 END
-
-
-
 
 $$
 
@@ -1086,10 +1017,6 @@ AND classId = theClassId
 GROUP BY userName UNION SELECT userName, 0, userScore FROM users WHERE classId = theClassId AND userId NOT IN (SELECT userId FROM users JOIN results USING (userId) WHERE classId = theClassId AND finishTime IS NOT NULL GROUP BY userName) ORDER BY userScore DESC;
 END
 
-
-
-
-
 $$
 
 DELIMITER ;
@@ -1111,7 +1038,6 @@ SELECT userName, sum(TIMESTAMPDIFF(MINUTE, finishTime, startTime)*(-1)) AS "Time
     GROUP BY userName;
 END
 
-
 $$
 
 DELIMITER ;
@@ -1132,8 +1058,6 @@ SELECT userName, moduleName, TIMESTAMPDIFF(MINUTE, finishTime, startTime)*(-1) A
     WHERE userName = theUserName AND resultSubmission IS NOT NULL
     ORDER BY incrementalRank;
 END
-
-
 
 $$
 
@@ -1247,8 +1171,8 @@ INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleRes
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('e635fce334aa61fdaa459c21c286d6332eddcdd3', 'Client Side Injection 2', 'challenge', 'Mobile Injection', 'BurpingChimneys', 'cfe68711def42bb0b201467b859322dd2750f633246842280dc68c858d208425', 'open', '80', '80', '5', 1);
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('2ab09c0c18470ae5f87d219d019a1f603e66f944', 'Reverse Engineering', 'lesson', 'Mobile Reverse Engineering', 'DrumaDrumaDrumBoomBoom', '19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9', 'open', '50', '50', '5', 1);
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('f16bf2ab1c1bf400d36330f91e9ac6045edcd003', 'Reverse Engineering 1', 'challenge', 'Mobile Reverse Engineering', 'FireStoneElectric', '5bc811f9e744a71393a277c51bfd8fbb5469a60209b44fa3485c18794df4d5b1', 'open', '53', '55', '5', 1);
- INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('9e46e3c8bde42dc16b9131c0547eedbf265e8f16', 'Reverse Engineering 2', 'challenge', 'Mobile Reverse Engineering', 'C1babd72225f0e9934YZ8', 'dbae0baa3f71f196c4d2c6c984d45a6c1c635bf1b482dccfe32e9b01b69a042b', 'open', '200', '50', '5', 1);
-  INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('ef6496892b8e48ac2f349cdd7c8ecb889fc982af', 'Broken Crypto', 'lesson', 'Mobile Broken Crypto', '33edeb397d665ed7d1a580f3148d4b2f', '911fa7f4232e096d6a74a0623842c4157e29b9bcc44e8a827be3bb7e58c9a212', 'open', '200', '50', '5', 1);
+INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('9e46e3c8bde42dc16b9131c0547eedbf265e8f16', 'Reverse Engineering 2', 'challenge', 'Mobile Reverse Engineering', 'C1babd72225f0e9934YZ8', 'dbae0baa3f71f196c4d2c6c984d45a6c1c635bf1b482dccfe32e9b01b69a042b', 'open', '200', '50', '5', 1);
+INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('ef6496892b8e48ac2f349cdd7c8ecb889fc982af', 'Broken Crypto', 'lesson', 'Mobile Broken Crypto', '33edeb397d665ed7d1a580f3148d4b2f', '911fa7f4232e096d6a74a0623842c4157e29b9bcc44e8a827be3bb7e58c9a212', 'open', '200', '50', '5', 1);
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('1506f22cd73d14d8a73e0ee32006f35d4f234799', 'Unintended Data Leakage', 'lesson', 'Mobile Data Leakage', 'SilentButSteadyRedLed', '392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec', 'open', '42', '40', '5', 1);
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('8ba06bc21d5a9d0f4e6771a74e11ee7036893cd1', 'Unintended Data Leakage 1', 'challange', 'Mobile Data Leakage', 'UpsideDownPizzaDip', 'bf16081ed057b2d1bc97f4b9da897149819a159a8114d4867c7f8f327f5453a8', 'open', '73', '70', '5', 1);
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('3d5b46abc6865ba09aaff98a8278a5f5e339abff', 'Failure To Restrict URL Access Challenge 1', 'challenge', 'Failure to Restrict URL Access', 'c776572b6a9d5b5c6e4aa672a4771213', '4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99', 'open', '41', '40', '5', 0);
@@ -1353,7 +1277,6 @@ CREATE  TABLE IF NOT EXISTS `backup`.`class` (
   `classYear` VARCHAR(5) NOT NULL ,
   PRIMARY KEY (`classId`) )
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `core`.`users`

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-	/**
+/**
  * This file is part of the Security Shepherd Project.
  * 
  * The Security Shepherd project is free software: you can redistribute it and/or modify
@@ -50,6 +50,7 @@ String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString())
 String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 String threadId = (String) ses.getAttribute("ThreadSequenceId");
 String ApplicationRoot = getServletContext().getRealPath("");
+boolean isAdmin = userRole.equalsIgnoreCase("admin");
 boolean changePassword = false;
 if(ses.getAttribute("ChangePassword") != null)
 {
@@ -72,6 +73,20 @@ if(!changePassword)
 			<% } else { %>
 			Now that you've signed in, lets get started with some Security Shepherd modules! The start a module, click the &quot;Get Next Challenge&quot; button on the left!
 			<% } %>
+			<% if(isAdmin) {%>
+			<h2 class="title">Configure Shepherd</h2>
+			As you are an Administrator you can define the scope of Security Shepherd. You can quickly change the game layout to Web or Mobile Application focused with the following buttons, or you can open the Admin Module Management menu, at the top left of the page, to open or close specific topics.
+			<br/><br/>
+			<div id="scopeResultsDiv"></div>
+			<div id="setScopeDiv">
+				<a href="javascript:;" style="text-decoration: none;" id="allApplication"><div class="menuButton">Open All Levels</div></a>
+				<a href="javascript:;" style="text-decoration: none;" id="onlyWebApplication"><div class="menuButton">Open Web App Levels Only</div></a>
+				<a href="javascript:;" style="text-decoration: none;" id="onlyMobileApplication"><div class="menuButton">Open Mobile Levels Only</div></a>
+				<a href="javascript:;" style="text-decoration: none;" id="noApplication"><div class="menuButton">Close All Levels</div></a>
+			</div>
+			<div id="scopeLoadingDiv" style="display: none;">Loading...</div>
+			
+			<% } %>
 			<br/><br/>
 			If you cannot see the message below this paragraph, please ensure that your browser can visit <a href="<%= exposedServer %>"> the exposed server.</a>.
 		</div>
@@ -89,6 +104,123 @@ if(!changePassword)
 			$("#contentDiv").slideDown("slow");
 		});
 	});
+	<% if (isAdmin) { %>
+	$("#allApplication").click(function(){
+		$("#scopeResultsDiv").slideUp("slow");
+		$("#scopeLoadingDiv").show("slow");
+		$("#setScopeDiv").slideUp("fast", function(){
+			var ajaxCall = $.ajax({
+				type: "POST",
+				url: "openEveryModules",
+				data: {
+					csrfToken: "<%= csrfToken %>"
+				},
+				async: false
+			});
+			if(ajaxCall.status == 200)
+			{
+				$('#scopeResultsDiv').html(ajaxCall.responseText);
+			}
+			else
+			{
+				$('#scopeResultsDiv').html("<br/><p> Config Failed!: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
+			}
+			$("#scopeLoadingDiv").hide("fast", function(){
+				$("#setScopeDiv").slideDown("slow", function(){
+					$("#scopeResultsDiv").show ("fast");
+				});
+			});
+			$("html, body").animate({ scrollTop: 0 }, "fast");
+		});
+	});
+	
+	$("#onlyWebApplication").click(function(){
+		$("#scopeResultsDiv").slideUp("slow");
+		$("#scopeLoadingDiv").show("slow");
+		$("#setScopeDiv").slideUp("fast", function(){
+			var ajaxCall = $.ajax({
+				type: "POST",
+				url: "openWebModules",
+				data: {
+					csrfToken: "<%= csrfToken %>"
+				},
+				async: false
+			});
+			if(ajaxCall.status == 200)
+			{
+				$('#scopeResultsDiv').html(ajaxCall.responseText);
+			}
+			else
+			{
+				$('#scopeResultsDiv').html("<br/><p> Config Failed!: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
+			}
+			$("#scopeLoadingDiv").hide("fast", function(){
+				$("#setScopeDiv").slideDown("slow", function(){
+					$("#scopeResultsDiv").show ("fast");
+				});
+			});
+			$("html, body").animate({ scrollTop: 0 }, "fast");
+		});
+	});
+	
+	$("#onlyMobileApplication").click(function(){
+		$("#scopeResultsDiv").slideUp("slow");
+		$("#scopeLoadingDiv").show("slow");
+		$("#setScopeDiv").slideUp("fast", function(){
+			var ajaxCall = $.ajax({
+				type: "POST",
+				url: "openMobileModules",
+				data: {
+					csrfToken: "<%= csrfToken %>"
+				},
+				async: false
+			});
+			if(ajaxCall.status == 200)
+			{
+				$('#scopeResultsDiv').html(ajaxCall.responseText);
+			}
+			else
+			{
+				$('#scopeResultsDiv').html("<br/><p> Config Failed!: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
+			}
+			$("#scopeLoadingDiv").hide("fast", function(){
+				$("#setScopeDiv").slideDown("slow", function(){
+					$("#scopeResultsDiv").show ("fast");
+				});
+			});
+			$("html, body").animate({ scrollTop: 0 }, "fast");
+		});
+	});
+	
+	$("#noApplication").click(function(){
+		$("#scopeResultsDiv").slideUp("slow");
+		$("#scopeLoadingDiv").show("slow");
+		$("#setScopeDiv").slideUp("fast", function(){
+			var ajaxCall = $.ajax({
+				type: "POST",
+				url: "closeEveryModules",
+				data: {
+					csrfToken: "<%= csrfToken %>"
+				},
+				async: false
+			});
+			if(ajaxCall.status == 200)
+			{
+				$('#scopeResultsDiv').html(ajaxCall.responseText);
+			}
+			else
+			{
+				$('#scopeResultsDiv').html("<br/><p> Config Failed!: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
+			}
+			$("#scopeLoadingDiv").hide("fast", function(){
+				$("#setScopeDiv").slideDown("slow", function(){
+					$("#scopeResultsDiv").show ("fast");
+				});
+			});
+			$("html, body").animate({ scrollTop: 0 }, "fast");
+		});
+	});
+	<% } // End of Admin Only Script%>
 	</script>
 	<%
 }
