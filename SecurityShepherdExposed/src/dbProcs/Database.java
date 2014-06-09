@@ -27,38 +27,10 @@ import org.apache.log4j.Logger;
 public class Database 
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Database.class);
-	/**
-	 * This method is used by the application to get a connection to the vulnerable database sever
-	 * @param ApplicationRoot The running context of the application.
-	 * @return A connection to the secure database server
-	 */
-	public static Connection getConnection(String ApplicationRoot)
-	{
-	   Connection conn = null;
-	   try
-	   {
-		   String props = ApplicationRoot+"/WEB-INF/site.properties";
-		  
-		   String DriverType = FileInputProperties.readfile(props, "DriverType"); 
-		   Class.forName(DriverType).newInstance();
-		   
-		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
-		   
-		   String username=FileInputProperties.readfile(props, "databaseUsername");
-		   String password=FileInputProperties.readfile(props, "databasePassword");
-		   
-		   conn = DriverManager.getConnection(connectionURL,username,password);
-	   }
-	   catch(Exception e)
-	   {
-		   log.fatal("Unable to create database connection: " + e);
-		   e.printStackTrace();
-	   }
-	   return conn;
-	} 
 	
 	/**
-	 * This method is used by the application to get a connection to the secure database sever's SQL injection Lesson schema
+	 * This method is used by the application to get a connection to the secure database sever's 
+	 * SQL injection Lesson schema
 	 * @param ApplicationRoot The running context of the application.
 	 * @return A connection to the secure database server
 	 */
@@ -67,13 +39,16 @@ public class Database
 	   Connection conn = null;
 	   try
 	   {
-		   String props = ApplicationRoot+"/WEB-INF/lessons/SqlInjLesson.properties";
-		  
-		   String DriverType = FileInputProperties.readfile(props, "DriverType"); 
+		   //Pull Driver and DB Url out of exposedDatabase.properties
+		   String props = ApplicationRoot+"/WEB-INF/exposedDatabase.properties";
+		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
-		   
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
+		   //Pull Schema, Username and Password from SqlInjLesson.properties
+		   props = ApplicationRoot+"/WEB-INF/lessons/SqlInjLesson.properties";
+		   
+		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
 		   String username=FileInputProperties.readfile(props, "databaseUsername");
 		   String password=FileInputProperties.readfile(props, "databasePassword");
 		   
@@ -95,20 +70,23 @@ public class Database
 	 */
 	public static Connection getChallengeConnection(String ApplicationRoot, String path)
 	{
+		//Some over paranoid input validation never hurts.
 		path = path.replaceAll("\\.", "").replaceAll("/", "");
-	   log.debug("Path = " + path);
-	   Connection conn = null;
-	   try
-	   {
-		   String props = ApplicationRoot+"/WEB-INF/challenges/" + path + ".properties";
-		  
-		   log.debug("property file = " + props);
-		   
-		   String DriverType = FileInputProperties.readfile(props, "DriverType"); 
+		log.debug("Path = " + path);
+		Connection conn = null;
+		try
+		{
+		   //Pull Driver and DB Url out of exposedDatabase.properties
+		   String props = ApplicationRoot+"/WEB-INF/exposedDatabase.properties";
+		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
-		   
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
+		   //Pull DB Schema, Schema Username and Schema Password from level specific properties File
+		   props = ApplicationRoot+"/WEB-INF/challenges/" + path + ".properties";
+		   log.debug("Level Properties File = " + path + ".properties");
+		   //Add DB Schema to the end of the connectionURL
+		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
 		   String username=FileInputProperties.readfile(props, "databaseUsername");
 		   String password=FileInputProperties.readfile(props, "databasePassword");
 		   

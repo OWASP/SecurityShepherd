@@ -453,9 +453,21 @@ if (request.getSession() != null)
 		%>
 		</script>
 		<!-- You are currently looking at the core server. 
-			Nothing related to the levels in Security Shepherd will be found in here. 
-			You might be looking for the iframe embeded in the page.
-			Try a tool like Firebug to make this stuff easier. -->
+		Nothing related to the levels in Security Shepherd will be found in here. 
+		You might be looking for the iframe embeded in the page.
+		Try a tool like Firebug to make this stuff easier. -->
+		<% if(ExposedServer.googleAnalyticsOn) { %>>
+		<script>
+			//Analytics for Shepherd Live
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			
+			ga('create', 'UA-51746570-1', 'securityshepherd.eu');
+			ga('send', 'pageview');	
+		</script>
+		<% } %>
 		</body>
 		</html>
 		<%

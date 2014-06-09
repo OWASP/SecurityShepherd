@@ -141,7 +141,7 @@ public class QuickConfiguration extends HttpServlet
 								"<p>The server has been configured! Distribute this link: <a href='" +
 								encoder.encodeForHTMLAttribute(coreHostAddress) + "'>" + 
 								encoder.encodeForHTML(coreHostAddress) + "</a><br><br>"
-								+ "<input id='finishedSetup' onclick='$(\"#configurationWizardDiv\").hide(\"slow\");$(\"html, body\").animate({ scrollTop: 0 }, \"fast\");' "
+								+ "<input id='finishedSetup' onclick='$(\"#configurationWizardDiv\").slideUp(\"slow\");$(\"html, body\").animate({ scrollTop: 0 }, \"fast\");' "
 								+ "type='button' value='Click Here To Hide Config Menu'></p>");
 						ConfigurationHelper.setConfiguredFlag(true);
 						

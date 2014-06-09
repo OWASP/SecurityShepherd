@@ -1,7 +1,7 @@
 package utils;
 
 /**
- * Class that is responsable for storing a Security Shepherd's instance's host URL and vulnerable application root.
+ * Class that is responsible for storing a Security Shepherd's instance's host URL and vulnerable application root.
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -22,13 +22,14 @@ package utils;
  */
 public class ExposedServer 
 {
-	private static String url = "http://127.0.0.1:8080/Exposed/";
-	private static String coreProtocol = "http";
+	private static String url = "https://live.securityshepherd/Exposed/";
+	private static String coreProtocol = "https";
 	private static String applicationRoot = "";
-	private static String secureHost = "127.0.0.1";
-	private static String securePort = "8080";
-	private static String secureUrl = "http://127.0.0.1:8080/";
+	private static String secureHost = "live.securityshepherd";
+	private static String securePort = "80";
+	private static String secureUrl = "https://live.securityshepherd/";
 	private static String broadcastAddress = "";
+	public static boolean googleAnalyticsOn = true;
 	
 	public static String getBroadcastAddress() 
 	{

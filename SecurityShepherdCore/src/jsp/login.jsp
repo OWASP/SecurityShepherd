@@ -95,17 +95,17 @@ if(ses.getAttribute("loginFailed") != null)
 			</form>
 			<br/>
 			<br/>
-			<center>
-			<a id="tools" href="javascript:;">Do you need a Proxy?</a>
-			<div id="toolsTable" style="display: none;">
-			<p>Download a HTTP Proxy here;</p>
-			<table>
-				<tr><td align="center"><a href="<%= theUrl %>stuff/WindowsZap.zip">ZAP for Windows</a></td></tr>
-				<tr><td align="center"><a href="<%= theUrl %>stuff/LinuxZap.gz">ZAP for Linux</a></td></tr>
-				<tr><td align="center"><a href="<%= theUrl %>stuff/MacZap.zip">ZAP for Mac</a></td></tr>
-			</table>
+			<div align="center">
+				<a id="tools" href="javascript:;">Do you need a Proxy?</a>
+				<div id="toolsTable" style="display: none;">
+				<p>Download a HTTP Proxy here;</p>
+				<table>
+					<tr><td align="center"><a href="http://bit.ly/zapWindows">ZAP for Windows</a></td></tr>
+					<tr><td align="center"><a href="http://bit.ly/zapLinux">ZAP for Linux</a></td></tr>
+					<tr><td align="center"><a href="http://bit.ly/zapForMac">ZAP for Mac</a></td></tr>
+				</table>
+				</div>
 			</div>
-			</center>
 		</div>
 	</div>
 	<!-- end content -->
@@ -133,5 +133,17 @@ if(ses.getAttribute("loginFailed") != null)
 		$("#toolsTable").show("slow");
 	});
 </script>
+<% if(ExposedServer.googleAnalyticsOn) { %>>
+	<script>
+		//Analytics for Shepherd Live
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		
+		ga('create', 'UA-51746570-1', 'securityshepherd.eu');
+		ga('send', 'pageview');	
+	</script>
+<% } %>
 </body>
 </html>
