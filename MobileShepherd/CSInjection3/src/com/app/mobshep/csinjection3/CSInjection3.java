@@ -80,8 +80,7 @@ case (R.id.bLogin):
 			sanitizeName = sanitizeName.replace("DROP", "/* */");
 			sanitizeName = sanitizeName.replace("1=1", "/* */");
 			sanitizeName = sanitizeName.replace("1 = 1", "/* */");
-			sanitizeName = sanitizeName.replace("'", "/* */");
-			sanitizeName =sanitizeName.replace("/*", ".");
+
 
 			
 			
@@ -97,8 +96,7 @@ case (R.id.bLogin):
 			sanitizePass = sanitizePass.replace("DROP", "/* */");
 			sanitizePass = sanitizePass.replace("1=1", "/* */");
 			sanitizePass = sanitizePass.replace("1 = 1", "/* */");
-			sanitizePass = sanitizePass.replace("'", "/* */");
-			sanitizePass =sanitizePass.replace("/*", ".");
+
 
 			
 

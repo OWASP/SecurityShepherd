@@ -25,8 +25,6 @@ import android.widget.TabHost.TabSpec;
 
 public class Insecure_Data_Storage2 extends Activity {
 
-	TabHost th;
-	EditText keyView;
 	Button insert;
 	Button select;
 	Button login;
@@ -51,7 +49,6 @@ private static final int MY_NOTIFICATION_ID = 1;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ids);
 		referenceXML();
-		th.setup();
 		
 		notificationIntent = new Intent(getApplicationContext(),
 				Insecure_Data_Storage2.class);
@@ -79,19 +76,7 @@ private static final int MY_NOTIFICATION_ID = 1;
 					e.printStackTrace();
 				}
 			}
-			
-
-		// Set up each tab
-		TabSpec specs = th.newTabSpec("Tab 1");
-
-		specs.setContent(R.id.tab1);
-		specs.setIndicator("Login");
-		th.addTab(specs);
-		
-		specs = th.newTabSpec("Tab 2");
-		specs.setContent(R.id.tab2);
-		specs.setIndicator("Key");
-		th.addTab(specs);
+	
 		
 
 		login.setOnClickListener(new View.OnClickListener() {
@@ -175,8 +160,6 @@ private static final int MY_NOTIFICATION_ID = 1;
 	}
 
 	public void referenceXML() {
-		keyView = (EditText) findViewById(R.id.tvKey2);
-		th = (TabHost) findViewById(R.id.tabhost);
 		login = (Button) findViewById(R.id.bLogin);
 		username = (EditText) findViewById(R.id.etName);
 		password = (EditText) findViewById(R.id.etPass);

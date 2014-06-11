@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
 <%
 	//No Quotes In level Name
-	String levelName = "";
+	String levelName = "What is Unintended Data Leakage?";
 	//Alphanumeric Only
 	String levelHash = "392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec";
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -61,7 +61,7 @@
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
 			%>
 			
-			<h2 class="title">What is Unintended Data Leakage?</h2>
+			<h2 class="title"> <% levelName %></h2>
 			<p> 
 				<div id="lessonIntro">
 

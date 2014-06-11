@@ -3,7 +3,7 @@
 
 <%
 	//No Quotes In level Name
-	String levelName = "";
+	String levelName = "What is Mobile Broken Crypto?";
 	//Alphanumeric Only
 	String levelHash = "911fa7f4232e096d6a74a0623842c4157e29b9bcc44e8a827be3bb7e58c9a212.jsp";
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -64,7 +64,7 @@
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
 			%>
 
-		<h2 class="title">What is Mobile Broken Crypto?</h2>
+		<h2 class="title"><%=levelName %></h2>
 			<p> 
 				<div id="lessonIntro">
 

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
 <%
 	//No Quotes In level Name
-	String levelName = "";
+	String levelName = "What is Mobile Insecure Data Storage?";
 	//Alphanumeric Only
 	String levelHash = "ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f";
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -56,7 +56,7 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%=levelName%>What is Mobile Insecure Data Storage?</h2>
+		<h2 class="title"><%=levelName%></h2>
 		<p>
 			<%
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
