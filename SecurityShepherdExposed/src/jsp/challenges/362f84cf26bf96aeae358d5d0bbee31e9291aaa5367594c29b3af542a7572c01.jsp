@@ -59,7 +59,7 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
-				This App stores user credentials within a database, the data has not been stored in plain text but it also has not been encrypted. Make the credentials readable to get the key. The key is the Admin's password. 
+				This App stores user credentials within a database, the data has not been stored in plain text but it also has not been encrypted. Make the credentials readable to get the key. The key is the Admin's password. The App is <a>InsecureData2.apk</a> 
 				<br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

@@ -93,7 +93,7 @@
 			 <br/> There are two tools you will need to reverse
 			engineer an APK. <a>Dex2Jar</a> and <a>JD-GUI</a>. Once you have
 			these tools and the target APK, use dex2jar to convert the APK to a
-			jar file then open the .jar file with JD-GUI. Find the key in the source code of the APK. <br />
+			jar file then open the .jar file with JD-GUI. Find the key in the source code of the <a>ReverseEngineer.apk</a>. <br />
 				
 				<script>
 				

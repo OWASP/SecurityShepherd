@@ -64,7 +64,7 @@
 			%>
 
 			<%=levelBlurb%>
-			<br /> The developers of this App have decided to use an algorithm to confirm or deny the authenticity of the key. Reverse Engineer ReverseEngineer3.APK to find this algorith. If you are unsure whether or not the key is correct, there is a key validity checker on the App. <br />
+			<br /> The developers of this App have decided to use an algorithm to confirm or deny the authenticity of the key. Reverse Engineer ReverseEngineer3.APK to find this algorith. If you are unsure whether or not the key is correct, there is a key validity checker on the App. The App is <a>ReverseEngineer3.apk</a> <br />
 			<%
 				/* IF you need a form - Present it like this */
 			%>
