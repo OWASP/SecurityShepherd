@@ -96,7 +96,7 @@
 			jar file then open the .jar file with JD-GUI. Find the key in the source code of the <a>ReverseEngineer.apk</a>. <br />
 				
 				<br/>
-				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
+				<%= Analytics.getMobileLevelBlurb("ReverseEngineer.apk") %>
 				<script>
 				
 				$('#hideLesson').click(function(){

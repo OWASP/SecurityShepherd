@@ -64,6 +64,7 @@ catch (Exception e)
 				<br/>
 				<br/>
 				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
+				<% // ^^ If you want to add an App Name to this level, replace the above line with Analytics.getMobileLevelBlurb("app.apk") %>
 				
 				<% /* IF you need a form - Present it like this */ %>
 				<%

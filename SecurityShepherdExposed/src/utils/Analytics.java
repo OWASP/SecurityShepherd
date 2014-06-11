@@ -20,5 +20,11 @@ public class Analytics
 	"</script>";
 	public static String sourceForgeMobileVmLinkBlurb = new String(""
 			+ "To complete this challenge you'll need to use the <a href='http://bit.ly/mobileShepherdVm'>Security Shepherd Android Virtual Machine</a> that contains the app. ");
+	private static String mobileVmLinkBlurb1 = new String("To complete this challenge you'll need to use the ");
+	private static String mobileVmLinkBlurb2 = new String(" app found in the <a href='http://bit.ly/mobileShepherdVm'>Security Shepherd Android Virtual Machine</a>.");
 	
+	public static String getMobileLevelBlurb (String appName)
+	{
+		return mobileVmLinkBlurb1 + appName + mobileVmLinkBlurb2;
+	}
 }
