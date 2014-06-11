@@ -139,6 +139,9 @@ catch(SQLException e)
 						});
 					});
 					</script>
+					<% if(ExposedServer.googleAnalyticsOn) { %>
+				<%= ExposedServer.googleAnalyticsScript %>
+			<% } %>
 			</form>
 		</div>
 	</div>

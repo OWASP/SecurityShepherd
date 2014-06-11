@@ -532,7 +532,7 @@ public class Setter
 				+ "moduleCategory = 'Mobile Data Leakage'"
 				+ " OR " + "moduleCategory = 'Mobile Injection'"
 				+ " OR " + "moduleCategory = 'Mobile Insecure Data Storage'"
-				+ " OR " + "moduleCategory = 'Mobile Reverse Engineer'"
+				+ " OR " + "moduleCategory = 'Mobile Reverse Engineering'"
 				+ " OR " + "moduleCategory = 'Mobile Broken Crypto'");
 		try
 		{
@@ -576,7 +576,7 @@ public class Setter
 				+ "moduleCategory = 'Mobile Data Leakage'"
 				+ " OR " + "moduleCategory = 'Mobile Injection'"
 				+ " OR " + "moduleCategory = 'Mobile Insecure Data Storage'"
-				+ " OR " + "moduleCategory = 'Mobile Reverse Engineer'"
+				+ " OR " + "moduleCategory = 'Mobile Reverse Engineering'"
 				+ " OR " + "moduleCategory = 'Mobile Broken Crypto'");
 		try
 		{

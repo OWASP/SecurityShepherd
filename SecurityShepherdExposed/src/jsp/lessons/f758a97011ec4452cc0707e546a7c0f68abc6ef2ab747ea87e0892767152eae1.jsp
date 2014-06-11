@@ -1,8 +1,7 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java"
-	import="utils.ShepherdExposedLogManager" errorPage=""%>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
 <%
 	//No Quotes In level Name
-	String levelName = "";
+	String levelName = "Client Side Injection Lesson";
 	//Alphanumeric Only
 	String levelHash = "f758a97011ec4452cc0707e546a7c0f68abc6ef2ab747ea87e0892767152eae1";
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -126,7 +125,7 @@
 				});
 			});
 		</script>
-
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 
 
 

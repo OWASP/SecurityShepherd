@@ -124,6 +124,9 @@ ArrayList modules = Getter.getAllModuleInfo(ApplicationRoot);
 						}
 					});
 					</script>
+					<% if(ExposedServer.googleAnalyticsOn) { %>
+				<%= ExposedServer.googleAnalyticsScript %>
+			<% } %>
 			</form>
 		</div>
 	</div>

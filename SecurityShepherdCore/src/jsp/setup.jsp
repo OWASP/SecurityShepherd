@@ -71,5 +71,8 @@
 		$("#toolsTable").show("slow");
 	});
 </script>
+<% if(ExposedServer.googleAnalyticsOn) { %>
+				<%= ExposedServer.googleAnalyticsScript %>
+			<% } %>
 </body>
 </html>

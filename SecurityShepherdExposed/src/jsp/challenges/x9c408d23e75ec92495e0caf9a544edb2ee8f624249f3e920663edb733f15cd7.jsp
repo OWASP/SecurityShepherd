@@ -68,5 +68,6 @@ String levelName =  "Insecure Cryptographic Storage Challenge 1";
 				});
 			});
 		</script>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

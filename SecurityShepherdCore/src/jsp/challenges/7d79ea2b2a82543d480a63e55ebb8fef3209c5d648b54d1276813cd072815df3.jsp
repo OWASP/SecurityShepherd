@@ -138,6 +138,9 @@ String getYourTokenUrl = encoder.encodeForHTMLAttribute(ExposedServer.getSecureU
 				});
 			});
 		</script>
+		<% if(ExposedServer.googleAnalyticsOn) { %>
+			<%= ExposedServer.googleAnalyticsScript %>
+		<% } %>
 </body>
 </html>
 <%

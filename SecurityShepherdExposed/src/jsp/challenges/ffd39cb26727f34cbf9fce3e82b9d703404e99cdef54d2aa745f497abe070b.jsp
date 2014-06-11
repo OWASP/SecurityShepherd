@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
 // SQL Injection Challenge One
 
@@ -125,5 +125,6 @@ String levelName = "SQL Injection Challenge One";
 				});
 			});;
 		</script>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

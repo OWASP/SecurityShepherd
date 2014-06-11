@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
 // Broken Authentication and Session Management Challenge One
 
@@ -117,5 +117,6 @@ String levelName = "Session Management Challenge One ";
 				});
 			});
 		</script>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

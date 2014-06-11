@@ -17,6 +17,7 @@ catch (Exception e)
 }
 %>
 <html><body>
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 <br/>
 <br/>
 <br/>

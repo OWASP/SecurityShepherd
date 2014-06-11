@@ -1,5 +1,5 @@
 <%@ page import="org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, utils.ShepherdExposedLogManager" %>
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager, utils.Hash" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
 /**
  * This file assigns the tracking cookie for the exposed server
@@ -54,18 +54,31 @@ if (request.getSession() != null)
 			<% if(parameter.isEmpty()) { %>
 			<h2 class="title">You are not ready!</h2>
 			<p>
-				Refresh the home page! If this error persists; Log out and back in! If this error continues to persit, please contact an Administrator
+				Refresh the home page! If this error persists; Log out and back in! If this error continues to persist, please contact an Administrator!
 			</p>
 			<% } else { %>
 			<h2 class="title">You have entered the game!</h2>
 			<p> 
 				Now that you can see this, you're good to go! Get cracking on lessons and challenges! 
 				<br/><br/>
-				Remeber, the levels you are playing are sub applications. Keep the game play in these applications! Stay away from your session ID's! You'll just log yourself out of you change them!
+				Remember, the levels you are playing are sub applications. Keep the game play in these applications! 
+				Stay away from your session ID's! You'll just log yourself out of you change them!
 				<br/><br/>
 				If you havn't already configured a web proxy, you better! It makes things much easier!
 			</p>
 			<% } %>
+			<h2 class="title">Project Sponsors</h2>
+			<p>
+			The OWASP Security Shepherd project would like to acknowledge and thank the generous support of our sponsors. 
+			Please be certain to visit their stall at the <a href="http://bit.ly/AppSecEu2014">OWASP AppSec EU 2014</a> 
+			conference as well as follow them on <a href="http://bit.ly/bccRiskAdvisory">twitter</a>.
+			<br/><br/>
+			<a href="http://bit.ly/BccRiskAdvisorySite"><img src="css/images/bccRiskAdvisorySmallLogo.jpg" alt="BCC Risk Advisory"/></a>
+			<a href="http://bit.ly/EdgeScan"><img src="css/images/edgescanSmallLogo.jpg" alt="EdgeScan" /></a>
+			<br/><br/>
+			The OWASP Security Shepherd Project would also like to thank Dr. Anthony Keane and the ITB Research Lab for hosting http://owasp.securityShepherd.eu!  
+			</p>
+			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		</div>
 </body>
 </html>

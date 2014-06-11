@@ -72,7 +72,7 @@ if(ses.getAttribute("loginFailed") != null)
 <!-- start page -->
 <div id="page">
 	<!-- start content -->
-	<div id="content">
+	<div id="content" style="margin-left: auto; margin-right: auto; width:320px">
 		<div class="post">
 			<h1 class="title">Login</h1>
 			<p>Use your <a><span>Security Shepherd Credentials</span></a> to Login.</p>
@@ -105,7 +105,40 @@ if(ses.getAttribute("loginFailed") != null)
 					<tr><td align="center"><a href="http://bit.ly/zapForMac">ZAP for Mac</a></td></tr>
 				</table>
 				</div>
+				<br><a id="showAbout" href="javascript:;">About Security Shepherd</a>
 			</div>
+		</div>
+	</div>
+	<div align="justify">
+		
+		<div id="aboutDiv" style="display: none;">
+		<h2 class="title">About Security Shepherd</h2>
+		<p>
+			The OWASP Security Shepherd project has been designed and implemented with the aim of fostering and improving application security
+			 awareness among a varied skill-set demographic.This project enables users to learn or to 
+			 improve upon existing manual penetration testing skills. This is accomplished through 
+			 lesson and challenge techniques. A lesson provides a user with a lot of help in completing 
+			 that module, where a challenge puts what the user learned in the lesson to use.
+			<br/>
+			<br/>
+			The OWASP Security Shepherd project covers the OWASP Top Ten web app risks and also covers the OWASP Top Ten Mobile risks as well. 
+			Using these risks as a challenge test bed, common security vulnerabilities can be explored and their 
+			impact on a system understood. Many of these levels include insufficient mitigations and protections to these risks, 
+			such as blacklist filters, atrocious encoding schemes, barbaric security mechanisms and 
+			poor security configuration. The modules have been crafted to provide not only a challenge for a 
+			security novice, but security professionals as well.
+		</p>
+		<h2 class="title">Project Sponsors</h2>
+		<p>
+			The OWASP Security Shepherd project would like to acknowledge and thank the generous support of our sponsors. 
+			Please be certain to visit their stall at the <a href="http://bit.ly/AppSecEu2014">OWASP AppSec EU 2014</a> 
+			conference as well as follow them on <a href="http://bit.ly/bccRiskAdvisory">twitter</a>.
+			<br/><br/>
+			<a href="http://bit.ly/BccRiskAdvisorySite"><img src="css/images/bccRiskAdvisorySmallLogo.jpg" alt="BCC Risk Advisory"/></a>
+			<a href="http://bit.ly/EdgeScan"><img src="css/images/edgescanSmallLogo.jpg" alt="EdgeScan" /></a>
+			<br/><br/>
+			The OWASP Security Shepherd Project would also like to thank Dr. Anthony Keane and the ITB Research Lab for hosting http://owasp.securityShepherd.eu!  
+		</p>
 		</div>
 	</div>
 	<!-- end content -->
@@ -120,30 +153,18 @@ if(ses.getAttribute("loginFailed") != null)
 		this.css("position","absolute");
 		this.css("left", (($(window).width() - this.outerWidth()) / 2) + $(window).scrollLeft() + "px");
 		return this;
-	}
-
-	$("#content").center();
-	
-	$(window).resize(function() 
-	{
-		$("#content").center();
-	});
+	}	
 	
 	$("#tools").click(function(){
 		$("#toolsTable").show("slow");
 	});
+	
+	$("#showAbout").click(function(){
+		$("#aboutDiv").show("slow");
+	});
 </script>
-<% if(ExposedServer.googleAnalyticsOn) { %>>
-	<script>
-		//Analytics for Shepherd Live
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		
-		ga('create', 'UA-51746570-1', 'securityshepherd.eu');
-		ga('send', 'pageview');	
-	</script>
+<% if(ExposedServer.googleAnalyticsOn) { %>
+	<%= ExposedServer.googleAnalyticsScript %>
 <% } %>
 </body>
 </html>

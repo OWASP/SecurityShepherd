@@ -101,6 +101,9 @@ String ApplicationRoot = getServletContext().getRealPath("");
 		}
 	});
 	</script>
+	<% if(ExposedServer.googleAnalyticsOn) { %>
+				<%= ExposedServer.googleAnalyticsScript %>
+			<% } %>
 	<%
 }
 else

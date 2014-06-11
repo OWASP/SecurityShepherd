@@ -93,6 +93,9 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					<p>Cheat sheets are already enabled!</p>
 				<% } %>
 			</form>
+			<% if(ExposedServer.googleAnalyticsOn) { %>
+				<%= ExposedServer.googleAnalyticsScript %>
+			<% } %>
 		</div>
 	</div>
 	<%
