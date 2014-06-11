@@ -858,10 +858,7 @@ android.support.v4.widget.ViewDragHelper$Callback:
     148:148:public ViewDragHelper$Callback()
 com.app.mobshep.IDS.BuildConfig
 com.app.mobshep.IDS.Insecure_Data_Storage:
-    android.widget.Button insert
-    android.widget.Button select
-com.app.mobshep.IDS.Manifest
-com.app.mobshep.IDS.Manifest$permission
+    private static final int MY_NOTIFICATION_ID
 com.app.mobshep.IDS.R
 com.app.mobshep.IDS.R$attr
 com.app.mobshep.IDS.R$dimen

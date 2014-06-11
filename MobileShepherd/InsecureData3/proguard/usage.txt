@@ -856,18 +856,16 @@ android.support.v4.widget.ViewDragHelper:
 android.support.v4.widget.ViewDragHelper$2
 android.support.v4.widget.ViewDragHelper$Callback:
     148:148:public ViewDragHelper$Callback()
-com.app.mobshep.IDS2.BuildConfig
-com.app.mobshep.IDS2.Insecure_Data_Storage2:
+com.app.mobshep.IDS3.BuildConfig
+com.app.mobshep.IDS3.Insecure_Data_Storage3:
     android.widget.Button insert
     android.widget.Button select
-com.app.mobshep.IDS2.Manifest
-com.app.mobshep.IDS2.Manifest$permission
-com.app.mobshep.IDS2.R
-com.app.mobshep.IDS2.R$attr
-com.app.mobshep.IDS2.R$dimen
-com.app.mobshep.IDS2.R$drawable
-com.app.mobshep.IDS2.R$id
-com.app.mobshep.IDS2.R$layout
-com.app.mobshep.IDS2.R$menu
-com.app.mobshep.IDS2.R$string
-com.app.mobshep.IDS2.R$style
+com.app.mobshep.IDS3.R
+com.app.mobshep.IDS3.R$attr
+com.app.mobshep.IDS3.R$dimen
+com.app.mobshep.IDS3.R$drawable
+com.app.mobshep.IDS3.R$id
+com.app.mobshep.IDS3.R$layout
+com.app.mobshep.IDS3.R$menu
+com.app.mobshep.IDS3.R$string
+com.app.mobshep.IDS3.R$style

@@ -1247,14 +1247,24 @@ android.support.v4.widget.ViewDragHelper$Callback -> android.support.v4.widget.a
     int clampViewPositionHorizontal(android.view.View,int,int) -> a
     int clampViewPositionVertical(android.view.View,int,int) -> b
 com.app.mobshep.IDS2.Insecure_Data_Storage2 -> com.app.mobshep.IDS2.Insecure_Data_Storage2:
-    android.widget.TabHost th -> a
-    android.widget.EditText keyView -> b
-    android.widget.Button login -> c
-    android.widget.EditText password -> d
-    android.widget.EditText username -> e
+    android.widget.Button login -> a
+    android.widget.EditText password -> b
+    android.widget.EditText username -> c
+    int mNotificationCount -> d
+    java.lang.CharSequence tickerText -> e
+    java.lang.CharSequence contentTitle -> f
+    java.lang.CharSequence contentText -> g
+    android.content.Intent notificationIntent -> h
+    long[] vibrate -> i
     void onCreate(android.os.Bundle) -> onCreate
-    void populateTable() -> a
-    void referenceXML() -> b
+    void copyDatabase(java.io.InputStream,java.io.OutputStream) -> a
+    void referenceXML() -> a
+    java.lang.CharSequence access$0(com.app.mobshep.IDS2.Insecure_Data_Storage2) -> a
+    java.lang.CharSequence access$1(com.app.mobshep.IDS2.Insecure_Data_Storage2) -> b
+    java.lang.CharSequence access$2(com.app.mobshep.IDS2.Insecure_Data_Storage2) -> c
+    int access$3(com.app.mobshep.IDS2.Insecure_Data_Storage2) -> d
+    void access$4(com.app.mobshep.IDS2.Insecure_Data_Storage2,int) -> a
+    long[] access$5(com.app.mobshep.IDS2.Insecure_Data_Storage2) -> e
 com.app.mobshep.IDS2.Insecure_Data_Storage2$1 -> com.app.mobshep.IDS2.a:
     com.app.mobshep.IDS2.Insecure_Data_Storage2 this$0 -> a
     void onClick(android.view.View) -> onClick

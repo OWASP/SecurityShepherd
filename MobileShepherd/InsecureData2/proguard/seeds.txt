@@ -67,6 +67,8 @@ com.app.mobshep.IDS2.Insecure_Data_Storage2: Insecure_Data_Storage2()
 com.app.mobshep.IDS2.R$dimen: int activity_horizontal_margin
 com.app.mobshep.IDS2.R$dimen: int activity_vertical_margin
 com.app.mobshep.IDS2.R$drawable: int background
+com.app.mobshep.IDS2.R$drawable: int button
+com.app.mobshep.IDS2.R$drawable: int edittext
 com.app.mobshep.IDS2.R$drawable: int ic_launcher
 com.app.mobshep.IDS2.R$drawable: int splash
 com.app.mobshep.IDS2.R$id: int Splash
@@ -77,20 +79,13 @@ com.app.mobshep.IDS2.R$id: int credits
 com.app.mobshep.IDS2.R$id: int etName
 com.app.mobshep.IDS2.R$id: int etPass
 com.app.mobshep.IDS2.R$id: int exit
-com.app.mobshep.IDS2.R$id: int tab1
-com.app.mobshep.IDS2.R$id: int tab2
-com.app.mobshep.IDS2.R$id: int tabhost
-com.app.mobshep.IDS2.R$id: int tvKey2
 com.app.mobshep.IDS2.R$id: int tvTitle
 com.app.mobshep.IDS2.R$layout: int ids
 com.app.mobshep.IDS2.R$layout: int splash
 com.app.mobshep.IDS2.R$menu: int firstkey
 com.app.mobshep.IDS2.R$string: int action_settings
 com.app.mobshep.IDS2.R$string: int app_name
-com.app.mobshep.IDS2.R$string: int descripIDS2
-com.app.mobshep.IDS2.R$string: int hint
 com.app.mobshep.IDS2.R$string: int insertData
-com.app.mobshep.IDS2.R$string: int introMessage2
 com.app.mobshep.IDS2.R$string: int login
 com.app.mobshep.IDS2.R$string: int pword
 com.app.mobshep.IDS2.R$string: int selectData
@@ -101,6 +96,8 @@ com.app.mobshep.IDS2.R$string: int titleIntro3
 com.app.mobshep.IDS2.R$string: int uname
 com.app.mobshep.IDS2.R$style: int AppBaseTheme
 com.app.mobshep.IDS2.R$style: int AppTheme
-com.app.mobshep.IDS2.R$style: int TabFont
+com.app.mobshep.IDS2.R$style: int ShepherdTabWidget
+com.app.mobshep.IDS2.R$style: int ShepherdTabWidgetText
+com.app.mobshep.IDS2.R$style: int ShepherdTheme
 com.app.mobshep.IDS2.Splash
 com.app.mobshep.IDS2.Splash: Splash()

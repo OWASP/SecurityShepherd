@@ -860,8 +860,7 @@ com.app.mobshep.IDS2.BuildConfig
 com.app.mobshep.IDS2.Insecure_Data_Storage2:
     android.widget.Button insert
     android.widget.Button select
-com.app.mobshep.IDS2.Manifest
-com.app.mobshep.IDS2.Manifest$permission
+    private static final int MY_NOTIFICATION_ID
 com.app.mobshep.IDS2.R
 com.app.mobshep.IDS2.R$attr
 com.app.mobshep.IDS2.R$dimen

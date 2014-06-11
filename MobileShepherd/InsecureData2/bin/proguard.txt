@@ -1,6 +1,6 @@
-# view AndroidManifest.xml #generated:28
+# view AndroidManifest.xml #generated:21
 -keep class com.app.mobshep.IDS2.Insecure_Data_Storage2 { <init>(...); }
 
-# view AndroidManifest.xml #generated:39
+# view AndroidManifest.xml #generated:31
 -keep class com.app.mobshep.IDS2.Splash { <init>(...); }
 
