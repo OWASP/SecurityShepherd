@@ -18,5 +18,7 @@ public class Analytics
 		"ga('create', 'UA-51746570-1', 'securityshepherd.eu');\n" +
 		"ga('send', 'pageview');\n" +
 	"</script>";
+	public static String sourceForgeMobileVmLinkBlurb = new String(""
+			+ "To complete this challenge you'll need to use the <a href='http://bit.ly/mobileShepherdVm'>Security Shepherd Android Virtual Machine</a> that contains the app. ");
 	
 }

@@ -62,7 +62,8 @@ catch (Exception e)
 				<br/>
 					This App was rushed to completion, as a result some features which should not have made it to the final version were included. The key can be found in <a>App logs</a> only intended for debugging. Submit it to complete this challenge. 
 				<br/>
-				
+				<br/>
+				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
 				<% /* IF you need a form - Present it like this */ %>
 				<%
 				/*

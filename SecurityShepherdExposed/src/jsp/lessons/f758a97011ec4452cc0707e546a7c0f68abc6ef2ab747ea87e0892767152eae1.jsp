@@ -96,6 +96,8 @@
 			
 			
 			 <br />
+			 <br/>
+				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
 			  
 			  <input type="button"
 				value="Hide Lesson Introduction" id="hideLesson" />

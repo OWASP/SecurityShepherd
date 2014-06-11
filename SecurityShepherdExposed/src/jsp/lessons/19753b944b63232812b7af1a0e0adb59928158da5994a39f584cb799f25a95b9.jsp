@@ -61,7 +61,7 @@
 		<h2 class="title"><%=levelName%></h2>
 		<p>
 			<%
-				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
+				/* Put Your Blurb Here Jeesh*/
 			%>
 			<p> 
 				<div id="lessonIntro">
@@ -95,6 +95,8 @@
 			these tools and the target APK, use dex2jar to convert the APK to a
 			jar file then open the .jar file with JD-GUI. Find the key in the source code of the APK. <br />
 				
+				<br/>
+				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
 				<script>
 				
 				$('#hideLesson').click(function(){

@@ -59,6 +59,8 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
+				<br/>
+				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
 				This App uses sloppy filters in an attempt to thwart attackers. These filters can be easily bypassed. Login to get the key. <br/>
 				<% /* IF you need a form - Present it like this */ %>
 				<%

@@ -61,6 +61,8 @@ catch (Exception e)
 				<br/>
 				This App has an upgraded form of filtering. Bypass the filtering, and perform SQL Injection to sign in as a legitimate user.
 				<br/>
+				<br/>
+				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
 				<% /* IF you need a form - Present it like this */ %>
 				<%
 				/*
