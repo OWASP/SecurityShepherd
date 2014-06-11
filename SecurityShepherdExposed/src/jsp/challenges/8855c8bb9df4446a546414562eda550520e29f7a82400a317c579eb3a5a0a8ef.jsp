@@ -59,7 +59,11 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
-				This App uses sloppy filters in an attempt to thwart attackers. These filters can be easily bypassed. Login to get the key. The App is <a>CSInjection2.apk</a><br/>
+				
+				This App uses sloppy filters in an attempt to thwart attackers. These filters can be easily bypassed. Login to get the key. 
+				<br/>
+				<br/>
+				<%= Analytics.getMobileLevelBlurb("CSInjection2.apk") %>
 				<% /* IF you need a form - Present it like this */ %>
 				<%
 				/*

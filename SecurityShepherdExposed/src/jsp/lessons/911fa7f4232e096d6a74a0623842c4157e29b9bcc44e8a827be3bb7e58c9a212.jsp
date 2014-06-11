@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java"
-	import="utils.ShepherdExposedLogManager" errorPage=""%>
+	import="utils.*" errorPage=""%>
 
 <%
 	//No Quotes In level Name
@@ -87,8 +87,10 @@
 				<br/>
 			
 			
-			 <br/> The developers of this App are holding a competition, whoever can crack their secure chat wins. Unfortunatly, the developers have misunderstood the definition of Cryptography. Reduce the intercepted messages exchanged to plaintext to reveal the key. The App for this lesson is <a>BrokenCrypto.apk</a> <br />
-				
+			 <br/> The developers of this App are holding a competition, whoever can crack their secure chat wins. Unfortunatly, the developers have misunderstood the definition of Cryptography. Reduce the intercepted messages exchanged to plaintext to reveal the key. <br />
+				<br/>
+			  <%= Analytics.getMobileLevelBlurb("BrokenCrypto.apk") %>
+
 				<script>
 				
 				$('#hideLesson').click(function(){
@@ -170,5 +172,6 @@
 		</script>
 		 */
 	%>
+	<% if (Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

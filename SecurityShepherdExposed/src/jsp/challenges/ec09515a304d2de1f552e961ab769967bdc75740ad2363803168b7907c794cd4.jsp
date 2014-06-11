@@ -59,8 +59,12 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
-				This App uses a hashing algorithm on stored user credentials. However, there are two issues here, firstly the user is using a <a>bad password</a>. Secondly, the App does <a>not use a salt</a> when hashing the data. The key is the user's password. The App is <a>InsecureData2</a>	
+				This App uses a hashing algorithm on stored user credentials. However, there are two issues here, firstly the user is using a <a>bad password</a>. Secondly, the App does <a>not use a salt</a> when hashing the data. The key is the user's password.
+
 				<br/>
+				<br/>
+				
+				<%= Analytics.getMobileLevelBlurb("InsecureData2.apk") %>
 				<% /* IF you need a form - Present it like this */ %>
 				<%
 				/*

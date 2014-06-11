@@ -58,6 +58,8 @@ catch (Exception e)
 				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				
 				<%= levelBlurb %>
+				
+				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
 				<br/>
 					
 				<br/>

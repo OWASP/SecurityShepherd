@@ -69,8 +69,8 @@
 			crawl through. The key has been hard coded into this APK. To get to
 			the key reverse engineer the APK and find the correct Activity which
 			performs a conditional statement to check the validity of the key. <br />
-			
-			The App is <a>ReverseEngineer2</a>
+			<br/>
+			<%= Analytics.getMobileLevelBlurb("ReverseEngineer2.apk") %>
 			<%
 				/* IF you need a form - Present it like this */
 			%>
