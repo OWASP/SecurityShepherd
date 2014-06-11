@@ -100,7 +100,7 @@
 			
 			 Apps won't always use a SQLite database to store data, in
 			some cases logs can yield useful information about the App and it's
-			users. Use this information to find out the key. In this lesson, the App <a>caches logs</a> on the device. The App itself acts as a notice board or to do list. Everything a user adds to the <a>ListView</a> in the App is logged. <br />
+			users. Use this information to find out the key. In this lesson, the App <a>caches logs</a> on the device. The App itself acts as a notice board or to do list. Everything a user adds to the <a>ListView</a> in the App is logged. The App for this lesson is <a>UDataLeakage.apk</a> <br />
 			
 			<br>
 			<br/>

@@ -70,7 +70,8 @@
 			the key reverse engineer the APK and find the correct Activity which
 			performs a conditional statement to check the validity of the key. <br />
 			<br/>
-				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
+			<%= Analytics.sourceForgeMobileVmLinkBlurb %>
+			The App is <a>ReverseEngineer2</a>
 			<%
 				/* IF you need a form - Present it like this */
 			%>

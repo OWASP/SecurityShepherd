@@ -59,7 +59,7 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
-				This App has an upgraded form of filtering. Bypass the filtering, and perform SQL Injection to sign in as a legitimate user.
+				This App has an upgraded form of filtering. Bypass the filtering, and perform SQL Injection to sign in as a legitimate user. The App is <a>CSInjection3</a>
 				<br/>
 				<br/>
 				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
