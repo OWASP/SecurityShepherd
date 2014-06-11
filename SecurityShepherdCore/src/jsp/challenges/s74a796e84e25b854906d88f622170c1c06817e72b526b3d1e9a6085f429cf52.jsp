@@ -137,6 +137,9 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				});
 			});
 		</script>
+		<% if(ExposedServer.googleAnalyticsOn) { %>
+			<%= ExposedServer.googleAnalyticsScript %>
+		<% } %>
 </body>
 </html>
 <%

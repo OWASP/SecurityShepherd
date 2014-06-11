@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
 // Insecure Cryptographic Storage Challenge 2 Accessed
 
@@ -130,5 +130,6 @@ String levelName = "Insecure Cryptographic Storage Challenge 2";
 			*/
 		});
 		</script>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

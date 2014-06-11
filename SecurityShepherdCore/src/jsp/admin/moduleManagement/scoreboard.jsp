@@ -250,6 +250,9 @@ if (request.getSession() != null) //Session If
 								
 							} 
 							</script>
+							<% if(ExposedServer.googleAnalyticsOn) { %>
+								<%= ExposedServer.googleAnalyticsScript %>
+							<% } %>
 					</form>
 				</div>
 			</div>
@@ -262,6 +265,9 @@ if (request.getSession() != null) //Session If
 				<div class="entry">
 				<p>CTF Mode is not enabled, so there are no scoreboards to show.</p>
 				</div>
+				<% if(ExposedServer.googleAnalyticsOn) { %>
+					<%= ExposedServer.googleAnalyticsScript %>
+				<% } %>
 			</div>
 		<%}
 	} //Valid Session If

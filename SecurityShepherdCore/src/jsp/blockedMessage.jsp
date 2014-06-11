@@ -37,6 +37,9 @@
 				In the mean time get a coffee and brag about how far ahead you must be than everybody else!
 			</p>
 		</div>
+		<% if(ExposedServer.googleAnalyticsOn) { %>
+				<%= ExposedServer.googleAnalyticsScript %>
+			<% } %>
 		
 </body>
 </html>

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.ShepherdExposedLogManager" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
 
 String levelName = "Blocked Message JSP Page";
@@ -53,6 +53,6 @@ catch (Exception e)
 				In the mean time get a coffee and brag about how far ahead you must be than everybody else!
 			</p>
 		</div>
-		
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

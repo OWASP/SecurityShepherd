@@ -75,6 +75,7 @@ if(!changePassword)
 			<% } %>
 			<% if(isAdmin) {%>
 			<h2 class="title">Configure Shepherd</h2>
+			<p>
 			As you are an Administrator you can define the scope of Security Shepherd. You can quickly change the game layout to Web or Mobile Application focused with the following buttons, or you can open the Admin Module Management menu, at the top left of the page, to open or close specific topics.
 			<br/><br/>
 			<div id="scopeResultsDiv"></div>
@@ -85,7 +86,7 @@ if(!changePassword)
 				<a href="javascript:;" style="text-decoration: none;" id="noApplication"><div class="menuButton">Close All Levels</div></a>
 			</div>
 			<div id="scopeLoadingDiv" style="display: none;">Loading...</div>
-			
+			</p>
 			<% } %>
 			<br/><br/>
 			If you cannot see the message below this paragraph, please ensure that your browser can visit <a href="<%= exposedServer %>"> the exposed server.</a>.
@@ -222,6 +223,9 @@ if(!changePassword)
 	});
 	<% } // End of Admin Only Script%>
 	</script>
+	<% if(ExposedServer.googleAnalyticsOn) { %>
+				<%= ExposedServer.googleAnalyticsScript %>
+			<% } %>
 	<%
 }
 else	//IF the  user doesnt need to change their pass, just post up the get Started message

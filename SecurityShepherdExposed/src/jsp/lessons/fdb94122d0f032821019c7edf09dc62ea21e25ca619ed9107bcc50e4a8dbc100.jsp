@@ -131,5 +131,6 @@ String levelName = "Insecure Direct Object References";
 				});
 			});
 		</script>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

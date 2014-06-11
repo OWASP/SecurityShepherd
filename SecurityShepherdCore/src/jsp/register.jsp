@@ -249,6 +249,9 @@ if(ses.getAttribute("errorMessage") != null)
 		}
 	});
 </script>
+<% if(ExposedServer.googleAnalyticsOn) { %>
+	<%= ExposedServer.googleAnalyticsScript %>
+<% } %>
 </body>
 </html>
 <%

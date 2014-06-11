@@ -86,5 +86,6 @@ String levelName =  "Failure to Restrict URL Access Lesson";
 				});
 			});
 		</script>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

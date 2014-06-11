@@ -201,9 +201,10 @@ catch(SQLException e)
 			}
 		}
 	});
-	
-	
 	</script>
+	<% if(ExposedServer.googleAnalyticsOn) { %>
+		<%= ExposedServer.googleAnalyticsScript %>
+	<% } %>
 	<%
 }
 else

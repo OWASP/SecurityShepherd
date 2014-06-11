@@ -90,6 +90,9 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					<p>CTF Mode is already enabled!</p>
 				<% } %>
 			</form>
+			<% if(ExposedServer.googleAnalyticsOn) { %>
+				<%= ExposedServer.googleAnalyticsScript %>
+			<% } %>
 		</div>
 	</div>
 	<%
