@@ -1,11 +1,13 @@
 package com.app.mobshep.IDS;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -14,6 +16,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,9 +32,9 @@ public class Insecure_Data_Storage extends Activity {
 
 	private int mNotificationCount;
 
-	private final CharSequence tickerText = "Challenge complete get the key and submit it!";
-	private final CharSequence contentTitle = "Success!";
-	private final CharSequence contentText = "InsecureData Complete!";
+	private final CharSequence tickerText = "Login has been disabled due to a vulnerability!";
+	private final CharSequence contentTitle = "Login Disabled!";
+	private final CharSequence contentText = "App contains vulnerability!";
 	private Intent NotificationIntent;
 	private long[] vibrate = { 0, 200, 200, 300 };
 
@@ -45,6 +48,7 @@ public class Insecure_Data_Storage extends Activity {
 		setContentView(R.layout.ids);
 		referenceXML();
 		
+	
 		String destinationDir = "/data/data/" +getPackageName() + "/databases";
 		
 		String destinationPath = destinationDir + "Members";
@@ -65,7 +69,8 @@ public class Insecure_Data_Storage extends Activity {
 			}
 			
 		}
-		
+
+		exportDatabse("Members");
 		
 		NotificationIntent = new Intent(getApplicationContext(),
 				Insecure_Data_Storage.class);
@@ -90,13 +95,19 @@ public class Insecure_Data_Storage extends Activity {
 							"Blank fields detected!", Toast.LENGTH_SHORT);
 					toast2.show();
 				}
-				if (CheckName.contentEquals("Admin")
-						&& CheckPass.contentEquals("Battery777")) {
+		
 
-					Toast toast3 = Toast.makeText(Insecure_Data_Storage.this,
-							"Logged in!", Toast.LENGTH_SHORT);
-					toast3.show();
-
+				if (CheckName.contentEquals("EpicTrees")
+						|| CheckName.contentEquals("GraveyBones")
+						|| CheckName.contentEquals("Admin")
+						|| CheckName.contentEquals("FallenComrade")
+						|| CheckName.contentEquals("IronFist")
+						|| CheckName.contentEquals("Jumper")
+						|| CheckName.contentEquals("99chips")
+						|| CheckName.contentEquals("RegularVeg")) {
+					
+					
+					
 					Notification.Builder notificationBuilder = new Notification.Builder(
 							getApplicationContext())
 							.setTicker(tickerText)
@@ -112,15 +123,7 @@ public class Insecure_Data_Storage extends Activity {
 					mNotificationManager.notify(MY_NOTIFICATION_ID,
 							notificationBuilder.build());
 
-				}
-
-				if (CheckName.contentEquals("EpicTrees")
-						|| CheckName.contentEquals("GraveyBones")
-						|| CheckName.contentEquals("FallenComrade")
-						|| CheckName.contentEquals("IronFist")
-						|| CheckName.contentEquals("Jumper")
-						|| CheckName.contentEquals("99chips")
-						|| CheckName.contentEquals("RegularVeg")) {
+					
 
 					Toast locked = Toast.makeText(Insecure_Data_Storage.this,
 							"That Account is locked.", Toast.LENGTH_SHORT);
@@ -136,6 +139,7 @@ public class Insecure_Data_Storage extends Activity {
 				}
 			}
 		});
+        
 	}
 
 	
@@ -151,6 +155,31 @@ public class Insecure_Data_Storage extends Activity {
 		oStream.close();
 		
 	}
+	
+	
+	public void exportDatabse(String databaseName) {
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+
+            if (sd.canWrite()) {
+                String currentDBPath = "//data//"+getPackageName()+"//databases//"+databaseName+"";
+                String backupDBPath = "backupname.db";
+                File currentDB = new File(data, currentDBPath);
+                File backupDB = new File(sd, backupDBPath);
+
+                if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                }
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+    }
 
 	public void referenceXML() {
 		login = (Button) findViewById(R.id.bLogin);

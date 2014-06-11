@@ -2,9 +2,9 @@
 	import="utils.ShepherdExposedLogManager" errorPage=""%>
 <%
 	//No Quotes In level Name
-	String levelName = "";
+	String levelName = "Mobile Reverse Engineering 2";
 	//Alphanumeric Only
-	String levelHash = "392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec";
+	String levelHash = "dbae0baa3f71f196c4d2c6c984d45a6c1c635bf1b482dccfe32e9b01b69a042b.jsp";
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 	String levelBlurb = "";
 
@@ -57,71 +57,14 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
+		<h2 class="title"><%=levelName%></h2>
 		<p>
 			<%
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
 			%>
-			
-			<h2 class="title">What is Unintended Data Leakage?</h2>
-			<p> 
-				<div id="lessonIntro">
 
 			<%=levelBlurb%>
-			<br /> Unintended data leakage occurs when an App inadvertantly
-			places sensitive information or data in a location on the mobile
-			device that is easily accessible by attackers or other Apps on the
-			device. </br> Unintended Data Leakage comes in many forms, including:
-			 </br> 
-			 
-			 <ul>
-			 
-			 <li>URL Caching (Both request and response) </li> 
-			  
-			 <li>Keyboard Press Caching </li>
-			
-			 <li>Copy/Paste buffer Caching </li>
-			 
-			 <li>Application backgrounding </li>
-			  
-			 <li>Logging </bli>
-			  
-			 <li>HTML5 data storage </li> 
-			   
-			 <li>Browser cookie objects </li>
-			 
-			 <li>Analytics data sent to 3rd parties </li>
-			
-			</ul>
-			
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
-				</div>
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
-				<br/>
-			
-			
-			 Apps won't always use a SQLite database to store data, in
-			some cases logs can yield useful information about the App and it's
-			users. Use this information to find out the key. In this lesson, the App <a>caches logs</a> on the device. The App itself acts as a notice board or to do list. Everything a user adds to the <a>ListView</a> in the App is logged. <br />
-			
-			
-			
-			<script>
-				
-				$('#hideLesson').click(function(){
-				$("#lessonIntro").hide("slow", function(){
-					$("#showLesson").show("fast");
-				});
-			});
-			
-			$("#showLesson").click(function(){
-				$('#showLesson').hide("fast", function(){
-					$("#lessonIntro").show("slow");
-				});
-			});
-		</script>
-			
-			
-			
+			<br /> The developers of this App have decided to use an algorithm to confirm or deny the authenticity of the key. Reverse Engineer ReverseEngineer3.APK to find this algorith. If you are unsure whether or not the key is correct, there is a key validity checker on the App. <br />
 			<%
 				/* IF you need a form - Present it like this */
 			%>

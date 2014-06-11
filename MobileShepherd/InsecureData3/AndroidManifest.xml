@@ -7,7 +7,11 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="20" />
-       <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+       <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE"/>
+       
     <permission android:protectionLevel="dangerous" android:icon="@drawable/ic_launcher" android:name="com.app.mobshep.IDS3.START_ACTIVITY" android:logo="@drawable/ic_launcher"></permission>
     
     <application

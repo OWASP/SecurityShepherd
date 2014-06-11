@@ -37,11 +37,12 @@ private static final int MY_NOTIFICATION_ID = 1;
 	
 	private int mNotificationCount;
 	
-	private final CharSequence tickerText = "Challenge complete get the key and submit it!";
-	private final CharSequence contentTitle = "Success!";
-	private final CharSequence contentText = "InsecureData2 Complete!";
-	private Intent notificationIntent;	
+	private final CharSequence tickerText = "Login has been disabled due to a vulnerability!";
+	private final CharSequence contentTitle = "Login Disabled!";
+	private final CharSequence contentText = "App contains vulnerability!";
+	private Intent notificationIntent;
 	private long[] vibrate = { 0, 200, 200, 300 };
+
 	
 
 	@Override
@@ -114,26 +115,8 @@ private static final int MY_NOTIFICATION_ID = 1;
 					Toast toast2 = Toast.makeText(Insecure_Data_Storage2.this,
 							"Blank fields detected!", Toast.LENGTH_SHORT);
 					toast2.show();
-				
-					
-					Notification.Builder notificationBuilder = new Notification.Builder(
-							getApplicationContext())
-							.setTicker(tickerText)
-							.setSmallIcon(R.drawable.ic_launcher)
-							.setAutoCancel(true)
-							.setContentTitle(contentTitle)
-							.setContentText(
-									contentText + " (" + ++mNotificationCount + ")")
-							.setVibrate(vibrate);
-					
-					
-					// Pass the Notification to the NotificationManager:
-					NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-					mNotificationManager.notify(MY_NOTIFICATION_ID,
-							notificationBuilder.build());
 
-					keyView.setText("" + "" + ""
-							+ "The Key is: WarshipsAndWrenches");
+					
 				}
 
 			if (CheckName.contentEquals("Root")
@@ -147,6 +130,23 @@ private static final int MY_NOTIFICATION_ID = 1;
 				Toast locked = Toast.makeText(Insecure_Data_Storage2.this,
 						"That Account is locked.", Toast.LENGTH_SHORT);
 				locked.show();
+				
+				
+				Notification.Builder notificationBuilder = new Notification.Builder(
+						getApplicationContext())
+						.setTicker(tickerText)
+						.setSmallIcon(R.drawable.ic_launcher)
+						.setAutoCancel(true)
+						.setContentTitle(contentTitle)
+						.setContentText(
+								contentText + " (" + ++mNotificationCount + ")")
+						.setVibrate(vibrate);
+				
+				
+				// Pass the Notification to the NotificationManager:
+				NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				mNotificationManager.notify(MY_NOTIFICATION_ID,
+						notificationBuilder.build());
 
 			}
 			

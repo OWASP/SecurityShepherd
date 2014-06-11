@@ -1,10 +1,11 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java"
 	import="utils.ShepherdExposedLogManager" errorPage=""%>
+
 <%
 	//No Quotes In level Name
 	String levelName = "";
 	//Alphanumeric Only
-	String levelHash = "392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec";
+	String levelHash = "911fa7f4232e096d6a74a0623842c4157e29b9bcc44e8a827be3bb7e58c9a212.jsp";
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 	String levelBlurb = "";
 
@@ -25,6 +26,7 @@
 				request.getHeader("X-Forwarded-For"),
 				"Could not recover username: " + e.toString());
 	}
+
 	/**
 	 * <br/><br/>
 	 * This file is part of the Security Shepherd Project.
@@ -61,37 +63,23 @@
 			<%
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
 			%>
-			
-			<h2 class="title">What is Unintended Data Leakage?</h2>
+
+		<h2 class="title">What is Mobile Broken Crypto?</h2>
 			<p> 
 				<div id="lessonIntro">
 
 			<%=levelBlurb%>
-			<br /> Unintended data leakage occurs when an App inadvertantly
-			places sensitive information or data in a location on the mobile
-			device that is easily accessible by attackers or other Apps on the
-			device. </br> Unintended Data Leakage comes in many forms, including:
-			 </br> 
-			 
-			 <ul>
-			 
-			 <li>URL Caching (Both request and response) </li> 
-			  
-			 <li>Keyboard Press Caching </li>
+			<br/>
 			
-			 <li>Copy/Paste buffer Caching </li>
-			 
-			 <li>Application backgrounding </li>
-			  
-			 <li>Logging </bli>
-			  
-			 <li>HTML5 data storage </li> 
-			   
-			 <li>Browser cookie objects </li>
-			 
-			 <li>Analytics data sent to 3rd parties </li>
+			Cryptography is difficult to get right, as a result many Apps use Cryptography poorly and become vulnerable to attack. An App can transfer keys insecurely, use a known broken or deprecated cryptographic algorithm or developers can create their own Crypto algorithms.			
+			<br/>
 			
-			</ul>
+			Poor key management can be due to hard coded keys, keys stored in directories, transferring the key in an insecure way or using the same key all the time. If the developers of an App make use a of custom, unproven, untested encryption algorithm then it is highly likely that the encrypted data is vulnerable.
+			Finally
+			<br/>
+			
+			
+			<br/>
 			
 			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
 				</div>
@@ -99,13 +87,9 @@
 				<br/>
 			
 			
-			 Apps won't always use a SQLite database to store data, in
-			some cases logs can yield useful information about the App and it's
-			users. Use this information to find out the key. In this lesson, the App <a>caches logs</a> on the device. The App itself acts as a notice board or to do list. Everything a user adds to the <a>ListView</a> in the App is logged. <br />
-			
-			
-			
-			<script>
+			 <br/> The developers of this App are holding a competition, whoever can crack their secure chat wins. Unfortunatly, the developers have misunderstood the definition of Cryptography. Reduce the intercepted messages exchanged to plaintext to reveal the key. <br />
+				
+				<script>
 				
 				$('#hideLesson').click(function(){
 				$("#lessonIntro").hide("slow", function(){
@@ -119,8 +103,10 @@
 				});
 			});
 		</script>
-			
-			
+				
+				
+				</script>
+				
 			
 			<%
 				/* IF you need a form - Present it like this */

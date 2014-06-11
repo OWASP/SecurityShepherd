@@ -9,7 +9,6 @@ import java.io.OutputStream;
 
 import android.app.Activity;
 import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
