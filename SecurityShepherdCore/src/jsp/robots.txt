@@ -1,0 +1,5 @@
+# robots.txt for http://www.example.com/
+
+User-agent: *
+Disallow: /challenges/ # No Robots to Challenges
+Disallow: /lessons/ # No Robots to Lessons
