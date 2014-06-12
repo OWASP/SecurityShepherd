@@ -1000,7 +1000,7 @@ public class Setter
 	{
 		try 
 		{
-			File siteProperties = new File(ExposedServer.getApplicationRoot() + "/WEB-INF/site.properties");
+			File siteProperties = new File(ExposedServer.getApplicationRoot() + "/WEB-INF/exposedDatabase.properties");
 			DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
 			String theProperties = new String("databaseConnectionURL=" + url +
 										"\ndatabaseUsername=" + userName +
