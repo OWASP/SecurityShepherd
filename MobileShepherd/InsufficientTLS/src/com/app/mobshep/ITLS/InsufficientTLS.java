@@ -38,14 +38,12 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 		case (R.id.bConfig):
 			
 			
-			Intent gotoMain = new Intent(this, Preferences.class);
-			startActivity(gotoMain);
+			Intent gotoIntent = new Intent(this, Preferences.class);
+			startActivity(gotoIntent);
 			
 			break;
 		
 		case (R.id.bSend):
-			
-			
 			
 			
 			//send the message to be intercepted to the Shepherd server

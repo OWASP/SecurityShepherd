@@ -8,8 +8,10 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="20" />
 
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     
         <permission
         android:name="com.app.mobshep.CSI.START_ACTIVITY"

@@ -1,11 +1,10 @@
 package com.app.mobshep.csinjection3;
 
 import java.io.File;
-
+import java.io.IOException;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-
 import android.database.sqlite.SQLiteException;
 import net.sqlcipher.database.*;
 import android.os.Bundle;
@@ -24,14 +23,15 @@ public class CSInjection3 extends Activity implements OnClickListener {
 	EditText username;
 	EditText password;
 	EditText key;
-
+	String dbPassword = "P93Eid3D33DE0ZanbffGp01Sirjw2";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.broken);
+		setContentView(R.layout.csi);
 		th = (TabHost) findViewById(R.id.tabhost);
-		populateTable(this, "P93Eid3D33DE0ZanbffGp01Sirjw2");
+		populateTable(this, dbPassword);
 		referenceXML();
 		th.setup();
 
@@ -80,16 +80,10 @@ case (R.id.bLogin):
 			sanitizeName = sanitizeName.replace("DROP", "/* */");
 			sanitizeName = sanitizeName.replace("1=1", "/* */");
 			sanitizeName = sanitizeName.replace("1 = 1", "/* */");
-
-
-			
-			
 			
 			
 			String sanitizePass = unsanitizePass.replace("OR", "/* */");
 			sanitizePass = sanitizePass.replace("or", "/* */");
-			sanitizePass = sanitizePass.replace("Or", "/* */");
-			sanitizePass = sanitizePass.replace("oR", "/* */");
 			sanitizePass = sanitizePass.replace("SELECT", "/* */");
 			sanitizePass = sanitizePass.replace("AND", "/* */");
 			sanitizePass = sanitizePass.replace("UPDATE", "/* */");
@@ -97,21 +91,28 @@ case (R.id.bLogin):
 			sanitizePass = sanitizePass.replace("1=1", "/* */");
 			sanitizePass = sanitizePass.replace("1 = 1", "/* */");
 
-
-			
-
-			if (login(sanitizeName, sanitizePass) == true) {
-				key.setText("The Key is: BurpingChimneys.");
-				Toast toast = Toast.makeText(CSInjection3.this, "Logged in as:" + sanitizeName,
-						Toast.LENGTH_LONG);
-				toast.show();
+			try {
+				if (login(sanitizeName, sanitizePass) == true) {
+					key.setText("The Key is: BurpingChimneys.");
+					Toast toast = Toast.makeText(CSInjection3.this, "Logged in as:" + sanitizeName,
+							Toast.LENGTH_LONG);
+					toast.show();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (login(sanitizeName, sanitizePass) == false) {
-				Toast toast = Toast.makeText(CSInjection3.this,
-						"Invalid Credentials!", Toast.LENGTH_SHORT);
-				toast.show();
+			try {
+				if (login(sanitizeName, sanitizePass) == false) {
+					Toast toast = Toast.makeText(CSInjection3.this,
+							"Invalid Credentials!", Toast.LENGTH_SHORT);
+					toast.show();
 
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 			if (sanitizeName.contentEquals("") || sanitizePass.contentEquals("")) {
@@ -130,37 +131,28 @@ case (R.id.bLogin):
 		}
 	}
 
-	private boolean login(String username, String password) {
+	private boolean login(String username, String password) throws IOException {
+
 		try {
-			
 			String dbPath = this.getDatabasePath("Users.db").getPath();
 
-			try{
-				
-			
-			SQLiteDatabase db = SQLiteDatabase.openDatabase(dbPath, "P93Eid3D33DE0ZanbffGpo101Sirjw2", null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
+					dbPassword, null);
 
-			String query = ("SELECT * FROM Users WHERE memName = '"
-					+ username + "' AND memPass ='" + password + "'");
+			String query = ("SELECT * FROM Users WHERE memName='" + username
+					+ "' AND memPass = '" + password + "';");
+
 			Cursor cursor = db.rawQuery(query, null);
-			
-			if (cursor.getCount() <= 0) {
-				return false;
+			if (cursor != null) {
+				if (cursor.getCount() <= 0) {
+					return false;
+
+				}
 			}
 
-			}catch(Exception e){
-				key.setText("");
-				Toast error = Toast.makeText(CSInjection3.this, "An Error occured",
-						Toast.LENGTH_SHORT);
-				error.show();
-			}
 		} catch (SQLiteException e) {
-			key.setText("");
-			
-			e.printStackTrace();
-			
-			Toast error = Toast.makeText(CSInjection3.this, "An SQL Error occured",
-					Toast.LENGTH_SHORT);
+			Toast error = Toast.makeText(CSInjection3.this,
+					"An database error occurred.", Toast.LENGTH_LONG);
 			error.show();
 		}
 

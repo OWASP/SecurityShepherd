@@ -24,6 +24,9 @@ public class UDataLeakage extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		logDetails("The Key is: SilentButSteadyRedLed");
+		
 		setContentView(R.layout.activity_unintended__data__leakage);
 	
 

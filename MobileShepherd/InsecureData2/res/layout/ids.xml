@@ -57,6 +57,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="34dp"
                         android:text="@string/login"
+                        android:filterTouchesWhenObscured="true"
                         android:background="@drawable/button" />
                   
                 </RelativeLayout>

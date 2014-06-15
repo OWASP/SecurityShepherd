@@ -42,7 +42,7 @@ public class Insecure_Data_Storage3 extends Activity {
 			// assets members.db -> /databases/
 
 			try {
-				copyDatabase(getBaseContext().getAssets().open("Members"),
+				copyDatabase(getBaseContext().getAssets().open("PasswordDB"),
 						new FileOutputStream(destinationPath));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

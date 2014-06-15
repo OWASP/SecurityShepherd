@@ -51,6 +51,7 @@
                         android:layout_below="@+id/etPass"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="42dp"
+                        android:filterTouchesWhenObscured="true"
                         android:background="@drawable/button"
                         android:text="@string/login" />
                   

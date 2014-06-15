@@ -3,7 +3,6 @@ package com.app.mobshep;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +33,6 @@ public class template extends Activity implements OnClickListener {
 
 		referenceXML(); // Link up Java -> XML references + declare
 						// onClickListeners.
-		checkDevice();
 
 		th.setup();
 
@@ -59,16 +57,6 @@ public class template extends Activity implements OnClickListener {
 		key = (EditText) findViewById(R.id.etKey);
 		Login.setOnClickListener(this);
 		Config.setOnClickListener(this);
-	}
-
-	public void checkDevice() {
-		if (Build.BRAND.equalsIgnoreCase("generic")
-				|| Build.BOARD.equalsIgnoreCase("sdk")) {
-			Toast tamper = Toast.makeText(template.this,
-					"This App has been tampered with.", Toast.LENGTH_LONG);
-			tamper.show();
-
-		}
 	}
 
 	public void onClick(View arg0) {

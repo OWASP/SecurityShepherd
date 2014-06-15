@@ -5,8 +5,6 @@ import java.io.IOException;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -26,24 +24,13 @@ public class CSInjection2 extends Activity implements OnClickListener {
 	EditText username;
 	EditText password;
 	EditText key;
-	String dbPassword="P93Eid3D33DE0ZanbffGpo101Sirjw2";
-	
-	
-	private static final int MY_NOTIFICATION_ID = 1;
-
-	private int mNotificationCount;
-
-	private final CharSequence tickerText = "Challenge complete, get the key and submit it!";
-	private final CharSequence contentTitle = "Success!";
-	private final CharSequence contentText = "Client Side Injection Challenge Complete!";
-	private long[] vibrate = { 0, 200, 200, 300 };
-
+	String dbPassword = "P93Eid3D33DE0ZanbffGpo101Sirjw2";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.broken);
+		setContentView(R.layout.csi);
 		th = (TabHost) findViewById(R.id.tabhost);
 		populateTable(this, dbPassword);
 		referenceXML();
@@ -60,8 +47,6 @@ public class CSInjection2 extends Activity implements OnClickListener {
 		th.addTab(specs);
 	}
 
-
-
 	private void referenceXML() {
 		// TODO Auto-generated method stub
 		Login = (Button) findViewById(R.id.bLogin);
@@ -76,14 +61,11 @@ public class CSInjection2 extends Activity implements OnClickListener {
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 
-case (R.id.bLogin):
-			
-	
-	
-	
+		case (R.id.bLogin):
+
 			String unsanitizeName = username.getText().toString();
 			String unsanitizePass = password.getText().toString();
-			
+
 			String sanitizeName = unsanitizeName.replace("OR", "/* */");
 			sanitizeName = sanitizeName.replace("or", "/* */");
 			sanitizeName = sanitizeName.replace("SELECT", "/* */");
@@ -92,8 +74,7 @@ case (R.id.bLogin):
 			sanitizeName = sanitizeName.replace("DROP", "/* */");
 			sanitizeName = sanitizeName.replace("1=1", "/* */");
 			sanitizeName = sanitizeName.replace("1 = 1", "/* */");
-			
-			
+
 			String sanitizePass = unsanitizePass.replace("OR", "/* */");
 			sanitizePass = sanitizePass.replace("or", "/* */");
 			sanitizePass = sanitizePass.replace("SELECT", "/* */");
@@ -102,40 +83,35 @@ case (R.id.bLogin):
 			sanitizePass = sanitizePass.replace("DROP", "/* */");
 			sanitizePass = sanitizePass.replace("1=1", "/* */");
 			sanitizePass = sanitizePass.replace("1 = 1", "/* */");
-			
-			if (login(sanitizeName, sanitizePass) == true) {
-				key.setText("The Key is: SourHatsAndAngryCats.");
-				Toast toast = Toast.makeText(CSInjection2.this, "Logged in as:" + sanitizeName,
-						Toast.LENGTH_LONG);
-				toast.show();
-				
-				Notification.Builder notificationBuilder = new Notification.Builder(
-						getApplicationContext())
-						.setTicker(tickerText)
-						.setSmallIcon(R.drawable.ic_launcher)
-						.setAutoCancel(true)
-						.setContentTitle(contentTitle)
-						.setContentText(
-								contentText + " (" + ++mNotificationCount
-										+ ")").setVibrate(vibrate);
 
-				// Pass the Notification to the NotificationManager:
-				NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				mNotificationManager.notify(MY_NOTIFICATION_ID,
-						notificationBuilder.build());
+			try {
+				if (login(sanitizeName, sanitizePass) == true) {
+					key.setText("The Key is: SourHatsAndAngryCats.");
+					Toast toast = Toast.makeText(CSInjection2.this,
+							"Logged in as:" + sanitizeName, Toast.LENGTH_LONG);
+					toast.show();
 
-				
-				
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (login(sanitizeName, sanitizePass) == false) {
-				Toast toast = Toast.makeText(CSInjection2.this,
-						"Invalid Credentials, " + sanitizeName, Toast.LENGTH_LONG);
-				toast.show();
+			try {
+				if (login(sanitizeName, sanitizePass) == false) {
+					Toast toast = Toast.makeText(CSInjection2.this,
+							"Invalid Credentials, " + sanitizeName,
+							Toast.LENGTH_LONG);
+					toast.show();
 
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (sanitizeName.contentEquals("") || sanitizePass.contentEquals("")) {
+			if (sanitizeName.contentEquals("")
+					|| sanitizePass.contentEquals("")) {
 				Toast toast2 = Toast.makeText(CSInjection2.this,
 						"Empty Fields Detected.", Toast.LENGTH_SHORT);
 				toast2.show();
@@ -143,41 +119,33 @@ case (R.id.bLogin):
 			}
 
 		}
-	
+
 	}
 
-	private boolean login(String username, String password) {
-	
-		
-		try{
+	private boolean login(String username, String password) throws IOException {
+
+		try {
 			String dbPath = this.getDatabasePath("Users.db").getPath();
 
-			try{
-				
-			
-			SQLiteDatabase db = SQLiteDatabase.openDatabase(dbPath, dbPassword, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
+					dbPassword, null);
 
-			String query = ("SELECT * FROM Users WHERE memName = '"
-					+ username + "' AND memPass ='" + password + "'");
+			String query = ("SELECT * FROM Users WHERE memName='" + username
+					+ "' AND memPass = '" + password + "';");
+
 			Cursor cursor = db.rawQuery(query, null);
-			
-			if (cursor.getCount() <= 0) {
-				return false;
+			if (cursor != null) {
+				if (cursor.getCount() <= 0) {
+					return false;
+
+				}
 			}
 
-			
 		} catch (SQLiteException e) {
-			e.printStackTrace();
-			Toast error = Toast.makeText(CSInjection2.this, "An Error occured",
-					Toast.LENGTH_SHORT);
+			Toast error = Toast.makeText(CSInjection2.this,
+					"An database error occurred.", Toast.LENGTH_LONG);
 			error.show();
 		}
-			
-	} catch (SQLiteException e) {
-		Toast error = Toast.makeText(CSInjection2.this,
-				"An database error occurred.", Toast.LENGTH_LONG);
-		error.show();
-	}
 
 		return true;
 
@@ -185,37 +153,35 @@ case (R.id.bLogin):
 
 	public void populateTable(Context context, String dbpassword) {
 		try {
-			
-			try{
-			SQLiteDatabase.loadLibs(context);
 
-			String dbPath = context.getDatabasePath("Users.db").getPath();
+			try {
+				SQLiteDatabase.loadLibs(context);
 
-			File dbPathFile = new File(dbPath);
-			if (!dbPathFile.exists())
-				dbPathFile.getParentFile().mkdirs();
+				String dbPath = context.getDatabasePath("Users.db").getPath();
 
-			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-					dbpassword, null);
+				File dbPathFile = new File(dbPath);
+				if (!dbPathFile.exists())
+					dbPathFile.getParentFile().mkdirs();
 
-			db.execSQL("DROP TABLE IF EXISTS Users");
-			db.execSQL("CREATE TABLE Users(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
+				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
+						dbpassword, null);
 
-			db.execSQL("INSERT INTO Users VALUES( 1,'Admin',20,'49c3a17ad8d8ccd93885e6a28661480d')");
-			db.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+				db.execSQL("DROP TABLE IF EXISTS Users");
+				db.execSQL("CREATE TABLE Users(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
+
+				db.execSQL("INSERT INTO Users VALUES( 1,'Admin',20,'49c3a17ad8d8ccd93885e6a28661480d')");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Toast error = Toast.makeText(CSInjection2.this,
+						"An error occurred.", Toast.LENGTH_LONG);
+				error.show();
+
+			}
+
+		} catch (SQLiteException e) {
 			Toast error = Toast.makeText(CSInjection2.this,
-					"An error occurred.", Toast.LENGTH_LONG);
+					"An database error occurred.", Toast.LENGTH_LONG);
 			error.show();
-
 		}
-		
-		
-	} catch (SQLiteException e) {
-		Toast error = Toast.makeText(CSInjection2.this,
-				"An database error occurred.", Toast.LENGTH_LONG);
-		error.show();
-	}
 	}
 }

@@ -1,4 +1,4 @@
-package com.app.mobshep.RE;
+package com.app.mobshep.RE3;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,7 +22,7 @@ public class Splash extends Activity {
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.app.mobshep.RE.Reverse_Engineering3");
+					Intent gotoMain = new Intent("com.app.mobshep.RE3.Reverse_Engineering3");
 					startActivity(gotoMain);
 				}
 
