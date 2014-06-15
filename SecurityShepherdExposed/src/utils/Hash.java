@@ -41,6 +41,7 @@ public class Hash
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Hash.class);
 	public static String userNameKey = "NsH{[_pLw2Q.3gOz";
+	public static String encryptionKeySalt = "s8@90_>'`uDx,#iA";
 	/**
 	 * Outputs a SHA256 digest
 	 * @param toHash String to hash
@@ -142,7 +143,7 @@ public class Hash
 			{
 				String decryptedUserName = Hash.decrypt(Hash.userNameKey, myCookie.getValue());
 				log.debug("Decrypted UserName: " + decryptedUserName);
-				toReturn = Hash.encrypt(Hash.validateEncryptionKey(decryptedUserName), baseKey);
+				toReturn = Hash.encrypt(Hash.validateEncryptionKey(decryptedUserName), baseKey + encryptionKeySalt);
 				log.debug("Returning: " + toReturn);
 			} 
 			catch (Exception e) 

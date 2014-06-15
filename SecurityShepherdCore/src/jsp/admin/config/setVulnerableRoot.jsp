@@ -49,7 +49,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
 	<h1 class="title">Vulnerable Application Root</h1>
-	Your vulnerable application root can be found in the vulnerable application server's log file. Search the log file for "Servlet root". Challenge Builder Functionailty will not work if this is not set correctly.<br/>
+	Your vulnerable application root can be found in the vulnerable application server's log file. Search the log file for "Servlet root". <br/>
 	An example application root is as follows;<br/><br/>
 	Servlet root = <a>C:\Users\userName\Servers\applicationServers\tomcatExposed\temp\1-ROOT</a><br/><br/>
 	Current root = <a><%= encoder.encodeForHTML(ExposedServer.getApplicationRoot()) %></a>

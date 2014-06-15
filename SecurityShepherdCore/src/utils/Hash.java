@@ -14,8 +14,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.log4j.Logger;
 import org.apache.commons.codec.binary.Base64;
 
-import servlets.OneTimePad;
-
 /**
  * Class used for miscellaneous Hash use
  * <br/><br/>
@@ -40,6 +38,7 @@ public class Hash
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Hash.class);
 	public static String userNameKey = "NsH{[_pLw2Q.3gOz";
+	public static String encryptionKeySalt = "s8@90_>'`uDx,#iA";
 	/**
 	 * Outputs a SHA256 digest
 	 * @param toHash String to hash
@@ -175,7 +174,7 @@ public class Hash
 		String toReturn = "Key Should be here! Please refresh the home page and try again!";
 			try 
 			{
-				toReturn = Hash.encrypt(key, baseKey);
+				toReturn = Hash.encrypt(key, baseKey + encryptionKeySalt);
 				log.debug("Returning: " + toReturn);
 			} 
 			catch (Exception e) 

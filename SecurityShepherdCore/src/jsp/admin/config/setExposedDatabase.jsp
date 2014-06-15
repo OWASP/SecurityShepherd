@@ -49,6 +49,63 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
 	<h1 class="title">Exposed Database Server Info</h1>
+	
+	<% if (ExposedServer.getApplicationRoot().isEmpty()) { %>
+	For the core application server to modify the exposed database settings, you must set the exposed application running context, called the Vulnerable Root. Your vulnerable application root can be found in the vulnerable application server's log file. Search the log file for "Servlet root". <br/>
+	An example application root is as follows;<br/><br/>
+	Servlet root = <a>C:\Users\userName\Servers\applicationServers\tomcatExposed\temp\1-ROOT</a><br/><br/>
+	Current root = <a><%= encoder.encodeForHTML(ExposedServer.getApplicationRoot()) %></a>
+	<br/>
+	<br/>
+	<div id="badData" style="display: none;"></div>
+	<div id="theStep">
+	<form action="javascript:;" id="leForm">
+	Vulnerable Application Root <input type="text" id="vAppRoot" style="width: 300px;"/><input type="submit" id="submitButton" value="Set Vulnerable Application Root"/>
+	<div id="loadingSign" style="display: none;"><p>Loading...</p></div>
+	</form>
+	</div>
+	<script>
+	$("#leForm").submit(function(){
+		$("#badData").hide("fast");
+		var applicationRoot = $("#vAppRoot").val();
+		if(applicationRoot.length > 8)
+		{
+			$("#submitButton").hide("fast");
+			$("#loadingSign").show("slow", function(){
+				var ajaxCall = $.ajax({
+					dataType: "text",
+					type: "POST",
+					url: "changeVulnerableAppRoot",
+					data: {
+						vulnerableApplicationRoot: applicationRoot,
+						csrfToken: "<%= csrfToken %>"
+					},
+					async: false
+				});
+				$("#theStep").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						$("#theStep").html(ajaxCall.responseText);
+					}
+					else
+					{
+						$("#badData").html("<p> An Error Occured: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#badData").show("slow");
+					}
+				});
+				$("#loadingSign").hide("fast", function(){
+					$("#theStep").show("slow");
+				});
+			});
+		}
+		else
+		{
+			$("#badData").html("<font color='red'>Invalid Application Root. Too Short.</font>");
+			$("#badData").show("slow");
+		}
+	});
+	</script>
+	<% } else {%>
 	If you are using a non-standard database configuration for Security Shepherd, you will need to specify the following information for your exposed database.
 	The core database and exposed databases are normally seperated to seperate database servser to minimise any potential attacks on the core server data. 
 	If you run both schemas on the same database server you will still be secure, unless a custom level has been added that exposed your entire database to takeover! Database seperation is recommended.
@@ -106,6 +163,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 		});
 	});
 	</script>
+	<% } %>
 	<% if(ExposedServer.googleAnalyticsOn) { %>
 				<%= ExposedServer.googleAnalyticsScript %>
 			<% } %>
