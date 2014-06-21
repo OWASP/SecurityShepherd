@@ -34,6 +34,7 @@ public class CSInjection extends Activity implements OnClickListener {
 		setContentView(R.layout.csi);
 		th = (TabHost) findViewById(R.id.tabhost);
 		populateTable(this, "dbPass");
+		generateKey(this, "dbPass");
 		referenceXML();
 		th.setup();
 
@@ -69,16 +70,15 @@ public class CSInjection extends Activity implements OnClickListener {
 
 			try {
 				if (login(CheckName, CheckPass) == true) {
-					key.setText("The Key is: VolcanicEruptionsAbruptInterruptions.");
-					Toast toast = Toast.makeText(CSInjection.this, "Logged in!",
-							Toast.LENGTH_LONG);
+					outputKey(this, dbPass);
+					Toast toast = Toast.makeText(CSInjection.this,
+							"Logged in!", Toast.LENGTH_LONG);
 					toast.show();
-
 
 				}
 			} catch (IOException e1) {
-				Toast toast = Toast.makeText(CSInjection.this, "An error occurred!",
-						Toast.LENGTH_LONG);
+				Toast toast = Toast.makeText(CSInjection.this,
+						"An error occurred!", Toast.LENGTH_LONG);
 				toast.show();
 			}
 
@@ -100,14 +100,6 @@ public class CSInjection extends Activity implements OnClickListener {
 				toast2.show();
 
 			}
-
-			else {
-
-				Toast toast = Toast.makeText(CSInjection.this,
-						"Invalid Credentials!", Toast.LENGTH_SHORT);
-				toast.show();
-
-			}
 		}
 	}
 
@@ -118,18 +110,17 @@ public class CSInjection extends Activity implements OnClickListener {
 
 			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
 					dbPass, null);
-			
-			
-			String query = ("SELECT * FROM MEMBERS WHERE memName='" + username + "' AND memPass = '" + password + "';" );
-			
+
+			String query = ("SELECT * FROM MEMBERS WHERE memName='" + username
+					+ "' AND memPass = '" + password + "';");
+
 			Cursor cursor = db.rawQuery(query, null);
 			if (cursor != null) {
-			if (cursor.getCount() <= 0) {
-				return false;
-			
+				if (cursor.getCount() <= 0) {
+					cursor.close();
+					return false;
+				}
 			}
-			}
-			
 
 		} catch (SQLiteException e) {
 			Toast error = Toast.makeText(CSInjection.this,
@@ -140,8 +131,6 @@ public class CSInjection extends Activity implements OnClickListener {
 		return true;
 
 	}
-	
-	
 
 	public void populateTable(Context context, String password) {
 		try {
@@ -161,6 +150,64 @@ public class CSInjection extends Activity implements OnClickListener {
 				db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
 
 				db.execSQL("INSERT INTO Members VALUES( 1,'Admin',20,'A3B922DF010PQSI827')");
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Toast error = Toast.makeText(CSInjection.this,
+						"An error occurred.", Toast.LENGTH_LONG);
+				error.show();
+
+			}
+
+		} catch (SQLiteException e) {
+			Toast error = Toast.makeText(CSInjection.this,
+					"An database error occurred.", Toast.LENGTH_LONG);
+			error.show();
+		}
+	}
+
+	public void outputKey(Context context, String password) {
+		SQLiteDatabase.loadLibs(context);
+
+		String dbPath = context.getDatabasePath("key.db").getPath();
+
+		SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPass,
+				null);
+
+		String query = ("SELECT * FROM key;");
+
+		Cursor cursor = db.rawQuery(query, null);
+
+		if (cursor != null) {
+
+			try {
+				if (cursor.moveToFirst())
+					key.setText(cursor.getString(0));
+			} finally {
+				cursor.close();
+
+			}
+		}
+	}
+
+	public void generateKey(Context context, String password) {
+		try {
+			try {
+				SQLiteDatabase.loadLibs(context);
+
+				String dbPath = context.getDatabasePath("key.db").getPath();
+
+				File dbPathFile = new File(dbPath);
+				if (!dbPathFile.exists())
+					dbPathFile.getParentFile().mkdirs();
+
+				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
+						dbPass, null);
+
+				db.execSQL("DROP TABLE IF EXISTS key");
+				db.execSQL("CREATE TABLE key(key VARCHAR)");
+
+				db.execSQL("INSERT INTO key VALUES('The Key is VolcanicEruptionsAbruptInterruptions.')");
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

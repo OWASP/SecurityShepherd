@@ -1,13 +1,11 @@
 package com.app.mobshep.IDS;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.FileChannel;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -16,7 +14,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,17 +25,6 @@ public class Insecure_Data_Storage extends Activity {
 	EditText password;
 	EditText username;
 
-	private static final int MY_NOTIFICATION_ID = 1;
-
-	private int mNotificationCount;
-
-	private final CharSequence tickerText = "Login has been disabled due to a vulnerability!";
-	private final CharSequence contentTitle = "Login Disabled!";
-	private final CharSequence contentText = "App contains vulnerability!";
-	private Intent NotificationIntent;
-	private long[] vibrate = { 0, 200, 200, 300 };
-
-	
 	
 	
 	@Override
@@ -49,7 +35,7 @@ public class Insecure_Data_Storage extends Activity {
 		referenceXML();
 		
 	
-		String destinationDir = "/data/data/" +getPackageName() + "/databases";
+		String destinationDir = "/data/data/" +getPackageName() + "/databases/";
 		
 		String destinationPath = destinationDir + "Members";
 		
@@ -70,11 +56,6 @@ public class Insecure_Data_Storage extends Activity {
 			
 		}
 		
-		NotificationIntent = new Intent(getApplicationContext(),
-				Insecure_Data_Storage.class);
-		PendingIntent.getActivity(getApplicationContext(), 0,
-				NotificationIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
-
 
 		login.setOnClickListener(new View.OnClickListener() {
 
@@ -103,23 +84,6 @@ public class Insecure_Data_Storage extends Activity {
 						|| CheckName.contentEquals("Jumper")
 						|| CheckName.contentEquals("99chips")
 						|| CheckName.contentEquals("RegularVeg")) {
-					
-					
-					
-					Notification.Builder notificationBuilder = new Notification.Builder(
-							getApplicationContext())
-							.setTicker(tickerText)
-							.setSmallIcon(R.drawable.ic_launcher)
-							.setAutoCancel(true)
-							.setContentTitle(contentTitle)
-							.setContentText(
-									contentText + " (" + ++mNotificationCount
-											+ ")").setVibrate(vibrate);
-
-					// Pass the Notification to the NotificationManager:
-					NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-					mNotificationManager.notify(MY_NOTIFICATION_ID,
-							notificationBuilder.build());
 
 					
 
@@ -153,8 +117,6 @@ public class Insecure_Data_Storage extends Activity {
 		oStream.close();
 		
 	}
-	
-	
 	
 	public void referenceXML() {
 		login = (Button) findViewById(R.id.bLogin);

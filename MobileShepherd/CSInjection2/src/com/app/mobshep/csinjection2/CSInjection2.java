@@ -35,6 +35,7 @@ public class CSInjection2 extends Activity implements OnClickListener {
 		populateTable(this, dbPassword);
 		referenceXML();
 		th.setup();
+		generateKey(this, dbPassword);
 
 		TabSpec specs = th.newTabSpec("tag1");
 		specs.setContent(R.id.tab1);
@@ -86,15 +87,16 @@ public class CSInjection2 extends Activity implements OnClickListener {
 
 			try {
 				if (login(sanitizeName, sanitizePass) == true) {
-					key.setText("The Key is: SourHatsAndAngryCats.");
+					outputKey(this, dbPassword);
 					Toast toast = Toast.makeText(CSInjection2.this,
-							"Logged in as:" + sanitizeName, Toast.LENGTH_LONG);
+							"Logged in!", Toast.LENGTH_LONG);
 					toast.show();
 
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (IOException e1) {
+				Toast toast = Toast.makeText(CSInjection2.this,
+						"An error occurred!", Toast.LENGTH_LONG);
+				toast.show();
 			}
 
 			try {
@@ -170,6 +172,64 @@ public class CSInjection2 extends Activity implements OnClickListener {
 				db.execSQL("CREATE TABLE Users(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
 
 				db.execSQL("INSERT INTO Users VALUES( 1,'Admin',20,'49c3a17ad8d8ccd93885e6a28661480d')");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Toast error = Toast.makeText(CSInjection2.this,
+						"An error occurred.", Toast.LENGTH_LONG);
+				error.show();
+
+			}
+
+		} catch (SQLiteException e) {
+			Toast error = Toast.makeText(CSInjection2.this,
+					"An database error occurred.", Toast.LENGTH_LONG);
+			error.show();
+		}
+	}
+	
+	public void outputKey(Context context, String password) {
+		SQLiteDatabase.loadLibs(context);
+
+		String dbPath = context.getDatabasePath("key.db").getPath();
+
+		SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPassword,
+				null);
+
+		String query = ("SELECT * FROM key;");
+
+		Cursor cursor = db.rawQuery(query, null);
+
+		if (cursor != null) {
+
+			try {
+				if (cursor.moveToFirst())
+					key.setText(cursor.getString(0));
+			} finally {
+				cursor.close();
+
+			}
+		}
+	}
+	
+	public void generateKey(Context context, String password) {
+		try {
+			try {
+				SQLiteDatabase.loadLibs(context);
+
+				String dbPath = context.getDatabasePath("key.db").getPath();
+
+				File dbPathFile = new File(dbPath);
+				if (!dbPathFile.exists())
+					dbPathFile.getParentFile().mkdirs();
+
+				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
+						dbPassword, null);
+
+				db.execSQL("DROP TABLE IF EXISTS key");
+				db.execSQL("CREATE TABLE key(key VARCHAR)");
+
+				db.execSQL("INSERT INTO key VALUES('The Key is SourHatsAndAngryCats.')");
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				Toast error = Toast.makeText(CSInjection2.this,

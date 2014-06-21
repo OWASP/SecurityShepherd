@@ -30,7 +30,7 @@ public class Insecure_Data_Storage3 extends Activity {
 		setContentView(R.layout.ids);
 		referenceXML();
 
-		String destinationDir = "/data/data/" + getPackageName() + "/databases";
+		String destinationDir = "/data/data/" + getPackageName() + "/databases/";
 
 		String destinationPath = destinationDir + "PasswordDB";
 
