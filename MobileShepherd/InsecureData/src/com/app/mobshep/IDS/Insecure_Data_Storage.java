@@ -8,11 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +19,6 @@ public class Insecure_Data_Storage extends Activity {
 	Button login;
 	EditText password;
 	EditText username;
-
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +27,6 @@ public class Insecure_Data_Storage extends Activity {
 		setContentView(R.layout.ids);
 		referenceXML();
 		
-	
 		String destinationDir = "/data/data/" +getPackageName() + "/databases/";
 		
 		String destinationPath = destinationDir + "Members";

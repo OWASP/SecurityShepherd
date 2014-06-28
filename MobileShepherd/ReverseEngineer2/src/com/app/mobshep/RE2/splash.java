@@ -22,7 +22,7 @@ public class splash extends Activity {
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.app.mobshep.RE2.Reverse_Engineering2");
+					Intent gotoMain = new Intent("com.app.mobshep.RE2.Triangle");
 					startActivity(gotoMain);
 				}
 

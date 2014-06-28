@@ -857,8 +857,6 @@ android.support.v4.widget.ViewDragHelper$2
 android.support.v4.widget.ViewDragHelper$Callback:
     148:148:public ViewDragHelper$Callback()
 com.app.mobshep.IDS.BuildConfig
-com.app.mobshep.IDS.Insecure_Data_Storage:
-    private static final int MY_NOTIFICATION_ID
 com.app.mobshep.IDS.R
 com.app.mobshep.IDS.R$attr
 com.app.mobshep.IDS.R$dimen

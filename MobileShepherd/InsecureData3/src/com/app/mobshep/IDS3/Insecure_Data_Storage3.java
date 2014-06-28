@@ -39,7 +39,6 @@ public class Insecure_Data_Storage3 extends Activity {
 		if (!f.exists()) {
 			File directory = new File(destinationDir);
 			directory.mkdirs();
-			// assets members.db -> /databases/
 
 			try {
 				copyDatabase(getBaseContext().getAssets().open("PasswordDB"),
@@ -62,9 +61,6 @@ public class Insecure_Data_Storage3 extends Activity {
 
 				String CheckName = username.getText().toString();
 				String CheckPass = password.getText().toString();
-
-				DatabaseUtils.sqlEscapeString(CheckName);
-				DatabaseUtils.sqlEscapeString(CheckPass);
 
 				if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
 					Toast toast2 = Toast.makeText(Insecure_Data_Storage3.this,

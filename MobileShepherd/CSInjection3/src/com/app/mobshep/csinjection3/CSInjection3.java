@@ -119,13 +119,6 @@ public class CSInjection3 extends Activity implements OnClickListener {
 
 			}
 
-			else {
-
-				Toast toast = Toast.makeText(CSInjection3.this,
-						"Invalid Credentials, " + sanitizeName,
-						Toast.LENGTH_SHORT);
-				toast.show();
-			}
 		}
 	}
 

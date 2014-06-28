@@ -15,10 +15,10 @@
         android:theme="@style/AppTheme" >
        
                <activity
-            android:name="com.app.mobshep.RE2.Reverse_Engineering2"
+            android:name="com.app.mobshep.RE2.Triangle"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="com.app.mobshep.RE2.Reverse_Engineering2" />
+                <action android:name="com.app.mobshep.RE2.Triangle" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

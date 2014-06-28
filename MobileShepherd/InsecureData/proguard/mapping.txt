@@ -1250,21 +1250,9 @@ com.app.mobshep.IDS.Insecure_Data_Storage -> com.app.mobshep.IDS.Insecure_Data_S
     android.widget.Button login -> a
     android.widget.EditText password -> b
     android.widget.EditText username -> c
-    int mNotificationCount -> d
-    java.lang.CharSequence tickerText -> e
-    java.lang.CharSequence contentTitle -> f
-    java.lang.CharSequence contentText -> g
-    android.content.Intent NotificationIntent -> h
-    long[] vibrate -> i
     void onCreate(android.os.Bundle) -> onCreate
     void copyDatabase(java.io.InputStream,java.io.OutputStream) -> a
     void referenceXML() -> a
-    java.lang.CharSequence access$0(com.app.mobshep.IDS.Insecure_Data_Storage) -> a
-    java.lang.CharSequence access$1(com.app.mobshep.IDS.Insecure_Data_Storage) -> b
-    java.lang.CharSequence access$2(com.app.mobshep.IDS.Insecure_Data_Storage) -> c
-    int access$3(com.app.mobshep.IDS.Insecure_Data_Storage) -> d
-    void access$4(com.app.mobshep.IDS.Insecure_Data_Storage,int) -> a
-    long[] access$5(com.app.mobshep.IDS.Insecure_Data_Storage) -> e
 com.app.mobshep.IDS.Insecure_Data_Storage$1 -> com.app.mobshep.IDS.a:
     com.app.mobshep.IDS.Insecure_Data_Storage this$0 -> a
     void onClick(android.view.View) -> onClick

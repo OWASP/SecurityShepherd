@@ -9,19 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TabHost;
 import android.widget.Toast;
-import android.widget.TabHost.TabSpec;
 
 public class Insecure_Data_Storage2 extends Activity {
 
@@ -31,9 +24,6 @@ public class Insecure_Data_Storage2 extends Activity {
 	EditText password;
 	EditText username;
 
-private static final int MY_NOTIFICATION_ID = 1;
-	
-	private int mNotificationCount;
 
 
 	@Override
@@ -77,10 +67,6 @@ private static final int MY_NOTIFICATION_ID = 1;
 
 				String CheckName = username.getText().toString();
 				String CheckPass = password.getText().toString();
-
-				DatabaseUtils.sqlEscapeString(CheckName);
-				DatabaseUtils.sqlEscapeString(CheckPass);
-				
 				
 				
 				if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
