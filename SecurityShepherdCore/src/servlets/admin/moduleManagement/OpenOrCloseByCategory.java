@@ -27,7 +27,7 @@ public class OpenOrCloseByCategory extends HttpServlet
 	 * Controller class used to specify what modules to mark as closed/open
 	 * @param toOpen Array of moduleId's to open
 	 * @param toClose Array of moduleId's to close
-	 * @param csrfToken The csrf protection token for this funciton
+	 * @param csrfToken The csrf protection token for this function
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -65,7 +65,7 @@ public class OpenOrCloseByCategory extends HttpServlet
 					if(openOrClose.equalsIgnoreCase("open"))
 						htmlOutput += "<p>The categories selected have been opened and are now available to users to access.</p>";
 					else
-						htmlOutput += "<p>The categories selected have been closed and are no longer available for useres to access or submit solutions for.</p>";
+						htmlOutput += "<p>The categories selected have been closed and are no longer available for users to access or submit solutions for.</p>";
 				}
 				else
 				{

@@ -58,7 +58,7 @@ public class SessionManagement1 extends HttpServlet
 		{
 			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 			ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-			//Attempting to recover username of session that made request
+			//Attempting to recover user name of session that made request
 			try
 			{
 				if (request.getSession() != null)
@@ -71,7 +71,7 @@ public class SessionManagement1 extends HttpServlet
 			catch (Exception e)
 			{
 				log.debug(levelName + " Servlet Accessed");
-				log.error("Could not retrieve username from session");
+				log.error("Could not retrieve user name from session");
 			}
 			Cookie userCookies[] = request.getCookies();
 			int i = 0;
@@ -123,16 +123,16 @@ public class SessionManagement1 extends HttpServlet
 				{
 					htmlOutput = "<h2 class='title'>HACK DETECTED</h2>" +
 							"<p>" +
-							"A possible attack has been detected. Functionality Stoped before any damage was done" +
+							"A possible attack has been detected. Functionality Stopped before any damage was done" +
 							"</p>";
 				}
 			}
-			log.debug("Outputing HTML");
+			log.debug("Outputting HTML");
 			out.write(htmlOutput);
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

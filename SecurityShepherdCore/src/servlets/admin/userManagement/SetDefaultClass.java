@@ -113,7 +113,7 @@ public class SetDefaultClass extends HttpServlet
 					log.error("SetDefaultClass Error: " + e.toString());
 					out.print("<h2 class=\"title\">Set Default Class Failure</h2><br>" +
 							"<p>" +
-							"<font color=\"red\">An error occured! Please try again.</font>" +
+							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
 				}
 			}
@@ -122,7 +122,7 @@ public class SetDefaultClass extends HttpServlet
 				log.debug("CSRF Tokens did not match");
 				out.print("<h2 class=\"title\">Player Assignment Failure</h2><br>" +
 						"<p>" +
-						"<font color=\"red\">An error occured! Please try again.</font>" +
+						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"<p>");
 			}
 		}
@@ -130,7 +130,7 @@ public class SetDefaultClass extends HttpServlet
 		{
 			out.print("<h2 class=\"title\">Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! Please try non administrator functions!</font>" +
+					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");
 		}
 		log.debug("*** SetDefaultClass END ***");

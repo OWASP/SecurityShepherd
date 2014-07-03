@@ -95,7 +95,7 @@ public class XssFilter
 	}
 	
 	/**
-	 * Encodes for HTML, but doesnt escape ambersands
+	 * Encodes for HTML, but doesn't escape ampersands
 	 * @param input
 	 * @return
 	 */
@@ -104,14 +104,14 @@ public class XssFilter
 		log.debug("Filtering input at XSS white list");
 		Encoder encoder = ESAPI.encoder();
 		input = encoder.encodeForHTML(input);
-		//Unencode a few things to open security holes
+		//Decode a few things to open security holes
 		input = input.replaceAll("&amp;", "&").replaceFirst("&quot;", "\"").replaceAll("&#x23;", "#").replaceFirst("&#x3d;", "=").replaceAll("&#x3b;", ";");
-		//Encode lowercase "on" and upercase "on" to complicate the required attack vectors to pass
+		//Encode lower-case "on" and upper-case "on" to complicate the required attack vectors to pass
 		return input.replaceAll("on", "&#x6f;&#x6e;").replaceAll("ON", "&#x4f;&#x4e;");
 	}
 	
 	/**
-	 * Whitelists for specific URL types but doesnt sanitise it well
+	 * White lists for specific URL types but doesn't sanitise it well
 	 * @param input
 	 * @return
 	 */
@@ -134,7 +134,7 @@ public class XssFilter
 		}
 		else
 		{
-			log.debug("Was not a HTTP url");
+			log.debug("Was not a HTTP URL");
 			input = howToMakeAUrlUrl;
 		}
 		return input;
@@ -159,7 +159,7 @@ public class XssFilter
 		}
 		else
 		{
-			log.debug("Was not a HTTP url");
+			log.debug("Was not a HTTP URL");
 			input = howToMakeAUrlUrl;
 		}
 		return input;

@@ -80,13 +80,13 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 					is the token that is tested. If a request does not contain a nonce at all, 
 					then it is likely vulnerable to CSRF attacks. If a request does contain a nonce, 
 					then there are more steps to include in testing for CSRF. Even though the nonce 
-					is in the request, it may not be checked, and may work with a null value. 
+					is in the request it may not be validated or may work with a null value. 
 					It is possible that the applications nonce management will allow an attack to use 
 					their valid nonce in other user requests!
 					<br />
 					<br />
 					HTTP requests can be sent using JavaScript. Requests that are sent this way include a 
-					"X-Requested-With" header. If this is checked for incoming requests, this can serve as 
+					"X-Requested-With" HTTP header. If this is checked for on incoming requests, this can serve as 
 					CSRF protection without a nonce value. This header cannot be replicated from a remote domain, 
 					due to the <a>Same Origin Policy</a>, preventing an attacker from delivering the attack remotely. 
 					It is not advised to use this as a sole CSRF protection model, as browser issues are commonly found that 

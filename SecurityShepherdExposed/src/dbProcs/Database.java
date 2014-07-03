@@ -39,13 +39,13 @@ public class Database
 	   Connection conn = null;
 	   try
 	   {
-		   //Pull Driver and DB Url out of exposedDatabase.properties
+		   //Pull Driver and DB URL out of exposedDatabase.properties
 		   String props = ApplicationRoot+"/WEB-INF/exposedDatabase.properties";
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
-		   //Pull Schema, Username and Password from SqlInjLesson.properties
+		   //Pull Schema, User name and Password from SqlInjLesson.properties
 		   props = ApplicationRoot+"/WEB-INF/lessons/SqlInjLesson.properties";
 		   
 		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
@@ -63,7 +63,7 @@ public class Database
 	}
 	
 	/**
-	 * This method is used by the application to get a connection to the secure database sever based on the inputted path to a specific properties file.
+	 * This method is used by the application to get a connection to the secure database sever based on the input path to a specific properties file.
 	 * @param ApplicationRoot The running context of the application.
 	 * @param path The path to the properties file to use for this connection. this is filtered for path traversal attacks
 	 * @return A connection to the secure database server
@@ -76,13 +76,13 @@ public class Database
 		Connection conn = null;
 		try
 		{
-		   //Pull Driver and DB Url out of exposedDatabase.properties
+		   //Pull Driver and DB URL out of exposedDatabase.properties
 		   String props = ApplicationRoot+"/WEB-INF/exposedDatabase.properties";
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
-		   //Pull DB Schema, Schema Username and Schema Password from level specific properties File
+		   //Pull DB Schema, Schema User name and Schema Password from level specific properties File
 		   props = ApplicationRoot+"/WEB-INF/challenges/" + path + ".properties";
 		   log.debug("Level Properties File = " + path + ".properties");
 		   //Add DB Schema to the end of the connectionURL

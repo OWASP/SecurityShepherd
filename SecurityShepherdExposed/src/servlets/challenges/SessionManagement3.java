@@ -48,7 +48,7 @@ public class SessionManagement3 extends HttpServlet
 	private static String levelHash = "t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3";
 	private static String levelResult = "e62008dc47f5eb065229d48963";
 	/**
-	 * Users must use this functionality to sign in as an administrator to retrieve the result key. If the user name is valid but not the passwor, an error message with the username is returned.
+	 * Users must use this functionality to sign in as an administrator to retrieve the result key. If the user name is valid but not the passwor, an error message with the user name is returned.
 	 * @param userName Sub schema user name
 	 * @param password Sub schema user password
 	 */
@@ -57,7 +57,7 @@ public class SessionManagement3 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -70,7 +70,7 @@ public class SessionManagement3 extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -100,10 +100,10 @@ public class SessionManagement3 extends HttpServlet
 			log.debug("Checking credentials");
 			PreparedStatement callstmt;
 			
-			log.debug("Commiting changes made to database");
+			log.debug("Committing changes made to database");
 			callstmt = conn.prepareStatement("COMMIT");
 			callstmt.execute();
-			log.debug("Changes commited.");
+			log.debug("Changes committed.");
 			
 			callstmt = conn.prepareStatement("SELECT userName, userAddress, userRole FROM users WHERE userName = ?");
 			callstmt.setString(1, subName);
@@ -149,16 +149,16 @@ public class SessionManagement3 extends HttpServlet
 			}
 			else
 			{
-				userAddress = "Username not found.<br/>";
+				userAddress = "User name not found.<br/>";
 				htmlOutput = htmlStart + userAddress + htmlEnd;
 			}
 			Database.closeConnection(conn);
-			log.debug("Outputing HTML");
+			log.debug("Outputting HTML");
 			out.write(htmlOutput);
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

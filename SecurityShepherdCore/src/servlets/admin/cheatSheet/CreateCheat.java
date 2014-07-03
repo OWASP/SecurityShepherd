@@ -80,7 +80,7 @@ public class CreateCheat extends HttpServlet
 					if(moduleCheck != null)
 					{
 						if(!Setter.updateCheatSheet(ApplicationRoot, moduleId, encoder.encodeForHTML(newSolution)))
-							errorMessage = "A database level error occured. Please contact your administrator";
+							errorMessage = "A database level error occurred. Please contact your administrator";
 					}
 					else
 					{

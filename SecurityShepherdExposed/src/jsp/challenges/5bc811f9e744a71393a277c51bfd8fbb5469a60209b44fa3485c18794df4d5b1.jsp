@@ -58,81 +58,17 @@
 	<div id="contentDiv">
 		<h2 class="title"><%=levelName%></h2>
 		<p>
-			<%
-				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
-			%>
-
 			<%=levelBlurb%>
-			<br /> When an attacker reverse engineers an APK, they usually have
-			multiple <a>packages</a> containing multiple <a>activities</a>
+			<br /> When an attacker reverse engineers an APK, they usually find
+			multiple <a>packages</a> containing multiple <a>activities</a>, 
 			containing multiple <a>methods</a> which have all been obfuscated to
-			crawl through. The key has been hard coded into this APK. To get to
+			crawl through. The key for this challenge has been hard coded into the APK for this challenge. To get to
 			the key reverse engineer the APK and find the correct Activity which
 			performs a conditional statement to check the validity of the key. <br />
 			<br/>
 			<%= Analytics.getMobileLevelBlurb("ReverseEngineer2.apk") %>
-			<%
-				/* IF you need a form - Present it like this */
-			%>
-			<%
-				/*
-				<br />
-				<br />
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>			
-						<div id="submitButton">
-						<input type="submit" value="Get Info"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
-					</td></tr>
-					</table>
-				</form>
-				
-				<div id="resultsDiv"></div>
-				 */
-			%>
 		</p>
 	</div>
-	<%
-		/*If you need to call the Server Do it like this */
-	%>
-	<%
-		/*
-		<script>
-			$("#leForm").submit(function(){
-				var theVariableName = $("#variableName").val();
-				var theSecondVariableName = $("#secondVariableName").val();
-				$("#submitButton").hide("fast");
-				$("#loadingSign").show("slow");
-				$("#resultsDiv").hide("slow", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "<ChangeThis= levelHash ChangeThis>",
-						data: {
-							variableName: theVariableName, 
-							secondVariableName: theSecondVariableName
-						},
-						async: false
-					});
-					if(ajaxCall.status == 200)
-					{
-						$("#resultsDiv").html(ajaxCall.responseText);
-					}
-					else
-					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-					}
-					$("#resultsDiv").show("slow", function(){
-						$("#loadingSign").hide("fast", function(){
-							$("#submitButton").show("slow");
-						});
-					});
-				});
-			});
-		</script>
-		 */
-	%>
 	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

@@ -22,14 +22,14 @@ package utils;
  */
 public class ExposedServer 
 {
-	private static String url = "https://owasp.securityshepherd.eu/Exposed/";
-	private static String coreProtocol = "https";
+	private static String url = "http://127.0.0.1/Exposed/";
+	private static String coreProtocol = "http";
 	private static String applicationRoot = "";
-	private static String secureHost = "owasp.securityshepherd";
-	private static String securePort = "80";
-	private static String secureUrl = "https://owasp.securityshepherd.eu/";
+	private static String secureHost = "127.0.0.1";
+	private static String securePort = "";
+	private static String secureUrl = "http://127.0.0.1/";
 	private static String broadcastAddress = "";
-	public static boolean googleAnalyticsOn = true;
+	public static boolean googleAnalyticsOn = false;
 	public static String googleAnalyticsScript = "<script>\n" +
 		"(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n" +
 		"(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n" +

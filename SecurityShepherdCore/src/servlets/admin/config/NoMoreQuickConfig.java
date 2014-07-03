@@ -63,14 +63,14 @@ public class NoMoreQuickConfig extends HttpServlet
 			{
 				log.debug("Setting System Configured Flag to True");
 				ConfigurationHelper.setConfiguredFlag(true);
-				out.write("The first time configuration message won't be bothering you anymore.");
+				out.write("The first time configuration message won't be bothering you any more.");
 			}
 			else
 			{
 				log.debug("CSRF tokens did not match");
 				out.print("<h2 class=\"title\">Host Address Update Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! CSRF Tokens did not match.</font>" +
+					"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 					"<p>");
 			}
 		}
@@ -78,7 +78,7 @@ public class NoMoreQuickConfig extends HttpServlet
 		{
 			out.print("<h2 class=\"title\">Unable to Cancel Config Splash</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! Please log in or try non administrator functions!</font>" +
+					"<font color=\"red\">An error Occurred! Please log in or try non administrator functions!</font>" +
 					"<p>");
 		}
 		log.debug("*** servlets.Admin.config.NoMoreQuickConfig END ***");

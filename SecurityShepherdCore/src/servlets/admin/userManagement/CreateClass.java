@@ -47,7 +47,7 @@ public class CreateClass extends HttpServlet
 	 * Initiated by createClass.jsp. Class is added to the system if valid data has been submitted. Otherwise no class is added to the core database schema.
 	 * Adding of class to Core Database is handed by Setter.createClass
 	 * @param className Name of the new class
-	 * @param classyear Class's year, in the format YY/YY, eg 11/12
+	 * @param classYear Class's year, in the format YY/YY, eg 11/12
 	 * @param csrfToken
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -108,7 +108,7 @@ public class CreateClass extends HttpServlet
 						{
 							reponseMessage = "<h2 class=\"title\">Class Create Failure</h2><br>" +
 							"<p>" +
-							"Sorry but an error occured! Please try again. If the problem persists please contact an administrator!" +
+							"Sorry but an error Occurred! Please try again. If the problem persists please contact an administrator!" +
 							"<p>";
 						}
 						out.print(reponseMessage);
@@ -116,7 +116,7 @@ public class CreateClass extends HttpServlet
 					else
 					{
 						//Validation Error Responses
-						String errorMessage = "An Error Occured: ";
+						String errorMessage = "An Error Occurred: ";
 						if(!notNull || !notEmpty)
 						{
 							log.error("Null values detected");
@@ -143,7 +143,7 @@ public class CreateClass extends HttpServlet
 					log.error("Create New Class Error: " + e.toString());
 					out.print("<h2 class=\"title\">Class Create Failure</h2><br>" +
 							"<p>" +
-							"<font color=\"red\">An error occured! Please try again.</font>" +
+							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
 				}
 			}
@@ -152,7 +152,7 @@ public class CreateClass extends HttpServlet
 				log.debug("CSRF tokens did not match");
 				out.print("<h2 class=\"title\">Class Create Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! CSRF Tokens did not match.</font>" +
+					"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 					"<p>");
 			}
 		}
@@ -160,7 +160,7 @@ public class CreateClass extends HttpServlet
 		{
 			out.print("<h2 class=\"title\">Class Create Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! Please try non administrator functions!</font>" +
+					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");
 		}
 		log.debug("*** createClass END ***");

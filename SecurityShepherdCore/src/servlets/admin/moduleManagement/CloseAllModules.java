@@ -25,7 +25,7 @@ public class CloseAllModules extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(CloseAllModules.class);
 	/**
 	 * Control class used to open all modules when called by an administrator
-	 * @param csrfToken The csrf protection token for this funciton
+	 * @param csrfToken The csrf protection token for this function
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -48,7 +48,7 @@ public class CloseAllModules extends HttpServlet
 				String ApplicationRoot = getServletContext().getRealPath("");
 				Setter.closeAllModules(ApplicationRoot);
 				htmlOutput = "<h2 class='title'>All Modules are Now Closed</h2>"
-						+ "<p>All of the Security Shepherd levels are now closd and not available for any user to access or submit solutions for!</p>";
+						+ "<p>All of the Security Shepherd levels are now closed and not available for any user to access or submit solutions for!</p>";
 			}
 			else
 			{

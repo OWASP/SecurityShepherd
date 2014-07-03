@@ -51,7 +51,7 @@ catch (Exception e)
 		<div id="contentDiv">
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
-				To finish this level you must successfully sign in as an administrator.
+				To acquire the result key for this challenge you must successfully sign in as an administrator.
 				<br />
 				<br />
 				<h2>Super Secure Payments</h2>

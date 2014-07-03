@@ -81,14 +81,14 @@ public class CsrfChallengeTwo extends HttpServlet
 						classId = (String)ses.getAttribute("userClass");
 					String htmlOutput = Getter.getCsrfForumWithIframe(ApplicationRoot, classId, moduleId);
 					
-					log.debug("Outputing HTML");
+					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}	

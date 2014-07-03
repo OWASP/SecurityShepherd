@@ -17,7 +17,7 @@ import utils.Hash;
 import utils.ShepherdExposedLogManager;
 
 /**
- * Failure to Restrict URL Access Challenge 1 (Admin)
+ * Failure to Restrict URL Access Challenge 2 (Admin)
  * <br/><br/>
  * This class is the target functionality for the challenge.
  * The information required to find this admin function is 
@@ -48,7 +48,7 @@ public class UrlAccess2Admin extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(UrlAccess2Admin.class);
 	private static String levelResult = "40b675e3d404c52b36abe31d05842b283975ec62e8"; 
 	private static String levelHash = "278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa";
-	private static String levelName = "Url Access 2 (Admin)";
+	private static String levelName = "URL Access 2 (Admin)";
 	/**
 	 * Users have to defeat SQL injection that blocks single quotes.
 	 * The input they enter is also been filtered.
@@ -60,7 +60,7 @@ public class UrlAccess2Admin extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -73,7 +73,7 @@ public class UrlAccess2Admin extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -84,7 +84,7 @@ public class UrlAccess2Admin extends HttpServlet
 			String userData = request.getParameter("adminData");
 			boolean tamperedRequest = !userData.equalsIgnoreCase("youAreAnAdminOfAwesomenessWoopWoop");
 			if(!tamperedRequest)
-				log.debug("Untampered Request");
+				log.debug("No request tampering detected");
 			else
 				log.debug("User Submitted - " + userData);
 			
@@ -103,10 +103,10 @@ public class UrlAccess2Admin extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
-		log.debug("outputing HTML");
+		log.debug("Outputting HTML");
 		out.write(htmlOutput);
 	}
 }

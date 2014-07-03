@@ -49,7 +49,7 @@ String levelName = "Session Management Challenge Two";
 		<div id="contentDiv">
 			<h2 class="title">Broken Authentication and Session Management Challenge Two</h2>
 			<p> 
-				Only the <a>admin</a> of the following sub-application can retrieve the result key to this challenge.
+				Only an <a>admin</a> of the following sub-application can retrieve the result key to this challenge.
 				<br />
 				<form id="leForm" action="javascript:;">
 					<div id="resultsDiv">
@@ -76,7 +76,7 @@ String levelName = "Session Management Challenge Two";
 				<div id="forgottenPassDiv" style="display: none;">
 					<form id="leForm2" action="javascript:;">
 						<h2 class='title'>Reset Password</h2>
-						<p>Please enter your <a>email address</a>.You will be sent an email with a new temporary password</p>
+						<p>Please enter your <a>email address</a>. You will be sent an email with a new temporary password</p>
 						<table>
 							<tr></td>
 								<div id="resetSubmit"><input id="resetEmail" type="text"/><input type="submit" value="Reset Password"/></div>

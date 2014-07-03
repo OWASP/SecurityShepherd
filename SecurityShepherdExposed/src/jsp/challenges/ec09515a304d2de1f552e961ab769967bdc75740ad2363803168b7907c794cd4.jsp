@@ -55,74 +55,17 @@ catch (Exception e)
 		<div id="contentDiv">
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
-				
-				<%= levelBlurb %>
 				<br/>
-				This App uses a hashing algorithm on stored user credentials. However, there are two issues here, firstly the user is using a <a>bad password</a>. Secondly, the App does <a>not use a salt</a> when hashing the data. The key is the user's password.
+				The App for this challenge uses a hashing algorithm on stored user credentials. However, there are two issues here, firstly the user is using a <a>bad password</a>. Secondly, the App does <a>not use a salt</a> when hashing the data. The result key to this challenge is the user's password.
 
 				<br/>
 				<br/>
 				
 				<%= Analytics.getMobileLevelBlurb("InsecureData2.apk") %>
-				<% /* IF you need a form - Present it like this */ %>
-				<%
-				/*
-				<br />
-				<br />
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>			
-						<div id="submitButton">
-						<input type="submit" value="Get Info"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
-					</td></tr>
-					</table>
-				</form>
 				
-				<div id="resultsDiv"></div>
-				*/
-				%>
 			</p>
 		</div>
-		<% /*If you need to call the Server Do it like this */ %>
-		<%
-		/*
-		<script>
-			$("#leForm").submit(function(){
-				var theVariableName = $("#variableName").val();
-				var theSecondVariableName = $("#secondVariableName").val();
-				$("#submitButton").hide("fast");
-				$("#loadingSign").show("slow");
-				$("#resultsDiv").hide("slow", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "<ChangeThis= levelHash ChangeThis>",
-						data: {
-							variableName: theVariableName, 
-							secondVariableName: theSecondVariableName
-						},
-						async: false
-					});
-					if(ajaxCall.status == 200)
-					{
-						$("#resultsDiv").html(ajaxCall.responseText);
-					}
-					else
-					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-					}
-					$("#resultsDiv").show("slow", function(){
-						$("#loadingSign").hide("fast", function(){
-							$("#submitButton").show("slow");
-						});
-					});
-				});
-			});
-		</script>
-		*/
-		%>
+		
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

@@ -60,7 +60,7 @@ public class SqlInjection4 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -73,7 +73,7 @@ public class SqlInjection4 extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -130,10 +130,10 @@ public class SqlInjection4 extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
-			log.fatal("SQL Injection Challenge 4 - " + e.toString());
+			out.write("An Error Occurred! You must be getting funky!");
+			log.fatal(levelName + " - " + e.toString());
 		}
-		log.debug("outputing HTML");
+		log.debug("Outputting HTML");
 		out.write(htmlOutput);
 	}
 }

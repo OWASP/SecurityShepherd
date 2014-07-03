@@ -48,7 +48,7 @@ public class SolutionSubmit extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SolutionSubmit.class);
 	/**
-	 * Initiated by a dynamic form in index.jsp this method checks the existace of the submitted module identifier before ensuring that the submission is correct
+	 * Initiated by a dynamic form in index.jsp this method checks the existence of the submitted module identifier before ensuring that the submission is correct
 	 * If the submission is found to be valid then the user is returned with a feedback form.
 	 * @param mouleId The identifier of the module that the solution is been submitted for
 	 * @param solutionKey The solution key for the proposed module
@@ -115,7 +115,7 @@ public class SolutionSubmit extends HttpServlet
 							String result = Getter.checkPlayerResult(ApplicationRoot, moduleId, userId);
 							if(result != null)
 							{
-								//If Feedback is enabled, the user must compelte another step. This step is continued in FeedbackSubmit.java
+								//If Feedback is enabled, the user must complete another step. This step is continued in FeedbackSubmit.java
 								if(FeedbackStatus.isEnabled())
 								{
 								log.debug("Returning Feedback Form for module: " + result);
@@ -146,7 +146,7 @@ public class SolutionSubmit extends HttpServlet
 										htmlOutput = new String("Could not update user result");
 										out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
 												"<p><font color=\"red\">" +
-												"Sorry but an error occured!" +
+												"Sorry but an error Occurred!" +
 												"</font></p>");
 									}
 								}
@@ -154,7 +154,7 @@ public class SolutionSubmit extends HttpServlet
 							else
 							{
 								log.debug("Could not update user result");
-								out.write("<h2 class=\"title\">Havn't You Done This Already?</h2><br>" +
+								out.write("<h2 class=\"title\">Haven't You Done This Already?</h2><br>" +
 										"<p>" +
 										"Our records say you have already completed this module! Go try another one!" +
 										"</p>");
@@ -172,7 +172,7 @@ public class SolutionSubmit extends HttpServlet
 					else
 					{
 						//Validation Error Responses
-						String errorMessage = "An Error Occured: ";
+						String errorMessage = "An Error Occurred: ";
 						if(!notNull)
 						{
 							log.error("Null values detected");
@@ -194,7 +194,7 @@ public class SolutionSubmit extends HttpServlet
 					log.error("Solution Submission Error: " + e.toString());
 					out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
 							"<p>" +
-							"<font color=\"red\">An error occured! Please try again.</font>" +
+							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
 				}
 			}
@@ -203,7 +203,7 @@ public class SolutionSubmit extends HttpServlet
 				log.debug("CSRF Tokens did not match");
 				out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
 						"<p>" +
-						"<font color=\"red\">An error occured! Please try again.</font>" +
+						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"<p>");
 			}
 		}
@@ -211,14 +211,14 @@ public class SolutionSubmit extends HttpServlet
 		{
 			out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! Please Log in!</font>" +
+					"<font color=\"red\">An error Occurred! Please Log in!</font>" +
 					"<p>");
 		}
 		log.debug("&&& END SolutionSubmit &&&");
 	}
 	/**
 	 * The method responsible for generating the feedback form based on the valid input submitted  by the user when initiating the doPost() method.
-	 * This data will have to be re-assessed when it is used to submit feedback as the user has an oppertunity to modify the parameters they are sending.
+	 * This data will have to be re-assessed when it is used to submit feedback as the user has an opportunity to modify the parameters they are sending.
 	 * @param moduleId The identifier of the module been completed
 	 * @param csrfToken 
 	 * @param theKey The submitted and valid solution key for the module been completed
@@ -347,7 +347,7 @@ public class SolutionSubmit extends HttpServlet
 	"			}\n" +
 	"			else\n" +
 	"			{\n" +
-	"				$(\"#badData\").html(\"<p> An Error Occured: \" + ajaxCall.status + \" \" + ajaxCall.statusText + \"</p>\");\n" +
+	"				$(\"#badData\").html(\"<p> An Error Occurred: \" + ajaxCall.status + \" \" + ajaxCall.statusText + \"</p>\");\n" +
 	"				$(\"#badData\").show(\"slow\");\n" +
 	"				$(\"#formDiv\").show(\"fast\");\n" +
 	"			}\n" +

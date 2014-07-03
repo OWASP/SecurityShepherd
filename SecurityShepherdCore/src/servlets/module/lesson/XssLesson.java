@@ -48,7 +48,7 @@ extends HttpServlet
 	private static String levelName = "XSS Lesson";
 	private static String levelHash = "zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a";
 	/**
-	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotely deployed, and therfore only is executable against the person initating the funciton.
+	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotely deployed, and therefore only is executable against the person initiating the function.
 	 * @param searchTerm To be spat back out at the user
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -78,7 +78,7 @@ extends HttpServlet
 						log.debug("Completed Module! Module Hash: " + theHash);
 						Encoder encoder = ESAPI.encoder();
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>You successfully executed the javascript alert command!<br />" +
+								"<p>You successfully executed the JavaScript alert command!<br />" +
 								"The result key for this lesson is <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
@@ -90,17 +90,17 @@ extends HttpServlet
 					}
 					log.debug("Adding searchTerm to Html: " + searchTerm);
 					htmlOutput += "<h2 class='title'>Search Results</h2>" +
-						"<p>Sorry but there were no results found that related to " +
+						"<p>Sorry but there were no results found that related to '" +
 						searchTerm +
-						"</p>";
-					log.debug("outputing HTML");
+						"'</p>";
+					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 		log.debug("End of " + levelName + " Servlet");

@@ -52,13 +52,10 @@ catch (Exception e)
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= levelName %></h2>
-			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
-				
-				An administrator of the following sub application would have no issue finding the result key to this level. But considering that you are a meer guest, you will not be shown the simple button administrators can click.
+			<p> 				
+				An administrator of the following sub application would have no issue finding the result key to this level. But considering that you are a mere guest, you will not be shown the simple button administrators can click.
 				<br/>
 				<br/>
-				<% /* IF you need a form - Present it like this */ %>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>			

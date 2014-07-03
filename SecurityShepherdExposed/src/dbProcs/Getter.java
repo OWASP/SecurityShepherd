@@ -57,7 +57,7 @@ public class Getter
 				result[i][1] = encoder.encodeForHTML(resultSet.getString(2));
 				result[i][2] = encoder.encodeForHTML(resultSet.getString(3));
 			}
-			log.debug("Thats All");
+			log.debug("That's All");
 		} 
 		catch (SQLException e)
 		{

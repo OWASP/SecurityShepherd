@@ -65,7 +65,7 @@ public class RedirectLessonTarget extends HttpServlet
 		catch(Exception e)
 		{
 			log.error("RedirectLessonTarget Error: " + e.toString());
-			out.write("You shouldnt be here!");
+			out.write("You shouldn't be here!");
 		}
 	}
 }

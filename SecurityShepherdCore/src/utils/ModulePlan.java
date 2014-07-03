@@ -61,7 +61,4 @@ public class ModulePlan
 	{
 		return tornyFloor;
 	}
-	
-	
-	
 }

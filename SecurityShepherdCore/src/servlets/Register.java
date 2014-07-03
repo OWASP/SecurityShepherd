@@ -158,7 +158,7 @@ public class Register extends HttpServlet
 			catch (Exception e)
 			{
 				log.error("Registration Error: " + e.toString());
-				ses.setAttribute("errorMessage", "An error occured. Please try again");
+				ses.setAttribute("errorMessage", "An error Occurred. Please try again");
 				response.sendRedirect("register.jsp");
 			}
 		}

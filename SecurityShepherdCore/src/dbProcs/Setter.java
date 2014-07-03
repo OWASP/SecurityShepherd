@@ -57,11 +57,11 @@ public class Setter
 		Encoder encoder = ESAPI.encoder();
 		Codec mySql = new MySQLCodec(MySQLCodec.MYSQL_MODE);
 		PreparedStatement prepStat;
-		//Schema Name should be enetered as an mysql escaped string.
+		//Schema Name should be entered as an mysql escaped string.
 		tableName = "tb_" + encoder.encodeForSQL(mySql, tableName);
 		try
 		{
-			log.debug("Prepairing CREATE USER statement");
+			log.debug("Preparing CREATE USER statement");
 			prepStat = conn.prepareStatement("CREATE USER ?@'localhost' IDENTIFIED BY ?;");
 			prepStat.setString(1, userName);
 			prepStat.setString(2, userPass);
@@ -69,14 +69,14 @@ public class Setter
 			prepStat.execute();
 			
 			//AGAIN -- SCHEMA NAME SHOULD BE ESCAPED UPON ENTRY TO THIS METHOD. IF IT ISNT, SQL INJECTION!
-			log.debug("Prepairing GRANT statement for user " + userName);
+			log.debug("Preparing GRANT statement for user " + userName);
 			prepStat = conn.prepareStatement("GRANT SELECT ON " + schemaName + "." +
 					tableName +" TO ?@'localhost';");
 			prepStat.setString(1, userName);
-			log.debug("Exceuting GRANT for SELECT");
+			log.debug("Executing GRANT for SELECT");
 			prepStat.execute();
 			
-			log.debug("COMMITing Changes");
+			log.debug("Committing Changes");
 			prepStat = conn.prepareStatement("COMMIT;");
 			prepStat.execute();
 		}
@@ -89,7 +89,7 @@ public class Setter
 	}
 	
 	/**
-	 * Database procedure just adds this. So this method just prepairs the statement
+	 * Database procedure just adds this. So this method just prepares the statement
 	 * @param ApplicationRoot
 	 * @param className Class name
 	 * @param classYear Year of the class in YY/YY. eg 11/12 
@@ -103,7 +103,7 @@ public class Setter
 		Connection conn = Database.getConnection(ApplicationRoot);
 		try
 		{
-			log.debug("Prepairing classCreate call");
+			log.debug("Preparing classCreate call");
 			CallableStatement callstmnt = conn.prepareCall("call classCreate(?, ?)");
 			callstmnt.setString(1, className);
 			callstmnt.setString(2, classYear);
@@ -122,7 +122,7 @@ public class Setter
 	
 	/**
 	 * Used to create a new module entry in the core database. The database will handle creating the new module identifier and module hash.
-	 * The module has will be returned form the database, and if it does not start will a letter, the applicaiton will update the database to reflect a hash starting with a letter, without safrifising the uniqueness of the hash
+	 * The module has will be returned form the database, and if it does not start will a letter, the application will update the database to reflect a hash starting with a letter, without sacrificing the uniqueness of the hash
 	 * @param applicationRoot The current running context of the application
 	 * @param challengeName The name of the module to create
 	 * @param challengeType The type of module to create
@@ -139,7 +139,7 @@ public class Setter
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleCreate(?, ?, ?, ?, ?)");
-			log.debug("Prepairing moduleCreate procedure");
+			log.debug("Preparing moduleCreate procedure");
 			callstmt.setString(1, challengeName);
 			callstmt.setString(2, challengeType);
 			callstmt.setString(3, challengeCategory);
@@ -194,7 +194,7 @@ public class Setter
 					break;
 				}
 				theHash = firstChar + theHash.substring(1);
-				log.debug("hash Change suggeestion: " + theHash);
+				log.debug("hash Change suggestion: " + theHash);
 				PreparedStatement prepStat = conn.prepareStatement("UPDATE modules SET moduleHash = ? WHERE moduleId = ?");
 				prepStat.setString(1, theHash);
 				prepStat.setString(2, moduleId);
@@ -203,7 +203,7 @@ public class Setter
 			}
 			catch(Exception e)
 			{
-				log.debug("Error Occured: " + e.toString());
+				log.debug("Error Occurred: " + e.toString());
 			}
 			log.debug("moduleHash: " + theHash);
 		}
@@ -246,7 +246,7 @@ public class Setter
 			}
 			log.debug("Creating Challenge Schema: " + schemaName);
 			
-			//Not Parameterising, because parameterising sticks ' around the parameter. Which is invalid syntax for CREATE SCHEMA. So Encoding for Mysql should also prevent SQL injection
+			//Not Parametrising, because parametrising sticks ' around the parameter. Which is invalid syntax for CREATE SCHEMA. So Encoding for Mysql should also prevent SQL injection
 			PreparedStatement prepStat = conn.prepareStatement("CREATE SCHEMA IF NOT EXISTS " + schemaName);
 			log.debug("Preparing Statement... CREATE SCHEMA IF NOT EXISTS " + schemaName);
 			prepStat.execute();
@@ -257,19 +257,19 @@ public class Setter
 			for(int i = 0; i < 5; i++)
 				sql += attrib[i] + " VARCHAR(64) NOT NULL, ";
 			sql += "PRIMARY KEY (id))ENGINE = InnoDB; ";
-			log.debug("Prepairing Execution");
+			log.debug("Preparing Execution");
 			prepStat = conn.prepareStatement(sql);
 			prepStat.execute();
 			log.debug("Table Created");
 			
-			log.debug("Commiting Changes");
+			log.debug("Committing Changes");
 			prepStat = conn.prepareStatement("COMMIT;");
 			prepStat.execute();
 		}
 		catch (SQLException e)
 		{
 			schemaName = null;
-			log.error("Could not create schama: " + e.toString());
+			log.error("Could not create schema: " + e.toString());
 			throw e;
 		}
 		log.debug("*** END Setter.createVulnerableSchema ***");
@@ -277,7 +277,7 @@ public class Setter
 	}
 	
 	/**
-	 * Used to populate the vulnerable schemas table with an array of attribues. This method adds ONE row to a table
+	 * Used to populate the vulnerable schemas table with an array of attributes. This method adds ONE row to a table
 	 * @param conn Connection to the vulnerable database server
 	 * @param schemaName The name of the schema in the vulnerable database server
 	 * @param theTable The name of the table to populate
@@ -289,7 +289,7 @@ public class Setter
 	public static void populateVulnerableSchema(Connection conn, String schemaName, String theTable, String[] data, String[] attrib, int attribAmount)
 	throws SQLException
 	{
-		log.debug("Inputted Parameters;");
+		log.debug("In-putted Parameters;");
 		log.debug("conn: " + conn.toString());
 		log.debug("schemaName: " + schemaName);
 		log.debug("data: " + data.toString());
@@ -320,7 +320,7 @@ public class Setter
 		
 		try
 		{
-			log.debug("Prepaired Statment: " + sql);
+			log.debug("Prepared Statement: " + sql);
 			PreparedStatement prepStat1;
 			if(conn.isClosed())
 			{
@@ -330,7 +330,7 @@ public class Setter
 			log.debug("Adding Row");
 			prepStat1 = conn.prepareStatement(sql);
 			
-			//debug statements and prepare statmenets
+			//debug statements and prepare statements
 			log.debug("prepStat.setString(1, " + data[0] + ")");
 			prepStat1.setString(1, data[0]);
 			log.debug("prepStat.setString(2, " + data[1] + ")");
@@ -346,7 +346,7 @@ public class Setter
 			log.debug(prepStat1.toString());
 			prepStat1.execute();
 			log.debug("Tables Populated");
-			log.debug("Commiting Changes");
+			log.debug("Committing Changes");
 			prepStat1 = conn.prepareStatement("COMMIT;");
 			prepStat1.execute();
 		}
@@ -368,7 +368,7 @@ public class Setter
 	 * @param message The String they want to store
 	 * @param userId The identifier of the user in which to store the attack under
 	 * @param moduleId The module identifier of which to store the message under
-	 * @return A boolean value reflecting the success of the funtion
+	 * @return A boolean value reflecting the success of the function
 	 */
 	public static boolean setStoredMessage (String ApplicationRoot, String message, String userId, String moduleId)
 	{
@@ -378,7 +378,7 @@ public class Setter
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call resultMessageSet(?, ?, ?)");
-			log.debug("Prepairing resultMessageSet procedure");
+			log.debug("Preparing resultMessageSet procedure");
 			callstmt.setString(1, message);
 			callstmt.setString(2, userId);
 			callstmt.setString(3, moduleId);
@@ -398,7 +398,7 @@ public class Setter
 	/**
 	 * This method sets the module status to Open. This information is absorbed by the Tournament Floor Plan
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifer of the module that is been set to open status
+	 * @param moduleId The identifier of the module that is been set to open status
 	 * @return Boolean result depicting success of statement
 	 */
 	public static boolean setModuleStatusOpen (String ApplicationRoot, String moduleId)
@@ -409,7 +409,7 @@ public class Setter
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
-			log.debug("Prepairing moduleSetStatus procedure");
+			log.debug("Preparing moduleSetStatus procedure");
 			callstmt.setString(1, moduleId);
 			callstmt.setString(2, "open");
 			callstmt.execute();
@@ -428,7 +428,7 @@ public class Setter
 	/**
 	 * This method sets every module status to Open.
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifer of the module that is been set to open status
+	 * @param moduleId The identifier of the module that is been set to open status
 	 * @return Boolean result depicting success of statement
 	 */
 	public static boolean openAllModules (String ApplicationRoot)
@@ -455,7 +455,7 @@ public class Setter
 	/**
 	 * This method sets every module status to Closed.
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifer of the module that is been set to open status
+	 * @param moduleId The identifier of the module that is been set to open status
 	 * @return Boolean result depicting success of statement
 	 */
 	public static boolean closeAllModules (String ApplicationRoot)
@@ -600,7 +600,7 @@ public class Setter
 	/**
 	 * This method sets the module status to Closed. This information is absorbed by the Tournament Floor Plan
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifer of the module that is been set to closed status
+	 * @param moduleId The identifier of the module that is been set to closed status
 	 * @return Boolean result depicting success of statement
 	 */
 	public static boolean setModuleStatusClosed (String ApplicationRoot, String moduleId)
@@ -611,7 +611,7 @@ public class Setter
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
-			log.debug("Prepairing moduleSetStatus procedure");
+			log.debug("Preparing moduleSetStatus procedure");
 			callstmt.setString(1, moduleId);
 			callstmt.setString(2, "closed");
 			callstmt.execute();
@@ -642,7 +642,7 @@ public class Setter
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call cheatSheetCreate(?, ?)");
-			log.debug("Prepairing cheatSheetCreate procedure");
+			log.debug("Preparing cheatSheetCreate procedure");
 			callstmt.setString(1, moduleId);
 			callstmt.setString(2, newSolution);
 			callstmt.execute();
@@ -672,7 +672,7 @@ public class Setter
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call resultMessagePlus(?, ?)");
-			log.debug("Prepairing resultMessagePlus procedure");
+			log.debug("Preparing resultMessagePlus procedure");
 			callstmt.setString(1, moduleId);
 			callstmt.setString(2, userId);
 			callstmt.execute();
@@ -688,7 +688,7 @@ public class Setter
 	}
 	
 	/**
-	 * @param ApplicationRoot The current running context of the aplication
+	 * @param ApplicationRoot The current running context of the application
 	 * @param userName User name of the user
 	 * @param currentPassword User's current password
 	 * @param newPassword New password to use in update
@@ -702,7 +702,7 @@ public class Setter
 		Connection conn = Database.getConnection(ApplicationRoot);
 		try
 		{
-			log.debug("Prepairing userPasswordChange call");
+			log.debug("Preparing userPasswordChange call");
 			CallableStatement callstmnt = conn.prepareCall("call userPasswordChange(?, ?, ?)");
 			callstmnt.setString(1, userName);
 			callstmnt.setString(2, currentPassword);
@@ -722,7 +722,7 @@ public class Setter
 	
 	/**
 	 * Updates a PLAYER's class identifier
-	 * @param ApplicationRoot The current running context of the applicaiton
+	 * @param ApplicationRoot The current running context of the application
 	 * @param classId New class to be assigned to
 	 * @param playerId Player to be assigned to new class
 	 * @return The userName that was updated
@@ -735,7 +735,7 @@ public class Setter
 		Connection conn = Database.getConnection(ApplicationRoot);
 		try
 		{
-			log.debug("Prepairing playerUpdateClass call");
+			log.debug("Preparing playerUpdateClass call");
 			CallableStatement callstmnt = conn.prepareCall("call playerUpdateClass(?, ?)");
 			callstmnt.setString(1, playerId);
 			callstmnt.setString(2, classId);
@@ -768,7 +768,7 @@ public class Setter
 		Connection conn = Database.getConnection(ApplicationRoot);
 		try
 		{
-			log.debug("Prepairing playerUpdateClassToNull call");
+			log.debug("Preparing playerUpdateClassToNull call");
 			CallableStatement callstmnt = conn.prepareCall("call playerUpdateClassToNull(?)");
 			callstmnt.setString(1, playerId);
 			log.debug("Executing playerUpdateClassToNull");
@@ -805,7 +805,7 @@ public class Setter
 		Connection conn = Database.getConnection(ApplicationRoot);
 		try
 		{
-			log.debug("Prepairing userUpdateResult call");
+			log.debug("Preparing userUpdateResult call");
 			CallableStatement callstmnt = conn.prepareCall("call userUpdateResult(?, ?, ?, ?, ?, ?)");
 			callstmnt.setString(1, moduleId);
 			callstmnt.setString(2, userId);
@@ -843,7 +843,7 @@ public class Setter
 		Connection conn = Database.getConnection(ApplicationRoot);
 		try
 		{
-			log.debug("Prepairing userUpdateRole call");
+			log.debug("Preparing userUpdateRole call");
 			CallableStatement callstmnt = conn.prepareCall("call userUpdateRole(?, ?)");
 			callstmnt.setString(1, playerId);
 			callstmnt.setString(2, newRole);
@@ -870,7 +870,7 @@ public class Setter
 	 * @param userPass Cannot be null
 	 * @param userRole Cannot be null, must be "player" or "admin"
 	 * @param userAddress Must be unique
-	 * @param tempPass Wheather or not to set the user with a temporary pass flag
+	 * @param tempPass Whether or not to set the user with a temporary pass flag
 	 * @return A boolean value determining the result of the creation
 	 * @throws SQLException If the creation fails, a Exception is thrown
 	 */
@@ -895,7 +895,7 @@ public class Setter
 			callstmt.setString(5, userAddress);
 			callstmt.setBoolean(6, tempPass);
 			ResultSet registerAttempt = callstmt.executeQuery();
-			log.debug("Opening resultset");
+			log.debug("Opening result set");
 			boolean goOn = false;
 			try
 			{
@@ -909,7 +909,7 @@ public class Setter
 			}
 			if(goOn)
 			{
-				if(registerAttempt.getString(1) == null) //Registration sucess
+				if(registerAttempt.getString(1) == null) //Registration success
 				{
 					log.debug("Register Success");
 					result = true;
@@ -935,7 +935,7 @@ public class Setter
 	 * This method converts the default database properties file at applicationRoot/WEB-INF/site.properties
 	 * @param applicationRoot The directory that the server is actually in
 	 * @param url The Url of the core Database
-	 * @param userName The username of the database user
+	 * @param userName The user name of the database user
 	 * @param password The password of the database user
 	 * @return Boolean value depicting the success of the method
 	 */
@@ -1025,7 +1025,7 @@ public class Setter
 		try
 		{
 			boolean updateToken = false;
-			log.debug("Prepairing setCsrfChallengeSixToken call");
+			log.debug("Preparing setCsrfChallengeSixToken call");
 			PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?");
 			callstmnt.setString(1, userId);
 			log.debug("Executing setCsrfChallengeSixToken");

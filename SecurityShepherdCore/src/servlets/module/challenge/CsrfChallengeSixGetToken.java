@@ -49,8 +49,7 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeSixGetToken.class);
 	private static final String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
 	/**
-	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
-	 * forces the victim to submit a post request to the CSRFChallengeTargetTwo
+	 * Allows users to retrieve their CSRF token for the CSRF Challenge 6 module
 	 * @param myMessage To Be stored as the users message for this module
 	 */
 	public void doGet (HttpServletRequest request, HttpServletResponse response) 
@@ -72,7 +71,7 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 				Connection conn = Database.getcsrfChallengeSixConnection(getServletContext().getRealPath(""));
 				try
 				{
-					log.debug("Prepairing setCsrfChallengeSixToken call");
+					log.debug("Preparing setCsrfChallengeSixToken call");
 					PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfTokenscol FROM csrfchallengesix.csrfTokens WHERE userId LIKE ?");
 					callstmnt.setString(1, userId);
 					log.debug("Executing setCsrfChallengeSixTokenQuery");
@@ -97,7 +96,7 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 		}
 	}
 

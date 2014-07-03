@@ -91,7 +91,7 @@ public class Getter
 				catch (SQLException e)
 				{
 					//... Outer Catch has preference to this one for some reason... This code is never reached!
-					// But I'll leave it here just incase. That includes the else block if goOn is false
+					// But I'll leave it here just in case. That includes the else block if goOn is false
 					log.debug("Incorrect Credentials");
 					goOn = false;
 				}
@@ -181,7 +181,7 @@ public class Getter
 		Connection conn = Database.getConnection(ApplicationRoot);
 		try
 		{
-			log.debug("Prepairing userUpdateResult call");
+			log.debug("Preparing userUpdateResult call");
 			CallableStatement callstmnt = conn.prepareCall("call userCheckResult(?, ?)");
 			callstmnt.setString(1, moduleId);
 			callstmnt.setString(2, userId);
@@ -260,7 +260,7 @@ public class Getter
 				result[3] = resultSet.getString(4); //mdouleCategory
 				modules.add(result);
 			}
-			log.debug("Returning Array list with " + i + " enteries.");
+			log.debug("Returning Array list with " + i + " entries.");
 		}
 		catch (SQLException e)
 		{
@@ -293,16 +293,16 @@ public class Getter
 			ResultSet challenges = callstmt.executeQuery();
 			log.debug("Opening Result Set from moduleAllInfo");
 			String challengeCategory = new String();
-			int rowNumber = 0; // Identifies the first row, ie the start of the list. This is sliglty different output to every other row
+			int rowNumber = 0; // Identifies the first row, ie the start of the list. This is slightly different output to every other row
 			while(challenges.next())
 			{
 				if(!challengeCategory.equalsIgnoreCase(challenges.getString(2)))
 				{
 					challengeCategory = challenges.getString(2);
 					//log.debug("New Category Detected: " + challengeCategory);
-					if(rowNumber > 0) //output prepaired for Every row after row 1
+					if(rowNumber > 0) //output prepared for Every row after row 1
 						output += "</ul></li><li><a href='javascript:;' class='challengeHeader' >" + encoder.encodeForHTML(challengeCategory)+ "</a><ul class='challengeList' style='display: none;'>";
-					else //output prepaired for First row in entire challenge
+					else //output prepared for First row in entire challenge
 						output += "<li><a href='javascript:;' class='challengeHeader'>" + encoder.encodeForHTML(challengeCategory)+ "</a><ul class='challengeList' style='display: none;'>";
 					//log.debug("Compiling Challenge Category - " + challengeCategory);
 				}
@@ -313,7 +313,7 @@ public class Getter
 				}
 				else
 				{
-					output+= "<img src='css/images/uncompleted.gif'/>"; //Incompleted marker
+					output+= "<img src='css/images/uncompleted.gif'/>"; //Incomplete marker
 				}
 				//Final out put compilation
 				output +="<a class='challenge' id='" 
@@ -400,7 +400,7 @@ public class Getter
 	
 	/**
 	 * @param ApplicationRoot The current running context of the application
-	 * @param classId The indentifier of the class
+	 * @param classId The identifier of the class
 	 * @return Class information based on the classId parameter
 	 */
 	public static String[] getClassInfo(String ApplicationRoot, String classId)
@@ -480,7 +480,7 @@ public class Getter
 		catch (SQLException e)
 		{
 			log.error("Could not execute query: " + e.toString());
-			htmlOutput = "<p>Sorry! An Error Occured. Please contact administrator</p>";
+			htmlOutput = "<p>Sorry! An Error Occurred. Please contact administrator</p>";
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END getCsrfForum ***");
@@ -539,7 +539,7 @@ public class Getter
 		catch (SQLException e)
 		{
 			log.error("Could not execute query: " + e.toString());
-			htmlOutput = "<p>Sorry! An Error Occured. Please contact administrator</p>";
+			htmlOutput = "<p>Sorry! An Error Occurred. Please contact administrator</p>";
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END getCsrfForum ***");
@@ -561,7 +561,7 @@ public class Getter
 		Connection conn = Database.getConnection(applicationRoot);
 		try
 		{
-			log.debug("Prepairing userUpdateResult call");
+			log.debug("Preparing userUpdateResult call");
 			CallableStatement callstmnt = conn.prepareCall("call moduleFeedback(?)");
 			callstmnt.setString(1, moduleId);
 			log.debug("Executing moduleFeedback");
@@ -590,7 +590,7 @@ public class Getter
 						color = !color;
 						result += "BGCOLOR='D4BCF7'";
 					}
-					//A row off intormation
+					//A row off information
 					result += "><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td>" + encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" +
 							resultSet.getInt(3) + "</td><td>" + resultSet.getInt(4) + "</td><td>" +
 							resultSet.getInt(5) + "</td><td>" + encoder.encodeForHTML(resultSet.getString(6)) + "</td></tr>";
@@ -617,7 +617,7 @@ public class Getter
 	 * This method prepares the incremental module menu. This is when Security Shepherd is in "Game Mode".
 	 * Users are presented with one uncompleted module at a time. This method also returns a script to be executed every time the menu is chanegd.
 	 * This is script defines the animation and operations to be carried out when the menu is interacted with
-	 * @param ApplicationRoot The running context of the applicaiton.
+	 * @param ApplicationRoot The running context of the application.
 	 * @param userId The user identifier of the user.
 	 * @param csrfToken The cross site request forgery token
 	 * @return A HTML menu of a users current module progress and a script for interaction with this menu
@@ -757,7 +757,7 @@ public class Getter
 	/**
 	 * This method prepares the Tournament module menu. This is when Security Shepherd is in "Tournament Mode".
 	 * Users are presented with a list of that are specified as open. 
-	 * @param ApplicationRoot The running context of the applicaiton.
+	 * @param ApplicationRoot The running context of the application.
 	 * @param userId The user identifier of the user.
 	 * @param csrfToken The cross site request forgery token
 	 * @return A HTML menu of a users current module progress and a script for interaction with this menu
@@ -927,7 +927,7 @@ public class Getter
 			log.debug("Gathering moduleAllInfo ResultSet for user " + userId);
 			ResultSet lessons = callstmt.executeQuery();
 			log.debug("Opening Result Set from moduleAllInfo");
-			int rowNumber = 0; // Used to indetify the first row, as it is slightly different to all other rows for output
+			int rowNumber = 0; // Used to identify the first row, as it is slightly different to all other rows for output
 			while(lessons.next())
 			{
 				//log.debug("Adding " + lessons.getString(1));
@@ -1086,7 +1086,7 @@ public class Getter
 	
 	/**
 	 * Retrieves the module category based on the moduleId submitted
-	 * @param ApplicationRoot The current runing context of the application
+	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId The id of the module that 
 	 * @return
 	 */
@@ -1114,7 +1114,7 @@ public class Getter
 	}
 	
 	/**
-	 * Returns true if a module has a hardcoded key, false if server encyrpts it
+	 * Returns true if a module has a hard coded key, false if server encrypts it
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId The id of the module 
 	 * @return
@@ -1132,7 +1132,7 @@ public class Getter
 			moduleFind.next();
 			theKeyType = moduleFind.getBoolean(1);
 			if(theKeyType)
-				log.debug("Module has hardcoded Key");
+				log.debug("Module has hard coded Key");
 			else
 				log.debug("Module has user specific Key");
 		}
@@ -1147,7 +1147,7 @@ public class Getter
 	}
 	
 	/**
-	 * @param ApplicationRoot The current runing context of the application
+	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId Identifier of module
 	 * @return The solution key for a module
 	 */
@@ -1213,7 +1213,7 @@ public class Getter
 	/**
 	 * Used in creating functionality that requires a user to select a module. 
 	 * This method only prepares the option tags for this type of input. It must still be wrapped in select tags.
-	 * @param ApplicationRoot The current running context of the applicaiton
+	 * @param ApplicationRoot The current running context of the application
 	 * @return All modules in HTML option tags
 	 */
 	public static String getModulesInOptionTags (String ApplicationRoot)
@@ -1247,7 +1247,7 @@ public class Getter
 	/**
 	 * Used in creating functionality that requires a user to select a module. 
 	 * This method only prepares the option tags for this type of input. It must still be wrapped in select tags.
-	 * @param ApplicationRoot The current running context of the applicaiton
+	 * @param ApplicationRoot The current running context of the application
 	 * @return All modules in HTML option tags
 	 */
 	public static String getModulesInOptionTagsCTF (String ApplicationRoot)
@@ -1313,7 +1313,7 @@ public class Getter
 	/**
 	 * This method is used to gather users according by class. Thanks to MySQL syntax, where class = null will return nothing, is null must be used.
 	 *  <br/>is 'validClass' will Error, = 'validclass' must be used.<br/>
-	 * So there are two proecureds this method calls. One that handles null classes, one that does not
+	 * So there are two procedures this method calls. One that handles null classes, one that does not
 	 * @param ClassId Identifier of class
 	 * @param ApplicationRoot The current running context of the application
 	 * @return ResultSet that contains users for the selected class
@@ -1367,7 +1367,7 @@ public class Getter
 		Connection conn = Database.getConnection(applicationRoot);
 		try
 		{
-			log.debug("Prepairing userProgress call");
+			log.debug("Preparing userProgress call");
 			CallableStatement callstmnt = conn.prepareCall("call userProgress(?)");
 			callstmnt.setString(1, classId);
 			log.debug("Executing userProgress");
@@ -1419,7 +1419,7 @@ public class Getter
 		Connection conn = Database.getConnection(applicationRoot);
 		try
 		{
-			log.debug("Prepairing userProgress call");
+			log.debug("Preparing userProgress call");
 			//Returns User's: Name, # of Completed modules and Score
 			CallableStatement callstmnt = conn.prepareCall("call userProgress(?)");
 			callstmnt.setString(1, classId);

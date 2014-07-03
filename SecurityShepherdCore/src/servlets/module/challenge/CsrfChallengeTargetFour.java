@@ -66,7 +66,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 				//Get CSRF Token From session
 				if(ses.getAttribute("csrfChallengeFourNonce") == null || ses.getAttribute("csrfChallengeFourNonce").toString().isEmpty())
 				{
-					log.debug("No CSRF Token assoiated with user");
+					log.debug("No CSRF Token associated with user");
 					Random random = new Random();
 					int newToken = random.nextInt(3);
 					out.write("No CSRF Token Detected for this Challenge. You're token is now " + newToken + "<br><br>");
@@ -96,7 +96,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 						{
 							log.debug(userName + " is been CSRF'd by " + attackerName);
 							
-							log.debug("Attemping to Increment ");
+							log.debug("Attempting to Increment ");
 							String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);
 							result = Setter.updateCsrfCounter(ApplicationRoot, moduleId, plusId);
 						}
@@ -131,7 +131,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 		}
 		catch(Exception e)
 		{
-				out.write("An Error Occured! You must be getting funky!");
+				out.write("An Error Occurred! You must be getting funky!");
 				log.fatal("Cross Site Request Forgery Target Challenge 2 - " + e.toString());
 		}
 	}

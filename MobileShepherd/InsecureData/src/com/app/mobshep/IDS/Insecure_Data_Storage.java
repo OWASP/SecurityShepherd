@@ -14,6 +14,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * This file is part of the Security Shepherd Project.
+ * 
+ * The Security Shepherd project is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.<br/>
+ * 
+ * The Security Shepherd project is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.<br/>
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * 
+ * @author Sean Duggan
+ */
+
 public class Insecure_Data_Storage extends Activity {
 
 	Button login;
@@ -96,8 +115,6 @@ public class Insecure_Data_Storage extends Activity {
         
 	}
 
-	
-
 	public void copyDatabase(InputStream iStream, OutputStream oStream)
 			throws IOException {
 		byte[] buffer = new byte[1024];
@@ -107,7 +124,6 @@ public class Insecure_Data_Storage extends Activity {
 		}
 		iStream.close();
 		oStream.close();
-		
 	}
 	
 	public void referenceXML() {
@@ -116,5 +132,4 @@ public class Insecure_Data_Storage extends Activity {
 		password = (EditText) findViewById(R.id.etPass);
 
 	}
-
 }

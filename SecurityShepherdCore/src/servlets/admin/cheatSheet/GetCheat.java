@@ -21,7 +21,7 @@ import utils.ShepherdLogManager;
 import utils.Validate;
 
 /**
- * Control class responseable for returning a cheat sheet for a module
+ * Control class responsible for returning a cheat sheet for a module
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -97,7 +97,7 @@ public class GetCheat extends HttpServlet
 		}
 		if(result == null)
 		{
-			out.write("An error occured...");
+			out.write("An error Occurred...");
 		}
 		log.debug("*** END servlets.Admin.GetCheat ***");
 	}

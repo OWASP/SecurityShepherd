@@ -48,7 +48,7 @@ public class Validate
 		{
 			if (ses.getAttribute("logout") != null) 
 			{
-				log.debug("Logout Attibute Found: Invalidating session...");
+				log.debug("Logout Attribute Found: Invalidating session...");
 			    ses.invalidate(); // make servlet engine forget the session
 			}
 			else
@@ -95,7 +95,7 @@ public class Validate
 		{
 			if (ses.getAttribute("logout") != null) 
 			{
-				log.debug("Logout Attibute Found: Invalidating session...");
+				log.debug("Logout Attribute Found: Invalidating session...");
 			    ses.invalidate(); // make servlet engine forget the session
 			}
 			else
@@ -110,7 +110,7 @@ public class Validate
 						String role = (String) ses.getAttribute("userRole");
 						result = (role.compareTo("admin") == 0);
 						if(!result)
-							log.fatal("User" + userName + " attemping Admin functions!");
+							log.fatal("User" + userName + " Attempting Admin functions!");
 					} 
 					catch (Exception e) 
 					{
@@ -154,13 +154,13 @@ public class Validate
 				BigInteger tenGrandNeg = new BigInteger("-10000");
 				if(!(theTokenCasted.compareTo(tenGrand) > 0 || theTokenCasted.compareTo(tenGrandNeg) < 0))
 				{
-					log.error("CSRF Cookie Token was modified in some mannor!");
+					log.error("CSRF Cookie Token was modified in some manor!");
 					theToken = null;
 				}
 			}
 			catch (Exception e)
 			{
-				log.error("CSRF Cookie Token was modified in some mannor: " + e.toString());
+				log.error("CSRF Cookie Token was modified in some manor: " + e.toString());
 				theToken = null;
 			}
 		}
@@ -268,8 +268,8 @@ public class Validate
 	}
 	
 	/**
-	 * Validates class year when creating classes. Class year should be YY/YY, eg 11/12. So the first year must be less than the second.	
-	 * @param classYear Class Year in YY/YY format, eg 11/12.
+	 * Validates class year when creating classes. Class year should be YY/YY, e.g. 11/12. So the first year must be less than the second.	
+	 * @param classYear Class Year in YY/YY format, e.g. 11/12.
 	 * @return Boolean value stating weather or not these supplied attributes make a valid class year
 	 */
 	public static boolean isValidClassYear(String classYear)
@@ -357,7 +357,7 @@ public class Validate
 		boolean result;
 		result = hostUrl.endsWith("/");
 		if (!result)
-			log.error("Url Doesn't end with a forward slash. Very likely wrong");
+			log.error("URL Doesn't end with a forward slash. Very likely wrong");
 		return result; 
 	}
 	

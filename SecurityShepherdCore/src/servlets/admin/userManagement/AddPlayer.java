@@ -134,7 +134,7 @@ public class AddPlayer extends HttpServlet
 					else
 					{
 						//Validation Error Responses
-						String errorMessage = "An Error Occured: ";
+						String errorMessage = "An Error Occurred: ";
 						if(!notNull || !notEmpty)
 						{
 							log.error("Null values detected");
@@ -152,7 +152,7 @@ public class AddPlayer extends HttpServlet
 						}
 						else if(!userValidate)
 						{
-							log.error("Javascript validation bypassed");
+							log.error("JavaScript validation bypassed");
 							errorMessage += "Invalid Request. Please try again";
 						}
 						else
@@ -169,7 +169,7 @@ public class AddPlayer extends HttpServlet
 				{
 					log.error("Create New Class Error: " + e.toString());
 					out.print("<div id='errorAlert' class='errorAlert'><p>" +
-							"An error occured! Please try again." +
+							"An error Occurred! Please try again." +
 							"</p></div>");
 				}
 			}
@@ -177,7 +177,7 @@ public class AddPlayer extends HttpServlet
 			{
 				log.debug("CSRF tokens did not match");
 				out.print("<div id='errorAlert' class='errorAlert'><p>" +
-						"An error occured! CSRF Tokens did not match." +
+						"An error Occurred! CSRF Tokens did not match." +
 						"<p></div>");
 			}
 		}
@@ -185,7 +185,7 @@ public class AddPlayer extends HttpServlet
 		{
 			out.print(
 					"<div id='errorAlert' class='errorAlert'><p>" +
-					"An error occured! Please try non administrator functions!" +
+					"An error Occurred! Please try non administrator functions!" +
 					"</p></div>");
 		}
 		log.debug("*** addPlayer END ***");

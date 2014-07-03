@@ -2,13 +2,13 @@ package utils;
 
 /**
  * Manages What Google Analytics is used by the Shepherd instance. If Any
- * @author mark
+ * @author Mark Denihan
  *
  */
 public class Analytics 
 {
 
-	public static boolean googleAnalyticsOn = true;
+	public static boolean googleAnalyticsOn = false;
 	public static String googleAnalyticsScript = "<script>\n" +
 		"(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n" +
 		"(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n" +

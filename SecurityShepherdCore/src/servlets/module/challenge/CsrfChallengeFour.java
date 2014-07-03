@@ -44,7 +44,7 @@ public class CsrfChallengeFour extends HttpServlet
 	private static final String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
 	/**
 	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
-	 * forces the victim to submit a post request to the CSRFChallengeTargetTwo
+	 * forces the victim to submit a post request to the CSRFChallengeTargetFour
 	 * @param myMessage To Be stored as the users message for this module
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -80,16 +80,15 @@ public class CsrfChallengeFour extends HttpServlet
 						classId = (String)ses.getAttribute("userClass");
 					String htmlOutput = Getter.getCsrfForumWithIframe(ApplicationRoot, classId, moduleId);
 					
-					log.debug("Outputing HTML");
+					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal("Cross Site Request Forgery Challenge Four - " + e.toString());
 		}
 	}
-
 }

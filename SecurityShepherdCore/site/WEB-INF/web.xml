@@ -11,7 +11,6 @@
 	<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 	
-	<!--
 	<error-page>
         <error-code>500</error-code>
         <location>/serverError.html</location>
@@ -20,7 +19,6 @@
         <error-code>404</error-code>
         <location>/lostSheep.html</location>
     </error-page>
-    -->
 	
 	<env-entry>
 		<env-entry-name>java.net.preferipv4stack</env-entry-name>

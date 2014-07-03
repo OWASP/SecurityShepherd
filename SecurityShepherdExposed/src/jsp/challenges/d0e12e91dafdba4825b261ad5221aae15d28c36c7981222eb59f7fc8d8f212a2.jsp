@@ -58,7 +58,7 @@ catch (Exception e)
 		<div id="contentDiv">
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
-				To obtain the result key you must obtain <em>Brendan's</em> answer to his security question. 
+				To obtain the result key to this challenge, you must obtain <em>Brendan's</em> answer to his security question. 
 				<br />
 				<br />
 				<h3>Get Your Authentication Number</h3>

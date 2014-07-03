@@ -59,8 +59,8 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 			<p> 
 				<div id="lessonIntro">
 					Cross-Site Scripting, or <a>XSS</a>, issues occur when an application uses <a>untrusted data</a> in a
-					 web browser without sufficient <a>validation</a> or <a>escaping</a>. If untrusted data contains
-					  a client side script, the browser will execute the script while it is interpreting the page.
+					web browser without sufficient <a>validation</a> or <a>escaping</a>. If untrusted data contains
+					a client side script, the browser will execute the script while it is interpreting the page.
 					<br />
 					<br />
 					Attackers can use XSS attacks to execute scripts in a victim's browser which can hijack user sessions, 
@@ -71,7 +71,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 					According to OWASP, XSS is the most widespread vulnerability found in web applications today. 
 					This is partially due to the variety of <a>attack vectors</a> that are available. The easiest way 
 					of showing an XSS attack executing is using a simple <a>alert box</a> as a client side script pay load. 
-					To execute a XSS attack, a variety of an attack vectors may be necessary to overcome insufficient escaping 
+					To execute a XSS payload, a variety of an attack vectors may be necessary to overcome insufficient escaping 
 					or validation. The following are examples of some known attack vectors, that all create the same
 					 <a>alert</a> pop up that reads "XSS".
 					<br />

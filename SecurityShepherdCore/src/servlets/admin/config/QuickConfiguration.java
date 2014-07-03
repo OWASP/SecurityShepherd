@@ -90,9 +90,9 @@ public class QuickConfiguration extends HttpServlet
 					try
 					{
 						URL newHost = new URL(coreHostAddress);
-						log.debug("Core Url Protocol: " + newHost.getProtocol().toLowerCase());
-						log.debug("Core Url Host: " + newHost.getHost());
-						log.debug("Core Url Port: " + newHost.getPort());
+						log.debug("Core URL Protocol: " + newHost.getProtocol().toLowerCase());
+						log.debug("Core URL Host: " + newHost.getHost());
+						log.debug("Core URL Port: " + newHost.getPort());
 						coreProtocol = newHost.getProtocol();
 						coreHost = newHost.getHost();
 						corePort = new Integer(newHost.getPort()).toString();
@@ -110,9 +110,9 @@ public class QuickConfiguration extends HttpServlet
 					try
 					{
 						URL newHost = new URL(exposedHostAdress);
-						log.debug("Exposed Url Protocol: " + newHost.getProtocol().toLowerCase());
-						log.debug("Exposed Url Host: " + newHost.getHost());
-						log.debug("Exposed Url Port: " + newHost.getPort());
+						log.debug("Exposed URL Protocol: " + newHost.getProtocol().toLowerCase());
+						log.debug("Exposed URL Host: " + newHost.getHost());
+						log.debug("Exposed URL Port: " + newHost.getPort());
 						exposedProtocol = newHost.getProtocol();
 						exposedHost = newHost.getHost();
 						exposedPort = new Integer(newHost.getPort()).toString();
@@ -149,7 +149,7 @@ public class QuickConfiguration extends HttpServlet
 					else
 					{
 						//Validation Error Responses
-						String errorMessage = "An Error Occured: ";
+						String errorMessage = "An Error Occurred: ";
 						if(!coreHostValid)
 						{
 							log.error("Invalid Core Host Address");
@@ -176,7 +176,7 @@ public class QuickConfiguration extends HttpServlet
 					log.error("Host Address Update Error: " + e.toString());
 					out.print("<h2 class=\"title\">Host Address Update Failure</h2><br>" +
 							"<p>" +
-							"<font color=\"red\">An error occured! Please try again.</font>" +
+							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
 				}
 			}
@@ -185,7 +185,7 @@ public class QuickConfiguration extends HttpServlet
 				log.debug("CSRF tokens did not match");
 				out.print("<h2 class=\"title\">Host Address Update Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! CSRF Tokens did not match.</font>" +
+					"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 					"<p>");
 			}
 		}
@@ -193,7 +193,7 @@ public class QuickConfiguration extends HttpServlet
 		{
 			out.print("<h2 class=\"title\">Host Address Update Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! Please log in or try non administrator functions!</font>" +
+					"<font color=\"red\">An error Occurred! Please log in or try non administrator functions!</font>" +
 					"<p>");
 		}
 		log.debug("*** servlets.Admin.config.QuickConfig END ***");

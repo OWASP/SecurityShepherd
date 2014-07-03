@@ -21,7 +21,7 @@ import dbProcs.Database;
 
 /**
  * Insecure Direct Object Reference Challenge Two
- * Does not use user specific key because key is currently hardcoded into database schema
+ * Does not use user specific key because key is currently hard coded into database schema
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -48,7 +48,7 @@ public class DirectObject2 extends HttpServlet
 	private static String levelHash = "vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4";
 	private static String levelResult = ""; //Stored in DB. Not user Specific
 	/**
-	 * The user must abuse this functionality to revial a hidden user. The result key is hidden in this users profile.
+	 * The user must abuse this functionality to reveal a hidden user. The result key is hidden in this users profile.
 	 * @param userId To be used in generating the HTML output
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -56,7 +56,7 @@ public class DirectObject2 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -69,7 +69,7 @@ public class DirectObject2 extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		log.debug(levelName + " Servlet Accessed");
 		PrintWriter out = response.getWriter();
@@ -106,7 +106,7 @@ public class DirectObject2 extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

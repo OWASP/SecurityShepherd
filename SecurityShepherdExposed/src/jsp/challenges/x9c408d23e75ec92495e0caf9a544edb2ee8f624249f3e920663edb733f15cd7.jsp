@@ -49,7 +49,7 @@ String levelName =  "Insecure Cryptographic Storage Challenge 1";
 		<div id="contentDiv">
 			<h2 class="title">Insecure Cryptographic Storage Challenge One</h2>
 			<p> 
-				The result key has been encrypted to ensure that nobody can finish the challenge without knowing the secret key to decrypt it, but it is encrypted with a famous, but easily broken, Roman cipher.
+				The result key has been encrypted to ensure that nobody can finish the challenge without knowing the secret key to decrypt it. However, the result key has been encrypted with a famous, but easily broken, Roman cipher.
 				<br/>
 				<br/>
 				<a>Ymj wjxzqy pjd ktw ymnx qjxxts nx ymj ktqqtbnsl xywnsl; rdqtajqdmtwxjwzssnslymwtzlmymjknjqibmjwjfwjdtzltnslbnymdtzwgnlf</a>

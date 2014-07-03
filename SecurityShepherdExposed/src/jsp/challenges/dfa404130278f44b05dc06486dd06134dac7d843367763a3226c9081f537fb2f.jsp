@@ -52,7 +52,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 		<div id="contentDiv">
 			<h2 class="title">Insecure Direct Object Reference Challenge One</h2>
 			<p> 
-				The result key for this challenge is stored in the private message for a user not listed below...
+				The result key for this challenge is stored in the private message for a user that is not listed below...
 				<br />
 				<br />
 				<center>

@@ -82,7 +82,7 @@ public class CsrfLesson extends HttpServlet
 					if(validLessonAttack)
 					{
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>The administrator recieved your messege and submitted the GET request embbeded in it<br />" +
+								"<p>The administrator received your message and submitted the GET request embedded in it's image<br />" +
 								"The result key for this lesson is <a>" +
 								encoder.encodeForHTML(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash)) +
 								"</a>";
@@ -93,14 +93,14 @@ public class CsrfLesson extends HttpServlet
 						"<tr><td>Message: </td><td> " +
 						"<img src=\"" + encoder.encodeForHTMLAttribute(messageForAdmin) + "\"/>" +
 						"</td></tr></table></p>";
-					log.debug("outputing HTML");
+					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 		log.debug("End of " + levelName + " Servlet");

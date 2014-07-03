@@ -17,7 +17,7 @@ import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * Cross Site Request Foregery challenge target One - Does not return reuslt key
+ * Cross Site Request Forgery challenge target One - Does not return result key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -70,7 +70,7 @@ public class CsrfChallengeTargetOne extends HttpServlet
 					{
 						log.debug(userName + " is been CSRF'd by " + attackerName);
 						
-						log.debug("Attemping to Increment ");
+						log.debug("Attempting to Increment ");
 						String moduleHash = CsrfChallengeOne.getLevelHash();
 						String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, moduleHash);
 						result = Setter.updateCsrfCounter(ApplicationRoot, moduleId, plusId);
@@ -97,7 +97,7 @@ public class CsrfChallengeTargetOne extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal("Cross Site Request Forgery Challenge Target 1 - " + e.toString());
 		}
 	}

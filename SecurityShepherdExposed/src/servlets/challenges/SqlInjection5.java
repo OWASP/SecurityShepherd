@@ -22,7 +22,21 @@ import dbProcs.Database;
  * Level : SQL Injection 5
  * <br><br>
  * 
- * @author mark
+ * This file is part of the Security Shepherd Project.
+ * 
+ * The Security Shepherd project is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.<br/>
+ * 
+ * The Security Shepherd project is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.<br/>
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * @author Mark Denihan
  *
  */
 public class SqlInjection5 extends HttpServlet
@@ -39,7 +53,7 @@ public class SqlInjection5 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -56,7 +70,7 @@ public class SqlInjection5 extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -136,7 +150,7 @@ public class SqlInjection5 extends HttpServlet
 			
 			//Output Order
 			htmlOutput = "<h3>Order Complete</h3>"
-					+ "Your order has been made and has been sent to our magic shipping department that knows where you want this to be delieved via brain wave sniffing techniques.<br/><br/>"
+					+ "Your order has been made and has been sent to our magic shipping department that knows where you want this to be delivered via brain wave sniffing techniques.<br/><br/>"
 					+ "Your order comes to a total of <a><strong>$" + finalCost + "</strong></a>";
 			if (trollAmount > 0 && trollCost == 0)
 			{

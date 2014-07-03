@@ -52,13 +52,10 @@ catch (Exception e)
 		<div id="contentDiv">
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
-				
-				To recover the result key for this level you just need to obtain the current server 
+				To recover the result key for this challenge you need to obtain the current server 
 				status message from an administrator's point of view!
 				<br/>
 				<br/>
-				<% /* IF you need a form - Present it like this */ %>
 				Use this form to view the status of the server <!-- from the point of view of a peasant or guest  -->
 				<br/>
 				<br/>

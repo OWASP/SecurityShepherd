@@ -75,7 +75,7 @@ public class EnableFeedback extends HttpServlet
 					log.error("Enable Feedback Error: " + e.toString());
 					out.print("<h2 class=\"title\">Enable Feedback Failure</h2><br>" +
 							"<p>" +
-							"<font color=\"red\">An error occured! Please try again.</font>" +
+							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
 				}
 			}
@@ -84,7 +84,7 @@ public class EnableFeedback extends HttpServlet
 				log.debug("CSRF tokens did not match");
 				out.print("<h2 class=\"title\">Enable Feedback Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! CSRF Tokens did not match.</font>" +
+					"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 					"<p>");
 			}
 		}
@@ -92,7 +92,7 @@ public class EnableFeedback extends HttpServlet
 		{
 			out.print("<h2 class=\"title\">Enable Feedback Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! Please log in or try non administrator functions!</font>" +
+					"<font color=\"red\">An error Occurred! Please log in or try non administrator functions!</font>" +
 					"<p>");
 		}
 		log.debug("*** servlets.Admin.config.EnableFeedback END ***");

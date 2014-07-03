@@ -68,7 +68,7 @@ extends HttpServlet
 			catch (Exception e)
 			{
 				log.debug(levelName + " Servlet Accessed");
-				log.error("Could not retrieve username from session");
+				log.error("Could not retrieve user name from session");
 			}
 			
 			String aUserName = request.getParameter("aUserName");
@@ -105,12 +105,12 @@ extends HttpServlet
 				while(i < output.length && output[i][0] != null);
 				htmlOutput += "</table>";			
 			}
-			log.debug("outputing HTML");
+			log.debug("Outputting HTML");
 			out.write(htmlOutput);
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

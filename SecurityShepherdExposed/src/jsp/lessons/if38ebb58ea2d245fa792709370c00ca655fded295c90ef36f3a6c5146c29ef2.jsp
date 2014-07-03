@@ -51,7 +51,7 @@ String levelName =  "Insecure Crypto Lesson";
 			<h2 class="title">What is Insecure Cryptographic Storage?</h2>
 			<p> 
 				<div id="lessonIntro">
-					The most common flaw in this area is simply <a>not encrypting data</a> that deserves encryption. When encryption is employed, unsafe key generation and storage, not rotating keys, and weak algorithm usage is common. Use of weak or unsalted hashes to protect passwords is also common. compromises all data that should have been encrypted. Typically this information includes sensitive data such as health records, credentials, personal data, credit cards, etc.
+					The most common flaw in this area is simply <a>not encrypting data</a> that deserves encryption. When encryption is employed, unsafe key generation and storage, not rotating keys and weak algorithm usage is common. Use of weak or unsalted hashes to protect passwords is also common. These mistakes can compromise all of the data that should have been encrypted. Typically this information includes sensitive data such as health records, credentials, personal data, credit cards, etc.
 					<br/>
 					<br/>
 					Imagine an application that <a>encrypts</a> credit cards in a database to prevent exposure to end users. However, the database is set to automatically decrypt queries against the credit card columns, allowing an SQL injection flaw to retrieve all the credit cards in clear text. The system should have been configured to allow only back end applications to decrypt them, not the front end web application.
@@ -63,7 +63,7 @@ String levelName =  "Insecure Crypto Lesson";
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
-				The decision has been made that the result key to this level should not be publicly available. To achieve this, the development team have decided to encode the result key with <a>base64</a>... recover it to complete the lesson.
+				The decision has been made that the result key to this lesson should not be publicly available. To achieve this, the development team have decided to encode the result key with <a>base64</a>... recover it to complete the lesson.
 				<br/>
 				<br/>
 				<a>YmFzZTY0aXNOb3RFbmNyeXB0aW9uQmFzZTY0aXNFbmNvZGluZ0Jhc2U2NEhpZGVzTm90aGluZ0Zyb21Zb3U=</a>

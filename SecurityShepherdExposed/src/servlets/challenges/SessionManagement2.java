@@ -48,7 +48,7 @@ public class SessionManagement2 extends HttpServlet
 	private static String levelHash = "d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7";
 	private static String levelResult = "4ba31e5ffe29de092fe1950422a";
 	/**
-	 * The user attempts to use this funciton to sign into a sub schema. If they successfully sign in then they are able to retrieve the result key for the challenge
+	 * The user attempts to use this function to sign into a sub schema. If they successfully sign in then they are able to retrieve the result key for the challenge
 	 * If they sign in with a correct user name but incorrect password then the email address of the user will be returned in a error message
 	 * @param subName Sub schema user name
 	 * @param subName Sub schema user password
@@ -58,7 +58,7 @@ public class SessionManagement2 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -71,7 +71,7 @@ public class SessionManagement2 extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -101,10 +101,10 @@ public class SessionManagement2 extends HttpServlet
 			log.debug("Checking credentials");
 			PreparedStatement callstmt;
 			
-			log.debug("Commiting changes made to database");
+			log.debug("Committing changes made to database");
 			callstmt = conn.prepareStatement("COMMIT");
 			callstmt.execute();
-			log.debug("Changes commited.");
+			log.debug("Changes committed.");
 			
 			callstmt = conn.prepareStatement("SELECT userName, userAddress FROM users WHERE userName = ? AND userPassword = SHA(?)");
 			callstmt.setString(1, subName);
@@ -123,7 +123,7 @@ public class SessionManagement2 extends HttpServlet
 			}
 			else
 			{
-				log.debug("Incorrect credentials, checking if username correct");
+				log.debug("Incorrect credentials, checking if user name correct");
 				callstmt = conn.prepareStatement("SELECT userAddress FROM users WHERE userName = ?");
 				callstmt.setString(1, subName);
 				log.debug("Executing getAddress");
@@ -135,17 +135,17 @@ public class SessionManagement2 extends HttpServlet
 				}
 				else
 				{
-					userAddress = "Username not found.<br/>";
+					userAddress = "User name not found.<br/>";
 				}
 				htmlOutput = htmlStart + userAddress + htmlEnd;
 			}
 			Database.closeConnection(conn);
-			log.debug("Outputing HTML");
+			log.debug("Outputting HTML");
 			out.write(htmlOutput);
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

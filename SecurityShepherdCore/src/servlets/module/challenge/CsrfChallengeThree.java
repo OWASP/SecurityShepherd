@@ -18,7 +18,7 @@ import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * Cross Site Request Foregery Challenge Three - Does not return result key
+ * Cross Site Request Forgery Challenge Three - Does not return result key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -41,7 +41,7 @@ public class CsrfChallengeThree extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeThree.class);
-	private static String levelName = "Cross Site Request Foregery Challenge Three";
+	private static String levelName = "Cross Site Request Forgery Challenge Three";
 	private static String levelHash = "z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c";
 	/**
 	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
@@ -81,14 +81,14 @@ public class CsrfChallengeThree extends HttpServlet
 						classId = (String)ses.getAttribute("userClass");
 					String htmlOutput = Getter.getCsrfForumWithIframe(ApplicationRoot, classId, moduleId);
 					
-					log.debug("Outputing HTML");
+					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

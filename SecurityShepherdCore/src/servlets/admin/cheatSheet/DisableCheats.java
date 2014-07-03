@@ -20,7 +20,7 @@ import utils.ShepherdLogManager;
 import utils.Validate;
 
 /**
- * Control class responseable for disabling cheat sheets
+ * Control class responsible for disabling cheat sheets
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 

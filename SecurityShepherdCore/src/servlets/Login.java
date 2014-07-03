@@ -89,7 +89,7 @@ public class Login extends HttpServlet
 					   ses.setAttribute("userStamp", user[0]);
 					   ses.setAttribute("userName", user[1]);
 					   ses.setAttribute("userRole", user[2]);
-					   //Used to make returned Keys user specific. Transfered to Exposed Server
+					   //Used to make returned Keys user specific. Transferred to Exposed Server
 					   String encyptedUserName = Hash.encrypt(Hash.userNameKey, p_login);
 					   ses.setAttribute("ThreadSequenceId", encyptedUserName);
 					   log.debug("userClassId = " + user[4]);
@@ -102,7 +102,7 @@ public class Login extends HttpServlet
 					   
 					   if(user[3].equalsIgnoreCase("true"))
 					   {
-						   log.debug("Temporary Password Detected, user will be promted to change");
+						   log.debug("Temporary Password Detected, user will be prompted to change");
 						   ses.setAttribute("ChangePassword", "true");
 					   }
 				   }
@@ -120,7 +120,7 @@ public class Login extends HttpServlet
 			}
 		   else
 		   {
-			   String loginFailed = "Incorrect Username or Password";
+			   String loginFailed = "Incorrect User name or Password";
 			   ses.setAttribute("loginFailed", loginFailed);
 			   response.sendRedirect("login.jsp");
 			   return;
@@ -128,7 +128,7 @@ public class Login extends HttpServlet
 		}
 		catch (IOException e)
 		{
-			String loginFailed = "Incorrect Username or Password";
+			String loginFailed = "Incorrect User name or Password";
 			ses.setAttribute("loginFailed", loginFailed);
 			log.error("Failed to Process Request: " + e.toString());
 		}

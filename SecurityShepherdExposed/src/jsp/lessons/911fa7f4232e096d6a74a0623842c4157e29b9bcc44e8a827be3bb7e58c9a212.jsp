@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java"
-	import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
 
 <%
 	//No Quotes In level Name
@@ -60,18 +59,12 @@
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
 		<p>
-			<%
-				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
-			%>
-
 		<h2 class="title"><%=levelName %></h2>
 			<p> 
 				<div id="lessonIntro">
-
-			<%=levelBlurb%>
 			<br/>
 			
-			Cryptography is difficult to get right, as a result many Apps use Cryptography poorly and become vulnerable to attack. An App can transfer keys insecurely, use a known broken or deprecated cryptographic algorithm or developers can create their own Crypto algorithms.			
+			Cryptography is difficult to get right, as a result many Apps use cryptography poorly and become vulnerable to attack. An App can transfer encryption keys insecurely, use a known broken or deprecated cryptographic algorithm or developers can create their own Crypto algorithms.			
 			<br/>
 			
 			Poor key management can be due to hard coded keys, keys stored in directories, transferring the key in an insecure way or using the same key all the time. If the developers of an App make use a of custom, unproven, untested encryption algorithm then it is highly likely that the encrypted data is vulnerable.
@@ -87,7 +80,7 @@
 				<br/>
 			
 			
-			 <br/> The developers of this App are holding a competition, whoever can crack their secure chat wins. Unfortunatly, the developers have misunderstood the definition of Cryptography. Reduce the intercepted messages exchanged to plaintext to reveal the key. <br />
+			 <br/> The developers of this App are holding a competition, whoever can crack their secure chat wins. Unfortunately, the developers have misunderstood the definition of Cryptography. Reduce the intercepted messages exchanged to plain text to reveal the key. <br />
 				<br/>
 			  <%= Analytics.getMobileLevelBlurb("BrokenCrypto.apk") %>
 
@@ -105,73 +98,9 @@
 				});
 			});
 		</script>
-				
-				
-				</script>
-				
 			
-			<%
-				/* IF you need a form - Present it like this */
-			%>
-			<%
-				/*
-				<br />
-				<br />
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>			
-						<div id="submitButton">
-						<input type="submit" value="Get Info"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
-					</td></tr>
-					</table>
-				</form>
-				
-				<div id="resultsDiv"></div>
-				 */
-			%>
 		</p>
 	</div>
-	<%
-		/*If you need to call the Server Do it like this */
-	%>
-	<%
-		/*
-		<script>
-			$("#leForm").submit(function(){
-				var theVariableName = $("#variableName").val();
-				var theSecondVariableName = $("#secondVariableName").val();
-				$("#submitButton").hide("fast");
-				$("#loadingSign").show("slow");
-				$("#resultsDiv").hide("slow", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "<ChangeThis= levelHash ChangeThis>",
-						data: {
-							variableName: theVariableName, 
-							secondVariableName: theSecondVariableName
-						},
-						async: false
-					});
-					if(ajaxCall.status == 200)
-					{
-						$("#resultsDiv").html(ajaxCall.responseText);
-					}
-					else
-					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-					}
-					$("#resultsDiv").show("slow", function(){
-						$("#loadingSign").hide("fast", function(){
-							$("#submitButton").show("slow");
-						});
-					});
-				});
-			});
-		</script>
-		 */
-	%>
 	<% if (Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
