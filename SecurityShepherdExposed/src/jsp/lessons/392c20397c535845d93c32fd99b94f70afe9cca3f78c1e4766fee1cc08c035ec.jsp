@@ -66,9 +66,9 @@
 				<div id="lessonIntro">
 
 			<%=levelBlurb%>
-			<br /> Unintended data leakage occurs when an App inadvertantly
+			<br /> Unintended data leakage occurs when an App inadvertently
 			places sensitive information or data in a location on the mobile
-			device that is easily accessible by attackers or other Apps on the
+			device that is accessible by attackers or other Apps on the
 			device. </br> Unintended Data Leakage comes in many forms, including:
 			 </br> 
 			 
@@ -88,7 +88,7 @@
 			   
 			 <li>Browser cookie objects </li>
 			 
-			 <li>Analytics data sent to 3rd parties </li>
+			 <li>Analytic data sent to third parties </li>
 			
 			</ul>
 			
@@ -98,13 +98,13 @@
 				<br/>
 			
 			
-			 Apps won't always use a SQLite database to store data, in
-			some cases logs can yield useful information about the App and it's
-			users. Use this information to find out the key. In this lesson, the App <a>caches logs</a> on the device. The App itself acts as a notice board or to do list. Everything a user adds to the <a>ListView</a> in the App is logged. <br />
+			Apps won't always use a SQLite database to store data. In
+			some cases logs yield useful information about the App and it's
+			users. Use this information to find the result key. In this lesson, the App <a>caches logs</a> on the device. The App itself acts as a notice board or to do list. Everything a user adds to the <a>ListView</a> in the App is logged. <br />
 			
 			<br>
 			<br/>
-				<%= Analytics.getMobileLevelBlurb("UDataLeakage.apk") %>
+			<%= Analytics.getMobileLevelBlurb("UDataLeakage.apk") %>
 			
 			<script>
 				
@@ -121,69 +121,7 @@
 			});
 		</script>
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-			
-			
-			<%
-				/* IF you need a form - Present it like this */
-			%>
-			<%
-				/*
-				<br />
-				<br />
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>			
-						<div id="submitButton">
-						<input type="submit" value="Get Info"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
-					</td></tr>
-					</table>
-				</form>
-				
-				<div id="resultsDiv"></div>
-				 */
-			%>
 		</p>
 	</div>
-	<%
-		/*If you need to call the Server Do it like this */
-	%>
-	<%
-		/*
-		<script>
-			$("#leForm").submit(function(){
-				var theVariableName = $("#variableName").val();
-				var theSecondVariableName = $("#secondVariableName").val();
-				$("#submitButton").hide("fast");
-				$("#loadingSign").show("slow");
-				$("#resultsDiv").hide("slow", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "<ChangeThis= levelHash ChangeThis>",
-						data: {
-							variableName: theVariableName, 
-							secondVariableName: theSecondVariableName
-						},
-						async: false
-					});
-					if(ajaxCall.status == 200)
-					{
-						$("#resultsDiv").html(ajaxCall.responseText);
-					}
-					else
-					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-					}
-					$("#resultsDiv").show("slow", function(){
-						$("#loadingSign").hide("fast", function(){
-							$("#submitButton").show("slow");
-						});
-					});
-				});
-			});
-		</script>
-		 */
-	%>
 </body>
 </html>

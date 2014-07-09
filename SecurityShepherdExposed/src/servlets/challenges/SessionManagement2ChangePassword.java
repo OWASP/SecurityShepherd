@@ -57,7 +57,7 @@ public class SessionManagement2ChangePassword extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -70,7 +70,7 @@ public class SessionManagement2ChangePassword extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user-name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -102,10 +102,10 @@ public class SessionManagement2ChangePassword extends HttpServlet
 				callstmt.execute();
 				log.debug("Statement executed");
 				
-				log.debug("Commiting changes made to database");
+				log.debug("Committing changes made to database");
 				callstmt = conn.prepareStatement("COMMIT");
 				callstmt.execute();
-				log.debug("Changes commited.");
+				log.debug("Changes committed.");
 				
 				htmlOutput = encoder.encodeForHTML(newPassword);
 				Database.closeConnection(conn);
@@ -114,12 +114,12 @@ public class SessionManagement2ChangePassword extends HttpServlet
 			{
 				log.error(levelName + " SQL Error: " + e.toString());
 			}
-			log.debug("Outputing HTML");
+			log.debug("Outputting HTML");
 			out.write("Changed to: " + htmlOutput);
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

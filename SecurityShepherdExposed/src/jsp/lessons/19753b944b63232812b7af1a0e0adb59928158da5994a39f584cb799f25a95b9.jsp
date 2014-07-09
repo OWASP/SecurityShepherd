@@ -60,40 +60,28 @@
 	<div id="contentDiv">
 		<h2 class="title"><%=levelName%></h2>
 		<p>
-			<%
-				/* Put Your Blurb Here Jeesh*/
-			%>
-			<p> 
-				<div id="lessonIntro">
-
-			<%=levelBlurb%>
-			<br /> <br /> One of the biggest dangers to Apps is reverse
-			engineering. This is easily done and can reveal source code, API
-			keys, Encryption Keys, Hidden Admin Functionality and hard coded passwords. A developer may obfuscate their code in order to make it more difficult for an attacker to read. In some cases obfuscation is the only defense. 
-			
-			<br/ >
-			<a>ProGuard</a> is a tool which now comes with the Android SDK and can be used to optimize,
-			shrink and <a>obfuscate code</a>. The obfuscation makes the code harder to
-			read for anyone who reverse engineers the APK. Although ProGuard is
-			an excellent tool, it will not secure your code. 
-			
-			ProGuard should generally be used all the time due to the other benefits it comes
-			with, but it will only slow down an attacker and cannot prevent
-			attackers from finding sensitive information.
-			
-			<br/>
-			Other obfuscation techniques involve not only making the code harder to read but also making the code more confusing. Instead of a hard coded string comparison, An App could use a function to check to validity of a password.<br/>
-			
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
-				</div>
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+			<div id="lessonIntro">
+				One of the biggest dangers to Mobile Applications is reverse
+				engineering. This is easily done and can reveal source code, API
+				keys, Encryption Keys, Hidden Admin Functionality or hard coded passwords. A developer may obfuscate their code in order to make it more difficult for an attacker to read. In some cases obfuscation is the only defence. 
+				
 				<br/>
-			
-			
-			 <br/> There are two tools you will need to reverse
-			engineer an APK. <a>Dex2Jar</a> and <a>JD-GUI</a>. Once you have
-			these tools and the target APK, use dex2jar to convert the APK to a
-			jar file then open the .jar file with JD-GUI. Find the key in the source code of the <a>ReverseEngineer.apk</a>. <br />
+				<a>ProGuard</a> is a tool which now comes with the Android SDK and can be used to optimize,
+				shrink and <a>obfuscate code</a>. Obfuscation makes the code harder to
+				read for anyone who reverse engineers the APK. Although ProGuard is
+				an excellent tool, it will not secure your code. 
+				
+				ProGuard should generally be used all the time due to the other benefits it offers, but it will only slow down an attacker from gathering information and cannot prevent attackers from finding sensitive information.
+				
+				<br/>
+				Other obfuscation techniques involve not only making the code harder to read but also making the code more confusing. Instead of a hard coded string comparison, an App could use a function to check to validity of a password.<br/>
+				<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+			</div>
+			<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+			<br/>
+			<br/> 
+			There are two tools you will need to reverse engineer an APK. <a>Dex2Jar</a> and <a>JD-GUI</a>. Once you have
+			these tools and the target APK, use dex2jar to convert the APK to a	jar file then open the .jar file with JD-GUI. Carry this out against the app for this lesson and investigate the source code to retrieve the result key. <br />
 				
 				<br/>
 				<%= Analytics.getMobileLevelBlurb("ReverseEngineer.apk") %>
@@ -112,70 +100,7 @@
 			});
 		</script>
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-			
-				
-			
-			<%
-				/* IF you need a form - Present it like this */
-			%>
-			<%
-				/*
-				<br />
-				<br />
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>			
-						<div id="submitButton">
-						<input type="submit" value="Get Info"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
-					</td></tr>
-					</table>
-				</form>
-				
-				<div id="resultsDiv"></div>
-				 */
-			%>
 		</p>
 	</div>
-	<%
-		/*If you need to call the Server Do it like this */
-	%>
-	<%
-		/*
-		<script>
-			$("#leForm").submit(function(){
-				var theVariableName = $("#variableName").val();
-				var theSecondVariableName = $("#secondVariableName").val();
-				$("#submitButton").hide("fast");
-				$("#loadingSign").show("slow");
-				$("#resultsDiv").hide("slow", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "<ChangeThis= levelHash ChangeThis>",
-						data: {
-							variableName: theVariableName, 
-							secondVariableName: theSecondVariableName
-						},
-						async: false
-					});
-					if(ajaxCall.status == 200)
-					{
-						$("#resultsDiv").html(ajaxCall.responseText);
-					}
-					else
-					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-					}
-					$("#resultsDiv").show("slow", function(){
-						$("#loadingSign").hide("fast", function(){
-							$("#submitButton").show("slow");
-						});
-					});
-				});
-			});
-		</script>
-		 */
-	%>
 </body>
 </html>

@@ -74,7 +74,7 @@ public class GetProgress extends HttpServlet
 			}
 			else
 			{
-				out.write("Error Occured!");
+				out.write("Error Occurred!");
 			}
 		}
 		else

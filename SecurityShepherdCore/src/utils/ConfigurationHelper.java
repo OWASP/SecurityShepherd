@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 
 /**
- * This class will store all of the configuration setup that appears for first time sign in administrators
+ * This class will store all of the configuration set-up that appears for first time sign in administrators
  * 
  * @author Mark Denihan
  *
@@ -24,6 +24,8 @@ public class ConfigurationHelper
 			boolean defaultValuesDetected = true;
 			boolean defaultCoreValueDetected = true;
 			boolean defaultExposedValueDetected = true;
+			log.debug("exposedServer = " + ExposedServer.getSecureUrl());
+			log.debug("thisClass     = " + defaultCoreServerAddress);
 			defaultCoreValueDetected = ExposedServer.getSecureUrl().equalsIgnoreCase(defaultCoreServerAddress) || ExposedServer.getSecureUrl().equalsIgnoreCase(defaultCoreServerAddress.replaceFirst("http", "https"));
 			if(defaultCoreValueDetected)
 				log.info("Default Core Detected");

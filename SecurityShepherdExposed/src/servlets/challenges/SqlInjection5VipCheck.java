@@ -23,7 +23,21 @@ import dbProcs.Database;
  * Level : SQL Injection 5
  * <br><br>
  * 
- * @author mark
+ * This file is part of the Security Shepherd Project.
+ * 
+ * The Security Shepherd project is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.<br/>
+ * 
+ * The Security Shepherd project is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.<br/>
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * @author Mark Denihan
  *
  */
 public class SqlInjection5VipCheck extends HttpServlet
@@ -39,7 +53,7 @@ public class SqlInjection5VipCheck extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -52,7 +66,7 @@ public class SqlInjection5VipCheck extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -69,7 +83,7 @@ public class SqlInjection5VipCheck extends HttpServlet
 			
 			htmlOutput = new String("");
 			Connection conn = Database.getChallengeConnection(applicationRoot, "SqlInjectionChallenge5ShopVipCoupon");
-			log.debug("Looking for VipCoupons Insecurly");
+			log.debug("Looking for VipCoupons Insecurely");
 			PreparedStatement prepstmt = conn.prepareStatement("SELECT itemId, perCentOff, itemName FROM vipCoupons JOIN items USING (itemId) WHERE couponCode = '" + couponCode + "';");
 			ResultSet coupons = prepstmt.executeQuery();
 			try
@@ -88,14 +102,14 @@ public class SqlInjection5VipCheck extends HttpServlet
 			}
 			catch(Exception e)
 			{
-				log.debug("Could Not Find Vip Coupon: " + e.toString());
+				log.debug("Could Not Find VIP Coupon: " + e.toString());
 				htmlOutput += "<p> Check Failed - Please try again later</p>";
 			}
 			conn.close();
 		}
 		catch(Exception e)
 		{
-			log.debug("Did complete Vip Check: " + e.toString());
+			log.debug("Did complete VIP Check: " + e.toString());
 			htmlOutput += "<p> Check Failed - Please try again later</p>";
 		}
 		try

@@ -22,7 +22,7 @@ import utils.SqlFilter;
 import dbProcs.Database;
 
 /**
- * SQL Injection Challange One - Does not use user specific keys
+ * SQL Injection Challenge One - Does not use user specific keys
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -46,7 +46,7 @@ public class SqlInjection1 extends HttpServlet
 	//SQL Challenge One
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection1.class);
-	private static String levelName = "SQL Injection Challange One";
+	private static String levelName = "SQL Injection Challenge One";
 	private static String levelHash = "ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b";
 	private static String levelResult = ""; // Stored in Vulnerable DB. Not user Specific
 	/**
@@ -59,7 +59,7 @@ public class SqlInjection1 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -72,7 +72,7 @@ public class SqlInjection1 extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -121,10 +121,10 @@ public class SqlInjection1 extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
-		log.debug("outputing HTML");
+		log.debug("Outputting HTML");
 		out.write(htmlOutput);
 	}
 }

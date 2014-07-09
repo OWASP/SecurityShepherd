@@ -52,7 +52,7 @@ String levelName =  "Failure to Restrict URL Access Lesson";
 			<h2 class="title">What is a Failure to Restrict URL Access?</h2>
 			<p> 
 				<div id="lessonIntro">
-					An application that <a>fails to restrict URL access</a> is an application that does is not protecting it's "protected" pages sufficiently. This occurs when an application hides functionality from basic users. In an application that fails to restrict URL access, administration links are only put onto the page if the user is an administrator. If users discover the page's address, they can still access it via URL access.
+					An application that <a>fails to restrict URL access</a> is an application that is not protecting it's "protected" pages sufficiently. This occurs when an application hides functionality from basic users. In an application that fails to restrict URL access, administration links are only put onto the page if the user is an administrator. If users discover a page's address, they can still access it via URL access.
 					<br/>
 					<br/>
 					Preventing unauthorized URL access requires selecting an approach for requiring proper authentication and proper authorization for each page. The easier the authentication is to include in a page the more likely that all pages will be covered by the policy.

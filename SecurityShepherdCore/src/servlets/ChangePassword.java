@@ -92,7 +92,7 @@ public class ChangePassword extends HttpServlet
 						else
 						{
 							log.error("Incorrect Password");
-							ses.setAttribute("errorMessage", "Incorrect Password... Dont lock yourself out!");
+							ses.setAttribute("errorMessage", "Incorrect Password... Don't lock yourself out!");
 							response.sendRedirect("index.jsp");
 						}
 					}
@@ -117,7 +117,7 @@ public class ChangePassword extends HttpServlet
 						//Return error message
 						else if(!validData)
 						{
-							log.error("Bad Data Receieved");
+							log.error("Bad Data Received");
 							ses.setAttribute("errorMessage", "Invalid Request! Please try again.");
 						}
 						else if(!validPassword)

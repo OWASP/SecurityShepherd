@@ -39,7 +39,7 @@ public class SqlInjection5CouponCheck extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -52,7 +52,7 @@ public class SqlInjection5CouponCheck extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -69,7 +69,7 @@ public class SqlInjection5CouponCheck extends HttpServlet
 			
 			htmlOutput = new String("");
 			Connection conn = Database.getChallengeConnection(applicationRoot, "SqlInjectionChallenge5ShopCoupon");
-			log.debug("Looking for Coupons Insecurly");
+			log.debug("Looking for Coupons Insecurely");
 			PreparedStatement prepstmt = conn.prepareStatement("SELECT itemId, perCentOff, itemName FROM coupons JOIN items USING (itemId) WHERE couponCode = '" + couponCode + "';");
 			ResultSet coupons = prepstmt.executeQuery();
 			try
@@ -96,7 +96,7 @@ public class SqlInjection5CouponCheck extends HttpServlet
 		catch(Exception e)
 		{
 			log.debug("Did complete Check: " + e.toString());
-			htmlOutput = "Error Occured: " + encoder.encodeForHTML(e.toString());
+			htmlOutput = "Error Occurred: " + encoder.encodeForHTML(e.toString());
 		}
 		try
 		{

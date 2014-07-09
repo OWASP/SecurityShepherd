@@ -47,17 +47,14 @@ public class BrokenCrypto3 extends HttpServlet
 	private static String levelName = "Broken Crypto Challenge 3";
 	private static String levelHash = "2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1";
 	public static String levelResult = "thisisthesecurityshepherdabcencryptionkey"; //Is used as encryption key in this level
-	/**
-	 * The user must abuse this functionality to revial a hidden user. The result key is hidden in this users profile.
-	 * @param userId To be used in generating the HTML output
-	 */
+
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -70,7 +67,7 @@ public class BrokenCrypto3 extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		
 		PrintWriter out = response.getWriter();
@@ -86,13 +83,13 @@ public class BrokenCrypto3 extends HttpServlet
 			String decryptedUserData = decrypt(userData, levelResult);
 			log.debug("Decrypted to: " + decryptedUserData);
 			Encoder encoder = ESAPI.encoder();
-			htmlOutput = "<h2>Plaintext Result:</h2><p>Your ciphertext was decrypted to the following:<br/><br/><em>"
+			htmlOutput = "<h2>Plain text Result:</h2><p>Your cipher text was decrypted to the following:<br/><br/><em>"
 					+ encoder.encodeForHTML(decryptedUserData)
 					+ "</em></p>";
 		}
 		catch(Exception e)
 		{
-			htmlOutput = "An Error Occured! You must be getting funky!";
+			htmlOutput = "An Error Occurred! You must be getting funky!";
 			log.fatal(levelName + " - " + e.toString());
 		}
 		out.write(htmlOutput);

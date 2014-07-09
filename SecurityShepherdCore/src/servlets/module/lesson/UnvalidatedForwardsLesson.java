@@ -91,16 +91,16 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 						log.debug("Url Query: " + csrfUrl.getQuery());
 						validSolution = csrfUrl.getHost().equals(ExposedServer.getSecureHost().toLowerCase());
 						if(!validSolution)
-							log.debug("Invalid Solutoin: Bad Host");
+							log.debug("Invalid Solution: Bad Host");
 						validSolution = new Integer(csrfUrl.getPort()).toString().equals(ExposedServer.getSecurePort().toLowerCase()) && validSolution;
 						if(!validSolution)
-							log.debug("Invalid Solutoin: Bad Port or Above");
+							log.debug("Invalid Solution: Bad Port or Above");
 						validSolution = csrfUrl.getPath().toLowerCase().equalsIgnoreCase("/user/redirect") && validSolution;
 						if(!validSolution)
-							log.debug("Invalid Solutoin: Bad Path or Above");
+							log.debug("Invalid Solution: Bad Path or Above");
 						validSolution = csrfUrl.getQuery().toLowerCase().startsWith(("to=").toLowerCase()) && validSolution;
 						if(!validSolution)
-							log.debug("Invalid Solutoin: Bad Query or Above");
+							log.debug("Invalid Solution: Bad Query or Above");
 						if(validSolution)
 						{
 							log.debug("Redirect URL Correct: Now checking the Redirected URL for valid CSRF Attack");
@@ -124,13 +124,13 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 						validSolution = false;
 						validAttack = false;
 						messageForAdmin = "";
-						htmlOutput="Invalid Url";
+						htmlOutput="Invalid URL";
 					}				
 					
 					if(validSolution && validAttack)
 					{
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>The administrator recieved your messege, clicked the link, and submitted the GET request automaticaly through the invalidated redirect<br />" +
+								"<p>The administrator received your message, clicked the link, and submitted the GET request automatically through the invalidated redirect<br />" +
 								"The result key for this lesson is <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
@@ -150,14 +150,14 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 							"'>" + encoder.encodeForHTML("Link from " + userName) +
 							"</a></td></tr></table></p>";
 					}
-					log.debug("outputing HTML");
+					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 		log.debug("End of " + levelName + " Servlet");

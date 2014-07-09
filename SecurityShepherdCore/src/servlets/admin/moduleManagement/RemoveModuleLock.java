@@ -69,7 +69,7 @@ public class RemoveModuleLock extends HttpServlet
 				{
 					log.debug("Blocker Disabled");
 					ModuleBlock.reset();
-					out.write("<h2 class='title'>Blocker Disabled</h2><p>There is no longer any module blocker enabled on the applicaiton. All levels can be completed.</p>");
+					out.write("<h2 class='title'>Blocker Disabled</h2><p>There is no longer any module blocker enabled on the application. All levels can be completed.</p>");
 				}
 				catch (Exception e)
 				{

@@ -18,7 +18,6 @@
     <env-entry-value>true</env-entry-value>
 </env-entry> 
   
-  <!--
   <error-page>
         <error-code>500</error-code>
         <location>/serverError.html</location>
@@ -27,8 +26,7 @@
         <error-code>404</error-code>
         <location>/lostSheep.html</location>
     </error-page> 
-    -->
-  
+    
 	<servlet>
 		<servlet-name>/lessons/e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594</servlet-name>
 		<servlet-class>servlets.SqlInjectionLesson</servlet-class>

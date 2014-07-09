@@ -50,13 +50,13 @@ String levelName =  "SQL Injection Lesson";
 			<h2 class="title">What is SQL Injection?</h2>
 			<p> 
 				<div id="lessonIntro">
-					Injection flaws, such as <a>SQL injection</a> occur when hostile data is sent to an interpreter as part of a command or query. The hostile data can trick the interpreter into executing unintended commands or accessing unauthorized data. Injections attacks are of a high severity. Injection flaws can be exploited to access any information held on the system and removing a system's confidentiality. These security risks can then be extended to execute updates to existing data affecting the systems integrity and availability. These attacks are easily exploitable as they can be initiated by anyone who can interact with the system through any data they pass to the application.
+					Injection flaws, such as <a>SQL injection</a>, occur when hostile data is sent to an interpreter as part of a command or query. The hostile data can trick the interpreter into executing unintended commands or accessing unauthorized data. Injections attacks are of a high severity. Injection flaws can be exploited to remove a system's confidentiality by accessing any information held on the system. These security risks can then be extended to execute updates to existing data affecting the systems integrity and availability. These attacks are easily exploitable as they can be initiated by anyone who can interact with the system through any data they pass to the application.
 					<br />
 					<br />
-					In the following form's parameters are concatenated to a string that will be passed to a SQL server. This means that the data can be interpreted as part of the code. 
+					The following form's parameters are concatenated to a string that will be passed to a SQL server. This means that the data can be interpreted as part of the code. 
 					<br />
 					<br />
-					The objective here is to modify the result of the query with <a>SQL Injection</a> so that all of the table's rows are returned. This means you want to change the <a>boolean</a> result of the query's <a>WHERE</a> clause. The easiest way to ensure the <a>boolean</a> result is always true is to inject a <a>boolean 'OR'</a> operator followed by a true statement like <a>1 = 1</a>.
+					The objective here is to modify the result of the query with <a>SQL Injection</a> so that all of the table's rows are returned. This means you want to change the <a>boolean</a> result of the query's <a>WHERE</a> clause to return true for every row in the table. The easiest way to ensure the <a>boolean</a> result is always true is to inject a <a>boolean 'OR'</a> operator followed by a true statement like <a>1 = 1</a>.
 					<br />
 					<br />
 					If the parameter is been interpreted as a string, you can escape the string with an apostrophe. That means that everything after the apostrophe will be interpreted as SQL code.
@@ -67,12 +67,12 @@ String levelName =  "SQL Injection Lesson";
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
 				
-				Use <a>SQL Injection</a> in the following example to retrieve all of the tables rows. The lesson's solution key will be found in one of these rows! The results will be posted beneath the search form.
+				Exploit the <a>SQL Injection</a> flaw in the following example to retrieve all of the rows in the table. The lesson's solution key will be found in one of these rows! The results will be posted beneath the search form.
 				<br />
 				<br />
 				<div id="hint" style="display: none;">
 					<h2 class="title">Lesson Hint</h2>
-					This is the query that you are adding data to. See if you can input something that can cause the <a>WHERE</a> clause to always return <a>true</a>. Remember, you can escape a string using an apostrophe.
+					This is the query that you are adding data to. See if you can input something that will cause the <a>WHERE</a> clause to return <a>true</a> for every row in the table. Remember, you can escape a string using an apostrophe.
 					<br />
 					<br />
 					<div>SELECT * FROM tb_users WHERE username ='<a id="userContent"></a>';</div>
@@ -83,7 +83,7 @@ String levelName =  "SQL Injection Lesson";
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>username</a> of the user that you want to look up
+						Please enter the <a>user name</a> of the user that you want to look up
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="aUserName" type="text"/>

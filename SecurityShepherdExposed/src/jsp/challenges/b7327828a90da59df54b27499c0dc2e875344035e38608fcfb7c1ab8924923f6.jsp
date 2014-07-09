@@ -54,9 +54,7 @@ String levelName = "SQL Injection Challenge Three";
 			SQL Injection Challenge Three
 			</h2>
 			<p> 
-				To complete this challenge, you must use SQL injection get the <a>credit card number</a> from 
-				one of the <a>customers</a> that has a <a>customer name</a> of <a>Mary Martin</a>. Mary's 
-				credit card number is the result key to this challenge.
+				To complete this challenge, you must exploit a SQL injection issue in the following sub application to acquire the <a>credit card number</a> from one of the <a>customers</a> that has a <a>customer name</a> of <a>Mary Martin</a>. Mary's credit card number is the result key to this challenge.
 				
 				<form id="leForm" action="javascript:;">
 					<table>

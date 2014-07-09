@@ -60,68 +60,14 @@ catch (Exception e)
 				<%= levelBlurb %>
 				<br/>
 				
-				This App uses sloppy filters in an attempt to thwart attackers. These filters can be easily bypassed. Login to get the key. 
+				The App for this challenge uses sloppy filters in an attempt to thwart attackers. These filters can be easily bypassed. Login to get the key. 
 				<br/>
 				<br/>
 				<%= Analytics.getMobileLevelBlurb("CSInjection2.apk") %>
-				<% /* IF you need a form - Present it like this */ %>
-				<%
-				/*
-				<br />
-				<br />
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>			
-						<div id="submitButton">
-						<input type="submit" value="Get Info"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
-					</td></tr>
-					</table>
-				</form>
 				
-				<div id="resultsDiv"></div>
-				*/
-				%>
 			</p>
 		</div>
-		<% /*If you need to call the Server Do it like this */ %>
-		<%
-		/*
-		<script>
-			$("#leForm").submit(function(){
-				var theVariableName = $("#variableName").val();
-				var theSecondVariableName = $("#secondVariableName").val();
-				$("#submitButton").hide("fast");
-				$("#loadingSign").show("slow");
-				$("#resultsDiv").hide("slow", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "<ChangeThis= levelHash ChangeThis>",
-						data: {
-							variableName: theVariableName, 
-							secondVariableName: theSecondVariableName
-						},
-						async: false
-					});
-					if(ajaxCall.status == 200)
-					{
-						$("#resultsDiv").html(ajaxCall.responseText);
-					}
-					else
-					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-					}
-					$("#resultsDiv").show("slow", function(){
-						$("#loadingSign").hide("fast", function(){
-							$("#submitButton").show("slow");
-						});
-					});
-				});
-			});
-		</script>
-		*/
-		%>
+		
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

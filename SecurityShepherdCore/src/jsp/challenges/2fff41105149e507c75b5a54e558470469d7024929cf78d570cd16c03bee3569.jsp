@@ -21,7 +21,8 @@
  * 
  * @author Mark Denihan
  */
- String levelHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
+ 
+String levelHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cross Site Request Forgery Challenge 5 Accessed");
 if (request.getSession() != null)
 {

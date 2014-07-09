@@ -119,7 +119,7 @@ public class CreateNewAdmin extends HttpServlet
 					else
 					{
 						//Validation Error Responses
-						String errorMessage = "An Error Occured: ";
+						String errorMessage = "An Error Occurred: ";
 						if(!notNull || !notEmpty)
 						{
 							log.error("Null values detected");
@@ -137,7 +137,7 @@ public class CreateNewAdmin extends HttpServlet
 						}
 						else if(!userValidate)
 						{
-							log.error("Javascript validation bypassed");
+							log.error("JavaScript validation bypassed");
 							errorMessage += "Invalid Request. Please try again";
 						}
 						out.print("<h2 class=\"title\">Admin Create Failure</h2><br>" +
@@ -151,7 +151,7 @@ public class CreateNewAdmin extends HttpServlet
 					log.error("Create New Admin Error: " + e.toString());
 					out.print("<h2 class=\"title\">Admin Create Failure</h2><br>" +
 							"<p>" +
-							"<font color=\"red\">An error occured! Please try again.</font>" +
+							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
 				}
 			}
@@ -160,7 +160,7 @@ public class CreateNewAdmin extends HttpServlet
 				log.debug("CSRF tokens did not match");
 				out.print("<h2 class=\"title\">Admin Create Failure</h2><br>" +
 						"<p>" +
-						"<font color=\"red\">An error occured! CSRF Tokens did not match.</font>" +
+						"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 						"<p>");
 			}
 		}
@@ -168,7 +168,7 @@ public class CreateNewAdmin extends HttpServlet
 		{
 			out.print("<h2 class=\"title\">Admin Create Failure</h2><br>" +
 				"<p>" +
-				"<font color=\"red\">An error occured! Please try non administrator functions!</font>" +
+				"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 				"<p>");
 		}
 		log.debug("*** createNewAdmin END ***");

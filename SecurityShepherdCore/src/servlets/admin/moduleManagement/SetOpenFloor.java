@@ -40,7 +40,7 @@ public class SetOpenFloor extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SetOpenFloor.class);
 	/**
-	 * Called to change the status of the utiles.ModulePlan class. Once this has been called by a valid administrator, the utils.ModulePlan will be changed.
+	 * Called to change the status of the utils.ModulePlan class. Once this has been called by a valid administrator, the utils.ModulePlan will be changed.
 	 * @param csrfToken
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -65,7 +65,7 @@ public class SetOpenFloor extends HttpServlet
 			}
 			else
 			{
-				out.write("Error Occured!");
+				out.write("Error Occurred!");
 			}
 		}
 		log.debug("*** END servlets.Admin.SetOpenFloor ***");

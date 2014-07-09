@@ -78,7 +78,7 @@ public class CsrfChallengeTargetThree extends HttpServlet
 					{
 						log.debug(userName + " is been CSRF'd by " + attackerName);
 						
-						log.debug("Attemping to Increment ");
+						log.debug("Attempting to Increment ");
 						String moduleHash = CsrfChallengeThree.getLevelHash();
 						String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, moduleHash);
 						result = Setter.updateCsrfCounter(ApplicationRoot, moduleId, plusId);
@@ -109,7 +109,7 @@ public class CsrfChallengeTargetThree extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal("Cross Site Request Forgery Challenge Target 3 - " + e.toString());
 		}
 	}

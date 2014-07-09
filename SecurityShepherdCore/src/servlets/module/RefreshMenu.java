@@ -45,7 +45,7 @@ public class RefreshMenu extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(GetModule.class);
 	/**
-	 * This method refreshs the user's menu after they complete a level incremental mode. This ensures that the process of continuing challenges is a fluid one.
+	 * This method refreshes the user's menu after they complete a level incremental mode. This ensures that the process of continuing challenges is a fluid one.
 	 * @param csrfToken
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 

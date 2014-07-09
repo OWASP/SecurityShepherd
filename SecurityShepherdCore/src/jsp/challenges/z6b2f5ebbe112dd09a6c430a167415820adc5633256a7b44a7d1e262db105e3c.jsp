@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-	// Cross Site Request Forgery Challenge 6
+	// Cross Site Request Forgery Challenge 3
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -35,7 +35,7 @@ try
 }
 catch(Exception htmlE)
 {
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(CSRFChallenge3.jsp): tokenCookie Error:" + htmlE.toString());
 }
 // validateSession ensures a valid session, and valid role credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
@@ -60,13 +60,13 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross Site Request Forgery Challenge Six</title>
+	<title>Security Shepherd - Cross Site Request Forgery Challenge Three</title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Cross Site Request Forgery Challenge Six</h2>
+			<h2 class="title">Cross Site Request Forgery Challenge Three</h2>
 			<p> 
 				To complete this challenge, you must get your CSRF counter above 0. 
 				The request to increment your counter is as follows;
@@ -80,7 +80,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 				The csrfToken parameter is generated dynamically for easy user upon user interaction and the exampleId parameter is the identifier of the user who's CSRF counter is been incremented. Your identifier is <a><%= userId %></a>
 				<br/>
 				<br/>
-				You can use the CSRF forum below to post an iframe pointing at a web site.				
+				You can use the CSRF forum below to post an iFrame pointing at a web site.				
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>

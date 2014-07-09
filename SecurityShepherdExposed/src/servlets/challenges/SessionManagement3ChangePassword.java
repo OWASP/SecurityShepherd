@@ -46,9 +46,9 @@ public class SessionManagement3ChangePassword extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement3ChangePassword.class);
 	private static String levelName = "Session Management Challenge Three (Change Password)";
 	private static String levelHash = "b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a";
-	private static String levelResult = ""; //This servlet does not return a result
+	private static String levelResult = ""; //This Servlet does not return a result
 	/**
-	 * Function used by Session Managment Challenge Three to change the password of the submitted user name specified in the "Current" cookie
+	 * Function used by Session Management Challenge Three to change the password of the submitted user name specified in the "Current" cookie
 	 * @param current User cookie used to store the current user (encoded twice with base64)
 	 * @param newPassword the password which to use to update an accounts password
 	 */
@@ -70,7 +70,7 @@ public class SessionManagement3ChangePassword extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();
 		Base64 base64 = new Base64();
@@ -120,24 +120,24 @@ public class SessionManagement3ChangePassword extends HttpServlet
 				log.debug("Executing changePassword");
 				callstmt.execute();
 				
-				log.debug("Commiting changes made to database");
+				log.debug("Committing changes made to database");
 				callstmt = conn.prepareStatement("COMMIT");
 				callstmt.execute();
-				log.debug("Changes commited.");
+				log.debug("Changes committed.");
 				
 				htmlOutput = "<p>Password change request success.</p>";
 			}
 			else
 			{
-				log.debug("invalid password submited: " + subNewPass);
+				log.debug("invalid password submitted: " + subNewPass);
 				htmlOutput = "<p>Change Password Failed.</p>";
 			}
-			log.debug("Outputing HTML");
+			log.debug("Outputting HTML");
 			out.write(htmlOutput);
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - Change Password - " + e.toString());
 		}
 	}

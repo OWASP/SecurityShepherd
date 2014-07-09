@@ -121,7 +121,7 @@ public class GetPlayersByClass extends HttpServlet
 						}
 						catch(SQLException e1)
 						{
-							log.error("Error Occured when handling playerList ResultSet");
+							log.error("Error Occurred when handling playerList ResultSet");
 						}
 					}
 					else

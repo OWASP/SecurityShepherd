@@ -77,7 +77,7 @@ public class XssChallengeOne extends HttpServlet
 					{
 						Encoder encoder = ESAPI.encoder();
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>You successfully executed the javascript alert command!<br />" +
+								"<p>You successfully executed the JavaScript alert command!<br />" +
 								"The result key for this lesson is <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
@@ -92,14 +92,14 @@ public class XssChallengeOne extends HttpServlet
 						"<p>Sorry but there were no results found that related to " +
 						searchTerm +
 						"</p>";
-					log.debug("outputing HTML");
+					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

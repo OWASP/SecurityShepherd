@@ -42,6 +42,7 @@ public class templateServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(templateServlet.class);
+	private static String levelName = "Example Challenge"; //Used for Logging
 	/**
 	 * Describe level here
 	 * @param paramName Put the JSON parameters you are expecting here
@@ -49,6 +50,10 @@ public class templateServlet extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		//Logging Servlet access
+		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+		log.debug(levelName + " servlet accessed");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String jsonOutput = new String();
@@ -64,7 +69,7 @@ public class templateServlet extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal("Session management lesson - " + e.toString());
 		}
 	}

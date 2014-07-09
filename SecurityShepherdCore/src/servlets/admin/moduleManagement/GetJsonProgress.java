@@ -20,7 +20,7 @@ import utils.Validate;
 import dbProcs.Getter;
 
 /**
- * This control class is responseable for the server operation in the Get Progress use case where the result of which is a JSON object of JSON arrays. This is used to create a scoreboard environment that updates in real time.
+ * This control class is responsible for the server operation in the Get Progress use case where the result of which is a JSON object of JSON arrays. This is used to create a scoreboard environment that updates in real time.
  * This Servlet should be poled regularly to achieve this.
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -76,7 +76,7 @@ public class GetJsonProgress extends HttpServlet
 			}
 			else
 			{
-				out.write("Error Occured!");
+				out.write("Error Occurred!");
 			}
 		}
 		else

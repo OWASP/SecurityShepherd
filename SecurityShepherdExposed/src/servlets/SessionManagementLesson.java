@@ -55,7 +55,7 @@ public class SessionManagementLesson extends HttpServlet
 		out.print(getServletInfo());
 		try
 		{
-			//Attempting to recover username of session that made request
+			//Attempting to recover user name of session that made request
 			try
 			{
 				if (request.getSession() != null)
@@ -68,7 +68,7 @@ public class SessionManagementLesson extends HttpServlet
 			catch (Exception e)
 			{
 				log.debug(levelName + " Servlet Accessed");
-				log.error("Could not retrieve username from session");
+				log.error("Could not retrieve user name from session");
 			}
 			Cookie userCookies[] = request.getCookies();
 			int i = 0;
@@ -95,7 +95,7 @@ public class SessionManagementLesson extends HttpServlet
 					
 					htmlOutput = "<h2 class='title'>Lesson Complete</h2>" +
 							"<p>" +
-							"Congradulations, you have bypassed this lessons <strong><a>VERY WEAK</a></strong> session managment. The result key for this lesson is " +
+							"Congratulations, you have bypassed this lessons <strong><a>VERY WEAK</a></strong> session management. The result key for this lesson is " +
 							"<a>"+ userKey + "</a>" +
 							"</p>";
 				}
@@ -108,12 +108,12 @@ public class SessionManagementLesson extends HttpServlet
 						"You have not completed this lesson yet." +
 						"</p>";
 			}
-			log.debug("Outputing HTML");
+			log.debug("Outputting HTML");
 			out.write(htmlOutput);
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

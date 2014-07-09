@@ -70,7 +70,7 @@ public class GetFeedback extends HttpServlet
 			}
 			else
 			{
-				out.write("Error Occured!");
+				out.write("Error Occurred!");
 			}
 		}
 		log.debug("*** END servlets.Admin.GetFeedback ***");

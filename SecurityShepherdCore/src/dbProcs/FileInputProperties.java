@@ -35,7 +35,7 @@ public class FileInputProperties
 	 * Reads the properties file for a specific property and returns it as a string.
 	 * @param filename The file to read
 	 * @param Property The name of the property to be found
-	 * @return The value of the specificed property to be found
+	 * @return The value of the specified property to be found
 	 */
 	@SuppressWarnings("deprecation")
 	public static String readfile(String filename, String Property) 

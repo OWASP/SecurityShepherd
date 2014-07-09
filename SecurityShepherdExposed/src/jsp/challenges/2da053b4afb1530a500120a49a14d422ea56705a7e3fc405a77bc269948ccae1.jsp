@@ -5,7 +5,7 @@ String levelName = "Insecure Cyrpto Challenge 3";
 //Alphanumeric Only
 String levelHash = "2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1";
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "The result key to this level is the same as the encryption key used in the following sub applicaiton. Break the cipher and recover the encryption! The result key is in all caps.";
+String levelBlurb = "The result key to this level is the same as the encryption key used in the following sub application. Break the cipher and recover the encryption! The result key is in all caps.";
 //Logs the IP, Forwarded IP that acceeded this level with the level name in the debug for convience. If you want to log more stuff in the JSP use this as an example
 try
 {
@@ -22,7 +22,7 @@ catch (Exception e)
 	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
 }
 /**
- * This level uses XOR's user input with a key. the vulnerablity in the cipher is if the attacker submits spaces, the key will be revealed after the XOR.
+ * This level uses XOR's user input with a key. the vulnerability in the cipher is if the attacker submits spaces, the key will be revealed after the XOR.
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -53,8 +53,6 @@ catch (Exception e)
 		<div id="contentDiv">
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
-				
 				<%= levelBlurb %>
 				<form id="leForm" action="javascript:;">
 					<table>
@@ -72,7 +70,7 @@ catch (Exception e)
 					</table>
 				</form>
 				
-				<div id="resultsDiv"><h2>Cipher text Example</h2><p>Try Decrypt this: IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==</p></div>
+				<div id="resultsDiv"><h2>Cipher text Example</h2><p>Try to decrypt this: IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==</p></div>
 			</p>
 		</div>
 		<% /*If you need to call the Server Do it like this */ %>

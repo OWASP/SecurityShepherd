@@ -21,7 +21,7 @@ import utils.ShepherdExposedLogManager;
  * <br/><br/>
  * This class is the target functionality for the challenge.
  * The information required to find this admin function is 
- * contained in the javascript of the JSP page associated with the level. This level returns
+ * contained in the JavaScript of the JSP page associated with the level. This level returns
  * a user specific key.
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -48,7 +48,7 @@ public class UrlAccess1Admin extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(UrlAccess1Admin.class);
 	private static String levelResult = "c776572b6a9d5b5c6e4aa672a4771213"; 
 	private static String levelHash = "4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99";
-	private static String levelName = "Url Access 1 (Admin)";
+	private static String levelName = "URL Access 1 (Admin)"; //Used for Logging
 	/**
 	 * Users have to defeat SQL injection that blocks single quotes.
 	 * The input they enter is also been filtered.
@@ -60,7 +60,7 @@ public class UrlAccess1Admin extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -73,7 +73,7 @@ public class UrlAccess1Admin extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -84,7 +84,7 @@ public class UrlAccess1Admin extends HttpServlet
 			String userData = request.getParameter("userData");
 			boolean tamperedRequest = !userData.equalsIgnoreCase("4816283");
 			if(!tamperedRequest)
-				log.debug("Untampered Request");
+				log.debug("No request tampering detected");
 			else
 				log.debug("User Submitted - " + userData);
 			
@@ -103,10 +103,10 @@ public class UrlAccess1Admin extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
-		log.debug("outputing HTML");
+		log.debug("Outputting HTML");
 		out.write(htmlOutput);
 	}
 }

@@ -53,10 +53,10 @@ String levelName = "Session Management Lesson";
 			<h2 class="title">What is Broken Authentication and Session Management?</h2>
 			<p> 
 				<div id="lessonIntro">
-					Attacks against an application's <a>authentication</a> and <a>session management</a> can be performed with security risks that other vulnerabilities present. For example, and applications session management can be overcome when a <a>Cross Site Scripting</a> vulnerability is used to steal user sessions. This topic is more about flaws that exist in the applications authentication and session management schema.
+					Attacks against an application's <a>authentication</a> and <a>session management</a> can be performed using security risks that other vulnerabilities present. For example, any application's session management can be overcome when a <a>Cross Site Scripting</a> vulnerability is used to steal user session tokens. This topic is more about flaws that exist in the applications authentication and session management schema.
 					<br />
 					<br />
-					Broken authentication and session management flaws are commonly found in areas such as logout, password management, secret question, account update. An attack can potentially abuse these functions to modify other user's credentials by guessing their secret question. Finding such flaws can sometimes be difficult, as each implementation is unique.
+					Broken authentication and session management flaws are commonly found in functionalities such as logout, password management, secret question and account update. An attack can potentially abuse these functions to modify other users credentials by guessing their secret question or through parameter abuse. Finding such flaws can sometimes be difficult, as each implementation is unique.
 					<br />
 					<br />
 					The following scenarios are vulnerable to these security risks;
@@ -67,14 +67,14 @@ String levelName = "Session Management Lesson";
 					<br /><a>5)</a> Session parameters can be manually changed by the user through application functionality.
 					<br />
 					<br />
-					Broken authentication and session management flaws allow an attack to potentially compromise every account in the application. Once the attack has been performed, the attack has the ability to do anything the user could do. For this reason, privileged accounts, such as administrators, are targeted.
+					Broken authentication and session management flaws allow an attacker to potentially compromise every account across an application. Once the attack has been performed, the attacker has the ability to do anything the user could do. For this reason, privileged accounts, such as administrators, are targeted.
 					<br />
 					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
 				</div>
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
 				
-				This lesson implements bad session management that performed on the client side. Investigate the following function to see if you can retrieve the result key.
+				This lesson implements bad session management. Investigate the following function to see if you trick the server into thinking you have already completed this lesson to retrieve the result key.
 				<br />
 				<br />
 				<div id="hint" style="display: none;">

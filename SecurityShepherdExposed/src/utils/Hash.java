@@ -161,11 +161,11 @@ public class Hash
 		try 
 		{
 			decryptedUserName = Hash.decrypt(Hash.userNameKey, encyptedUserName);
-			log.debug("Decrypted username to: " + decryptedUserName);
+			log.debug("Decrypted user-name to: " + decryptedUserName);
 		} 
 		catch (GeneralSecurityException e)
 		{
-			log.error("Could not decrypt username: " + e.toString());
+			log.error("Could not decrypt user name: " + e.toString());
 		}
 		return decryptedUserName;
 	}
@@ -205,31 +205,31 @@ public class Hash
 	}
 	
 	public static String encrypt(String key, String value)
-			throws GeneralSecurityException 
-			{
-				byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
-				if (raw.length != 16) 
-				{
-					throw new IllegalArgumentException("Invalid key size.");
-				}
-				SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-				Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-				cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
-				return Base64.encodeBase64String(cipher.doFinal(value.getBytes(Charset.forName("US-ASCII"))));
-			}
+	throws GeneralSecurityException 
+	{
+		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
+		if (raw.length != 16) 
+		{
+			throw new IllegalArgumentException("Invalid key size.");
+		}
+		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
+		return Base64.encodeBase64String(cipher.doFinal(value.getBytes(Charset.forName("US-ASCII"))));
+	}
 
-			public static String decrypt(String key, String encrypted)
-			throws GeneralSecurityException 
-			{
-				byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
-				if (raw.length != 16)
-				{
-					throw new IllegalArgumentException("Invalid key size.");
-				}
-				SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-				Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-				cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
-				byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
-				return new String(original, Charset.forName("US-ASCII"));
-			}
+	public static String decrypt(String key, String encrypted)
+	throws GeneralSecurityException 
+	{
+		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
+		if (raw.length != 16)
+		{
+			throw new IllegalArgumentException("Invalid key size.");
+		}
+		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
+		byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
+		return new String(original, Charset.forName("US-ASCII"));
+	}
 }

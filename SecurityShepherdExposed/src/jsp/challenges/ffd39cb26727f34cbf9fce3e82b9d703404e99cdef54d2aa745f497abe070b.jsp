@@ -50,10 +50,10 @@ String levelName = "SQL Injection Challenge One";
 		<div id="contentDiv">
 			<h2 class="title">SQL Injection Challenge One</h2>
 			<p> 
-				To complete this challenge, you must use SQL injection in the following form to find the result key.
+				To complete this challenge, you must exploit the SQL injection flaw in the following form to find the result key.
 				<div id="hint" style="display: none;">
 					<h2 class="title">Challenge Hint</h2>
-					This is the query you are injecting code into... But your input is been filtered!
+					This is the query you are attempting to inject code into... But your input is been filtered by the server!
 					<br />
 					<br />
 					<div>SELECT * FROM customers WHERE customerId ='<a id="userContent"></a>';</div>

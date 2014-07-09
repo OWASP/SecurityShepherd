@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java"
-	import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
 <%
 	//No Quotes In level Name
 	String levelName = "Mobile Reverse Engineering 2";
@@ -64,7 +63,7 @@
 			%>
 
 			<%=levelBlurb%>
-			<br /> The developers of this App have decided to use an algorithm to confirm or deny the authenticity of the key. Reverse Engineer ReverseEngineer3.APK to find this algorith. If you are unsure whether or not the key is correct, there is a key validity checker on the App. <br />
+			<br /> The developers of this App have decided to use an algorithm to confirm or deny the authenticity of the key. You must Reverse Engineer ReverseEngineer3.APK to find this algorithm. If you are unsure whether or not the key is correct, there is a key validity checker in the App. <br />
 			<br>
 			<br/>
 			<%= Analytics.getMobileLevelBlurb("ReverseEngineer3.apk") %>

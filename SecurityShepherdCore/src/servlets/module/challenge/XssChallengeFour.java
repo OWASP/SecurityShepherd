@@ -86,7 +86,7 @@ public class XssChallengeFour extends HttpServlet
 						{
 							Encoder encoder = ESAPI.encoder();
 							htmlOutput = "<h2 class='title'>Well Done</h2>" +
-									"<p>You successfully executed the javascript alert command!<br />" +
+									"<p>You successfully executed the JavaScript alert command!<br />" +
 									"The result key for this lesson is <a>" +
 									encoder.encodeForHTML(
 											Hash.generateUserSolution(
@@ -107,7 +107,7 @@ public class XssChallengeFour extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal("Cross Site Scripting Challenge 4 - " + e.toString());
 		}
 	}

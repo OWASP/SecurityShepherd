@@ -27,7 +27,7 @@ public class SetModuleStatus extends HttpServlet
 	 * Controller class used to specify what modules to mark as closed/open
 	 * @param toOpen Array of moduleId's to open
 	 * @param toClose Array of moduleId's to close
-	 * @param csrfToken The csrf protection token for this funciton
+	 * @param csrfToken The csrf protection token for this function
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException

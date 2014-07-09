@@ -46,7 +46,7 @@ public class UrlAccess2 extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(UrlAccess2.class);
 	private static String levelResult = "40b675e3d404c52b36abe31d05842b283975ec62e8"; 
 	private static String levelHash = "278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa";
-	private static String levelName = "Url Access 2 (Guest)";
+	private static String levelName = "URL Access 2 (Guest)";
 	/**
 	 * Users have to defeat SQL injection that blocks single quotes.
 	 * The input they enter is also been filtered.
@@ -58,7 +58,7 @@ public class UrlAccess2 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdExposedLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
+		//Attempting to recover user name of session that made request
 		try
 		{
 			if (request.getSession() != null)
@@ -71,7 +71,7 @@ public class UrlAccess2 extends HttpServlet
 		catch (Exception e)
 		{
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve username from session");
+			log.error("Could not retrieve user name from session");
 		}
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -81,7 +81,7 @@ public class UrlAccess2 extends HttpServlet
 			String userData = request.getParameter("guestData");
 			boolean tamperedRequest = !userData.equalsIgnoreCase("ismcoa98sUD8j21dmdoasmcoISOdjh3189");
 			if(!tamperedRequest)
-				log.debug("Untampered Request");
+				log.debug("No request tampering detected");
 			else
 				log.debug("User Submitted - " + userData);
 			
@@ -94,10 +94,10 @@ public class UrlAccess2 extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
-		log.debug("outputing HTML");
+		log.debug("Outputting HTML");
 		out.write(htmlOutput);
 	}
 }

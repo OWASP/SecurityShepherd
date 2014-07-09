@@ -184,13 +184,13 @@ public class FindXSS
 							htmlElement = htmlElement.replaceAll(" ", "");
 							// Get rid of return characters if there are any
 							htmlElement = htmlElement.replaceAll("\n", "");
-							// Identify start index (after attriubte)
+							// Identify start index (after attribute)
 							start = htmlElement.indexOf(uriAttributes[i]) + uriAttributes[i].length();
 							log.debug("Start = " + start);
 							//URI Attacks can be encoded in HTML encoding and still be rendered by most browsers so this line decodes the values once if an ampersand exists
 							if(htmlElement.contains("&"))
 							{
-								log.debug("HTML Encoded URI attriute detected: " + htmlElement);
+								log.debug("HTML Encoded URI attribute detected: " + htmlElement);
 								Encoder encoder = ESAPI.encoder();
 								htmlElement = encoder.decodeForHTML(htmlElement);
 								log.debug("Decoded Attribute = " + htmlElement);
@@ -221,12 +221,12 @@ public class FindXSS
 									// log.debug("Striped to: " + firstPartOfUriValue);
 								}
 									
-								//Stripping off starting quote or appostraphy
+								//Stripping off starting quote or apostrophe
 								if(firstPartOfUriValue.startsWith("\"") || firstPartOfUriValue.startsWith("'"))
 								{
 									// log.debug("Found quote at start of string");
 									firstPartOfUriValue = firstPartOfUriValue.substring(1);
-									// log.debug("Stripted to: " + firstPartOfUriValue);
+									// log.debug("Striped to: " + firstPartOfUriValue);
 								}
 								// log.debug("Checking to see if the string is equal to data or javascript");
 								// log.debug("Checking the string '" + firstPartOfUriValue + "'");
@@ -307,7 +307,7 @@ public class FindXSS
 			int tempEnd = messageForAdmin.indexOf("/>", tempStart + 5);
 			if(tempEnd == -1)
 			{
-				log.debug("Invlaid <img> Tag");
+				log.debug("Invalid <img> Tag");
 			}
 			else
 			{
@@ -364,10 +364,10 @@ public class FindXSS
 					try
 					{
 						URL csrfUrl = new URL(tempMessage);
-						log.debug("Url Host: " + csrfUrl.getHost());
-						log.debug("Url Port: " + csrfUrl.getPort());
-						log.debug("Url Path: " + csrfUrl.getPath());
-						log.debug("Url Query: " + csrfUrl.getQuery());
+						log.debug("URL Host: " + csrfUrl.getHost());
+						log.debug("URL Port: " + csrfUrl.getPort());
+						log.debug("URL Path: " + csrfUrl.getPath());
+						log.debug("URL Query: " + csrfUrl.getQuery());
 						validUrl = csrfUrl.getHost().equals(ExposedServer.getSecureHost().toLowerCase());
 						if(!validUrl)
 							log.debug("1");
@@ -420,16 +420,16 @@ public class FindXSS
 			log.debug("theAttack Query: " + theAttack.getQuery());
 			validAttack = theAttack.getHost().equals(ExposedServer.getSecureHost().toLowerCase());
 			if(!validAttack)
-				log.debug("Invalid Solutoin: Bad Host");
+				log.debug("Invalid Solution: Bad Host");
 			validAttack = new Integer(theAttack.getPort()).toString().equals(ExposedServer.getSecurePort().toLowerCase()) && validAttack;
 			if(!validAttack)
-				log.debug("Invalid Solutoin: Bad Port or Above");
+				log.debug("Invalid Solution: Bad Port or Above");
 			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath) && validAttack;
 			if(!validAttack)
-				log.debug("Invalid Solutoin: Bad Path or Above");
+				log.debug("Invalid Solution: Bad Path or Above");
 			validAttack = theAttack.getQuery().toLowerCase().equalsIgnoreCase((userIdParameterName + "=" + userIdParameterValue).toLowerCase()) && validAttack;
 			if(!validAttack)
-				log.debug("Invalid Solutoin: Bad Query or Above");
+				log.debug("Invalid Solution: Bad Query or Above");
 		}
 		catch(MalformedURLException e)
 		{
@@ -462,13 +462,13 @@ public class FindXSS
 			log.debug("theAttack Query: " + theAttack.getQuery());
 			validAttack = theAttack.getHost().equals(ExposedServer.getSecureHost().toLowerCase());
 			if(!validAttack)
-				log.debug("Invalid Solutoin: Bad Host");
+				log.debug("Invalid Solution: Bad Host");
 			validAttack = new Integer(theAttack.getPort()).toString().equals(ExposedServer.getSecurePort().toLowerCase()) && validAttack;
 			if(!validAttack)
-				log.debug("Invalid Solutoin: Bad Port or Above");
+				log.debug("Invalid Solution: Bad Port or Above");
 			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath) && validAttack;
 			if(!validAttack)
-				log.debug("Invalid Solutoin: Bad Path or Above");
+				log.debug("Invalid Solution: Bad Path or Above");
 		}
 		catch(MalformedURLException e)
 		{

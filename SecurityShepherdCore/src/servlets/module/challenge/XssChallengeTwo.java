@@ -48,7 +48,7 @@ public class XssChallengeTwo extends HttpServlet
 	private static String levelName = "Cross Site Scripting Challenge Two";
 	private static String levelHash = "t227357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888";
 	/**
-	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotly deployed, and therfore only is executable against the person initating the funciton.
+	 * Cross Site Request Forgery safe Reflected XSS vulnerability. As there is no CSRF risk, this XSS flaw cannot be remotely exploited, and therefore is only is executable against the person initiating the function.
 	 * @param searchTerm To be spat back out at the user after been filtered
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -77,7 +77,7 @@ public class XssChallengeTwo extends HttpServlet
 					{
 						Encoder encoder = ESAPI.encoder();
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>You successfully executed the javascript alert command!<br />" +
+								"<p>You successfully executed the JavaScript alert command!<br />" +
 								"The result key for this lesson is <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
@@ -93,14 +93,14 @@ public class XssChallengeTwo extends HttpServlet
 						"<p>Sorry but there were no results found that related to " +
 						searchTerm +
 						"</p>";
-					log.debug("outputing HTML");
+					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occured! You must be getting funky!");
+			out.write("An Error Occurred! You must be getting funky!");
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

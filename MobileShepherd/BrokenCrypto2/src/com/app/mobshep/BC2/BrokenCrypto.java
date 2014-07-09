@@ -1,4 +1,11 @@
-package com.app.mobshep.BC;
+package com.app.mobshep.BC2;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -27,7 +34,7 @@ import android.widget.EditText;
 
 public class BrokenCrypto extends Activity{
 
-	EditText messageOne, messageTwo, messageThree, messageFour, messageFive;
+	EditText messageOne, messageTwo, messageThree;
 	
 
 
@@ -37,11 +44,31 @@ public class BrokenCrypto extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.broken);
 		referenceXML();
+		
+String destinationDir = "/data/data/" +getPackageName() + "/encrypt/";
+		
+		String destinationPath = destinationDir + "desKey";
+		
+		File f = new File(destinationPath);
+		
+		if (!f.exists()){
+			File directory = new File(destinationDir);
+			directory.mkdirs();
+			//assets members.db -> /databases/
+			
+			try{
+				copyKey(getBaseContext().getAssets().open("desKey"), new FileOutputStream(destinationPath));
+			}catch(FileNotFoundException e){
+				e.printStackTrace();
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+			
+		}
+		
 		startTimerOne();
 		startTimerTwo();
 		startTimerThree();
-		startTimerFour();
-		startTimerFive();
 		
 	}
 		
@@ -53,13 +80,9 @@ public class BrokenCrypto extends Activity{
 		messageOne = (EditText)findViewById(R.id.tvMessage1);
 		messageTwo = (EditText)findViewById(R.id.tvMessage2);
 		messageThree = (EditText)findViewById(R.id.tvMessage3);
-		messageFour = (EditText)findViewById(R.id.tvMessage4);
-		messageFive = (EditText)findViewById(R.id.tvMessage5);
 		messageOne.setVisibility(View.INVISIBLE);
 		messageTwo.setVisibility(View.INVISIBLE);
 		messageThree.setVisibility(View.INVISIBLE);
-		messageFour.setVisibility(View.INVISIBLE);
-		messageFive.setVisibility(View.INVISIBLE);
 
 
 	}
@@ -92,7 +115,7 @@ public class BrokenCrypto extends Activity{
 	        public void run() {
 	           
 	                try {
-	                    Thread.sleep(4000);
+	                    Thread.sleep(5000);
 	                }    
 	                catch (InterruptedException e) {
 	                    e.printStackTrace();
@@ -114,7 +137,7 @@ public class BrokenCrypto extends Activity{
 	        public void run() {
 	           
 	                try {
-	                    Thread.sleep(6000);
+	                    Thread.sleep(7000);
 	                }    
 	                catch (InterruptedException e) {
 	                    e.printStackTrace();
@@ -130,51 +153,17 @@ public class BrokenCrypto extends Activity{
 	    new Thread(runnable).start();
 	}
 	
-	private void startTimerFour() {
-	    final Handler handler = new Handler();
-	    Runnable runnable = new Runnable() {
-	        public void run() {
-	           
-	                try {
-	                    Thread.sleep(8000);
-	                }    
-	                catch (InterruptedException e) {
-	                    e.printStackTrace();
-	                }
-	                handler.post(new Runnable(){
-	                    public void run() {
-	                    	messageFour.setVisibility(View.VISIBLE);
-	                }
-	            });
-	            
-	        }
-	    };
-	    new Thread(runnable).start();
+	public void copyKey(InputStream iStream, OutputStream oStream)
+			throws IOException {
+		byte[] buffer = new byte[1024];
+		int i;
+		while ((i = iStream.read(buffer)) > 0) {
+				oStream.write(buffer, 0 , i);
+		}
+		iStream.close();
+		oStream.close();
+		
 	}
-	
-	private void startTimerFive() {
-	    final Handler handler = new Handler();
-	    Runnable runnable = new Runnable() {
-	        public void run() {
-	           
-	                try {
-	                    Thread.sleep(10000);
-	                }    
-	                catch (InterruptedException e) {
-	                    e.printStackTrace();
-	                }
-	                handler.post(new Runnable(){
-	                    public void run() {
-	                    	messageFive.setVisibility(View.VISIBLE);
-	                }
-	            });
-	            
-	        }
-	    };
-	    new Thread(runnable).start();
-	}
-	
-	
 	
 	}
 

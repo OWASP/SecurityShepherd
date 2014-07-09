@@ -54,7 +54,7 @@ String levelName = "Session Management Challenge One ";
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Admin Only Button"/></div>
+						<div id="submitButton"><input type="submit" value="Administrator Only Button"/></div>
 						<p style="display: none;" id="loadingSign">Loading...</p>
 					</td></tr>
 					</table>

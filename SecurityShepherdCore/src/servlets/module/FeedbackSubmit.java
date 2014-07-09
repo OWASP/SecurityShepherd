@@ -143,7 +143,7 @@ public class FeedbackSubmit extends HttpServlet
 								htmlOutput = new String("Could not update user result");
 								out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
 										"<p><font color=\"red\">" +
-										"Sorry but an error occured!" +
+										"Sorry but an error Occurred!" +
 										"</font></p>");
 							}
 						}
@@ -159,7 +159,7 @@ public class FeedbackSubmit extends HttpServlet
 					else
 					{
 						//Validation Error Responses
-						String errorMessage = "An Error Occured: ";
+						String errorMessage = "An Error Occurred: ";
 						if(!notNull)
 						{
 							log.error("Null values detected");
@@ -181,7 +181,7 @@ public class FeedbackSubmit extends HttpServlet
 					log.error("Feedback Submission Error: " + e.toString());
 					htmlOutput = new String("<h2 class=\"title\">Feedback Submission Failure</h2><br>" +
 							"<p>" +
-							"<font color=\"red\">An error occured! Please try again.</font>" +
+							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"</p>");
 				}
 			}
@@ -190,7 +190,7 @@ public class FeedbackSubmit extends HttpServlet
 				log.debug("CSRF Tokens did not match");
 				htmlOutput = new String("<h2 class=\"title\">Feedback Submission Failure</h2><br>" +
 						"<p>" +
-						"<font color=\"red\">An error occured! Please try again.</font>" +
+						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"</p>");
 			}
 		}
@@ -198,7 +198,7 @@ public class FeedbackSubmit extends HttpServlet
 		{
 			htmlOutput = new String("<h2 class=\"title\">Feedback Submission Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! Please try non administrator functions or Log in!</font>" +
+					"<font color=\"red\">An error Occurred! Please try non administrator functions or Log in!</font>" +
 					"</p>");
 		}
 		out.write(htmlOutput);

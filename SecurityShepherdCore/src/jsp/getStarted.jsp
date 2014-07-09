@@ -71,7 +71,7 @@ if(!changePassword)
 			<% if(ModulePlan.openFloor) { %>
 			Now that you've signed in, lets get started with some Security Shepherd modules! To start a module, click on the list headers, <span><a>Lessons</a></span> or <span><a>Modules</a></span>, in the side menu to see what modules are currently available!
 			<% } else { %>
-			Now that you've signed in, lets get started with some Security Shepherd modules! The start a module, click the &quot;Get Next Challenge&quot; button on the left!
+			Now that you've signed in, lets get started with some Security Shepherd challenges! The start one, click the &quot;Get Next Challenge&quot; button on the left!
 			<% } %>
 			<% if(isAdmin) {%>
 			<h2 class="title">Configure Shepherd</h2>

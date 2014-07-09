@@ -76,7 +76,7 @@ public class ChangeExposedDatabase extends HttpServlet
 						
 						log.debug("Getting Parameters");
 						String url = Validate.validateParameter(request.getParameter("databaseUrl"), 256);
-						log.debug("url = " + url);
+						log.debug("URL = " + url);
 						String userName = Validate.validateParameter(request.getParameter("databaseUsername"), 256);
 						log.debug("userName = " + userName);
 						String password = Validate.validateParameter(request.getParameter("databasePassword"), 256);
@@ -87,17 +87,17 @@ public class ChangeExposedDatabase extends HttpServlet
 						{
 							if(Setter.setRemoteExposedDatabaseInfo(url, userName, password))
 								out.write("<h2 class='title'>Exposed Database Info Updated</h2>" +
-										"<p>The Core Database properties have sucessfully been updated!</p>");
+										"<p>The Core Database properties have successfully been updated!</p>");
 							else
 							{
 								out.print("<h2 class=\"title\">Exposed Database Info Update Failure</h2><br>" +
-										"<p><font color=\"red\">Could not update the database server information on the exposed server. Ether it is a completly remote machine to the core server or the vulnerable application root is set incorrectly.</font><p>");
+										"<p><font color=\"red\">Could not update the database server information on the exposed server. Ether it is a completely remote machine to the core server or the vulnerable application root is set incorrectly.</font><p>");
 							}
 						}
 						else
 						{
 							//Validation Error Responses
-							String errorMessage = "An Error Occured ";
+							String errorMessage = "An Error Occurred ";
 							if(!validData)
 							{
 								log.error("Invalid Application Address");
@@ -106,7 +106,7 @@ public class ChangeExposedDatabase extends HttpServlet
 							else
 							{
 								log.error("Unexpected Failure");
-								errorMessage = "An Error Occured";
+								errorMessage = "An Error Occurred";
 							}
 							out.print("<h2 class=\"title\">Exposed Database Info Update Failure</h2><br>" +
 									"<p><font color=\"red\">" +
@@ -119,7 +119,7 @@ public class ChangeExposedDatabase extends HttpServlet
 						log.error("Exposed Database Info Update Error: " + e.toString());
 						out.print("<h2 class=\"title\">Exposed Database Info Update Failure</h2><br>" +
 								"<p>" +
-								"<font color=\"red\">An error occured! Please try again.</font>" +
+								"<font color=\"red\">An error Occurred! Please try again.</font>" +
 								"<p>");
 					}
 				}
@@ -150,7 +150,7 @@ public class ChangeExposedDatabase extends HttpServlet
 							"					if(ajaxCall.status == 200)					{					" +
 							"	$(\"#theStep\").html(ajaxCall.responseText);					}				" +
 							"	else					{						" +
-							"$(\"#badData\").html(\"<p> An Error Occured: \" + ajaxCall.status + \" \" + ajaxCall.statusText + \"</p>\");" +
+							"$(\"#badData\").html(\"<p> An Error Occurred: \" + ajaxCall.status + \" \" + ajaxCall.statusText + \"</p>\");" +
 							"						$(\"#badData\").show(\"slow\");					}				});		" +
 							"		$(\"#loadingSign\").hide(\"fast\", function(){					$(\"#theStep\").show(\"slow\");	" +
 							"			});			});		}		else		{			" +
@@ -163,7 +163,7 @@ public class ChangeExposedDatabase extends HttpServlet
 				log.debug("CSRF tokens did not match");
 				out.print("<h2 class=\"title\">Exposed Database Info Update Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! CSRF Tokens did not match.</font>" +
+					"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 					"<p>");
 			}
 		}
@@ -171,7 +171,7 @@ public class ChangeExposedDatabase extends HttpServlet
 		{
 			out.print("<h2 class=\"title\">Exposed Database Info Update Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! Please log in or try non administrator functions!</font>" +
+					"<font color=\"red\">An error Occurred! Please log in or try non administrator functions!</font>" +
 					"<p>");
 		}
 		log.debug("*** servlets.Admin.config.ChangeExposedDatabase END ***");

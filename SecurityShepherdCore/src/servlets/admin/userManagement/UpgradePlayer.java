@@ -108,7 +108,7 @@ public class UpgradePlayer extends HttpServlet
 					else
 					{
 						//Validation Error Responses
-						String errorMessage = "An Error Occured: ";
+						String errorMessage = "An Error Occurred: ";
 						if(!notNull)
 						{
 							log.error("Null values detected");
@@ -130,7 +130,7 @@ public class UpgradePlayer extends HttpServlet
 					log.error("Assign Players Error: " + e.toString());
 					out.print("<h2 class=\"title\">Player Upgrade Failure</h2><br>" +
 							"<p>" +
-							"<font color=\"red\">An error occured! Please try again.</font>" +
+							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
 				}
 			}
@@ -139,7 +139,7 @@ public class UpgradePlayer extends HttpServlet
 				log.debug("CSRF Tokens did not match");
 				out.print("<h2 class=\"title\">Player Upgrade Failure</h2><br>" +
 						"<p>" +
-						"<font color=\"red\">An error occured! Please try again.</font>" +
+						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"<p>");
 			}
 		}
@@ -147,7 +147,7 @@ public class UpgradePlayer extends HttpServlet
 		{
 			out.print("<h2 class=\"title\">Player Upgrade Failure</h2><br>" +
 					"<p>" +
-					"<font color=\"red\">An error occured! Please try non administrator functions!</font>" +
+					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");
 		}
 		log.debug("*** UpgradePlayer END ***");
