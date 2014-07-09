@@ -67,36 +67,48 @@ public class CSInjection3 extends Activity implements OnClickListener {
 			String unsanitizeName = username.getText().toString();
 			String unsanitizePass = password.getText().toString();
 
-			String sanitizeName = unsanitizeName.replace("OR", "/* */");
-			sanitizeName = sanitizeName.replace("or", "/* */");
-			sanitizeName = sanitizeName.replace("Or", "/* */");
-			sanitizeName = sanitizeName.replace("oR", "/* */");
-			sanitizeName = sanitizeName.replace("SELECT", "/* */");
-			sanitizeName = sanitizeName.replace("AND", "/* */");
-			sanitizeName = sanitizeName.replace("UPDATE", "/* */");
-			sanitizeName = sanitizeName.replace("DROP", "/* */");
-			sanitizeName = sanitizeName.replace("1=1", "/* */");
-			sanitizeName = sanitizeName.replace("1 = 1", "/* */");
+			String sanitizeName = unsanitizeName.replace("OR", "  ");
+			sanitizeName = sanitizeName.replace("or", "  ");
+			sanitizeName = sanitizeName.replace("Or", "  ");
+			sanitizeName = sanitizeName.replace("oR", "  ");
+			sanitizeName = sanitizeName.replace("SELECT", "  ");
+			sanitizeName = sanitizeName.replace("AND", "  ");
+			sanitizeName = sanitizeName.replace("UPDATE", "  ");
+			sanitizeName = sanitizeName.replace("DROP", "  ");
+			sanitizeName = sanitizeName.replace("1=1", "  ");
+			sanitizeName = sanitizeName.replace("1 = 1", "  ");
 
-			String sanitizePass = unsanitizePass.replace("OR", "/* */");
-			sanitizePass = sanitizePass.replace("or", "/* */");
-			sanitizePass = sanitizePass.replace("SELECT", "/* */");
-			sanitizePass = sanitizePass.replace("AND", "/* */");
-			sanitizePass = sanitizePass.replace("UPDATE", "/* */");
-			sanitizePass = sanitizePass.replace("DROP", "/* */");
-			sanitizePass = sanitizePass.replace("1=1", "/* */");
-			sanitizePass = sanitizePass.replace("1 = 1", "/* */");
+			String sanitizePass = unsanitizePass.replace("OR", "  ");
+			sanitizePass = sanitizePass.replace("or", "  ");
+			sanitizePass = sanitizePass.replace("SELECT", "  ");
+			sanitizePass = sanitizePass.replace("AND", "  ");
+			sanitizePass = sanitizePass.replace("UPDATE", "  ");
+			sanitizePass = sanitizePass.replace("DROP", "  ");
+			sanitizePass = sanitizePass.replace("1=1", "  ");
+			sanitizePass = sanitizePass.replace("1 = 1", "  ");
 
 			try {
-				if (login(sanitizeName, sanitizePass) == true) {
-					key.setText("The Key is: ");
-					Toast toast = Toast.makeText(CSInjection3.this,
-							"Logged in as:" + sanitizeName, Toast.LENGTH_LONG);
-					toast.show();
+
+				try {
+					if (login(sanitizeName, sanitizePass) == true) {
+						key.setText("The Key is: ");
+						Toast toast = Toast.makeText(CSInjection3.this,
+								"Logged in as:" + sanitizeName,
+								Toast.LENGTH_LONG);
+						toast.show();
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					Toast error = Toast.makeText(CSInjection3.this,
+							"An database error occurred.", Toast.LENGTH_LONG);
+					error.show();
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			} catch (SQLiteException e) {
+				Toast error = Toast.makeText(CSInjection3.this,
+						"An database error occurred.", Toast.LENGTH_LONG);
+				error.show();
+
 			}
 
 			try {
@@ -108,7 +120,9 @@ public class CSInjection3 extends Activity implements OnClickListener {
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Toast error = Toast.makeText(CSInjection3.this,
+						"An database error occurred.", Toast.LENGTH_LONG);
+				error.show();
 			}
 
 			if (sanitizeName.contentEquals("")
@@ -124,7 +138,10 @@ public class CSInjection3 extends Activity implements OnClickListener {
 
 	private boolean login(String username, String password) throws IOException {
 
+		
 		try {
+			
+			
 			String dbPath = this.getDatabasePath("Users.db").getPath();
 
 			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
@@ -140,17 +157,16 @@ public class CSInjection3 extends Activity implements OnClickListener {
 
 				}
 			}
-
+			
 		} catch (SQLiteException e) {
 			Toast error = Toast.makeText(CSInjection3.this,
 					"An database error occurred.", Toast.LENGTH_LONG);
 			error.show();
 		}
-
 		return true;
-
+		
+		
 	}
-
 	public void outputKey(Context context, String password) {
 		SQLiteDatabase.loadLibs(context);
 

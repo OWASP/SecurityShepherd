@@ -13,7 +13,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 
-public class BrokenCrypto extends Activity{
+public class BrokenCrypto2 extends Activity{
 
 	EditText messageOne, messageTwo, messageThree;
 	

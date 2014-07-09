@@ -67,23 +67,23 @@ public class CSInjection2 extends Activity implements OnClickListener {
 			String unsanitizeName = username.getText().toString();
 			String unsanitizePass = password.getText().toString();
 
-			String sanitizeName = unsanitizeName.replace("OR", "/* */");
-			sanitizeName = sanitizeName.replace("or", "/* */");
-			sanitizeName = sanitizeName.replace("SELECT", "/* */");
-			sanitizeName = sanitizeName.replace("AND", "/* */");
-			sanitizeName = sanitizeName.replace("UPDATE", "/* */");
-			sanitizeName = sanitizeName.replace("DROP", "/* */");
-			sanitizeName = sanitizeName.replace("1=1", "/* */");
-			sanitizeName = sanitizeName.replace("1 = 1", "/* */");
+			String sanitizeName = unsanitizeName.replace("OR", " ");
+			sanitizeName = sanitizeName.replace("or", " ");
+			sanitizeName = sanitizeName.replace("SELECT", " ");
+			sanitizeName = sanitizeName.replace("AND", " ");
+			sanitizeName = sanitizeName.replace("UPDATE", " ");
+			sanitizeName = sanitizeName.replace("DROP", " ");
+			sanitizeName = sanitizeName.replace("1=1", " ");
+			sanitizeName = sanitizeName.replace("1 = 1", " ");
 
-			String sanitizePass = unsanitizePass.replace("OR", "/* */");
-			sanitizePass = sanitizePass.replace("or", "/* */");
-			sanitizePass = sanitizePass.replace("SELECT", "/* */");
-			sanitizePass = sanitizePass.replace("AND", "/* */");
-			sanitizePass = sanitizePass.replace("UPDATE", "/* */");
-			sanitizePass = sanitizePass.replace("DROP", "/* */");
-			sanitizePass = sanitizePass.replace("1=1", "/* */");
-			sanitizePass = sanitizePass.replace("1 = 1", "/* */");
+			String sanitizePass = unsanitizePass.replace("OR", "  ");
+			sanitizePass = sanitizePass.replace("or", "  ");
+			sanitizePass = sanitizePass.replace("SELECT", "  ");
+			sanitizePass = sanitizePass.replace("AND", "  ");
+			sanitizePass = sanitizePass.replace("UPDATE", "  ");
+			sanitizePass = sanitizePass.replace("DROP", "  ");
+			sanitizePass = sanitizePass.replace("1=1", "  ");
+			sanitizePass = sanitizePass.replace("1 = 1", "  ");
 
 			try {
 				if (login(sanitizeName, sanitizePass) == true) {

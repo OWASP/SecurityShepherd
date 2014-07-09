@@ -22,7 +22,7 @@ public class Splash extends Activity {
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.app.mobshep.BC2.BrokenCrypto");
+					Intent gotoMain = new Intent("com.app.mobshep.BC2.BrokenCrypto2");
 					startActivity(gotoMain);
 				}
 

@@ -1,34 +1,56 @@
 package com.app.mobshep.UDL;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+public class UDataLeakage extends Activity {
 
-public class UDataLeakage extends ActionBarActivity {
-
-	String Log;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.udl);
 		
-		logDetails("The Key is: SilentButSteadyRedLed");
 		
-		setContentView(R.layout.activity_unintended__data__leakage);
-	
+String destinationDir = "/data/data/" +getPackageName() + "/files/";
+		
+		String destinationPath = destinationDir + "Tue Jul 08 172618 EDT 2014";
+		
+		File f = new File(destinationPath);
+		
+		if (!f.exists()){
+			File directory = new File(destinationDir);
+			directory.mkdirs();
+			//assets members.db -> /databases/
+			
+			try{
+				copyKey(getBaseContext().getAssets().open("Tue Jul 08 172618 EDT 2014"), new FileOutputStream(destinationPath));
+			}catch(FileNotFoundException e){
+				e.printStackTrace();
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+			
+		}
+			
 
 		ListView noteList = (ListView)findViewById(R.id.noteList);
 		final EditText miniNote = (EditText)findViewById(R.id.miniNote);
@@ -45,7 +67,7 @@ public class UDataLeakage extends ActionBarActivity {
 				if (event.getAction() == KeyEvent.ACTION_DOWN)
 				if((keyCode == KeyEvent.KEYCODE_DPAD_CENTER) || keyCode == KeyEvent.KEYCODE_ENTER){
 					
-					Log = miniNote.getText().toString();
+					String Log = miniNote.getText().toString();
 					
 					logDetails(Log);
 					
@@ -66,8 +88,7 @@ public class UDataLeakage extends ActionBarActivity {
 		
 		
 	}
-	
-	
+
 	private void logDetails(String content) {
 		// TODO Auto-generated method stub
 		Date date = new Date();
@@ -91,10 +112,17 @@ public class UDataLeakage extends ActionBarActivity {
 				}
 			}
 		}
+	}
+
+	public void copyKey(InputStream iStream, OutputStream oStream)
+			throws IOException {
+		byte[] buffer = new byte[1024];
+		int i;
+		while ((i = iStream.read(buffer)) > 0) {
+			oStream.write(buffer, 0, i);
+		}
+		iStream.close();
+		oStream.close();
 
 	}
-	
-	
-	
-
 }

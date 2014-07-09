@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Typeface;
 import net.sqlcipher.database.*;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CSInjection extends Activity implements OnClickListener {
@@ -22,6 +24,7 @@ public class CSInjection extends Activity implements OnClickListener {
 	TabHost th;
 	Button Login;
 	EditText username;
+	TextView loginTitle;
 	EditText password;
 	EditText key;
 	String dbPass = "37e44d547f20a9f3ca9ac7d625486b7b";
@@ -51,12 +54,22 @@ public class CSInjection extends Activity implements OnClickListener {
 
 	private void referenceXML() {
 		// TODO Auto-generated method stub
+		 Typeface myTypeface = Typeface.createFromAsset(getAssets(), "fonts/Ubuntu-R.ttf");
+		
 		Login = (Button) findViewById(R.id.bLogin);
 		// Login.setFilterTouchesWhenObscured(true);
 		username = (EditText) findViewById(R.id.etName);
 		password = (EditText) findViewById(R.id.etPass);
 		key = (EditText) findViewById(R.id.etKey);
 		Login.setOnClickListener(this);
+		loginTitle = (TextView) findViewById(R.id.tvTitle);
+		
+		th = (TabHost) findViewById(R.id.tabhost);		
+		loginTitle.setTypeface(myTypeface);
+		Login.setTypeface(myTypeface);
+		username.setTypeface(myTypeface);
+		password.setTypeface(myTypeface);
+		key.setTypeface(myTypeface);
 
 	}
 
