@@ -65,7 +65,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 			<h2 class="title"><%= encoder.encodeForHTML(levelName) %></h2>
 			<p> 
 				Demonstrate a XSS vulnerability in the following form by executing a JavaScript alert command.   
-				The developers have heard that escaping is a better way of fixing XSS issues but they are not totally clear on how to implement it.
+				The developers had heard that escaping is a better way of fixing XSS issues but they were not totally clear on how to implement it.
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>

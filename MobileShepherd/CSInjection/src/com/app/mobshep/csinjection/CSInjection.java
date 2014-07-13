@@ -126,7 +126,7 @@ public class CSInjection extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 
-			if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
+			if (CheckName.contentEquals("") || CheckPass.contentEquals("") || CheckPass.contentEquals("A3B922DF010PQSI827")) {
 				Toast toast2 = Toast.makeText(CSInjection.this,
 						"Empty Fields Detected.", Toast.LENGTH_SHORT);
 				toast2.show();

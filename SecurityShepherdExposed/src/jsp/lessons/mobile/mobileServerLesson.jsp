@@ -1,5 +1,5 @@
-
-
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%
 /**
  * Template Servlet for Mobile Levels
  * <br/><br/>
@@ -17,7 +17,20 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- * @author Mark Denihan
+ * @author Sean Duggan
  *
  */
+ 
+ 
+ 
+%>
 
+<script>
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+
+
+//Display Mobile CSS and at first, user details due to a value sent from the app.
+
+}
+
+</script>

@@ -64,7 +64,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 			<h2 class="title"><%= encoder.encodeForHTML(levelName) %></h2>
 			<p> 
 				Demonstrate a XSS vulnerability in the following form by executing a JavaScript alert command. 
-				The developers wanted to demo how HTTP links can be embedded in HTML! Have a look by putting in your own HTTP link. 
+				The developers of this sub application wanted to demonstrate how HTTP links can be embedded in HTML. Have a look by putting in your own HTTP link. 
 				The Developers are white listing input so only HTTP URLs are allowed!
 				<form id="leForm" action="javascript:;">
 					<table>
