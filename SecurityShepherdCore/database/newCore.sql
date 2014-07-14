@@ -92,26 +92,6 @@ CREATE  TABLE IF NOT EXISTS `core`.`results` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-
--- -----------------------------------------------------
--- Table `core`.`cheatSheet`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `core`.`cheatsheet` (
-  `cheatSheetId` VARCHAR(64) NOT NULL ,
-  `moduleId` VARCHAR(64) NOT NULL ,
-  `createDate` DATETIME NOT NULL ,
-  `solution` LONGTEXT NOT NULL ,
-  PRIMARY KEY (`cheatSheetId`, `moduleId`) ,
-  INDEX `fk_CheatSheet_Modules1` (`moduleId` ASC) ,
-  CONSTRAINT `fk_CheatSheet_Modules1`
-    FOREIGN KEY (`moduleId` )
-    REFERENCES `core`.`modules` (`moduleId` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
-
 -- -----------------------------------------------------
 -- Table `core`.`sequence`
 -- -----------------------------------------------------
@@ -887,10 +867,10 @@ DECLARE theId VARCHAR(64);
         currVal = currVal + 1
         WHERE tableName = 'cheatSheet';
     COMMIT;
-    SELECT SHA(CONCAT(currVal, tableName)) FROM sequence
+	SELECT NOW() FROM DUAL INTO theDate;
+    SELECT SHA(CONCAT(currVal, tableName, theDate)) FROM sequence
         WHERE tableName = 'cheatSheet'
         INTO theId;
-    SELECT NOW() FROM DUAL INTO theDate;
     INSERT INTO cheatSheet
         (cheatSheetId, moduleId, createDate, solution)
         VALUES
@@ -1156,13 +1136,21 @@ INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCat
 INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('891a0208a95f1791287be721a4b851d4c584880a', 'Insecure Cryptographic Storage Challenge 1', 'challenge', 'Insecure Cryptographic Storage', 'mylovelyhorserunningthroughthefieldwhereareyougoingwithyourbiga', 'x9c408d23e75ec92495e0caf9a544edb2ee8f624249f3e920663edb733f15cd7', 'open', '35', '35', '5', 1);
 INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('82e8e9e2941a06852b90c97087309b067aeb2c4c', 'Insecure Direct Object Reference Challenge 2', 'challenge', 'Insecure Direct Object References', '1f746b87a4e3628b90b1927de23f6077abdbbb64586d3ac9485625da21921a0f', 'vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4', 'open', '67', '65', '5', 1);
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998', 'SQL Injection 4', 'challenge', 'Injection', 'd316e80045d50bdf8ed49d48f130b4acf4a878c82faef34daff8eb1b98763b6f', '1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629', 'open', '77', '75', '5', 1);
+CALL cheatSheetCreate('e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998', "The filter in this challenge is removing all single quotes. However as there are two user parameters been utilised in the challenges login query, backslashes can be used to escape the user input's intended string context. The challenge can be completed with a user name of a <b>Backslash (\\)</b>  and a password of <b>OR 1 = 1; -- </b>.");
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('a84bbf8737a9ca749d81d5226fc87e0c828138ee', 'SQL Injection 5', 'challenge', 'Injection', '343f2e424d5d7a2eff7f9ee5a5a72fd97d5a19ef7bff3ef2953e033ea32dd7ee', '8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62', 'open', '90', '90', '5', 1);
+CALL cheatSheetCreate('a84bbf8737a9ca749d81d5226fc87e0c828138ee', "To complete this challenge without prior knowledge, a user must exploit an SQL injection flaw in a 'VIP Coupon Check' call. To find this function call they must deobfusticate the JavaScript file in the challenge. The address of the function is <b>challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62VipCouponCheck</b> on the exposed server. The parameter vulnerable to SQL injection in the POST request call to this URL is <b>couponCode</b>. There is no filter in this challenge so using <b>'or'1'='1</b> as the vulnerable parameter value will retrieve the necessary coupon.");
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('ad332a32a6af1f005f9c8d1e98db264eb2ae5dfe', 'SQL Injection 6', 'challenge', 'Injection', '17f999a8b3fbfde54124d6e94b256a264652e5087b14622e1644c884f8a33f82', 'd0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2', 'open', '95', '95', '5', 1);
+CALL cheatSheetCreate('ad332a32a6af1f005f9c8d1e98db264eb2ae5dfe', "This challenge can be defeated by encoding SQL Injection attacks for \\x UTF. For Example, the following will reveal the challenges result key; <b>\\x27\\x6f\\x72\\x27\\x31\\x27\\x3d\\x27\\x31</b>");
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('182f519ef2add981c77a584380f41875edc65a56', 'Cross Site Scripting 4', 'challenge', 'XSS', '515e05137e023dd7828adc03f639c8b13752fbdffab2353ccec2beef2eec95e4', '06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751', 'open', '76', '75', '5', 0);
+CALL cheatSheetCreate('182f519ef2add981c77a584380f41875edc65a56', "This challenge does not require a solution to be formed in XHTML to be detected. One way to pass this challenge is to submit the following; <b>http://test\"oNmouseover=alert(123);//</b>"); 
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('fccf8e4d5372ee5a73af5f862dc810545d19b176', 'Cross Site Scripting 5', 'challenge', 'XSS', '7d7cc278c30cca985ab027e9f9e09e2f759e5a3d1f63293fd1be975e13cd4744', 'f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671', 'open', '86', '85', '5', 0);
+CALL cheatSheetCreate('fccf8e4d5372ee5a73af5f862dc810545d19b176', "This challenge does not require a solution to be formed in XHTML to be detected. One way to pass this challenge is to submit the following; <b>http://test\"\"onmouseover=alert(123);//</b>"); 
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('0a37cb9296ff3763f7f3a45ff313bce47afa9384', 'CSRF 4', 'challenge', 'CSRF', '8f34078ef3e53f619618d9def1ede8a6a9117c77c2fad22f76bba633da83e6d4', '70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49', 'open', '81', '80', '5', 1);
+CALL cheatSheetCreate('0a37cb9296ff3763f7f3a45ff313bce47afa9384', "To guarantee completing this CSRF Challenge in a single attempt, a user must craft a CSRF attack that sends a POST request, to the request described in the challenge write up, with all of the possible CSRF tokens for the challenge. The only possible csrf tokens for this challenge are 0, 1 and 2.");
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('04a5bd8656fdeceac26e21ef6b04b90eaafbd7d5', 'CSRF 5', 'challenge', 'CSRF', 'df611f54325786d42e6deae8bbd0b9d21cf2c9282ec6de4e04166abe2792ac00', '2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569', 'open', '91', '90', '5', 1);
+CALL cheatSheetCreate('04a5bd8656fdeceac26e21ef6b04b90eaafbd7d5', "To guarantee completing this CSRF Challenge in a single attempt, a user must craft a CSRF attack that sends a POST request, to the request described in the challenge write up, with all of the possible CSRF tokens for the challenge. The only possible csrf tokens for this challenge are c4ca4238a0b923820dcc509a6f75849b, c81e728d9d4c2f636f067f89cc14862c and eccbc87e4b5ce2fe28308fd9f2a7baf3.");
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5', 'CSRF 6', 'challenge', 'CSRF', '849e1efbb0c1e870d17d32a3e1b18a8836514619146521fbec6623fce67b73e8', '7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3', 'open', '120', '120', '5', 1);
+CALL cheatSheetCreate('853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5', "To complete this challenge, a user must exploit an SQL injection flaw in the 'Retrieve Token' function to retrieve another users CSRF token. This information must be utilised to launch a CSRF attack against them before they refresh the challenge page themselves. One a victim refreshes the challenge page, their token updates. Social Engineering will need to be utilised to successfully complete this challenge.");
 INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('53a53a66cb3bf3e4c665c442425ca90e29536edd', 'Mobile Insecure Data Storage', 'lesson', 'Mobile Insecure Data Storage', 'Battery777', 'ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f', 'open', '25', '25', '5', 1);
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('307f78f18fd6a87e50ed6705231a9f24cd582574', 'Insecure Data Storage 1', 'challenge', 'Mobile Insecure Data Storage', 'WarshipsAndWrenches', '362f84cf26bf96aeae358d5d0bbee31e9291aaa5367594c29b3af542a7572c01', 'open', '61', '60', '5', 1);
 INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('da3de2e556494a9c2fb7308a98454cf55f3a4911', 'Insecure Data Storage 2', 'challenge', 'Mobile Insecure Data Storage', 'starfish123', 'ec09515a304d2de1f552e961ab769967bdc75740ad2363803168b7907c794cd4', 'open', '69', '65', '5', 1);

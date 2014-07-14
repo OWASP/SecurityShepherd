@@ -1,5 +1,5 @@
-/jsp/
+/jsp
 /ESAPI.properties
-/dbProcs/
-/servlets/
-/utils/
+/servlets
+/utils
+/dbProcs
