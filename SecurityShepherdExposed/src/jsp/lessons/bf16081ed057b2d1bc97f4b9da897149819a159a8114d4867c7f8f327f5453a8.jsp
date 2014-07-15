@@ -2,7 +2,7 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Mobile Unintended Data Leakage 1";
+String levelName = "What is Mobile Unintended Data Leakage?";
 //Alphanumeric Only
 String levelHash = "bf16081ed057b2d1bc97f4b9da897149819a159a8114d4867c7f8f327f5453a8";
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -59,7 +59,7 @@ catch (Exception e)
 				The App for this Challenge was rushed to completion, as a result some features which should not have made it to the final version were included. The result key can be found in <a>App logs</a> only intended for debugging. Submit it to complete this challenge. 
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("CORRECT_APP_NAME_HERE_PLZ.apk") %> 
+				<%= Analytics.getMobileLevelBlurb("UDataLeakage1.apk") %> 
 			</p>
 		</div>
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

@@ -43,8 +43,6 @@ public class UDataLeakage extends Activity {
  * @author Sean Duggan
  */
 
->>>>>>> branch 'master' of https://github.com/markdenihan/owaspSecurityShepherd.git
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

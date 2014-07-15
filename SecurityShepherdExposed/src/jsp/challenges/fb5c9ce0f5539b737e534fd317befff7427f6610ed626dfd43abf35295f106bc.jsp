@@ -1,11 +1,11 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
 
 //No Quotes In level Name
-String levelName = "Mobile Unintended Data Leakage 1";
+String levelName = "Broken Crypto 3";
 //Alphanumeric Only
-String levelHash = "bf16081ed057b2d1bc97f4b9da897149819a159a8114d4867c7f8f327f5453a8";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+String levelHash = "fb5c9ce0f5539b737e534fd317befff7427f6610ed626dfd43abf35295f106bc";
+//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
 try
@@ -22,7 +22,6 @@ catch (Exception e)
 	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
 	ShepherdExposedLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
 }
-
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -47,7 +46,7 @@ catch (Exception e)
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="../css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 	</script> 
 </head>
@@ -60,14 +59,14 @@ catch (Exception e)
 				
 				<%= levelBlurb %>
 				<br/>
-					The App for this challenge was rushed to completion, as a result some features which should not have made it to the final version were included. The key can be found in <a>App logs</a> only intended for debugging. Submit it to complete this challenge. 
-					
+				This App uses AES to encrypt it's chat however it's developers have implemented this poorly. The key is in the conversation. Decrypt the chat to get the key.  			
 				<br/>
 				<br/>
-	
-				<%= Analytics.getMobileLevelBlurb("UDataLeakage1.apk") %>
+				<%= Analytics.getMobileLevelBlurb("BrolenCrypto3.apk") %>
+				
 			</p>
 		</div>
+		
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

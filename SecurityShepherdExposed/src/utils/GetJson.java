@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 
-import servlets.mobile.templateServlet;
+
 
 public class GetJson 
 {
