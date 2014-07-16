@@ -2,7 +2,7 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Client Side Injection 2";
+String levelName = "Mobile Client Side Injection 2";
 //Alphanumeric Only
 String levelHash = "cfe68711def42bb0b201467b859322dd2750f633246842280dc68c858d208425";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you

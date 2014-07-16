@@ -2,7 +2,7 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Broken Crypto 2";
+String levelName = "Mobile Broken Crypto 1";
 //Alphanumeric Only
 String levelHash = "d2f8519f8264f9479f56165465590b499ceca941ab848805c00f5bf0a40c9717";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -62,7 +62,7 @@ catch (Exception e)
 				This App uses a deprecated encryption algorithm (DES) and breaks a few rules of key management. The key is in the conversation. Decrypt the chat to get the key.  			
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("BrolenCrypto2.apk") %>
+				<%= Analytics.getMobileLevelBlurb("BrokenCrypto2.apk") %>
 				
 			</p>
 		</div>

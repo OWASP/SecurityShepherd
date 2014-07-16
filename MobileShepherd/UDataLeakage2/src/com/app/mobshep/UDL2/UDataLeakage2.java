@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Date;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Context;
@@ -129,7 +130,9 @@ public class UDataLeakage2 extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		Date date = new Date();
 
-		String filename = "DEBUGLog" + date.toString();
+		Random rand = new Random(5);
+		
+		String filename = "Log" + rand;
 		String EOL = System.getProperty("line.seperator");
 		BufferedWriter writer = null;
 		try {

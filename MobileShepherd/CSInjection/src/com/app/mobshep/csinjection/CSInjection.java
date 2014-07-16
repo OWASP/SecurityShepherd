@@ -72,9 +72,7 @@ public class CSInjection extends Activity implements OnClickListener {
 	}
 
 	private void referenceXML() {
-		// TODO Auto-generated method stub
-		 Typeface myTypeface = Typeface.createFromAsset(getAssets(), "fonts/Ubuntu-R.ttf");
-		
+		// TODO Auto-generated method stub		
 		Login = (Button) findViewById(R.id.bLogin);
 		// Login.setFilterTouchesWhenObscured(true);
 		username = (EditText) findViewById(R.id.etName);
@@ -84,11 +82,6 @@ public class CSInjection extends Activity implements OnClickListener {
 		loginTitle = (TextView) findViewById(R.id.tvTitle);
 		
 		th = (TabHost) findViewById(R.id.tabhost);		
-		loginTitle.setTypeface(myTypeface);
-		Login.setTypeface(myTypeface);
-		username.setTypeface(myTypeface);
-		password.setTypeface(myTypeface);
-		key.setTypeface(myTypeface);
 
 	}
 
