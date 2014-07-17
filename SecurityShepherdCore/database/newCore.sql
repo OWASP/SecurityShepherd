@@ -121,25 +121,6 @@ CREATE  TABLE IF NOT EXISTS `core`.`sequence` (
   PRIMARY KEY (`tableName`) )
 ENGINE = InnoDB;
 
-
--- -----------------------------------------------------
--- Table `core`.`cheatsheet`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `core`.`cheatsheet` (
-  `cheatSheetId` VARCHAR(64) NOT NULL ,
-  `moduleId` VARCHAR(64) NOT NULL ,
-  `createDate` DATETIME NOT NULL ,
-  `solution` LONGTEXT NOT NULL ,
-  PRIMARY KEY (`cheatSheetId`, `moduleId`) ,
-  INDEX `fk_CheatSheet_Modules1` (`moduleId` ASC) ,
-  CONSTRAINT `fk_CheatSheet_Modules1`
-    FOREIGN KEY (`moduleId` )
-    REFERENCES `core`.`modules` (`moduleId` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
 SELECT "Creating Procedures" FROM DUAL;
 
 -- -----------------------------------------------------
@@ -887,10 +868,11 @@ DECLARE theId VARCHAR(64);
         currVal = currVal + 1
         WHERE tableName = 'cheatSheet';
     COMMIT;
-    SELECT SHA(CONCAT(currVal, tableName)) FROM sequence
+	SELECT NOW() FROM DUAL INTO theDate;
+    SELECT SHA(CONCAT(currVal, tableName, theDate)) FROM sequence
         WHERE tableName = 'cheatSheet'
         INTO theId;
-    SELECT NOW() FROM DUAL INTO theDate;
+    
     INSERT INTO cheatSheet
         (cheatSheetId, moduleId, createDate, solution)
         VALUES
@@ -1189,7 +1171,7 @@ SELECT "Data for table cheatSheet" FROM DUAL;
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;
 USE `core`;
-INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('1ed105033900e462b26ca0685b00d98f59efcd93', '0dbea4cb5811fff0527184f99bd5034ca9286f11', '2012-02-10 10:11:53', 'Stop the request with a proxy and change the &quot;username&quot; parameter to be equall to &quot;admin&quot;');
+INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('1ed105033900e462b26ca0685b00d98f59efcd93', '0dbea4cb5811fff0527184f99bd5034ca9286f11', '2012-02-10 10:11:53', 'Stop the request with a proxy and change the &quot;username&quot; parameter to be equal to &quot;admin&quot;');
 INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('286ac1acdd084193e940e6f56df5457ff05a9fe1', '453d22238401e0bf6f1ff5d45996407e98e45b07', '2012-02-10 10:11:53', 'To complete the lesson, the attack string is the following:<br/>&lt;img src=&quot;https://hostname:port/root/grantComplete/csrfLesson?userId=tempId&quot;/&gt;');
 INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('44a6af94f6f7a16cc92d84a936cb5c7825967b47', 'cd7f70faed73d2457219b951e714ebe5775515d8', '2012-02-10 10:11:53', 'Input is been filtered. To complete this challenge, enter the following attack string;<br/>&lt;iframe src=&#39;#&#39; onload=&#39;alert(&quot;XSS&quot;)&#39;&gt;&lt;/iframe&gt;');
 INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('5487f2bf98beeb3aea66941ae8257a5e0bec38bd', '2dc909fd89c2b03059b1512e7b54ce5d1aaa4bb4', '2012-02-10 10:11:53', 'The user Ids in this challenge follow a sequence. The Hidden Users ID is 11');
@@ -1213,7 +1195,20 @@ INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solu
 INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('e4cb1c92453cf0e6adb5fe0e66abd408cb5b76ea', 'ac944b716c1ec5603f1d09c68e7a7e6e75b0d601', '2012-02-10 10:11:53', 'A step by step guid is not yet available for this lesson. You will need a tool like <a>Wire Shark</a> and you will need to search for the packet with the result key! The packet is broadcasted with UDP.');
 INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('e7e44ba680b2ab1f6958b1344c9e43931b81164a', '5dda8dc216bd6a46fccaa4ed45d49404cdc1c82e', '2012-02-10 10:11:53', 'To complete this challenge, you must craft a second statment to return Mary Martin\'\'s credit card number as the current statement only returns the customerName attribute. The following string will perform this; </br> &#39; UNION ALL SELECT creditCardNumber FROM customers WHERE customerName = &#39;Mary Martin<br/> The filter in this challenge is difficult to get around. But the \'\'UNION\'\' operator is not been filtered. Using the UNION command you are able to return the results of custom statements.');
 INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('f392e5a69475b14fbe5ae17639e174f379c0870e', '201ae6f8c55ba3f3b5881806387fbf34b15c30c2', '2012-02-10 10:11:53', 'The lesson is encoded in Base64. Most proxy applicaitons include a decoder for this encoding.');
-INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('6afa50948e10466e9a94c7c2b270b3f958e412c6', '82e8e9e2941a06852b90c97087309b067aeb2c4c', '2012-02-10 10:11:53', "The user Id\'s inthis challenge are hashed using MD5. You can google the ID\'s to find their plain text if you have an internet connection to find their plain text. The sequence of ID\'\'s is as follows;<br/>2, 3, 5, 7, 9, 11<br/>The next number in the sequenceis 13. Modify the request with a proxy so that the id is the MD5 of 13 (c51ce410c124a10e0db5e4b97fc2af39)");
+INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('6afa50948e10466e9a94c7c2b270b3f958e412c6', '82e8e9e2941a06852b90c97087309b067aeb2c4c', '2012-02-10 10:11:53', "The user Id\'s in this challenge are hashed using MD5. You can google the ID\'s to find their plain text if you have an internet connection to find their plain text. The sequence of ID\'\'s is as follows;<br/>2, 3, 5, 7, 9, 11<br/>The next number in the sequence is 13. Modify the request with a proxy so that the id is the MD5 of 13 (c51ce410c124a10e0db5e4b97fc2af39)");
+CALL cheatSheetCreate('a84bbf8737a9ca749d81d5226fc87e0c828138ee', "To complete this challenge without prior knowledge, a user must exploit an SQL injection flaw in a 'VIP Coupon Check' call. To find this function call they must deobfusticate the JavaScript file in the challenge. The address of the function is <b>challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62VipCouponCheck</b> on the exposed server. The parameter vulnerable to SQL injection in the POST request call to this URL is <b>couponCode</b>. There is no filter in this challenge so using <b>'or'1'='1</b> as the vulnerable parameter value will retrieve the necessary coupon.");
+CALL cheatSheetCreate('e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998', "The filter in this challenge is removing all single quotes. However as there are two user parameters been utilised in the challenges login query, backslashes can be used to escape the user input's intended string context. The challenge can be completed with a user name of a <b>Backslash (\\)</b>  and a password of <b>OR 1 = 1; -- </b>.");
+CALL cheatSheetCreate('ad332a32a6af1f005f9c8d1e98db264eb2ae5dfe', "This challenge can be defeated by encoding SQL Injection attacks for \\x UTF. For Example, the following will reveal the challenges result key; <b>\\x27\\x6f\\x72\\x27\\x31\\x27\\x3d\\x27\\x31</b>");
+CALL cheatSheetCreate('182f519ef2add981c77a584380f41875edc65a56', "This challenge does not require a solution to be formed in XHTML to be detected. One way to pass this challenge is to submit the following; <b>http://test\"oNmouseover=alert(123);//</b>"); 
+CALL cheatSheetCreate('fccf8e4d5372ee5a73af5f862dc810545d19b176', "This challenge does not require a solution to be formed in XHTML to be detected. One way to pass this challenge is to submit the following; <b>http://test\"\"onmouseover=alert(123);//</b>"); 
+CALL cheatSheetCreate('0a37cb9296ff3763f7f3a45ff313bce47afa9384', "To guarantee completing this CSRF Challenge in a single attempt, a user must craft a CSRF attack that sends a POST request, to the request described in the challenge write up, with all of the possible CSRF tokens for the challenge. The only possible csrf tokens for this challenge are 0, 1 and 2.");
+CALL cheatSheetCreate('04a5bd8656fdeceac26e21ef6b04b90eaafbd7d5', "To guarantee completing this CSRF Challenge in a single attempt, a user must craft a CSRF attack that sends a POST request, to the request described in the challenge write up, with all of the possible CSRF tokens for the challenge. The only possible csrf tokens for this challenge are c4ca4238a0b923820dcc509a6f75849b, c81e728d9d4c2f636f067f89cc14862c and eccbc87e4b5ce2fe28308fd9f2a7baf3.");
+CALL cheatSheetCreate('853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5', "To complete this challenge, a user must exploit an SQL injection flaw in the 'Retrieve Token' function to retrieve another users CSRF token. This information must be utilised to launch a CSRF attack against them before they refresh the challenge page themselves. One a victim refreshes the challenge page, their token updates. Social Engineering will need to be utilised to successfully complete this challenge.");
+CALL cheatSheetCreate('3d5b46abc6865ba09aaff98a8278a5f5e339abff', "View the source of this challenge and inspect the JavaScript at the end of the page. It contains two functions, and one of them is for a HTML element that is not in the level. This function is an admin function and reveals a URL very similar to the user function. Send a valid post request, as described by the JavaScript, to that URL to retrieve the result key.");
+CALL cheatSheetCreate('c7ac1e05faa2d4b1016cfcc726e0689419662784', "View the source of this challenge and inspect the JavaScript at the end of the page. You can deobfusticate the JavaScript with an on line web tool, give it a Google. The script contains two functions, and one of them is for a HTML element that is not in the level. This function is an admin function and reveals a URL very similar to the user function. Send a valid post request, as described by the JavaScript, to that URL to retrieve the result key.");
+CALL cheatSheetCreate('b3cfd5890649e6815a1c7107cc41d17c82826cfa', "There are a number of ways to defeat the crypto and get the encryption key in this challenge. The quickest way is to submit base64 encoded spaces. The cyrpto XOR's the spaces with the key and returns the resultant 'cipher text', which is the encryption key.");
+CALL cheatSheetCreate('ced925f8357a17cfe3225c6236df0f681b2447c4', "Users must discover the session id for this sub application is very weak. The default session ID for a guest will be 00000001 base64'd twice. The admins session ID is TURBd01EQXdNREF3TURBd01EQXlNUT09 (00000021 when decoded).");
+CALL cheatSheetCreate('c6841bcc326c4bad3a23cd4fa6391eb9bdb146ed', "This challenge does not require a solution to be formed in XHTML to be detected. One way to pass this challenge is to submit the following; <b> http://\"\"onmouseover=alert(123);//</b>");
 
 COMMIT;
 
