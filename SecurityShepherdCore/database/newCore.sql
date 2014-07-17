@@ -869,11 +869,12 @@ DECLARE theId VARCHAR(64);
         WHERE tableName = 'cheatSheet';
     COMMIT;
 	SELECT NOW() FROM DUAL INTO theDate;
-    SELECT SHA(CONCAT(currVal, tableName, theDate)) FROM sequence
+	
+    SELECT SHA(CONCAT(currVal, tableName, theDate)) FROM `core`.`sequence`
         WHERE tableName = 'cheatSheet'
         INTO theId;
     
-    INSERT INTO cheatSheet
+    INSERT INTO `core`.`cheatSheet`
         (cheatSheetId, moduleId, createDate, solution)
         VALUES
         (theId, theModule, theDate, theSheet);
@@ -1109,6 +1110,18 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
+SELECT "Data for table `core`.`sequence`" FROM DUAL;
+-- -----------------------------------------------------
+SET AUTOCOMMIT=0;
+USE `core`;
+INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('users', '282475249');
+INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('cheatSheet', '282475299');
+INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('class', '282475249');
+INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('modules', '282475576');
+
+COMMIT;
+
+-- -----------------------------------------------------
 SELECT "Inserting Data for table `core`.`modules`" FROM DUAL;
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;
@@ -1171,6 +1184,9 @@ SELECT "Data for table cheatSheet" FROM DUAL;
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;
 USE `core`;
+COMMIT;
+
+COMMIT;
 INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('1ed105033900e462b26ca0685b00d98f59efcd93', '0dbea4cb5811fff0527184f99bd5034ca9286f11', '2012-02-10 10:11:53', 'Stop the request with a proxy and change the &quot;username&quot; parameter to be equal to &quot;admin&quot;');
 INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('286ac1acdd084193e940e6f56df5457ff05a9fe1', '453d22238401e0bf6f1ff5d45996407e98e45b07', '2012-02-10 10:11:53', 'To complete the lesson, the attack string is the following:<br/>&lt;img src=&quot;https://hostname:port/root/grantComplete/csrfLesson?userId=tempId&quot;/&gt;');
 INSERT INTO `core`.`cheatSheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('44a6af94f6f7a16cc92d84a936cb5c7825967b47', 'cd7f70faed73d2457219b951e714ebe5775515d8', '2012-02-10 10:11:53', 'Input is been filtered. To complete this challenge, enter the following attack string;<br/>&lt;iframe src=&#39;#&#39; onload=&#39;alert(&quot;XSS&quot;)&#39;&gt;&lt;/iframe&gt;');
@@ -1211,20 +1227,6 @@ CALL cheatSheetCreate('ced925f8357a17cfe3225c6236df0f681b2447c4', "Users must di
 CALL cheatSheetCreate('c6841bcc326c4bad3a23cd4fa6391eb9bdb146ed', "This challenge does not require a solution to be formed in XHTML to be detected. One way to pass this challenge is to submit the following; <b> http://\"\"onmouseover=alert(123);//</b>");
 
 COMMIT;
-
--- -----------------------------------------------------
-SELECT "Data for table `core`.`sequence`" FROM DUAL;
--- -----------------------------------------------------
-SET AUTOCOMMIT=0;
-USE `core`;
-INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('users', '282475249');
-INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('cheatSheet', '282475299');
-INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('class', '282475249');
-INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('modules', '282475576');
-
-COMMIT;
-
-
 
 -- Default admin user
 
