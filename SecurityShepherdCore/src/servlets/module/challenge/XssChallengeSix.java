@@ -45,7 +45,7 @@ public class XssChallengeSix extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(XssChallengeSix.class);
 	private static final String levelHash = "d330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf";
-	private static final String levelName = "Cross-Site Scripting Challenge Five";
+	private static final String levelName = "Cross-Site Scripting Challenge Six";
 	/**
 	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotely exploited, and there fore only is executable against the person initiating the function.
 	 * @param searchTerm To be spat back out at the user after been encoded for wrong HTML Context
@@ -76,6 +76,10 @@ public class XssChallengeSix extends HttpServlet
 					log.debug("After Sanitising - " + searchTerm);
 					
 					boolean xssDetected = FindXSS.search(userPost);
+					if (!xssDetected) // Do a more complex search
+					{
+						xssDetected = FindXSS.searchForComplexLinkAttributeXss(userPost, getServletContext().getRealPath(""));
+					}
 					if(xssDetected)
 					{
 						Encoder encoder = ESAPI.encoder();
