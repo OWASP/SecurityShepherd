@@ -13,8 +13,6 @@ public class ConfigurationHelper
 {
 	private static boolean hasAlreadyBeenConfigured = false; //Set to false at start up
 	private static org.apache.log4j.Logger log = Logger.getLogger(ConfigurationHelper.class); //Logger
-	private static String defaultCoreServerAddress = "http://127.0.0.1:8080/";
-	private static String defaultExposedServerAddress = "http://127.0.0.1:8080/Exposed/";
 	public static boolean alreadyConfigured ()
 	{
 		if(!hasAlreadyBeenConfigured)
@@ -25,12 +23,11 @@ public class ConfigurationHelper
 			boolean defaultCoreValueDetected = true;
 			boolean defaultExposedValueDetected = true;
 			log.debug("exposedServer = " + ExposedServer.getSecureUrl());
-			log.debug("thisClass     = " + defaultCoreServerAddress);
-			defaultCoreValueDetected = ExposedServer.getSecureUrl().equalsIgnoreCase(defaultCoreServerAddress) || ExposedServer.getSecureUrl().equalsIgnoreCase(defaultCoreServerAddress.replaceFirst("http", "https"));
+			defaultCoreValueDetected = ExposedServer.getSecureUrl().contains("127.0.0.1");
 			if(defaultCoreValueDetected)
 				log.info("Default Core Detected");
 			
-			defaultExposedValueDetected = ExposedServer.getUrl().equalsIgnoreCase(defaultExposedServerAddress) || ExposedServer.getUrl().equalsIgnoreCase(defaultExposedServerAddress.replaceFirst("http", "https"));
+			defaultExposedValueDetected = ExposedServer.getUrl().contains("127.0.0.1");
 			if(defaultExposedValueDetected)
 				log.info("Default Exposed Detected");
 			
