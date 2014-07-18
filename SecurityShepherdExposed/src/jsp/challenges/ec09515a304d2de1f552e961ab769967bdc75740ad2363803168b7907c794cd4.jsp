@@ -2,7 +2,7 @@
 <%
 
 //No Quotes In level Name
-String levelName = "Mobile Insecure Data Storage 1";
+String levelName = "Mobile Insecure Data Storage 2";
 //Alphanumeric Only
 String levelHash = "ec09515a304d2de1f552e961ab769967bdc75740ad2363803168b7907c794cd4";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
