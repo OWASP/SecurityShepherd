@@ -1,7 +1,21 @@
 package com.app.mobshep.ITLS;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -39,6 +53,10 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.configure);
 		referenceXML();
+		
+		//these two lines are temporary and shoud NOT make it to the final app. Create an Async task for any future network activities
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy); 
 
 	}
 
@@ -59,9 +77,9 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 			break;
 
 		case (R.id.bSecret):
-
-			// send the message to be intercepted to the Shepherd server
-
+			
+			postData();
+			
 			Toast sendingMessage = Toast.makeText(InsufficientTLS.this,
 					"Sent Message!", Toast.LENGTH_SHORT);
 			sendingMessage.show();
@@ -69,4 +87,29 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 
 		}
 	}
+	
+	
+	public void postData() {
+	    // Create a new HttpClient and Post Header
+	    HttpClient httpclient = new DefaultHttpClient();
+	    HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
+
+	    try {
+	        // Add your data
+	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+	        nameValuePairs.add(new BasicNameValuePair("id", "12345"));
+	        nameValuePairs.add(new BasicNameValuePair("stringdata", "This is a duck. Look at it quack."));
+	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+	        // Execute HTTP Post Request
+	        HttpResponse response = httpclient.execute(httppost);
+	        
+	    } catch (ClientProtocolException e) {
+	        // TODO Auto-generated catch block
+	    } catch (IOException e) {
+	        // TODO Auto-generated catch block
+	    }
+	} 
 }
+
+

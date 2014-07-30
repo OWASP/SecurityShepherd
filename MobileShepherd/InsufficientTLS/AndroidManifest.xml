@@ -8,6 +8,7 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="20" />
     <permission android:protectionLevel="dangerous" android:icon="@drawable/ic_launcher" android:name="com.app.mobshep.ITLS.START_ACTIVITY" android:logo="@drawable/ic_launcher"></permission>
+    <uses-permission android:name="android.permission.INTERNET"/>
     
     
     <application
@@ -17,7 +18,7 @@
         android:theme="@style/AppTheme" >
        
         <activity
-            android:name="com.app.mobshep.template"
+            android:name="com.app.mobshep.ITLS.InsufficientTLS"
             android:label="@string/app_name" 
              android:permission="com.app.mobshep.ITLS.InsufficientTLS.START_ACTIVITY">
             <intent-filter>
