@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Typeface;
 import net.sqlcipher.database.*;
 import android.os.Bundle;
 import android.view.View;

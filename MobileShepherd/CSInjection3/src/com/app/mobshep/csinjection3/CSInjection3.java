@@ -254,7 +254,7 @@ public class CSInjection3 extends Activity implements OnClickListener {
 				db.execSQL("DROP TABLE IF EXISTS key");
 				db.execSQL("CREATE TABLE key(key VARCHAR)");
 
-				db.execSQL("INSERT INTO key VALUES('The key is BurpingChimneys.')");
+				db.execSQL("INSERT INTO key VALUES('The key is .')");
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

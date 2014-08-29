@@ -9,8 +9,9 @@
 	<string name="PFrag">CSinjection</string>
 	
 	<!-- Generic Application wide Strings -->
-	<string name="pword">Password</string>
-	<string name="uname">Username</string>
+	<string name="password">Password</string>
+	<string name="username">Username</string>
+	<string name="authMessage">The key is only shown to authenticated users.</string>
 	<string name="login">Login</string>
 	<string name="selectData">Select Data</string>
 	<string name="insertData">Insert Data</string>

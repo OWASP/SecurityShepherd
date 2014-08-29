@@ -8,15 +8,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class BrokenCrypto3 extends Activity {
 
-	EditText messageOne, messageTwo, messageThree;
-
+	Button messageOne, messageTwo, messageThree;
+	
+	/*
+	Toast copied = Toast.makeText(BrokenCrypto3.this,
+			"Message Copied to Clipboard!", Toast.LENGTH_SHORT);
+*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -90,9 +98,9 @@ public class BrokenCrypto3 extends Activity {
 
 	private void referenceXML() {
 		// TODO Auto-generated method stub
-		messageOne = (EditText) findViewById(R.id.tvMessage1);
-		messageTwo = (EditText) findViewById(R.id.tvMessage2);
-		messageThree = (EditText) findViewById(R.id.tvMessage3);
+		messageOne = (Button) findViewById(R.id.Message1);
+		messageTwo = (Button) findViewById(R.id.Message2);
+		messageThree = (Button) findViewById(R.id.Message3);
 		messageOne.setVisibility(View.INVISIBLE);
 		messageTwo.setVisibility(View.INVISIBLE);
 		messageThree.setVisibility(View.INVISIBLE);
@@ -171,6 +179,41 @@ public class BrokenCrypto3 extends Activity {
 		iStream.close();
 		oStream.close();
 
+	}
+	
+	public void copyMessage1(View v) {
+
+		String copiedMessage = messageOne.getText().toString();
+
+		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipData clip = ClipData.newPlainText("message1", copiedMessage);
+		clipboard.setPrimaryClip(clip);
+
+		//copied.show();
+
+	}
+
+	public void copyMessage2(View v) {
+
+		String copiedMessage2 = messageTwo.getText().toString();
+
+		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipData clip = ClipData.newPlainText("message2", copiedMessage2);
+		clipboard.setPrimaryClip(clip);
+
+		//copied.show();
+
+	}
+
+	public void copyMessage3(View v) {
+
+		String copiedMessage3 = messageThree.getText().toString();
+
+		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipData clip = ClipData.newPlainText("message3", copiedMessage3);
+		clipboard.setPrimaryClip(clip);
+
+		//copied.show();
 	}
 
 }

@@ -32,12 +32,12 @@ public final class R {
         public static final int bLogin=0x7f070006;
         public static final int background=0x7f070000;
         public static final int etKey=0x7f070008;
-        public static final int etName=0x7f070004;
-        public static final int etPass=0x7f070005;
+        public static final int etName=0x7f070003;
+        public static final int etPass=0x7f070004;
         public static final int tab2=0x7f070002;
         public static final int tab3=0x7f070007;
         public static final int tabhost=0x7f070001;
-        public static final int tvTitle=0x7f070003;
+        public static final int tvTitle=0x7f070005;
     }
     public static final class layout {
         public static final int csi=0x7f030000;

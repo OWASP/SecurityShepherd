@@ -28,8 +28,6 @@ public class Main extends Activity {
 		
 		setContentView(R.layout.activity_unintended__data__leakage);
 	
-		logDetails("The Key is: UpsideDownPizzaDip");
-
 		ListView noteList = (ListView)findViewById(R.id.noteList);
 		final EditText miniNote = (EditText)findViewById(R.id.miniNote);
 		final ArrayList<String> noteItems = new ArrayList<String>();

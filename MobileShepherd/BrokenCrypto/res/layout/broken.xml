@@ -1,78 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:orientation="vertical" >
-             
+
     <LinearLayout
-                    android:id="@+id/tab2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:textColor="#DA70D6" >
+        android:id="@+id/brokenLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:textColor="#DA70D6" >
 
-                    <EditText
-                        android:id="@+id/tvMessage1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="38dp"
-                        android:background="@drawable/purple"
-                        android:textIsSelectable="true"
-                        android:text="@string/message1"
-                        android:editable="false"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="402dp"
+            android:layout_height="wrap_content"
+            android:text="Click a message ot copy it."
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#DA70D6" />
 
-                    <EditText
-                        android:id="@+id/tvMessage2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="39dp"
-                        android:textIsSelectable="true"
-                        android:background="@drawable/green"
-                        android:text="@string/message2"
-                        android:editable="false"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <Button
+            android:id="@+id/Message1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38dp"
+            android:background="@drawable/purple"
+            android:onClick="copyMessage1"
+            android:text="@string/message1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
 
-                    <EditText
-                        android:id="@+id/tvMessage3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignRight="@+id/textView2"
-                        android:layout_below="@+id/textView2"
-                        android:layout_marginTop="38dp"
-                        android:background="@drawable/purple"
-                        android:text="@string/message3"
-                        android:textIsSelectable="true"
-                        android:editable="false"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <Button
+            android:id="@+id/Message2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="39dp"
+            android:background="@drawable/green"
+            android:onClick="copyMessage2"
+            android:text="@string/message2"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
 
-                    <EditText
-                        android:id="@+id/tvMessage4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/textView3"
-                        android:layout_below="@+id/textView3"
-                        android:layout_marginTop="40dp"
-                        android:background="@drawable/green"
-                        android:text="@string/message4"
-                        android:editable="false"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <Button
+            android:id="@+id/Message3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38dp"
+            android:background="@drawable/purple"
+            android:onClick="copyMessage3"
+            android:text="@string/message3"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
 
-                    <EditText
-                        android:id="@+id/tvMessage5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="42dp"
-                        android:background="@drawable/purple"
-                        android:text="@string/message5"
-                        android:editable="false"
-                        android:textIsSelectable="true"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <Button
+            android:id="@+id/Message4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/green"
+            android:onClick="copyMessage4"
+            android:text="@string/message4"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                </LinearLayout>
+        <Button
+            android:id="@+id/Message5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="42dp"
+            android:background="@drawable/purple"
+            android:onClick="copyMessage5"
+            android:text="@string/message5"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
+    </LinearLayout>
 
-              
-
-</LinearLayout>
+</ScrollView>
