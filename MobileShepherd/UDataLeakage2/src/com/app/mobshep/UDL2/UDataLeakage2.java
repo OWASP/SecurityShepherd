@@ -36,7 +36,7 @@ public class UDataLeakage2 extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.broken);
 		referenceXML();
-		
+
 		logDetails("My name is Jack Meade, I'm here to kick ass and drink gravy... and I'm all outta gravey!");
 		logDetails("Today I had chicken again! I love Chicken! #deliciousChicken #whyDoIDoThis");
 		logDetails("The house is flooded... uh oh");
@@ -81,10 +81,11 @@ public class UDataLeakage2 extends Activity implements OnClickListener {
 						Toast loggedIn = Toast.makeText(UDataLeakage2.this,
 								"Logged in!", Toast.LENGTH_LONG);
 						loggedIn.show();
-						
-						Intent loggedInIntent = new Intent("com.app.mobshep.UDL2.Main");
+
+						Intent loggedInIntent = new Intent(
+								"com.app.mobshep.UDL2.Main");
 						startActivity(loggedInIntent);
-						
+
 					}
 
 				} else {
@@ -131,7 +132,7 @@ public class UDataLeakage2 extends Activity implements OnClickListener {
 		Date date = new Date();
 
 		Random rand = new Random(5);
-		
+
 		String filename = "Log" + rand;
 		String EOL = System.getProperty("line.seperator");
 		BufferedWriter writer = null;

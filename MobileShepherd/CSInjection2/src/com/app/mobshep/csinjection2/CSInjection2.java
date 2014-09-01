@@ -144,7 +144,7 @@ public class CSInjection2 extends Activity implements OnClickListener {
 	}
 
 	private boolean login(String username, String password) throws IOException {
-
+try{
 		try {
 			String dbPath = this.getDatabasePath("Users.db").getPath();
 
@@ -161,6 +161,16 @@ public class CSInjection2 extends Activity implements OnClickListener {
 
 				}
 			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Toast error = Toast.makeText(CSInjection2.this,
+					"An error occurred.", Toast.LENGTH_LONG);
+			error.show();
+			key.getText().clear();
+			key.setHint("The key is only shown to authenticated users.");
+			return false;
+		}
 
 		} catch (SQLiteException e) {
 			Toast error = Toast.makeText(CSInjection2.this,

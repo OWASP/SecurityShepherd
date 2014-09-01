@@ -20,7 +20,8 @@
                          android:layout_centerHorizontal="true"
                          android:layout_marginTop="140dp"
                          android:text="Reveal Key"
-                         android:textColor="#DA70D6" />
+                         android:background="@drawable/button"
+                          />
 
                      <EditText
                          android:id="@+id/etPassword"
@@ -30,6 +31,7 @@
                          android:layout_centerHorizontal="true"
                          android:layout_marginBottom="68dp"
                          android:ems="10"
+                         android:background="@drawable/edittext"
                          android:inputType="textPassword"
                          android:hint="Password"
                          android:textColor="#DA70D6" />

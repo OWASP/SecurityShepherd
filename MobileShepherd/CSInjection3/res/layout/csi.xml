@@ -40,12 +40,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/etPass"
+                        android:layout_alignRight="@+id/etPass"
                         android:layout_below="@+id/tvTitle"
                         android:layout_marginTop="25dp"
+                        android:background="@drawable/edittext"
                         android:ems="10"
                         android:hint="Username"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:background="@drawable/edittext"
                         android:textColor="#DA70D6" />
 
                     <EditText
@@ -70,13 +71,13 @@
                         android:id="@+id/bLogin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_alignRight="@+id/etPass"
                         android:layout_below="@+id/etPass"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="48dp"
-                        android:filterTouchesWhenObscured="true"
-                        android:text="@string/login"
                         android:background="@drawable/button"
-                         />
+                        android:filterTouchesWhenObscured="true"
+                        android:text="@string/login" />
 
                     <TextView
                         android:id="@+id/tvTitle"

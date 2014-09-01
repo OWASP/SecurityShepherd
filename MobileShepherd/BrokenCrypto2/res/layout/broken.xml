@@ -17,7 +17,7 @@
             android:id="@+id/textView1"
             android:layout_width="402dp"
             android:layout_height="wrap_content"
-            android:text="Click a message ot copy it."
+            android:text="Click a message to copy it."
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#DA70D6" />
 
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="38dp"
             android:background="@drawable/purple"
-            android:onClick="copyMesage1"
+            android:onClick="copyMessage1"
             android:text="@string/message1"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textIsSelectable="true" />
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="39dp"
             android:background="@drawable/green"
-            android:onClick="copyMesage2"
+            android:onClick="copyMessage2"
             android:text="@string/message2"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textIsSelectable="true" />
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="38dp"
             android:background="@drawable/purple"
-            android:onClick="copyMesage3"
+            android:onClick="copyMessage3"
             android:text="@string/message3"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textIsSelectable="true" />

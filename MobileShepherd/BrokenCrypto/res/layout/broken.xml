@@ -17,7 +17,7 @@
             android:id="@+id/textView1"
             android:layout_width="402dp"
             android:layout_height="wrap_content"
-            android:text="Click a message ot copy it."
+            android:text="Click a message to copy it."
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#DA70D6" />
 

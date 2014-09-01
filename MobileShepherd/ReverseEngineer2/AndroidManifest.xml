@@ -16,7 +16,8 @@
        
                <activity
             android:name="com.app.mobshep.RE2.Triangle"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@style/ShepherdTheme" >
             <intent-filter>
                 <action android:name="com.app.mobshep.RE2.Triangle" />
 
@@ -25,7 +26,8 @@
         </activity>
        
         <activity
-            android:name="com.app.mobshep.RE2.splash">
+            android:name="com.app.mobshep.RE2.splash"
+            android:theme="@style/ShepherdTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

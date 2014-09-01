@@ -6,30 +6,6 @@
     android:background="@drawable/background"
     android:orientation="vertical" >
 
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etName"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="81dp"
-                        android:text="@string/login"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
-                    <EditText
-                        android:id="@+id/etName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etPass"
-                        android:layout_below="@+id/tvTitle"
-                        android:layout_marginTop="51dp"
-                        android:ems="10"
-                        android:hint="Username"
-                        android:background="@drawable/edittext"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
-
                     <EditText
                         android:id="@+id/etPass"
                         android:layout_width="wrap_content"
@@ -48,12 +24,40 @@
                         android:id="@+id/bLogin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_alignRight="@+id/etPass"
                         android:layout_below="@+id/etPass"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="42dp"
-                        android:filterTouchesWhenObscured="true"
                         android:background="@drawable/button"
+                        android:filterTouchesWhenObscured="true"
                         android:text="@string/login" />
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etName"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="45dp"
+                        android:text="@string/login"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <EditText
+                        android:id="@+id/etName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_below="@+id/tvTitle"
+                        android:layout_marginTop="35dp"
+                        android:background="@drawable/edittext"
+                        android:ems="10"
+                        android:hint="Username"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" >
+
+                        <requestFocus />
+                    </EditText>
                   
                 </RelativeLayout>
                 

@@ -77,8 +77,6 @@ com.app.mobshep.IDS.R$id: int background
 com.app.mobshep.IDS.R$id: int etName
 com.app.mobshep.IDS.R$id: int etPass
 com.app.mobshep.IDS.R$id: int exit
-com.app.mobshep.IDS.R$id: int tab1
-com.app.mobshep.IDS.R$id: int tabhost
 com.app.mobshep.IDS.R$id: int tvTitle
 com.app.mobshep.IDS.R$layout: int ids
 com.app.mobshep.IDS.R$layout: int splash
