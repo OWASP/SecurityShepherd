@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.app.mobshep.BC"
+    package="com.mobshep.BrokenCrypto"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -15,17 +15,17 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.app.mobshep.BC.BrokenCrypto"
+            android:name="com.mobshep.BrokenCrypto.BrokenCrypto"
             android:label="@string/app_name"
             android:theme="@style/ShepherdTheme" >
             <intent-filter>
-                <action android:name="com.app.mobshep.BC.BrokenCrypto" />
+                <action android:name="com.mobshep.BrokenCrypto.BrokenCrypto" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.app.mobshep.BC.Splash"
+            android:name="com.mobshep.BrokenCrypto.Splash"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

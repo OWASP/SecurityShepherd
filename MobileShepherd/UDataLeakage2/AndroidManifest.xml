@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.app.mobshep.UDL2"
+    package="com.mobshep.UDataLeakage2"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.app.mobshep.UDL2.UDataLeakage2"
+            android:name="com.mobshep.UDataLeakage2.UDataLeakage2"
             android:label="@string/app_name"
             android:persistent="true"
             android:theme="@style/ShepherdTheme" >
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.app.mobshep.UDL2.Splash"
+            android:name="com.mobshep.UDataLeakage2.Splash"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.app.mobshep.UDL2.Forgotton"
+            android:name="com.mobshep.UDataLeakage2.Forgotton"
             android:label="@string/app_name"
             android:persistent="true"
             android:theme="@style/ShepherdTheme" >
@@ -51,7 +51,7 @@
         </activity>
         
         <activity
-            android:name="com.app.mobshep.UDL2.Main"
+            android:name="com.mobshep.UDataLeakage2.Main"
             android:label="@string/app_name"
             android:persistent="true"
             android:theme="@style/ShepherdTheme" >
