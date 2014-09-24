@@ -32,55 +32,58 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
+//By default Android Application class extend Activity
+
+//OnClickListener is implemented for use of buttons and functionality which occurs with them. However this can be replaced with the Android OnClick function which requires less code.
 
 public class template extends Activity implements OnClickListener {
 
-	TabHost th;
+	/* This is a template app for use when creating a new Mobile Shepherd Lesson or Challenge */
+	
+	/* This app uses a tabhost, these are useful when working on a small screen as it allows for multiple tabs for a user to navigate through*/
+	
+	TabHost mobileTabs;
 	TextView Intro;
 	Button Login;
 	Button Config;
 	EditText username;
 	EditText password;
 	EditText key;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.broken);
-		th = (TabHost) findViewById(R.id.tabhost);
+		
+		//This line defines which layout this activity uses.
+		setContentView(R.layout.mobilelayout);
+		mobileTabs = (TabHost) findViewById(R.id.tabhost);
 
 		referenceXML(); // Link up Java -> XML references + declare
 						// onClickListeners.
+		
+		mobileTabs.setup();
 
-		th.setup();
-
-		// Set up each tab
-		TabSpec specs = th.newTabSpec("tag1");
+		/* Set up each tab, the tags are defined in the layout.xml, found in the res/layout folder. */
+		TabSpec specs = mobileTabs.newTabSpec("tag1");
 		specs.setContent(R.id.tab1);
 		specs.setIndicator("Tab 1");
-		th.addTab(specs);
+		mobileTabs.addTab(specs);
 
-		specs = th.newTabSpec("tag2");
+		specs = mobileTabs.newTabSpec("tag2");
 		specs.setContent(R.id.tab2);
 		specs.setIndicator("Tab 2");
-		th.addTab(specs);
+		mobileTabs.addTab(specs);
 	}
 
-	private void referenceXML() {
-		// TODO Auto-generated method stub
-		Login = (Button) findViewById(R.id.bLogin);
-		Config = (Button) findViewById(R.id.bConfig);
-		username = (EditText) findViewById(R.id.etName);
-		password = (EditText) findViewById(R.id.etPass);
-		key = (EditText) findViewById(R.id.etKey);
-		Login.setOnClickListener(this);
-		Config.setOnClickListener(this);
-	}
-
+	
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 
+		/*An optional button for preferences functionality*/
+		
 		case (R.id.bConfig):
 
 			Intent gotoMain = new Intent(this, Preferences.class);
@@ -93,26 +96,46 @@ public class template extends Activity implements OnClickListener {
 			String CheckName = username.getText().toString();
 			String CheckPass = password.getText().toString();
 
+			/*A hard coded login if statement, this app could be used as a reverse engineer lesson.*/
+			
 			if (CheckName.contentEquals("user")
 					&& CheckPass.contentEquals("pass")) {
-				key.setText("Key is revealed.");
-				Toast toast = Toast.makeText(template.this, "Logged in!",
+				key.setText("Key is revealed...");
+				
+				//A toast is a simple pop up message, define context, text and length
+				Toast reveal = Toast.makeText(template.this, "Logged in!",
 						Toast.LENGTH_LONG);
-				toast.show();
+				reveal.show();
 			}
 
 			if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
-				Toast toast2 = Toast.makeText(template.this,
+				Toast empty = Toast.makeText(template.this,
 						"Empty Fields Detected.", Toast.LENGTH_LONG);
-				toast2.show();
+				empty.show();
 			}
 
 			else {
 
-				Toast toast = Toast.makeText(template.this,
+				Toast invalid = Toast.makeText(template.this,
 						"Invalid Credentials!", Toast.LENGTH_LONG);
-				toast.show();
+				invalid.show();
 			}
 		}
 	}
+	
+	/*All of the xml references are here, if an element has functionality tied to it,
+	 *  it requires an onClickListener like shown below. Otherwise the findViewById will 
+	 *  suffice (for things like static textviews)*/
+	
+	private void referenceXML() {
+		// TODO Auto-generated method stub
+		Login = (Button) findViewById(R.id.bLogin);
+		Config = (Button) findViewById(R.id.bConfig);
+		username = (EditText) findViewById(R.id.etName);
+		password = (EditText) findViewById(R.id.etPass);
+		key = (EditText) findViewById(R.id.etKey);
+		Login.setOnClickListener(this);
+		Config.setOnClickListener(this);
+	}
+
 }

@@ -1,0 +1,35 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
+    </style>
+
+    <style name="ShepherdTheme" parent="@android:style/Theme">
+        <item name="android:tabWidgetStyle">@style/ShepherdTabWidget</item>
+    </style>
+
+    <style name="ShepherdTabWidget" parent="@android:style/Widget.TabWidget">
+        <item name="android:textAppearance">@style/ShepherdTabWidgetText</item>
+    </style>
+
+    <style name="ShepherdTabWidgetText" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#DA70D6</item>
+    </style>
+
+</resources>

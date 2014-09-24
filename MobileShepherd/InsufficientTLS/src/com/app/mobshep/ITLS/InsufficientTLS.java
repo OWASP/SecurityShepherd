@@ -13,9 +13,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -41,40 +46,40 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
+@SuppressLint("NewApi")
 public class InsufficientTLS extends Activity implements OnClickListener {
 
-	Button save;
 	Button send;
 	EditText IP;
-
+	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		Settings.System.putString(getContentResolver(), Settings.System.HTTP_PROXY, "myproxy:8080"); 
 		setContentView(R.layout.configure);
 		referenceXML();
 		
-		//these two lines are temporary and shoud NOT make it to the final app. Create an Async task for any future network activities
+		//these two lines are temporary and should NOT make it to the final app. Create an Async task for any future network activities
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy); 
+		
+		if (isNetworkAvailable() == false)
+		{
+			//There is no network....
+		}
 
 	}
 
 	private void referenceXML() {
 		// TODO Auto-generated method stub
-		IP = (EditText) findViewById(R.id.etIP);
 		send = (Button) findViewById(R.id.bSecret);
-		save = (Button) findViewById(R.id.bSave);
 		send.setOnClickListener(this);
-		save.setOnClickListener(this);
 	}
 
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
-
-		case (R.id.bSave):
-
-			break;
 
 		case (R.id.bSecret):
 			
@@ -110,6 +115,20 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 	        // TODO Auto-generated catch block
 	    }
 	} 
+	
+	public boolean isNetworkAvailable() {
+	    ConnectivityManager cm = (ConnectivityManager) 
+	      getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+	    
+	    // if no network is available networkInfo will be null
+	    // otherwise check if we are connected
+	    if (networkInfo != null && networkInfo.isConnected()) {
+	        return true;
+	    }
+	    return false;
+	} 
+	
 }
 
 

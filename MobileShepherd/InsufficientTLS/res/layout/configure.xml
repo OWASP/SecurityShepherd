@@ -16,44 +16,20 @@
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/relativeLayout1"
-        android:text="Status" />
-
-    <EditText
-        android:id="@+id/etIP"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/edittext"
-        android:ems="10"
-        android:hint="Enter IP Address of Server" >
-
-        <requestFocus />
-    </EditText>
+        android:text="Status..." />
 
     <Button
         android:id="@+id/bSecret"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="180dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/bSave"
         android:layout_marginTop="18dp"
         android:background="@drawable/button"
         android:text="Send Secret Message" />
-
-    <Button
-        android:id="@+id/bSave"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/etIP"
-        android:layout_marginTop="23dp"
-        android:background="@drawable/button"
-        android:text="Save" />
 
 </RelativeLayout>

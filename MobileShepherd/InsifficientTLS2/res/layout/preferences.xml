@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/dialog_based_preferences" >
+
+        <EditTextPreference
+            android:dialogTitle="@string/server_dialog_title"
+            android:key="server_preference"
+            android:summary="@string/server_summary"
+            android:title="@string/server_title" />
+
+        <EditTextPreference
+            android:dialogTitle="@string/database_dialog_title"
+            android:key="database_address"
+            android:summary="@string/database_summary"
+            android:title="@string/database_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/launch_preferences" >
+
+        <PreferenceScreen
+            android:summary="@string/summary_intent_preference"
+            android:title="@string/title_intent_preference" >
+
+            <intent android:action="com.app.mobshep.ITLS.InsufficientTLS" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/preference_attributes" >
+
+        <CheckBoxPreference
+            android:key="parent_checkbox_preference"
+            android:title="@string/title_parent_preference" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

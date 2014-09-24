@@ -25,6 +25,8 @@ import android.os.Bundle;
 
 public class Splash extends Activity {
 
+	//The splash class is not a requirement when making a new challenge.
+	
 	@Override
 	protected void onCreate(Bundle Mobile) {
 		// TODO Auto-generated method stub
@@ -33,9 +35,8 @@ public class Splash extends Activity {
 		// implement a thread to move on from the intro screen to input screen
 		Thread timer = new Thread() {
 			public void run() {
-				// catch exceptions
 				try {
-					sleep(5000);
+					sleep(3000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} finally

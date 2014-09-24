@@ -42,7 +42,7 @@ public final class R {
         public static final int tvTitle=0x7f080006;
     }
     public static final class layout {
-        public static final int broken=0x7f030000;
+        public static final int mobilelayout=0x7f030000;
         public static final int preferences=0x7f030001;
         public static final int splash=0x7f030002;
     }
