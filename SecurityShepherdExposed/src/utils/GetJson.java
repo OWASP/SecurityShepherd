@@ -5,9 +5,7 @@ import java.io.BufferedReader;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 
-
-
-public class GetJson 
+public class GetJson
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(GetJson.class);
 	public static JSONArray getJssonArrayFromPost (BufferedReader reader)

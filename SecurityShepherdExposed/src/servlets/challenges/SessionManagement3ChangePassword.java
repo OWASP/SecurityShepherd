@@ -2,6 +2,7 @@ package servlets.challenges;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -99,7 +100,19 @@ public class SessionManagement3ChangePassword extends HttpServlet
 			if(passNewObj != null)
 				subNewPass = (String) passNewObj;
 			log.debug("subName = " + subName);
-			subName = base64.decode(base64.decode(subName).toString()).toString();
+			//Base 64 Decode
+			try
+			{
+				byte[] decodedName = Base64.decodeBase64(subName);
+				subName = new String(decodedName, "UTF-8");
+				decodedName = Base64.decodeBase64(subName);
+				subName = new String(decodedName, "UTF-8");
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				log.debug("Could not decode username");
+				subName = new String();
+			}
 			log.debug("subName Decoded = " + subName);
 			log.debug("subPass = " + subNewPass);
 			

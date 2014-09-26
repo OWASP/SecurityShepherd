@@ -252,4 +252,30 @@
 		<url-pattern>/challenges/ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1</servlet-name>
+		<servlet-class>servlets.challenges.SessionManagement5</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1</servlet-name>
+		<url-pattern>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1SendToken</servlet-name>
+		<servlet-class>servlets.challenges.SessionManagement5SetToken</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1SendToken</servlet-name>
+		<url-pattern>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1SendToken</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1ChangePass</servlet-name>
+		<servlet-class>servlets.challenges.SessionManagement5ChangePassword</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1ChangePass</servlet-name>
+		<url-pattern>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1ChangePass</url-pattern>
+	</servlet-mapping>
 </web-app>

@@ -38,7 +38,10 @@ import utils.ExposedServer;
 public class Getter 
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Getter.class);
-	
+	/**
+	 * Used for scoreboards / progress bars
+	 */
+	private static int widthOfUnitBar = 11; //px
 	/**
 	 * This method hashes the user submitted password and sends it to the database.
 	 * The database does the rest of the work, including Brute Force prevention.
@@ -1379,10 +1382,10 @@ public class Getter
 				if(resultSet.getString(1) != null)
 				{
 					result += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + //Output their progress
-						"</td><td><div style='background-color: #A878EF; heigth: 25px; width: " + 25*resultSet.getInt(2) + "px;'>" +
+						"</td><td><div style='background-color: #A878EF; heigth: 25px; width: " + widthOfUnitBar*resultSet.getInt(2) + "px;'>" +
 								"<font color='white'><strong>" +
 								resultSet.getInt(2);
-					if(resultSet.getInt(2) > 3)
+					if(resultSet.getInt(2) > 6)
 						result += " Modules";
 					result += "</strong></font></div></td></tr>";
 				}
@@ -1435,7 +1438,7 @@ public class Getter
 				if(resultSet.getString(1) != null)
 				{
 					jsonInner.put("userName", new String(encoder.encodeForHTML(resultSet.getString(1)))); //User Name
-					jsonInner.put("progressBar", new Integer(resultSet.getInt(2)*25)); //Progress Bar Width
+					jsonInner.put("progressBar", new Integer(resultSet.getInt(2)*widthOfUnitBar)); //Progress Bar Width
 					jsonInner.put("score", new Integer(resultSet.getInt(3))); //Score
 					log.debug("Adding: " + jsonInner.toString());
 					json.add(jsonInner);

@@ -21,7 +21,7 @@ import utils.ShepherdExposedLogManager;
 import dbProcs.Database;
 
 /**
- * Session Management Challenge Three
+ * Session Management Challenge Five
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -40,21 +40,15 @@ import dbProcs.Database;
  * @author Mark Denihan
  *
  */
-public class SessionManagement3 extends HttpServlet
+public class SessionManagement5 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement3.class);
-	private static String levelName = "Session Management Challenge Three";
-	private static String levelHash = "t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3";
-	private static String levelResult = "e62008dc47f5eb065229d48963";
-	
-	public static String getLevelHash ()
-	{
-		return levelHash;
-	}
-	
+	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement5.class);
+	private static String levelName = "Session Management Challenge Five";
+	public static String levelHash = "7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1";
+	private static String levelResult = "a15b8ea0b8a3374a1dedc326dfbe3dbae26";
 	/**
-	 * Users must use this functionality to sign in as an administrator to retrieve the result key. If the user name is valid but not the passwor, an error message with the user name is returned.
+	 * Users must use this functionality to sign in as an administrator to retrieve the result key.
 	 * @param userName Sub schema user name
 	 * @param password Sub schema user password
 	 */
@@ -102,7 +96,7 @@ public class SessionManagement3 extends HttpServlet
 			String ApplicationRoot = getServletContext().getRealPath("");
 			log.debug("Servlet root = " + ApplicationRoot );
 			
-			Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalThree");
+			Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
 			log.debug("Checking credentials");
 			PreparedStatement callstmt;
 			
@@ -111,20 +105,22 @@ public class SessionManagement3 extends HttpServlet
 			callstmt.execute();
 			log.debug("Changes committed.");
 			
-			callstmt = conn.prepareStatement("SELECT userName, userAddress, userRole FROM users WHERE userName = ?");
+			callstmt = conn.prepareStatement("SELECT userName, userRole FROM users WHERE userName = ?");
 			callstmt.setString(1, subName);
 			log.debug("Executing findUser");
 			ResultSet resultSet = callstmt.executeQuery();
+			//Is the username valid?
 			if(resultSet.next())
 			{
 				log.debug("User found");
-				if(resultSet.getString(3).equalsIgnoreCase("admin"))
+				//Is the user an Admin?
+				if(resultSet.getString(2).equalsIgnoreCase("admin"))
 				{
 					log.debug("Admin Detected");
-					callstmt = conn.prepareStatement("SELECT userName, userAddress, userRole FROM users WHERE userName = ? AND userPassword = SHA(?)");
+					callstmt = conn.prepareStatement("SELECT userName, userRole FROM users WHERE userName = ? AND userPassword = SHA(?)");
 					callstmt.setString(1, subName);
 					callstmt.setString(2, subPass);
-					log.debug("Executing authUser");
+					log.debug("Executing Login Check");
 					ResultSet resultSet2 = callstmt.executeQuery();
 					if(resultSet2.next())
 					{
@@ -145,7 +141,7 @@ public class SessionManagement3 extends HttpServlet
 				}
 				else
 				{
-					log.debug("Successful Guest Login");
+					log.debug("Successful Pleb Login");
 					htmlOutput = htmlStart + htmlEnd +
 							"<h2 class='title'>Welcome Guest</h2>" +
 							"<p>No further information for Guest Users currently available. " +

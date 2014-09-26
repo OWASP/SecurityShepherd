@@ -66,7 +66,7 @@ if(!changePassword)
 %>
 	<div id="getStarted" style="display:none;">
 	<div class="post">
-		<h1 class="title">Lets Get Started</h1>
+		<h1 class="title">OWASP Security Shepherd - Lets Get Started</h1>
 		<div class="entry">
 			<% if(ModulePlan.openFloor) { %>
 			Now that you've signed in, lets get started with some Security Shepherd modules! To start a module, click on the list headers, <span><a>Lessons</a></span> or <span><a>Modules</a></span>, in the side menu to see what modules are currently available!

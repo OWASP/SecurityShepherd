@@ -37,8 +37,8 @@ import org.apache.commons.codec.binary.Base64;
 public class Hash 
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Hash.class);
-	public static String userNameKey = "NsH{[_pLw2Q.3gOz";
-	public static String encryptionKeySalt = "s8@90_>'`uDx,#iA";
+	public static String userNameKey = "Yfsh{_p>sgQK!z6w";
+	public static String encryptionKeySalt = "K;2i5$e[7'c9.dNy";
 	/**
 	 * Outputs a SHA256 digest
 	 * @param toHash String to hash
