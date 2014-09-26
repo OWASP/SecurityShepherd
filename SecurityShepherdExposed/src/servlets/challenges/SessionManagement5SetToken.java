@@ -16,12 +16,18 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-import utils.Hash;
 import utils.ShepherdExposedLogManager;
 import dbProcs.Database;
 
 /**
- * Session Management Challenge Three
+ * Session Management Challenge Five SessionManagement5SetToken
+ * (Does not Return Result Key)
+ * 
+ * This function is a shell to give the appearance that a token has been set for a user. 
+ * A DB call is made to check if a user exists. If the user does exist the server returns an ok message 
+ * claiming that the user has been emailed a URL with a token embedded for resetting their password. 
+ * This in fact does not happen. User must find another way to sign in as an admin.
+ * 
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -40,23 +46,17 @@ import dbProcs.Database;
  * @author Mark Denihan
  *
  */
-public class SessionManagement3 extends HttpServlet
+public class SessionManagement5SetToken extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement3.class);
-	private static String levelName = "Session Management Challenge Three";
-	private static String levelHash = "t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3";
-	private static String levelResult = "e62008dc47f5eb065229d48963";
-	
-	public static String getLevelHash ()
-	{
-		return levelHash;
-	}
-	
+	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement5SetToken.class);
+	private static String levelName = "SessionManagement5SetToken";
+	public static String levelHash = SessionManagement5.levelHash;
+	private static String levelResult = ""; //This class does not return a result key
 	/**
-	 * Users must use this functionality to sign in as an administrator to retrieve the result key. If the user name is valid but not the passwor, an error message with the user name is returned.
+	 * Used to apparently send a message to a user with a token to reset their password.
+	 * 
 	 * @param userName Sub schema user name
-	 * @param password Sub schema user password
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -85,25 +85,19 @@ public class SessionManagement3 extends HttpServlet
 		log.debug(levelName + " Servlet Accessed");
 		try
 		{
-			log.debug("Getting Challenge Parameters");
+			log.debug("Getting Parameters");
 			Object nameObj = request.getParameter("subUserName");
-			Object passObj = request.getParameter("subUserPassword");
-			String subName = new String();
-			String subPass = new String();
-			String userAddress = new String();
+			String userName = new String();
 			if(nameObj != null)
-				subName = (String) nameObj;
-			if(passObj != null)
-				subPass = (String) passObj;
-			log.debug("subName = " + subName);
-			log.debug("subPass = " + subPass);
+				userName = (String) nameObj;
+			log.debug("subName = " + userName);
 			
 			log.debug("Getting ApplicationRoot");
 			String ApplicationRoot = getServletContext().getRealPath("");
 			log.debug("Servlet root = " + ApplicationRoot );
 			
-			Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalThree");
-			log.debug("Checking credentials");
+			Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
+			log.debug("Checking name");
 			PreparedStatement callstmt;
 			
 			log.debug("Committing changes made to database");
@@ -111,52 +105,20 @@ public class SessionManagement3 extends HttpServlet
 			callstmt.execute();
 			log.debug("Changes committed.");
 			
-			callstmt = conn.prepareStatement("SELECT userName, userAddress, userRole FROM users WHERE userName = ?");
-			callstmt.setString(1, subName);
+			callstmt = conn.prepareStatement("SELECT userName FROM users WHERE userName = ?");
+			callstmt.setString(1, userName);
 			log.debug("Executing findUser");
 			ResultSet resultSet = callstmt.executeQuery();
+			//Is the username valid?
 			if(resultSet.next())
 			{
 				log.debug("User found");
-				if(resultSet.getString(3).equalsIgnoreCase("admin"))
-				{
-					log.debug("Admin Detected");
-					callstmt = conn.prepareStatement("SELECT userName, userAddress, userRole FROM users WHERE userName = ? AND userPassword = SHA(?)");
-					callstmt.setString(1, subName);
-					callstmt.setString(2, subPass);
-					log.debug("Executing authUser");
-					ResultSet resultSet2 = callstmt.executeQuery();
-					if(resultSet2.next())
-					{
-						log.debug("Successful Admin Login");
-						// Get key and add it to the output
-						String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
-						
-						htmlOutput = "<h2 class='title'>Welcome " + encoder.encodeForHTML(resultSet2.getString(1)) + "</h2>" +
-								"<p>" +
-								"The result key is <a>" + userKey + "</a>" +
-								"</p>";
-					}
-					else
-					{
-						userAddress = "Incorrect password for <a>" + encoder.encodeForHTML(resultSet.getString(1)) + "</a><br/>";
-						htmlOutput = htmlStart + userAddress + htmlEnd;
-					}
-				}
-				else
-				{
-					log.debug("Successful Guest Login");
-					htmlOutput = htmlStart + htmlEnd +
-							"<h2 class='title'>Welcome Guest</h2>" +
-							"<p>No further information for Guest Users currently available. " +
-							"If your getting bored of the current functions available, " +
-							"you'll just have to upgrade yourself to an administrator somehow.</p><br/><br/>";	
-				}
+				htmlOutput = "URL with embedded password reset token has been sent to '" + encoder.encodeForHTML(userName) + "' via email.";
 			}
 			else
 			{
-				userAddress = "User name not found.<br/>";
-				htmlOutput = htmlStart + userAddress + htmlEnd;
+				log.debug("User not Found");
+				htmlOutput = "Could not find user" + encoder.encodeForHTML(userName);
 			}
 			Database.closeConnection(conn);
 			log.debug("Outputting HTML");
@@ -168,11 +130,4 @@ public class SessionManagement3 extends HttpServlet
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}
-	
-	private static String htmlStart = "<table>";
-	private static String htmlEnd = "<tr><td>Username:</td><td><input type='text' id='subUserName'/></td></tr>" +
-			"<tr><td>Password:</td><td><input type='password' id='subUserPassword'/></td></tr>" +
-			"<tr><td colspan='2'><div id='submitButton'><input type='submit' value='Sign In'/>" +
-			"</div></td></tr>" +
-			"</table>";
 }

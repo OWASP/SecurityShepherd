@@ -671,7 +671,7 @@ INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestio
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (4, 'Anthony', '7844', 'What game do I suck at?', 'All of the games', '84');
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (5, 'Owen', '4648', 'Favourite Sandwhich Topping', 'Peanutbutter', '33');
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (6, 'Eoin', '2653', 'Where did I holiday in the summer of 69?', 'The Dark Side of the Moon', '12');
-INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (7, 'David', '3598', 'This is how we get ants', 'Don\'t get me started', '6');
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (7, 'David', '3598', 'This is how we get ants', "Don\'t get me started", '6');
 
 COMMIT;
 
@@ -691,6 +691,73 @@ CREATE TABLE IF NOT EXISTS `csrfChallengeSix`.`csrfTokens` (
   `csrfTokenscol` VARCHAR(256) NULL,
   PRIMARY KEY (`userId`))
 ENGINE = InnoDB;
+
+-- ======================================================
+-- BrokenAuthAndSessMangChalFive
+-- ======================================================
+DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalFive` ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalFive` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `BrokenAuthAndSessMangChalFive`;
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+
+-- -----------------------------------------------------
+-- Table `BrokenAuthAndSessMangChalFive`.`users`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `BrokenAuthAndSessMangChalFive`.`users` (
+  `userId` INT NOT NULL ,
+  `userName` VARCHAR(32) NOT NULL ,
+  `userPassword` VARCHAR(128) NOT NULL ,
+  `userAddress` VARCHAR(128) NOT NULL ,
+  `userRole` VARCHAR(8) NOT NULL DEFAULT 'guest' ,
+  PRIMARY KEY (`userId`) )
+ENGINE = InnoDB;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `BrokenAuthAndSessMangChalFive`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `BrokenAuthAndSessMangChalFive`;
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (12, 'admin', 'default', 'zoidberg22@shepherd.com', 'admin');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (321, 'administrator', 'default', 'buzzthebald@shepherd.com', 'admin');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (3212, 'root', 'default', 'elitehacker@shepherd.com', 'admin');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (634, 'superuser', 'default', 'superman@security.com', 'admin');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (4524, 'privileged', 'default', 'spoiltbrat@security.com', 'admin');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (40, 'guest1', 'default', 'guest1@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (41, 'guest2', 'default', 'guest2@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (42, 'guest3', 'default', 'guest3@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (43, 'guest4', 'default', 'guest4@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (44, 'guest5', 'default', 'guest5@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (45, 'guest6', 'default', 'guest6@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (46, 'guest7', 'default', 'guest7@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (47, 'guest8', 'default', 'guest8@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (48, 'guest9', 'guest', 'guest9@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (49, 'guest11', 'guest', 'guest11@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (50, 'guest12', 'guest', 'guest12@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (51, 'guest13', 'guest', 'guest13@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (52, 'guest14', 'guest', 'guest14@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (53, 'guest15', 'guest', 'guest15@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (54, 'guest16', 'guest', 'guest16@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (55, 'guest17', 'guest', 'guest17@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (56, 'guest18', 'guest', 'guest18@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (57, 'guest19', 'guest', 'guest19@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (58, 'guest20', 'guest', 'guest20@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (59, 'guest21', 'guest', 'guest21@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (60, 'guest22', 'guest', 'guest22@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (61, 'guest23', 'guest', 'guest23@guest.com', 'guest');
+INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (62, 'guest10', 'guest', 'guest10@guest.com', 'guest');
+
+COMMIT;
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
@@ -768,4 +835,9 @@ CREATE USER  'csrfChalSixer'@'localhost' IDENTIFIED BY 'c4n1bUplZ';
 GRANT SELECT ON `csrfChallengeSix`.`csrfTokens` TO 'csrfChalSixer'@'localhost';
 GRANT INSERT ON `csrfChallengeSix`.`csrfTokens` TO 'csrfChalSixer'@'localhost';
 GRANT UPDATE ON `csrfChallengeSix`.`csrfTokens` TO 'csrfChalSixer'@'localhost';
+
+DROP USER  'l3tsg0cra'@'localhost';
+CREATE USER 'l3tsg0cra'@'localhost' IDENTIFIED BY '83ururMa';
+GRANT SELECT ON `BrokenAuthAndSessMangChalFive`.`users` TO 'l3tsg0cra'@'localhost';
+GRANT UPDATE ON `BrokenAuthAndSessMangChalFive`.`users` TO 'l3tsg0cra'@'localhost';
 

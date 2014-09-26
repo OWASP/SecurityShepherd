@@ -81,7 +81,7 @@ public class SqlInjection6 extends HttpServlet
 			log.debug("userPin - " + userPin);
 			userPin = userPin.replaceAll("\\\\", "\\\\\\\\").replaceAll("'", ""); // Escape single quotes
 			log.debug("userPin scrubbed - " + userPin);
-			userPin = java.net.URLDecoder.decode(userPin.replaceAll("\\\\x", "%"), "UTF-8"); //Decode \x encoding 
+			userPin = java.net.URLDecoder.decode(userPin.replaceAll("\\\\\\\\x", "%"), "UTF-8"); //Decode \x encoding 
 			log.debug("searchTerm decoded to - " + userPin);
 			Connection conn = Database.getChallengeConnection(applicationRoot, "SqlChallengeSix");
 			log.debug("Looking for users");
