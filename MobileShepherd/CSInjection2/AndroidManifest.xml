@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.app.mobshep.csinjection2"
+    package="com.mobshep.csinjection2"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -15,7 +15,7 @@
 
 
                 <permission
-        android:name="com.app.mobshep.CSI2.START_ACTIVITY"
+        android:name="com.mobshep.CSI2.START_ACTIVITY"
         android:icon="@drawable/ic_launcher"
         android:logo="@drawable/ic_launcher"
         android:protectionLevel="dangerous" >
@@ -29,17 +29,17 @@
        
         <activity
             android:theme="@style/ShepherdTheme"
-            android:name="com.app.mobshep.csinjection2.CSInjection2"
+            android:name="com.mobshep.csinjection2.CSInjection2"
             android:label="@string/app_name"
-            android:permission="com.app.mobshep.CSI2.START_ACTIVITY"  >
+            android:permission="com.mobshep.CSI2.START_ACTIVITY"  >
             <intent-filter>
-                <action android:name="com.app.mobshep.csinjection2.CSInjection2" />
+                <action android:name="com.mobshep.csinjection2.CSInjection2" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
        
         <activity
-            android:name="com.app.mobshep.csinjection2.Splash"
+            android:name="com.mobshep.csinjection2.Splash"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

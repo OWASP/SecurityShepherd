@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.app.mobshep.csinjection"
+    package="com.mobshep.csinjection"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     
         <permission
-        android:name="com.app.mobshep.CSI.START_ACTIVITY"
+        android:name="com.mobshep.CSI.START_ACTIVITY"
         android:icon="@drawable/ic_launcher"
         android:logo="@drawable/ic_launcher"
         android:protectionLevel="dangerous" >
@@ -28,7 +28,7 @@
  
         <activity
             android:theme="@style/ShepherdTheme"
-            android:name="com.app.mobshep.csinjection.CSInjection"
+            android:name="com.mobshep.csinjection.CSInjection"
             android:label="@string/app_name"
             android:permission="com.app.mobshep.CSI.START_ACTIVITY" >
             <intent-filter>
@@ -39,7 +39,7 @@
         </activity>
     
         <activity
-            android:name="com.app.mobshep.csinjection.Splash"
+            android:name="com.mobshep.csinjection.Splash"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
