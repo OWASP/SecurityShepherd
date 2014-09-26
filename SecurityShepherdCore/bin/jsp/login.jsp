@@ -57,7 +57,7 @@ if(ses.getAttribute("loginFailed") != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Login - Security Shepherd</title>
+<title>OWASP Security Shepherd - Login</title>
 
 <link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
