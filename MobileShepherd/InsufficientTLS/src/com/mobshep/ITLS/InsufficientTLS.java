@@ -1,6 +1,7 @@
 package com.mobshep.ITLS;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -51,23 +51,24 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 
 	Button send;
 	EditText IP;
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		Settings.System.putString(getContentResolver(), Settings.System.HTTP_PROXY, "myproxy:8080"); 
+
 		setContentView(R.layout.configure);
 		referenceXML();
-		
-		//these two lines are temporary and should NOT make it to the final app. Create an Async task for any future network activities
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		StrictMode.setThreadPolicy(policy); 
-		
-		if (isNetworkAvailable() == false)
-		{
-			//There is no network....
+
+		// these two lines are temporary and should NOT make it to the final
+		// app. Create an Async task for any future network activities
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+				.permitAll().build();
+		StrictMode.setThreadPolicy(policy);
+
+		if (isNetworkAvailable() == false) {
+			// There is no network....
 		}
 
 	}
@@ -82,9 +83,9 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 		switch (arg0.getId()) {
 
 		case (R.id.bSecret):
-			
-			postData();
-			
+
+			method1();
+
 			Toast sendingMessage = Toast.makeText(InsufficientTLS.this,
 					"Sent Message!", Toast.LENGTH_SHORT);
 			sendingMessage.show();
@@ -92,43 +93,73 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 
 		}
 	}
-	
-	
-	public void postData() {
-	    // Create a new HttpClient and Post Header
-	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
 
-	    try {
-	        // Add your data
-	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-	        nameValuePairs.add(new BasicNameValuePair("id", "12345"));
-	        nameValuePairs.add(new BasicNameValuePair("stringdata", "This is a duck. Look at it quack."));
-	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+	public void method1() {
 
-	        // Execute HTTP Post Request
-	        HttpResponse response = httpclient.execute(httppost);
-	        
-	    } catch (ClientProtocolException e) {
-	        // TODO Auto-generated catch block
-	    } catch (IOException e) {
-	        // TODO Auto-generated catch block
-	    }
-	} 
-	
+		HttpClient client = new DefaultHttpClient();
+		HttpPost post = new HttpPost("www.google.com");
+
+		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+		pairs.add(new BasicNameValuePair("key1", "value1"));
+		pairs.add(new BasicNameValuePair("key2", "value2"));
+		try {
+			post.setEntity(new UrlEncodedFormEntity(pairs));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			HttpResponse response = client.execute(post);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Create a new HttpClient and Post Header
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost("http://www.google.ie");
+
+		try {
+			// Add your data
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("id", "12345"));
+			nameValuePairs.add(new BasicNameValuePair("stringdata",
+					"This is a duck. Look at it quack."));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+			// Execute HTTP Post Request
+			HttpResponse response = httpclient.execute(httppost);
+
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+	}
+
 	public boolean isNetworkAvailable() {
-	    ConnectivityManager cm = (ConnectivityManager) 
-	      getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-	    
-	    // if no network is available networkInfo will be null
-	    // otherwise check if we are connected
-	    if (networkInfo != null && networkInfo.isConnected()) {
-	        return true;
-	    }
-	    return false;
-	} 
-	
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+		// if no network is available networkInfo will be null
+		// otherwise check if we are connected
+		if (networkInfo != null && networkInfo.isConnected()) {
+			return true;
+		}
+		return false;
+	}
+
+
+	public void method2() {
+
+	}
+
+	public void method3() {
+
+	}
+
 }
-
-

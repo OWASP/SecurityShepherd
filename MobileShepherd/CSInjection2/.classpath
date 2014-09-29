@@ -5,8 +5,9 @@
 	<classpathentry exported="true" kind="lib" path="libs/commons-codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/guava-r09.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sqlcipher.jar"/>
-	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="C:/Users/IBM_ADMIN/Desktop/adt-bundle-windows-x86_64-20140321/sdk/platforms/android-19/android.jar"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

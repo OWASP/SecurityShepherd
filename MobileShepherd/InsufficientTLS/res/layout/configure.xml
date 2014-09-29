@@ -26,10 +26,45 @@
         android:id="@+id/bSecret"
         android:layout_width="wrap_content"
         android:layout_height="180dp"
+        android:layout_alignBottom="@+id/tvStatus"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="18dp"
         android:background="@drawable/button"
+        android:onClick="method1"
         android:text="Send Secret Message" />
+
+    <Button
+        android:id="@+id/method1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tvStatus"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/button"
+        android:text="Method 1" />
+
+    <Button
+        android:id="@+id/method2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/method1"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/method1"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/button"
+        android:text="Method 2" />
+
+    <Button
+        android:id="@+id/method3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/method2"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/method2"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/button"
+        android:text="Method 3" />
 
 </RelativeLayout>
