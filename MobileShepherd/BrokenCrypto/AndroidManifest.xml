@@ -5,9 +5,15 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="14"
         android:targetSdkVersion="20" />
 
+    <permission
+        android:name="com.mobshep.BC.START_ACTIVITY"
+        android:icon="@drawable/ic_launcher"
+        android:logo="@drawable/ic_launcher"
+        android:protectionLevel="dangerous" >
+    </permission>
 
     <application
         android:allowBackup="true"
@@ -17,6 +23,7 @@
         <activity
             android:name="com.mobshep.BrokenCrypto.BrokenCrypto"
             android:label="@string/app_name"
+            android:permission="com.app.mobshep.BC.START_ACTIVITY"
             android:theme="@style/ShepherdTheme" >
             <intent-filter>
                 <action android:name="com.mobshep.BrokenCrypto.BrokenCrypto" />
@@ -26,7 +33,7 @@
         </activity>
         <activity
             android:name="com.mobshep.BrokenCrypto.Splash"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

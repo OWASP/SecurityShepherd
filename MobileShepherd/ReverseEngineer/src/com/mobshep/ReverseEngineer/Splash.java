@@ -41,7 +41,7 @@ public class Splash extends Activity {
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.mobshep.ReverseEngineer.Reverse_Engineering");
+					Intent gotoMain = new Intent(Splash.this, Reverse_Engineering.class);
 					startActivity(gotoMain);
 				}
 

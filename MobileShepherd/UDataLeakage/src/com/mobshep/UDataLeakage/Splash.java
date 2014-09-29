@@ -42,7 +42,7 @@ public class Splash extends Activity {
 
 				{
 					Intent gotoMain = new Intent(
-							"com.mobshep.UDataLeakage.UDataLeakage");
+							Splash.this, UDataLeakage.class);
 					startActivity(gotoMain);
 				}
 

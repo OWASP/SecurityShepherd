@@ -41,7 +41,7 @@ public class Splash extends Activity {
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.mobshep.InsecureData2.Insecure_Data_Storage2");
+					Intent gotoMain = new Intent(Splash.this, Insecure_Data_Storage2.class);
 					startActivity(gotoMain);
 				}
 

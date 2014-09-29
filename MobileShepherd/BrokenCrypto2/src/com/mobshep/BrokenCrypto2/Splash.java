@@ -41,7 +41,7 @@ public class Splash extends Activity {
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.mobshep.BrokenCrypto2.BrokenCrypto2");
+					Intent gotoMain = new Intent(Splash.this, BrokenCrypto2.class);
 					startActivity(gotoMain);
 				}
 

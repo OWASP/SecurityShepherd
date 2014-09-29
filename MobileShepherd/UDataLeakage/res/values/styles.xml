@@ -1,10 +1,10 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppBaseTheme" parent="android:Theme.Holo">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -12,7 +12,14 @@
         -->
     </style>
 
-    <!-- Application theme. -->
+        <!-- Application theme. -->
+        <style name="TabFont" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#DA70D6</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+        
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
@@ -31,5 +38,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#DA70D6</item>
     </style>
-
+    
+    
 </resources>

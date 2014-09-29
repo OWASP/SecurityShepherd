@@ -42,7 +42,7 @@ public class splash extends Activity {
 				} finally
 
 				{
-					Intent gotoMain = new Intent("com.mobshep.ReverseEngineer2.Triangle");
+					Intent gotoMain = new Intent(splash.this, Triangle.class);
 					startActivity(gotoMain);
 				}
 
