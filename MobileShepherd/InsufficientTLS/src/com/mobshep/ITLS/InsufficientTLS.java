@@ -5,14 +5,20 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -47,12 +53,12 @@ import android.widget.Toast;
  */
 
 @SuppressLint("NewApi")
-public class InsufficientTLS extends Activity implements OnClickListener {
+public class InsufficientTLS extends Activity {
 
 	Button send;
+	Button method1, method2, method3;
 	EditText IP;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -76,22 +82,9 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 	private void referenceXML() {
 		// TODO Auto-generated method stub
 		send = (Button) findViewById(R.id.bSecret);
-		send.setOnClickListener(this);
-	}
-
-	public void onClick(View arg0) {
-		switch (arg0.getId()) {
-
-		case (R.id.bSecret):
-
-			method1();
-
-			Toast sendingMessage = Toast.makeText(InsufficientTLS.this,
-					"Sent Message!", Toast.LENGTH_SHORT);
-			sendingMessage.show();
-			break;
-
-		}
+		method1 = (Button) findViewById(R.id.method1);
+		method2 = (Button) findViewById(R.id.method2);
+		
 	}
 
 	public void method1() {
@@ -140,6 +133,41 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 			// TODO Auto-generated catch block
 		}
 	}
+	
+	public void method2() {
+		
+		//Create a json object and put Key value pairs as mapped by server.
+		
+		JSONObject jsonobj = new JSONObject();
+		try {
+			jsonobj.put("email", "a@b.com");
+			jsonobj.put("old_passw", "306");
+			jsonobj.put("use_id", "123");
+			jsonobj.put("new_passw", "456");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//Create http client and post URL.
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppostreq = new HttpPost("www.google.ie");
+		
+		//Create a String entity. String entity is appended to the url in a format that is required in HTTP POST.
+
+
+		try {
+			StringEntity se = new StringEntity(jsonobj.toString());
+			se.setContentType("application/json;charset=UTF-8");
+			se.setContentEncoding((Header) new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
 
 	public boolean isNetworkAvailable() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -154,9 +182,7 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 	}
 
 
-	public void method2() {
-
-	}
+	
 
 	public void method3() {
 
