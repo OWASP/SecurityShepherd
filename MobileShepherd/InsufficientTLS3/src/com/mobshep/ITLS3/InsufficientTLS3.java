@@ -1,30 +1,29 @@
 package com.mobshep.ITLS3;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 /**
@@ -49,70 +48,121 @@ import android.widget.Toast;
 @SuppressLint("NewApi")
 public class InsufficientTLS3 extends Activity implements OnClickListener {
 
-	Button save;
-	Button send;
-	EditText IP;
+	private Button sendTheMessage;
+	private ProgressBar progressBar;
+	private static final String TAG = "MyActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.configure);
-		referenceXML();
-		
-		//these two lines are temporary and should NOT make it to the final app. Create an Async task for any future network activities
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		StrictMode.setThreadPolicy(policy); 
-		
-		if (isNetworkAvailable() == false)
-		{
-			//There is no network....
-		}
 
+		setContentView(R.layout.layout);
+		referenceXML();
+
+		if (isNetworkAvailable() == false) {
+			Toast networkError = Toast.makeText(InsufficientTLS3.this,
+					"No Network Connection Detected.", Toast.LENGTH_SHORT);
+			networkError.show();
+		}
+	}
+
+	public boolean isNetworkAvailable() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+		// if no network is available networkInfo will be null
+		// otherwise check if we are connected
+		if (networkInfo != null && networkInfo.isConnected()) {
+			return true;
+		}
+		return false;
 	}
 
 	private void referenceXML() {
 		// TODO Auto-generated method stub
-		IP = (EditText) findViewById(R.id.etIP);
-		send = (Button) findViewById(R.id.bSecret);
-		save = (Button) findViewById(R.id.bSave);
-		send.setOnClickListener(this);
-		save.setOnClickListener(this);
+		sendTheMessage = (Button) findViewById(R.id.theFirstButton);
+		progressBar = (ProgressBar) findViewById(R.id.theProgressBar);
+		progressBar.setVisibility(View.GONE);
+		sendTheMessage.setOnClickListener(this);
 	}
 
+	@Override
 	public void onClick(View arg0) {
-		switch (arg0.getId()) {
+		// TODO Auto-generated method stub
+			progressBar.setVisibility(View.VISIBLE);
+			new MyAsyncTask().execute("Sending Data...");
 
-		case (R.id.bSave):
-
-			break;
-
-		case (R.id.bSecret):
-			
-			Toast sendingMessage = Toast.makeText(InsufficientTLS3.this,
-					"Sent Message!", Toast.LENGTH_SHORT);
-			sendingMessage.show();
-			break;
-
-		}
 	}
-	
-	
-	
-	public boolean isNetworkAvailable() {
-	    ConnectivityManager cm = (ConnectivityManager) 
-	      getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-	    
-	    // if no network is available networkInfo will be null
-	    // otherwise check if we are connected
-	    if (networkInfo != null && networkInfo.isConnected()) {
-	        return true;
-	    }
-	    return false;
-	} 
-	
+
+	private class MyAsyncTask extends AsyncTask<String, Integer, Double> {
+
+		@Override
+		protected Double doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			postData(params[0]);
+			return null;
+		}
+
+		protected void onPostExecute(Double result) {
+			progressBar.setVisibility(View.GONE);
+			Toast.makeText(getApplicationContext(), "Message Sent",
+					Toast.LENGTH_LONG).show();
+		}
+
+		protected void onProgressUpdate(Integer... progress) {
+			progressBar.setProgress(progress[0]);
+		}
+
+		public void postData(String valueIWantToSend) {
+			// Create a new HttpClient and Post Header
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(
+					"https://owasp.securityshepherd.eu");
+
+			try {
+
+				final String url = "https://owasp.securityshepherd.eu/getTheMobileData.jsp";
+				URL obj = new URL(url);
+				HttpURLConnection con = (HttpURLConnection) obj
+						.openConnection();
+
+				// add reuqest header
+				con.setRequestMethod("POST");
+				con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+				String urlParameters = "uname=&pass=";
+
+				// Send post request
+				con.setDoOutput(true);
+				DataOutputStream wr = new DataOutputStream(
+						con.getOutputStream());
+				wr.writeBytes(urlParameters);
+				wr.flush();
+				wr.close();
+
+				int responseCode = con.getResponseCode();
+				Log.i(TAG, "\nSending 'POST' request to URL : " + url);
+				Log.i(TAG, "Post parameters : " + urlParameters);
+				Log.i(TAG, "Response Code : " + responseCode);
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						con.getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+			}
+		}
+
+	}
+
 }
-
-

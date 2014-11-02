@@ -27,7 +27,6 @@
         <activity
             android:name="com.mobshep.ITLS.InsufficientTLS"
             android:label="@string/app_name"
-            android:permission="com.mobshep.ITLS.START_ACTIVITY"
             android:theme="@style/ShepherdTheme" >
             <intent-filter>
                 <action android:name="com.app.mobshep.ITLS.InsufficientTLS" />
@@ -37,8 +36,7 @@
         </activity>
         <activity
             android:name="com.mobshep.ITLS.Splash"
-            android:label="@string/app_name"
-            android:permission="com.mobshep.ITLS.START_ACTIVITY">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

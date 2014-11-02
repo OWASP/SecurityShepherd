@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">InsufficientTLS</string>
+    <string name="app_name">InsufficientTLS2</string>
     <string name="action_settings">Settings</string>
    
 	<!-- Defind Strings for challenge -->

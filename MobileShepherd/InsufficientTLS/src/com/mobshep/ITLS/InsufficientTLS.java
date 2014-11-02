@@ -1,36 +1,29 @@
 package com.mobshep.ITLS;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 /**
@@ -53,121 +46,26 @@ import android.widget.Toast;
  */
 
 @SuppressLint("NewApi")
-public class InsufficientTLS extends Activity {
+public class InsufficientTLS extends Activity implements OnClickListener {
 
-	Button send;
-	Button method1, method2, method3;
-	EditText IP;
+	private Button sendTheMessage;
+	private ProgressBar progressBar;
+	private static final String TAG = "MyActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.configure);
+		setContentView(R.layout.layout);
 		referenceXML();
 
-		// these two lines are temporary and should NOT make it to the final
-		// app. Create an Async task for any future network activities
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-				.permitAll().build();
-		StrictMode.setThreadPolicy(policy);
-
 		if (isNetworkAvailable() == false) {
-			// There is no network....
-		}
-
-	}
-
-	private void referenceXML() {
-		// TODO Auto-generated method stub
-		send = (Button) findViewById(R.id.bSecret);
-		method1 = (Button) findViewById(R.id.method1);
-		method2 = (Button) findViewById(R.id.method2);
-		
-	}
-
-	public void method1() {
-
-		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost("www.google.com");
-
-		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-		pairs.add(new BasicNameValuePair("key1", "value1"));
-		pairs.add(new BasicNameValuePair("key2", "value2"));
-		try {
-			post.setEntity(new UrlEncodedFormEntity(pairs));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		try {
-			HttpResponse response = client.execute(post);
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// Create a new HttpClient and Post Header
-		HttpClient httpclient = new DefaultHttpClient();
-		HttpPost httppost = new HttpPost("http://www.google.ie");
-
-		try {
-			// Add your data
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("id", "12345"));
-			nameValuePairs.add(new BasicNameValuePair("stringdata",
-					"This is a duck. Look at it quack."));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-			// Execute HTTP Post Request
-			HttpResponse response = httpclient.execute(httppost);
-
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Toast networkError = Toast.makeText(InsufficientTLS.this,
+					"No Network Connection Detected.", Toast.LENGTH_SHORT);
+			networkError.show();
 		}
 	}
-	
-	public void method2() {
-		
-		//Create a json object and put Key value pairs as mapped by server.
-		
-		JSONObject jsonobj = new JSONObject();
-		try {
-			jsonobj.put("email", "a@b.com");
-			jsonobj.put("old_passw", "306");
-			jsonobj.put("use_id", "123");
-			jsonobj.put("new_passw", "456");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		//Create http client and post URL.
-		DefaultHttpClient httpclient = new DefaultHttpClient();
-		HttpPost httppostreq = new HttpPost("www.google.ie");
-		
-		//Create a String entity. String entity is appended to the url in a format that is required in HTTP POST.
-
-
-		try {
-			StringEntity se = new StringEntity(jsonobj.toString());
-			se.setContentType("application/json;charset=UTF-8");
-			se.setContentEncoding((Header) new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
-	
 
 	public boolean isNetworkAvailable() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -181,10 +79,89 @@ public class InsufficientTLS extends Activity {
 		return false;
 	}
 
+	private void referenceXML() {
+		// TODO Auto-generated method stub
+		sendTheMessage = (Button) findViewById(R.id.theFirstButton);
+		progressBar = (ProgressBar) findViewById(R.id.theProgressBar);
+		progressBar.setVisibility(View.GONE);
+		sendTheMessage.setOnClickListener(this);
+	}
 
-	
+	@Override
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+			progressBar.setVisibility(View.VISIBLE);
+			new MyAsyncTask().execute("Sending Data...");
 
-	public void method3() {
+	}
+
+	private class MyAsyncTask extends AsyncTask<String, Integer, Double> {
+
+		@Override
+		protected Double doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			postData(params[0]);
+			return null;
+		}
+
+		protected void onPostExecute(Double result) {
+			progressBar.setVisibility(View.GONE);
+			Toast.makeText(getApplicationContext(), "Message Sent",
+					Toast.LENGTH_LONG).show();
+		}
+
+		protected void onProgressUpdate(Integer... progress) {
+			progressBar.setProgress(progress[0]);
+		}
+
+		public void postData(String valueIWantToSend) {
+			// Create a new HttpClient and Post Header
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(
+					"https://owasp.securityshepherd.eu");
+
+			try {
+
+				final String url = "https://owasp.securityshepherd.eu/getTheMobileData.jsp";
+				URL obj = new URL(url);
+				HttpURLConnection con = (HttpURLConnection) obj
+						.openConnection();
+
+				// add reuqest header
+				con.setRequestMethod("POST");
+				con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+				String urlParameters = "uname=U3RldmU=&pass=TWVhdGJhbGxzQW5kQnJvY2NvbGk=";
+
+				// Send post request
+				con.setDoOutput(true);
+				DataOutputStream wr = new DataOutputStream(
+						con.getOutputStream());
+				wr.writeBytes(urlParameters);
+				wr.flush();
+				wr.close();
+
+				int responseCode = con.getResponseCode();
+				Log.i(TAG, "\nSending 'POST' request to URL : " + url);
+				Log.i(TAG, "Post parameters : " + urlParameters);
+				Log.i(TAG, "Response Code : " + responseCode);
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						con.getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+			}
+		}
 
 	}
 
