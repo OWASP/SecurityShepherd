@@ -72,7 +72,7 @@ extends HttpServlet
 					String searchTerm = request.getParameter("searchTerm");
 					log.debug("User Submitted - " + searchTerm);
 					String htmlOutput = new String();
-					if(FindXSS.search(searchTerm))
+					if(FindXSS.antiSamySearch(searchTerm, getServletContext().getRealPath("")))
 					{
 						String theHash = this.getClass().getSimpleName();
 						log.debug("Completed Module! Module Hash: " + theHash);

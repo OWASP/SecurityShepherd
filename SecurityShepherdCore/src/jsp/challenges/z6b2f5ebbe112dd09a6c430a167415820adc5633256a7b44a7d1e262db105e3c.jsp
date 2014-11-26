@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-	// Cross Site Request Forgery Challenge 3
+	// Cross Site Request Forgery Challenge 6
 
 /**
  * This file is part of the Security Shepherd Project.

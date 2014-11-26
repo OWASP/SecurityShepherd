@@ -73,7 +73,8 @@ public class XssChallengeOne extends HttpServlet
 					searchTerm = XssFilter.levelOne(searchTerm);
 					log.debug("After Filtering - " + searchTerm);
 					String htmlOutput = new String();
-					if(FindXSS.search(searchTerm))
+					String applicationRoot = getServletContext().getRealPath("");
+					if(FindXSS.antiSamySearch(searchTerm, applicationRoot))
 					{
 						Encoder encoder = ESAPI.encoder();
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +

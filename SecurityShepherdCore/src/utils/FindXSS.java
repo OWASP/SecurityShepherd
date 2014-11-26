@@ -40,6 +40,33 @@ public class FindXSS
 	 * @param xssString User XSS submission (After filter if any)
 	 * @return Boolean returned reflecting the presence of valid XSS attacks or not.
 	 */
+	private static String []  htmlElements = {
+		"a", "area", "br",	"button", "base","caption", "center", "cite", "col", "colgroup", "dd",
+		"del", "dfn", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "form", "h1",
+		"h2", "h3", "h4", "h5", "h6", "head", "hr", "html", "!", "iframe",
+		"img", "input", "ins", "isindex", "kbd", "label", "legend", "li",
+		"link", "map", "menu", "meta", "noframes", "noscript", "object", 
+		"ol", "optgroup", "option", "p", "param", "pre", "q", "s", "samp",
+		"script", "select", "small", "span", "strike", "strong", "style", 
+		"sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead",
+		"title", "tr", "tt", "u", "ul", "var"};
+	private static String[] javascriptTriggers = {
+		"onabort", "onbeforecopy", "onbeforecut", "onbeforepaste", "oncopy", "oncut", 
+		"oninput", "onkeydown", "onkeypress", "onkeyup", "onpaste", "onbeforeunload", 
+		"onhaschange", "onload", "onoffline", "ononline", "onreadystatechange", 
+		"onreadystatechange", "onstop", "onunload", "onreset", "onsubmit", "onclick", 
+		"oncontextmenu", "ondblclick", "onlosecapture", "onmouseenter", "onmousedown", 
+		"onmouseleave", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onmousewheel",
+		"onscroll", "onmove", "onmoveend", "onmovestart", "ondrag", "ondragenter", "ondragleave",
+		"ondragover", "ondragstart", "ondrop", "onresize", "onresizeend", "onresizestart",
+		"onactivate", "onbeforeactivate", "onbeforedeactivate", "onbeforeeditfocus", "onblur",
+		"ondeactivate", "onfocus", "onfocusin", "onfocusout", "oncontrolselect", "onselect", 
+		"onselectionchange", "onselectstart", "onafterprint", "onbeforeprint", "onhelp", 
+		"onerror", "onerrorupdate", "onafterupdate", "onbeforeupdate", "oncellchange", 
+		"ondataavailable", "ondatasetchanged", "ondatasetcomplete", "onrowenter", "onrowexit",
+		"onrowsdelete", "onrowsinserted", "onbounce", "onfinish", "onstart", "onchange", 
+		"onfilterchange", "onpropertychange", "onsearch", "onmessage", "formaction", "textinput"};
+	
 	public static boolean search (String xssString)
 	{
 		try
@@ -70,34 +97,6 @@ public class FindXSS
 				String[] colons = {
 						":", "&#x3a", "&#x3a;", "&#58", "&#58;"
 				};
-				String[] javascriptTriggers = {
-						"onabort", "onbeforecopy", "onbeforecut", "onbeforepaste", "oncopy", "oncut", 
-						"oninput", "onkeydown", "onkeypress", "onkeyup", "onpaste", "onbeforeunload", 
-						"onhaschange", "onload", "onoffline", "ononline", "onreadystatechange", 
-						"onreadystatechange", "onstop", "onunload", "onreset", "onsubmit", "onclick", 
-						"oncontextmenu", "ondblclick", "onlosecapture", "onmouseenter", "onmousedown", 
-						"onmouseleave", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onmousewheel",
-						"onscroll", "onmove", "onmoveend", "onmovestart", "ondrag", "ondragenter", "ondragleave",
-						"ondragover", "ondragstart", "ondrop", "onresize", "onresizeend", "onresizestart",
-						"onactivate", "onbeforeactivate", "onbeforedeactivate", "onbeforeeditfocus", "onblur",
-						"ondeactivate", "onfocus", "onfocusin", "onfocusout", "oncontrolselect", "onselect", 
-						"onselectionchange", "onselectstart", "onafterprint", "onbeforeprint", "onhelp", 
-						"onerror", "onerrorupdate", "onafterupdate", "onbeforeupdate", "oncellchange", 
-						"ondataavailable", "ondatasetchanged", "ondatasetcomplete", "onrowenter", "onrowexit",
-						"onrowsdelete", "onrowsinserted", "onbounce", "onfinish", "onstart", "onchange", 
-						"onfilterchange", "onpropertychange", "onsearch", "onmessage", "formaction", "textinput"};
-				String[] htmlElements = {
-					"a", "abbr", "acronym", "address", "applet", "area", "b", 
-					"base", "basefont", "bdo", "big", "blockquote", "body", "br",
-					"button", "caption", "center", "cite", "col", "colgroup", "dd",
-					"del", "dfn", "dir", "div", "dl", "dt", "em", "fieldset", "h1",
-					"h2", "h3", "h4", "h5", "h6", "head", "hr", "html", "!", "iframe",
-					"img", "input", "ins", "isindex", "kbd", "label", "legend", "li",
-					"link", "map", "menu", "meta", "noframes", "noscript", "object", 
-					"ol", "optgroup", "option", "p", "param", "pre", "q", "s", "samp",
-					"script", "select", "small", "span", "strike", "strong", "style", 
-					"sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead",
-					"title", "tr", "tt", "u", "ul", "var"};
 				
 				//log.debug("Cleaning Xss String");
 				String tempXss = xssString;
@@ -584,24 +583,14 @@ public class FindXSS
 			String[] colons = {
 					":", "&#x3a", "&#x3a;", "&#58", "&#58;"
 			};
+			//TODO - Find out if this local array is nessisary
+			/*
 			String[] javascriptTriggers = {
 				"onload", "onunload", "onblur", "onchange", "onfocus",
 				"onreset", "onselect", "onsubmit", "onabort", "onkeydown",
 				"onkeyup", "onkeypress", "onclick", "ondblclick", "onmousedown",
 				"onmousemove", "onmouseout", "onmouseover", "onmouseup", "onerror", "formaction"};
-			String[] htmlElements = {
-				"a", "abbr", "acronym", "address", "applet", "area", "b", 
-				"base", "basefont", "bdo", "big", "blockquote", "body", "br",
-				"button", "caption", "center", "cite", "col", "colgroup", "dd",
-				"del", "dfn", "dir", "div", "dl", "dt", "em", "fieldset", "h1",
-				"h2", "h3", "h4", "h5", "h6", "head", "hr", "html", "!", "iframe",
-				"img", "input", "ins", "isindex", "kbd", "label", "legend", "li",
-				"link", "map", "menu", "meta", "noframes", "noscript", "object", 
-				"ol", "optgroup", "option", "p", "param", "pre", "q", "s", "samp",
-				"script", "select", "small", "span", "strike", "strong", "style", 
-				"sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead",
-				"title", "tr", "tt", "u", "ul", "var"};
-			
+			*/
 			//log.debug("Cleaning Xss String");
 			String tempXss = xssString;
 			tempXss.replaceAll("\n", "");
@@ -760,9 +749,14 @@ public class FindXSS
 							payload = payload.substring(payloadStart + 6, payloadEnd);
 							//log.debug("alert payload = " + payload);
 							
-							if(!((payload.startsWith("\"") && payload.endsWith("\"")) || (payload.startsWith("'") && payload.endsWith("'"))))
+							if(!(
+									(payload.startsWith("\"") && payload.endsWith("\"")) ||
+									(payload.startsWith("'") && payload.endsWith("'")) ||
+									(payload.startsWith("/") && payload.endsWith("/"))
+								))
 							{
-								Long.parseLong(payload);
+								//AntiSamy sometimes strips the JS of its double quotes so no longer check the validity of a number
+								//Long.parseLong(payload);
 								triggerFound = true;
 							}
 							else
@@ -785,5 +779,166 @@ public class FindXSS
 			log.error("FindXSS Error: " + e.toString());
 			return false;
 		}
+	}
+	
+	public static boolean antiSamySearch (String xssString, String applicationRoot)
+	{
+		boolean result = false;
+		xssString = xssString.toLowerCase().trim();
+		log.debug("xssString  is " + xssString);
+		
+		//Create AntiSamy Object
+		String propertiesFile = applicationRoot+"/WEB-INF/antisamy-esapi.xml";
+		try
+		{
+			log.debug("Making AntiSamy Object");
+			AntiSamy as = new AntiSamy();
+			Policy policy = Policy.getInstance(propertiesFile);
+			log.debug("Scanning xssString...");
+			CleanResults cr = as.scan(xssString, policy, AntiSamy.SAX);		
+			String safeString = cr.getCleanHTML();
+			log.debug("safeString is " + safeString);
+			if(xssString.equalsIgnoreCase(safeString))
+			{
+				log.debug("Strings Match: No Xss Detected");
+			}
+			else
+			{
+				log.debug("Strings Differ: Possible Xss Detected");
+				log.debug("Number of errors: " + cr.getNumberOfErrors());
+				//Get the errors as they describe the XSS attack vector that was used
+				List<String> errors = cr.getErrorMessages();
+				int numberOfErrors = cr.getNumberOfErrors();
+				for(int i = 0; i < numberOfErrors; i++)
+				{
+					String error = errors.get(i);
+					log.debug("Error " + (i+1));
+					//Comment following line out out unless testing
+					log.debug("Error Reads: " + error);
+					//First check if error is about Script tags - This would imply simple xss has been submitted
+					String scriptTagErrorStart = new String("The script tag is not allowed for security reasons.");
+					if(error.startsWith(scriptTagErrorStart))
+					{
+						log.debug("Script tags detected");
+						result = true;
+					}
+					else
+					{
+						log.debug("Simple XSS Script Tags not detected");
+						//iframe's with Javascript events do not get caught. So checking if error is Iframe error
+						String iframeErrorStart = new String("The iframe tag is not allowed for security reasons.");
+						if(error.startsWith(iframeErrorStart))
+						{
+							//If it is we're going to change it to an <A> element, because antiSamy will check the javascript events and URI attacks of that
+							xssString = xssString.replaceAll("iframe", "a");
+							//Calling Function Recurseivly atm. TODO// Make a Overwritten version of this search that searches for an error releated to a specific element
+							result = FindXSS.antiSamySearch(xssString, applicationRoot);
+						}
+						else
+						{
+							for(int j = 0; j < htmlElements.length; j++)
+							{
+								//We want errors that read like: "The a tag contained an attribute that we could not process. The "; // This will only catch "a" tag
+								//Loop goes checks to see if this error is one of a known HTML element of interest
+								//Make the error message we are expecting for this HTML Element
+								String expectedErrorStart = makeAntiSammyError(htmlElements[j]);
+								//log.debug("Searching for: " + expectedErrorStart);
+								//If the error starts with this error, we're interested.
+								if(error.startsWith(expectedErrorStart))
+								{
+									//Extracting important parts of the error message
+									error = error.substring(expectedErrorStart.length());
+									String errorAttribute = error.substring(0, error.indexOf(" "));
+									String errorAttibuteValue = error.substring(error.indexOf("\"")+1, error.indexOf("\"", error.indexOf("\"")+1));
+									Encoder encoder = ESAPI.encoder();
+									errorAttibuteValue = encoder.decodeForHTML(errorAttibuteValue.replaceAll("&#34;", ""));
+									
+									//Reconstructing attack vector used based on error message details
+									log.debug("Constructing attack vector from AntiSammy error");
+									String attackVector = "<" + htmlElements[j] + " " + errorAttribute + "=\"" + errorAttibuteValue + "\"";
+									//Does the Element need a </ELEMENT> tag or />
+									if(!isEmptyHtmlElement(htmlElements[j]))
+									{
+										attackVector += ">Attack</" + htmlElements[j] + ">";
+									}
+									else
+									{
+										attackVector += "/>";
+									}
+											
+									log.debug("attackVector: " + attackVector);
+									log.debug("Searching for XSS in attackVector...");
+									if(FindXSS.searchWithoutSimple(attackVector))
+									{
+										log.debug("Xss Detected");
+										result = true;
+									}
+									else
+										log.debug("Xss Not Detected");
+								}
+								if(result)
+									break; //Xss Detected, time to get out of here
+							}
+						}
+					}
+					if(result)
+					{
+						break; //Xss Detected, time to get out of here
+					}
+					else
+					{
+						log.debug("Error Deemed uninteresting");
+					}
+				}
+			}
+		} 
+		catch (ScanException e) 
+		{
+			log.debug("ScanException: " + e.toString());
+		} 
+		catch (PolicyException e)
+		{
+			log.debug("PolicyException: " + e.toString());
+		}
+		catch (Exception e)
+		{
+			log.debug("Unexpected Error! " + e.toString());
+		}
+		return result;
+	}
+	
+	/**
+	 * Creates the leading string of an AntiSammy error for a specific html element
+	 * @param htmlElement the element to include in the error message
+	 * @return
+	 */
+	private static String makeAntiSammyError(String htmlElement)
+	{
+		return new String("The " + htmlElement + " tag contained an attribute that we could not process. The ");
+	}
+	
+	private static boolean isEmptyHtmlElement(String htmlElement)
+	{
+		boolean emptyHtmlElement = false;
+		String emptyElements[] = {"br", "hr", "link", "base", "meta", "img", "embed", "param", "area", "col", "input"};
+		for (int i = 0; i < emptyElements.length && !emptyHtmlElement; i++)
+		{
+			emptyHtmlElement = htmlElement.equalsIgnoreCase(emptyElements[i]);
+		}
+		return emptyHtmlElement;
+	}
+	
+	private static boolean simpleXssDetected(String xssString)
+	{
+		boolean result = false;
+		int start = xssString.indexOf("<script>");
+		int end = xssString.indexOf("</script>", start);
+		int middle = xssString.indexOf("alert");
+		if(start > -1 && end > -1 && (start < middle && middle < end))
+		{
+			log.debug("<script> tags detected");
+			result = true;
+		}
+		return result;
 	}
 }
