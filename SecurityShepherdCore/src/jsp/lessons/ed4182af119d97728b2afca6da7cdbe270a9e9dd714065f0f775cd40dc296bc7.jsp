@@ -116,10 +116,10 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 				<br />
 				<br />
 				The function used by an administrator to mark this lesson as complete for a user is initiated by the following 
-				GET request to <a><%= encoder.encodeForHTML(ExposedServer.getSecureUrl()) %></a>, where 'exampleId' is a valid userId;
+				GET request to this server, where 'exampleId' is a valid userId;
 				<br/>
 				<br/>
-				GET <a href="<%= encoder.encodeForHTML(ExposedServer.getSecureUrl()) + "/root/grantComplete/csrfLesson" %>">/root/grantComplete/csrfLesson?userId=exampleId </a>
+				GET <a href="<%= encoder.encodeForHTML("../root/grantComplete/csrfLesson?userId=exampleId") %>">/root/grantComplete/csrfLesson?userId=exampleId </a>
 				<br />
 				To complete this lesson, send the administrator a message with a image URL, that will show in an 
 				embedded <a>&lt;img&gt;</a> tag that will force them to submit the request described above, 
@@ -190,9 +190,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 				});
 			});
 		</script>
-		<% if(ExposedServer.googleAnalyticsOn) { %>
-			<%= ExposedServer.googleAnalyticsScript %>
-		<% } %>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
 <%

@@ -16,9 +16,9 @@ import org.owasp.esapi.Encoder;
 
 import dbProcs.Getter;
 import utils.FindXSS;
+import utils.Hash;
 import utils.ShepherdLogManager;
 import utils.Validate;
-import utils.XssFilter;
 
 /**
  * CSRF Lesson
@@ -84,7 +84,12 @@ public class CsrfLesson extends HttpServlet
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +
 								"<p>The administrator received your message and submitted the GET request embedded in it's image<br />" +
 								"The result key for this lesson is <a>" +
-								encoder.encodeForHTML(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash)) +
+								encoder.encodeForHTML(
+										Hash.generateUserSolution(
+												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
+												), (String)ses.getAttribute("userName")
+										)
+								) +
 								"</a>";
 					}
 					log.debug("Adding searchTerm to Html: " + messageForAdmin);

@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.Analytics" errorPage="" %>
 <%
 /*
  * This file is part of the Security Shepherd Project.
@@ -37,9 +38,7 @@
 				In the mean time get a coffee and brag about how far ahead you must be than everybody else!
 			</p>
 		</div>
-		<% if(ExposedServer.googleAnalyticsOn) { %>
-				<%= ExposedServer.googleAnalyticsScript %>
-			<% } %>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		
 </body>
 </html>

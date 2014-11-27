@@ -68,7 +68,7 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 				String htmlOutput = new String("Your csrf Token for this Challenge is: ");
 				String userId = request.getParameter("userId").toString();
 				Encoder encoder = ESAPI.encoder();
-				Connection conn = Database.getcsrfChallengeSixConnection(getServletContext().getRealPath(""));
+				Connection conn = Database.getChallengeConnection(getServletContext().getRealPath(""), "csrfChallengeSix");
 				try
 				{
 					log.debug("Preparing setCsrfChallengeSixToken call");

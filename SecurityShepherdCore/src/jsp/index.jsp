@@ -52,8 +52,6 @@ if (request.getSession() != null)
 		String csrfJsToken = encoder.encodeForJavaScript(tokenCookie.getValue());
 		String ApplicationRoot = getServletContext().getRealPath("");
 		int i = 0;
-
-		String exposedServer = ExposedServer.getUrl();
 %>
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
@@ -85,7 +83,7 @@ if (request.getSession() != null)
 		<div id="page">
 			<div id="submitResult" style="display: none; float: right;, width: 800px;">
 				<form action="javascript:;" id="resultForm" >
-				<input type="hidden" id="currentModule" value=""/>
+				<input type="hidden" id="currentModule" value="" />
 					<table>
 					<tr><td>
 						Submit Result Key:</td><td> <input style="width: 470px;" type="text" id="moduleResult" value="" autocomplete="OFF"/></td><td><div id="submitForm"><input type="submit" value="Submit"/></div>
@@ -106,33 +104,6 @@ if (request.getSession() != null)
 			Nothing related to the levels in Security Shepherd will be found in here. 
 			You might be looking for the iframe embeded in the page.
 			Try a tool like Firebug to make this stuff easier. -->
-			<% if(!ConfigurationHelper.alreadyConfigured() && userRole.compareTo("admin") == 0)
-			{ 
-			%>
-				<div id="configurationWizardDiv" align="justify">
-					<h1 class="title">First Time Configuration!</h1>
-					<div align="justify">
-						<p>Security Shepherd wants to help you through your first time setup. If you are going to use Security Shepherd locally and for yourself you can skip this by clicking the 
-						<b><a>Skip</a></b> button! If you are going to use Security Shepherd as a service for people to connect to over the network, then you should check the values in the following form accurately depict the network location of your server.</p>
-					</div>
-						<form action="javascript:;" id="configurationWizard" style="border-color:#A878EF; border-style:dashed; background-color: #D4D4D4;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;">
-							<table id="#configurationTable" align="center"><tbody>
-							<tr>
-								<td>Core Address:</td><td><input style="width: 470px;" id="coreHostAddress" autocomplete="ON" type="text" value="<%= encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl()) %>" /></td>
-							</tr><tr>
-								<td>Exposed Address:</td><td><input style="width: 470px;" id="exposedHostAddress" autocomplete="ON" type="text" value="<%= encoder.encodeForHTMLAttribute(ExposedServer.getUrl()) %>" /></td>
-							</tr><tr id="doSomthingRow">
-								<td><input value="Configure Server" type="submit"></td><td align="right"><input value="Skip" type="button" id="noSetupForMeThanks"></td>				
-							</tr><tr id="configLoading" style="display: none;">
-								<td colspan="2"> <div id="submitLoading" >Loading... </div></td>
-							</tr>
-							</tbody></table>
-						</form>
-					<div id="configResultResponse"></div>
-				</div>
-			<% 
-				}
-			%>
 			<div id="contentDiv">
 				<!-- Ajax Div -->
 			</div>
@@ -140,7 +111,7 @@ if (request.getSession() != null)
 				<ul>
 					<% if (userRole.compareTo("admin") == 0){ %>
 						<li>
-							<a id="adminList" href="javascript:;"><div class='menuButton'>Admin</div></a>
+							 <a id="adminList" href="javascript:;"><div class='menuButton'>Admin</div></a>
 							<ul id="theAdminList" style="display: none;">
 								<li>
 									<a id="cheatSheetManagementList" href="javascript:;">Cheat Sheet Management</a>
@@ -181,11 +152,7 @@ if (request.getSession() != null)
 									<ul id="theConfigurationList" style="display: none;">
 										<li><a id="enableFeedbackLink" href="javascript:;">Enable Feedback</a></li>
 										<li><a id="disableFeedbackLink" href="javascript:;">Disable Feedback</a></li>
-										<li><a id="setCoreHostAddressLink" href="javascript:;">Set Core Host Address</a></li>
-										<li><a id="setExposedHostAddressLink" href="javascript:;">Set Exposed Host Address</a></li>
 										<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
-										<li><a id="setExposedDatabaseLink" href="javascript:;">Set Exposed Database</a></li>
-										<li><a id="setVulnerableRootLink" href="javascript:;">Set Vulnerable Server App Root</a></li>
 									</ul>
 								</li>
 							</ul>
@@ -369,94 +336,12 @@ if (request.getSession() != null)
 			}
 		});
 		
-		<% if(!ConfigurationHelper.alreadyConfigured() && userRole.compareTo("admin") == 0)
-		{ 
-		%>
-		$("#configurationWizard").submit(function(){
-			var theCoreHostAddress = $("#coreHostAddress").val();
-			var theExposedHostAddress = $("#exposedHostAddress").val();
-			if((theExposedHostAddress.length > 8 && theCoreHostAddress.length > 8))
-			{
-				$("#badData").hide("fast");
-				$("#configResultResponse").hide("fast");
-				$("#doSomthingRow").hide("fast");
-				$("#configLoading").show("slow", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "quickConfig",
-						data: {
-							coreHostAddress: theCoreHostAddress,
-							exposedHostAddress: theExposedHostAddress,
-							csrfToken: "<%= csrfToken %>"
-						},
-						async: false
-					});
-					if(ajaxCall.status == 200)
-					{
-						$('#configResultResponse').html(ajaxCall.responseText);
-						if (ajaxCall.responseText.indexOf("Please try again") >= 0) //Error Message In Response (Don't Hide Form)
-						{
-							$("#configLoading").hide("fast", function(){
-								$("#configResultResponse").show ("fast");
-							});
-						}
-						else // No Error Message
-						{
-							$("#configLoading").hide("fast", function(){
-								$("#configurationWizard").slideUp("slow", function(){
-									$("#configResultResponse").show ("fast");
-								});
-							});
-						}
-					}
-					else
-					{
-						$('#configResultResponse').html("<br/><p> Sorry but there was a result form error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
-						$("#configResultResponse").show("slow");
-					}
-						$("#configLoading").hide("fast", function(){
-							$("#doSomthingRow").show("slow");
-					});
-				});
-			}
-			else
-			{
-				$("#badData").html("<font color='red'>Invalid Url. Too Short.</font>");
-				$("#badData").show("slow");
-			}
-		});
-		
-		$("#noSetupForMeThanks").click(function(){
-			$("#configurationWizardDiv").slideUp("slow", function(){
-				var ajaxCall = $.ajax({
-					type: "POST",
-					url: "cancelConfigPrompt",
-					data: {
-						csrfToken: "<%= csrfToken %>"
-					},
-					async: false
-				});
-				if(ajaxCall.status == 200)
-				{
-					//Grand
-				}
-				else
-				{
-					$('#resultResponse').html("<br/><p> Config Splash Cancel Failed!: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
-					$("#resultResponse").show("slow");
-				}
-				$("html, body").animate({ scrollTop: 0 }, "fast");
-			});
-		});
-		<%
-		}
-		%>
 		</script>
 		<!-- You are currently looking at the core server. 
 		Nothing related to the levels in Security Shepherd will be found in here. 
 		You might be looking for the iframe embeded in the page.
 		Try a tool like Firebug to make this stuff easier. -->
-		<% if(ExposedServer.googleAnalyticsOn) { %><%= ExposedServer.googleAnalyticsScript %><% } %>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		</body>
 		</html>
 		<%

@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-import utils.ExposedServer;
 import utils.ShepherdLogManager;
 import utils.Validate;
 import utils.ModuleBlock;
@@ -127,7 +126,7 @@ public class StopHere extends HttpServlet
 		else
 		{
 			log.error("Invalid Session Detected");
-			out.write(encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl()) + "css/images/loggedOutSheep.jpg");
+			out.write("css/images/loggedOutSheep.jpg");
 		}
 		log.debug("&&& END StopHere &&&");
 	}

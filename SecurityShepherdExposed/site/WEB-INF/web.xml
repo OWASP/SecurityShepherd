@@ -29,7 +29,7 @@
     
 	<servlet>
 		<servlet-name>/lessons/e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594</servlet-name>
-		<servlet-class>servlets.SqlInjectionLesson</servlet-class>
+		<servlet-class>servlets.lessons.SqlInjectionLesson</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/lessons/e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594</servlet-name>
@@ -74,7 +74,7 @@
   	
   	<servlet>
 		<servlet-name>/lessons/b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806</servlet-name>
-		<servlet-class>servlets.SessionManagementLesson</servlet-class>
+		<servlet-class>servlets.lessons.SessionManagementLesson</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/lessons/b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806</servlet-name>
@@ -128,7 +128,7 @@
 	
 	<servlet>
 		<servlet-name>/lessons/fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100</servlet-name>
-		<servlet-class>servlets.DirectObjectLesson</servlet-class>
+		<servlet-class>servlets.lessons.DirectObjectLesson</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/lessons/fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100</servlet-name>

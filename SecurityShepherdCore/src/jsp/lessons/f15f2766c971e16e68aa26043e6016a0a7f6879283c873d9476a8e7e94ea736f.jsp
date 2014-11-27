@@ -90,10 +90,10 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 				the redirect page.
 				<br />
 				<br />
-				The function vulnerable to unvalidated redirects is <a>/user/redirect?to=exampleUrl</a>
+				The function vulnerable to unvalidated redirects is <a href="../user/redirect?to=exampleUrl">/user/redirect?to=exampleUrl</a>
 				<br />
 				<br />
-				The request to mark this lesson as complete is <a>/root/grantComplete/unvalidatedredirectlesson?userid=exampleId</a> where the exampleId is a users TempId. <a></a>
+				The request to mark this lesson as complete is <a href="../root/grantComplete/unvalidatedredirectlesson?userid=exampleId">/root/grantComplete/unvalidatedredirectlesson?userid=exampleId</a> where the exampleId is a users TempId. <a></a>
 				<br />
 				<br />
 				Your temporary ID is <a><%= tempId %></a>
@@ -160,9 +160,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 				});
 			});
 		</script>
-		<% if(ExposedServer.googleAnalyticsOn) { %>
-			<%= ExposedServer.googleAnalyticsScript %>
-		<% } %>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
 <%

@@ -47,7 +47,6 @@ String registrationSuccess = new String();
 String loginFailed = new String();
 String registerError = new String();
 Encoder encoder = ESAPI.encoder();
-String theUrl = encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl());
 
 if(ses.getAttribute("loginFailed") != null)
 {
@@ -163,8 +162,6 @@ if(ses.getAttribute("loginFailed") != null)
 		$("#aboutDiv").show("slow");
 	});
 </script>
-<% if(ExposedServer.googleAnalyticsOn) { %>
-	<%= ExposedServer.googleAnalyticsScript %>
-<% } %>
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>

@@ -174,9 +174,7 @@ if(ses.getAttribute("errorMessage") != null)
 		}
 	});
 	</script>
-	<% if(ExposedServer.googleAnalyticsOn) { %>
-		<%= ExposedServer.googleAnalyticsScript %>
-	<% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 	<%
 }
 else

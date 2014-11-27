@@ -86,14 +86,10 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						}
 					});
 					</script>
-					<% if(ExposedServer.googleAnalyticsOn) { %>
-						<%= ExposedServer.googleAnalyticsScript %>
-					<% } %>
+					<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 				<% } else { %>
 					<p>No module block is currently enabled!</p>
-					<% if(ExposedServer.googleAnalyticsOn) { %>
-						<%= ExposedServer.googleAnalyticsScript %>
-					<% } %>
+					<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 				<% } %>
 			</form>
 		</div>

@@ -13,8 +13,6 @@ import org.json.simple.JSONObject;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-import utils.ExposedServer;
-
 
 /** 
  * Used to retrieve information from the Database
@@ -57,7 +55,7 @@ public class Getter
 		
 		boolean userFound = false;
 		boolean goOn = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try 
 		{
 			//See if user Exists
@@ -181,7 +179,7 @@ public class Getter
 		log.debug("*** Setter.checkPlayerResult ***");
 		
 		String result = null;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			log.debug("Preparing userUpdateResult call");
@@ -213,7 +211,7 @@ public class Getter
 		log.debug("*** Getter.findPlayerById ***");
 		boolean userFound = false;
 		//Get connection
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call playerFindById(?)");
@@ -245,7 +243,7 @@ public class Getter
 		log.debug("*** Getter.getAllModuleInfo ***");
 		ArrayList<String[]> modules = new ArrayList<String[]>();
 		
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleGetAll()");
@@ -286,7 +284,7 @@ public class Getter
 		String output = new String();
 		//Encoder to prevent XSS
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleAllInfo(?, ?)");
@@ -356,7 +354,7 @@ public class Getter
 		int result = 0;
 		ResultSet resultSet = null;
 		log.debug("*** Getter.getClassCount ***");
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call classCount()");
@@ -384,7 +382,7 @@ public class Getter
 	{
 		ResultSet result = null;
 		log.debug("*** Getter.getClassInfo (All Classes) ***");
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call classesGetData()");
@@ -410,7 +408,7 @@ public class Getter
 	{
 		String[] result = new String[2];
 		log.debug("*** Getter.getClassInfo (Single Class) ***");
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call classFind(?)");
@@ -444,7 +442,7 @@ public class Getter
 		log.debug("Getting stored messages from class: " + classId);
 		Encoder encoder = ESAPI.encoder();
 		String htmlOutput = new String();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			if(classId != null)
@@ -503,7 +501,7 @@ public class Getter
 		log.debug("Getting stored messages from class: " + classId);
 		Encoder encoder = ESAPI.encoder();
 		String htmlOutput = new String();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			if(classId != null)
@@ -561,7 +559,7 @@ public class Getter
 		
 		String result = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(applicationRoot);
+		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
 			log.debug("Preparing userUpdateResult call");
@@ -630,7 +628,7 @@ public class Getter
 		log.debug("*** Getter.getIncrementalChallenges ***");
 		String output = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)");
@@ -770,7 +768,7 @@ public class Getter
 		log.debug("*** Getter.getTournamentModules ***");
 		String output = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			//Get the modules
@@ -834,7 +832,7 @@ public class Getter
 		String closedModules = new String();
 		String output = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			//Get the modules
@@ -885,7 +883,7 @@ public class Getter
 		String theModules = new String();
 		String output = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			//Get the modules
@@ -920,7 +918,7 @@ public class Getter
 		log.debug("*** Getter.getLesson ***");
 		String output = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			//Get the lesson modules
@@ -987,7 +985,7 @@ public class Getter
 		log.debug("*** Getter.getModuleAddress ***");
 		String output = new String();
 		String type = new String();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleGetHash(?, ?)");
@@ -1006,15 +1004,7 @@ public class Getter
 			{
 				type = "lessons";
 			}
-			//Identify which server to point to
-			if(modules.getString(2).equalsIgnoreCase("XSS") || modules.getString(2).equalsIgnoreCase("CSRF") || modules.getString(2).equalsIgnoreCase("Unvalidated Redirects and Forwards") || modules.getString(2).equalsIgnoreCase("Insufficient Transport Layer Protection"))
-			{
-				output = ExposedServer.getSecureUrl() + type + "/" + modules.getString(1) + ".jsp";
-			}
-			else
-			{
-				output = ExposedServer.getUrl() + type + "/" + modules.getString(1) + ".jsp";
-			}
+			output = type + "/" + modules.getString(1) + ".jsp";
 		}
 		catch(Exception e)
 		{
@@ -1034,7 +1024,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getModuleHash ***");
 		String result = new String();
-		Connection conn = Database.getConnection(applicationRoot);
+		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleGetHashById(?)");
@@ -1066,7 +1056,7 @@ public class Getter
 		log.debug("*** Getter.getModuleIdFromHash ***");
 		log.debug("Getting ID from Hash: " + moduleHash);
 		String result = new String();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleGetIdFromHash(?)");
@@ -1097,7 +1087,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getModuleResult ***");
 		String theCategory = null;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			PreparedStatement prepstmt = conn.prepareStatement("SELECT moduleCategory FROM modules WHERE moduleId = ?");
@@ -1126,7 +1116,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getModuleKeyType ***");
 		boolean theKeyType = true;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			PreparedStatement prepstmt = conn.prepareStatement("SELECT hardcodedKey FROM modules WHERE moduleId = ?");
@@ -1158,7 +1148,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getModuleResult ***");
 		String moduleFound = null;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleGetResult(?)");
@@ -1190,7 +1180,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getModuleResultFromHash ***");
 		String result = new String();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			log.debug("hash '" + moduleHash + "'");
@@ -1224,7 +1214,7 @@ public class Getter
 		log.debug("*** Getter.getModulesInOptionTags ***");
 		String output = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			PreparedStatement callstmt = conn.prepareStatement("SELECT moduleId, moduleName FROM modules ORDER BY moduleCategory, moduleName;");
@@ -1258,7 +1248,7 @@ public class Getter
 		log.debug("*** Getter.getModulesInOptionTags ***");
 		String output = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			PreparedStatement callstmt = conn.prepareStatement("SELECT moduleId, moduleName FROM modules ORDER BY incrementalRank;");
@@ -1291,7 +1281,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getModuleSolution ***");
 		String[] result = new String[2];
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call cheatSheetGetSolution(?)");
@@ -1325,7 +1315,7 @@ public class Getter
 	{
 		ResultSet result = null;
 		log.debug("*** Getter.getPlayersByClass (Single Class) ***");
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = null;
@@ -1367,7 +1357,7 @@ public class Getter
 		
 		String result = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(applicationRoot);
+		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
 			log.debug("Preparing userProgress call");
@@ -1419,7 +1409,7 @@ public class Getter
 		
 		String result = new String();
 		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getConnection(applicationRoot);
+		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
 			log.debug("Preparing userProgress call");
@@ -1473,7 +1463,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getUserName ***");
 		String result = new String();
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call userGetNameById(?)");
@@ -1504,7 +1494,7 @@ public class Getter
 	{
 		log.debug("*** Getter.isUserLocked ***");
 		boolean result = true;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call userLocked(?)");

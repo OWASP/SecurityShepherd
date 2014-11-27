@@ -8,8 +8,6 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 import org.apache.log4j.Logger;
 import org.owasp.validator.html.*; 
-import org.owasp.esapi.errors.IntrusionException;
-import org.owasp.esapi.errors.ValidationException;
 
 /**
  * Class is responsible for finding valid XSS and CSRF attacks in user submissions
@@ -367,18 +365,12 @@ public class FindXSS
 						log.debug("URL Port: " + csrfUrl.getPort());
 						log.debug("URL Path: " + csrfUrl.getPath());
 						log.debug("URL Query: " + csrfUrl.getQuery());
-						validUrl = csrfUrl.getHost().equals(ExposedServer.getSecureHost().toLowerCase());
+						validUrl = csrfUrl.getPath().toLowerCase().equalsIgnoreCase("/root/grantComplete/csrflesson");
 						if(!validUrl)
 							log.debug("1");
-						validUrl = new Integer(csrfUrl.getPort()).toString().equals(ExposedServer.getSecurePort().toLowerCase()) && validUrl;
-						if(!validUrl)
-							log.debug("2");
-						validUrl = csrfUrl.getPath().toLowerCase().equalsIgnoreCase("/root/grantComplete/csrflesson") && validUrl;
-						if(!validUrl)
-							log.debug("3");
 						validUrl = csrfUrl.getQuery().toLowerCase().equalsIgnoreCase(("userId=" + falseId).toLowerCase()) && validUrl;
 						if(!validUrl)
-							log.debug("4");
+							log.debug("2");
 					}
 					catch(MalformedURLException e)
 					{
@@ -413,17 +405,12 @@ public class FindXSS
 		try
 		{
 			URL theAttack = new URL(theUrl);
+			log.debug("csrfAttackPath: " + csrfAttackPath);
 			log.debug("theAttack Host: " + theAttack.getHost());
 			log.debug("theAttack Port: " + theAttack.getPort());
 			log.debug("theAttack Path: " + theAttack.getPath());
 			log.debug("theAttack Query: " + theAttack.getQuery());
-			validAttack = theAttack.getHost().equals(ExposedServer.getSecureHost().toLowerCase());
-			if(!validAttack)
-				log.debug("Invalid Solution: Bad Host");
-			validAttack = new Integer(theAttack.getPort()).toString().equals(ExposedServer.getSecurePort().toLowerCase()) && validAttack;
-			if(!validAttack)
-				log.debug("Invalid Solution: Bad Port or Above");
-			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath) && validAttack;
+			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath);
 			if(!validAttack)
 				log.debug("Invalid Solution: Bad Path or Above");
 			validAttack = theAttack.getQuery().toLowerCase().equalsIgnoreCase((userIdParameterName + "=" + userIdParameterValue).toLowerCase()) && validAttack;
@@ -459,13 +446,7 @@ public class FindXSS
 			log.debug("theAttack Port: " + theAttack.getPort());
 			log.debug("theAttack Path: " + theAttack.getPath());
 			log.debug("theAttack Query: " + theAttack.getQuery());
-			validAttack = theAttack.getHost().equals(ExposedServer.getSecureHost().toLowerCase());
-			if(!validAttack)
-				log.debug("Invalid Solution: Bad Host");
-			validAttack = new Integer(theAttack.getPort()).toString().equals(ExposedServer.getSecurePort().toLowerCase()) && validAttack;
-			if(!validAttack)
-				log.debug("Invalid Solution: Bad Port or Above");
-			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath) && validAttack;
+			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath);
 			if(!validAttack)
 				log.debug("Invalid Solution: Bad Path or Above");
 		}
@@ -824,7 +805,7 @@ public class FindXSS
 					}
 					else
 					{
-						log.debug("Simple XSS Script Tags not detected");
+						//log.debug("Simple XSS Script Tags not detected");
 						//iframe's with Javascript events do not get caught. So checking if error is Iframe error
 						String iframeErrorStart = new String("The iframe tag is not allowed for security reasons.");
 						if(error.startsWith(iframeErrorStart))
@@ -867,7 +848,7 @@ public class FindXSS
 									}
 											
 									log.debug("attackVector: " + attackVector);
-									log.debug("Searching for XSS in attackVector...");
+									//log.debug("Searching for XSS in attackVector...");
 									if(FindXSS.searchWithoutSimple(attackVector))
 									{
 										log.debug("Xss Detected");
@@ -887,7 +868,7 @@ public class FindXSS
 					}
 					else
 					{
-						log.debug("Error Deemed uninteresting");
+						log.debug("Error Deemed Uninteresting");
 					}
 				}
 			}
@@ -926,19 +907,5 @@ public class FindXSS
 			emptyHtmlElement = htmlElement.equalsIgnoreCase(emptyElements[i]);
 		}
 		return emptyHtmlElement;
-	}
-	
-	private static boolean simpleXssDetected(String xssString)
-	{
-		boolean result = false;
-		int start = xssString.indexOf("<script>");
-		int end = xssString.indexOf("</script>", start);
-		int middle = xssString.indexOf("alert");
-		if(start > -1 && end > -1 && (start < middle && middle < end))
-		{
-			log.debug("<script> tags detected");
-			result = true;
-		}
-		return result;
 	}
 }

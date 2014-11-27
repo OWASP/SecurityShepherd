@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import utils.ExposedServer;
+
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -59,19 +59,10 @@ public class Redirect extends HttpServlet
 				try
 				{
 					String redirectString = request.getParameter("to");
-					URL redirectTo = new URL(redirectString);
-					if(redirectTo.getHost().equalsIgnoreCase(ExposedServer.getSecureHost()))
-					{
-						String userName = (String) ses.getAttribute("userName");
-						log.debug("Redirecting " + userName + " to the following URL: " + redirectString);
-						response.sendRedirect(redirectString);
-					}
-					else
-					{
-						out.write("Hardened Vulnerable Redirect example...");
-					}
+					out.write("Hardened Vulnerable Redirect example...");
+					//No actual redirecting
 				}
-				catch(MalformedURLException e)
+				catch(Exception e)
 				{
 					log.error("Invalid URL submitted to Redirect Function: " + e.toString());
 					out.write("Hardened Vulnerable Redirect example...");

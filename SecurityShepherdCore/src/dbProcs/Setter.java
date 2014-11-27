@@ -16,8 +16,6 @@ import org.owasp.esapi.Encoder;
 import org.owasp.esapi.codecs.Codec;
 import org.owasp.esapi.codecs.MySQLCodec;
 
-import utils.ExposedServer;
-
 /**
  * Used to add information to the Database
  * <br/><br/>
@@ -100,7 +98,7 @@ public class Setter
 		log.debug("*** Setter.classCreate ***");
 		
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			log.debug("Preparing classCreate call");
@@ -135,7 +133,7 @@ public class Setter
 	{
 		log.debug("*** Setter.createModule ***");
 		String moduleId = null;
-		Connection conn = Database.getConnection(applicationRoot);
+		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleCreate(?, ?, ?, ?, ?)");
@@ -374,7 +372,7 @@ public class Setter
 	{
 		log.debug("*** Setter.setStoredMessage ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call resultMessageSet(?, ?, ?)");
@@ -405,7 +403,7 @@ public class Setter
 	{
 		log.debug("*** Setter.setModuleStatusOpen ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
@@ -435,7 +433,7 @@ public class Setter
 	{
 		log.debug("*** Setter.openAllModules ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open'");
@@ -462,7 +460,7 @@ public class Setter
 	{
 		log.debug("*** Setter.closeAllModules ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed'");
@@ -490,7 +488,7 @@ public class Setter
 	{
 		log.debug("*** Setter.setModuleCategoryStatusOpen ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = ? WHERE moduleCategory = ?");
@@ -518,7 +516,7 @@ public class Setter
 	{
 		log.debug("*** Setter.openOnlyMobileCategories ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		final String webModuleCategoryHardcodedWhereClause = new String(""
 				+ "moduleCategory = 'CSRF'"
 				+ " OR " + "moduleCategory = 'Failure to Restrict URL Access'"
@@ -562,7 +560,7 @@ public class Setter
 	{
 		log.debug("*** Setter.openOnlyWebCategories ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		final String webModuleCategoryHardcodedWhereClause = new String(""
 				+ "moduleCategory = 'CSRF'"
 				+ " OR " + "moduleCategory = 'Failure to Restrict URL Access'"
@@ -607,7 +605,7 @@ public class Setter
 	{
 		log.debug("*** Setter.setModuleStatusClosed ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
@@ -638,7 +636,7 @@ public class Setter
 	{
 		log.debug("*** Getter.updateCheatSheet ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(applicationRoot);
+		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call cheatSheetCreate(?, ?)");
@@ -668,7 +666,7 @@ public class Setter
 	{
 		log.debug("*** Getter.updateCsrfCounter ***");
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call resultMessagePlus(?, ?)");
@@ -699,7 +697,7 @@ public class Setter
 		log.debug("*** Setter.updatePassword ***");
 		
 		boolean result = false;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			log.debug("Preparing userPasswordChange call");
@@ -732,7 +730,7 @@ public class Setter
 		log.debug("*** Setter.updatePlayerClass ***");
 		
 		String result = null;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			log.debug("Preparing playerUpdateClass call");
@@ -765,7 +763,7 @@ public class Setter
 		log.debug("*** Setter.updatePlayerClassToNull ***");
 		
 		String result = null;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			log.debug("Preparing playerUpdateClassToNull call");
@@ -802,7 +800,7 @@ public class Setter
 		log.debug("*** Setter.updatePlayerResult ***");
 		
 		String result = null;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			log.debug("Preparing userUpdateResult call");
@@ -840,7 +838,7 @@ public class Setter
 		log.debug("*** Setter.updateUserRole ***");
 		
 		String result = null;
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			log.debug("Preparing userUpdateRole call");
@@ -883,7 +881,7 @@ public class Setter
 		log.debug("userName" + userName);
 		log.debug("userRole" + userRole);
 		log.debug("userAddress" + userAddress);
-		Connection conn = Database.getConnection(ApplicationRoot);
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			log.debug("Executing userCreate procedure on Database");
@@ -943,14 +941,19 @@ public class Setter
 	{
 		try 
 		{
-			File siteProperties = new File(applicationRoot + "/WEB-INF/site.properties");
+			//Update Database Settings
+			File siteProperties = new File(applicationRoot + "/WEB-INF/database.properties");
 			DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
 			String theProperties = new String("databaseConnectionURL=" + url +
-										"\ndatabaseUsername=" + userName +
-										"\ndatabasePassword=" + password +
 										"\nDriverType=org.gjt.mm.mysql.Driver");
 			writer.write(theProperties.getBytes());
 			writer.close();
+			//Update Core Schema Settings
+			siteProperties = new File(applicationRoot + "/WEB-INF/coreDatabase.properties");
+			writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
+			theProperties = new String("databaseConnectionURL=core"+					
+					"\ndatabaseUsername=" + userName +
+					"\ndatabasePassword=" + password);
 			return true;
 		} 
 		catch (IOException e) 
@@ -989,39 +992,11 @@ public class Setter
 		}
 	}
 	
-	/**
-	 * This method converts the default database properties file at exposedApplicationRoot/WEB-INF/site.properties
-	 * @param url The Url of the exposed Database
-	 * @param userName The username of the database user
-	 * @param password The password of the database user
-	 * @return Boolean value depicting the success of the method
-	 */
-	public static boolean setRemoteExposedDatabaseInfo(String url, String userName, String password)
-	{
-		try 
-		{
-			File siteProperties = new File(ExposedServer.getApplicationRoot() + "/WEB-INF/exposedDatabase.properties");
-			DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
-			String theProperties = new String("databaseConnectionURL=" + url +
-										"\ndatabaseUsername=" + userName +
-										"\ndatabasePassword=" + password +
-										"\nDriverType=org.gjt.mm.mysql.Driver");
-			writer.write(theProperties.getBytes());
-			writer.close();
-			return true;
-		} 
-		catch (IOException e) 
-		{
-			log.error("Could not update Remote Exposed Database Info: " + e.toString());
-			return false;
-		}
-	}
-	
 	public static boolean setCsrfChallengeSixCsrfToken (String userId, String csrfToken, String ApplicationRoot)
 	{
 		log.debug("*** setCsrfChallengeSixToken ***");
 		boolean result = false;
-		Connection conn = Database.getcsrfChallengeSixConnection(ApplicationRoot);
+		Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeSix");
 		try
 		{
 			boolean updateToken = false;

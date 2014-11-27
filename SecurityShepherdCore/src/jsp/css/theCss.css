@@ -86,12 +86,6 @@ a:hover {
 	margin: 0;
 }
 
-#configurationWizardDiv {
-	float: right;
-	width: 685px;
-	margin: 0;
-}
-
 .errorMessage {
 	padding: 10px 10px 10px 10px;
 	background: #FFFFFF;

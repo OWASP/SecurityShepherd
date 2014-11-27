@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-import utils.ExposedServer;
 import utils.ModulePlan;
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -94,7 +93,7 @@ public class RefreshMenu extends HttpServlet
 		else
 		{
 			log.error("Invalid Session Detected");
-			out.write("<img src='" + encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl()) + "css/images/loggedOutSheep.jpg'/>");
+			out.write("<img src='css/images/loggedOutSheep.jpg'/>");
 		}
 		log.debug("&&& END RefreshMenu &&&");
 	}

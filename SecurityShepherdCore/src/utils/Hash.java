@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.Cookie;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.codec.binary.Base64;
@@ -212,5 +213,90 @@ public class Hash
 		cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
 		byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
 		return new String(original, Charset.forName("US-ASCII"));
+	}
+	
+	public static String generateUserSolution(String baseKey, Cookie[] cookies)
+	{
+		log.debug("Getting user Specific key");
+		String cookieName = "JSESSIONID3";
+		Cookie myCookie = null;
+		String toReturn = "Key Should be here! Please refresh the home page and try again!";
+		log.debug("Looking for key cookie");
+		if (cookies != null)
+		{
+			for (int i = 0; i < cookies.length; i++) 
+			{
+				log.debug("Looking at: " + cookies[i].getName() + " = " + cookies[i].getValue());
+				if (cookies[i].getName().equals(cookieName))
+				{
+					myCookie = cookies[i];
+					log.debug("Found Cookie with value: " + myCookie.getValue());
+					break;
+				}
+			}
+			try 
+			{
+				String decryptedUserName = Hash.decrypt(Hash.userNameKey, myCookie.getValue());
+				log.debug("Decrypted UserName: " + decryptedUserName);
+				toReturn = Hash.encrypt(Hash.validateEncryptionKey(decryptedUserName), baseKey + encryptionKeySalt);
+				log.debug("Returning: " + toReturn);
+			} 
+			catch (Exception e) 
+			{ 
+				log.error("Encryption Failure: " + e.toString());
+				toReturn = "Key Should be here! Please refresh the home page and try again!";
+			}
+		}
+		return "<b style='word-wrap: break-word;'>" + toReturn + "</b>";
+	}
+	
+	public static String validateEncryptionKey(String userSalt)
+	{
+		String newKey = new String();
+		int keySize = userSalt.length();
+		if(keySize == 16)
+		{
+			//log.debug("Key Already Valid");
+			newKey = userSalt;
+		}
+		else
+		{
+			if(keySize > 16)
+			{
+				//log.debug("Key too Long...");
+				newKey = userSalt.substring(0, 16);
+			}
+			else // Shorter than 16
+			{
+				//log.debug("Key too Short...");
+				newKey = userSalt;
+				int howManyTimes = (16 / keySize) - 1;
+				//log.debug("Repeating String " + howManyTimes + " times");
+				for(int i = 0; i < howManyTimes; i++)
+					newKey += userSalt;
+				keySize = newKey.length();
+				int toAdd = 16 - keySize;
+				//log.debug("Adding " + toAdd + " more characters");
+				newKey = newKey.concat(userSalt.substring(0, toAdd));
+			}
+		}
+		log.debug("Encryption key is '" + newKey + "'");
+		return newKey;
+	}
+	
+
+	public static String decryptUserName (String encyptedUserName)
+	{
+		String decryptedUserName = new String();
+		try 
+		{
+			decryptedUserName = Hash.decrypt(Hash.userNameKey, encyptedUserName);
+			log.debug("Decrypted user-name to: " + decryptedUserName);
+		} 
+		catch (GeneralSecurityException e)
+		{
+			log.error("Could not decrypt user name: " + e.toString());
+		}
+		return decryptedUserName;
 	}
 }

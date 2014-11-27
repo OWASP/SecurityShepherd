@@ -44,7 +44,6 @@ if (Validate.validateSession(ses) && tokenCookie != null)
 //This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
 Encoder encoder = ESAPI.encoder();
 String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
-String exposedServer = encoder.encodeForHTMLAttribute(ExposedServer.getUrl());
 String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
 String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
 String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
@@ -89,7 +88,7 @@ if(!changePassword)
 			</p>
 			<% } %>
 			<br/><br/>
-			If you cannot see the message below this paragraph, please ensure that your browser can visit <a href="<%= exposedServer %>"> the exposed server.</a>.
+			If you cannot see the message below this paragraph, please ensure that the Security Shepherd instance is correctly configured.</a>.
 		</div>
 		<br/>
 	<div id="cantSee">
@@ -99,7 +98,7 @@ if(!changePassword)
 	</div>
 	<script>
 	$('#getStarted').slideDown("slow");
-	$('#cantSee').html("<iframe style='width: 685px; height: 600px;' frameborder='no' id='theStart' src='<%= exposedServer %>test.jsp?ThreadSequenceId=<%=encoder.encodeForHTMLAttribute(encoder.encodeForURL(threadId))%>'></iframe>");
+	$('#cantSee').html("<iframe style='width: 685px; height: 600px;' frameborder='no' id='theStart' src='readyToPlay.jsp?ThreadSequenceId=<%=encoder.encodeForHTMLAttribute(encoder.encodeForURL(threadId))%>'></iframe>");
 	$('#cantSee').html(function(){
 		$("#theStart").load(function(){
 			$("#contentDiv").slideDown("slow");
@@ -223,9 +222,7 @@ if(!changePassword)
 	});
 	<% } // End of Admin Only Script%>
 	</script>
-	<% if(ExposedServer.googleAnalyticsOn) { %>
-				<%= ExposedServer.googleAnalyticsScript %>
-			<% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 	<%
 }
 else	//IF the  user doesnt need to change their pass, just post up the get Started message

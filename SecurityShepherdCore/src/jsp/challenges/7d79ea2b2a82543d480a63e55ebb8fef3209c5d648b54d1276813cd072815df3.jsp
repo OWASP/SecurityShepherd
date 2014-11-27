@@ -59,7 +59,7 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 String csrfChal6Token = Hash.randomString().trim();
 ses.setAttribute("csrfChallengeSixNonce", csrfChal6Token);
 Setter.setCsrfChallengeSixCsrfToken(userId, csrfChal6Token, ApplicationRoot);
-String getYourTokenUrl = encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl() + "/user/csrfchallengesix/getToken?userId=" + userId);
+String getYourTokenUrl = encoder.encodeForHTMLAttribute("../user/csrfchallengesix/getToken?userId=" + userId);
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -138,9 +138,7 @@ String getYourTokenUrl = encoder.encodeForHTMLAttribute(ExposedServer.getSecureU
 				});
 			});
 		</script>
-		<% if(ExposedServer.googleAnalyticsOn) { %>
-			<%= ExposedServer.googleAnalyticsScript %>
-		<% } %>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
 <%

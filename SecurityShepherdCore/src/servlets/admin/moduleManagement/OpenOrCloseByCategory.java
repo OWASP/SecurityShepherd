@@ -15,7 +15,6 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import dbProcs.Setter;
-import utils.ExposedServer;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -81,7 +80,7 @@ public class OpenOrCloseByCategory extends HttpServlet
 		else
 		{
 			log.error("Invalid Admin Session Detected");
-			out.write(encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl()) + "css/images/loggedOutSheep.jpg");
+			out.write("css/images/loggedOutSheep.jpg");
 		}
 		out.write(htmlOutput);
 		log.debug("&&& END OpenOrCloseByCategory &&&");

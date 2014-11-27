@@ -15,7 +15,6 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import dbProcs.Setter;
-import utils.ExposedServer;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -59,7 +58,7 @@ public class OpenWebModules extends HttpServlet
 		else
 		{
 			log.error("Invalid Session Detected");
-			htmlOutput = "<img src=\"" + encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl()) + "css/images/loggedOutSheep.jpg\" /><br/>";
+			htmlOutput = "<img src=\"css/images/loggedOutSheep.jpg\" /><br/>";
 		}
 		out.write(htmlOutput);
 		log.debug("&&& END " + servletName + " &&&");

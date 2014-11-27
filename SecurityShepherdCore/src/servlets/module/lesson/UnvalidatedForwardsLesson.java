@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-import utils.ExposedServer;
 import utils.FindXSS;
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -89,13 +88,7 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 						log.debug("Url Port: " + csrfUrl.getPort());
 						log.debug("Url Path: " + csrfUrl.getPath());
 						log.debug("Url Query: " + csrfUrl.getQuery());
-						validSolution = csrfUrl.getHost().equals(ExposedServer.getSecureHost().toLowerCase());
-						if(!validSolution)
-							log.debug("Invalid Solution: Bad Host");
-						validSolution = new Integer(csrfUrl.getPort()).toString().equals(ExposedServer.getSecurePort().toLowerCase()) && validSolution;
-						if(!validSolution)
-							log.debug("Invalid Solution: Bad Port or Above");
-						validSolution = csrfUrl.getPath().toLowerCase().equalsIgnoreCase("/user/redirect") && validSolution;
+						validSolution = csrfUrl.getPath().toLowerCase().equalsIgnoreCase("/user/redirect");
 						if(!validSolution)
 							log.debug("Invalid Solution: Bad Path or Above");
 						validSolution = csrfUrl.getQuery().toLowerCase().startsWith(("to=").toLowerCase()) && validSolution;

@@ -112,9 +112,7 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 				});
 			});
 		</script>
-		<% if(ExposedServer.googleAnalyticsOn) { %>
-			<%= ExposedServer.googleAnalyticsScript %>
-		<% } %>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
 <%

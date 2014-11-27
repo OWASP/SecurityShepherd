@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-import utils.ExposedServer;
 import utils.ShepherdLogManager;
 import utils.Validate;
 import dbProcs.Getter;
@@ -79,7 +78,7 @@ public class GetProgress extends HttpServlet
 		}
 		else
 		{
-			out.write("<img src='" + encoder.encodeForHTMLAttribute(ExposedServer.getSecureUrl()) + "css/images/loggedOutSheep.jpg'/>");
+			out.write("<img src='css/images/loggedOutSheep.jpg'/>");
 		}
 		log.debug("*** END servlets.Admin.GetProgress ***");
 	}
