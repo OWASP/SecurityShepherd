@@ -1,8 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
-// SQL Injection Challenge One
-
 /**
+ * SQL Injection Challenge One
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -23,20 +22,25 @@
  */
 
 String levelName = "SQL Injection Challenge One";
- try
+ ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+ if (request.getSession() != null)
  {
- 	if (request.getSession() != null)
+ 	HttpSession ses = request.getSession();
+ 	//Getting CSRF Token from client
+ 	Cookie tokenCookie = null;
+ 	try
  	{
- 		HttpSession ses = request.getSession();
- 		String userName = (String) ses.getAttribute("decyrptedUserName");
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + userName);
+ 		tokenCookie = Validate.getToken(request.getCookies());
  	}
- }
- catch (Exception e)
- {
- 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
- 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
- }
+ 	catch(Exception htmlE)
+ 	{
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
+ 	}
+ 	// validateSession ensures a valid session, and valid role credentials
+ 	// If tokenCookie == null, then the page is not going to continue loading
+ 	if (Validate.validateSession(ses) && tokenCookie != null)
+ 	{
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -128,3 +132,15 @@ String levelName = "SQL Injection Challenge One";
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
+<% 
+	}
+	else
+	{
+		response.sendRedirect("login.jsp");
+	}
+}
+else
+{
+	response.sendRedirect("login.jsp");
+}
+%>

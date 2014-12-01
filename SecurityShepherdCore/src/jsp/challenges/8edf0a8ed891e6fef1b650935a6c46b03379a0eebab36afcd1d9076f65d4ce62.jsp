@@ -1,27 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
-
-//No Quotes In level Name
-String levelName = "SQL Injection Challenge 5";
-//Alphanumeric Only
-String levelHash = "8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Not used - See Below";
-
-try
-{
-	if (request.getSession() != null)
-	{
-		HttpSession ses = request.getSession();
-		String userName = (String) ses.getAttribute("decyrptedUserName");
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + userName);
-	}
-}
-catch (Exception e)
-{
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
-}
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -41,6 +19,32 @@ catch (Exception e)
  *
  * @author Mark Denihan
  */
+//No Quotes In level Name
+String levelName = "SQL Injection Challenge 5";
+//Alphanumeric Only
+String levelHash = "8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62";
+//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+String levelBlurb = "Not used - See Below";
+
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+if (request.getSession() != null)
+{
+	HttpSession ses = request.getSession();
+	//Getting CSRF Token from client
+	Cookie tokenCookie = null;
+	try
+	{
+		tokenCookie = Validate.getToken(request.getCookies());
+	}
+	catch(Exception htmlE)
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
+	}
+	// validateSession ensures a valid session, and valid role credentials
+	// If tokenCookie == null, then the page is not going to continue loading
+	if (Validate.validateSession(ses) && tokenCookie != null)
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -151,3 +155,15 @@ catch (Exception e)
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
+<%
+	}
+	else
+	{
+		response.sendRedirect("login.jsp");
+	}
+}
+else
+{
+	response.sendRedirect("login.jsp");
+}
+%>

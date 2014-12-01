@@ -21,45 +21,44 @@
  * 
  * @author Mark Denihan
  */
- String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cross Site Request Forgery Challenge 6 Accessed");
+String levelName = "CSRF Challenge 6";
+String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
-HttpSession ses = request.getSession();
-Getter get = new Getter();
-//Getting CSRF Token from client
-Cookie tokenCookie = null;
-try
-{
-	tokenCookie = Validate.getToken(request.getCookies());
-}
-catch(Exception htmlE)
-{
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(CSRFChallenge6.jsp): tokenCookie Error:" + htmlE.toString());
-}
-// validateSession ensures a valid session, and valid role credentials
-// Also, if tokenCookie != null, then the page is good to continue loading
-if (Validate.validateSession(ses) && tokenCookie != null)
-{
-	//Logging Username
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
-// Getting Session Variables
-//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-Encoder encoder = ESAPI.encoder();
-String ApplicationRoot = getServletContext().getRealPath("");
-String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
-String userClass = null;
-if(ses.getAttribute("userClass") != null)
-{
-	userClass = encoder.encodeForHTML(ses.getAttribute("userClass").toString());
-}
-String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
-
-//Set CSRF Challenge 6 CsrfToken
-String csrfChal6Token = Hash.randomString().trim();
-ses.setAttribute("csrfChallengeSixNonce", csrfChal6Token);
-Setter.setCsrfChallengeSixCsrfToken(userId, csrfChal6Token, ApplicationRoot);
-String getYourTokenUrl = encoder.encodeForHTMLAttribute("../user/csrfchallengesix/getToken?userId=" + userId);
+	HttpSession ses = request.getSession();
+	//Getting CSRF Token from client
+	Cookie tokenCookie = null;
+	try
+	{
+		tokenCookie = Validate.getToken(request.getCookies());
+	}
+	catch(Exception htmlE)
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
+	}
+	// validateSession ensures a valid session, and valid role credentials
+	// If tokenCookie == null, then the page is not going to continue loading
+	if (Validate.validateSession(ses) && tokenCookie != null)
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+		// Getting Session Variables
+		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
+		Encoder encoder = ESAPI.encoder();
+		String ApplicationRoot = getServletContext().getRealPath("");
+		String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
+		String userClass = null;
+		if(ses.getAttribute("userClass") != null)
+		{
+			userClass = encoder.encodeForHTML(ses.getAttribute("userClass").toString());
+		}
+		String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
+		
+		//Set CSRF Challenge 6 CsrfToken
+		String csrfChal6Token = Hash.randomString().trim();
+		ses.setAttribute("csrfChallengeSixNonce", csrfChal6Token);
+		Setter.setCsrfChallengeSixCsrfToken(userId, csrfChal6Token, ApplicationRoot);
+		String getYourTokenUrl = encoder.encodeForHTMLAttribute("../user/csrfchallengesix/getToken?userId=" + userId);
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -142,14 +141,14 @@ String getYourTokenUrl = encoder.encodeForHTMLAttribute("../user/csrfchallengesi
 </body>
 </html>
 <%
+	}
+	else
+	{
+		response.sendRedirect("login.jsp");
+	}
 }
 else
 {
-response.sendRedirect("login.jsp");
-}
-}
-else
-{
-response.sendRedirect("login.jsp");
+	response.sendRedirect("login.jsp");
 }
 %>

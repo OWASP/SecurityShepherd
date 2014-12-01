@@ -1,9 +1,9 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-	// Cross Site Request Forgery Challenge 1
-
 /**
+ * Cross Site Request Forgery Challenge 1
+ * 
  * This file is part of the Security Shepherd Project.
  * 
  * The Security Shepherd project is free software: you can redistribute it and/or modify
@@ -21,39 +21,37 @@
  * 
  * @author Mark Denihan
  */
- 
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cross Site Request Forgery Challenge 1 Accessed");
-if (request.getSession() != null)
-{
-HttpSession ses = request.getSession();
-Getter get = new Getter();
-//Getting CSRF Token from client
-Cookie tokenCookie = null;
-try
-{
-	tokenCookie = Validate.getToken(request.getCookies());
-}
-catch(Exception htmlE)
-{
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(CSRFChallenge1.jsp): tokenCookie Error:" + htmlE.toString());
-}
-// validateSession ensures a valid session, and valid role credentials
-// Also, if tokenCookie != null, then the page is good to continue loading
-if (Validate.validateSession(ses) && tokenCookie != null)
-{
-//Logging Username
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
-// Getting Session Variables
-//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-Encoder encoder = ESAPI.encoder();
-String ApplicationRoot = getServletContext().getRealPath("");
-String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
-String userClass = null;
-if(ses.getAttribute("userClass") != null)
-{
-	userClass = encoder.encodeForHTML(ses.getAttribute("userClass").toString());
-}
-String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
+String levelName = new String("CSRF Challenge 1");
+ ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+ if (request.getSession() != null)
+ {
+ 	HttpSession ses = request.getSession();
+ 	//Getting CSRF Token from client
+ 	Cookie tokenCookie = null;
+ 	try
+ 	{
+ 		tokenCookie = Validate.getToken(request.getCookies());
+ 	}
+ 	catch(Exception htmlE)
+ 	{
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
+ 	}
+ 	// validateSession ensures a valid session, and valid role credentials
+ 	// If tokenCookie == null, then the page is not going to continue loading
+ 	if (Validate.validateSession(ses) && tokenCookie != null)
+ 	{
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+ 		// Getting Session Variables
+		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
+		Encoder encoder = ESAPI.encoder();
+		String ApplicationRoot = getServletContext().getRealPath("");
+		String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
+		String userClass = null;
+		if(ses.getAttribute("userClass") != null)
+		{
+			userClass = encoder.encodeForHTML(ses.getAttribute("userClass").toString());
+		}
+		String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -141,14 +139,14 @@ String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
 </body>
 </html>
 <%
+	}
+	else
+	{
+		response.sendRedirect("login.jsp");
+	}
 }
 else
 {
-response.sendRedirect("login.jsp");
-}
-}
-else
-{
-response.sendRedirect("login.jsp");
+	response.sendRedirect("login.jsp");
 }
 %>

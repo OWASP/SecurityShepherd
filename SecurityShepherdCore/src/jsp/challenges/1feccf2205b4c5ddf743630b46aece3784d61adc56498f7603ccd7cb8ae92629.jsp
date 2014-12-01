@@ -1,25 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
-
-//No Quotes In level Name
-String levelName = "SQL Injection 4";
-//Alphanumeric Only
-String levelHash = "1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629";
-
-try
-{
-	if (request.getSession() != null)
-	{
-		HttpSession ses = request.getSession();
-		String userName = (String) ses.getAttribute("decyrptedUserName");
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + userName);
-	}
-}
-catch (Exception e)
-{
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
-}
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -39,6 +19,30 @@ catch (Exception e)
  *
  * @author Mark Denihan
  */
+ 
+//No Quotes In level Name
+String levelName = "SQL Injection 4";
+//Alphanumeric Only
+String levelHash = "1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629";
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+if (request.getSession() != null)
+{
+	HttpSession ses = request.getSession();
+	//Getting CSRF Token from client
+	Cookie tokenCookie = null;
+	try
+	{
+		tokenCookie = Validate.getToken(request.getCookies());
+	}
+	catch(Exception htmlE)
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
+	}
+	// validateSession ensures a valid session, and valid role credentials
+	// If tokenCookie == null, then the page is not going to continue loading
+	if (Validate.validateSession(ses) && tokenCookie != null)
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -116,3 +120,15 @@ catch (Exception e)
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
+<% 
+	}
+	else
+	{
+		response.sendRedirect("login.jsp");
+	}
+}
+else
+{
+	response.sendRedirect("login.jsp");
+}
+%>

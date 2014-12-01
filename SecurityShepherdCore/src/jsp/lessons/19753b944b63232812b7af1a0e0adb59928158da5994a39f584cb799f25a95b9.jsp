@@ -1,31 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage=""%>
 
 <%
-	//No Quotes In level Name
-	String levelName = "What is Mobile Reverse Engineering?";
-	//Alphanumeric Only
-	String levelHash = "19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9";
-	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-	String levelBlurb = "";
-
-	try {
-		if (request.getSession() != null) {
-			HttpSession ses = request.getSession();
-			String userName = (String) ses
-					.getAttribute("decyrptedUserName");
-			ShepherdLogManager.logEvent(request.getRemoteAddr(),
-					request.getHeader("X-Forwarded-For"), levelName
-							+ " has been accessed by " + userName);
-		}
-	} catch (Exception e) {
-		ShepherdLogManager.logEvent(request.getRemoteAddr(),
-				request.getHeader("X-Forwarded-For"), levelName
-						+ " has been accessed");
-		ShepherdLogManager.logEvent(request.getRemoteAddr(),
-				request.getHeader("X-Forwarded-For"),
-				"Could not recover username: " + e.toString());
-	}
-
 	/**
 	 * <br/><br/>
 	 * This file is part of the Security Shepherd Project.
@@ -45,6 +20,39 @@
 	 *
 	 * @author Sean Duggan
 	 */
+ 
+	//No Quotes In level Name
+	String levelName = "What is Mobile Reverse Engineering?";
+	//Alphanumeric Only
+	String levelHash = "19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9";
+	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+	String levelBlurb = "";
+	
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+	if (request.getSession() != null)
+	{
+		HttpSession ses = request.getSession();
+		//Getting CSRF Token from client
+		Cookie tokenCookie = null;
+		try
+		{
+			tokenCookie = Validate.getToken(request.getCookies());
+		}
+		catch(Exception htmlE)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
+		}
+		// validateSession ensures a valid session, and valid role credentials
+		// If tokenCookie == null, then the page is not going to continue loading
+		if (Validate.validateSession(ses) && tokenCookie != null)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+			// Getting Session Variables
+			//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
+			Encoder encoder = ESAPI.encoder();
+			String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
+
+	
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -104,3 +112,15 @@
 	</div>
 </body>
 </html>
+<%
+		}
+		else
+		{
+			response.sendRedirect("login.jsp");
+		}
+	}
+	else
+	{
+		response.sendRedirect("login.jsp");
+	}
+%>
