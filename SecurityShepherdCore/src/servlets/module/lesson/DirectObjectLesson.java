@@ -75,7 +75,7 @@ public class DirectObjectLesson extends HttpServlet
 				else if(userName.equalsIgnoreCase("admin"))
 				{
 					// Get key and add it to the output
-					String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
+					String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 					log.debug("Admin Profile Found");
 					htmlOutput = htmlAdmin + userKey + "<a></a></td></tr></table>";
 				}

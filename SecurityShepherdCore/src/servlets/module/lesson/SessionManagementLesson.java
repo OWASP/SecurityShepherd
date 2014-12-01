@@ -81,7 +81,7 @@ public class SessionManagementLesson extends HttpServlet
 						log.debug("Lesson Complete");
 						
 						// Get key and add it to the output
-						String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
+						String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 						
 						htmlOutput = "<h2 class='title'>Lesson Complete</h2>" +
 								"<p>" +

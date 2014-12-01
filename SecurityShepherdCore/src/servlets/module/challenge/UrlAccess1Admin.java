@@ -79,7 +79,7 @@ public class UrlAccess1Admin extends HttpServlet
 				
 				if(!tamperedRequest)
 				{
-					String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
+					String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 					htmlOutput = "<h2 class='title'>Server Status</h2>"
 						+ "<p>We have no idea what is wrong with the server. It just keeps saying 'Result key is <a>"
 						+ userKey
