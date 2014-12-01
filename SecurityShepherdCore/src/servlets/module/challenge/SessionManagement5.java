@@ -18,6 +18,7 @@ import org.owasp.esapi.Encoder;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
+import utils.Validate;
 import dbProcs.Database;
 
 /**
@@ -57,111 +58,105 @@ public class SessionManagement5 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
-			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
-			}
-		}
-		catch (Exception e)
-		{
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			Encoder encoder = ESAPI.encoder();
+			String htmlOutput = new String();
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
-		String htmlOutput = new String();
-		log.debug(levelName + " Servlet Accessed");
-		try
-		{
-			log.debug("Getting Challenge Parameters");
-			Object nameObj = request.getParameter("subUserName");
-			Object passObj = request.getParameter("subUserPassword");
-			String subName = new String();
-			String subPass = new String();
-			String userAddress = new String();
-			if(nameObj != null)
-				subName = (String) nameObj;
-			if(passObj != null)
-				subPass = (String) passObj;
-			log.debug("subName = " + subName);
-			log.debug("subPass = " + subPass);
-			
-			log.debug("Getting ApplicationRoot");
-			String ApplicationRoot = getServletContext().getRealPath("");
-			log.debug("Servlet root = " + ApplicationRoot );
-			
-			Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
-			log.debug("Checking credentials");
-			PreparedStatement callstmt;
-			
-			log.debug("Committing changes made to database");
-			callstmt = conn.prepareStatement("COMMIT");
-			callstmt.execute();
-			log.debug("Changes committed.");
-			
-			callstmt = conn.prepareStatement("SELECT userName, userRole FROM users WHERE userName = ?");
-			callstmt.setString(1, subName);
-			log.debug("Executing findUser");
-			ResultSet resultSet = callstmt.executeQuery();
-			//Is the username valid?
-			if(resultSet.next())
+			try
 			{
-				log.debug("User found");
-				//Is the user an Admin?
-				if(resultSet.getString(2).equalsIgnoreCase("admin"))
+				log.debug("Getting Challenge Parameters");
+				Object nameObj = request.getParameter("subUserName");
+				Object passObj = request.getParameter("subUserPassword");
+				String subName = new String();
+				String subPass = new String();
+				String userAddress = new String();
+				if(nameObj != null)
+					subName = (String) nameObj;
+				if(passObj != null)
+					subPass = (String) passObj;
+				log.debug("subName = " + subName);
+				log.debug("subPass = " + subPass);
+				
+				log.debug("Getting ApplicationRoot");
+				String ApplicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + ApplicationRoot );
+				
+				Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
+				log.debug("Checking credentials");
+				PreparedStatement callstmt;
+				
+				log.debug("Committing changes made to database");
+				callstmt = conn.prepareStatement("COMMIT");
+				callstmt.execute();
+				log.debug("Changes committed.");
+				
+				callstmt = conn.prepareStatement("SELECT userName, userRole FROM users WHERE userName = ?");
+				callstmt.setString(1, subName);
+				log.debug("Executing findUser");
+				ResultSet resultSet = callstmt.executeQuery();
+				//Is the username valid?
+				if(resultSet.next())
 				{
-					log.debug("Admin Detected");
-					callstmt = conn.prepareStatement("SELECT userName, userRole FROM users WHERE userName = ? AND userPassword = SHA(?)");
-					callstmt.setString(1, subName);
-					callstmt.setString(2, subPass);
-					log.debug("Executing Login Check");
-					ResultSet resultSet2 = callstmt.executeQuery();
-					if(resultSet2.next())
+					log.debug("User found");
+					//Is the user an Admin?
+					if(resultSet.getString(2).equalsIgnoreCase("admin"))
 					{
-						log.debug("Successful Admin Login");
-						// Get key and add it to the output
-						String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
-						
-						htmlOutput = "<h2 class='title'>Welcome " + encoder.encodeForHTML(resultSet2.getString(1)) + "</h2>" +
-								"<p>" +
-								"The result key is <a>" + userKey + "</a>" +
-								"</p>";
+						log.debug("Admin Detected");
+						callstmt = conn.prepareStatement("SELECT userName, userRole FROM users WHERE userName = ? AND userPassword = SHA(?)");
+						callstmt.setString(1, subName);
+						callstmt.setString(2, subPass);
+						log.debug("Executing Login Check");
+						ResultSet resultSet2 = callstmt.executeQuery();
+						if(resultSet2.next())
+						{
+							log.debug("Successful Admin Login");
+							// Get key and add it to the output
+							String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
+							
+							htmlOutput = "<h2 class='title'>Welcome " + encoder.encodeForHTML(resultSet2.getString(1)) + "</h2>" +
+									"<p>" +
+									"The result key is <a>" + userKey + "</a>" +
+									"</p>";
+						}
+						else
+						{
+							userAddress = "Incorrect password for <a>" + encoder.encodeForHTML(resultSet.getString(1)) + "</a><br/>";
+							htmlOutput = htmlStart + userAddress + htmlEnd;
+						}
 					}
 					else
 					{
-						userAddress = "Incorrect password for <a>" + encoder.encodeForHTML(resultSet.getString(1)) + "</a><br/>";
-						htmlOutput = htmlStart + userAddress + htmlEnd;
+						log.debug("Successful Pleb Login");
+						htmlOutput = htmlStart + htmlEnd +
+								"<h2 class='title'>Welcome Guest</h2>" +
+								"<p>No further information for Guest Users currently available. " +
+								"If your getting bored of the current functions available, " +
+								"you'll just have to upgrade yourself to an administrator somehow.</p><br/><br/>";	
 					}
 				}
 				else
 				{
-					log.debug("Successful Pleb Login");
-					htmlOutput = htmlStart + htmlEnd +
-							"<h2 class='title'>Welcome Guest</h2>" +
-							"<p>No further information for Guest Users currently available. " +
-							"If your getting bored of the current functions available, " +
-							"you'll just have to upgrade yourself to an administrator somehow.</p><br/><br/>";	
+					userAddress = "User name not found.<br/>";
+					htmlOutput = htmlStart + userAddress + htmlEnd;
 				}
+				Database.closeConnection(conn);
+				log.debug("Outputting HTML");
+				out.write(htmlOutput);
 			}
-			else
+			catch(Exception e)
 			{
-				userAddress = "User name not found.<br/>";
-				htmlOutput = htmlStart + userAddress + htmlEnd;
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - " + e.toString());
 			}
-			Database.closeConnection(conn);
-			log.debug("Outputting HTML");
-			out.write(htmlOutput);
 		}
-		catch(Exception e)
+		else
 		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - " + e.toString());
+			log.error(levelName + " servlet accessed with no session");
 		}
 	}
 	

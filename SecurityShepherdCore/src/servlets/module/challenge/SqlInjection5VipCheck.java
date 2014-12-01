@@ -17,6 +17,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
+import utils.Validate;
 import dbProcs.Database;
 
 /**
@@ -53,73 +54,67 @@ public class SqlInjection5VipCheck extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
-			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
-			}
-		}
-		catch (Exception e)
-		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
-		String htmlOutput = new String();
-		String applicationRoot = getServletContext().getRealPath("");
-		
-		try
-		{
-			String couponCode = request.getParameter("couponCode");
-			log.debug("couponCode - " + couponCode);
-			if (couponCode == null || couponCode.isEmpty())
-				couponCode = new String();
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			Encoder encoder = ESAPI.encoder();
+			String htmlOutput = new String();
+			String applicationRoot = getServletContext().getRealPath("");
 			
-			htmlOutput = new String("");
-			Connection conn = Database.getChallengeConnection(applicationRoot, "SqlInjectionChallenge5ShopVipCoupon");
-			log.debug("Looking for VipCoupons Insecurely");
-			PreparedStatement prepstmt = conn.prepareStatement("SELECT itemId, perCentOff, itemName FROM vipCoupons JOIN items USING (itemId) WHERE couponCode = '" + couponCode + "';");
-			ResultSet coupons = prepstmt.executeQuery();
 			try
 			{
-				if(coupons.next())
+				String couponCode = request.getParameter("couponCode");
+				log.debug("couponCode - " + couponCode);
+				if (couponCode == null || couponCode.isEmpty())
+					couponCode = new String();
+				
+				htmlOutput = new String("");
+				Connection conn = Database.getChallengeConnection(applicationRoot, "SqlInjectionChallenge5ShopVipCoupon");
+				log.debug("Looking for VipCoupons Insecurely");
+				PreparedStatement prepstmt = conn.prepareStatement("SELECT itemId, perCentOff, itemName FROM vipCoupons JOIN items USING (itemId) WHERE couponCode = '" + couponCode + "';");
+				ResultSet coupons = prepstmt.executeQuery();
+				try
 				{
-					htmlOutput = new String("Valid Coupon for ");
-					log.debug("Found coupon for %" + coupons.getInt(2));
-					log.debug("For Item Name " + coupons.getString(3));
-					htmlOutput += "%" + coupons.getInt(2) + " off " + encoder.encodeForHTML(coupons.getString(3)) + " items";
+					if(coupons.next())
+					{
+						htmlOutput = new String("Valid Coupon for ");
+						log.debug("Found coupon for %" + coupons.getInt(2));
+						log.debug("For Item Name " + coupons.getString(3));
+						htmlOutput += "%" + coupons.getInt(2) + " off " + encoder.encodeForHTML(coupons.getString(3)) + " items";
+					}
+					else
+					{
+						htmlOutput = "No coupon Found";
+					}
 				}
-				else
+				catch(Exception e)
 				{
-					htmlOutput = "No coupon Found";
+					log.debug("Could Not Find VIP Coupon: " + e.toString());
+					htmlOutput += "<p> Check Failed - Please try again later</p>";
 				}
+				conn.close();
 			}
 			catch(Exception e)
 			{
-				log.debug("Could Not Find VIP Coupon: " + e.toString());
+				log.debug("Did complete VIP Check: " + e.toString());
 				htmlOutput += "<p> Check Failed - Please try again later</p>";
 			}
-			conn.close();
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch(Exception e)
+			{
+				log.error("Failed to Pause: " + e.toString());
+			}
+			out.write(htmlOutput);
 		}
-		catch(Exception e)
+		else
 		{
-			log.debug("Did complete VIP Check: " + e.toString());
-			htmlOutput += "<p> Check Failed - Please try again later</p>";
+			log.error(levelName + " servlet accessed with no session");
 		}
-		try
-		{
-			Thread.sleep(1000);
-		}
-		catch(Exception e)
-		{
-			log.error("Failed to Pause: " + e.toString());
-		}
-		out.write(htmlOutput);
 	}
 }

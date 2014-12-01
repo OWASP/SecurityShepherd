@@ -17,6 +17,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
+import utils.Validate;
 import dbProcs.Database;
 
 /**
@@ -63,71 +64,65 @@ public class SessionManagement5SetToken extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
-			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
-			}
-		}
-		catch (Exception e)
-		{
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			Encoder encoder = ESAPI.encoder();
+			String htmlOutput = new String();
 			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
-		String htmlOutput = new String();
-		log.debug(levelName + " Servlet Accessed");
-		try
-		{
-			log.debug("Getting Parameters");
-			Object nameObj = request.getParameter("subUserName");
-			String userName = new String();
-			if(nameObj != null)
-				userName = (String) nameObj;
-			log.debug("subName = " + userName);
-			
-			log.debug("Getting ApplicationRoot");
-			String ApplicationRoot = getServletContext().getRealPath("");
-			log.debug("Servlet root = " + ApplicationRoot );
-			
-			Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
-			log.debug("Checking name");
-			PreparedStatement callstmt;
-			
-			log.debug("Committing changes made to database");
-			callstmt = conn.prepareStatement("COMMIT");
-			callstmt.execute();
-			log.debug("Changes committed.");
-			
-			callstmt = conn.prepareStatement("SELECT userName FROM users WHERE userName = ?");
-			callstmt.setString(1, userName);
-			log.debug("Executing findUser");
-			ResultSet resultSet = callstmt.executeQuery();
-			//Is the username valid?
-			if(resultSet.next())
+			try
 			{
-				log.debug("User found");
-				htmlOutput = "URL with embedded password reset token has been sent to '" + encoder.encodeForHTML(userName) + "' via email.";
+				log.debug("Getting Parameters");
+				Object nameObj = request.getParameter("subUserName");
+				String userName = new String();
+				if(nameObj != null)
+					userName = (String) nameObj;
+				log.debug("subName = " + userName);
+				
+				log.debug("Getting ApplicationRoot");
+				String ApplicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + ApplicationRoot );
+				
+				Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
+				log.debug("Checking name");
+				PreparedStatement callstmt;
+				
+				log.debug("Committing changes made to database");
+				callstmt = conn.prepareStatement("COMMIT");
+				callstmt.execute();
+				log.debug("Changes committed.");
+				
+				callstmt = conn.prepareStatement("SELECT userName FROM users WHERE userName = ?");
+				callstmt.setString(1, userName);
+				log.debug("Executing findUser");
+				ResultSet resultSet = callstmt.executeQuery();
+				//Is the username valid?
+				if(resultSet.next())
+				{
+					log.debug("User found");
+					htmlOutput = "URL with embedded password reset token has been sent to '" + encoder.encodeForHTML(userName) + "' via email.";
+				}
+				else
+				{
+					log.debug("User not Found");
+					htmlOutput = "Could not find user" + encoder.encodeForHTML(userName);
+				}
+				Database.closeConnection(conn);
+				log.debug("Outputting HTML");
+				out.write(htmlOutput);
 			}
-			else
+			catch(Exception e)
 			{
-				log.debug("User not Found");
-				htmlOutput = "Could not find user" + encoder.encodeForHTML(userName);
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - " + e.toString());
 			}
-			Database.closeConnection(conn);
-			log.debug("Outputting HTML");
-			out.write(htmlOutput);
 		}
-		catch(Exception e)
+		else
 		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - " + e.toString());
+			log.error(levelName + " servlet accessed with no session");
 		}
 	}
 }

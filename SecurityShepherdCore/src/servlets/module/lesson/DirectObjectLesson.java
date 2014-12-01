@@ -15,6 +15,7 @@ import org.owasp.esapi.Encoder;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
+import utils.Validate;
 
 /**
  * Insecure Direct Object Lesson
@@ -53,54 +54,49 @@ public class DirectObjectLesson extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		//Attempting to recover username of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();
+			out.print(getServletInfo());
+			try
 			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
+				String userName = request.getParameter("username");
+				log.debug("User Submitted - " + userName);
+				String ApplicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + ApplicationRoot );
+				String htmlOutput = new String();
+				if(userName.equalsIgnoreCase("guest"))
+				{
+					log.debug("Guest Profile Found");
+					htmlOutput = htmlGuest;
+				}
+				else if(userName.equalsIgnoreCase("admin"))
+				{
+					// Get key and add it to the output
+					String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
+					log.debug("Admin Profile Found");
+					htmlOutput = htmlAdmin + userKey + "<a></a></td></tr></table>";
+				}
+				else
+				{
+					log.debug("No Profile Found");
+					Encoder encoder = ESAPI.encoder();
+					htmlOutput = "<h2 class='title'>User: 404 - User Not Found</h2><p>User '" + encoder.encodeForHTML(userName) + "' could not be found or does not exist.</p>";
+				}
+				log.debug("Outputting HTML");
+				out.write(htmlOutput);
+			}
+			catch(Exception e)
+			{
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal("Insecure Direct Object Lesson Lesson - " + e.toString());
 			}
 		}
-		catch (Exception e)
+		else
 		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		PrintWriter out = response.getWriter();
-		out.print(getServletInfo());
-		try
-		{
-			String userName = request.getParameter("username");
-			log.debug("User Submitted - " + userName);
-			String ApplicationRoot = getServletContext().getRealPath("");
-			log.debug("Servlet root = " + ApplicationRoot );
-			String htmlOutput = new String();
-			if(userName.equalsIgnoreCase("guest"))
-			{
-				log.debug("Guest Profile Found");
-				htmlOutput = htmlGuest;
-			}
-			else if(userName.equalsIgnoreCase("admin"))
-			{
-				// Get key and add it to the output
-				String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
-				log.debug("Admin Profile Found");
-				htmlOutput = htmlAdmin + userKey + "<a></a></td></tr></table>";
-			}
-			else
-			{
-				log.debug("No Profile Found");
-				Encoder encoder = ESAPI.encoder();
-				htmlOutput = "<h2 class='title'>User: 404 - User Not Found</h2><p>User '" + encoder.encodeForHTML(userName) + "' could not be found or does not exist.</p>";
-			}
-			log.debug("Outputting HTML");
-			out.write(htmlOutput);
-		}
-		catch(Exception e)
-		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal("Insecure Direct Object Lesson Lesson - " + e.toString());
+			log.error(levelName + " servlet accessed with no session");
 		}
 	}
 	private static String htmlGuest = "<h2 class='title'>User: Guest</h2><table><tr><th>Age:</th><td>22</td></tr>" +

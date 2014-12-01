@@ -64,7 +64,7 @@ extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
-				log.debug("Current User: " + ses.getAttribute("userName").toString());
+				log.debug(levelName + " accessed by: " + ses.getAttribute("userName").toString());
 				Cookie tokenCookie = Validate.getToken(request.getCookies());
 				Object tokenParmeter = request.getParameter("csrfToken");
 				if(Validate.validateTokens(tokenCookie, tokenParmeter))
@@ -81,10 +81,7 @@ extends HttpServlet
 								"<p>You successfully executed the JavaScript alert command!<br />" +
 								"The result key for this lesson is <a>" +
 								encoder.encodeForHTML(
-										Hash.generateUserSolution(
-												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
-												), (String)ses.getAttribute("userName")
-										)
+										Hash.generateUserSolution(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash), (String)ses.getAttribute("userName"))
 								) +
 								"</a>";
 					}
@@ -96,6 +93,10 @@ extends HttpServlet
 					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
+			}
+			else
+			{
+				log.error(levelName + " accessed with no session");
 			}
 		}
 		catch(Exception e)

@@ -15,6 +15,7 @@ import org.owasp.esapi.Encoder;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
+import utils.Validate;
 
 /**
  * Failure to Restrict URL Access Challenge 1 (Admin)
@@ -43,7 +44,6 @@ import utils.ShepherdLogManager;
  */
 public class UrlAccess1Admin extends HttpServlet
 {
-	//Sql Challenge 4
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(UrlAccess1Admin.class);
 	private static String levelResult = "c776572b6a9d5b5c6e4aa672a4771213"; 
@@ -60,53 +60,47 @@ public class UrlAccess1Admin extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			String htmlOutput = new String();
+			Encoder encoder = ESAPI.encoder();
+			try
 			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
+				String userData = request.getParameter("userData");
+				boolean tamperedRequest = !userData.equalsIgnoreCase("4816283");
+				if(!tamperedRequest)
+					log.debug("No request tampering detected");
+				else
+					log.debug("User Submitted - " + userData);
+				
+				if(!tamperedRequest)
+				{
+					String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
+					htmlOutput = "<h2 class='title'>Server Status</h2>"
+						+ "<p>We have no idea what is wrong with the server. It just keeps saying 'Result key is <a>"
+						+ userKey
+						+ "</a>. What does that even mean?!</p>";
+				}
+				else
+					htmlOutput = "<h2 class='title'>Server Status Failure</h2>"
+							+ "<p>Could not retrieve server status. Invalid userData.</p>"
+							+ "<!-- " + encoder.encodeForHTML(userData) + " -->";
 			}
-		}
-		catch (Exception e)
-		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		String htmlOutput = new String();
-		Encoder encoder = ESAPI.encoder();
-		try
-		{
-			String userData = request.getParameter("userData");
-			boolean tamperedRequest = !userData.equalsIgnoreCase("4816283");
-			if(!tamperedRequest)
-				log.debug("No request tampering detected");
-			else
-				log.debug("User Submitted - " + userData);
-			
-			if(!tamperedRequest)
+			catch(Exception e)
 			{
-				String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
-				htmlOutput = "<h2 class='title'>Server Status</h2>"
-					+ "<p>We have no idea what is wrong with the server. It just keeps saying 'Result key is <a>"
-					+ userKey
-					+ "</a>. What does that even mean?!</p>";
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - " + e.toString());
 			}
-			else
-				htmlOutput = "<h2 class='title'>Server Status Failure</h2>"
-						+ "<p>Could not retrieve server status. Invalid userData.</p>"
-						+ "<!-- " + encoder.encodeForHTML(userData) + " -->";
+			log.debug("Outputting HTML");
+			out.write(htmlOutput);
 		}
-		catch(Exception e)
+		else
 		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - " + e.toString());
+			log.error(levelName + " servlet accessed with no session");
 		}
-		log.debug("Outputting HTML");
-		out.write(htmlOutput);
 	}
 }

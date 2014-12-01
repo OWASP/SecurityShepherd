@@ -18,6 +18,7 @@ import org.owasp.esapi.Encoder;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
+import utils.Validate;
 import dbProcs.Database;
 
 /**
@@ -57,70 +58,64 @@ public class SessionManagement2ChangePassword extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
-			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
-			}
-		}
-		catch (Exception e)
-		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user-name from session");
-		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
-		String htmlOutput = new String();
-		log.debug(levelName + " Servlet accessed");
-		try
-		{
-			log.debug("Getting Challenge Parameter");
-			Object emailObj = request.getParameter("subEmail");
-			String subEmail = new String();
-			if(emailObj != null)
-				subEmail = (String) emailObj;
-			log.debug("subEmail = " + subEmail);
-			
-			log.debug("Getting ApplicationRoot");
-			String ApplicationRoot = getServletContext().getRealPath("");
-			log.debug("Servlet root = " + ApplicationRoot );
-			
-			String newPassword = Hash.randomString();
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			Encoder encoder = ESAPI.encoder();
+			String htmlOutput = new String();
+			log.debug(levelName + " Servlet accessed");
 			try
 			{
-				Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalTwo");
-				log.debug("Checking credentials");
-				PreparedStatement callstmt = conn.prepareStatement("UPDATE users SET userPassword = SHA(?) WHERE userAddress = ?");
-				callstmt.setString(1, newPassword);
-				callstmt.setString(2, subEmail);
-				log.debug("Executing resetPassword");
-				callstmt.execute();
-				log.debug("Statement executed");
+				log.debug("Getting Challenge Parameter");
+				Object emailObj = request.getParameter("subEmail");
+				String subEmail = new String();
+				if(emailObj != null)
+					subEmail = (String) emailObj;
+				log.debug("subEmail = " + subEmail);
 				
-				log.debug("Committing changes made to database");
-				callstmt = conn.prepareStatement("COMMIT");
-				callstmt.execute();
-				log.debug("Changes committed.");
+				log.debug("Getting ApplicationRoot");
+				String ApplicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + ApplicationRoot );
 				
-				htmlOutput = encoder.encodeForHTML(newPassword);
-				Database.closeConnection(conn);
+				String newPassword = Hash.randomString();
+				try
+				{
+					Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalTwo");
+					log.debug("Checking credentials");
+					PreparedStatement callstmt = conn.prepareStatement("UPDATE users SET userPassword = SHA(?) WHERE userAddress = ?");
+					callstmt.setString(1, newPassword);
+					callstmt.setString(2, subEmail);
+					log.debug("Executing resetPassword");
+					callstmt.execute();
+					log.debug("Statement executed");
+					
+					log.debug("Committing changes made to database");
+					callstmt = conn.prepareStatement("COMMIT");
+					callstmt.execute();
+					log.debug("Changes committed.");
+					
+					htmlOutput = encoder.encodeForHTML(newPassword);
+					Database.closeConnection(conn);
+				}
+				catch(SQLException e)
+				{
+					log.error(levelName + " SQL Error: " + e.toString());
+				}
+				log.debug("Outputting HTML");
+				out.write("Changed to: " + htmlOutput);
 			}
-			catch(SQLException e)
+			catch(Exception e)
 			{
-				log.error(levelName + " SQL Error: " + e.toString());
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - " + e.toString());
 			}
-			log.debug("Outputting HTML");
-			out.write("Changed to: " + htmlOutput);
 		}
-		catch(Exception e)
+		else
 		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - " + e.toString());
+			log.error(levelName + " servlet accessed with no session");
 		}
 	}
 }

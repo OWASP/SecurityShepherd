@@ -40,6 +40,7 @@ public class CsrfChallengeTargetThree extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeTargetThree.class);
+	private static String levelName = "CSRF 3 Target";
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Three as complete.
 	 * @param userId User identifier to be incremented
@@ -58,6 +59,7 @@ public class CsrfChallengeTargetThree extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				String plusId = request.getParameter("userid");
 				log.debug("User Submitted - " + plusId);
 				String csrfParam = null;

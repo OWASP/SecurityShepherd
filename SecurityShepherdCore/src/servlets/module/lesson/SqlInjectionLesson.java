@@ -18,6 +18,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
+import utils.Validate;
 import dbProcs.Database;
 
 /**
@@ -55,64 +56,56 @@ extends HttpServlet
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
+		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
 		{
-			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
-			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-			//Attempting to recover username of session that made request
-			try
+			HttpSession ses = request.getSession(true);
+			if(Validate.validateSession(ses))
 			{
-				if (request.getSession() != null)
+				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+				String aUserName = request.getParameter("aUserName");
+				log.debug("User Submitted - " + aUserName);
+				String ApplicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + ApplicationRoot );
+				String[][] output = getSqlInjectionResult(ApplicationRoot, aUserName);
+				log.debug("output returned. [0][0] is " + output[0][0]);
+				String htmlOutput = "<h2 class='title'>Search Results</h2>";
+				if (output[0][0] == null)
 				{
-					HttpSession ses = request.getSession();
-					String userName = (String) ses.getAttribute("decyrptedUserName");
-					log.debug(userName + " accessed " + levelName + " Servlet");
+					htmlOutput += "<p>No rows returned from that query! Make sure your <a>escaping</a> the string and changing the <a>boolean result</a> of the <a>WHERE</a> to be always true";
 				}
-			}
-			catch (Exception e)
-			{
-				log.debug(levelName + " Servlet Accessed");
-				log.error("Could not retrieve user name from session");
-			}
-			
-			String aUserName = request.getParameter("aUserName");
-			log.debug("User Submitted - " + aUserName);
-			String ApplicationRoot = getServletContext().getRealPath("");
-			log.debug("Servlet root = " + ApplicationRoot );
-			String[][] output = getSqlInjectionResult(ApplicationRoot, aUserName);
-			log.debug("output returned. [0][0] is " + output[0][0]);
-			String htmlOutput = "<h2 class='title'>Search Results</h2>";
-			if (output[0][0] == null)
-			{
-				htmlOutput += "<p>No rows returned from that query! Make sure your <a>escaping</a> the string and changing the <a>boolean result</a> of the <a>WHERE</a> to be always true";
-			}
-			else if(output[0][0].equalsIgnoreCase("error"))
-			{
-				log.debug("Setting Error Message");
-				htmlOutput += "<p>An error was detected!</p>" +
-						"<p>" + output[0][1] + "</p>";
+				else if(output[0][0].equalsIgnoreCase("error"))
+				{
+					log.debug("Setting Error Message");
+					htmlOutput += "<p>An error was detected!</p>" +
+							"<p>" + output[0][1] + "</p>";
+				}
+				else
+				{
+					log.debug("Adding table");
+					int i = 0;
+					log.debug("outputLength = " + output.length);
+					htmlOutput += "<table><tr><th>User Id</th><th>User Name</th><th>Comment</th></tr>";
+					do
+					{
+						log.debug("Adding User " + output[i][1]);
+						htmlOutput += "<tr><td>" + output[i][0] + "</td><td>" + output[i][1] + "</td><td>"
+							+ output[i][2] + "</td></tr>";
+						i++;
+						
+					}
+					while(i < output.length && output[i][0] != null);
+					htmlOutput += "</table>";			
+				}
+				log.debug("Outputting HTML");
+				out.write(htmlOutput);
 			}
 			else
 			{
-				log.debug("Adding table");
-				int i = 0;
-				log.debug("outputLength = " + output.length);
-				htmlOutput += "<table><tr><th>User Id</th><th>User Name</th><th>Comment</th></tr>";
-				do
-				{
-					log.debug("Adding User " + output[i][1]);
-					htmlOutput += "<tr><td>" + output[i][0] + "</td><td>" + output[i][1] + "</td><td>"
-						+ output[i][2] + "</td></tr>";
-					i++;
-					
-				}
-				while(i < output.length && output[i][0] != null);
-				htmlOutput += "</table>";			
+				log.error(levelName + " accessed with no session");
 			}
-			log.debug("Outputting HTML");
-			out.write(htmlOutput);
 		}
 		catch(Exception e)
 		{

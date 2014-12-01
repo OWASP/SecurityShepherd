@@ -44,6 +44,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static final String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeTargetFour.class);
+	private static String levelName = "CSRF 4 Target";
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Two as complete.
 	 * @param userId User identifier to be incremented
@@ -63,6 +64,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				//Get CSRF Token From session
 				if(ses.getAttribute("csrfChallengeFourNonce") == null || ses.getAttribute("csrfChallengeFourNonce").toString().isEmpty())
 				{

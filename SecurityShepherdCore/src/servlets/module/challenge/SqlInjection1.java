@@ -19,6 +19,7 @@ import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
 import utils.SqlFilter;
+import utils.Validate;
 import dbProcs.Database;
 
 /**
@@ -59,72 +60,66 @@ public class SqlInjection1 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			String htmlOutput = new String();
+			Encoder encoder = ESAPI.encoder();
+			try
 			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
+				String userIdentity = request.getParameter("userIdentity");
+				log.debug("User Submitted - " + userIdentity);
+				userIdentity = SqlFilter.levelOne(userIdentity);
+				log.debug("Filtered to " + userIdentity);
+				String ApplicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + ApplicationRoot );
+				
+				log.debug("Getting Connection to Database");
+				Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeOne");
+				Statement stmt = conn.createStatement();
+				log.debug("Gathering result set");
+				ResultSet resultSet = stmt.executeQuery("SELECT * FROM customers WHERE customerId = '" + userIdentity + "'");
+				
+				int i = 0;
+				htmlOutput = "<h2 class='title'>Search Results</h2>";
+				htmlOutput += "<table><tr><th>Name</th><th>Address</th><th>Comment</th></tr>";
+				
+				log.debug("Opening Result Set from query");
+				while(resultSet.next())
+				{
+					log.debug("Adding Customer " + resultSet.getString(2));
+					htmlOutput += "<tr><td>"
+						+ encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" 
+						+ encoder.encodeForHTML(resultSet.getString(3)) + "</td><td>"
+						+ encoder.encodeForHTML(resultSet.getString(4)) + "</td></tr>";
+					i++;
+				}
+				htmlOutput += "</table>";
+				if(i == 0)
+				{
+					htmlOutput = "<p>There were no results found in your search</p>";
+				}
 			}
-		}
-		catch (Exception e)
-		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		String htmlOutput = new String();
-		Encoder encoder = ESAPI.encoder();
-		try
-		{
-			String userIdentity = request.getParameter("userIdentity");
-			log.debug("User Submitted - " + userIdentity);
-			userIdentity = SqlFilter.levelOne(userIdentity);
-			log.debug("Filtered to " + userIdentity);
-			String ApplicationRoot = getServletContext().getRealPath("");
-			log.debug("Servlet root = " + ApplicationRoot );
-			
-			log.debug("Getting Connection to Database");
-			Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeOne");
-			Statement stmt = conn.createStatement();
-			log.debug("Gathering result set");
-			ResultSet resultSet = stmt.executeQuery("SELECT * FROM customers WHERE customerId = '" + userIdentity + "'");
-			
-			int i = 0;
-			htmlOutput = "<h2 class='title'>Search Results</h2>";
-			htmlOutput += "<table><tr><th>Name</th><th>Address</th><th>Comment</th></tr>";
-			
-			log.debug("Opening Result Set from query");
-			while(resultSet.next())
+			catch (SQLException e)
 			{
-				log.debug("Adding Customer " + resultSet.getString(2));
-				htmlOutput += "<tr><td>"
-					+ encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" 
-					+ encoder.encodeForHTML(resultSet.getString(3)) + "</td><td>"
-					+ encoder.encodeForHTML(resultSet.getString(4)) + "</td></tr>";
-				i++;
+				log.debug("SQL Error caught - " + e.toString());
+				htmlOutput += "<p>An error was detected!</p>" +
+					"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
 			}
-			htmlOutput += "</table>";
-			if(i == 0)
+			catch(Exception e)
 			{
-				htmlOutput = "<p>There were no results found in your search</p>";
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - " + e.toString());
 			}
+			log.debug("Outputting HTML");
+			out.write(htmlOutput);
 		}
-		catch (SQLException e)
+		else
 		{
-			log.debug("SQL Error caught - " + e.toString());
-			htmlOutput += "<p>An error was detected!</p>" +
-				"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
+			log.error(levelName + " servlet accessed with no session");
 		}
-		catch(Exception e)
-		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - " + e.toString());
-		}
-		log.debug("Outputting HTML");
-		out.write(htmlOutput);
 	}
 }

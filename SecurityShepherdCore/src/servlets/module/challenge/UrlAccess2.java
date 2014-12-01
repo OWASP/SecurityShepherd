@@ -10,10 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
+import utils.Validate;
 
 /**
  * Failure to Restrict URL Access Challenge 2
@@ -58,46 +57,40 @@ public class UrlAccess2 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			String htmlOutput = new String();
+			try
 			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
+				String userData = request.getParameter("guestData");
+				boolean tamperedRequest = !userData.equalsIgnoreCase("ismcoa98sUD8j21dmdoasmcoISOdjh3189");
+				if(!tamperedRequest)
+					log.debug("No request tampering detected");
+				else
+					log.debug("User Submitted - " + userData);
+				
+				if(!tamperedRequest)
+					htmlOutput = "<h2 class='title'>Normal Guest Request</h2>"
+						+ "<p>Pretty Boring Stuff.</p>";
+				else
+					htmlOutput = "<h2 class='title'>Not Normal Guest Request</h2>"
+							+ "<p>This is different.</p>";
 			}
+			catch(Exception e)
+			{
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - " + e.toString());
+			}
+			log.debug("Outputting HTML");
+			out.write(htmlOutput);
 		}
-		catch (Exception e)
+		else
 		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
+			log.error(levelName + " servlet accessed with no session");
 		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		String htmlOutput = new String();
-		try
-		{
-			String userData = request.getParameter("guestData");
-			boolean tamperedRequest = !userData.equalsIgnoreCase("ismcoa98sUD8j21dmdoasmcoISOdjh3189");
-			if(!tamperedRequest)
-				log.debug("No request tampering detected");
-			else
-				log.debug("User Submitted - " + userData);
-			
-			if(!tamperedRequest)
-				htmlOutput = "<h2 class='title'>Normal Guest Request</h2>"
-					+ "<p>Pretty Boring Stuff.</p>";
-			else
-				htmlOutput = "<h2 class='title'>Not Normal Guest Request</h2>"
-						+ "<p>This is different.</p>";
-		}
-		catch(Exception e)
-		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - " + e.toString());
-		}
-		log.debug("Outputting HTML");
-		out.write(htmlOutput);
 	}
 }

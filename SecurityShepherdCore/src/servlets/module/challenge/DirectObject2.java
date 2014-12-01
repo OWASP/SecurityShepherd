@@ -17,6 +17,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
+import utils.Validate;
 import dbProcs.Database;
 
 /**
@@ -56,58 +57,51 @@ public class DirectObject2 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();
+			out.print(getServletInfo());
+			try
 			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
+				String userId = request.getParameter("userId[]");
+				log.debug("User Submitted - " + userId);
+				String ApplicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + ApplicationRoot );
+				String htmlOutput = new String();
+				
+				Connection conn = Database.getChallengeConnection(ApplicationRoot, "directObjectRefChalTwo");
+				PreparedStatement prepstmt = conn.prepareStatement("SELECT userName, privateMessage FROM users WHERE userId = ?");
+				prepstmt.setString(1, userId);
+				ResultSet resultSet = prepstmt.executeQuery();
+				if(resultSet.next())
+				{
+					log.debug("Found user: " + resultSet.getString(1));
+					String userName = resultSet.getString(1);
+					String privateMessage = resultSet.getString(2);
+					htmlOutput = "<h2 class='title'>" + userName + "'s Message</h2>" +
+							"<p>" + privateMessage + "</p>";
+				}
+				else
+				{
+					log.debug("No Profile Found");
+					Encoder encoder = ESAPI.encoder();
+					htmlOutput = "<h2 class='title'>User: 404 - User Not Found</h2><p>User '" + encoder.encodeForHTML(userId) + "' could not be found or does not exist.</p>";
+				}
+				log.debug("Outputting HTML");
+				out.write(htmlOutput);
+				Database.closeConnection(conn);
+			}
+			catch(Exception e)
+			{
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - " + e.toString());
 			}
 		}
-		catch (Exception e)
+		else
 		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		log.debug(levelName + " Servlet Accessed");
-		PrintWriter out = response.getWriter();
-		out.print(getServletInfo());
-		try
-		{
-			String userId = request.getParameter("userId[]");
-			log.debug("User Submitted - " + userId);
-			String ApplicationRoot = getServletContext().getRealPath("");
-			log.debug("Servlet root = " + ApplicationRoot );
-			String htmlOutput = new String();
-			
-			Connection conn = Database.getChallengeConnection(ApplicationRoot, "directObjectRefChalTwo");
-			PreparedStatement prepstmt = conn.prepareStatement("SELECT userName, privateMessage FROM users WHERE userId = ?");
-			prepstmt.setString(1, userId);
-			ResultSet resultSet = prepstmt.executeQuery();
-			if(resultSet.next())
-			{
-				log.debug("Found user: " + resultSet.getString(1));
-				String userName = resultSet.getString(1);
-				String privateMessage = resultSet.getString(2);
-				htmlOutput = "<h2 class='title'>" + userName + "'s Message</h2>" +
-						"<p>" + privateMessage + "</p>";
-			}
-			else
-			{
-				log.debug("No Profile Found");
-				Encoder encoder = ESAPI.encoder();
-				htmlOutput = "<h2 class='title'>User: 404 - User Not Found</h2><p>User '" + encoder.encodeForHTML(userId) + "' could not be found or does not exist.</p>";
-			}
-			log.debug("Outputting HTML");
-			out.write(htmlOutput);
-			Database.closeConnection(conn);
-		}
-		catch(Exception e)
-		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - " + e.toString());
+			log.error(levelName + " servlet accessed with no session");
 		}
 	}
 }

@@ -65,6 +65,7 @@ public class CsrfChallengeThree extends HttpServlet
 				Object tokenParmeter = request.getParameter("csrfToken");
 				if(Validate.validateTokens(tokenCookie, tokenParmeter))
 				{
+					log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 					String myMessage = request.getParameter("myMessage");
 					log.debug("User Submitted - " + myMessage);
 					myMessage = Validate.makeValidUrl(myMessage);

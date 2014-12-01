@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
+import utils.Validate;
 
 /**
  * Session Management Lesson
@@ -55,61 +56,55 @@ public class SessionManagementLesson extends HttpServlet
 		out.print(getServletInfo());
 		try
 		{
-			//Attempting to recover user name of session that made request
-			try
+			HttpSession ses = request.getSession(true);
+			if(Validate.validateSession(ses))
 			{
-				if (request.getSession() != null)
+				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+				Cookie userCookies[] = request.getCookies();
+				int i = 0;
+				Cookie theCookie = null;
+				for(i = 0; i < userCookies.length; i++)
 				{
-					HttpSession ses = request.getSession();
-					String userName = (String) ses.getAttribute("decyrptedUserName");
-					log.debug(userName + " accessed " + levelName + " Servlet");
+					if(userCookies[i].getName().compareTo("lessonComplete") == 0)
+					{
+						theCookie = userCookies[i];
+						break; //End Loop, because we found the token
+					}
 				}
-			}
-			catch (Exception e)
-			{
-				log.debug(levelName + " Servlet Accessed");
-				log.error("Could not retrieve user name from session");
-			}
-			Cookie userCookies[] = request.getCookies();
-			int i = 0;
-			Cookie theCookie = null;
-			for(i = 0; i < userCookies.length; i++)
-			{
-				if(userCookies[i].getName().compareTo("lessonComplete") == 0)
+				String htmlOutput = null;
+				if(theCookie != null)
 				{
-					theCookie = userCookies[i];
-					break; //End Loop, because we found the token
+					log.debug("Cookie value: " + theCookie.getValue());
+					
+					if(theCookie.getValue().equals("lessonComplete"))
+					{
+						log.debug("Lesson Complete");
+						
+						// Get key and add it to the output
+						String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
+						
+						htmlOutput = "<h2 class='title'>Lesson Complete</h2>" +
+								"<p>" +
+								"Congratulations, you have bypassed this lessons <strong><a>VERY WEAK</a></strong> session management. The result key for this lesson is " +
+								"<a>"+ userKey + "</a>" +
+								"</p>";
+					}
 				}
-			}
-			String htmlOutput = null;
-			if(theCookie != null)
-			{
-				log.debug("Cookie value: " + theCookie.getValue());
-				
-				if(theCookie.getValue().equals("lessonComplete"))
+				if(htmlOutput == null)
 				{
-					log.debug("Lesson Complete");
-					
-					// Get key and add it to the output
-					String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
-					
-					htmlOutput = "<h2 class='title'>Lesson Complete</h2>" +
+					log.debug("Lesson Not Complete");
+					htmlOutput = "<h2 class='title'>Lesson Not Complete</h2>" +
 							"<p>" +
-							"Congratulations, you have bypassed this lessons <strong><a>VERY WEAK</a></strong> session management. The result key for this lesson is " +
-							"<a>"+ userKey + "</a>" +
+							"You have not completed this lesson yet." +
 							"</p>";
 				}
+				log.debug("Outputting HTML");
+				out.write(htmlOutput);
 			}
-			if(htmlOutput == null)
+			else
 			{
-				log.debug("Lesson Not Complete");
-				htmlOutput = "<h2 class='title'>Lesson Not Complete</h2>" +
-						"<p>" +
-						"You have not completed this lesson yet." +
-						"</p>";
+				log.error(levelName + " servlet accessed with no session");
 			}
-			log.debug("Outputting HTML");
-			out.write(htmlOutput);
 		}
 		catch(Exception e)
 		{

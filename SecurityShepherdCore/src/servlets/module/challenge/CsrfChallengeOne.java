@@ -60,6 +60,7 @@ public class CsrfChallengeOne extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				Cookie tokenCookie = Validate.getToken(request.getCookies());
 				Object tokenParmeter = request.getParameter("csrfToken");
 				if(Validate.validateTokens(tokenCookie, tokenParmeter))

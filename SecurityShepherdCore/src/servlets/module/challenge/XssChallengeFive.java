@@ -45,6 +45,7 @@ public class XssChallengeFive extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(XssChallengeFive.class);
 	private static final String levelHash = "f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671";
+	private static String levelName = "XSS Challenge 5";
 	/**
 	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotely exploited, and there fore only is executable against the person initiating the function.
 	 * @param searchTerm To be spat back out at the user after been encoded for wrong HTML Context
@@ -62,6 +63,7 @@ public class XssChallengeFive extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				Cookie tokenCookie = Validate.getToken(request.getCookies());
 				Object tokenParmeter = request.getParameter("csrfToken");
 				if(Validate.validateTokens(tokenCookie, tokenParmeter))

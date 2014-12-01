@@ -14,6 +14,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
+import utils.Validate;
 
 /**
  * Failure to Restrict URL Access Challenge 1
@@ -57,48 +58,42 @@ public class UrlAccess1 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			String htmlOutput = new String();
+			Encoder encoder = ESAPI.encoder();
+			try
 			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
+				String userData = request.getParameter("userData");
+				boolean tamperedRequest = !userData.equalsIgnoreCase("4816283");
+				if(!tamperedRequest)
+					log.debug("No request tampering detected");
+				else
+					log.debug("User Submitted - " + userData);
+				
+				if(!tamperedRequest)
+					htmlOutput = "<h2 class='title'>Server Status</h2>"
+						+ "<p>The server status is normal. Nothing to see here. Move along.</p>";
+				else
+					htmlOutput = "<h2 class='title'>Server Status Failure</h2>"
+							+ "<p>Could not retrieve server status. Invalid userData.</p>"
+							+ "<!-- " + encoder.encodeForHTML(userData) + " -->";
 			}
+			catch(Exception e)
+			{
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - " + e.toString());
+			}
+			log.debug("Outputting HTML");
+			out.write(htmlOutput);
 		}
-		catch (Exception e)
+		else
 		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
+			log.error(levelName + " servlet accessed with no session");
 		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		String htmlOutput = new String();
-		Encoder encoder = ESAPI.encoder();
-		try
-		{
-			String userData = request.getParameter("userData");
-			boolean tamperedRequest = !userData.equalsIgnoreCase("4816283");
-			if(!tamperedRequest)
-				log.debug("No request tampering detected");
-			else
-				log.debug("User Submitted - " + userData);
-			
-			if(!tamperedRequest)
-				htmlOutput = "<h2 class='title'>Server Status</h2>"
-					+ "<p>The server status is normal. Nothing to see here. Move along.</p>";
-			else
-				htmlOutput = "<h2 class='title'>Server Status Failure</h2>"
-						+ "<p>Could not retrieve server status. Invalid userData.</p>"
-						+ "<!-- " + encoder.encodeForHTML(userData) + " -->";
-		}
-		catch(Exception e)
-		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - " + e.toString());
-		}
-		log.debug("Outputting HTML");
-		out.write(htmlOutput);
 	}
 }

@@ -19,6 +19,7 @@ import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
 import utils.SqlFilter;
+import utils.Validate;
 import dbProcs.Database;
 
 /**
@@ -60,80 +61,74 @@ public class SqlInjection4 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			String htmlOutput = new String();
+			Encoder encoder = ESAPI.encoder();
+			try
 			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
-			}
-		}
-		catch (Exception e)
-		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		String htmlOutput = new String();
-		Encoder encoder = ESAPI.encoder();
-		try
-		{
-			String theUserName = request.getParameter("theUserName");
-			log.debug("User Submitted - " + theUserName);
-			theUserName = SqlFilter.levelFour(theUserName);
-			log.debug("Filtered to " + theUserName);
-			String thePassword = request.getParameter("thePassword");
-			log.debug("thePassword Submitted - " + thePassword);
-			thePassword = SqlFilter.levelFour(thePassword);
-			log.debug("Filtered to " + thePassword);
-			String ApplicationRoot = getServletContext().getRealPath("");
-			log.debug("Servlet root = " + ApplicationRoot );
-			
-			log.debug("Getting Connection to Database");
-			Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeFour");
-			Statement stmt = conn.createStatement();
-			log.debug("Gathering result set");
-			ResultSet resultSet = stmt.executeQuery("SELECT userName FROM users WHERE userName = '" + theUserName + "' AND userPassword = '" + thePassword + "'");
-	
-			int i = 0;
-			htmlOutput = "<h2 class='title'>Login Result</h2>";
-			
-			log.debug("Opening Result Set from query");
-			if(resultSet.next())
-			{
-				log.debug("Signed in as " + resultSet.getString(1));
-				htmlOutput += "<p>Signed in as " + encoder.encodeForHTML(resultSet.getString(1)) + "</p>";
-				if(resultSet.getString(1).equalsIgnoreCase("admin"))
+				String theUserName = request.getParameter("theUserName");
+				log.debug("User Submitted - " + theUserName);
+				theUserName = SqlFilter.levelFour(theUserName);
+				log.debug("Filtered to " + theUserName);
+				String thePassword = request.getParameter("thePassword");
+				log.debug("thePassword Submitted - " + thePassword);
+				thePassword = SqlFilter.levelFour(thePassword);
+				log.debug("Filtered to " + thePassword);
+				String ApplicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + ApplicationRoot );
+				
+				log.debug("Getting Connection to Database");
+				Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeFour");
+				Statement stmt = conn.createStatement();
+				log.debug("Gathering result set");
+				ResultSet resultSet = stmt.executeQuery("SELECT userName FROM users WHERE userName = '" + theUserName + "' AND userPassword = '" + thePassword + "'");
+		
+				int i = 0;
+				htmlOutput = "<h2 class='title'>Login Result</h2>";
+				
+				log.debug("Opening Result Set from query");
+				if(resultSet.next())
 				{
-					htmlOutput += "<p>As you are the admin, here is the result key:"
-								+ "<a>"	+ encoder.encodeForHTML(levelResult) + "</a>";
+					log.debug("Signed in as " + resultSet.getString(1));
+					htmlOutput += "<p>Signed in as " + encoder.encodeForHTML(resultSet.getString(1)) + "</p>";
+					if(resultSet.getString(1).equalsIgnoreCase("admin"))
+					{
+						htmlOutput += "<p>As you are the admin, here is the result key:"
+									+ "<a>"	+ encoder.encodeForHTML(levelResult) + "</a>";
+					}
+					else
+					{
+						htmlOutput += "<p>But admins have all the fun</p>";
+					}
+					i++;
 				}
-				else
+				if(i == 0)
 				{
-					htmlOutput += "<p>But admins have all the fun</p>";
+					htmlOutput = "<h2 class='title'>Login Result</h2><p>You didn't log in. This site is super secure so hax won't work!</p>";
 				}
-				i++;
 			}
-			if(i == 0)
+			catch (SQLException e)
 			{
-				htmlOutput = "<h2 class='title'>Login Result</h2><p>You didn't log in. This site is super secure so hax won't work!</p>";
+				log.debug("SQL Error caught - " + e.toString());
+				htmlOutput += "<p>An error was detected!</p>" +
+					"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
 			}
+			catch(Exception e)
+			{
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - " + e.toString());
+			}
+			log.debug("Outputting HTML");
+			out.write(htmlOutput);
 		}
-		catch (SQLException e)
+		else
 		{
-			log.debug("SQL Error caught - " + e.toString());
-			htmlOutput += "<p>An error was detected!</p>" +
-				"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
+			log.error(levelName + " servlet accessed with no session");
 		}
-		catch(Exception e)
-		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - " + e.toString());
-		}
-		log.debug("Outputting HTML");
-		out.write(htmlOutput);
 	}
 }

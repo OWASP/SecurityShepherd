@@ -14,6 +14,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
+import utils.Validate;
 
 /**
  * Bad Crypto Challenge Three
@@ -50,45 +51,39 @@ public class BrokenCrypto3 extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
-			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
-			}
-		}
-		catch (Exception e)
-		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 		
-		PrintWriter out = response.getWriter();
-		out.print(getServletInfo());
-		String htmlOutput = new String();
-		try
-		{
-			String userData = request.getParameter("userData");
-			log.debug("User Submitted - " + userData);
-			
-			log.debug("Decrypting user input");
-			//Using level key as encryption key
-			String decryptedUserData = decrypt(userData, levelResult);
-			log.debug("Decrypted to: " + decryptedUserData);
-			Encoder encoder = ESAPI.encoder();
-			htmlOutput = "<h2>Plain text Result:</h2><p>Your cipher text was decrypted to the following:<br/><br/><em>"
-					+ encoder.encodeForHTML(decryptedUserData)
-					+ "</em></p>";
+			PrintWriter out = response.getWriter();
+			out.print(getServletInfo());
+			String htmlOutput = new String();
+			try
+			{
+				String userData = request.getParameter("userData");
+				log.debug("User Submitted - " + userData);
+				
+				log.debug("Decrypting user input");
+				//Using level key as encryption key
+				String decryptedUserData = decrypt(userData, levelResult);
+				log.debug("Decrypted to: " + decryptedUserData);
+				Encoder encoder = ESAPI.encoder();
+				htmlOutput = "<h2>Plain text Result:</h2><p>Your cipher text was decrypted to the following:<br/><br/><em>"
+						+ encoder.encodeForHTML(decryptedUserData)
+						+ "</em></p>";
+			}
+			catch(Exception e)
+			{
+				htmlOutput = "An Error Occurred! You must be getting funky!";
+				log.fatal(levelName + " - " + e.toString());
+			}
+			out.write(htmlOutput);
 		}
-		catch(Exception e)
+		else
 		{
-			htmlOutput = "An Error Occurred! You must be getting funky!";
-			log.fatal(levelName + " - " + e.toString());
+			log.error(levelName + " servlet accessed with no session");
 		}
-		out.write(htmlOutput);
 	}
 	
 	/**

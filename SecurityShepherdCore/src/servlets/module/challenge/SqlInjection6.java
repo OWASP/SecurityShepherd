@@ -18,6 +18,7 @@ import org.owasp.esapi.Encoder;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
+import utils.Validate;
 import dbProcs.Database;
 /**
  * Level : SQL Injection 6
@@ -55,80 +56,74 @@ public class SqlInjection6 extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover user name of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
-			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
-			}
-		}
-		catch (Exception e)
-		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
-		String htmlOutput = new String();
-		String applicationRoot = getServletContext().getRealPath("");
-		Encoder encoder = ESAPI.encoder();
-		try
-		{
-			String userPin = (String) request.getParameter("pinNumber");
-			log.debug("userPin - " + userPin);
-			userPin = userPin.replaceAll("\\\\", "\\\\\\\\").replaceAll("'", ""); // Escape single quotes
-			log.debug("userPin scrubbed - " + userPin);
-			userPin = java.net.URLDecoder.decode(userPin.replaceAll("\\\\\\\\x", "%"), "UTF-8"); //Decode \x encoding 
-			log.debug("searchTerm decoded to - " + userPin);
-			Connection conn = Database.getChallengeConnection(applicationRoot, "SqlChallengeSix");
-			log.debug("Looking for users");
-			PreparedStatement prepstmt = 
-					conn.prepareStatement("SELECT userName FROM users WHERE userPin = '" + userPin + "'");
-			ResultSet users = prepstmt.executeQuery();
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();  
+			out.print(getServletInfo());
+			String htmlOutput = new String();
+			String applicationRoot = getServletContext().getRealPath("");
+			Encoder encoder = ESAPI.encoder();
 			try
 			{
-				if(users.next())
+				String userPin = (String) request.getParameter("pinNumber");
+				log.debug("userPin - " + userPin);
+				userPin = userPin.replaceAll("\\\\", "\\\\\\\\").replaceAll("'", ""); // Escape single quotes
+				log.debug("userPin scrubbed - " + userPin);
+				userPin = java.net.URLDecoder.decode(userPin.replaceAll("\\\\\\\\x", "%"), "UTF-8"); //Decode \x encoding 
+				log.debug("searchTerm decoded to - " + userPin);
+				Connection conn = Database.getChallengeConnection(applicationRoot, "SqlChallengeSix");
+				log.debug("Looking for users");
+				PreparedStatement prepstmt = 
+						conn.prepareStatement("SELECT userName FROM users WHERE userPin = '" + userPin + "'");
+				ResultSet users = prepstmt.executeQuery();
+				try
 				{
-					htmlOutput = "<h3>Welcome back " + encoder.encodeForHTML(users.getString(1)) + "</h3>"
-							+ "<p>You're authentication number is now " + encoder.encodeForHTML(Hash.randomString()) + "</p>";
+					if(users.next())
+					{
+						htmlOutput = "<h3>Welcome back " + encoder.encodeForHTML(users.getString(1)) + "</h3>"
+								+ "<p>You're authentication number is now " + encoder.encodeForHTML(Hash.randomString()) + "</p>";
+					}
+					else
+					{
+						htmlOutput = "<h3>Incorrect Password / User name</h3><p>Careful now!</p>";
+					}
 				}
-				else
+				catch(Exception e)
 				{
 					htmlOutput = "<h3>Incorrect Password / User name</h3><p>Careful now!</p>";
+					log.debug("Could Not Find User: " + e.toString());
+					try
+					{
+						Thread.sleep(1000);
+					}
+					catch(Exception e1)
+					{
+						log.error("Failed to Pause: " + e1.toString());
+					}
 				}
+				conn.close();
 			}
 			catch(Exception e)
 			{
-				htmlOutput = "<h3>Incorrect Password / User name</h3><p>Careful now!</p>";
-				log.debug("Could Not Find User: " + e.toString());
+				log.debug("Could not Search for User: " + e.toString());
+				htmlOutput += "<p>Bad Request? Please be careful!</p>";
 				try
 				{
 					Thread.sleep(1000);
 				}
-				catch(Exception e1)
+				catch(Exception e2)
 				{
-					log.error("Failed to Pause: " + e1.toString());
+					log.error("Failed to Pause: " + e2.toString());
 				}
 			}
-			conn.close();
+			log.debug("*** SQLi C6 End ***");
+			out.write(htmlOutput);
 		}
-		catch(Exception e)
+		else
 		{
-			log.debug("Could not Search for User: " + e.toString());
-			htmlOutput += "<p>Bad Request? Please be careful!</p>";
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch(Exception e2)
-			{
-				log.error("Failed to Pause: " + e2.toString());
-			}
+			log.error(levelName + " servlet accessed with no session");
 		}
-		log.debug("*** SQLi C6 End ***");
-		out.write(htmlOutput);
 	}
 }

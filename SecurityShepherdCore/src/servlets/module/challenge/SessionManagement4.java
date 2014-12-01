@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
+import utils.Validate;
 
 /**
  * Session Management Challenge Four
@@ -59,89 +60,83 @@ public class SessionManagement4 extends HttpServlet
 		{
 			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-			//Attempting to recover user name of session that made request
-			try
+			HttpSession ses = request.getSession(true);
+			if(Validate.validateSession(ses))
 			{
-				if (request.getSession() != null)
+				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+				Cookie userCookies[] = request.getCookies();
+				int i = 0;
+				Cookie theCookie = null;
+				for(i = 0; i < userCookies.length; i++)
 				{
-					HttpSession ses = request.getSession();
-					String userName = (String) ses.getAttribute("decyrptedUserName");
-					log.debug(userName + " accessed " + levelName + " Servlet");
+					if(userCookies[i].getName().compareTo("SubSessionID") == 0)
+					{
+						theCookie = userCookies[i];
+						break; //End Loop, because we found the token
+					}
 				}
+				String htmlOutput = null;
+				if(theCookie != null)
+				{
+					log.debug("Cookie value: " + theCookie.getValue());
+					if(theCookie.getValue().equals("TURBd01EQXdNREF3TURBd01EQXdNUT09")) //Guest Session
+					{
+						log.debug("Guest Session Detected");
+					}
+					else if (theCookie.getValue().equals("TURBd01EQXdNREF3TURBd01EQXlNUT09")) //Admin Session
+					{
+						log.debug("Admin Session Detected: Challenge Complete");
+						// Get key and add it to the output
+						String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
+						htmlOutput = "<h2 class='title'>Admin Only Club</h2>" +
+								"<p>" +
+								"Welcome administrator. Your result key is as follows " +
+								"<a>" + userKey + "</a>" +
+								"</p>";
+					}
+					else //Unknown or Dead session
+					{
+						log.debug("Dead Session Detected");
+					}
+				}
+				if(htmlOutput == null)
+				{
+					log.debug("Challenge Not Complete");
+					boolean hackDetected = false;
+					hackDetected = !(request.getParameter("useSecurity") != null && request.getParameter("userId") != null);
+					if(!hackDetected)
+					{
+						log.debug("useSecurity: " + request.getParameter("useSecurity"));
+						log.debug("userId: " + request.getParameter("userId"));
+						hackDetected = !(request.getParameter("useSecurity").toString().equalsIgnoreCase("true"));
+					}
+					else
+					{
+						log.debug("Parameters Missing");
+					}
+					
+					if(!hackDetected)
+					{
+						htmlOutput = "<h2 class='title'>Your not an Admin!!!</h2>" +
+								"<p>" +
+								"Stay away from the admin only section. The wolves have been released." +
+								"</p>";
+					}
+					else
+					{
+						htmlOutput = "<h2 class='title'>HACK DETECTED</h2>" +
+								"<p>" +
+								"A possible attack has been detected. Functionality Stopped before any damage was done" +
+								"</p>";
+					}
+				}
+				log.debug("Outputting HTML");
+				out.write(htmlOutput);
 			}
-			catch (Exception e)
+			else
 			{
-				log.debug(levelName + " Servlet Accessed");
-				log.error("Could not retrieve user name from session");
+				log.error(levelName + " servlet accessed with no session");
 			}
-			Cookie userCookies[] = request.getCookies();
-			int i = 0;
-			Cookie theCookie = null;
-			for(i = 0; i < userCookies.length; i++)
-			{
-				if(userCookies[i].getName().compareTo("SubSessionID") == 0)
-				{
-					theCookie = userCookies[i];
-					break; //End Loop, because we found the token
-				}
-			}
-			String htmlOutput = null;
-			if(theCookie != null)
-			{
-				log.debug("Cookie value: " + theCookie.getValue());
-				if(theCookie.getValue().equals("TURBd01EQXdNREF3TURBd01EQXdNUT09")) //Guest Session
-				{
-					log.debug("Guest Session Detected");
-				}
-				else if (theCookie.getValue().equals("TURBd01EQXdNREF3TURBd01EQXlNUT09")) //Admin Session
-				{
-					log.debug("Admin Session Detected: Challenge Complete");
-					// Get key and add it to the output
-					String userKey = Hash.generateUserSolution(levelResult, request.getCookies());
-					htmlOutput = "<h2 class='title'>Admin Only Club</h2>" +
-							"<p>" +
-							"Welcome administrator. Your result key is as follows " +
-							"<a>" + userKey + "</a>" +
-							"</p>";
-				}
-				else //Unknown or Dead session
-				{
-					log.debug("Dead Session Detected");
-				}
-			}
-			if(htmlOutput == null)
-			{
-				log.debug("Challenge Not Complete");
-				boolean hackDetected = false;
-				hackDetected = !(request.getParameter("useSecurity") != null && request.getParameter("userId") != null);
-				if(!hackDetected)
-				{
-					log.debug("useSecurity: " + request.getParameter("useSecurity"));
-					log.debug("userId: " + request.getParameter("userId"));
-					hackDetected = !(request.getParameter("useSecurity").toString().equalsIgnoreCase("true"));
-				}
-				else
-				{
-					log.debug("Parameters Missing");
-				}
-				
-				if(!hackDetected)
-				{
-					htmlOutput = "<h2 class='title'>Your not an Admin!!!</h2>" +
-							"<p>" +
-							"Stay away from the admin only section. The wolves have been released." +
-							"</p>";
-				}
-				else
-				{
-					htmlOutput = "<h2 class='title'>HACK DETECTED</h2>" +
-							"<p>" +
-							"A possible attack has been detected. Functionality Stopped before any damage was done" +
-							"</p>";
-				}
-			}
-			log.debug("Outputting HTML");
-			out.write(htmlOutput);
 		}
 		catch(Exception e)
 		{

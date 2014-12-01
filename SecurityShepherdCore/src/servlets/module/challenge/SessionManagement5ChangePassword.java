@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.commons.codec.binary.Base64;
 
 import utils.ShepherdLogManager;
+import utils.Validate;
 import dbProcs.Database;
 
 /**
@@ -64,145 +65,139 @@ public class SessionManagement5ChangePassword extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		//Attempting to recover username of session that made request
-		try
+		HttpSession ses = request.getSession(true);
+		if(Validate.validateSession(ses))
 		{
-			if (request.getSession() != null)
-			{
-				HttpSession ses = request.getSession();
-				String userName = (String) ses.getAttribute("decyrptedUserName");
-				log.debug(userName + " accessed " + levelName + " Servlet");
-			}
-		}
-		catch (Exception e)
-		{
-			log.debug(levelName + " Servlet Accessed");
-			log.error("Could not retrieve user name from session");
-		}
-		PrintWriter out = response.getWriter();
-		Base64 base64 = new Base64();
-		out.print(getServletInfo());
-		String htmlOutput = new String();
-		String errorMessage = new String();
-		int tokenLife = 11;
-		try
-		{
-			log.debug("Getting Challenge Parameters");
-			Object passNewObj = request.getParameter("newPassword");
-			Object userNewObj = request.getParameter("userName");
-			Object tokenObj = request.getParameter("resetPasswordToken");
-			String userName = new String();
-			String newPass = new String();
-			String token = new String();
-			if(passNewObj != null)
-				newPass = (String) passNewObj;
-			if(userNewObj != null)
-				userName = (String) userNewObj;
-			if(tokenObj != null)
-				token = (String) tokenObj;
-			log.debug("userName = " + userName);
-			log.debug("newPass = " + newPass);
-			log.debug("token = " + token);
-			String tokenTime = new String();
+			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+			PrintWriter out = response.getWriter();
+			Base64 base64 = new Base64();
+			out.print(getServletInfo());
+			String htmlOutput = new String();
+			String errorMessage = new String();
+			int tokenLife = 11;
 			try
 			{
-				byte[] decodedToken = Base64.decodeBase64(token);
-				tokenTime = new String(decodedToken, "UTF-8");
-			}
-			catch (UnsupportedEncodingException e)
-			{
-				log.debug("Could not decode password token");
-				errorMessage += "<p>Could not Decode Token</p>";
-			}
-			if(tokenTime.isEmpty())
-			{
-				log.debug("Could not decode token. Ending Servlet.");
-				out.write(errorMessage);
-			}
-			else
-			{
-				log.debug("Decoded Token = " + tokenTime);
-				
-				//Get Time from Token and see if it is inside the last 10 minutes
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
-				try 
+				log.debug("Getting Challenge Parameters");
+				Object passNewObj = request.getParameter("newPassword");
+				Object userNewObj = request.getParameter("userName");
+				Object tokenObj = request.getParameter("resetPasswordToken");
+				String userName = new String();
+				String newPass = new String();
+				String token = new String();
+				if(passNewObj != null)
+					newPass = (String) passNewObj;
+				if(userNewObj != null)
+					userName = (String) userNewObj;
+				if(tokenObj != null)
+					token = (String) tokenObj;
+				log.debug("userName = " + userName);
+				log.debug("newPass = " + newPass);
+				log.debug("token = " + token);
+				String tokenTime = new String();
+				try
 				{
-					Date tokenDateTime = simpleDateFormat.parse(tokenTime);
-					Date currentDateTime = new Date();
-					//Get difference in minutes
-					tokenLife = (int)((currentDateTime.getTime()/60000) - (tokenDateTime.getTime()/60000));
-					log.debug("Token life = " + tokenLife);
-				} 
-				catch (ParseException e) 
-				{
-					log.error("Date Parsing Error: " + e.toString());
-					errorMessage += "Could not parse/manipulate date or time from token: " + e.toString();
+					byte[] decodedToken = Base64.decodeBase64(token);
+					tokenTime = new String(decodedToken, "UTF-8");
 				}
-				
-				if(tokenLife < 10 && tokenLife >= 0)
+				catch (UnsupportedEncodingException e)
 				{
-					if(newPass.length() >= 12)
-					{
-						log.debug("Getting ApplicationRoot");
-						String ApplicationRoot = getServletContext().getRealPath("");
-						log.debug("Servlet root = " + ApplicationRoot );
-						
-						Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
-						log.debug("Changing password for user: " + userName);
-						log.debug("Changing password to: " + newPass);
-						PreparedStatement callstmt;
-						
-						callstmt = conn.prepareStatement("UPDATE users SET userPassword = SHA(?) WHERE userName = ?");
-						
-						callstmt.setString(1, newPass); 
-						callstmt.setString(2, userName);
-						
-						log.debug("Executing changePassword");
-						callstmt.execute();
-						
-						log.debug("Committing changes made to database");
-						callstmt = conn.prepareStatement("COMMIT");
-						callstmt.execute();
-						log.debug("Changes committed.");
-						
-						htmlOutput = "<p>Password change request success.</p>";
-					}
-					else
-					{
-						log.debug("Invalid password submitted: " + newPass);
-						htmlOutput = "<p>Change Password Failed. Must be at least 12 characters.</p>";
-					}
+					log.debug("Could not decode password token");
+					errorMessage += "<p>Could not Decode Token</p>";
+				}
+				if(tokenTime.isEmpty())
+				{
+					log.debug("Could not decode token. Ending Servlet.");
+					out.write(errorMessage);
 				}
 				else
 				{
-					if(!errorMessage.isEmpty())
+					log.debug("Decoded Token = " + tokenTime);
+					
+					//Get Time from Token and see if it is inside the last 10 minutes
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
+					try 
 					{
-						htmlOutput = "<p><font colour='red'><b>" + errorMessage + "</b></font</p>";
+						Date tokenDateTime = simpleDateFormat.parse(tokenTime);
+						Date currentDateTime = new Date();
+						//Get difference in minutes
+						tokenLife = (int)((currentDateTime.getTime()/60000) - (tokenDateTime.getTime()/60000));
+						log.debug("Token life = " + tokenLife);
+					} 
+					catch (ParseException e) 
+					{
+						log.error("Date Parsing Error: " + e.toString());
+						errorMessage += "Could not parse/manipulate date or time from token: " + e.toString();
 					}
-					else if(tokenLife >= 10)
+					
+					if(tokenLife < 10 && tokenLife >= 0)
 					{
-						log.debug("Token too old");
-						htmlOutput = "<p>Token is too old or none was submitted. Please get another one</p>";
-					}
-					else if (tokenLife < 0)
-					{
-						log.debug("Token to young");
-						htmlOutput = "<p>Invalid Token Recieved. Too Young.</p>";
+						if(newPass.length() >= 12)
+						{
+							log.debug("Getting ApplicationRoot");
+							String ApplicationRoot = getServletContext().getRealPath("");
+							log.debug("Servlet root = " + ApplicationRoot );
+							
+							Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
+							log.debug("Changing password for user: " + userName);
+							log.debug("Changing password to: " + newPass);
+							PreparedStatement callstmt;
+							
+							callstmt = conn.prepareStatement("UPDATE users SET userPassword = SHA(?) WHERE userName = ?");
+							
+							callstmt.setString(1, newPass); 
+							callstmt.setString(2, userName);
+							
+							log.debug("Executing changePassword");
+							callstmt.execute();
+							
+							log.debug("Committing changes made to database");
+							callstmt = conn.prepareStatement("COMMIT");
+							callstmt.execute();
+							log.debug("Changes committed.");
+							
+							htmlOutput = "<p>Password change request success.</p>";
+						}
+						else
+						{
+							log.debug("Invalid password submitted: " + newPass);
+							htmlOutput = "<p>Change Password Failed. Must be at least 12 characters.</p>";
+						}
 					}
 					else
 					{
-						log.error("Token to Strange: Unexpected Error");
-						htmlOutput = "<p>Invalid Token Recieved. Too Funky.</p>";
+						if(!errorMessage.isEmpty())
+						{
+							htmlOutput = "<p><font colour='red'><b>" + errorMessage + "</b></font</p>";
+						}
+						else if(tokenLife >= 10)
+						{
+							log.debug("Token too old");
+							htmlOutput = "<p>Token is too old or none was submitted. Please get another one</p>";
+						}
+						else if (tokenLife < 0)
+						{
+							log.debug("Token to young");
+							htmlOutput = "<p>Invalid Token Recieved. Too Young.</p>";
+						}
+						else
+						{
+							log.error("Token to Strange: Unexpected Error");
+							htmlOutput = "<p>Invalid Token Recieved. Too Funky.</p>";
+						}
 					}
 				}
+				log.debug("Outputting HTML");
+				out.write(htmlOutput);
 			}
-			log.debug("Outputting HTML");
-			out.write(htmlOutput);
+			catch(Exception e)
+			{
+				out.write("An Error Occurred! You must be getting funky!");
+				log.fatal(levelName + " - Change Password - " + e.toString());
+			}
 		}
-		catch(Exception e)
+		else
 		{
-			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal(levelName + " - Change Password - " + e.toString());
+			log.error(levelName + " servlet accessed with no session");
 		}
 	}
 	

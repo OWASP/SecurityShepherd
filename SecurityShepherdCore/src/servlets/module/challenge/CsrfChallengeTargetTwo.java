@@ -40,6 +40,7 @@ public class CsrfChallengeTargetTwo extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeTargetTwo.class);
+	private static String levelName = "CSRF 2 Target";
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Two as complete.
 	 * @param userId User identifier to be incremented
@@ -58,6 +59,7 @@ public class CsrfChallengeTargetTwo extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				String plusId = request.getParameter("userId");
 				log.debug("User Submitted - " + plusId);
 				String userId = (String)ses.getAttribute("userStamp");
