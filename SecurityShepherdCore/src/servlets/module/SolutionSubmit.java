@@ -105,9 +105,12 @@ public class SolutionSubmit extends HttpServlet
 						else
 						{
 							//Encrypted Solution key,  must be decrypted before compare
-							String decryptedKey = Hash.decrypt(Validate.validateEncryptionKey(userName), solutionKey);
-							storedResult += Hash.encryptionKeySalt; //Add server solution salt to base key before compare with decrypted key
+							String decryptedKey = Hash.decryptUserSpecificSolution(Validate.validateEncryptionKey(userName), solutionKey);
+							storedResult += Hash.getCurrentSalt(); //Add server solution salt to base key before compare with decrypted key
 							validKey = storedResult.compareTo(decryptedKey) == 0;
+							log.debug("Decrypted Submitted Key: " + decryptedKey);
+							log.debug("Stored Expected Key: " + storedResult);
+							
 						}
 						if(validKey)
 						{

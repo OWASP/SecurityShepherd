@@ -38,34 +38,192 @@ import org.apache.commons.codec.binary.Base64;
 public class Hash 
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Hash.class);
-	public static String userNameKey = "Yfsh{_p>sgQK!z6w";
-	public static String encryptionKeySalt = "K;2i5$e[7'c9.dNy";
+	public static String userNameKey = randomKeyLengthString();
+	private static String encryptionKeySalt = randomKeyLengthString();
+	private static String serverEncryptionKey = randomKeyLengthString();
+	
 	/**
-	 * Outputs a SHA256 digest
-	 * @param toHash String to hash
-	 * @return Fashed string
+	 * Merges current server encryption key with user name based encryption key to create user specific key
+	 * @param userName
+	 * @return
 	 */
-	public static String thisString (String toHash)
+	private static String createUserSpecificEncryptionKey (String userNameKey) throws Exception 
 	{
-		String hashed = null;
-		byte[] byteArray = new byte[256];
-		MessageDigest md;
+		if(userNameKey.length() != 16)
+			throw new Exception("User Name key must be 16 bytes long");
+		else
+		{
+			byte[] serverKey = serverEncryptionKey.getBytes();
+			byte[] userKey = userNameKey.getBytes();
+			for(int i = 0; i < userKey.length; i++)
+			{
+				userKey[i] = (byte)(userKey[i] + serverKey[i]);
+			}
+			return new String(userKey);
+		}
+	}
+	
+	/**
+	 * Decrypts data using specific key and ciphertext
+	 * @param key Encryption Key (Must be 16 Bytes)
+	 * @param encrypted Ciphertext to decrypt
+	 * @return Plaintext decrypted from submitted ciphertext and key
+	 * @throws GeneralSecurityException
+	 */
+	public static String decrypt(String key, String encrypted)
+	throws GeneralSecurityException 
+	{
+		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
+		if (raw.length != 16)
+		{
+			throw new IllegalArgumentException("Invalid key size.");
+		}
+		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
+		byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
+		return new String(original, Charset.forName("US-ASCII"));
+	}
+	
+	public static String decryptUserSpecificSolution(String userNameKey, String encryptedSolution)
+	throws GeneralSecurityException, Exception 
+	{
+		try
+		{
+			String key = createUserSpecificEncryptionKey(userNameKey);
+			byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
+			if (raw.length != 16)
+			{
+				throw new IllegalArgumentException("Invalid key size.");
+			}
+			SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
+			byte[] original = cipher.doFinal(Base64.decodeBase64(encryptedSolution));
+			return new String(original, Charset.forName("US-ASCII"));
+		}
+		catch (Exception e)
+		{
+			throw new Exception("Could not Craft user specific Encryption Key");
+		}
+	}
+	
+	/**
+	 * Specifically decrypts encrypted user names
+	 * @param encyptedUserName Encrypted user name
+	 * @return Decrypted User name
+	 */
+	public static String decryptUserName (String encyptedUserName)
+	{
+		String decryptedUserName = new String();
 		try 
 		{
-			md = MessageDigest.getInstance("SHA");
-			log.debug("Hashing Value With " + md.getAlgorithm());
-			byteArray = toHash.getBytes();
-			md.update(byteArray);
-			byteArray = md.digest();
+			decryptedUserName = Hash.decrypt(Hash.userNameKey, encyptedUserName);
+			log.debug("Decrypted user-name to: " + decryptedUserName);
 		} 
-		catch (NoSuchAlgorithmException e) 
+		catch (GeneralSecurityException e)
 		{
-			log.fatal("Could not Find SHA Algorithm: " + e.toString());
+			log.error("Could not decrypt user name: " + e.toString());
 		}
-		hashed = new String(byteArray);
-
-		return hashed;
+		return decryptedUserName;
 	}
+	
+	/**
+	 * Encrypts plain text into cipher text based on encryption key
+	 * @param key Encryption Key (Must be 16 Bytes)
+	 * @param value Plain text to encrypt
+	 * @return Cipher text based on plain text and key submitted
+	 * @throws GeneralSecurityException
+	 */
+	public static String encrypt(String key, String value)
+	throws GeneralSecurityException 
+	{
+		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
+		if (raw.length != 16) 
+		{
+			throw new IllegalArgumentException("Invalid key size.");
+		}
+		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
+		return Base64.encodeBase64String(cipher.doFinal(value.getBytes(Charset.forName("US-ASCII"))));
+	}
+	
+	/**
+	 * Generates user solution based on the user name stored in their encypted cookie
+	 * @param baseKey The stored result key for the module
+	 * @param cookies All of a users session cookies. The encrypted user name is pulled out from this array
+	 * @return User Specific Solution
+	 */
+	public static String generateUserSolution(String baseKey, Cookie[] cookies)
+	{
+		log.debug("Getting user Specific key");
+		String cookieName = "JSESSIONID3";
+		Cookie myCookie = null;
+		String toReturn = "Key Should be here! Please refresh the home page and try again!";
+		log.debug("Looking for key cookie");
+		if (cookies != null)
+		{
+			for (int i = 0; i < cookies.length; i++) 
+			{
+				log.debug("Looking at: " + cookies[i].getName() + " = " + cookies[i].getValue());
+				if (cookies[i].getName().equals(cookieName))
+				{
+					myCookie = cookies[i];
+					log.debug("Found Cookie with value: " + myCookie.getValue());
+					break;
+				}
+			}
+			try 
+			{
+				String decryptedUserName = Hash.decrypt(Hash.userNameKey, myCookie.getValue());
+				log.debug("Decrypted UserName: " + decryptedUserName);
+				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(decryptedUserName));
+				toReturn = Hash.encrypt(key, baseKey + getCurrentSalt());
+				log.debug("Returning: " + toReturn);
+			} 
+			catch (Exception e) 
+			{ 
+				log.error("Encryption Failure: " + e.toString());
+				toReturn = "Key Should be here! Please refresh the home page and try again!";
+			}
+		}
+		return "<b style='word-wrap: break-word;'>" + toReturn + "</b>";
+	}
+	
+	/**
+	 * Generates user solution based on the user name stored in their encrypted cookie
+	 * @param baseKey The stored result key for the module
+	 * @param userSalt The User Specific Encryption Salt (Based on user name)
+	 * @return User Specific Solution
+	 */
+	public static String generateUserSolution(String baseKey, String userSalt)
+	{
+		log.debug("Generating key for " + userSalt);
+		String toReturn = "Key Should be here! Please refresh the home page and try again!";
+			try 
+			{
+				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
+				toReturn = Hash.encrypt(key, baseKey + getCurrentSalt());
+				log.debug("Returning: " + toReturn);
+			} 
+			catch (Exception e) 
+			{ 
+				log.error("Encrypt Failure: " + e.toString());
+				toReturn = "Key Should be here! Please refresh the home page and try again!";
+			}
+		return toReturn;
+	}
+	
+	/**
+	 * This is used when encrypting/decrypting the salt. If this is bypassed characters can be lost in encryption process.
+	 * @return
+	 */
+	public static String getCurrentSalt()
+	{
+		return Base64.encodeBase64String(encryptionKeySalt.getBytes());
+	}
+	
 	/**
 	 * Outputs a MD5 digest
 	 * @param toHash String to hash
@@ -92,30 +250,6 @@ public class Hash
 
 		return hashed;
 	}
-	/**
-	 * Creates a psedorandom string
-	 * @return Random String
-	 */
-	public static String randomString() 
-	{
-		String result = new String();
-		try
-		{
-			byte byteArray[] = new byte[16];
-			SecureRandom psn1 = SecureRandom.getInstance("SHA1PRNG");
-			psn1.setSeed(psn1.nextLong());
-			psn1.nextBytes(byteArray);
-			BigInteger bigInt = new BigInteger(byteArray);
-			result = bigInt.toString();
-			log.debug("Generated String = " + result);
-			
-		}
-		catch(Exception e)
-		{
-			log.error("Random Number Error : " + e.toString());
-		}
-		return result;
-	}
 	
 	/**
 	 * Creates a psedorandom base64 string
@@ -135,6 +269,51 @@ public class Hash
 			result = new String(byteArray);
 			result = base64.encode(thisString(thisString(byteArray.toString())).getBytes()).toString();
 			log.debug("Generated String = " + result);
+		}
+		catch(Exception e)
+		{
+			log.error("Random Number Error : " + e.toString());
+		}
+		return result;
+	}
+	
+	public static String randomKeyLengthString()
+	{
+		String result = new String();
+		try
+		{
+			byte byteArray[] = new byte[16];
+			SecureRandom psn1 = SecureRandom.getInstance("SHA1PRNG");
+			psn1.setSeed(psn1.nextLong());
+			psn1.nextBytes(byteArray);
+			result = new String(byteArray);
+			log.debug("Generated Key = " + result);
+			
+		}
+		catch(Exception e)
+		{
+			log.error("Random Number Error : " + e.toString());
+		}
+		return result;
+	}
+
+	/**
+	 * Creates a psedorandom string
+	 * @return Random String
+	 */
+	public static String randomString() 
+	{
+		String result = new String();
+		try
+		{
+			byte byteArray[] = new byte[16];
+			SecureRandom psn1 = SecureRandom.getInstance("SHA1PRNG");
+			psn1.setSeed(psn1.nextLong());
+			psn1.nextBytes(byteArray);
+			BigInteger bigInt = new BigInteger(byteArray);
+			result = bigInt.toString();
+			log.debug("Generated String = " + result);
+			
 		}
 		catch(Exception e)
 		{
@@ -168,88 +347,34 @@ public class Hash
 		return result;
 	}
 	
-	public static String generateUserSolution(String baseKey, String userSalt)
+	/**
+	 * Outputs a SHA256 digest
+	 * @param toHash String to hash
+	 * @return Hashed string
+	 */
+	public static String thisString (String toHash)
 	{
-		log.debug("Generating key for " + userSalt);
-		String key = Validate.validateEncryptionKey(userSalt);
-		String toReturn = "Key Should be here! Please refresh the home page and try again!";
-			try 
-			{
-				toReturn = Hash.encrypt(key, baseKey + encryptionKeySalt);
-				log.debug("Returning: " + toReturn);
-			} 
-			catch (Exception e) 
-			{ 
-				log.error("Encrypt Failure: " + e.toString());
-				toReturn = "Key Should be here! Please refresh the home page and try again!";
-			}
-		return toReturn;
-	}
-	
-	public static String encrypt(String key, String value)
-	throws GeneralSecurityException 
-	{
-		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
-		if (raw.length != 16) 
+		String hashed = null;
+		byte[] byteArray = new byte[256];
+		MessageDigest md;
+		try 
 		{
-			throw new IllegalArgumentException("Invalid key size.");
+			md = MessageDigest.getInstance("SHA");
+			log.debug("Hashing Value With " + md.getAlgorithm());
+			byteArray = toHash.getBytes();
+			md.update(byteArray);
+			byteArray = md.digest();
+		} 
+		catch (NoSuchAlgorithmException e) 
+		{
+			log.fatal("Could not Find SHA Algorithm: " + e.toString());
 		}
-		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
-		return Base64.encodeBase64String(cipher.doFinal(value.getBytes(Charset.forName("US-ASCII"))));
-	}
+		hashed = new String(byteArray);
 
-	public static String decrypt(String key, String encrypted)
-	throws GeneralSecurityException 
-	{
-		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
-		if (raw.length != 16)
-		{
-			throw new IllegalArgumentException("Invalid key size.");
-		}
-		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-		cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
-		byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
-		return new String(original, Charset.forName("US-ASCII"));
+		return hashed;
 	}
 	
-	public static String generateUserSolution(String baseKey, Cookie[] cookies)
-	{
-		log.debug("Getting user Specific key");
-		String cookieName = "JSESSIONID3";
-		Cookie myCookie = null;
-		String toReturn = "Key Should be here! Please refresh the home page and try again!";
-		log.debug("Looking for key cookie");
-		if (cookies != null)
-		{
-			for (int i = 0; i < cookies.length; i++) 
-			{
-				log.debug("Looking at: " + cookies[i].getName() + " = " + cookies[i].getValue());
-				if (cookies[i].getName().equals(cookieName))
-				{
-					myCookie = cookies[i];
-					log.debug("Found Cookie with value: " + myCookie.getValue());
-					break;
-				}
-			}
-			try 
-			{
-				String decryptedUserName = Hash.decrypt(Hash.userNameKey, myCookie.getValue());
-				log.debug("Decrypted UserName: " + decryptedUserName);
-				toReturn = Hash.encrypt(Hash.validateEncryptionKey(decryptedUserName), baseKey + encryptionKeySalt);
-				log.debug("Returning: " + toReturn);
-			} 
-			catch (Exception e) 
-			{ 
-				log.error("Encryption Failure: " + e.toString());
-				toReturn = "Key Should be here! Please refresh the home page and try again!";
-			}
-		}
-		return "<b style='word-wrap: break-word;'>" + toReturn + "</b>";
-	}
-	
+
 	public static String validateEncryptionKey(String userSalt)
 	{
 		String newKey = new String();
@@ -284,19 +409,4 @@ public class Hash
 		return newKey;
 	}
 	
-
-	public static String decryptUserName (String encyptedUserName)
-	{
-		String decryptedUserName = new String();
-		try 
-		{
-			decryptedUserName = Hash.decrypt(Hash.userNameKey, encyptedUserName);
-			log.debug("Decrypted user-name to: " + decryptedUserName);
-		} 
-		catch (GeneralSecurityException e)
-		{
-			log.error("Could not decrypt user name: " + e.toString());
-		}
-		return decryptedUserName;
-	}
 }
