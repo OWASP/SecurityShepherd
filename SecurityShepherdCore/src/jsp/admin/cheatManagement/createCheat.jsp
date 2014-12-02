@@ -132,11 +132,11 @@ ArrayList modules = Getter.getAllModuleInfo(ApplicationRoot);
 }
 else
 {
-response.sendRedirect("login.jsp");
+response.sendRedirect("../../loggedOutSheep.html");
 }
 }
 else
 {
-response.sendRedirect("login.jsp");
+response.sendRedirect("../../loggedOutSheep.html");
 }
 %>

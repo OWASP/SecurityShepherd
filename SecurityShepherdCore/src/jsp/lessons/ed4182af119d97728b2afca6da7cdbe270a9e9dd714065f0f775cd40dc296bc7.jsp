@@ -194,11 +194,11 @@
 	}
 	else
 	{
-		response.sendRedirect("login.jsp");
+		response.sendRedirect("../loggedOutSheep.html");
 	}
 }
 else
 {
-	response.sendRedirect("login.jsp");
+	response.sendRedirect("../loggedOutSheep.html");
 }
 %>

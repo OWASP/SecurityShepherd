@@ -144,11 +144,11 @@ String levelName = "Insecure Direct Object References Lesson";
 	}
 	else
 	{
-		response.sendRedirect("login.jsp");
+		response.sendRedirect("../loggedOutSheep.html");
 	}
 }
 else
 {
-	response.sendRedirect("login.jsp");
+	response.sendRedirect("../loggedOutSheep.html");
 }
 %>

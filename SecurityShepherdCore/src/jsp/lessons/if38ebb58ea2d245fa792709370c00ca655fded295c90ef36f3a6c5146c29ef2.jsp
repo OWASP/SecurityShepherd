@@ -94,11 +94,11 @@ String levelName = "Insecure Crypto Lesson";
 	}
 	else
 	{
-		response.sendRedirect("login.jsp");
+		response.sendRedirect("../loggedOutSheep.html");
 	}
 }
 else
 {
-	response.sendRedirect("login.jsp");
+	response.sendRedirect("../loggedOutSheep.html");
 }
 %>

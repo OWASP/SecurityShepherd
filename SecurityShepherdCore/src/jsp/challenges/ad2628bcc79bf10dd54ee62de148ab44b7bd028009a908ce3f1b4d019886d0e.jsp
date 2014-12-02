@@ -116,11 +116,11 @@ String levelName = new String("CSRF Challenge 3");
 	}
 	else
 	{
-		response.sendRedirect("login.jsp");
+		response.sendRedirect("../loggedOutSheep.html");
 	}
 }
 else
 {
-	response.sendRedirect("login.jsp");
+	response.sendRedirect("../loggedOutSheep.html");
 }
 %>

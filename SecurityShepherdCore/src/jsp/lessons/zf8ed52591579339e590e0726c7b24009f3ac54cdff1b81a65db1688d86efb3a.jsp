@@ -159,11 +159,11 @@ if (request.getSession() != null)
 	}
 	else
 	{
-		response.sendRedirect("login.jsp");
+		response.sendRedirect("../ajaxLogin.jsp");
 	}
 }
 else
 {
-	response.sendRedirect("login.jsp");
+	response.sendRedirect("../ajaxLogin.jsp");
 }
 %>

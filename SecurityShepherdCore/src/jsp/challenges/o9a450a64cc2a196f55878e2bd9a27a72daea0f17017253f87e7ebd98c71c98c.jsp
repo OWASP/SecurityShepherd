@@ -118,11 +118,11 @@ String levelName = "Insecure Direct Object References Challenge One";
 	}
 	else
 	{
-		response.sendRedirect("login.jsp");
+		response.sendRedirect("../loggedOutSheep.html");
 	}
 }
 else
 {
-	response.sendRedirect("login.jsp");
+	response.sendRedirect("../loggedOutSheep.html");
 }
 %>

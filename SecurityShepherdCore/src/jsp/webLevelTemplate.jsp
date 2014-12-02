@@ -1,26 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
-	//No Quotes In level Name
-String levelName = "Level Name";
-//Alphanumeric Only
-String levelHash = "LevelHash";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Download the file and play with it to extract the key for this level!";
-//Logs the IP, Forwarded IP that acceeded this level with the level name in the debug for convience. If you want to log more stuff in the JSP use this as an example
-try
-{
-	if (request.getSession() != null)
-	{
-		HttpSession ses = request.getSession();
-		String userName = (String) ses.getAttribute("decyrptedUserName");
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + userName);
-	}
-}
-catch (Exception e)
-{
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed");
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not recover username: " + e.toString());
-}
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -38,8 +17,36 @@ catch (Exception e)
  * You should have received a copy of the GNU General Public License
  * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * @author YourName
+ * @author Your Name
  */
+
+//No Quotes In level Name
+String levelName = "Level Name";
+//Alphanumeric Only
+String levelHash = "Level Hash";
+//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
+String levelBlurb = "Tell the player what to do here";
+
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+if (request.getSession() != null)
+{
+	HttpSession ses = request.getSession();
+	//Getting CSRF Token from client
+	Cookie tokenCookie = null;
+	try
+	{
+		tokenCookie = Validate.getToken(request.getCookies());
+	}
+	catch(Exception htmlE)
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
+	}
+	// validateSession ensures a valid session, and valid role credentials
+	// If tokenCookie == null, then the page is not going to continue loading
+	if (Validate.validateSession(ses) && tokenCookie != null)
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -119,3 +126,15 @@ catch (Exception e)
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
+<%
+	}
+	else
+	{
+		response.sendRedirect("../loggedOutSheep.html");
+	}
+}
+else
+{
+	response.sendRedirect("../loggedOutSheep.html");
+}
+%>

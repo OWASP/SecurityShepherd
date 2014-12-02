@@ -190,11 +190,11 @@ if (request.getSession() != null) //Session If
 	} //Valid Session If
 	else
 	{
-	response.sendRedirect("login.jsp");
+	response.sendRedirect("../../loggedOutSheep.html");
 	}
 } //Session If
 else
 {
-response.sendRedirect("login.jsp");
+response.sendRedirect("../../loggedOutSheep.html");
 }
 %>
