@@ -129,18 +129,6 @@ public class Getter
 					//User has logged in, or a Authentication Bypass was detected... You never know! Better safe than sorry	
 					return result;
 				}
-				else
-				{
-					// Empty Result Set, But the user exists => Incorrect Password
-					// Run increment bad login count / temp lock user's account
-					//Setting userFound to False so that an exception isnt triggered here that sets the function off again
-					userFound = false;
-					callstmt = conn.prepareCall("call userLock(?)");
-					log.debug("Running account lock function on user '" + userName + "'");
-					callstmt.setString(1, userName);
-					callstmt.execute();
-					log.debug("userLock Executed");
-				}
 			}
 		} 
 		catch (SQLException e) 
