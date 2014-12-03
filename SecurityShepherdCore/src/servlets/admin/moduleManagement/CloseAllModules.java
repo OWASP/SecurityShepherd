@@ -33,7 +33,6 @@ public class CloseAllModules extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& " + servletName + " &&&");
-		Encoder encoder = ESAPI.encoder();
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String htmlOutput = new String();

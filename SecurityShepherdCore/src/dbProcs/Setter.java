@@ -119,6 +119,33 @@ public class Setter
 	}
 	
 	/**
+	 * This method sets every module status to Closed.
+	 * @param ApplicationRoot Current running director of the application
+	 * @param moduleId The identifier of the module that is been set to open status
+	 * @return Boolean result depicting success of statement
+	 */
+	public static boolean closeAllModules (String ApplicationRoot)
+	{
+		log.debug("*** Setter.closeAllModules ***");
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed'");
+			callstmt.execute();
+			log.debug("All modules Set to closed");
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not close all modules: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END closeAllModules ***");
+		return result;
+	}
+	
+	/**
 	 * Used to create a new module entry in the core database. The database will handle creating the new module identifier and module hash.
 	 * The module has will be returned form the database, and if it does not start will a letter, the application will update the database to reflect a hash starting with a letter, without sacrificing the uniqueness of the hash
 	 * @param applicationRoot The current running context of the application
@@ -275,155 +302,6 @@ public class Setter
 	}
 	
 	/**
-	 * Used to populate the vulnerable schemas table with an array of attributes. This method adds ONE row to a table
-	 * @param conn Connection to the vulnerable database server
-	 * @param schemaName The name of the schema in the vulnerable database server
-	 * @param theTable The name of the table to populate
-	 * @param data The data to use for population
-	 * @param attrib The list of attributes to be populated
-	 * @param attribAmount The amount of attributes been populated
-	 * @throws SQLException Thrown if there is a population error
-	 */
-	public static void populateVulnerableSchema(Connection conn, String schemaName, String theTable, String[] data, String[] attrib, int attribAmount)
-	throws SQLException
-	{
-		log.debug("In-putted Parameters;");
-		log.debug("conn: " + conn.toString());
-		log.debug("schemaName: " + schemaName);
-		log.debug("data: " + data.toString());
-		log.debug("attrib: " + attrib.toString());
-		log.debug("attribAmount: " + attribAmount);
-		
-		//Preparing population script
-		String sql = new String();
-		log.debug("Adding data to table");
-		// Creating: INSERT INTO schema.tb_table (
-		sql = "INSERT INTO " + schemaName + ".tb_" + theTable + " (";
-		// Creating: attrib1, attrib2, attrib3, attrib4, attrib5
-		for(int i = 0; i < attribAmount; i++)
-		{
-			sql += attrib[i];
-			if(i < attribAmount - 1)
-				sql += ", ";
-		}
-		// Creating: ) VALUES (val1, val2, val3, val4, val5);
-		sql += ") VALUES (";
-		for(int i = 0; i < attribAmount; i++)
-		{
-			sql += "?";
-			if(i < attribAmount - 1)
-				sql += ", ";
-		}
-		sql += ");";
-		
-		try
-		{
-			log.debug("Prepared Statement: " + sql);
-			PreparedStatement prepStat1;
-			if(conn.isClosed())
-			{
-				log.error("Connection is closed");
-			}
-			
-			log.debug("Adding Row");
-			prepStat1 = conn.prepareStatement(sql);
-			
-			//debug statements and prepare statements
-			log.debug("prepStat.setString(1, " + data[0] + ")");
-			prepStat1.setString(1, data[0]);
-			log.debug("prepStat.setString(2, " + data[1] + ")");
-			prepStat1.setString(2, data[1]);
-			log.debug("prepStat.setString(3, " + data[2] + ")");
-			prepStat1.setString(3, data[2]);
-			log.debug("prepStat.setString(4, " + data[3] + ")");
-			prepStat1.setString(4, data[3]);
-			log.debug("prepStat.setString(5, " + data[4] + ")");
-			prepStat1.setString(5, data[4]);
-			
-			log.debug("Executing Statement for row");
-			log.debug(prepStat1.toString());
-			prepStat1.execute();
-			log.debug("Tables Populated");
-			log.debug("Committing Changes");
-			prepStat1 = conn.prepareStatement("COMMIT;");
-			prepStat1.execute();
-		}
-		catch(SQLException e1)
-		{
-			log.error("Could not populate table: " + e1.toString());
-			throw e1;
-		}
-		catch(Exception e1)
-		{
-			log.error("Could not populate table, None Database Error: " + e1.toString());
-			throw new SQLException("Could not execute Population");
-		}
-	}
-	
-	/**
-	 * Used by CSRF levels to store their CSRF attack string, that will be displayed in a CSRF forum for the class the user is in
-	 * @param ApplicationRoot The current running context of the application
-	 * @param message The String they want to store
-	 * @param userId The identifier of the user in which to store the attack under
-	 * @param moduleId The module identifier of which to store the message under
-	 * @return A boolean value reflecting the success of the function
-	 */
-	public static boolean setStoredMessage (String ApplicationRoot, String message, String userId, String moduleId)
-	{
-		log.debug("*** Setter.setStoredMessage ***");
-		boolean result = false;
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			CallableStatement callstmt = conn.prepareCall("call resultMessageSet(?, ?, ?)");
-			log.debug("Preparing resultMessageSet procedure");
-			callstmt.setString(1, message);
-			callstmt.setString(2, userId);
-			callstmt.setString(3, moduleId);
-			callstmt.execute();
-			log.debug("Executed resultMessageSet");
-			result = true;
-		}
-		catch (SQLException e)
-		{
-			log.error("Could not execute resultMessageSet: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END setStoredMessage ***");
-		return result;
-	}
-	
-	/**
-	 * This method sets the module status to Open. This information is absorbed by the Tournament Floor Plan
-	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifier of the module that is been set to open status
-	 * @return Boolean result depicting success of statement
-	 */
-	public static boolean setModuleStatusOpen (String ApplicationRoot, String moduleId)
-	{
-		log.debug("*** Setter.setModuleStatusOpen ***");
-		boolean result = false;
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
-			log.debug("Preparing moduleSetStatus procedure");
-			callstmt.setString(1, moduleId);
-			callstmt.setString(2, "open");
-			callstmt.execute();
-			log.debug("Executed moduleSetStatus");
-			result = true;
-		}
-		catch (SQLException e)
-		{
-			log.error("Could not execute moduleSetStatus: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END setModuleStatusOpen ***");
-		return result;
-	}
-	
-	/**
 	 * This method sets every module status to Open.
 	 * @param ApplicationRoot Current running director of the application
 	 * @param moduleId The identifier of the module that is been set to open status
@@ -447,63 +325,6 @@ public class Setter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END setModuleStatusOpen ***");
-		return result;
-	}
-	
-	/**
-	 * This method sets every module status to Closed.
-	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifier of the module that is been set to open status
-	 * @return Boolean result depicting success of statement
-	 */
-	public static boolean closeAllModules (String ApplicationRoot)
-	{
-		log.debug("*** Setter.closeAllModules ***");
-		boolean result = false;
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed'");
-			callstmt.execute();
-			log.debug("All modules Set to closed");
-			result = true;
-		}
-		catch (SQLException e)
-		{
-			log.error("Could not close all modules: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END closeAllModules ***");
-		return result;
-	}
-	
-	/**
-	 * This method is used to set the status of all modules in a category to open or closed.
-	 * @param ApplicationRoot Used to locate database properties file
-	 * @param moduleCategory The module category to open or closed
-	 * @param openOrClosed What to set the module status to. Can only be "open" or "closed"
-	 * @return
-	 */
-	public static boolean setModuleCategoryStatusOpen (String ApplicationRoot, String moduleCategory, String openOrClosed)
-	{
-		log.debug("*** Setter.setModuleCategoryStatusOpen ***");
-		boolean result = false;
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = ? WHERE moduleCategory = ?");
-			prepstmt.setString(1, openOrClosed);
-			prepstmt.setString(2, moduleCategory);
-			prepstmt.execute();
-			log.debug("Set " + moduleCategory + " to " + openOrClosed);
-			result = true;
-		}
-		catch (SQLException e)
-		{
-			log.error("Could not open/close category: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END setModuleCategoryStatusOpen ***");
 		return result;
 	}
 	
@@ -596,6 +417,237 @@ public class Setter
 	}
 	
 	/**
+	 * Used to populate the vulnerable schemas table with an array of attributes. This method adds ONE row to a table
+	 * @param conn Connection to the vulnerable database server
+	 * @param schemaName The name of the schema in the vulnerable database server
+	 * @param theTable The name of the table to populate
+	 * @param data The data to use for population
+	 * @param attrib The list of attributes to be populated
+	 * @param attribAmount The amount of attributes been populated
+	 * @throws SQLException Thrown if there is a population error
+	 */
+	public static void populateVulnerableSchema(Connection conn, String schemaName, String theTable, String[] data, String[] attrib, int attribAmount)
+	throws SQLException
+	{
+		log.debug("In-putted Parameters;");
+		log.debug("conn: " + conn.toString());
+		log.debug("schemaName: " + schemaName);
+		log.debug("data: " + data.toString());
+		log.debug("attrib: " + attrib.toString());
+		log.debug("attribAmount: " + attribAmount);
+		
+		//Preparing population script
+		String sql = new String();
+		log.debug("Adding data to table");
+		// Creating: INSERT INTO schema.tb_table (
+		sql = "INSERT INTO " + schemaName + ".tb_" + theTable + " (";
+		// Creating: attrib1, attrib2, attrib3, attrib4, attrib5
+		for(int i = 0; i < attribAmount; i++)
+		{
+			sql += attrib[i];
+			if(i < attribAmount - 1)
+				sql += ", ";
+		}
+		// Creating: ) VALUES (val1, val2, val3, val4, val5);
+		sql += ") VALUES (";
+		for(int i = 0; i < attribAmount; i++)
+		{
+			sql += "?";
+			if(i < attribAmount - 1)
+				sql += ", ";
+		}
+		sql += ");";
+		
+		try
+		{
+			log.debug("Prepared Statement: " + sql);
+			PreparedStatement prepStat1;
+			if(conn.isClosed())
+			{
+				log.error("Connection is closed");
+			}
+			
+			log.debug("Adding Row");
+			prepStat1 = conn.prepareStatement(sql);
+			
+			//debug statements and prepare statements
+			log.debug("prepStat.setString(1, " + data[0] + ")");
+			prepStat1.setString(1, data[0]);
+			log.debug("prepStat.setString(2, " + data[1] + ")");
+			prepStat1.setString(2, data[1]);
+			log.debug("prepStat.setString(3, " + data[2] + ")");
+			prepStat1.setString(3, data[2]);
+			log.debug("prepStat.setString(4, " + data[3] + ")");
+			prepStat1.setString(4, data[3]);
+			log.debug("prepStat.setString(5, " + data[4] + ")");
+			prepStat1.setString(5, data[4]);
+			
+			log.debug("Executing Statement for row");
+			log.debug(prepStat1.toString());
+			prepStat1.execute();
+			log.debug("Tables Populated");
+			log.debug("Committing Changes");
+			prepStat1 = conn.prepareStatement("COMMIT;");
+			prepStat1.execute();
+		}
+		catch(SQLException e1)
+		{
+			log.error("Could not populate table: " + e1.toString());
+			throw e1;
+		}
+		catch(Exception e1)
+		{
+			log.error("Could not populate table, None Database Error: " + e1.toString());
+			throw new SQLException("Could not execute Population");
+		}
+	}
+	
+	/**
+	 * This method converts the default database properties file at applicationRoot/WEB-INF/site.properties
+	 * @param applicationRoot The directory that the server is actually in
+	 * @param url The Url of the core Database
+	 * @param userName The user name of the database user
+	 * @param password The password of the database user
+	 * @return Boolean value depicting the success of the method
+	 */
+	public static boolean setCoreDatabaseInfo(String applicationRoot, String url, String userName, String password)
+	{
+		try 
+		{
+			//Update Database Settings
+			File siteProperties = new File(applicationRoot + "/WEB-INF/database.properties");
+			DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
+			String theProperties = new String("databaseConnectionURL=" + url +
+										"\nDriverType=org.gjt.mm.mysql.Driver");
+			writer.write(theProperties.getBytes());
+			writer.close();
+			//Update Core Schema Settings
+			siteProperties = new File(applicationRoot + "/WEB-INF/coreDatabase.properties");
+			writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
+			theProperties = new String("databaseConnectionURL=core"+					
+					"\ndatabaseUsername=" + userName +
+					"\ndatabasePassword=" + password);
+			return true;
+		} 
+		catch (IOException e) 
+		{
+			log.error("Could not update Core Database Info: " + e.toString());
+			return false;
+		}
+	}
+	
+	/**
+	 * This method is used to store a CSRF Token for a specific user in the csrfChallengeSix DB Schema
+	 * @param userId User Identifier
+	 * @param csrfToken CSRF Token to add to the csrfChallengeSix DB Schema
+	 * @param ApplicationRoot Running context of the application
+	 * @return
+	 */
+	public static boolean setCsrfChallengeSixCsrfToken (String userId, String csrfToken, String ApplicationRoot)
+	{
+		log.debug("*** setCsrfChallengeSixToken ***");
+		boolean result = false;
+		Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeSix");
+		try
+		{
+			boolean updateToken = false;
+			log.debug("Preparing setCsrfChallengeSixToken call");
+			PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?");
+			callstmnt.setString(1, userId);
+			log.debug("Executing setCsrfChallengeSixToken");
+			ResultSet rs = callstmnt.executeQuery();
+			if(rs.next())
+			{
+				//Need to Update CSRF token rather than Insert
+				log.debug("CSRF token Found for Challenge 6... Updating");
+				updateToken = true;
+			}
+			else
+			{
+				log.debug("No CSRF token Found for Challenge 6... Creating");
+			}
+			rs.close();
+			
+			String whatToDo = new String();
+			if(updateToken)
+				whatToDo = "UPDATE `csrfChallengeSix`.`csrfTokens` SET csrfTokenscol = ? WHERE userId = ?";
+			else
+				whatToDo = "INSERT INTO `csrfChallengeSix`.`csrfTokens` (`csrfTokenscol`, `userId`) VALUES (?, ?)";
+			callstmnt = conn.prepareStatement(whatToDo);
+			callstmnt.setString(1, csrfToken);
+			callstmnt.setString(2, userId);
+			callstmnt.execute();
+			result = true;
+			callstmnt.close();
+		}
+		catch(SQLException e)
+		{
+			log.error("CsrfChallenge6 TokenUpdate Failure: " + e.toString());
+		}
+		Database.closeConnection(conn);		
+		return result;
+	}
+	
+	/**
+	 * This method converts the default database properties file at applicationRoot/WEB-INF/vulnerableDb.properties
+	 * @param applicationRoot The directory that the server is actually in
+	 * @param url The Url of the exposed Database
+	 * @param userName The username of the database user
+	 * @param password The password of the database user
+	 * @return Boolean value depicting the success of the method
+	 */
+	public static boolean setExposedDatabaseInfo(String applicationRoot, String url, String userName, String password)
+	{
+		try 
+		{
+			File siteProperties = new File(applicationRoot + "/WEB-INF/vulnerableDb.properties");
+			DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
+			String theProperties = new String("databaseConnectionURL=" + url +
+										"\ndatabaseUsername=" + userName +
+										"\ndatabasePassword=" + password +
+										"\nDriverType=org.gjt.mm.mysql.Driver");
+			writer.write(theProperties.getBytes());
+			writer.close();
+			return true;
+		} 
+		catch (IOException e) 
+		{
+			log.error("Could not update Exposed Database Info: " + e.toString());
+			return false;
+		}
+	}
+	
+	/**
+	 * This method is used to set the status of all modules in a category to open or closed.
+	 * @param ApplicationRoot Used to locate database properties file
+	 * @param moduleCategory The module category to open or closed
+	 * @param openOrClosed What to set the module status to. Can only be "open" or "closed"
+	 * @return
+	 */
+	public static boolean setModuleCategoryStatusOpen (String ApplicationRoot, String moduleCategory, String openOrClosed)
+	{
+		log.debug("*** Setter.setModuleCategoryStatusOpen ***");
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = ? WHERE moduleCategory = ?");
+			prepstmt.setString(1, openOrClosed);
+			prepstmt.setString(2, moduleCategory);
+			prepstmt.execute();
+			log.debug("Set " + moduleCategory + " to " + openOrClosed);
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not open/close category: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END setModuleCategoryStatusOpen ***");
+		return result;
+	}
+	
+	/**
 	 * This method sets the module status to Closed. This information is absorbed by the Tournament Floor Plan
 	 * @param ApplicationRoot Current running director of the application
 	 * @param moduleId The identifier of the module that is been set to closed status
@@ -622,6 +674,69 @@ public class Setter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END setModuleStatusClosed ***");
+		return result;
+	}
+	
+	/**
+	 * This method sets the module status to Open. This information is absorbed by the Tournament Floor Plan
+	 * @param ApplicationRoot Current running director of the application
+	 * @param moduleId The identifier of the module that is been set to open status
+	 * @return Boolean result depicting success of statement
+	 */
+	public static boolean setModuleStatusOpen (String ApplicationRoot, String moduleId)
+	{
+		log.debug("*** Setter.setModuleStatusOpen ***");
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
+			log.debug("Preparing moduleSetStatus procedure");
+			callstmt.setString(1, moduleId);
+			callstmt.setString(2, "open");
+			callstmt.execute();
+			log.debug("Executed moduleSetStatus");
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not execute moduleSetStatus: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END setModuleStatusOpen ***");
+		return result;
+	}
+	
+	/**
+	 * Used by CSRF levels to store their CSRF attack string, that will be displayed in a CSRF forum for the class the user is in
+	 * @param ApplicationRoot The current running context of the application
+	 * @param message The String they want to store
+	 * @param userId The identifier of the user in which to store the attack under
+	 * @param moduleId The module identifier of which to store the message under
+	 * @return A boolean value reflecting the success of the function
+	 */
+	public static boolean setStoredMessage (String ApplicationRoot, String message, String userId, String moduleId)
+	{
+		log.debug("*** Setter.setStoredMessage ***");
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			CallableStatement callstmt = conn.prepareCall("call resultMessageSet(?, ?, ?)");
+			log.debug("Preparing resultMessageSet procedure");
+			callstmt.setString(1, message);
+			callstmt.setString(2, userId);
+			callstmt.setString(3, moduleId);
+			callstmt.execute();
+			log.debug("Executed resultMessageSet");
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not execute resultMessageSet: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END setStoredMessage ***");
 		return result;
 	}
 	
@@ -926,114 +1041,6 @@ public class Setter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END userCreate ***");	
-		return result;
-	}
-	
-	/**
-	 * This method converts the default database properties file at applicationRoot/WEB-INF/site.properties
-	 * @param applicationRoot The directory that the server is actually in
-	 * @param url The Url of the core Database
-	 * @param userName The user name of the database user
-	 * @param password The password of the database user
-	 * @return Boolean value depicting the success of the method
-	 */
-	public static boolean setCoreDatabaseInfo(String applicationRoot, String url, String userName, String password)
-	{
-		try 
-		{
-			//Update Database Settings
-			File siteProperties = new File(applicationRoot + "/WEB-INF/database.properties");
-			DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
-			String theProperties = new String("databaseConnectionURL=" + url +
-										"\nDriverType=org.gjt.mm.mysql.Driver");
-			writer.write(theProperties.getBytes());
-			writer.close();
-			//Update Core Schema Settings
-			siteProperties = new File(applicationRoot + "/WEB-INF/coreDatabase.properties");
-			writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
-			theProperties = new String("databaseConnectionURL=core"+					
-					"\ndatabaseUsername=" + userName +
-					"\ndatabasePassword=" + password);
-			return true;
-		} 
-		catch (IOException e) 
-		{
-			log.error("Could not update Core Database Info: " + e.toString());
-			return false;
-		}
-	}
-	
-	/**
-	 * This method converts the default database properties file at applicationRoot/WEB-INF/vulnerableDb.properties
-	 * @param applicationRoot The directory that the server is actually in
-	 * @param url The Url of the exposed Database
-	 * @param userName The username of the database user
-	 * @param password The password of the database user
-	 * @return Boolean value depicting the success of the method
-	 */
-	public static boolean setExposedDatabaseInfo(String applicationRoot, String url, String userName, String password)
-	{
-		try 
-		{
-			File siteProperties = new File(applicationRoot + "/WEB-INF/vulnerableDb.properties");
-			DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
-			String theProperties = new String("databaseConnectionURL=" + url +
-										"\ndatabaseUsername=" + userName +
-										"\ndatabasePassword=" + password +
-										"\nDriverType=org.gjt.mm.mysql.Driver");
-			writer.write(theProperties.getBytes());
-			writer.close();
-			return true;
-		} 
-		catch (IOException e) 
-		{
-			log.error("Could not update Exposed Database Info: " + e.toString());
-			return false;
-		}
-	}
-	
-	public static boolean setCsrfChallengeSixCsrfToken (String userId, String csrfToken, String ApplicationRoot)
-	{
-		log.debug("*** setCsrfChallengeSixToken ***");
-		boolean result = false;
-		Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeSix");
-		try
-		{
-			boolean updateToken = false;
-			log.debug("Preparing setCsrfChallengeSixToken call");
-			PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?");
-			callstmnt.setString(1, userId);
-			log.debug("Executing setCsrfChallengeSixToken");
-			ResultSet rs = callstmnt.executeQuery();
-			if(rs.next())
-			{
-				//Need to Update CSRF token rather than Insert
-				log.debug("CSRF token Found for Challenge 6... Updating");
-				updateToken = true;
-			}
-			else
-			{
-				log.debug("No CSRF token Found for Challenge 6... Creating");
-			}
-			rs.close();
-			
-			String whatToDo = new String();
-			if(updateToken)
-				whatToDo = "UPDATE `csrfChallengeSix`.`csrfTokens` SET csrfTokenscol = ? WHERE userId = ?";
-			else
-				whatToDo = "INSERT INTO `csrfChallengeSix`.`csrfTokens` (`csrfTokenscol`, `userId`) VALUES (?, ?)";
-			callstmnt = conn.prepareStatement(whatToDo);
-			callstmnt.setString(1, csrfToken);
-			callstmnt.setString(2, userId);
-			callstmnt.execute();
-			result = true;
-			callstmnt.close();
-		}
-		catch(SQLException e)
-		{
-			log.error("CsrfChallenge6 TokenUpdate Failure: " + e.toString());
-		}
-		Database.closeConnection(conn);		
 		return result;
 	}
 }

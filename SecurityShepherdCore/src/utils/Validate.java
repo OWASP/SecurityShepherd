@@ -33,51 +33,161 @@ public class Validate
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Validate.class);
 	/**
-	 * Session is checked for credentials and ensures that they have not been modified and that they are valid
-	 * @param ses HttpSession from users browser
-	 * @return Boolean value that reflects the validity of the users session
+	 * Finds JSession token from user's cookies[], validates and returns.
+	 * @param userCookies Cookies from users browser
+	 * @return JSession Id
 	 */
-	public static boolean validateSession(HttpSession ses)
+	public static Cookie getSessionId (Cookie[] userCookies)
+	{
+		int i = 0;
+		Cookie theSessionId = null;
+		for(i = 0; i < userCookies.length; i++)
+		{
+			if(userCookies[i].getName().compareTo("JSESSIONID") == 0)
+			{
+				theSessionId = userCookies[i];
+				break; //End Loop, because we found the theSessionId
+			}
+		}
+		return theSessionId;
+	}
+
+	/**
+	 * Finds CSRF token from user's cookies[], validates.
+	 * @param userCookies All of the user's cookies from their browser
+	 * @return csrfCookie
+	 */
+	public static Cookie getToken (Cookie[] userCookies)
+	{
+		int i = 0;
+		Cookie theToken = null;
+		for(i = 0; i < userCookies.length; i++)
+		{
+			if(userCookies[i].getName().compareTo("token") == 0)
+			{
+				theToken = userCookies[i];
+				break; //End Loop, because we found the token
+			}
+		}
+		if(theToken != null)
+		{
+			log.debug("Found Cookie " + theToken.getName() + " with value " + theToken.getValue());
+			//The Token is currently designed to be a random Big Integer. If the Big Integer Case does not work, the token has been modified. Potentially in a malicious manner
+			try
+			{
+				BigInteger theTokenCasted = new BigInteger(theToken.getValue());
+				BigInteger tenGrand = new BigInteger("10000");
+				BigInteger tenGrandNeg = new BigInteger("-10000");
+				if(!(theTokenCasted.compareTo(tenGrand) > 0 || theTokenCasted.compareTo(tenGrandNeg) < 0))
+				{
+					log.error("CSRF Cookie Token was modified in some manor!");
+					theToken = null;
+				}
+			}
+			catch (Exception e)
+			{
+				log.error("CSRF Cookie Token was modified in some manor: " + e.toString());
+				theToken = null;
+			}
+		}
+		return theToken;
+	}
+	
+	/**
+	 * Validates class year when creating classes. Class year should be YY/YY, e.g. 11/12. So the first year must be less than the second.	
+	 * @param classYear Class Year in YY/YY format, e.g. 11/12.
+	 * @return Boolean value stating weather or not these supplied attributes make a valid class year
+	 */
+	public static boolean isValidClassYear(String classYear)
 	{
 		boolean result = false;
-		if (ses == null)
+		result = classYear.length() == 5;
+		if(result)
 		{
-			log.debug("No Session Found");
-		}
-		else
-		{
-			if (ses.getAttribute("logout") != null) 
+			try
 			{
-				log.debug("Logout Attribute Found: Invalidating session...");
-			    ses.invalidate(); // make servlet engine forget the session
+				result = Integer.parseInt(classYear.substring(0, 2)) < Integer.parseInt(classYear.substring(3, 5));
 			}
-			else
+			catch(Exception e)
 			{
-				// log.debug("Active Session Found");
-				if (ses.getAttribute("userRole") != null)
-				{
-					try 
-					{
-						log.debug("Session holder is "+ses.getAttribute("userName").toString());
-						String role = (String) ses.getAttribute("userRole");
-						result = (role.compareTo("player") == 0 || role.compareTo("admin") == 0);
-						if(!result)
-							log.fatal("User Role Parameter Tampered. Role = " + role);
-					} 
-					catch (Exception e) 
-					{
-						log.fatal("Tampered Parameter Detected!!! Could not Decrypt stamp");
-					}
-				}
-				else
-				{
-					log.debug("Session has no credentials");
-				}
+				log.error("Could not parse classYear");
+				result = false;
 			}
 		}
 		return result;
 	}
+	
+	/**
+	 * Email validation
+	 * @param email
+	 * @return Boolean reflect email validity
+	 */
+	public static boolean isValidEmailAddress(String email) 
+	{
+	   boolean result = true;
+	   try 
+	   {
+	      InternetAddress emailAddr = new InternetAddress(email);
+	      emailAddr.validate();
+	   } 
+	   catch (AddressException ex)
+	   {
+	      result = false;
+	   }
+	   return result;
+	}
 
+	/**
+	 * Used to validate user creation requests
+	 * @param userName User Name
+	 * @param passWord User Password
+	 * @return Boolean value stating weather or not these supplied attributes make a valid user
+	 */
+	public static boolean isValidUser(String userName, String passWord)
+	{
+		boolean result = false;
+		result = userName.length() > 4 && passWord.length() > 7 && userName.length() <= 32 && passWord.length() <= 512;
+		if (!result)
+		{
+			log.debug("Invalid Data detected in Validate.isValidUser()");
+		}
+		return result;
+	}
+	
+	/**
+	 * Used to validate user creation requests
+	 * @param userName User Name
+	 * @param passWord User Password
+	 * @param userAddress User address
+	 * @return Boolean value stating weather or not these supplied attributes make a valid user
+	 */
+	public static boolean isValidUser(String userName, String passWord, String userAddress)
+	{
+		boolean result = false;
+		result = userName.length() > 4 && passWord.length() >= 8 && userName.length() <= 32 && passWord.length() <= 512 && userAddress.length() <= 128;
+		if (!result)
+		{
+			log.debug("Invalid Data detected in Validate.isValidUser()");
+		}
+		return result;
+	}
+
+	/**
+	 * Quick method to prevent data and javascript URLs
+	 * @param theUrl
+	 * @return
+	 */
+	public static String makeValidUrl(String theUrl)
+	{
+		theUrl = theUrl.toLowerCase();
+		if (!theUrl.startsWith("http"))
+		{
+			theUrl = "http" + theUrl;
+			log.debug("Transformed to: " + theUrl);
+		}
+		return theUrl;
+	}
+	
 	/**
 	 * Session is checked for credentials and ensures that they have not been modified and that they are valid for an administrator
 	 * @param ses HttpSession from users browser
@@ -127,66 +237,115 @@ public class Validate
 	}
 	
 	/**
-	 * Finds CSRF token from user's cookies[], validates.
-	 * @param userCookies All of the user's cookies from their browser
-	 * @return csrfCookie
+	 * Takes a String submitted to be used to encrypt and makes it the correct length for an encryption key
+	 * @param userSalt String to be validated
+	 * @return A Valid Encryption Key based on the input
 	 */
-	public static Cookie getToken (Cookie[] userCookies)
+	public static String validateEncryptionKey(String userSalt)
 	{
-		int i = 0;
-		Cookie theToken = null;
-		for(i = 0; i < userCookies.length; i++)
+		String newKey = new String();
+		int keySize = userSalt.length();
+		if(keySize == 16)
 		{
-			if(userCookies[i].getName().compareTo("token") == 0)
+			//log.debug("Key Already Valid");
+			newKey = userSalt;
+		}
+		else
+		{
+			if(keySize > 16)
 			{
-				theToken = userCookies[i];
-				break; //End Loop, because we found the token
+				//log.debug("Key too Long...");
+				newKey = userSalt.substring(0, 16);
+			}
+			else // Shorter than 16
+			{
+				//log.debug("Key too Short...");
+				newKey = userSalt;
+				int howManyTimes = (16 / keySize) - 1;
+				//log.debug("Repeating String " + howManyTimes + " times");
+				for(int i = 0; i < howManyTimes; i++)
+					newKey += userSalt;
+				keySize = newKey.length();
+				int toAdd = 16 - keySize;
+				//log.debug("Adding " + toAdd + " more characters");
+				newKey = newKey.concat(userSalt.substring(0, toAdd));
 			}
 		}
-		if(theToken != null)
-		{
-			log.debug("Found Cookie " + theToken.getName() + " with value " + theToken.getValue());
-			//The Token is currently designed to be a random Big Integer. If the Big Integer Case does not work, the token has been modified. Potentially in a malicious manner
-			try
-			{
-				BigInteger theTokenCasted = new BigInteger(theToken.getValue());
-				BigInteger tenGrand = new BigInteger("10000");
-				BigInteger tenGrandNeg = new BigInteger("-10000");
-				if(!(theTokenCasted.compareTo(tenGrand) > 0 || theTokenCasted.compareTo(tenGrandNeg) < 0))
-				{
-					log.error("CSRF Cookie Token was modified in some manor!");
-					theToken = null;
-				}
-			}
-			catch (Exception e)
-			{
-				log.error("CSRF Cookie Token was modified in some manor: " + e.toString());
-				theToken = null;
-			}
-		}
-		return theToken;
+		log.debug("Encryption key is '" + newKey + "'");
+		return newKey;
 	}
 	
 	/**
-	 * Finds JSession token from user's cookies[], validates and returns.
-	 * @param userCookies Cookies from users browser
-	 * @return JSession Id
+	 * Validates objects received through a function request. Also ensures max length is not too high.
+	 * @param input Object to validate
+	 * @param maxLength Maximum length of object
+	 * @return Boolean value reflecting if valid or not
 	 */
-	public static Cookie getSessionId (Cookie[] userCookies)
+	public static String validateParameter (Object input, int maxLength)
 	{
-		int i = 0;
-		Cookie theSessionId = null;
-		for(i = 0; i < userCookies.length; i++)
+		String result = new String();
+		try
 		{
-			if(userCookies[i].getName().compareTo("JSESSIONID") == 0)
+			result = (String) input;
+			if(result.length() > maxLength)
 			{
-				theSessionId = userCookies[i];
-				break; //End Loop, because we found the theSessionId
+				log.debug("Parameter Too Long");
+				result = new String();
 			}
 		}
-		return theSessionId;
+		catch(Exception e)
+		{
+			log.debug("Invalid String Parameter: " + e.toString());
+		}
+		return result;
 	}
-
+	
+	/**
+	 * Session is checked for credentials and ensures that they have not been modified and that they are valid
+	 * @param ses HttpSession from users browser
+	 * @return Boolean value that reflects the validity of the users session
+	 */
+	public static boolean validateSession(HttpSession ses)
+	{
+		boolean result = false;
+		if (ses == null)
+		{
+			log.debug("No Session Found");
+		}
+		else
+		{
+			if (ses.getAttribute("logout") != null) 
+			{
+				log.debug("Logout Attribute Found: Invalidating session...");
+			    ses.invalidate(); // make servlet engine forget the session
+			}
+			else
+			{
+				// log.debug("Active Session Found");
+				if (ses.getAttribute("userRole") != null)
+				{
+					try 
+					{
+						log.debug("Session holder is "+ses.getAttribute("userName").toString());
+						String role = (String) ses.getAttribute("userRole");
+						result = (role.compareTo("player") == 0 || role.compareTo("admin") == 0);
+						if(!result)
+							log.fatal("User Role Parameter Tampered. Role = " + role);
+					} 
+					catch (Exception e) 
+					{
+						log.fatal("Tampered Parameter Detected!!! Could not Decrypt stamp");
+					}
+				}
+				else
+				{
+					log.debug("Session has no credentials");
+				}
+			}
+		}
+		return result;
+	}
+	
 	/**
 	 * This method compares the two submitted tokens after ensuring they are not null and not empty.
 	 * @param cookieToken CSRF cookie Token
@@ -231,111 +390,7 @@ public class Validate
 		}	
 		return result;
 	}
-	
-	/**
-	 * Used to validate user creation requests
-	 * @param userName User Name
-	 * @param passWord User Password
-	 * @param userAddress User address
-	 * @return Boolean value stating weather or not these supplied attributes make a valid user
-	 */
-	public static boolean isValidUser(String userName, String passWord, String userAddress)
-	{
-		boolean result = false;
-		result = userName.length() > 4 && passWord.length() >= 8 && userName.length() <= 32 && passWord.length() <= 512 && userAddress.length() <= 128;
-		if (!result)
-		{
-			log.debug("Invalid Data detected in Validate.isValidUser()");
-		}
-		return result;
-	}
 
-	/**
-	 * Used to validate user creation requests
-	 * @param userName User Name
-	 * @param passWord User Password
-	 * @return Boolean value stating weather or not these supplied attributes make a valid user
-	 */
-	public static boolean isValidUser(String userName, String passWord)
-	{
-		boolean result = false;
-		result = userName.length() > 4 && passWord.length() > 7 && userName.length() <= 32 && passWord.length() <= 512;
-		if (!result)
-		{
-			log.debug("Invalid Data detected in Validate.isValidUser()");
-		}
-		return result;
-	}
-	
-	/**
-	 * Validates class year when creating classes. Class year should be YY/YY, e.g. 11/12. So the first year must be less than the second.	
-	 * @param classYear Class Year in YY/YY format, e.g. 11/12.
-	 * @return Boolean value stating weather or not these supplied attributes make a valid class year
-	 */
-	public static boolean isValidClassYear(String classYear)
-	{
-		boolean result = false;
-		result = classYear.length() == 5;
-		if(result)
-		{
-			try
-			{
-				result = Integer.parseInt(classYear.substring(0, 2)) < Integer.parseInt(classYear.substring(3, 5));
-			}
-			catch(Exception e)
-			{
-				log.error("Could not parse classYear");
-				result = false;
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Email validation
-	 * @param email
-	 * @return Boolean reflect email validity
-	 */
-	public static boolean isValidEmailAddress(String email) 
-	{
-	   boolean result = true;
-	   try 
-	   {
-	      InternetAddress emailAddr = new InternetAddress(email);
-	      emailAddr.validate();
-	   } 
-	   catch (AddressException ex)
-	   {
-	      result = false;
-	   }
-	   return result;
-	}
-	
-	/**
-	 * Validates objects received through a function request. Also ensures max length is not too high.
-	 * @param input Object to validate
-	 * @param maxLength Maximum length of object
-	 * @return Boolean value reflecting if valid or not
-	 */
-	public static String validateParameter (Object input, int maxLength)
-	{
-		String result = new String();
-		try
-		{
-			result = (String) input;
-			if(result.length() > maxLength)
-			{
-				log.debug("Parameter Too Long");
-				result = new String();
-			}
-		}
-		catch(Exception e)
-		{
-			log.debug("Invalid String Parameter: " + e.toString());
-		}
-		return result;
-	}
-	
 	/**
 	 * Validates file name attributes to defend against path traversal
 	 * @param fileName File name to validate
@@ -359,55 +414,5 @@ public class Validate
 		if (!result)
 			log.error("URL Doesn't end with a forward slash. Very likely wrong");
 		return result; 
-	}
-	
-	/**
-	 * Quick method to prevent data and javascript URLs
-	 * @param theUrl
-	 * @return
-	 */
-	public static String makeValidUrl(String theUrl)
-	{
-		theUrl = theUrl.toLowerCase();
-		if (!theUrl.startsWith("http"))
-		{
-			theUrl = "http" + theUrl;
-			log.debug("Transformed to: " + theUrl);
-		}
-		return theUrl;
-	}
-
-	public static String validateEncryptionKey(String userSalt)
-	{
-		String newKey = new String();
-		int keySize = userSalt.length();
-		if(keySize == 16)
-		{
-			//log.debug("Key Already Valid");
-			newKey = userSalt;
-		}
-		else
-		{
-			if(keySize > 16)
-			{
-				//log.debug("Key too Long...");
-				newKey = userSalt.substring(0, 16);
-			}
-			else // Shorter than 16
-			{
-				//log.debug("Key too Short...");
-				newKey = userSalt;
-				int howManyTimes = (16 / keySize) - 1;
-				//log.debug("Repeating String " + howManyTimes + " times");
-				for(int i = 0; i < howManyTimes; i++)
-					newKey += userSalt;
-				keySize = newKey.length();
-				int toAdd = 16 - keySize;
-				//log.debug("Adding " + toAdd + " more characters");
-				newKey = newKey.concat(userSalt.substring(0, toAdd));
-			}
-		}
-		log.debug("Encryption key is '" + newKey + "'");
-		return newKey;
 	}
 }

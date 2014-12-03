@@ -85,6 +85,26 @@ public class Hash
 		return new String(original, Charset.forName("US-ASCII"));
 	}
 	
+	/**
+	 * Specifically decrypts encrypted user names
+	 * @param encyptedUserName Encrypted user name
+	 * @return Decrypted User name
+	 */
+	public static String decryptUserName (String encyptedUserName)
+	{
+		String decryptedUserName = new String();
+		try 
+		{
+			decryptedUserName = Hash.decrypt(Hash.userNameKey, encyptedUserName);
+			log.debug("Decrypted user-name to: " + decryptedUserName);
+		} 
+		catch (GeneralSecurityException e)
+		{
+			log.error("Could not decrypt user name: " + e.toString());
+		}
+		return decryptedUserName;
+	}
+	
 	public static String decryptUserSpecificSolution(String userNameKey, String encryptedSolution)
 	throws GeneralSecurityException, Exception 
 	{
@@ -106,26 +126,6 @@ public class Hash
 		{
 			throw new Exception("Could not Craft user specific Encryption Key");
 		}
-	}
-	
-	/**
-	 * Specifically decrypts encrypted user names
-	 * @param encyptedUserName Encrypted user name
-	 * @return Decrypted User name
-	 */
-	public static String decryptUserName (String encyptedUserName)
-	{
-		String decryptedUserName = new String();
-		try 
-		{
-			decryptedUserName = Hash.decrypt(Hash.userNameKey, encyptedUserName);
-			log.debug("Decrypted user-name to: " + decryptedUserName);
-		} 
-		catch (GeneralSecurityException e)
-		{
-			log.error("Could not decrypt user name: " + e.toString());
-		}
-		return decryptedUserName;
 	}
 	
 	/**
@@ -287,7 +287,7 @@ public class Hash
 			psn1.setSeed(psn1.nextLong());
 			psn1.nextBytes(byteArray);
 			result = new String(byteArray);
-			log.debug("Generated Key = " + result);
+			//log.debug("Generated Key = " + result);
 			
 		}
 		catch(Exception e)

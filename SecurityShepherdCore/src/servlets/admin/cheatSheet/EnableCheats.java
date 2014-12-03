@@ -55,7 +55,6 @@ public class EnableCheats extends HttpServlet
 		log.debug("*** servlets.Admin.EnableCheats ***");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateAdminSession(ses))
 		{

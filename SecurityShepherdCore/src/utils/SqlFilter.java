@@ -26,20 +26,21 @@ public class SqlFilter
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlFilter.class);
 
+	public static String levelFour (String input)
+	{
+		input = input.toLowerCase();
+		while(input.contains("'"))
+		{
+			log.debug("Scrubbing ' from input");
+			input = input.replaceAll("'", "");
+		}
+		return input;
+	}
+	
 	public static String levelOne (String input)
 	{
 		log.debug("Filtering input at SQL levelOne");
 		return input.replaceFirst("'", "");
-	}
-	
-	public static String levelTwo (String input)
-	{
-		log.debug("Filtering input at SQL levelTwo");
-		input = input.replaceAll("OR", "").replaceAll("or", "");
-		input = input.replaceAll("OR", "").replaceAll("or", "");
-		input = input.replaceAll("|", "").replaceAll("&", "");
-		input = input.replaceAll("true", "").replaceAll("TRUE", "");
-		return input;
 	}
 	
 	public static String levelThree (String input)
@@ -52,14 +53,13 @@ public class SqlFilter
 		return input;
 	}
 	
-	public static String levelFour (String input)
+	public static String levelTwo (String input)
 	{
-		input = input.toLowerCase();
-		while(input.contains("'"))
-		{
-			log.debug("Scrubbing ' from input");
-			input = input.replaceAll("'", "");
-		}
+		log.debug("Filtering input at SQL levelTwo");
+		input = input.replaceAll("OR", "").replaceAll("or", "");
+		input = input.replaceAll("OR", "").replaceAll("or", "");
+		input = input.replaceAll("|", "").replaceAll("&", "");
+		input = input.replaceAll("true", "").replaceAll("TRUE", "");
 		return input;
 	}
 }

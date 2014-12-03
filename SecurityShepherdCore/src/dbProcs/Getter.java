@@ -13,7 +13,6 @@ import org.json.simple.JSONObject;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-
 /** 
  * Used to retrieve information from the Database
  * <br/><br/>
@@ -418,65 +417,6 @@ public class Getter
 	}
 	
 	/**
-	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks against each other. URLs are contained in IMG tags
-	 * @param ApplicationRoot The current running context of the application
-	 * @param classId Identifier of the class to populate the forum with
-	 * @param moduleId The module in which to return the forum for
-	 * @return A HTML table of a Class's CSRF Submissions for a specific module
-	 */
-	public static String getCsrfForumWithImg (String ApplicationRoot, String classId, String moduleId)
-	{
-		log.debug("*** Getter.getCsrfForum ***");
-		log.debug("Getting stored messages from class: " + classId);
-		Encoder encoder = ESAPI.encoder();
-		String htmlOutput = new String();
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			if(classId != null)
-			{
-				CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)");
-				log.debug("Gathering resultMessageByClass ResultSet");
-				callstmt.setString(1, classId);
-				callstmt.setString(2, moduleId);
-				ResultSet resultSet = callstmt.executeQuery();
-				log.debug("resultMessageByClass executed");
-				
-				//Table Header
-				htmlOutput = "<table><tr><th>User Name</th><th>Image</th></tr>";
-				
-				log.debug("Opening Result Set from resultMessageByClass");
-				int counter = 0;
-				while(resultSet.next())
-				{
-					counter++;
-					//Table content
-					htmlOutput += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td><img src=\"" + encoder.encodeForHTMLAttribute(resultSet.getString(2)) + "\"/></td></tr>";
-				}
-				if(counter > 0)
-					log.debug("Added a " + counter + " row table");
-				else
-					log.debug("No results from query");
-				//Table end
-				htmlOutput += "</table>";
-			}
-			else
-			{
-				log.error("User with Null Class detected");
-				htmlOutput = "<p><font color='red'>You must be assigned to a class to use this function. Please contact your administrator.</font></p>";
-			}
-		}
-		catch (SQLException e)
-		{
-			log.error("Could not execute query: " + e.toString());
-			htmlOutput = "<p>Sorry! An Error Occurred. Please contact administrator</p>";
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END getCsrfForum ***");
-		return htmlOutput;
-	}
-	
-	/**
 	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks against each other. URLs are contained in IFRAME tags
 	 * @param ApplicationRoot The current running context of the application
 	 * @param classId Identifier of the class to populate the forum with
@@ -511,6 +451,65 @@ public class Getter
 					counter++;
 					//Table content
 					htmlOutput += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td><iframe sandbox=\"allow-scripts allow-forms\" src=\"" + encoder.encodeForHTMLAttribute(resultSet.getString(2)) + "\"></iframe></td></tr>";
+				}
+				if(counter > 0)
+					log.debug("Added a " + counter + " row table");
+				else
+					log.debug("No results from query");
+				//Table end
+				htmlOutput += "</table>";
+			}
+			else
+			{
+				log.error("User with Null Class detected");
+				htmlOutput = "<p><font color='red'>You must be assigned to a class to use this function. Please contact your administrator.</font></p>";
+			}
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not execute query: " + e.toString());
+			htmlOutput = "<p>Sorry! An Error Occurred. Please contact administrator</p>";
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END getCsrfForum ***");
+		return htmlOutput;
+	}
+	
+	/**
+	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks against each other. URLs are contained in IMG tags
+	 * @param ApplicationRoot The current running context of the application
+	 * @param classId Identifier of the class to populate the forum with
+	 * @param moduleId The module in which to return the forum for
+	 * @return A HTML table of a Class's CSRF Submissions for a specific module
+	 */
+	public static String getCsrfForumWithImg (String ApplicationRoot, String classId, String moduleId)
+	{
+		log.debug("*** Getter.getCsrfForum ***");
+		log.debug("Getting stored messages from class: " + classId);
+		Encoder encoder = ESAPI.encoder();
+		String htmlOutput = new String();
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			if(classId != null)
+			{
+				CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)");
+				log.debug("Gathering resultMessageByClass ResultSet");
+				callstmt.setString(1, classId);
+				callstmt.setString(2, moduleId);
+				ResultSet resultSet = callstmt.executeQuery();
+				log.debug("resultMessageByClass executed");
+				
+				//Table Header
+				htmlOutput = "<table><tr><th>User Name</th><th>Image</th></tr>";
+				
+				log.debug("Opening Result Set from resultMessageByClass");
+				int counter = 0;
+				while(resultSet.next())
+				{
+					counter++;
+					//Table content
+					htmlOutput += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td><img src=\"" + encoder.encodeForHTMLAttribute(resultSet.getString(2)) + "\"/></td></tr>";
 				}
 				if(counter > 0)
 					log.debug("Added a " + counter + " row table");
@@ -744,158 +743,6 @@ public class Getter
 	}
 	
 	/**
-	 * This method prepares the Tournament module menu. This is when Security Shepherd is in "Tournament Mode".
-	 * Users are presented with a list of that are specified as open. 
-	 * @param ApplicationRoot The running context of the application.
-	 * @param userId The user identifier of the user.
-	 * @param csrfToken The cross site request forgery token
-	 * @return A HTML menu of a users current module progress and a script for interaction with this menu
-	 */
-	public static String getTournamentModules (String ApplicationRoot, String userId)
-	{
-		log.debug("*** Getter.getTournamentModules ***");
-		String output = new String();
-		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			//Get the modules
-			CallableStatement callstmt = conn.prepareCall("call moduleOpenInfo(?)");
-			callstmt.setString(1, userId);
-			log.debug("Gathering moduleOpenInfo ResultSet for user " + userId);
-			ResultSet lessons = callstmt.executeQuery();
-			log.debug("Opening Result Set from moduleOpenInfo");
-			int rowNumber = 0; // Used to indetify the first row, as it is slightly different to all other rows for output
-			while(lessons.next())
-			{
-				//log.debug("Adding " + lessons.getString(1));
-				output += "<li>";
-				//Markers for completion
-				if(lessons.getString(4) != null)
-				{
-					output += "<img src='css/images/completed.gif'/>";
-				}
-				else
-				{
-					output+= "<img src='css/images/uncompleted.gif'/>";
-				}
-				//Prepare lesson output
-				output += "<a class='lesson' id='" 
-					+ encoder.encodeForHTMLAttribute(lessons.getString(3))
-					+ "' href='javascript:;'>" 
-					+ encoder.encodeForHTML(lessons.getString(1)) 
-					+ "</a>";
-				output += "</li>";
-				rowNumber++;
-			}
-			//If no output has been found, return an error message
-			if(output.isEmpty())
-			{
-				output = "<li><a href='javascript:;'>No modules found</a></li>";
-			}
-			else
-			{
-				log.debug("Tournaments List returned");
-			}
-		}
-		catch(Exception e)
-		{
-			log.error("Tournament List Retrieval: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		return output;
-	}
-	
-	/**
-	 * This method returns the modules with open and closed in different &lt;select&gt; elements for administration manipulation
-	 * @param ApplicationRoot
-	 * @param userId
-	 * @param csrfToken
-	 * @return
-	 */
-	public static String getModuleStatusMenu (String ApplicationRoot)
-	{
-		log.debug("*** Getter.getModuleStatusMenu ***");
-		String openModules = new String();
-		String closedModules = new String();
-		String output = new String();
-		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			//Get the modules
-			CallableStatement callstmt = conn.prepareCall("call moduleAllStatus()");
-			log.debug("Gathering moduleAllStatus ResultSet");
-			ResultSet modules = callstmt.executeQuery();
-			log.debug("Opening Result Set from moduleAllStatus");
-			while(modules.next())
-			{
-				String theModule = "<option value='" + encoder.encodeForHTMLAttribute(modules.getString(1)) + 
-						"'>" + encoder.encodeForHTML(modules.getString(2)) + "</option>\n";
-				if(modules.getString(3).equalsIgnoreCase("open"))
-				{
-					//Module is Open currently, so add it to the open side of the list
-					openModules += theModule;
-				}
-				else 
-				{
-					//If it is not open: It must be closed (NULL or not)
-					closedModules += theModule;
-				}
-			}
-			//This is the actual output: It assumes a <table> environment
-			output = "<tr><th>To Open</th><th>To Close</th></tr><tr>\n" +
-					"<td><select style='width: 300px; height: 200px;' multiple id='toOpen'>" + closedModules + "</select></td>\n" +
-					"<td><select style='width: 300px; height: 200px;' multiple id='toClose'>" + openModules + "</select></td>\n" +
-					"</tr>\n";
-			log.debug("Module Status Menu returned");
-		}
-		catch(Exception e)
-		{
-			log.error("Module Status Menu: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		return output;
-	}
-	
-	/**
-	 * This method returns the module categories to open or closed in a &lt;select&gt; element for administration manipulation
-	 * @param ApplicationRoot
-	 * @param userId
-	 * @param csrfToken
-	 * @return
-	 */
-	public static String getOpenCloseCategoryMenu (String ApplicationRoot)
-	{
-		log.debug("*** Getter.getOpenCloseCategoryMenu ***");
-		String theModules = new String();
-		String output = new String();
-		Encoder encoder = ESAPI.encoder();
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			//Get the modules
-			CallableStatement callstmt = conn.prepareCall("SELECT DISTINCT moduleCategory FROM modules ORDER BY moduleCategory");
-			ResultSet modules = callstmt.executeQuery();
-			while(modules.next())
-			{
-				String theModule = "<option value='" + encoder.encodeForHTMLAttribute(modules.getString(1)) + 
-						"'>" + encoder.encodeForHTML(modules.getString(1)) + "</option>\n";
-				theModules += theModule;
-			}
-			//This is the actual output: It assumes a <table> environment
-			output = "<select style='width: 300px; height: 200px;' multiple id='toDo'>" + theModules + "</select>\n";
-			log.debug("Module Category Menu returned");
-		}
-		catch(Exception e)
-		{
-			log.error("Module Status Menu: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		return output;
-	}
-	
-	/**
 	 * Used to gather a menu of lessons for a user, including markers for each lesson they have completed or not completed
 	 * @param ApplicationRoot The current running context of the application
 	 * @param userId Identifier of the user
@@ -1004,6 +851,35 @@ public class Getter
 	}
 	
 	/**
+	 * Retrieves the module category based on the moduleId submitted
+	 * @param ApplicationRoot The current running context of the application
+	 * @param moduleId The id of the module that 
+	 * @return
+	 */
+	public static String getModuleCategory (String ApplicationRoot, String moduleId)
+	{
+		log.debug("*** Getter.getModuleResult ***");
+		String theCategory = null;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			PreparedStatement prepstmt = conn.prepareStatement("SELECT moduleCategory FROM modules WHERE moduleId = ?");
+			prepstmt.setString(1, moduleId);
+			ResultSet moduleFind = prepstmt.executeQuery();
+			moduleFind.next();
+			theCategory = moduleFind.getString(1);
+		}
+		catch(Exception e)
+		{
+			log.error("Module did not exist: " + e.toString());
+			theCategory = null;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END getModuleCategory ***");
+		return theCategory;
+	}
+	
+	/**
 	 * @param applicationRoot The current running context of the application.
 	 * @param moduleId The identifier of a module
 	 * @return The hash of the module specified
@@ -1063,35 +939,6 @@ public class Getter
 		Database.closeConnection(conn);
 		log.debug("*** END getModuleIdFromHash ***");
 		return result;
-	}
-	
-	/**
-	 * Retrieves the module category based on the moduleId submitted
-	 * @param ApplicationRoot The current running context of the application
-	 * @param moduleId The id of the module that 
-	 * @return
-	 */
-	public static String getModuleCategory (String ApplicationRoot, String moduleId)
-	{
-		log.debug("*** Getter.getModuleResult ***");
-		String theCategory = null;
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			PreparedStatement prepstmt = conn.prepareStatement("SELECT moduleCategory FROM modules WHERE moduleId = ?");
-			prepstmt.setString(1, moduleId);
-			ResultSet moduleFind = prepstmt.executeQuery();
-			moduleFind.next();
-			theCategory = moduleFind.getString(1);
-		}
-		catch(Exception e)
-		{
-			log.error("Module did not exist: " + e.toString());
-			theCategory = null;
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END getModuleCategory ***");
-		return theCategory;
 	}
 	
 	/**
@@ -1292,6 +1139,95 @@ public class Getter
 	}
 	
 	/**
+	 * This method returns the modules with open and closed in different &lt;select&gt; elements for administration manipulation
+	 * @param ApplicationRoot
+	 * @param userId
+	 * @param csrfToken
+	 * @return
+	 */
+	public static String getModuleStatusMenu (String ApplicationRoot)
+	{
+		log.debug("*** Getter.getModuleStatusMenu ***");
+		String openModules = new String();
+		String closedModules = new String();
+		String output = new String();
+		Encoder encoder = ESAPI.encoder();
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			//Get the modules
+			CallableStatement callstmt = conn.prepareCall("call moduleAllStatus()");
+			log.debug("Gathering moduleAllStatus ResultSet");
+			ResultSet modules = callstmt.executeQuery();
+			log.debug("Opening Result Set from moduleAllStatus");
+			while(modules.next())
+			{
+				String theModule = "<option value='" + encoder.encodeForHTMLAttribute(modules.getString(1)) + 
+						"'>" + encoder.encodeForHTML(modules.getString(2)) + "</option>\n";
+				if(modules.getString(3).equalsIgnoreCase("open"))
+				{
+					//Module is Open currently, so add it to the open side of the list
+					openModules += theModule;
+				}
+				else 
+				{
+					//If it is not open: It must be closed (NULL or not)
+					closedModules += theModule;
+				}
+			}
+			//This is the actual output: It assumes a <table> environment
+			output = "<tr><th>To Open</th><th>To Close</th></tr><tr>\n" +
+					"<td><select style='width: 300px; height: 200px;' multiple id='toOpen'>" + closedModules + "</select></td>\n" +
+					"<td><select style='width: 300px; height: 200px;' multiple id='toClose'>" + openModules + "</select></td>\n" +
+					"</tr>\n";
+			log.debug("Module Status Menu returned");
+		}
+		catch(Exception e)
+		{
+			log.error("Module Status Menu: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		return output;
+	}
+	
+	/**
+	 * This method returns the module categories to open or closed in a &lt;select&gt; element for administration manipulation
+	 * @param ApplicationRoot
+	 * @param userId
+	 * @param csrfToken
+	 * @return
+	 */
+	public static String getOpenCloseCategoryMenu (String ApplicationRoot)
+	{
+		log.debug("*** Getter.getOpenCloseCategoryMenu ***");
+		String theModules = new String();
+		String output = new String();
+		Encoder encoder = ESAPI.encoder();
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			//Get the modules
+			CallableStatement callstmt = conn.prepareCall("SELECT DISTINCT moduleCategory FROM modules ORDER BY moduleCategory");
+			ResultSet modules = callstmt.executeQuery();
+			while(modules.next())
+			{
+				String theModule = "<option value='" + encoder.encodeForHTMLAttribute(modules.getString(1)) + 
+						"'>" + encoder.encodeForHTML(modules.getString(1)) + "</option>\n";
+				theModules += theModule;
+			}
+			//This is the actual output: It assumes a <table> environment
+			output = "<select style='width: 300px; height: 200px;' multiple id='toDo'>" + theModules + "</select>\n";
+			log.debug("Module Category Menu returned");
+		}
+		catch(Exception e)
+		{
+			log.error("Module Status Menu: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		return output;
+	}
+	
+	/**
 	 * This method is used to gather users according by class. Thanks to MySQL syntax, where class = null will return nothing, is null must be used.
 	 *  <br/>is 'validClass' will Error, = 'validclass' must be used.<br/>
 	 * So there are two procedures this method calls. One that handles null classes, one that does not
@@ -1440,6 +1376,69 @@ public class Getter
 		Database.closeConnection(conn);
 		log.debug("*** END getProgressJSON ***");
 		return result;
+	}
+	
+	/**
+	 * This method prepares the Tournament module menu. This is when Security Shepherd is in "Tournament Mode".
+	 * Users are presented with a list of that are specified as open. 
+	 * @param ApplicationRoot The running context of the application.
+	 * @param userId The user identifier of the user.
+	 * @param csrfToken The cross site request forgery token
+	 * @return A HTML menu of a users current module progress and a script for interaction with this menu
+	 */
+	public static String getTournamentModules (String ApplicationRoot, String userId)
+	{
+		log.debug("*** Getter.getTournamentModules ***");
+		String output = new String();
+		Encoder encoder = ESAPI.encoder();
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			//Get the modules
+			CallableStatement callstmt = conn.prepareCall("call moduleOpenInfo(?)");
+			callstmt.setString(1, userId);
+			log.debug("Gathering moduleOpenInfo ResultSet for user " + userId);
+			ResultSet lessons = callstmt.executeQuery();
+			log.debug("Opening Result Set from moduleOpenInfo");
+			int rowNumber = 0; // Used to indetify the first row, as it is slightly different to all other rows for output
+			while(lessons.next())
+			{
+				//log.debug("Adding " + lessons.getString(1));
+				output += "<li>";
+				//Markers for completion
+				if(lessons.getString(4) != null)
+				{
+					output += "<img src='css/images/completed.gif'/>";
+				}
+				else
+				{
+					output+= "<img src='css/images/uncompleted.gif'/>";
+				}
+				//Prepare lesson output
+				output += "<a class='lesson' id='" 
+					+ encoder.encodeForHTMLAttribute(lessons.getString(3))
+					+ "' href='javascript:;'>" 
+					+ encoder.encodeForHTML(lessons.getString(1)) 
+					+ "</a>";
+				output += "</li>";
+				rowNumber++;
+			}
+			//If no output has been found, return an error message
+			if(output.isEmpty())
+			{
+				output = "<li><a href='javascript:;'>No modules found</a></li>";
+			}
+			else
+			{
+				log.debug("Tournaments List returned");
+			}
+		}
+		catch(Exception e)
+		{
+			log.error("Tournament List Retrieval: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		return output;
 	}
 	
 	/**

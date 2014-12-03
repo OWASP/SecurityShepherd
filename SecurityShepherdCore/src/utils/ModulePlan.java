@@ -26,17 +26,32 @@ public class ModulePlan
 	public static boolean incrementalFloor = true;
 	public static boolean tornyFloor = false;
 	
-	public static void setOpenFloor()
+	public static boolean isIncrementalFloor() 
 	{
-		openFloor = true;
-		incrementalFloor = false;
-		tornyFloor = false;
+		return incrementalFloor;
 	}
 	
+	public static boolean isOpenFloor() 
+	{
+		return openFloor;
+	}
+	
+	public static boolean isTornyFloor()
+	{
+		return tornyFloor;
+	}
+
 	public static void setIncrementalFloor()
 	{
 		openFloor = false;
 		incrementalFloor = true;
+		tornyFloor = false;
+	}
+
+	public static void setOpenFloor()
+	{
+		openFloor = true;
+		incrementalFloor = false;
 		tornyFloor = false;
 	}
 	
@@ -45,20 +60,5 @@ public class ModulePlan
 		openFloor = true;
 		incrementalFloor = false;
 		tornyFloor = true;
-	}
-
-	public static boolean isOpenFloor() 
-	{
-		return openFloor;
-	}
-
-	public static boolean isIncrementalFloor() 
-	{
-		return incrementalFloor;
-	}
-	
-	public static boolean isTornyFloor()
-	{
-		return tornyFloor;
 	}
 }

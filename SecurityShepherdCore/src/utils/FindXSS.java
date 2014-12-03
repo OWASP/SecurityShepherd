@@ -48,7 +48,7 @@ public class FindXSS
 		"script", "select", "small", "span", "strike", "strong", "style", 
 		"sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead",
 		"title", "tr", "tt", "u", "ul", "var"};
-	private static String[] javascriptTriggers = {
+	public static String[] javascriptTriggers = {
 		"onabort", "onbeforecopy", "onbeforecut", "onbeforepaste", "oncopy", "oncut", 
 		"oninput", "onkeydown", "onkeypress", "onkeyup", "onpaste", "onbeforeunload", 
 		"onhaschange", "onload", "onoffline", "ononline", "onreadystatechange", 
@@ -64,6 +64,340 @@ public class FindXSS
 		"ondataavailable", "ondatasetchanged", "ondatasetcomplete", "onrowenter", "onrowexit",
 		"onrowsdelete", "onrowsinserted", "onbounce", "onfinish", "onstart", "onchange", 
 		"onfilterchange", "onpropertychange", "onsearch", "onmessage", "formaction", "textinput"};
+	
+	/**
+	 * Search Strings for XSS attack vectors using the OWASP AntiSamy project
+	 * @param xssString String to search
+	 * @param applicationRoot Running context of the application
+	 * @return True or False for detected XSS
+	 */
+	public static boolean antiSamySearch (String xssString, String applicationRoot)
+	{
+		boolean result = false;
+		xssString = xssString.toLowerCase().trim();
+		log.debug("xssString  is " + xssString);
+		
+		//Create AntiSamy Object
+		String propertiesFile = applicationRoot+"/WEB-INF/antisamy-esapi.xml";
+		try
+		{
+			log.debug("Making AntiSamy Object");
+			AntiSamy as = new AntiSamy();
+			Policy policy = Policy.getInstance(propertiesFile);
+			log.debug("Scanning xssString...");
+			CleanResults cr = as.scan(xssString, policy, AntiSamy.SAX);		
+			String safeString = cr.getCleanHTML();
+			log.debug("safeString is " + safeString);
+			if(xssString.equalsIgnoreCase(safeString))
+			{
+				log.debug("Strings Match: No Xss Detected");
+			}
+			else
+			{
+				log.debug("Strings Differ: Possible Xss Detected");
+				log.debug("Number of errors: " + cr.getNumberOfErrors());
+				//Get the errors as they describe the XSS attack vector that was used
+				List<String> errors = cr.getErrorMessages();
+				int numberOfErrors = cr.getNumberOfErrors();
+				for(int i = 0; i < numberOfErrors; i++)
+				{
+					String error = errors.get(i);
+					log.debug("Error " + (i+1));
+					//Comment following line out out unless testing
+					log.debug("Error Reads: " + error);
+					//First check if error is about Script tags - This would imply simple xss has been submitted
+					String scriptTagErrorStart = new String("The script tag is not allowed for security reasons.");
+					if(error.startsWith(scriptTagErrorStart))
+					{
+						log.debug("Script tags detected");
+						result = true;
+					}
+					else
+					{
+						//log.debug("Simple XSS Script Tags not detected");
+						//iframe's with Javascript events do not get caught. So checking if error is Iframe error
+						String iframeErrorStart = new String("The iframe tag is not allowed for security reasons.");
+						if(error.startsWith(iframeErrorStart))
+						{
+							//If it is we're going to change it to an <A> element, because antiSamy will check the javascript events and URI attacks of that
+							xssString = xssString.replaceAll("iframe", "a");
+							//Calling Function Recurseivly atm. TODO// Make a Overwritten version of this search that searches for an error releated to a specific element
+							result = FindXSS.antiSamySearch(xssString, applicationRoot);
+						}
+						else
+						{
+							for(int j = 0; j < htmlElements.length; j++)
+							{
+								//We want errors that read like: "The a tag contained an attribute that we could not process. The "; // This will only catch "a" tag
+								//Loop goes checks to see if this error is one of a known HTML element of interest
+								//Make the error message we are expecting for this HTML Element
+								String expectedErrorStart = makeAntiSammyError(htmlElements[j]);
+								//log.debug("Searching for: " + expectedErrorStart);
+								//If the error starts with this error, we're interested.
+								if(error.startsWith(expectedErrorStart))
+								{
+									//Extracting important parts of the error message
+									error = error.substring(expectedErrorStart.length());
+									String errorAttribute = error.substring(0, error.indexOf(" "));
+									String errorAttibuteValue = error.substring(error.indexOf("\"")+1, error.indexOf("\"", error.indexOf("\"")+1));
+									Encoder encoder = ESAPI.encoder();
+									errorAttibuteValue = encoder.decodeForHTML(errorAttibuteValue.replaceAll("&#34;", ""));
+									
+									//Reconstructing attack vector used based on error message details
+									log.debug("Constructing attack vector from AntiSammy error");
+									String attackVector = "<" + htmlElements[j] + " " + errorAttribute + "=\"" + errorAttibuteValue + "\"";
+									//Does the Element need a </ELEMENT> tag or />
+									if(!isEmptyHtmlElement(htmlElements[j]))
+									{
+										attackVector += ">Attack</" + htmlElements[j] + ">";
+									}
+									else
+									{
+										attackVector += "/>";
+									}
+											
+									log.debug("attackVector: " + attackVector);
+									//log.debug("Searching for XSS in attackVector...");
+									if(FindXSS.searchWithoutSimple(attackVector))
+									{
+										log.debug("Xss Detected");
+										result = true;
+									}
+									else
+										log.debug("Xss Not Detected");
+								}
+								if(result)
+									break; //Xss Detected, time to get out of here
+							}
+						}
+					}
+					if(result)
+					{
+						break; //Xss Detected, time to get out of here
+					}
+					else
+					{
+						log.debug("Error Deemed Uninteresting");
+					}
+				}
+			}
+		} 
+		catch (ScanException e) 
+		{
+			log.debug("ScanException: " + e.toString());
+		} 
+		catch (PolicyException e)
+		{
+			log.debug("PolicyException: " + e.toString());
+		}
+		catch (Exception e)
+		{
+			log.debug("Unexpected Error! " + e.toString());
+		}
+		return result;
+	}
+	
+	/**
+	 * Method used to validate GET request CSRF attacks embeded in IMG tags.
+	 * @param messageForAdmin
+	 * @param falseId
+	 * @return
+	 */
+	public static boolean findCsrf (String messageForAdmin, String falseId)
+	{
+		//Find a HTML tag
+		while(messageForAdmin.contains("< "))
+			messageForAdmin = messageForAdmin.replaceAll("< ", "<");
+		while(messageForAdmin.contains(" >"))
+			messageForAdmin = messageForAdmin.replaceAll(" >", ">");
+		log.debug("Cleaned to: " + messageForAdmin);
+		log.debug("Checking for <img>");
+		if(messageForAdmin.contains("<img"))
+		{
+			log.debug("Possible <img>");
+			int tempStart = messageForAdmin.indexOf("<img");
+			int tempEnd = messageForAdmin.indexOf("/>", tempStart + 5);
+			if(tempEnd == -1)
+			{
+				log.debug("Invalid <img> Tag");
+			}
+			else
+			{
+				log.debug("Searching for SRC attribute");
+				String tempMessage = messageForAdmin.substring(tempStart, tempEnd);
+				log.debug("Working on: " + tempMessage);
+				if(tempMessage.contains(" src"))
+				{
+					log.debug("Finding src after '='");
+					int srcStart = tempMessage.indexOf(" src") + 4;
+					tempMessage = tempMessage.substring(srcStart);
+					log.debug("After SRC: " + tempMessage);
+					int srcEqual = tempMessage.indexOf("=") + 1;
+					log.debug("srcEqual = " + srcEqual);
+					int counter = 0;
+					while(tempMessage.substring(srcEqual + counter).startsWith(" "))
+					{
+						//Find end of white space after equals sign, and then evaluate if the url is valid
+						counter++;
+						log.debug("counter = " + counter);
+					}
+
+					tempMessage = tempMessage.substring(srcEqual + counter);
+					log.debug("Working on: " + tempMessage);
+					String quoteType = null;
+					if(tempMessage.startsWith("\""))
+					{
+						quoteType = "\"";
+					}
+					else if(tempMessage.startsWith("'"))
+					{
+						quoteType = "'";
+					}
+					else
+					{
+						log.debug("No Quotes found around url");
+						int endOfUrl = tempMessage.indexOf(" ");
+						if(endOfUrl == -1)
+							endOfUrl = tempMessage.length();
+						else
+							endOfUrl--;
+						log.debug(tempMessage);
+						tempMessage = tempMessage.substring(0, endOfUrl);
+						log.debug(tempMessage);
+					}
+					if(quoteType != null)
+					{
+						log.debug("Quotes Found: " + quoteType);
+						tempMessage = tempMessage.substring(1, tempMessage.substring(2).indexOf(quoteType) + 2);
+					}
+					log.debug("URL found to be: " + tempMessage);
+					boolean validUrl = false;
+					log.debug("Validating URL for Solution");
+					try
+					{
+						URL csrfUrl = new URL(tempMessage);
+						log.debug("URL Host: " + csrfUrl.getHost());
+						log.debug("URL Port: " + csrfUrl.getPort());
+						log.debug("URL Path: " + csrfUrl.getPath());
+						log.debug("URL Query: " + csrfUrl.getQuery());
+						validUrl = csrfUrl.getPath().toLowerCase().equalsIgnoreCase("/root/grantComplete/csrflesson");
+						if(!validUrl)
+							log.debug("1");
+						validUrl = csrfUrl.getQuery().toLowerCase().equalsIgnoreCase(("userId=" + falseId).toLowerCase()) && validUrl;
+						if(!validUrl)
+							log.debug("2");
+					}
+					catch(MalformedURLException e)
+					{
+						log.error("Invalid URL: " + e.toString());
+					}
+					if(!validUrl)
+					{
+						log.debug("Invalid Url: " + tempMessage);
+					}
+					else
+					{
+						log.debug("Valid URL");
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Searches for URL that contains CSRF attack string without user ID expected. Returns true if it is valid based on parameters submitted
+	 * @param theUrl The Entire URL containing the attack
+	 * @param csrfAttackPath The path the CSRF vulnerable function should be in
+	 * @return boolean value depicting if the attack is valid or not
+	 */
+	public static boolean findCsrfAttackUrl (String theUrl, String csrfAttackPath) 
+	{
+		boolean validAttack = false;
+		try
+		{
+			URL theAttack = new URL(theUrl);
+			log.debug("theAttack Host: " + theAttack.getHost());
+			log.debug("theAttack Port: " + theAttack.getPort());
+			log.debug("theAttack Path: " + theAttack.getPath());
+			log.debug("theAttack Query: " + theAttack.getQuery());
+			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath);
+			if(!validAttack)
+				log.debug("Invalid Solution: Bad Path or Above");
+		}
+		catch(MalformedURLException e)
+		{
+			log.debug("Invalid URL Submitted: " + e.toString());
+			validAttack = false;
+		}
+		catch(Exception e)
+		{
+			log.error("FindCSRF Failed: " + e.toString());
+			validAttack = false;
+		}
+		return validAttack;
+	}
+	
+	/**
+	 * Searches for URL that contains CSRF attack string. Returns true if it is valid based on parameters submitted
+	 * @param theUrl The Entire URL containing the attack
+	 * @param csrfAttackPath The path the CSRF vulnerable function should be in
+	 * @param userIdParameterName The user ID parameter name expected
+	 * @param userIdParameterValue The user ID parameter value expected
+	 * @return boolean value depicting if the attack is valid or not
+	 */
+	public static boolean findCsrfAttackUrl (String theUrl, String csrfAttackPath, String userIdParameterName, String userIdParameterValue ) 
+	{
+		boolean validAttack = false;
+		try
+		{
+			URL theAttack = new URL(theUrl);
+			log.debug("csrfAttackPath: " + csrfAttackPath);
+			log.debug("theAttack Host: " + theAttack.getHost());
+			log.debug("theAttack Port: " + theAttack.getPort());
+			log.debug("theAttack Path: " + theAttack.getPath());
+			log.debug("theAttack Query: " + theAttack.getQuery());
+			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath);
+			if(!validAttack)
+				log.debug("Invalid Solution: Bad Path or Above");
+			validAttack = theAttack.getQuery().toLowerCase().equalsIgnoreCase((userIdParameterName + "=" + userIdParameterValue).toLowerCase()) && validAttack;
+			if(!validAttack)
+				log.debug("Invalid Solution: Bad Query or Above");
+		}
+		catch(MalformedURLException e)
+		{
+			log.debug("Invalid URL Submitted: " + e.toString());
+			validAttack = false;
+		}
+		catch(Exception e)
+		{
+			log.error("FindCSRF Failed: " + e.toString());
+			validAttack = false;
+		}
+		return validAttack;
+	}
+	
+	private static boolean isEmptyHtmlElement(String htmlElement)
+	{
+		boolean emptyHtmlElement = false;
+		String emptyElements[] = {"br", "hr", "link", "base", "meta", "img", "embed", "param", "area", "col", "input"};
+		for (int i = 0; i < emptyElements.length && !emptyHtmlElement; i++)
+		{
+			emptyHtmlElement = htmlElement.equalsIgnoreCase(emptyElements[i]);
+		}
+		return emptyHtmlElement;
+	}
+	
+	/**
+	 * Creates the leading string of an AntiSammy error for a specific html element
+	 * @param htmlElement the element to include in the error message
+	 * @return
+	 */
+	private static String makeAntiSammyError(String htmlElement)
+	{
+		return new String("The " + htmlElement + " tag contained an attribute that we could not process. The ");
+	}
 	
 	public static boolean search (String xssString)
 	{
@@ -280,187 +614,6 @@ public class FindXSS
 			log.error("FindXSS Error: " + e.toString());
 			return false;
 		}
-	}
-	
-	/**
-	 * Method used to validate GET request CSRF attacks embeded in IMG tags.
-	 * @param messageForAdmin
-	 * @param falseId
-	 * @return
-	 */
-	public static boolean findCsrf (String messageForAdmin, String falseId)
-	{
-		//Find a HTML tag
-		while(messageForAdmin.contains("< "))
-			messageForAdmin = messageForAdmin.replaceAll("< ", "<");
-		while(messageForAdmin.contains(" >"))
-			messageForAdmin = messageForAdmin.replaceAll(" >", ">");
-		log.debug("Cleaned to: " + messageForAdmin);
-		log.debug("Checking for <img>");
-		if(messageForAdmin.contains("<img"))
-		{
-			log.debug("Possible <img>");
-			int tempStart = messageForAdmin.indexOf("<img");
-			int tempEnd = messageForAdmin.indexOf("/>", tempStart + 5);
-			if(tempEnd == -1)
-			{
-				log.debug("Invalid <img> Tag");
-			}
-			else
-			{
-				log.debug("Searching for SRC attribute");
-				String tempMessage = messageForAdmin.substring(tempStart, tempEnd);
-				log.debug("Working on: " + tempMessage);
-				if(tempMessage.contains(" src"))
-				{
-					log.debug("Finding src after '='");
-					int srcStart = tempMessage.indexOf(" src") + 4;
-					tempMessage = tempMessage.substring(srcStart);
-					log.debug("After SRC: " + tempMessage);
-					int srcEqual = tempMessage.indexOf("=") + 1;
-					log.debug("srcEqual = " + srcEqual);
-					int counter = 0;
-					while(tempMessage.substring(srcEqual + counter).startsWith(" "))
-					{
-						//Find end of white space after equals sign, and then evaluate if the url is valid
-						counter++;
-						log.debug("counter = " + counter);
-					}
-
-					tempMessage = tempMessage.substring(srcEqual + counter);
-					log.debug("Working on: " + tempMessage);
-					String quoteType = null;
-					if(tempMessage.startsWith("\""))
-					{
-						quoteType = "\"";
-					}
-					else if(tempMessage.startsWith("'"))
-					{
-						quoteType = "'";
-					}
-					else
-					{
-						log.debug("No Quotes found around url");
-						int endOfUrl = tempMessage.indexOf(" ");
-						if(endOfUrl == -1)
-							endOfUrl = tempMessage.length();
-						else
-							endOfUrl--;
-						log.debug(tempMessage);
-						tempMessage = tempMessage.substring(0, endOfUrl);
-						log.debug(tempMessage);
-					}
-					if(quoteType != null)
-					{
-						log.debug("Quotes Found: " + quoteType);
-						tempMessage = tempMessage.substring(1, tempMessage.substring(2).indexOf(quoteType) + 2);
-					}
-					log.debug("URL found to be: " + tempMessage);
-					boolean validUrl = false;
-					log.debug("Validating URL for Solution");
-					try
-					{
-						URL csrfUrl = new URL(tempMessage);
-						log.debug("URL Host: " + csrfUrl.getHost());
-						log.debug("URL Port: " + csrfUrl.getPort());
-						log.debug("URL Path: " + csrfUrl.getPath());
-						log.debug("URL Query: " + csrfUrl.getQuery());
-						validUrl = csrfUrl.getPath().toLowerCase().equalsIgnoreCase("/root/grantComplete/csrflesson");
-						if(!validUrl)
-							log.debug("1");
-						validUrl = csrfUrl.getQuery().toLowerCase().equalsIgnoreCase(("userId=" + falseId).toLowerCase()) && validUrl;
-						if(!validUrl)
-							log.debug("2");
-					}
-					catch(MalformedURLException e)
-					{
-						log.error("Invalid URL: " + e.toString());
-					}
-					if(!validUrl)
-					{
-						log.debug("Invalid Url: " + tempMessage);
-					}
-					else
-					{
-						log.debug("Valid URL");
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Searches for URL that contains CSRF attack string. Returns true if it is valid based on parameters submitted
-	 * @param theUrl The Entire URL containing the attack
-	 * @param csrfAttackPath The path the CSRF vulnerable function should be in
-	 * @param userIdParameterName The user ID parameter name expected
-	 * @param userIdParameterValue The user ID parameter value expected
-	 * @return boolean value depicting if the attack is valid or not
-	 */
-	public static boolean findCsrfAttackUrl (String theUrl, String csrfAttackPath, String userIdParameterName, String userIdParameterValue ) 
-	{
-		boolean validAttack = false;
-		try
-		{
-			URL theAttack = new URL(theUrl);
-			log.debug("csrfAttackPath: " + csrfAttackPath);
-			log.debug("theAttack Host: " + theAttack.getHost());
-			log.debug("theAttack Port: " + theAttack.getPort());
-			log.debug("theAttack Path: " + theAttack.getPath());
-			log.debug("theAttack Query: " + theAttack.getQuery());
-			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath);
-			if(!validAttack)
-				log.debug("Invalid Solution: Bad Path or Above");
-			validAttack = theAttack.getQuery().toLowerCase().equalsIgnoreCase((userIdParameterName + "=" + userIdParameterValue).toLowerCase()) && validAttack;
-			if(!validAttack)
-				log.debug("Invalid Solution: Bad Query or Above");
-		}
-		catch(MalformedURLException e)
-		{
-			log.debug("Invalid URL Submitted: " + e.toString());
-			validAttack = false;
-		}
-		catch(Exception e)
-		{
-			log.error("FindCSRF Failed: " + e.toString());
-			validAttack = false;
-		}
-		return validAttack;
-	}
-	
-	/**
-	 * Searches for URL that contains CSRF attack string without user ID expected. Returns true if it is valid based on parameters submitted
-	 * @param theUrl The Entire URL containing the attack
-	 * @param csrfAttackPath The path the CSRF vulnerable function should be in
-	 * @return boolean value depicting if the attack is valid or not
-	 */
-	public static boolean findCsrfAttackUrl (String theUrl, String csrfAttackPath) 
-	{
-		boolean validAttack = false;
-		try
-		{
-			URL theAttack = new URL(theUrl);
-			log.debug("theAttack Host: " + theAttack.getHost());
-			log.debug("theAttack Port: " + theAttack.getPort());
-			log.debug("theAttack Path: " + theAttack.getPath());
-			log.debug("theAttack Query: " + theAttack.getQuery());
-			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath);
-			if(!validAttack)
-				log.debug("Invalid Solution: Bad Path or Above");
-		}
-		catch(MalformedURLException e)
-		{
-			log.debug("Invalid URL Submitted: " + e.toString());
-			validAttack = false;
-		}
-		catch(Exception e)
-		{
-			log.error("FindCSRF Failed: " + e.toString());
-			validAttack = false;
-		}
-		return validAttack;
 	}
 	
 	public static boolean searchForComplexLinkAttributeXss (String xssString, String applicationRoot)
@@ -760,152 +913,5 @@ public class FindXSS
 			log.error("FindXSS Error: " + e.toString());
 			return false;
 		}
-	}
-	
-	public static boolean antiSamySearch (String xssString, String applicationRoot)
-	{
-		boolean result = false;
-		xssString = xssString.toLowerCase().trim();
-		log.debug("xssString  is " + xssString);
-		
-		//Create AntiSamy Object
-		String propertiesFile = applicationRoot+"/WEB-INF/antisamy-esapi.xml";
-		try
-		{
-			log.debug("Making AntiSamy Object");
-			AntiSamy as = new AntiSamy();
-			Policy policy = Policy.getInstance(propertiesFile);
-			log.debug("Scanning xssString...");
-			CleanResults cr = as.scan(xssString, policy, AntiSamy.SAX);		
-			String safeString = cr.getCleanHTML();
-			log.debug("safeString is " + safeString);
-			if(xssString.equalsIgnoreCase(safeString))
-			{
-				log.debug("Strings Match: No Xss Detected");
-			}
-			else
-			{
-				log.debug("Strings Differ: Possible Xss Detected");
-				log.debug("Number of errors: " + cr.getNumberOfErrors());
-				//Get the errors as they describe the XSS attack vector that was used
-				List<String> errors = cr.getErrorMessages();
-				int numberOfErrors = cr.getNumberOfErrors();
-				for(int i = 0; i < numberOfErrors; i++)
-				{
-					String error = errors.get(i);
-					log.debug("Error " + (i+1));
-					//Comment following line out out unless testing
-					log.debug("Error Reads: " + error);
-					//First check if error is about Script tags - This would imply simple xss has been submitted
-					String scriptTagErrorStart = new String("The script tag is not allowed for security reasons.");
-					if(error.startsWith(scriptTagErrorStart))
-					{
-						log.debug("Script tags detected");
-						result = true;
-					}
-					else
-					{
-						//log.debug("Simple XSS Script Tags not detected");
-						//iframe's with Javascript events do not get caught. So checking if error is Iframe error
-						String iframeErrorStart = new String("The iframe tag is not allowed for security reasons.");
-						if(error.startsWith(iframeErrorStart))
-						{
-							//If it is we're going to change it to an <A> element, because antiSamy will check the javascript events and URI attacks of that
-							xssString = xssString.replaceAll("iframe", "a");
-							//Calling Function Recurseivly atm. TODO// Make a Overwritten version of this search that searches for an error releated to a specific element
-							result = FindXSS.antiSamySearch(xssString, applicationRoot);
-						}
-						else
-						{
-							for(int j = 0; j < htmlElements.length; j++)
-							{
-								//We want errors that read like: "The a tag contained an attribute that we could not process. The "; // This will only catch "a" tag
-								//Loop goes checks to see if this error is one of a known HTML element of interest
-								//Make the error message we are expecting for this HTML Element
-								String expectedErrorStart = makeAntiSammyError(htmlElements[j]);
-								//log.debug("Searching for: " + expectedErrorStart);
-								//If the error starts with this error, we're interested.
-								if(error.startsWith(expectedErrorStart))
-								{
-									//Extracting important parts of the error message
-									error = error.substring(expectedErrorStart.length());
-									String errorAttribute = error.substring(0, error.indexOf(" "));
-									String errorAttibuteValue = error.substring(error.indexOf("\"")+1, error.indexOf("\"", error.indexOf("\"")+1));
-									Encoder encoder = ESAPI.encoder();
-									errorAttibuteValue = encoder.decodeForHTML(errorAttibuteValue.replaceAll("&#34;", ""));
-									
-									//Reconstructing attack vector used based on error message details
-									log.debug("Constructing attack vector from AntiSammy error");
-									String attackVector = "<" + htmlElements[j] + " " + errorAttribute + "=\"" + errorAttibuteValue + "\"";
-									//Does the Element need a </ELEMENT> tag or />
-									if(!isEmptyHtmlElement(htmlElements[j]))
-									{
-										attackVector += ">Attack</" + htmlElements[j] + ">";
-									}
-									else
-									{
-										attackVector += "/>";
-									}
-											
-									log.debug("attackVector: " + attackVector);
-									//log.debug("Searching for XSS in attackVector...");
-									if(FindXSS.searchWithoutSimple(attackVector))
-									{
-										log.debug("Xss Detected");
-										result = true;
-									}
-									else
-										log.debug("Xss Not Detected");
-								}
-								if(result)
-									break; //Xss Detected, time to get out of here
-							}
-						}
-					}
-					if(result)
-					{
-						break; //Xss Detected, time to get out of here
-					}
-					else
-					{
-						log.debug("Error Deemed Uninteresting");
-					}
-				}
-			}
-		} 
-		catch (ScanException e) 
-		{
-			log.debug("ScanException: " + e.toString());
-		} 
-		catch (PolicyException e)
-		{
-			log.debug("PolicyException: " + e.toString());
-		}
-		catch (Exception e)
-		{
-			log.debug("Unexpected Error! " + e.toString());
-		}
-		return result;
-	}
-	
-	/**
-	 * Creates the leading string of an AntiSammy error for a specific html element
-	 * @param htmlElement the element to include in the error message
-	 * @return
-	 */
-	private static String makeAntiSammyError(String htmlElement)
-	{
-		return new String("The " + htmlElement + " tag contained an attribute that we could not process. The ");
-	}
-	
-	private static boolean isEmptyHtmlElement(String htmlElement)
-	{
-		boolean emptyHtmlElement = false;
-		String emptyElements[] = {"br", "hr", "link", "base", "meta", "img", "embed", "param", "area", "col", "input"};
-		for (int i = 0; i < emptyElements.length && !emptyHtmlElement; i++)
-		{
-			emptyHtmlElement = htmlElement.equalsIgnoreCase(emptyElements[i]);
-		}
-		return emptyHtmlElement;
 	}
 }

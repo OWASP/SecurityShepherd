@@ -29,22 +29,47 @@ public class Database
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Database.class);
 	/**
-	 * This method is used by the application to get a connection to the secure database sever
+	 * This method is used by the application to close an open connection to a database server
+	 * @param conn The connection to close
+	 */
+	public static void closeConnection(Connection conn)
+	{
+		try
+		{
+			log.debug("Closing database connection");
+			conn.close();
+		}
+		catch(Exception e)
+		{
+			log.error("Error closing connection:" + e.toString());
+		}
+	}
+	
+	/**
+	 * This method is used by the application to get a connection to the secure database sever based on the input path to a specific properties file.
 	 * @param ApplicationRoot The running context of the application.
+	 * @param path The path to the properties file to use for this connection. this is filtered for path traversal attacks
 	 * @return A connection to the secure database server
 	 */
-	public static Connection getDatabaseConnection(String ApplicationRoot)
+	public static Connection getChallengeConnection(String ApplicationRoot, String path)
 	{
-	   Connection conn = null;
-	   try
-	   {
+		//Some over paranoid input validation never hurts.
+		path = path.replaceAll("\\.", "").replaceAll("/", "");
+		log.debug("Path = " + path);
+		Connection conn = null;
+		try
+		{
+		   //Pull Driver and DB URL out of database.properties
 		   String props = ApplicationRoot+"/WEB-INF/database.properties";
-		  
-		   String DriverType = FileInputProperties.readfile(props, "DriverType"); 
+		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
-		   
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
+		   //Pull DB Schema, Schema User name and Schema Password from level specific properties File
+		   props = ApplicationRoot+"/WEB-INF/challenges/" + path + ".properties";
+		   log.debug("Level Properties File = " + path + ".properties");
+		   //Add DB Schema to the end of the connectionURL
+		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
 		   String username=FileInputProperties.readfile(props, "databaseUsername");
 		   String password=FileInputProperties.readfile(props, "databasePassword");
 		   
@@ -92,30 +117,22 @@ public class Database
 	}
 	
 	/**
-	 * This method is used by the application to get a connection to the secure database sever based on the input path to a specific properties file.
+	 * This method is used by the application to get a connection to the secure database sever
 	 * @param ApplicationRoot The running context of the application.
-	 * @param path The path to the properties file to use for this connection. this is filtered for path traversal attacks
 	 * @return A connection to the secure database server
 	 */
-	public static Connection getChallengeConnection(String ApplicationRoot, String path)
+	public static Connection getDatabaseConnection(String ApplicationRoot)
 	{
-		//Some over paranoid input validation never hurts.
-		path = path.replaceAll("\\.", "").replaceAll("/", "");
-		log.debug("Path = " + path);
-		Connection conn = null;
-		try
-		{
-		   //Pull Driver and DB URL out of database.properties
+	   Connection conn = null;
+	   try
+	   {
 		   String props = ApplicationRoot+"/WEB-INF/database.properties";
-		   String DriverType = FileInputProperties.readfile(props, "DriverType");
+		  
+		   String DriverType = FileInputProperties.readfile(props, "DriverType"); 
 		   Class.forName(DriverType).newInstance();
+		   
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
-		   //Pull DB Schema, Schema User name and Schema Password from level specific properties File
-		   props = ApplicationRoot+"/WEB-INF/challenges/" + path + ".properties";
-		   log.debug("Level Properties File = " + path + ".properties");
-		   //Add DB Schema to the end of the connectionURL
-		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
 		   String username=FileInputProperties.readfile(props, "databaseUsername");
 		   String password=FileInputProperties.readfile(props, "databasePassword");
 		   
@@ -161,22 +178,5 @@ public class Database
 		   e.printStackTrace();
 	   }
 	   return conn;
-	}
-	
-	/**
-	 * This method is used by the application to close an open connection to a database server
-	 * @param conn The connection to close
-	 */
-	public static void closeConnection(Connection conn)
-	{
-		try
-		{
-			log.debug("Closing database connection");
-			conn.close();
-		}
-		catch(Exception e)
-		{
-			log.error("Error closing connection:" + e.toString());
-		}
 	}
 }
