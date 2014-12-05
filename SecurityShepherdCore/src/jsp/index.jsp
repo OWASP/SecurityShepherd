@@ -51,6 +51,7 @@ if (request.getSession() != null)
 		String userId = encoder.encodeForJavaScript(ses.getAttribute("userStamp").toString());
 		String csrfJsToken = encoder.encodeForJavaScript(tokenCookie.getValue());
 		String ApplicationRoot = getServletContext().getRealPath("");
+		boolean showCheatSheet = CheatSheetStatus.showCheat(userRole);
 		int i = 0;
 %>
 		<html xmlns="http://www.w3.org/1999/xhtml">
@@ -83,7 +84,7 @@ if (request.getSession() != null)
 		<div id="page">
 			<div id="submitResult" style="display: none; float: right;, width: 800px;">
 				<form action="javascript:;" id="resultForm" >
-				<input type="hidden" id="currentModule" value="" />
+				<input type="hidden" id="currentModule" value="">
 					<table>
 					<tr><td>
 						Submit Result Key:</td><td> <input style="width: 470px;" type="text" id="moduleResult" value="" autocomplete="OFF"/></td><td><div id="submitForm"><input type="submit" value="Submit"/></div>
@@ -92,12 +93,8 @@ if (request.getSession() != null)
 					</table>
 					<div id="resultResponse"></div>
 				</form>
-				<% if(CheatSheetStatus.getStatus()) { %>
-					<br/>
-					<small><a id='showSolution' href="javascript:;">Show Module Cheat Sheet...</a></small><br/>
+				<% if(showCheatSheet) { %>
 					<div id="solutionDiv" style="display:none;"></div>
-					<br/>
-					<br/>
 				<% } %>
 			</div>
 			<!-- You are currently looking at the core server. 
@@ -157,6 +154,11 @@ if (request.getSession() != null)
 								</li>
 							</ul>
 						</li>
+					<% } %>
+					<% if(showCheatSheet) { %>
+					<div id="cheatSheetButton" style="display: none;">
+						<a id="showSolution" href="javascript:;"><div class="menuButton">Cheat</div></a>
+					</div>
 					<% } %>
 					<% if(ModulePlan.isOpenFloor()) { %>
 						<li>
@@ -223,9 +225,17 @@ if (request.getSession() != null)
 					theActualFile = ajaxCall.responseText;
 					$('#contentDiv').html("<iframe frameborder='no' style='word-wrap: break-word; width: 685px; height: 2056px;' id='theChallenge' src='" + theActualFile + "'></iframe>");
 					$("#theChallenge").load(function(){
-						$("#submitResult").slideDown("fast", function(){
-							$("#contentDiv").slideDown("slow");
-						});
+						<% if(showCheatSheet) { %>
+							$("#submitResult").slideDown("fast", function(){
+								$("#cheatSheetButton").slideDown("fast", function(){
+									$("#contentDiv").slideDown("slow");
+								});
+							});
+						<% } else { %>
+							$("#submitResult").slideDown("fast", function(){
+								$("#contentDiv").slideDown("slow");
+							});
+						<% } %>
 					}).appendTo('#contentDiv');
 				}
 				else
@@ -256,9 +266,17 @@ if (request.getSession() != null)
 					theActualFile = ajaxCall.responseText;
 					$('#contentDiv').html("<iframe frameborder='no' style='word-wrap: break-word; width: 685px; height: 2056px;' id='theLesson' src='" + theActualFile + "'></iframe>");
 					$("#theLesson").load(function(){
+					<% if(showCheatSheet) { %>
+						$("#submitResult").slideDown("fast", function(){
+							$("#cheatSheetButton").slideDown("fast", function(){
+								$("#contentDiv").slideDown("slow");
+							});
+						});
+					<% } else { %>
 						$("#submitResult").slideDown("fast", function(){
 							$("#contentDiv").slideDown("slow");
 						});
+					<% } %>
 					}).appendTo('#contentDiv');
 				}
 				else
@@ -266,30 +284,6 @@ if (request.getSession() != null)
 					$('#contentDiv').html("<p> Sorry but there was a lesson error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					$("#contentDiv").slideDown("slow");
 				}
-			});
-		});
-
-		$("#showSolution").click(function(){
-			$("#solutionDiv").hide("fast", function(){
-				var theModuleId = $("#currentModule").val();
-				var ajaxCall = $.ajax({
-					type: "POST",
-					url: "getCheat",
-					data: {
-						moduleId: theModuleId,
-						csrfToken: "<%= csrfToken %>"
-					},
-					async: false
-				});
-				if(ajaxCall.status == 200)
-				{
-					$('#solutionDiv').html(ajaxCall.responseText);
-				}
-				else
-				{
-					$('#solutionDiv').html("<p> Sorry but there was a show solution error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-				}
-				$("#solutionDiv").show("fast");
 			});
 		});
 
@@ -335,6 +329,32 @@ if (request.getSession() != null)
 				alert('Invalid Key');
 			}
 		});
+		
+		<% if(showCheatSheet) { %>
+		$("#showSolution").click(function(){
+			$("#solutionDiv").hide("fast", function(){
+				var theModuleId = $("#currentModule").val();
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "getCheat",
+					data: {
+						moduleId: theModuleId,
+						csrfToken: "<%= csrfToken %>"
+					},
+					async: false
+				});
+				if(ajaxCall.status == 200)
+				{
+					$('#solutionDiv').html(ajaxCall.responseText);
+				}
+				else
+				{
+					$('#solutionDiv').html("<p> Sorry but there was a show solution error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+				}
+				$("#solutionDiv").show("fast");
+			});
+		});
+		<% } %>
 		
 		</script>
 		<!-- You are currently looking at the core server. 

@@ -22,26 +22,61 @@ package utils;
  */
 public class CheatSheetStatus
 {
-	private static String is = "disabled";
-
-	public static String setStatus()
+	private static boolean adminEnabled = false;
+	private static boolean playerEnabled = false;
+	
+	public static void disableForAll()
 	{
-		return is;
-	}
-
-	public static void enable()
-	{
-		CheatSheetStatus.is = "enabled";
+		adminEnabled = false;
+		playerEnabled = false;
 	}
 	
-	public static void disable()
+	public static void enableForAdminsOnly()
 	{
-		CheatSheetStatus.is = "disabled";
+		playerEnabled = false;
+		adminEnabled = true;
 	}
 	
-	public static boolean getStatus ()
+	public static void enableForAll()
 	{
-		return is.equals("enabled");
+		adminEnabled = true;
+		playerEnabled = true;
+	}
+	
+	public static boolean getStatusForAll ()
+	{
+		return adminEnabled && playerEnabled;
+	}
+	
+	public static boolean isEnabledForAdminsOnly()
+	{
+		return !playerEnabled && adminEnabled;
+	}
+	
+	public static boolean isEnabledForPlayers()
+	{
+		return playerEnabled;
+	}
+	
+	public static boolean isEnabledAtAll()
+	{
+		return adminEnabled || playerEnabled;
+	}
+
+	public static boolean showCheat(String userRole) 
+	{
+		boolean show = false;
+		if(isEnabledAtAll())
+		{
+			if(isEnabledForPlayers())
+				show = true;
+			else
+			{
+				if(isEnabledForAdminsOnly() && userRole.compareTo("admin") == 0)
+					show = true;
+			}
+		}
+		return show;
 	}
 	
 }

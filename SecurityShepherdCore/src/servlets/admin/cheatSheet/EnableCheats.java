@@ -63,10 +63,21 @@ public class EnableCheats extends HttpServlet
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
-				CheatSheetStatus.enable();
-				log.debug("Cheat Sheets Enabled");
-				out.write("<h2 class='title'>Cheat Sheets Enabled</h2>" +
-						"<p>Cheat Sheets have been enabled for all Security Shepherd Users</p>");
+				//Enable for all or for admins?
+				String enableFor = Validate.validateParameter(request.getParameter("enableForAll"), 16);
+				if(enableFor.equalsIgnoreCase("true"))
+				{
+					CheatSheetStatus.enableForAll();
+					log.debug("Cheat Sheets Enabled");
+					out.write("<h2 class='title'>Cheat Sheets Enabled</h2>" +
+							"<p>Cheat Sheets have been enabled for all Security Shepherd Users</p>");
+				}
+				else
+				{
+					CheatSheetStatus.enableForAdminsOnly();log.debug("Cheat Sheets Enabled");
+					out.write("<h2 class='title'>Cheat Sheets Enabled</h2>" +
+							"<p>Cheat Sheets have been enabled for Security Shepherd Administrators</p>");
+				}
 			}
 		}
 		else

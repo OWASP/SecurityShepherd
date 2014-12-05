@@ -54,16 +54,22 @@ String ApplicationRoot = getServletContext().getRealPath("");
 	<div id="formDiv" class="post">
 		<h1 class="title">Enable Cheat Sheets</h1>
 		<div class="entry">
-			<form id="theForm" action="javascript:;">
-				<% if (!CheatSheetStatus.getStatus()) {%>
+			
+				<% if (!CheatSheetStatus.getStatusForAll()) {%>
+					<form id="theForm" action="javascript:;">
 					<p>Are you sure that you want to enable <a>cheat sheets</a> for all users?</p>
 					<div id="badData"></div>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
 					<table align="center">
 						<tr><td colspan="2" align="center">
-							<input type="submit" id="submitButton" value="Enable Cheat Sheets"/>
+							<input type="submit" id="submitButton" value="Enable Cheat Sheets For Admins"/>
+						</td></tr>
+						<tr><td colspan="2" align="center">
+							<br>Or<br><br>
+							<input type="button" id="openAll" value="Enable Cheat Sheets For All"/>
 						</td></tr>
 					</table>
+					</form>
 					<script>					
 					$("#theForm").submit(function(){
 						var theCsrfToken = $('#csrfToken').val();
@@ -72,6 +78,32 @@ String ApplicationRoot = getServletContext().getRealPath("");
 							type: "POST",
 							url: "enableCheats",
 							data: {
+								enableForAll: "nope",
+								csrfToken: theCsrfToken
+							},
+							async: false
+						});
+						if(ajaxCall.status == 200)
+						{
+							$("#contentDiv").hide("fast", function(){
+								$("#contentDiv").html(ajaxCall.responseText);
+								$("#contentDiv").show("fast");
+							});
+						}
+						else
+						{
+							$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						}
+					});
+					
+					$("#openAll").click(function(){
+						var theCsrfToken = $('#csrfToken').val();
+						//The Ajax Operation
+						var ajaxCall = $.ajax({
+							type: "POST",
+							url: "enableCheats",
+							data: {
+								enableForAll: "true",
 								csrfToken: theCsrfToken
 							},
 							async: false
@@ -92,7 +124,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 				<% } else { %>
 					<p>Cheat sheets are already enabled!</p>
 				<% } %>
-			</form>
+			
 			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		</div>
 	</div>

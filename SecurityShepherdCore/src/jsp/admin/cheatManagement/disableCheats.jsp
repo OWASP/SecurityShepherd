@@ -52,7 +52,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 		<h1 class="title">Disable Cheat Sheets</h1>
 		<div class="entry">
 			<form id="theForm" action="javascript:;">
-				<% if (CheatSheetStatus.getStatus()) {%>
+				<% if (CheatSheetStatus.isEnabledAtAll()) {%>
 					<p>Are you sure that you want to disable <a>cheat sheets</a> for all users?</p>
 					<div id="badData"></div>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>

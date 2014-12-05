@@ -63,7 +63,7 @@ public class DisableCheats extends HttpServlet
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
-				CheatSheetStatus.disable();
+				CheatSheetStatus.disableForAll();
 				log.debug("Cheat Sheets Disabled");
 				out.write("<h2 class='title'>Cheat Sheets Disabled</h2>" +
 				"<p>Cheat Sheets have been disabled for all Security Shepherd Users</p>");

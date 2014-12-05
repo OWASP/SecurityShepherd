@@ -67,7 +67,7 @@ public class GetCheat extends HttpServlet
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
-				if(CheatSheetStatus.getStatus())
+				if(CheatSheetStatus.showCheat(ses.getAttribute("userRole").toString()))
 				{
 					String ApplicationRoot = getServletContext().getRealPath("");
 					String moduleId = request.getParameter("moduleId");
@@ -77,10 +77,12 @@ public class GetCheat extends HttpServlet
 						result = Getter.getModuleSolution(ApplicationRoot, moduleId);
 						if(result != null)
 						{
-							out.write("<br/><br/><h2 class='title'>" + encoder.encodeForHTML(result[0]) + " Cheat</h2>" +
+							out.write(
+									"<div id='theActualCheat' style='float: right; margin 0; width: 685px;border-color:#A878EF; border-style:dashed; background-color: #D4D4D4; padding-top:5px; padding-bottom:5px; padding-right:5px; padding-left:5px;'>" + 
+									"<big style='color:#A878EF;'>" + encoder.encodeForHTML(result[0]) + " Cheat</big>" +
 									"<p>" +
 									result[1] +
-									"</p>");
+									"</div></p><br>");
 						}
 					}
 				}
