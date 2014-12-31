@@ -1,62 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/background"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
     android:background="@drawable/background"
-    android:orientation="horizontal" >
+    android:weightSum="1">
+    <RelativeLayout android:id="@+id/Spacer"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="100dp"
+        android:layout_weight="0.08">
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="0.63">
 
-    <EditText
-        android:id="@+id/etName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etPass"
-        android:layout_below="@+id/tvTitle"
-        android:layout_marginTop="25dp"
-        android:ems="10"
-        android:background="@drawable/edittext"
-        android:hint="Username"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#DA70D6" />
+        <RelativeLayout android:id="@+id/innerBox"
+            android:layout_width="500dip"
+            android:background="@drawable/box"
+            android:layout_height="fill_parent"
+            android:layout_centerHorizontal="true">
 
-    <EditText
-        android:id="@+id/etPass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
-        android:ems="10"
-        android:hint="Password"
-        android:background="@drawable/edittext"
-        android:inputType="textPassword"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#DA70D6" >
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext"
+                android:ems="10"
+                android:hint="Username"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#DA70D6"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
 
-        <requestFocus />
-    </EditText>
+            <EditText
+                android:id="@+id/etPass"
 
-    <Button
-        android:id="@+id/bLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etPass"
-        android:layout_alignRight="@+id/etPass"
-        android:layout_below="@+id/etPass"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/button"
-        android:filterTouchesWhenObscured="true"
-        android:text="@string/login" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Password"
+                android:layout_marginTop="20dp"
+                android:inputType="textPassword"
+                android:gravity="center"
+                android:background="@drawable/edittext"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#DA70D6"
+                android:layout_below="@+id/etName"
+                android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etName"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="34dp"
-        android:text="@string/login"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#DA70D6" />
+            <Button
+                android:id="@+id/bLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button"
+                android:filterTouchesWhenObscured="true"
+                android:text="@string/login"
+                android:layout_below="@+id/etPass"
+                android:layout_alignLeft="@+id/etPass"
+                android:layout_marginTop="20dp"
+                android:layout_alignStart="@+id/etPass"
+                android:layout_alignRight="@+id/etPass"
+                android:layout_alignEnd="@+id/etPass" />
 
-</RelativeLayout>
+            <requestFocus />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>
