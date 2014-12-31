@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BrokenCrypto.iml" filepath="$PROJECT_DIR$/BrokenCrypto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MobShepTemplate.iml" filepath="$PROJECT_DIR$/MobShepTemplate.iml" />
     </modules>
   </component>
 </project>

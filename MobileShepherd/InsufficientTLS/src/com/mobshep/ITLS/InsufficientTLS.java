@@ -15,10 +15,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,6 +52,7 @@ import android.widget.Toast;
 public class InsufficientTLS extends Activity implements OnClickListener {
 
 	private Button sendTheMessage;
+	private Button preferences;
 	private ProgressBar progressBar;
 	private static final String TAG = "MyActivity";
 
@@ -81,18 +85,24 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 
 	private void referenceXML() {
 		// TODO Auto-generated method stub
+		preferences = (Button) findViewById(R.id.buttonPrefs);
 		sendTheMessage = (Button) findViewById(R.id.theFirstButton);
 		progressBar = (ProgressBar) findViewById(R.id.theProgressBar);
 		progressBar.setVisibility(View.GONE);
 		sendTheMessage.setOnClickListener(this);
+		preferences.setOnClickListener(this);
 	}
 
-	@Override
-	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
-			progressBar.setVisibility(View.VISIBLE);
-			new MyAsyncTask().execute("Sending Data...");
+	private void sendNetworkData() {
+		progressBar.setVisibility(View.VISIBLE);
+		new MyAsyncTask().execute("Sending Data...");
+	}
 
+	private void settings() {
+		// TODO Auto-generated method stub
+		Intent gotoPreferences = new Intent(InsufficientTLS.this,
+				Preferences.class);
+		startActivity(gotoPreferences);
 	}
 
 	private class MyAsyncTask extends AsyncTask<String, Integer, Double> {
@@ -131,6 +141,10 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 				con.setRequestMethod("POST");
 				con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
+				//test code
+				
+				//remove test code
+				
 				String urlParameters = "uname=U3RldmU=&pass=TWVhdGJhbGxzQW5kQnJvY2NvbGk=";
 
 				// Send post request
@@ -165,4 +179,18 @@ public class InsufficientTLS extends Activity implements OnClickListener {
 
 	}
 
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+
+		case (R.id.theFirstButton):
+			sendNetworkData();
+			break;
+		case (R.id.buttonPrefs):
+			settings();
+			break;
+		}
+
+	}
 }
