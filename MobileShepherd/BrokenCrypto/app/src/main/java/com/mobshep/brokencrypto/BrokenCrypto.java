@@ -42,10 +42,7 @@ public class BrokenCrypto extends Activity {
 		setContentView(R.layout.broken);
 		
 
-		//Toast info = Toast.makeText(BrokenCrypto.this,
-			//	"Click a message to copy it!", Toast.LENGTH_SHORT);
-		//info.show();
-		
+
 		referenceXML();
 		startTimerOne();
 		startTimerTwo();
@@ -68,7 +65,8 @@ public class BrokenCrypto extends Activity {
 		messageFour.setVisibility(View.INVISIBLE);
 		messageFive.setVisibility(View.INVISIBLE);
 
-	}
+
+    }
 
 	private void startTimerOne() {
 		final Handler handler = new Handler();

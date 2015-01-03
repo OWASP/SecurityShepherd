@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/miniNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="25dp"
+        android:background="@drawable/edittext"
+        android:ems="10"
+        android:hint="The key is: UpsideDownPizzaDip"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#DA70D6" />
+
+    <ListView
+        android:id="@+id/noteList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#DA70D6" 
+        android:background="@drawable/button"
+         >
+    </ListView>
+
+</LinearLayout>

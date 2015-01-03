@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<lint>
-    <issue id="Instantiatable" severity="warning" />
-    <issue id="MissingTranslation" severity="warning" />
-    <issue id="NewApi" severity="ignore" />
-    <issue id="ValidFragment" severity="warning" />
-</lint>

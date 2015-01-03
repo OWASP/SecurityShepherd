@@ -31,14 +31,209 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a50c61f-20c8-45e9-95b0-365f2d2ad8db" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsecureData2\app\src\main\res\drawable\background\background.jpg" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../InsecureData2/app/src/main/drawable/background.jpg" afterPath="$PROJECT_DIR$/../InsecureData2/app/src/main/drawable/background.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../InsecureData2/app/src/main/res/drawable/background.jpg" afterPath="$PROJECT_DIR$/../InsecureData2/app/src/main/res/drawable/background.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../InsecureData2/app/src/main/res/layout/ids.xml" afterPath="$PROJECT_DIR$/../InsecureData2/app/src/main/res/layout/ids.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../InsecureData2/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../InsecureData2/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../InsecureData3/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../InsecureData3/.idea/workspace.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-hdpi/background.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-ldpi/background.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-mdpi/background.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xhdpi/background.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xxhdpi/background.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-hdpi/ic_launcher.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-ldpi/ic_launcher.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-mdpi/ic_launcher.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xhdpi/ic_launcher.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xxhdpi/ic_launcher.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-hdpi/splash.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-ldpi/splash.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-mdpi/splash.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xhdpi/splash.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xxhdpi/splash.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/java/com/mobshep/brokencrypto/BrokenCrypto.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/java/com/mobshep/brokencrypto/Splash.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/layout/broken.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/values/dimens.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/values-sw600dp/dimens.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/values-sw720dp-land/dimens.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-hdpi/edittext.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-ldpi/edittext.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-mdpi/edittext.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xhdpi/edittext.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xxhdpi/edittext.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-hdpi/green.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-ldpi/green.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-mdpi/green.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xhdpi/green.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xxhdpi/green.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-hdpi/purple.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-ldpi/purple.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-mdpi/purple.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xhdpi/purple.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/drawable-xxhdpi/purple.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/layout/splash.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/values/strings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/values/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/values-v11/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../BrokenCrypto/app/src/main/res/values-v14/styles.xml" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\.settings\org.eclipse.jdt.core.prefs" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\AndroidManifest.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\assets\desKey" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\ic_launcher-web.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\libs\android-support-v4.jar" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\lint.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\proguard-project.txt" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\project.properties" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-hdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-hdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-hdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-hdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-hdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-hdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-ldpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-ldpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-ldpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-ldpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-ldpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-ldpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-mdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-mdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-mdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-mdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-mdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-mdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xhdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xhdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xhdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xhdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xhdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xhdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xxhdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xxhdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xxhdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xxhdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xxhdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\drawable-xxhdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\layout\broken.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\layout\splash.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\values-sw600dp\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\values-sw720dp-land\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\values-v11\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\values-v14\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\values\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\values\strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\res\values\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\src\com\mobshep\BrokenCrypto2\BrokenCrypto2.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto2\src\com\mobshep\BrokenCrypto2\Splash.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\.gitignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\.settings\org.eclipse.jdt.core.prefs" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\AndroidManifest.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\assets\key1" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\assets\key2" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\assets\key3" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\build.gradle" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\gradle\wrapper\gradle-wrapper.jar" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\gradle\wrapper\gradle-wrapper.properties" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\gradlew" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\gradlew.bat" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\ic_launcher-web.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\libs\android-support-v4.jar" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\lint.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\proguard-project.txt" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\project.properties" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-hdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-hdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-hdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-hdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-hdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-hdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-ldpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-ldpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-ldpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-ldpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-ldpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-ldpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-mdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-mdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-mdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-mdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-mdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-mdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xhdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xhdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xhdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xhdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xhdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xhdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xxhdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xxhdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xxhdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xxhdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xxhdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\drawable-xxhdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\layout\broken.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\layout\splash.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\values-sw600dp\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\values-sw720dp-land\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\values-v11\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\values-v14\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\values\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\values\strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\res\values\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\src\com\mobshep\BrokenCrypto3\BrokenCrypto3.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto3\src\com\mobshep\BrokenCrypto3\Splash.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\.settings\org.eclipse.jdt.core.prefs" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\AndroidManifest.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\ic_launcher-web.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\libs\android-support-v4.jar" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\lint.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\proguard-project.txt" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\project.properties" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-hdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-hdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-hdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-hdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-hdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-hdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-ldpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-ldpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-ldpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-ldpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-ldpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-ldpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-mdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-mdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-mdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-mdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-mdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-mdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xhdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xhdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xhdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xhdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xhdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xhdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xxhdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xxhdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xxhdpi\green.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xxhdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xxhdpi\purple.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\drawable-xxhdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\layout\broken.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\layout\splash.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\values-sw600dp\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\values-sw720dp-land\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\values-v11\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\values-v14\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\values\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\values\strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\res\values\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\src\com\mobshep\BrokenCrypto\BrokenCrypto.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\BrokenCrypto\src\com\mobshep\BrokenCrypto\Splash.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../BrokenCrypto/.gitignore" afterPath="$PROJECT_DIR$/../BrokenCrypto/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../BrokenCrypto2/.gitignore" afterPath="$PROJECT_DIR$/../BrokenCrypto2/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../BrokenCrypto/build.gradle" afterPath="$PROJECT_DIR$/../BrokenCrypto/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../BrokenCrypto2/build.gradle" afterPath="$PROJECT_DIR$/../BrokenCrypto2/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../BrokenCrypto2/gradle/wrapper/gradle-wrapper.properties" afterPath="$PROJECT_DIR$/../BrokenCrypto2/gradle/wrapper/gradle-wrapper.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../BrokenCrypto/gradle/wrapper/gradle-wrapper.properties" afterPath="$PROJECT_DIR$/../BrokenCrypto/gradle/wrapper/gradle-wrapper.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../MobShepTemplate/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../MobShepTemplate/.idea/workspace.xml" />
     </list>
     <ignored path="InsecureData.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -1108,10 +1303,8 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1066" />
+    <option name="width" value="960" />
+    <option name="height" value="1050" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -1139,7 +1332,63 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="InsecureData" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Gradle Scripts" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidBuildScriptsGroupNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="InsecureData" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="InsecureData" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="InsecureData" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="insecuredata" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1270,63 +1519,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="AndroidView">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="InsecureData" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Gradle Scripts" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidBuildScriptsGroupNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="InsecureData" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="InsecureData" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="InsecureData" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="insecuredata" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1558,7 +1751,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1066" extended-state="0" />
+    <frame x="0" y="0" width="960" height="1050" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1568,20 +1761,20 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32938388" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16151386" sideWeight="0.5041051" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33666667" sideWeight="0.50421584" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2838983" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33076924" sideWeight="0.27878466" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27558637" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33668903" sideWeight="0.17333333" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5744445" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32938388" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33305085" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16151386" sideWeight="0.4958949" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33666667" sideWeight="0.49578413" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32967034" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33076924" sideWeight="0.72121537" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33668903" sideWeight="0.82666665" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
