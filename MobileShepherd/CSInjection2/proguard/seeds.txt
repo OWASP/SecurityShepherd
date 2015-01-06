@@ -1,4 +1,0 @@
-com.app.mobshep.csinjection2.CSInjection2
-com.app.mobshep.csinjection2.CSInjection2: CSInjection2()
-com.app.mobshep.csinjection2.Splash
-com.app.mobshep.csinjection2.Splash: Splash()
