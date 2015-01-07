@@ -18,151 +18,54 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43c70fcb-21ab-4726-a6cf-c2fc6bef856e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/jniLibs/armeabi/libdatabase_sqlcipher.so" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/jniLibs/armeabi-v7a/libdatabase_sqlcipher.so" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/jniLibs/x86/libdatabase_sqlcipher.so" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/jniLibs/armeabi/libsqlcipher_android.so" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/jniLibs/armeabi-v7a/libsqlcipher_android.so" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/jniLibs/x86/libsqlcipher_android.so" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/jniLibs/armeabi/libstlport_shared.so" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/jniLibs/armeabi-v7a/libstlport_shared.so" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/jniLibs/x86/libstlport_shared.so" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/libs/sqlcipher-javadoc.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/libs/sqlcipher.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/androidTest/java/com/mobshep/csinjection2/ApplicationTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xxhdpi/button.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xxhdpi/edittext.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/gradle.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../CSInjection2/settings.gradle" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\.classpath" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\.idea\libraries\android_support_v4.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\.project" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\.settings\org.eclipse.jdt.core.prefs" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\BrokenCrypto.iml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\ic_launcher-web.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\android-support-v4.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\armeabi\libdatabase_sqlcipher.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\armeabi\libsqlcipher_android.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\armeabi\libstlport_shared.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\commons-codec.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\guava-r09.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\sqlcipher.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\x86\libdatabase_sqlcipher.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\x86\libsqlcipher_android.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\libs\x86\libstlport_shared.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\lint.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\proguard-project.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\proguard\dump.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\proguard\mapping.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\proguard\seeds.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\proguard\usage.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\project.properties" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xhdpi\background.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xxhdpi\background.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xxhdpi\button.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xxhdpi\edittext.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\.settings\org.eclipse.jdt.core.prefs" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\AndroidManifest.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\assets\icudt46l.zip" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\gradle\wrapper\gradle-wrapper.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\gradle\wrapper\gradle-wrapper.properties" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\gradlew" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\gradlew.bat" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\ic_launcher-web.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\android-support-v4.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\armeabi\libdatabase_sqlcipher.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\armeabi\libsqlcipher_android.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\armeabi\libstlport_shared.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\commons-codec.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\guava-r09.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\sqlcipher.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\x86\libdatabase_sqlcipher.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\x86\libsqlcipher_android.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\libs\x86\libstlport_shared.so" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\project.properties" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-hdpi\background.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-hdpi\button.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-hdpi\edittext.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-hdpi\ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-hdpi\splash.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-ldpi\background.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-ldpi\button.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-ldpi\edittext.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-ldpi\ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-ldpi\splash.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-mdpi\button.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-mdpi\edittext.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-mdpi\ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-mdpi\splash.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xhdpi\button.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xhdpi\edittext.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xhdpi\ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xhdpi\splash.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xxhdpi\background.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xxhdpi\button.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xxhdpi\edittext.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xxhdpi\ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xxhdpi\splash.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\layout\csi.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\layout\splash.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\values-sw600dp\dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\values-sw720dp-land\dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\values-v11\styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\values-v14\styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\values\dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\values\strings.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\values\styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\src\com\mobshep\csinjection3\CSInjection3.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\src\com\mobshep\csinjection3\Splash.java" afterPath="" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\AndroidManifest.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/AndroidManifest.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\assets\icudt46l.zip" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/assets/icudt46l.zip" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-hdpi\background.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-hdpi/background.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-hdpi\button.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-ldpi/button.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-hdpi\edittext.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-hdpi/edittext.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-hdpi\ic_launcher.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-hdpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-hdpi\splash.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-hdpi/splash.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-ldpi\background.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-ldpi/background.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-ldpi\button.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xhdpi/button.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-ldpi\edittext.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-mdpi/edittext.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-ldpi\ic_launcher.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-ldpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-ldpi\splash.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-ldpi/splash.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-mdpi\background.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-mdpi/background.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-mdpi\button.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-hdpi/button.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-mdpi\edittext.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xhdpi/edittext.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-mdpi\ic_launcher.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-mdpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-mdpi\splash.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-mdpi/splash.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xhdpi\button.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-mdpi/button.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xhdpi\edittext.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-ldpi/edittext.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xhdpi\ic_launcher.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xhdpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xhdpi\splash.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xhdpi/splash.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xxhdpi\ic_launcher.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xxhdpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\drawable-xxhdpi\splash.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xxhdpi/splash.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\layout\csi.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/layout/csi.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\layout\splash.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/layout/splash.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\values-sw600dp\dimens.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/values-sw600dp/dimens.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\values-sw720dp-land\dimens.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/values-sw720dp-land/dimens.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\values\dimens.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/values/dimens.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\values\strings.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/values/strings.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\res\values\styles.xml" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/values/styles.xml" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\src\com\mobshep\csinjection2\CSInjection2.java" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/java/com/mobshep/csinjection2/CSInjection2.java" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection2\src\com\mobshep\csinjection2\Splash.java" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/java/com/mobshep/csinjection2/Splash.java" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\proguard-project.txt" afterPath="$PROJECT_DIR$/../CSInjection2/app/proguard-rules.pro" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-mdpi\background.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xhdpi/background.png" />
-      <change type="MOVED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\CSInjection3\res\drawable-xhdpi\background.png" afterPath="$PROJECT_DIR$/../CSInjection2/app/src/main/res/drawable-xxhdpi/background.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CSInjection2/.gitignore" afterPath="$PROJECT_DIR$/../CSInjection2/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CSInjection2/.idea/.name" afterPath="$PROJECT_DIR$/../CSInjection2/.idea/.name" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CSInjection2/build.gradle" afterPath="$PROJECT_DIR$/../CSInjection2/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CSInjection2/gradle/wrapper/gradle-wrapper.properties" afterPath="$PROJECT_DIR$/../CSInjection2/gradle/wrapper/gradle-wrapper.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CSInjection2/.idea/misc.xml" afterPath="$PROJECT_DIR$/../CSInjection2/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CSInjection2/.idea/modules.xml" afterPath="$PROJECT_DIR$/../CSInjection2/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CSInjection2/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/../CSInjection2/.idea/copyright/profiles_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CSInjection2/.idea/vcs.xml" afterPath="$PROJECT_DIR$/../CSInjection2/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CSInjection2/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../CSInjection2/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\.settings\org.eclipse.jdt.core.prefs" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\AndroidManifest.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\ic_launcher-web.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\libs\android-support-v4.jar" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\lint.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\proguard-project.txt" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\project.properties" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-hdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-hdpi\button.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-hdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-hdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-hdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-ldpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-ldpi\button.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-ldpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-ldpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-ldpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-mdpi\background.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-mdpi\button.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-mdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-mdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-mdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xhdpi\background.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xhdpi\button.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xhdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xhdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xhdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xxhdpi\background.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xxhdpi\button.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xxhdpi\edittext.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xxhdpi\ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\drawable-xxhdpi\splash.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\layout\layout.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\layout\preferences.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\layout\splash.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\values-sw600dp\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\values-sw720dp-land\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\values-v11\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\values-v14\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\values\dimens.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\values\strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\res\values\styles.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\src\com\mobshep\ITLS\InsufficientTLS.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\src\com\mobshep\ITLS\Preferences.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\IBM_ADMIN\git\owaspSecurityShepherd\MobileShepherd\InsufficientTLS\src\com\mobshep\ITLS\Splash.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../InsufficientTLS/.gitignore" afterPath="$PROJECT_DIR$/../InsufficientTLS/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../InsufficientTLS/build.gradle" afterPath="$PROJECT_DIR$/../InsufficientTLS/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../InsufficientTLS/gradle/wrapper/gradle-wrapper.properties" afterPath="$PROJECT_DIR$/../InsufficientTLS/gradle/wrapper/gradle-wrapper.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="CSInjection.iws" />
@@ -816,7 +719,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -917,6 +819,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -983,7 +886,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -998,7 +901,7 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../CSInjection2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../InsufficientTLS" />
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="emulator-5554" />
@@ -1183,7 +1086,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1066" extended-state="1" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1236,6 +1139,38 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mobshep/csinjection/Splash.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1326">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mobshep/csinjection/CSInjection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3320" max-vertical-offset="4250">
+          <caret line="257" column="9" selection-start-line="257" selection-start-column="9" selection-end-line="257" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="935">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values-sw720dp-land/dimens.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mobshep/csinjection/Splash.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1326">
