@@ -62,7 +62,12 @@ public class CheatSheetStatus
 	{
 		return adminEnabled || playerEnabled;
 	}
-
+	
+	/**
+	 * Returns boolean to tell view's whether Cheat Sheets are available for a specific user role or not
+	 * @param userRole
+	 * @return
+	 */
 	public static boolean showCheat(String userRole) 
 	{
 		boolean show = false;

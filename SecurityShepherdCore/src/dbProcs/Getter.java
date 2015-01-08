@@ -13,6 +13,8 @@ import org.json.simple.JSONObject;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
+import utils.ScoreboardStatus;
+
 /** 
  * Used to retrieve information from the Database
  * <br/><br/>
@@ -740,6 +742,103 @@ public class Getter
 		Database.closeConnection(conn);
 		log.debug("*** END getIncrementalChallenges() ***");
 		return output;
+	}
+	
+	/**
+	 * Use to return the current progress of a class in JSON format with information like userid, user name and score
+	 * @param applicationRoot The current running context of the application
+	 * @param classId The identifier of the class to use in lookup
+	 * @return A JSON representation of a class's progress in the application
+	 */
+	@SuppressWarnings("unchecked")
+	public static String getJsonScore(String applicationRoot, String classId) 
+	{
+		String result = new String();
+		Encoder encoder = ESAPI.encoder();
+		Connection conn = Database.getCoreConnection(applicationRoot);
+		try
+		{
+			//Returns User's: Name, # of Completed modules and Score
+			CallableStatement callstmnt = null;
+			if(ScoreboardStatus.getScoreboardClass().isEmpty())
+				callstmnt = conn.prepareCall("call totalScoreboard()"); //Open Scoreboard not based on a class
+			else
+			{
+				callstmnt = conn.prepareCall("call classScoreboard(?)"); //Class Scoreboard based on classId
+				callstmnt.setString(1, classId);
+			}
+			//log.debug("Executing classScoreboard");
+			ResultSet resultSet = callstmnt.executeQuery();
+			JSONArray json = new JSONArray();
+			JSONObject jsonInner = new JSONObject();
+			int resultAmount = 0;
+			int prevPlace = 0;
+			int prevScore = 0;
+			float baseBarScale = 0; //
+			float tieBreaker = 0;
+			while(resultSet.next()) //For each user in a class
+			{
+				resultAmount++;
+				jsonInner = new JSONObject();
+				if(resultSet.getString(1) != null)
+				{
+					int place = resultAmount;
+					int score = resultSet.getInt(3);
+					if(resultAmount == 1) //First Place is Returned First, so this will be the biggest bar on the scoreboard
+					{
+						int highscore = score;
+						//log.debug("Current Highscore Listing is " + highscore);
+						//Use the high score to scale the width of the bars for the whole scoreboard
+						float maxBarScale = 1.02f; //High Score bar will have a scale of 1 //This will get used when a scale is added to the scoreboard
+						baseBarScale = highscore * maxBarScale;
+						//setting up variables for Tie Scenario Placings
+						prevPlace = 1;
+						prevScore = score;
+					}
+					else
+					{
+						//Does this score line match the one before? if so the place shouldnt change
+						if (score == prevScore)
+						{
+							place = prevPlace;
+							tieBreaker = tieBreaker + 0.01f;
+						}
+						else
+						{
+							prevScore = score;
+							prevPlace = place;
+							tieBreaker = 0;
+						}
+					}
+					int barScale = (int)((score*100)/baseBarScale); //bar scale is the percentage the bar should be of the row's context (Highest Possible is depends on scale set in maxBarScale. eg: maxBarScale = 1.1 would mean the max scale would be 91% for a single row)
+					jsonInner.put("id", new String(encoder.encodeForHTML(resultSet.getString(1)))); //User Id
+					jsonInner.put("username", new String(encoder.encodeForHTML(resultSet.getString(2)))); //User Name
+					jsonInner.put("score", new Integer(score)); //Score
+					jsonInner.put("scale", barScale); //Scale of score bar
+					jsonInner.put("place", place); //Place on board
+					jsonInner.put("order", (place+tieBreaker)); //Order on board
+					//log.debug("Adding: " + jsonInner.toString());
+					json.add(jsonInner);
+				}
+			}
+			if(resultAmount > 0)
+				result = json.toString();
+			else
+				result = new String();
+		}
+		catch(SQLException e)
+		{
+			log.error("getJsonScore Failure: " + e.toString());
+			result = null;
+		}
+		catch(Exception e)
+		{
+			log.error("getJsonScore Unexpected Failure: " + e.toString());
+			result = null;
+		}
+		Database.closeConnection(conn);
+		//log.debug("*** END getJsonScore ***");
+		return result;
 	}
 	
 	/**
