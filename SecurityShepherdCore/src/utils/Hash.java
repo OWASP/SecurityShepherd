@@ -288,7 +288,13 @@ public class Hash
 			psn1.nextBytes(byteArray);
 			result = new String(byteArray);
 			//log.debug("Generated Key = " + result);
-			
+			if(result.length() != 16)
+			{
+				log.error("Generated Key is the incorrect Length: Shortening ");
+				result = result.substring(0, 15);
+				if(result.length() != 16)
+					log.fatal("Encryption key length is Still not Right");
+			}
 		}
 		catch(Exception e)
 		{
