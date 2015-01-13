@@ -63,7 +63,7 @@ public class DisableScoreboard extends HttpServlet
 			{
 				try
 				{			
-					log.debug("Disabling Scoreboard");
+					log.debug("Scoreboard Disabled by: " + ses.getAttribute("userName"));
 					ScoreboardStatus.disableScoreboard();
 					htmlOutput = "Scoreboard is now disabled and cannot be accessed.";
 					log.debug(htmlOutput);

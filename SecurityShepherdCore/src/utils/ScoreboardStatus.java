@@ -9,6 +9,20 @@ public class ScoreboardStatus
 {
 	private static boolean scoreboardEnabled = true;
 	private static String scoreboardClass = new String();
+	private static boolean adminOnlyScoreboard = false;
+	
+	/**
+	 * Returns if user is authorised to see scoreboard currenly. 
+	 * @param userRole Must be player or admin
+	 * @return
+	 */
+	public static boolean canSeeScoreboard (String userRole)
+	{
+		boolean authorised = true;
+		if(adminOnlyScoreboard)
+			authorised = userRole.equalsIgnoreCase("admin");
+		return authorised && scoreboardEnabled;
+	}
 	
 	/**
 	 * Disables scoreboard functions
@@ -16,6 +30,7 @@ public class ScoreboardStatus
 	public static void disableScoreboard()
 	{
 		scoreboardEnabled = false;
+		adminOnlyScoreboard = false;
 		scoreboardClass = new String();
 	}
 	
@@ -34,6 +49,14 @@ public class ScoreboardStatus
 	}
 	
 	/**
+	 * Sets the scoreboard to be admin only
+	 */
+	public static void setScoreboardAdminOnly()
+	{
+		adminOnlyScoreboard = true;
+	}
+	
+	/**
 	 * Enables public Scoreboard based on scores from specific class
 	 * @param theClass Class to base the Scoreboard on
 	 */
@@ -41,6 +64,7 @@ public class ScoreboardStatus
 	{
 		scoreboardClass = theClass;
 		scoreboardEnabled = true;
+		adminOnlyScoreboard = false;
 	}
 	
 	/**
@@ -50,5 +74,6 @@ public class ScoreboardStatus
 	{
 		scoreboardEnabled = true;
 		scoreboardClass = new String();
+		adminOnlyScoreboard = false;
 	}
 }

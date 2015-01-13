@@ -813,6 +813,7 @@ public class Getter
 					int barScale = (int)((score*100)/baseBarScale); //bar scale is the percentage the bar should be of the row's context (Highest Possible is depends on scale set in maxBarScale. eg: maxBarScale = 1.1 would mean the max scale would be 91% for a single row)
 					jsonInner.put("id", new String(encoder.encodeForHTML(resultSet.getString(1)))); //User Id
 					jsonInner.put("username", new String(encoder.encodeForHTML(resultSet.getString(2)))); //User Name
+					jsonInner.put("usernameTitle", new String(encoder.encodeForHTMLAttribute(resultSet.getString(2)))); //User name encoded for title attribute
 					jsonInner.put("score", new Integer(score)); //Score
 					jsonInner.put("scale", barScale); //Scale of score bar
 					jsonInner.put("place", place); //Place on board

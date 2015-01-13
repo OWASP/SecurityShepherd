@@ -59,10 +59,11 @@ public class GetJsonScore extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
-			log.debug("Current User: " + ses.getAttribute("userName").toString());
+			log.debug("Scoreboard accessed by " + ses.getAttribute("userName").toString());
+			boolean canSeeScoreboard = ScoreboardStatus.canSeeScoreboard((String)ses.getAttribute("userRole"));
 			Cookie tokenCookie = Validate.getToken(request.getCookies());
 			Object tokenParmeter = request.getParameter("csrfToken");
-			if(Validate.validateTokens(tokenCookie, tokenParmeter) && ScoreboardStatus.isScoreboardEnabled())
+			if(Validate.validateTokens(tokenCookie, tokenParmeter) && canSeeScoreboard)
 			{
 				String applicationRoot = getServletContext().getRealPath("");
 				String jsonOutput = Getter.getJsonScore(applicationRoot, ScoreboardStatus.getScoreboardClass());
@@ -72,14 +73,15 @@ public class GetJsonScore extends HttpServlet
 			}
 			else
 			{
-				if(!ScoreboardStatus.isScoreboardEnabled())
-					out.write("Scoreboard is not currently enabled");
+				if(!canSeeScoreboard)
+					out.write("Scoreboard is not currently available");
 				else
 					out.write("Error Occurred!");
 			}
 		}
 		else
 		{
+			log.debug("Unauthenticated Scoreboard Request");
 			out.write("<img src='css/images/loggedOutSheep.jpg'/>");
 		}
 		//log.debug("*** END servlets.GetJsonScore ***");

@@ -296,6 +296,7 @@ public class Validate
 		catch(Exception e)
 		{
 			log.debug("Invalid String Parameter: " + e.toString());
+			result = new String();
 		}
 		return result;
 	}

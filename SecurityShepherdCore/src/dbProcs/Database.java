@@ -36,7 +36,7 @@ public class Database
 	{
 		try
 		{
-			log.debug("Closing database connection");
+			//log.debug("Closing database connection");
 			conn.close();
 		}
 		catch(Exception e)
