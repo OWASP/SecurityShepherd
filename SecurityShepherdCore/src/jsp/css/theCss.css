@@ -187,3 +187,66 @@ a:hover {
    border-top-color: #8660BF;
    background: #8660BF;
    }
+   
+   .scoreBar {
+	background-color: #965BED;
+	height: 30px;
+	position: relative;
+	font-size: 25px;
+	font-weight: bold;
+	padding-left: 5;
+	vertical-align: middle;
+	padding-top: 5;
+	border: white;
+	margin: 0 0 3px 0;
+	min-width: 240px;
+	color: white;
+}
+
+.scoreBar:hover {
+	background-color: #AC7DF2;
+	height: 30px;
+	position: relative;
+	font-size: 25px;
+	font-weight: bold;
+	padding-left: 5;
+	vertical-align: middle;
+	padding-top: 5;
+	border: white;
+	margin: 0 0 3px 0;
+	min-width: 240px;
+	color: white;
+}
+
+.scoreLine{
+	display:inline;
+	min-width: 100%;
+}
+
+.leaderboard{
+	min-width: 100%;
+}
+
+.scoreName{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline;
+	position: absolute;
+	left: 80px;
+	width: 50%
+}
+
+.place{
+	display: inline; 
+	color: #000000;
+	min-width:25px;
+}
+
+.scoreNumber{
+	display: inline; 
+	float: right;
+	padding-right: 5px;
+	padding-top: 2px;
+	color: white;
+}

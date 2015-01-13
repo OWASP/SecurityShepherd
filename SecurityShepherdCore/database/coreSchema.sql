@@ -1003,6 +1003,43 @@ END
 $$
 
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure classScoreboard
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`classScoreboard` (IN theClassId VARCHAR(64))
+BEGIN
+    COMMIT;
+SELECT userId, userName, userScore FROM users 
+	WHERE classId = theClassId AND userRole = 'player' AND userScore > 0
+	ORDER BY userScore DESC, userId ASC;
+END
+
+$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure totalScoreboard
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`totalScoreboard` ()
+BEGIN
+    COMMIT;
+SELECT userId, userName, userScore FROM users 
+	WHERE userRole = 'player' AND userScore > 0
+	ORDER BY userScore DESC, userId ASC;
+END
+
+$$
+
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure userStats
 -- -----------------------------------------------------

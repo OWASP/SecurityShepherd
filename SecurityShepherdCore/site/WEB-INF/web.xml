@@ -218,6 +218,33 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>/EnableScoreboard</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.EnableScoreboard</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/EnableScoreboard</servlet-name>
+		<url-pattern>/EnableScoreboard</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/DisableScoreboard</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.DisableScoreboard</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/DisableScoreboard</servlet-name>
+		<url-pattern>/DisableScoreboard</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/scoreboard</servlet-name>
+		<servlet-class>servlets.GetJsonScore</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/scoreboard</servlet-name>
+		<url-pattern>/scoreboard</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>/setTornyFloorPlan</servlet-name>
 		<servlet-class>servlets.admin.moduleManagement.SetTornyFloorPlan</servlet-class>
 	</servlet>
