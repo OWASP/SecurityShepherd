@@ -192,7 +192,7 @@ public class Hash
 	}
 	
 	/**
-	 * Generates user solution based on the user name stored in their encrypted cookie
+	 * Generates user specific solution based on the user name provided and server side encryption keys
 	 * @param baseKey The stored result key for the module
 	 * @param userSalt The User Specific Encryption Salt (Based on user name)
 	 * @return User Specific Solution
