@@ -1,5 +1,8 @@
         package com.mobshep.template;
         import android.content.Intent;
+        import android.content.Context;
+        import android.content.DialogInterface;
+        import android.app.AlertDialog;
         import android.os.Bundle;
         import android.support.v7.app.ActionBarActivity;
         import android.view.Menu;
@@ -75,6 +78,12 @@ public class template extends ActionBarActivity implements OnClickListener {
         specs.setContent(R.id.tab2);
         specs.setIndicator("Tab 2");
         mobileTabs.addTab(specs);
+
+        specs = mobileTabs.newTabSpec("tag3");
+        specs.setContent(R.id.tab3);
+        specs.setIndicator("Tab 3");
+        mobileTabs.addTab(specs);
+
     }
 
 
@@ -149,9 +158,37 @@ public class template extends ActionBarActivity implements OnClickListener {
         }
 
         if (id == R.id.action_license) {
-            Intent goToLicense = new Intent(this, license.class);
-            startActivity(goToLicense);
+
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
+
+            // set title
+            alertDialogBuilder.setTitle("License");
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("This App is part of the Security Shepherd Project. The Security Shepherd project is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. The Security Shepherd project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with the Security Shepherd project.  If not, see http://www.gnu.org/licenses.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close
+                            // current activity
+                            dialog.cancel();
+                        }
+                    });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
             return true;
+        }
+
+        if (id == R.id.action_exit){
+            finish();
         }
 
 

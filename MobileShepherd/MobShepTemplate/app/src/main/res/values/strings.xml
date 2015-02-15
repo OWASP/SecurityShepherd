@@ -4,8 +4,10 @@
     <string name="app_name">Template</string>
     <string name="action_settings">Settings</string>
     <string name="action_license">License</string>
-   
-	<!-- Defind Strings for challenge -->
+    <string name="action_exit">Exit</string>
+
+
+    <!-- Defind Strings for challenge -->
 	<string name="titleIntro6">Title</string>
 	<string name="BCDescrip">This is a template to use when creating Mobile Shepherd lessons.</string>
 	<string name="PFrag">Template</string>
