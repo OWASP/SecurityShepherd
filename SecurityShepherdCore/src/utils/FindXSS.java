@@ -62,8 +62,13 @@ public class FindXSS
 		"onselectionchange", "onselectstart", "onafterprint", "onbeforeprint", "onhelp", 
 		"onerror", "onerrorupdate", "onafterupdate", "onbeforeupdate", "oncellchange", 
 		"ondataavailable", "ondatasetchanged", "ondatasetcomplete", "onrowenter", "onrowexit",
-		"onrowsdelete", "onrowsinserted", "onbounce", "onfinish", "onstart", "onchange", 
-		"onfilterchange", "onpropertychange", "onsearch", "onmessage", "formaction", "textinput"};
+		"onrowsdelete", "onrowsinserted", "onbounce", "onfinish", "onstart", "onchange", "onwheel", 
+		"onfilterchange", "onpropertychange", "onsearch", "onmessage", "formaction", "textinput",
+		"onhashchange", "onpagehide", "onpageshow", "onpopstate", "onstorage", "oninvalid", "ondragend",
+		"oncanplay", "oncanplaythrough", "oncuechange", "ondurationchange", "onemptied", "onended", 
+		"onloadeddata", "onloadedmetadata", "onloadstart", "onpause", "onplay", "onplaying", "onprogress", 
+		"onratechange", "onseeked", "onseeking", "onstalled", "onsuspend", "ontimeupdate", "onvolumechange",
+		"onwaiting", "onshow", "ontoggle"};
 	
 	/**
 	 * Search Strings for XSS attack vectors using the OWASP AntiSamy project
@@ -717,14 +722,6 @@ public class FindXSS
 			String[] colons = {
 					":", "&#x3a", "&#x3a;", "&#58", "&#58;"
 			};
-			//TODO - Find out if this local array is nessisary
-			/*
-			String[] javascriptTriggers = {
-				"onload", "onunload", "onblur", "onchange", "onfocus",
-				"onreset", "onselect", "onsubmit", "onabort", "onkeydown",
-				"onkeyup", "onkeypress", "onclick", "ondblclick", "onmousedown",
-				"onmousemove", "onmouseout", "onmouseover", "onmouseup", "onerror", "formaction"};
-			*/
 			//log.debug("Cleaning Xss String");
 			String tempXss = xssString;
 			tempXss.replaceAll("\n", "");

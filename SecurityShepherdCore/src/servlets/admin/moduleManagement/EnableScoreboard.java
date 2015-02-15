@@ -66,6 +66,7 @@ public class EnableScoreboard extends HttpServlet
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
+				log.debug("Scoreboard being enabled by: " + ses.getAttribute("userName"));
 				String[] classInfo = new String[2];
 				try
 				{
@@ -101,8 +102,20 @@ public class EnableScoreboard extends HttpServlet
 					}
 					else //Function must have completed if this isn't empty
 					{
-						htmlOutput = "<h2 class='title'>Scoreboard Settings Updated</h2>"
+						String restrictedScoreboard = Validate.validateParameter(request.getParameter("restricted"), 5);
+						if(restrictedScoreboard.isEmpty()) //Public Scoreboard
+						{
+							log.debug("Public Scoreboard Enabled");
+							htmlOutput = "<h2 class='title'>Scoreboard Settings Updated</h2>"
 								+ "<p>" + htmlOutput +"</p>";
+						}
+						else
+						{
+							ScoreboardStatus.setScoreboardAdminOnly();
+							log.debug("Admin Only Scoreboard Enabled");
+							htmlOutput = "<h2 class='title'>Scoreboard Settings Updated</h2>"
+								+ "<p>" + htmlOutput +" The scoreboard is only accessible by administrators</p>";
+						}
 					}
 					out.write(htmlOutput);
 				}

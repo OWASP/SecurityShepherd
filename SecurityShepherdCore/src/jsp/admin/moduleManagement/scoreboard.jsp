@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: scoreboard.jsp *************************");
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: scoreboard Config.jsp *************************");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -34,7 +34,7 @@ if (request.getSession() != null) //Session If
 	}
 	catch(Exception htmlE)
 	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(scoreboard.jsp): tokenCookie Error:" + htmlE.toString());
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(scoreboardConfig.jsp): tokenCookie Error:" + htmlE.toString());
 	}
 	// validateAdminSession ensures a valid session, and valid administrator credentials
 	// Also, if tokenCookie != null, then the page is good to continue loading
@@ -47,44 +47,40 @@ if (request.getSession() != null) //Session If
 		Encoder encoder = ESAPI.encoder();
 		String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
 		String ApplicationRoot = getServletContext().getRealPath("");
-		if (!ModulePlan.isOpenFloor()) //Floor Plan If
+		ResultSet classList = Getter.getClassInfo(ApplicationRoot);
+		boolean showClasses = true;
+		try
 		{
-	ResultSet classList = Getter.getClassInfo(ApplicationRoot);
-	boolean showClasses = true;
-	try
-	{
-		showClasses = classList.next();
-	}
-	catch(SQLException e)
-	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
-		showClasses = false;
-	}
+			showClasses = classList.next();
+		}
+		catch(SQLException e)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
+			showClasses = false;
+		}
 %>
-			<style type="text/css">
-				div.Numbers {clear:both}
-				
-				div.Numbers div {border: solid 2px #FFF; margin:2px; color:#FFF;}
-				
-				div.header div { width:33%; float:left }
-				
-				.hide{visibility:hidden}
-				.vanish{display:none}
-				.static{position:static}
-				.absolute{position:absolute}	
-			</style>
 			<div id="formDiv" class="post">
-				<h1 class="title">Scoreboard</h1>
+				<h1 class="title">Configure Scoreboard</h1>
 				<div class="entry">
+					<br/>
 					<div id="badData"></div>
+					<a href="javascript:;" style="text-decoration: none;" id="enableScoreboard" title="Enable scoreboard that lists all users regardless of class"><div class="menuButton">Enable Scoreboard</div></a>
+					<a href="javascript:;" style="text-decoration: none;" id="enableAdminScoreboard" title="Disable the scoreboard"><div class="menuButton">Enable Scoreboard for Admins</div></a>
+					<a href="javascript:;" style="text-decoration: none;" id="disableScoreboard" title="Disable the scoreboard"><div class="menuButton">Disable Scoreboard</div></a>
+					
+					<br/>
+					<h2 class="title">Enable Class Specific Scoreboard</h2>
 					<form id="theForm" action="javascript:;">
-							<p>Select the class you would like to show the scoreboard for</p>
+							<p>Use this form to enable a scoreboard that only lists user from the specific class chosen below;</p>
 							<div id="badData"></div>
 							<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
 							<table align="center">
 								<tr>
 									<td>
-									<select id="classId">
+										Class: 
+									</td>
+									<td>
+									<select id="classId" style="width: 100%">
 										<option value=""></option>
 										<%
 											if(showClasses)
@@ -111,9 +107,12 @@ if (request.getSession() != null) //Session If
 									</select>
 									</td>
 								</tr>
-								<tr><td align="center">
-									<div id="submitButton"><input type="submit" value="Get Scoreboard"/><input type="button" value="Sort" onclick="SortNumbers()"/></div>
-									<div id="loadingSign" style="display: none;"><p>Loading...</p></div> 
+								<tr><td colspan="2" align="center">
+									<div id="submitDiv">
+										<div id="submitButton" style="display: inline;"><input type="submit" value="Enable Class Scoreboard"/></div>
+										 or <div id="submitButton2" style="display: inline;"><input type="button" value="Enable Class Scoreboard for Admins"/></div>
+									 </div>
+									<div id="loadingSign" style="display: none;"><p>Loading...</p></div>
 								</td></tr>
 							</table>
 							<div id="resultDiv">
@@ -129,64 +128,177 @@ if (request.getSession() != null) //Session If
 							
 							$("#theForm").submit(function(){
 								$("#loadingSign").show("slow");
-									$("#submitButton").hide("fast");
-								setInterval(function(){
-									//Need to fix the timer for the first run!
-									theCsrfToken = $('#csrfToken').val();
-									theClass = $("#classId").val();
-									//The Ajax Operation
-									//$("#badData").hide("fast");
-									$("#resultDiv").hide("fast", function(){
-										var ajaxCall = $.ajax({
-											type: "POST",
-											url: "getJsonProgress",
-											data: {
-												classId: theClass,
-												csrfToken: theCsrfToken
-											},
-											async: false
-										});
-										var htmlHeap = "";
-										if(ajaxCall.status == 200)
-										{
-											//Do JSON stuff here
-											var jsonObj = jQuery.parseJSON(ajaxCall.responseText);
-											$.each(jsonObj, function(i, user){
-												theUsers[topOfStack] = user.userName;
-												topOfStack++;
-												htmlHeap = htmlHeap + "<div id='" + user.userName + "' class='unsorted'><table style='font-size: 12px; text-align: left;'><tr><td style='width: 150px;'>" + user.userName + "</td><td style='width:" + user.progressBar + "px; background-color: #A878EF; font-size:18px; font-weight:bold; color:#FFF;' id='userScore'>" + user.score + "</td></tr></table></div>";
-											});
-											$("#resultDiv").html("<p><div id='numberDiv' class='Numbers'>" + htmlHeap + "</div><p>");
-											$("#resultDiv").show("fast");
-										}
-										else
-										{
-											$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-											$("#badData").show("slow");
-										}
-										$("#loadingSign").hide("fast");
+								$("#submitDiv").hide("fast");
+								theCsrfToken = $('#csrfToken').val();
+								theClass = $("#classId").val();
+								//The Ajax Operation
+								//$("#badData").hide("fast");
+								$("#resultDiv").hide("fast", function(){
+									var ajaxCall = $.ajax({
+										type: "POST",
+										url: "EnableScoreboard",
+										data: {
+											classId: theClass,
+											csrfToken: theCsrfToken
+										},
+										async: false
 									});
-								}, 30000);
+									var htmlHeap = "";
+									if(ajaxCall.status == 200)
+									{
+										$("#resultDiv").html(ajaxCall.responseText);
+										$("#resultDiv").show("fast");
+									}
+									else
+									{
+										$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+										$("#badData").show("slow");
+									}
+									$("#loadingSign").hide("fast", function(){
+										$("#submitDiv").show("slow");										
+									});
+								});
 							});
 							
-							function blank(){;}
+							$("#submitButton2").click(function(){
+								$("#loadingSign").show("slow");
+								$("#submitDiv").hide("fast");
+								theCsrfToken = $('#csrfToken').val();
+								theClass = $("#classId").val();
+								//The Ajax Operation
+								//$("#badData").hide("fast");
+								$("#resultDiv").hide("fast", function(){
+									var ajaxCall = $.ajax({
+										type: "POST",
+										url: "EnableScoreboard",
+										data: {
+											classId: theClass,
+											restricted: "true",
+											csrfToken: theCsrfToken
+										},
+										async: false
+									});
+									var htmlHeap = "";
+									if(ajaxCall.status == 200)
+									{
+										$("#resultDiv").html(ajaxCall.responseText);
+										$("#resultDiv").show("fast");
+									}
+									else
+									{
+										$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+										$("#badData").show("slow");
+									}
+									$("#loadingSign").hide("fast", function(){
+										$("#submitDiv").show("slow");										
+									});
+								});
+							});
+							
+							$("#enableScoreboard").click(function(){
+								$("#loadingSign").show("slow");
+								$("#submitDiv").hide("fast");
+								theCsrfToken = $('#csrfToken').val();
+								//The Ajax Operation
+								//$("#badData").hide("fast");
+								$("#resultDiv").hide("fast", function(){
+									var ajaxCall = $.ajax({
+										type: "POST",
+										url: "EnableScoreboard",
+										data: {
+											classId: "",
+											csrfToken: theCsrfToken
+										},
+										async: false
+									});
+									var htmlHeap = "";
+									if(ajaxCall.status == 200)
+									{
+										$("#resultDiv").html(ajaxCall.responseText);
+										$("#resultDiv").show("fast");
+									}
+									else
+									{
+										$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+										$("#badData").show("slow");
+									}
+									$("#loadingSign").hide("fast", function(){
+										$("#submitDiv").show("slow");										
+									});
+								});
+							});
+							
+							$("#enableAdminScoreboard").click(function(){
+								$("#loadingSign").show("slow");
+								$("#submitDiv").hide("fast");
+								theCsrfToken = $('#csrfToken').val();
+								//The Ajax Operation
+								//$("#badData").hide("fast");
+								$("#resultDiv").hide("fast", function(){
+									var ajaxCall = $.ajax({
+										type: "POST",
+										url: "EnableScoreboard",
+										data: {
+											classId: "",
+											restricted: "true",
+											csrfToken: theCsrfToken
+										},
+										async: false
+									});
+									var htmlHeap = "";
+									if(ajaxCall.status == 200)
+									{
+										$("#resultDiv").html(ajaxCall.responseText);
+										$("#resultDiv").show("fast");
+									}
+									else
+									{
+										$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+										$("#badData").show("slow");
+									}
+									$("#loadingSign").hide("fast", function(){
+										$("#submitDiv").show("slow");										
+									});
+								});
+							});
+							
+							$("#disableScoreboard").click(function(){
+								$("#loadingSign").show("slow");
+								$("#submitDiv").hide("fast");
+								theCsrfToken = $('#csrfToken').val();
+								//The Ajax Operation
+								$("#resultDiv").hide("fast", function(){
+									var ajaxCall = $.ajax({
+										type: "POST",
+										url: "DisableScoreboard",
+										data: {
+											classId: "",
+											csrfToken: theCsrfToken
+										},
+										async: false
+									});
+									var htmlHeap = "";
+									if(ajaxCall.status == 200)
+									{
+										$("#resultDiv").html(ajaxCall.responseText);
+										$("#resultDiv").show("fast");
+									}
+									else
+									{
+										$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+										$("#badData").show("slow");
+									}
+									$("#loadingSign").hide("fast", function(){
+										$("#submitDiv").show("slow");										
+									});
+								});
+							});
 							</script>
 							<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 					</form>
 				</div>
 			</div>
-			<%
-		}
-		else // CTF Mode is not enabled
-		{%>
-			<div id="formDiv" class="post">
-				<h1 class="title">No Scoreboards Available</h1>
-				<div class="entry">
-				<p>CTF Mode is not enabled, so there are no scoreboards to show.</p>
-				</div>
-				<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-			</div>
-		<%}
+	<% 
 	} //Valid Session If
 	else
 	{

@@ -59,7 +59,7 @@ public class Hash
 			{
 				userKey[i] = (byte)(userKey[i] + serverKey[i]);
 			}
-			return new String(userKey);
+			return new String(userKey, Charset.forName("US-ASCII"));
 		}
 	}
 	
@@ -192,7 +192,7 @@ public class Hash
 	}
 	
 	/**
-	 * Generates user solution based on the user name stored in their encrypted cookie
+	 * Generates user specific solution based on the user name provided and server side encryption keys
 	 * @param baseKey The stored result key for the module
 	 * @param userSalt The User Specific Encryption Salt (Based on user name)
 	 * @return User Specific Solution
@@ -246,7 +246,7 @@ public class Hash
 		{
 			log.fatal("Could not Find MD5 Algorithm: " + e.toString());
 		}
-		hashed = new String(byteArray);
+		hashed = new String(byteArray, Charset.forName("US-ASCII"));
 
 		return hashed;
 	}
@@ -266,7 +266,7 @@ public class Hash
 			Base64 base64 = new Base64();
 			psn1.setSeed(psn1.nextLong());
 			psn1.nextBytes(byteArray);
-			result = new String(byteArray);
+			result = new String(byteArray, Charset.forName("US-ASCII"));
 			result = base64.encode(thisString(thisString(byteArray.toString())).getBytes()).toString();
 			log.debug("Generated String = " + result);
 		}
@@ -286,9 +286,15 @@ public class Hash
 			SecureRandom psn1 = SecureRandom.getInstance("SHA1PRNG");
 			psn1.setSeed(psn1.nextLong());
 			psn1.nextBytes(byteArray);
-			result = new String(byteArray);
+			result = new String(byteArray, Charset.forName("US-ASCII"));
 			//log.debug("Generated Key = " + result);
-			
+			if(result.length() != 16)
+			{
+				log.error("Generated Key is the incorrect Length: Shortening ");
+				result = result.substring(0, 15);
+				if(result.length() != 16)
+					log.fatal("Encryption key length is Still not Right");
+			}
 		}
 		catch(Exception e)
 		{
@@ -369,7 +375,7 @@ public class Hash
 		{
 			log.fatal("Could not Find SHA Algorithm: " + e.toString());
 		}
-		hashed = new String(byteArray);
+		hashed = new String(byteArray, Charset.forName("US-ASCII"));
 
 		return hashed;
 	}

@@ -49,6 +49,7 @@ if (request.getSession() != null)
 		String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
 		String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
 		String userId = encoder.encodeForJavaScript(ses.getAttribute("userStamp").toString());
+		boolean canSeeScoreboard = ScoreboardStatus.canSeeScoreboard((String)ses.getAttribute("userRole"));
 		String csrfJsToken = encoder.encodeForJavaScript(tokenCookie.getValue());
 		String ApplicationRoot = getServletContext().getRealPath("");
 		boolean showCheatSheet = CheatSheetStatus.showCheat(userRole);
@@ -129,7 +130,6 @@ if (request.getSession() != null)
 										<li><a id="openCloseByCategory" href="javascript:;">Open or Close by Category</a></li>
 										<li><a id="feedbackLink" href="javascript:;">View Feedback</a></li>
 										<li><a id="progressLink" href="javascript:;">View Progress</a></li>
-										<li><a id="scoreboardLink" href="javascript:;">Scoreboard</a></li>
 									</ul>
 								</li>
 								<li>
@@ -147,6 +147,7 @@ if (request.getSession() != null)
 								<li>
 									<a id="configurationList" href="javascript:;">Configuration</a>
 									<ul id="theConfigurationList" style="display: none;">
+										<li><a id="scoreboardLink" href="javascript:;">Configure Scoreboard</a></li>
 										<li><a id="enableFeedbackLink" href="javascript:;">Enable Feedback</a></li>
 										<li><a id="disableFeedbackLink" href="javascript:;">Disable Feedback</a></li>
 										<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
@@ -154,6 +155,11 @@ if (request.getSession() != null)
 								</li>
 							</ul>
 						</li>
+					<% } %>
+					<% if(canSeeScoreboard) { %>
+					<div id="scoreboardButton">
+						<a id="showScoreboard" href="/scoreboard.jsp" target="bar"><div class="menuButton">Scoreboard</div></a>
+					</div>
 					<% } %>
 					<% if(showCheatSheet) { %>
 					<div id="cheatSheetButton" style="display: none;">
