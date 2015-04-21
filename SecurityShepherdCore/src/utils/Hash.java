@@ -124,7 +124,7 @@ public class Hash
 		}
 		catch (Exception e)
 		{
-			throw new Exception("Could not Craft user specific Encryption Key");
+			throw new Exception("Decryption Failure: Could not Craft User Key or Ciphertext was Bad");
 		}
 	}
 	

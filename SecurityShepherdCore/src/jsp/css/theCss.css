@@ -250,3 +250,53 @@ a:hover {
 	padding-top: 2px;
 	color: white;
 }
+
+.medalContainer {
+	display: inline;
+}
+
+
+.goldMedalAmountBubble {
+	width: 20px;
+	height: 20px;
+	box-shadow: 1px 1px 1px gray;
+	background-color: gold;
+	color: black;
+	font-weight: bold;
+	font-size: 14px;
+	border-radius: 50%;
+	text-align: center;
+	display: inline-block;
+	margin-left: 5px;
+	line-height: 23px;
+}
+
+.silverMedalAmountBubble {
+	width: 20px;
+	height: 20px;
+	box-shadow: 1px 1px 1px gray;
+	background-color: silver;
+	color: black;
+	font-weight: bold;
+	font-size: 14px;
+	border-radius: 50%;
+	text-align: center;
+	display: inline-block;
+	margin-left: 5px;
+	line-height: 23px;
+}
+
+.bronzeMedalAmountBubble {
+	width: 20px;
+	height: 20px;
+	box-shadow: 1px 1px 1px gray;
+	background-color: #CD7F32;
+	color: black;
+	font-weight: bold;
+	font-size: 14px;
+	border-radius: 50%;
+	text-align: center;
+	display: inline-block;
+	margin-left: 5px;
+	line-height: 23px;
+}

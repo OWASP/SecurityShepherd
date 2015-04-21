@@ -59,11 +59,12 @@ public class EnableScoreboard extends HttpServlet
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
-		if(Validate.validateAdminSession(ses))
+		Cookie tokenCookie = Validate.getToken(request.getCookies());
+		Object tokenParmeter = request.getParameter("csrfToken");
+		if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		{
+			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			String htmlOutput = new String();
-			Cookie tokenCookie = Validate.getToken(request.getCookies());
-			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
 				log.debug("Scoreboard being enabled by: " + ses.getAttribute("userName"));

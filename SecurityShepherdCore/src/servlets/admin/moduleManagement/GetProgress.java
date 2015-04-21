@@ -53,14 +53,14 @@ public class GetProgress extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.GetProgress ***");
-		PrintWriter out = response.getWriter(); 
-		Encoder encoder = ESAPI.encoder();
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
-		if(Validate.validateAdminSession(ses))
+		Cookie tokenCookie = Validate.getToken(request.getCookies());
+		Object tokenParmeter = request.getParameter("csrfToken");
+		if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		{
-			Cookie tokenCookie = Validate.getToken(request.getCookies());
-			Object tokenParmeter = request.getParameter("csrfToken");
+			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
 				String classId = Validate.validateParameter(request.getParameter("classId"), 64);

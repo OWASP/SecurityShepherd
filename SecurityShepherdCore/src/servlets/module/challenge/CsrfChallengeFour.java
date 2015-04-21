@@ -41,7 +41,7 @@ public class CsrfChallengeFour extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeFour.class);
-	private static final String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
+	private static final String levelHash = "84118752e6cd78fecc3563ba2873d944aacb7b72f28693a23f9949ac310648b5";
 	private static String levelName = "CSRF Challenge 4";
 	/**
 	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
@@ -53,7 +53,7 @@ public class CsrfChallengeFour extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Cross-SiteForegery Challenge Four Servlet");
+		log.debug(levelName + " Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -61,18 +61,19 @@ public class CsrfChallengeFour extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				Cookie tokenCookie = Validate.getToken(request.getCookies());
 				Object tokenParmeter = request.getParameter("csrfToken");
 				if(Validate.validateTokens(tokenCookie, tokenParmeter))
 				{
 					String myMessage = request.getParameter("myMessage");
-					log.debug("User Submitted - " + myMessage);
+					log.debug("Message Submitted - " + myMessage);
 					myMessage = Validate.makeValidUrl(myMessage);
 					
 					log.debug("Updating User's Stored Message");
 					String ApplicationRoot = getServletContext().getRealPath("");
-					String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, CsrfChallengeFour.levelHash);
+					String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);
 					String userId = (String)ses.getAttribute("userStamp");
 					Setter.setStoredMessage(ApplicationRoot, myMessage, userId, moduleId);
 					
@@ -90,7 +91,7 @@ public class CsrfChallengeFour extends HttpServlet
 		catch(Exception e)
 		{
 			out.write("An Error Occurred! You must be getting funky!");
-			log.fatal("Cross Site Request Forgery Challenge Four - " + e.toString());
 		}
 	}
+
 }

@@ -20,7 +20,7 @@
  * @author Sean Duggan
 */
 //No Quotes In level Name
-String levelName = "Mobile Reverse Engineering 1";
+String levelName = "Mobile Reverse Engineering 2";
 //Alphanumeric Only
 String levelHash = "5bc811f9e744a71393a277c51bfd8fbb5469a60209b44fa3485c18794df4d5b1";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -43,7 +43,7 @@ if (request.getSession() != null)
 	// If tokenCookie == null, then the page is not going to continue loading
 	if (Validate.validateSession(ses) && tokenCookie != null)
 	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -68,7 +68,7 @@ if (request.getSession() != null)
 			the key reverse engineer the APK and find the correct Activity which
 			performs a conditional statement to check the validity of the key. <br />
 			<br/>
-			<%= Analytics.getMobileLevelBlurb("ReverseEngineer2.apk") %>
+			<%= Analytics.getMobileLevelBlurb("ReverseEngineer3.apk") %>
 		</p>
 	</div>
 	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

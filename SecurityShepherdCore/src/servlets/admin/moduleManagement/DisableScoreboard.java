@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+
 import utils.ScoreboardStatus;
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -54,11 +55,12 @@ public class DisableScoreboard extends HttpServlet
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
-		if(Validate.validateAdminSession(ses))
+		Cookie tokenCookie = Validate.getToken(request.getCookies());
+		Object tokenParmeter = request.getParameter("csrfToken");
+		if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		{
+			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			String htmlOutput = new String();
-			Cookie tokenCookie = Validate.getToken(request.getCookies());
-			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
 				try

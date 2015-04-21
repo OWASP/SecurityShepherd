@@ -135,21 +135,7 @@ public class Getter
 		catch (SQLException e) 
 		{
 			log.error("Login Failure: " + e.toString());
-			if(userFound)
-			{
-				try
-				{
-					CallableStatement callstmt = conn.prepareCall("call userLock(?)");
-					log.debug("Running account lock function on user '" + userName + "'");
-					callstmt.setString(1, userName);
-					callstmt.execute();
-					log.debug("userLock Executed");
-				}
-				catch (SQLException e1)
-				{
-					log.fatal("Could not run userLock on user: " + e1.toString());
-				}
-			}
+			//Lagging Response
 		}
 		Database.closeConnection(conn);
 		log.debug("$$$ End authUser $$$");
@@ -161,7 +147,7 @@ public class Getter
 	 * @param ApplicationRoot The current running context of an application
 	 * @param moduleId The module identifier 
 	 * @param userId The user identifier
-	 * @return The result key of the module if the user has not completed the level
+	 * @return The result key of the module if the user has not completed the level. 
 	 */
 	public static String checkPlayerResult(String ApplicationRoot, String moduleId, String userId)
 	{
@@ -182,11 +168,50 @@ public class Getter
 		}
 		catch(SQLException e)
 		{
-			log.error("userCheckResult Failure: " + e.toString());
+			log.debug("userCheckResult Failure: " + e.toString());
 			result = null;
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END checkPlayerResult ***");
+		return result;
+	}
+	
+	/**
+	 * This method is used to determine if a CSRF level has been completed. A call is made to the DB that returns the CSRF counter for a level. If this counter is greater than 0, the level has been completed
+	 * @param applicationRoot Running context of the application
+	 * @param moduleHash Hash ID of the CSRF module you wish to check if a user has completed
+	 * @param userId the ID of the user to check
+	 * @return True or False value depicting if the user has completed the module
+	 */
+	public static boolean isCsrfLevelComplete (String applicationRoot, String moduleId, String userId)
+	{
+		log.debug("*** Setter.isCsrfLevelComplete ***");
+		
+		boolean result = false;
+		
+		Connection conn = Database.getCoreConnection(applicationRoot);
+		try
+		{
+			log.debug("Preparing csrfLevelComplete call");
+			CallableStatement callstmnt = conn.prepareCall("call csrfLevelComplete(?, ?)");
+			callstmnt.setString(1, moduleId);
+			callstmnt.setString(2, userId);
+			log.debug("moduleId: " + moduleId);
+			log.debug("userId: " + userId);
+			log.debug("Executing csrfLevelComplete");
+			ResultSet resultSet = callstmnt.executeQuery();
+			resultSet.next();
+			result = resultSet.getInt(1) > 0; // If Result is > 0, then the CSRF level is complete
+			if(result)
+				log.debug("CSRF Level is complete");
+		}
+		catch(SQLException e)
+		{
+			log.error("csrfLevelComplete Failure: " + e.toString());
+			result = false;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END isCsrfLevelComplete ***");
 		return result;
 	}
 	
@@ -774,6 +799,9 @@ public class Getter
 			int resultAmount = 0;
 			int prevPlace = 0;
 			int prevScore = 0;
+			int prevGold = 0;
+			int prevSilver = 0;
+			int prevBronze = 0;
 			float baseBarScale = 0; //
 			float tieBreaker = 0;
 			while(resultSet.next()) //For each user in a class
@@ -784,6 +812,9 @@ public class Getter
 				{
 					int place = resultAmount;
 					int score = resultSet.getInt(3);
+					int goldMedals = resultSet.getInt(4);
+					int silverMedals = resultSet.getInt(5);
+					int bronzeMedals = resultSet.getInt(6);
 					if(resultAmount == 1) //First Place is Returned First, so this will be the biggest bar on the scoreboard
 					{
 						int highscore = score;
@@ -797,8 +828,8 @@ public class Getter
 					}
 					else
 					{
-						//Does this score line match the one before? if so the place shouldnt change
-						if (score == prevScore)
+						//Does this score line match the one before (Score and Medals)? if so the place shouldnt change
+						if (score == prevScore && goldMedals == prevGold && silverMedals == prevSilver && bronzeMedals == prevBronze)
 						{
 							place = prevPlace;
 							tieBreaker = tieBreaker + 0.01f;
@@ -807,17 +838,73 @@ public class Getter
 						{
 							prevScore = score;
 							prevPlace = place;
+							prevGold = goldMedals;
+							prevSilver = silverMedals;
+							prevBronze = bronzeMedals;
 							tieBreaker = 0;
 						}
 					}
+					String displayMedal = new String("display: inline;");
+					String goldDisplayStyle = new String("display: none;");
+					String silverDisplayStyle = new String("display: none;");
+					String bronzeDisplayStyle = new String("display: none;");
+					if (goldMedals > 0)
+						goldDisplayStyle = displayMedal;
+					if (silverMedals > 0)
+						silverDisplayStyle = displayMedal;
+					if (bronzeMedals > 0)
+						bronzeDisplayStyle = displayMedal;
+					
 					int barScale = (int)((score*100)/baseBarScale); //bar scale is the percentage the bar should be of the row's context (Highest Possible is depends on scale set in maxBarScale. eg: maxBarScale = 1.1 would mean the max scale would be 91% for a single row)
+					
+					String userMedalString = new String();
+					if(goldMedals > 0 || silverMedals > 0 || bronzeMedals > 0)
+					{
+						userMedalString += " holding ";
+						if (goldMedals > 0)
+							userMedalString += goldMedals + " gold";
+						if (silverMedals > 0)
+						{
+							if (goldMedals > 0) //Medals Before, puncuate
+							{
+								if(bronzeMedals > 0) //more medals after silver? Comma
+								{
+									userMedalString += ", ";
+								}
+								else //Say And
+								{
+									userMedalString += " and ";
+								}
+							}
+							userMedalString += silverMedals + " silver";
+						}
+						if (bronzeMedals > 0)
+						{
+							if (goldMedals > 0 || silverMedals > 0) //Medals Before?
+							{
+								userMedalString += " and ";
+							}
+							userMedalString += bronzeMedals + " bronze";
+						}
+						//Say Medal(s) at the end of the string
+						userMedalString += " medal";
+						if(goldMedals + silverMedals + bronzeMedals > 1)
+							userMedalString += "s";
+					}
+						
 					jsonInner.put("id", new String(encoder.encodeForHTML(resultSet.getString(1)))); //User Id
 					jsonInner.put("username", new String(encoder.encodeForHTML(resultSet.getString(2)))); //User Name
-					jsonInner.put("usernameTitle", new String(encoder.encodeForHTMLAttribute(resultSet.getString(2)))); //User name encoded for title attribute
+					jsonInner.put("userTitle", new String(encoder.encodeForHTML(resultSet.getString(2)) + " with " + score + " points" + userMedalString)); //User name encoded for title attribute
 					jsonInner.put("score", new Integer(score)); //Score
 					jsonInner.put("scale", barScale); //Scale of score bar
 					jsonInner.put("place", place); //Place on board
 					jsonInner.put("order", (place+tieBreaker)); //Order on board
+					jsonInner.put("goldMedalCount", new Integer(goldMedals));
+					jsonInner.put("goldDisplay", goldDisplayStyle);
+					jsonInner.put("silverMedalCount", new Integer(silverMedals));
+					jsonInner.put("silverDisplay", silverDisplayStyle);
+					jsonInner.put("bronzeMedalCount", new Integer(bronzeMedals));
+					jsonInner.put("bronzeDisplay", bronzeDisplayStyle);
 					//log.debug("Adding: " + jsonInner.toString());
 					json.add(jsonInner);
 				}
@@ -1045,7 +1132,7 @@ public class Getter
 	 * Returns true if a module has a hard coded key, false if server encrypts it
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId The id of the module 
-	 * @return
+	 * @return Returns true if a module has a hard coded key, false if server encrypts it
 	 */
 	public static boolean getModuleKeyType (String ApplicationRoot, String moduleId)
 	{
@@ -1489,48 +1576,96 @@ public class Getter
 	public static String getTournamentModules (String ApplicationRoot, String userId)
 	{
 		log.debug("*** Getter.getTournamentModules ***");
-		String output = new String();
+		String levelMasterList = new String();
 		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
+			String listEntry = new String();
 			//Get the modules
-			CallableStatement callstmt = conn.prepareCall("call moduleOpenInfo(?)");
+			CallableStatement callstmt = conn.prepareCall("call moduleTournamentOpenInfo(?)");
 			callstmt.setString(1, userId);
-			log.debug("Gathering moduleOpenInfo ResultSet for user " + userId);
-			ResultSet lessons = callstmt.executeQuery();
-			log.debug("Opening Result Set from moduleOpenInfo");
-			int rowNumber = 0; // Used to indetify the first row, as it is slightly different to all other rows for output
-			while(lessons.next())
+			log.debug("Gathering moduleTournamentOpenInfo ResultSet for user " + userId);
+			ResultSet levels = callstmt.executeQuery();
+			log.debug("Opening Result Set from moduleTournamentOpenInfo");
+			int currentSection = 0; // Used to identify the first row, as it is slightly different to all other rows for output
+			while(levels.next())
 			{
+				//Create Row Entry First
 				//log.debug("Adding " + lessons.getString(1));
-				output += "<li>";
+				listEntry = "<li>";
 				//Markers for completion
-				if(lessons.getString(4) != null)
+				if(levels.getString(4) != null)
 				{
-					output += "<img src='css/images/completed.gif'/>";
+					listEntry += "<img src='css/images/completed.gif'/>";
 				}
 				else
 				{
-					output+= "<img src='css/images/uncompleted.gif'/>";
+					listEntry += "<img src='css/images/uncompleted.gif'/>";
 				}
-				//Prepare lesson output
-				output += "<a class='lesson' id='" 
-					+ encoder.encodeForHTMLAttribute(lessons.getString(3))
+				//Prepare entry output
+				listEntry += "<a class='lesson' id='" 
+					+ encoder.encodeForHTMLAttribute(levels.getString(3))
 					+ "' href='javascript:;'>" 
-					+ encoder.encodeForHTML(lessons.getString(1)) 
-					+ "</a>";
-				output += "</li>";
-				rowNumber++;
+					+ encoder.encodeForHTML(levels.getString(1)) 
+					+ "</a>\n";
+				listEntry += "</li>";
+				//What section does this belong in? Current or Next?
+				if (getTounnamentSectionFromRankNumber(levels.getInt(5)) > currentSection)
+				{
+					//This level is not in the same level band as the previous level. So a new Level Band Header is required on the master list before we add the entry.
+					//Do we need to close a previous list?
+					if(currentSection != 0) //If a Section Select hasn't been made before, we don't need to close any previous sections
+					{
+						//We've had a section before, so need to close the previous one before we make this new one
+						levelMasterList += "</ul>\n";
+					}
+					//Update the current section to the one we have just added to the list
+					currentSection = getTounnamentSectionFromRankNumber(levels.getInt(5));
+					//Which to Add?
+					switch(currentSection)
+					{
+						case 1: //fieldTraining
+							//log.debug("Starting Field Training List");
+							levelMasterList += "<a id=\"fieldTrainingList\" href=\"javascript:;\"><div class=\"menuButton\">Field Training</div></a>"
+								+ "<ul id=\"theFieldTrainingList\" style=\"display: none;\">\n";
+							break;
+						case 2: //corporal
+							//log.debug("Starting Corporal List");
+							levelMasterList += "<a id=\"corporalList\" href=\"javascript:;\"><div class=\"menuButton\">Corporal</div></a>"
+								+ "<ul id=\"theCorporalList\" style=\"display: none;\">\n";
+							break;
+						case 3: //sergeant
+							//log.debug("Starting Sergeant List");
+							levelMasterList += "<a id=\"sergeantList\" href=\"javascript:;\"><div class=\"menuButton\">Sergeant</div></a>"
+								+ "<ul id=\"theSergeantList\" style=\"display: none;\">\n";
+							break;
+						case 4: //major
+							//log.debug("Starting Major List");
+							levelMasterList += "<a id=\"majorList\" href=\"javascript:;\"><div class=\"menuButton\">Major</div></a>"
+								+ "<ul id=\"theMajorList\" style=\"display: none;\">\n";
+							break;
+						case 5: //admiral
+							//log.debug("Starting Admiral List");
+							levelMasterList += "<a id=\"admiralList\" href=\"javascript:;\"><div class=\"menuButton\">Admiral</div></a>"
+								+ "<ul id=\"theAdmiralList\" style=\"display: none;\">\n";
+							break;
+					}
+				}
+				//Now we can add the entry to the level master List and start again
+				levelMasterList += listEntry;
+				//log.debug("Put level in category: " + currentSection);
 			}
 			//If no output has been found, return an error message
-			if(output.isEmpty())
+			if(levelMasterList.isEmpty())
 			{
-				output = "<li><a href='javascript:;'>No modules found</a></li>";
+				levelMasterList = "<ul><li><a href='javascript:;'>No modules found</a></li></ul>";
 			}
 			else
 			{
-				log.debug("Tournaments List returned");
+				//List is complete, but we need to close the last list we made, which deinfetly exists as the levelmasterList is not empty
+				levelMasterList += "</ul>";
+				log.debug("Tournament List returned");
 			}
 		}
 		catch(Exception e)
@@ -1538,7 +1673,28 @@ public class Getter
 			log.error("Tournament List Retrieval: " + e.toString());
 		}
 		Database.closeConnection(conn);
-		return output;
+		return levelMasterList;
+	}
+	
+	private static int fieldTrainingCap = 50;
+	private static int corporalCap = 100;
+	private static int sergeantCap = 150;
+	private static int majorCap = 200;
+	private static int admiralCap = 999; //everything above Major is Admiral
+	private static int getTounnamentSectionFromRankNumber (int rankNumber)
+	{
+		if(rankNumber < fieldTrainingCap)
+			return 1;
+		else if (rankNumber < corporalCap)
+			return 2;
+		else if (rankNumber < sergeantCap)
+			return 3;
+		else if (rankNumber < majorCap)
+			return 4;
+		else if (rankNumber < admiralCap)
+			return 5;
+		else
+			return 5; //Max level is 5.
 	}
 	
 	/**

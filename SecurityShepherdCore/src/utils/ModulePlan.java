@@ -23,8 +23,8 @@ package utils;
 public class ModulePlan
 {
 	public static boolean openFloor = false;
-	public static boolean incrementalFloor = true;
-	public static boolean tornyFloor = false;
+	public static boolean incrementalFloor = false;
+	public static boolean tornyFloor = true;
 	
 	public static boolean isIncrementalFloor() 
 	{
@@ -36,7 +36,7 @@ public class ModulePlan
 		return openFloor;
 	}
 	
-	public static boolean isTornyFloor()
+	public static boolean isTournyFloor()
 	{
 		return tornyFloor;
 	}
@@ -55,9 +55,9 @@ public class ModulePlan
 		tornyFloor = false;
 	}
 	
-	public static void setTornyFloor()
+	public static void setTournyFloor()
 	{
-		openFloor = true;
+		openFloor = false;
 		incrementalFloor = false;
 		tornyFloor = true;
 	}

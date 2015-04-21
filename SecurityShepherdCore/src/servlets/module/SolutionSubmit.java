@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-import servlets.OneTimePad;
 import utils.FeedbackStatus;
 import utils.Hash;
 import utils.ModulePlan;
@@ -66,6 +65,7 @@ public class SolutionSubmit extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
+			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug("Current User: " + ses.getAttribute("userName").toString());
 			Cookie tokenCookie = Validate.getToken(request.getCookies());
 			Object tokenParmeter = request.getParameter("csrfToken");
@@ -104,12 +104,22 @@ public class SolutionSubmit extends HttpServlet
 							validKey = storedResult.compareTo(solutionKey) == 0;
 						else
 						{
-							//Encrypted Solution key,  must be decrypted before compare
-							String decryptedKey = Hash.decryptUserSpecificSolution(Validate.validateEncryptionKey(userName), solutionKey);
+							String decryptedKey = new String();
+							try
+							{
+								//Encrypted Solution key,  must be decrypted before compare
+								decryptedKey = Hash.decryptUserSpecificSolution(Validate.validateEncryptionKey(userName), solutionKey);
+							}
+							catch(Exception e)
+							{
+								log.error("Could not decrypt result key: " + e.toString());
+								// Key likely could not be decrypted because somebody submitted a string that could not be decrypted. 
+								//This is a bad submission so they should be warned. String will continue from this point as an empty value and will cause the function to run the Bad Submission procedure
+							}
 							storedResult += Hash.getCurrentSalt(); //Add server solution salt to base key before compare with decrypted key
 							validKey = storedResult.compareTo(decryptedKey) == 0;
 							log.debug("Decrypted Submitted Key: " + decryptedKey);
-							log.debug("Stored Expected Key: " + storedResult);
+							log.debug("Stored Expected Key    : " + storedResult);
 							
 						}
 						if(validKey)
@@ -135,13 +145,15 @@ public class SolutionSubmit extends HttpServlet
 									result = Setter.updatePlayerResult(ApplicationRoot, moduleId, userId, "Feedback is Disabled", 1, 1, 1);
 									if(result != null)
 									{
-										log.debug("User Result for module " + result + " succeeded");
+										log.debug("Solution Submission for module " + result + " succeeded");
 										htmlOutput = new String("<h2 class=\"title\">Solution Submission Success</h2><br>" +
 												"<p>" +
 												encoder.encodeForHTML(result) + " completed! Congratulations.");
 										htmlOutput += "</p>";
 										if(ModulePlan.isIncrementalFloor())
 											htmlOutput += FeedbackSubmit.refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter));
+										log.debug("Resetting user's Bad Submisison count to 0");
+										Setter.resetBadSubmission(ApplicationRoot, userId);
 										out.write(htmlOutput);
 									}
 									else
@@ -156,7 +168,7 @@ public class SolutionSubmit extends HttpServlet
 							}
 							else
 							{
-								log.debug("Could not update user result");
+								log.error("User has completed this module before. Returning Error");
 								out.write("<h2 class=\"title\">Haven't You Done This Already?</h2><br>" +
 										"<p>" +
 										"Our records say you have already completed this module! Go try another one!" +
@@ -165,11 +177,15 @@ public class SolutionSubmit extends HttpServlet
 						}
 						else
 						{
-							log.debug("Incorrect key submitted, returning error");
+							log.error("Incorrect key submitted, returning error");
 							out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
 									"<p><font color=\"red\">" +
-									"Incorrect Solution Key Submitted." +
+									"Incorrect Solution Key Submitted.<br><br>You have limited amounts of incorrect key submissions before you will loose 10% of your points. Contact the OWASP Security Shepherd if you think you have found the correct key but it is failing you." +
 									"</font></p>");
+							
+							log.error("Invoking Bad Submission procedure...");
+							Setter.incrementBadSubmission(ApplicationRoot, userId);
+							log.error(userName + " has been warned and potentially has lost points");
 						}
 					}
 					else

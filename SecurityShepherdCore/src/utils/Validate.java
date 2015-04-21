@@ -71,7 +71,7 @@ public class Validate
 		}
 		if(theToken != null)
 		{
-			log.debug("Found Cookie " + theToken.getName() + " with value " + theToken.getValue());
+			//log.debug("Found Cookie " + theToken.getName() + " with value " + theToken.getValue());
 			//The Token is currently designed to be a random Big Integer. If the Big Integer Case does not work, the token has been modified. Potentially in a malicious manner
 			try
 			{
@@ -137,6 +137,22 @@ public class Validate
 	   return result;
 	}
 
+	/**
+	 * Invalid password detecter
+	 * @param passWord
+	 * @return
+	 */
+	public static boolean isValidPassword(String passWord)
+	{
+		boolean result = false;
+		result = passWord.length() > 7 && passWord.length() <= 512;
+		if (!result)
+		{
+			log.debug("Invalid Password detected");
+		}
+		return result;
+	}
+	
 	/**
 	 * Used to validate user creation requests
 	 * @param userName User Name
@@ -216,11 +232,67 @@ public class Validate
 					try 
 					{
 						userName = (String) ses.getAttribute("userName");
-						log.debug("Session holder is " + userName);
+						//log.debug("Session holder is " + userName);
 						String role = (String) ses.getAttribute("userRole");
 						result = (role.compareTo("admin") == 0);
 						if(!result)
-							log.fatal("User" + userName + " Attempting Admin functions!");
+							log.fatal("User " + userName + " Attempting Admin functions! (CSRF Tokens Not Checked)");
+					} 
+					catch (Exception e) 
+					{
+						log.fatal("Tampered Parameter Detected!!! Could not parameters");
+					}
+				}
+				else
+				{
+					log.debug("Session has no credentials");
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Session is checked for credentials and ensures that they have not been modified and that they are valid for an administrator. This function also validates CSRF tokens
+	 * @param ses HttpSession from users browser
+	 * @return Boolean value that reflects the validity of the admins session
+	 */
+	public static boolean validateAdminSession(HttpSession ses, Cookie cookieToken, Object requestToken)
+	{
+		boolean result = false;
+		String userName = new String();
+		if (ses == null)
+		{
+			log.debug("No Session Found");
+		}
+		else
+		{
+			if (ses.getAttribute("logout") != null) 
+			{
+				log.debug("Logout Attribute Found: Invalidating session...");
+			    ses.invalidate(); // make servlet engine forget the session
+			}
+			else
+			{
+				//log.debug("Active Session Found");
+				if (ses.getAttribute("userRole") != null && ses.getAttribute("userName") != null)
+				{
+					try 
+					{
+						userName = (String) ses.getAttribute("userName");
+						//log.debug("Session holder is " + userName);
+						String role = (String) ses.getAttribute("userRole");
+						result = (role.compareTo("admin") == 0);
+						if(!result)
+						{
+							//Check CSRF Tokens of User to ensure they are not being CSRF'd into causing Unauthorised Access Alert
+							boolean validCsrfTokens = validateTokens(cookieToken, requestToken);
+							if(validCsrfTokens)
+								log.fatal("User account " + userName + " Attempting Admin functions! (With Valid CSRF Tokens)");
+							else
+								log.error("User account " + userName + " accessing admin function with bad CSRF Tokens");
+						}
+							
 					} 
 					catch (Exception e) 
 					{
@@ -289,7 +361,8 @@ public class Validate
 			result = (String) input;
 			if(result.length() > maxLength)
 			{
-				log.debug("Parameter Too Long");
+				log.debug("Parameter Too Long: " + result.length() + " characters");
+				log.debug("Parmaeter Was: " + result);
 				result = new String();
 			}
 		}
@@ -327,11 +400,23 @@ public class Validate
 				{
 					try 
 					{
-						log.debug("Session holder is "+ses.getAttribute("userName").toString());
+						//log.debug("Session holder is "+ses.getAttribute("userName").toString());
 						String role = (String) ses.getAttribute("userRole");
 						result = (role.compareTo("player") == 0 || role.compareTo("admin") == 0);
 						if(!result)
 							log.fatal("User Role Parameter Tampered. Role = " + role);
+						else
+						{
+							String userName = ses.getAttribute("userName").toString();
+							//Has the user been suspended? Should they be kicked?
+							if(UserKicker.shouldKickUser(userName))
+							{
+								log.debug(userName + " has been Suspended. Invalidating Session and Reporting Invalid Session");
+								ses.invalidate(); //Killing Session
+								result = false; //User will not access function they were attempting to call
+								UserKicker.removeFromKicklist(userName); //Removing from kick list, as they are now authenticated, the DB Layer Suspension will prevent them from signing in
+							}
+						}
 					} 
 					catch (Exception e) 
 					{

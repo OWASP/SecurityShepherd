@@ -21,26 +21,40 @@
  *
  * @author Mark Denihan
  */
-
-Encoder encoder = ESAPI.encoder();
-String parameter = (String)request.getParameter("ThreadSequenceId");
-try
-{
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Parameter = " + parameter);
-	Cookie cookie = new Cookie("JSESSIONID3", parameter);
-    ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Cookie Value = " + cookie.getValue());
-    response.addCookie(cookie);
-}
-catch(Exception e)
-{
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Parameter Decription Fail: " + parameter);
-	parameter = "";
-}
-if (request.getSession() != null)
-{
-	HttpSession ses = request.getSession();
-	ses.setAttribute("decyrptedUserName", Hash.decryptUserName(parameter));	
-}
+ String levelName = new String("ReadyToPlay.jsp");
+ ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+ if (request.getSession() != null)
+ {
+ 	HttpSession ses = request.getSession();
+ 	//Getting CSRF Token from client
+ 	Cookie tokenCookie = null;
+ 	try
+ 	{
+ 		tokenCookie = Validate.getToken(request.getCookies());
+ 	}
+ 	catch(Exception htmlE)
+ 	{
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +": tokenCookie Error:" + htmlE.toString());
+ 	}
+ 	// validateSession ensures a valid session, and valid role credentials
+ 	// If tokenCookie == null, then the page is not going to continue loading
+ 	if (Validate.validateSession(ses) && tokenCookie != null)
+ 	{
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
+		Encoder encoder = ESAPI.encoder();
+		String parameter = (String)request.getParameter("ThreadSequenceId");
+		try
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Thread Parameter = " + parameter, ses.getAttribute("userName"));
+			Cookie cookie = new Cookie("JSESSIONID3", parameter);
+		    ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Thread Cookie Value = " + cookie.getValue(), ses.getAttribute("userName"));
+		    response.addCookie(cookie);
+		}
+		catch(Exception e)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Thread Parameter caused Failure: " + parameter);
+			parameter = "";
+		}
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -77,8 +91,20 @@ if (request.getSession() != null)
 			<a href="http://bit.ly/EdgeScan"><img src="css/images/edgescanSmallLogo.jpg" alt="EdgeScan" /></a>
 			<br/><br/>
 			The OWASP Security Shepherd Project would also like to thank Dr. Anthony Keane and the ITB Security Research Lab for hosting the public http://owasp.securityShepherd.eu!  
-			</p>
+			<br/><a href="http://securityresearch.ie/"><img src="https://www.owasp.org/images/thumb/2/24/Fontlogo.png/300px-Fontlogo.png"/></a></p>
 			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		</div>
 </body>
 </html>
+<% 
+	}
+	else
+	{
+		response.sendRedirect("loggedOutSheep.html");
+	}
+}
+else
+{
+	response.sendRedirect("loggedOutSheep.html");
+}
+%>

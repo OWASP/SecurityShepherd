@@ -2,6 +2,7 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,14 +12,13 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import utils.Hash;
 import utils.ShepherdLogManager;
 import utils.Validate;
 import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * Cross Site Request Forgery Challenge Target Six - Does not return Result key
+ * Cross Site Request Forgery Challenge Target Six
  * <br/><br/>
  * Weak Nonce Variety can be broken
  * <br/><br/>
@@ -42,9 +42,10 @@ import dbProcs.Setter;
 public class CsrfChallengeTargetSix extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static String moduleHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
+	private static String moduleHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
+	private static final String[] csrfArray ={"c4ca4238a0b923820dcc509a6f75849b", "c81e728d9d4c2f636f067f89cc14862c", "eccbc87e4b5ce2fe28308fd9f2a7baf3"};
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeTargetSix.class);
-	private static String levelName = "CSRF Six Target";
+	private static String levelName = "CSRF 6 Target";
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Two as complete.
 	 * @param userId User identifier to be incremented
@@ -54,45 +55,46 @@ public class CsrfChallengeTargetSix extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("CSRF Challenge Six Target Servlet");
+		log.debug(levelName + " Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String storedToken = new String();
 		try
 		{
-			String ApplicationRoot = getServletContext().getRealPath("");
 			String csrfTokenName = "csrfChallengeSixNonce";
 			boolean result = false;
 			HttpSession ses = request.getSession(true);
-			String userId = (String)ses.getAttribute("userStamp");
 			if(Validate.validateSession(ses))
 			{
+				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				//Get CSRF Token From session
 				if(ses.getAttribute(csrfTokenName) == null || ses.getAttribute(csrfTokenName).toString().isEmpty())
 				{
 					log.debug("No CSRF Token associated with user");
-					storedToken = Hash.randomString();
+					Random random = new Random();
+					int newToken = random.nextInt(3);
+					storedToken = csrfArray[newToken];
 					out.write("No CSRF Token Detected for this Challenge. You're token is now " + storedToken + "<br><br>");
 					ses.setAttribute(csrfTokenName, storedToken);
-					Setter.setCsrfChallengeSixCsrfToken(userId, storedToken, ApplicationRoot);
 				}
 				else
 				{
 					storedToken = "" + ses.getAttribute(csrfTokenName);
 				}
-				log.debug("Victom is - " + userId);
-				String plusId = request.getParameter("userId").trim();
+				String userId = (String)ses.getAttribute("userStamp");
+				
+				String plusId = request.getParameter("userId").trim();;
 				log.debug("User Submitted - " + plusId);
-				String csrfToken = request.getParameter("csrfToken").trim();
-				log.debug("csrfToken Submitted - '" + csrfToken + "'");
-				log.debug("storedCsrf Token is - '" + storedToken + "'");
+				String csrfToken = request.getParameter("csrfToken").trim();;
+				log.debug("csrfToken Submitted - " + csrfToken);
 				
 				if(!userId.equals(plusId))
 				{
 					if(csrfToken.equalsIgnoreCase(storedToken))
 					{
 						log.debug("Valid Nonce Value Submitted");
+						String ApplicationRoot = getServletContext().getRealPath("");
 						String userName = (String)ses.getAttribute("userName");
 						String attackerName = Getter.getUserName(ApplicationRoot, plusId);
 						if(attackerName != null)
@@ -135,7 +137,7 @@ public class CsrfChallengeTargetSix extends HttpServlet
 		catch(Exception e)
 		{
 				out.write("An Error Occurred! You must be getting funky!");
-				log.fatal("Cross Site Request Forgery Target Challenge 6 - " + e.toString());
+				log.fatal(levelName + " - " + e.toString());
 		}
 	}
 }

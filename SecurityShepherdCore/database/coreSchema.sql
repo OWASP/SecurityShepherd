@@ -35,6 +35,10 @@ CREATE  TABLE IF NOT EXISTS `core`.`users` (
   `userAddress` VARCHAR(128) NULL ,
   `tempPassword` TINYINT(1)  NULL DEFAULT FALSE ,
   `userScore` INT NOT NULL DEFAULT 0 ,
+  `goldMedalCount` INT NOT NULL DEFAULT 0 ,
+  `silverMedalCount` INT NOT NULL DEFAULT 0 ,
+  `bronzeMedalCount` INT NOT NULL DEFAULT 0 ,
+  `badSubmissionCount` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`userId`) ,
   INDEX `classId` (`classId` ASC) ,
   UNIQUE INDEX `userName_UNIQUE` (`userName` ASC) ,
@@ -61,6 +65,9 @@ CREATE  TABLE IF NOT EXISTS `core`.`modules` (
   `scoreValue` INT NOT NULL DEFAULT 50 ,
   `scoreBonus` INT NOT NULL DEFAULT 5 ,
   `hardcodedKey` TINYINT(1) NOT NULL DEFAULT TRUE,
+  `goldMedalAvailable` TINYINT(1) NOT NULL DEFAULT TRUE,
+  `silverMedalAvailable` TINYINT(1) NOT NULL DEFAULT TRUE,
+  `bronzeMedalAvailable` TINYINT(1) NOT NULL DEFAULT TRUE,
   PRIMARY KEY (`moduleId`) )
 ENGINE = InnoDB;
 
@@ -224,6 +231,49 @@ END
 $$
 
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure suspendUser
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`suspendUser` (theId VARCHAR(64), theMins INT)
+BEGIN
+DECLARE theDate DATETIME;
+COMMIT;
+SELECT NOW() FROM DUAL INTO theDate;
+UPDATE `users` SET
+    suspendedUntil = TIMESTAMPADD(MINUTE, theMins, theDate)
+    WHERE userId = theId;
+COMMIT;
+END
+
+$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure unSuspendUser
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`unSuspendUser` (theId VARCHAR(64))
+BEGIN
+DECLARE theDate DATETIME;
+COMMIT;
+SELECT NOW() FROM DUAL INTO theDate;
+UPDATE `users` SET
+    suspendedUntil = theDate
+    WHERE userId = theId;
+COMMIT;
+END
+
+$$
+
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure userFind
 -- -----------------------------------------------------
@@ -352,6 +402,27 @@ UPDATE users SET
     WHERE userPass = SHA2(currentPassword, 512)
     AND userName = theUserName
     AND suspendedUntil < theDate;
+COMMIT;
+END
+
+$$
+
+DELIMITER ;
+-- -----------------------------------------------------
+-- procedure userPasswordChangeAdmin
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`userPasswordChangeAdmin` (IN theUserId VARCHAR(64), IN newPassword VARCHAR(512))
+BEGIN
+DECLARE theDate DATETIME;
+COMMIT;
+SELECT NOW() FROM DUAL INTO theDate;
+UPDATE users SET
+    userPass = SHA2(newPassword, 512),
+    tempPassword = FALSE
+    WHERE userId = theUserId;
 COMMIT;
 END
 
@@ -620,6 +691,7 @@ END
 $$
 
 DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure userUpdateResult
 -- -----------------------------------------------------
@@ -631,6 +703,10 @@ BEGIN
 DECLARE theDate TIMESTAMP;
 DECLARE theBonus INT;
 DECLARE totalScore INT;
+DECLARE medalInfo INT; -- Used to find out if there is a medal available
+DECLARE goldMedalInfo INT;
+DECLARE silverMedalInfo INT;
+DECLARE bronzeMedalInfo INT;
 COMMIT;
 SELECT NOW() FROM DUAL
     INTO theDate;
@@ -646,6 +722,36 @@ IF (theBonus > 0) THEN
         scoreBonus = scoreBonus - 1
         WHERE moduleId = theModuleId;
     COMMIT;
+END IF;
+
+-- Medal Available?
+SELECT count(moduleId) FROM modules
+	WHERE moduleId = theModuleId
+	AND (goldMedalAvailable = TRUE OR silverMedalAvailable = TRUE OR bronzeMedalAvailable = TRUE)
+	INTO medalInfo;
+COMMIT;
+
+IF (medalInfo > 0) THEN
+	SELECT count(moduleId) FROM modules WHERE moduleId = theModuleId AND goldMedalAvailable = TRUE INTO goldMedalInfo;
+	IF (goldMedalInfo > 0) THEN
+		UPDATE users SET goldMedalCount = goldMedalCount + 1 WHERE userId = theUserId; 
+		UPDATE modules SET goldMedalAvailable = FALSE WHERE moduleId = theModuleId;
+		COMMIT;
+	ELSE	
+		SELECT count(moduleId) FROM modules WHERE moduleId = theModuleId AND silverMedalAvailable = TRUE INTO silverMedalInfo;
+		IF (silverMedalInfo > 0) THEN
+			UPDATE users SET silverMedalCount = silverMedalCount + 1 WHERE userId = theUserId;
+			UPDATE modules SET silverMedalAvailable = FALSE WHERE moduleId = theModuleId;
+			COMMIT;
+		ELSE
+			SELECT count(moduleId) FROM modules WHERE moduleId = theModuleId AND bronzeMedalAvailable = TRUE INTO bronzeMedalInfo;
+			IF (bronzeMedalInfo > 0) THEN
+				UPDATE users SET bronzeMedalCount = bronzeMedalCount + 1 WHERE userId = theUserId;
+				UPDATE modules SET bronzeMedalAvailable = FALSE WHERE moduleId = theModuleId;
+				COMMIT;
+			END IF;
+		END IF;
+	END IF;
 END IF;
 
 -- Get the Score value for the level
@@ -680,6 +786,7 @@ SELECT moduleName FROM modules
 END $$
 
 DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure moduleGetHash
 -- -----------------------------------------------------
@@ -780,15 +887,6 @@ DELIMITER $$
 USE `core`$$
 CREATE PROCEDURE `core`.`resultMessagePlus` (IN theModuleId VARCHAR(64), IN theUserId2 VARCHAR(64))
 BEGIN
-DECLARE temp INT;
-COMMIT;
-SELECT csrfCount FROM results
-    WHERE userId = theUserId2
-    AND moduleId = theModuleId
-    INTO temp;
-IF (temp = 0) THEN
-    CALL moduleComplete(theModuleId, theUserId2);
-END IF;
 UPDATE results SET
     csrfCount = csrfCount + 1
     WHERE userId = theUserId2
@@ -799,6 +897,26 @@ END
 $$
 
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure resultMessagePlus
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`csrfLevelComplete` (IN theModuleId VARCHAR(64), IN theUserId2 VARCHAR(64))
+BEGIN
+	DECLARE temp INT;
+COMMIT;
+SELECT csrfCount FROM results
+    WHERE userId = theUserId2
+    AND moduleId = theModuleId;
+END
+
+$$
+
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure moduleGetIdFromHash
 -- -----------------------------------------------------
@@ -830,6 +948,49 @@ END
 $$
 
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure userBadSubmission
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`userBadSubmission` (IN theUserId VARCHAR(64))
+BEGIN
+UPDATE users SET
+    badSubmissionCount = badSubmissionCount + 1
+    WHERE userId = theUserId;
+COMMIT;
+UPDATE users SET
+	userScore = userScore - userScore/10
+	WHERE userId = theUserId AND badSubmissionCount > 40 AND userScore > 5;
+COMMIT;
+UPDATE users SET 
+	userScore = userScore - 10
+	WHERE userId = theUserId AND badSubmissionCount > 40 AND userScore <= 5;
+COMMIT;
+END
+$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure resetUserBadSubmission
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`resetUserBadSubmission` (IN theUserId VARCHAR(64))
+BEGIN
+UPDATE users SET
+    badSubmissionCount = 0
+    WHERE userId = theUserId;
+COMMIT;
+END
+$$
+
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure moduleComplete
 -- -----------------------------------------------------
@@ -1013,9 +1174,9 @@ USE `core`$$
 CREATE PROCEDURE `core`.`classScoreboard` (IN theClassId VARCHAR(64))
 BEGIN
     COMMIT;
-SELECT userId, userName, userScore FROM users 
+SELECT userId, userName, userScore, goldMedalCount, silverMedalCount, bronzeMedalCount FROM users 
 	WHERE classId = theClassId AND userRole = 'player' AND userScore > 0
-	ORDER BY userScore DESC, userId ASC;
+	ORDER BY userScore DESC, goldMedalCount DESC, silverMedalCount DESC, bronzeMedalCount DESC, userId ASC;
 END
 
 $$
@@ -1031,9 +1192,9 @@ USE `core`$$
 CREATE PROCEDURE `core`.`totalScoreboard` ()
 BEGIN
     COMMIT;
-SELECT userId, userName, userScore FROM users 
+SELECT userId, userName, userScore, goldMedalCount, silverMedalCount, bronzeMedalCount FROM users 
 	WHERE userRole = 'player' AND userScore > 0
-	ORDER BY userScore DESC, userId ASC;
+	ORDER BY userScore DESC, goldMedalCount DESC, silverMedalCount DESC, bronzeMedalCount DESC, userId ASC;
 END
 
 $$
@@ -1111,6 +1272,23 @@ END
 $$
 
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure moduleTournamentOpenInfo
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`moduleTournamentOpenInfo` (IN theUserId VARCHAR(64))
+BEGIN
+(SELECT moduleName, moduleCategory, moduleId, finishTime, incrementalRank, scoreValue FROM modules LEFT JOIN results USING (moduleId) 
+WHERE userId = theUserId AND moduleStatus = 'open') UNION (SELECT moduleName, moduleCategory, moduleId, null, incrementalRank, scoreValue FROM modules WHERE moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId AND moduleStatus = 'open') AND moduleStatus = 'open') ORDER BY incrementalRank, scoreValue, moduleName;
+END
+
+$$
+
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure moduleSetStatus
 -- -----------------------------------------------------
@@ -1163,58 +1341,76 @@ SELECT "Inserting Data for table `core`.`modules`" FROM DUAL;
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;
 USE `core`;
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('544aa22d3dd16a8232b093848a6523b0712b23da', 'SQL Injection 2', 'challenge', 'Injection', 'fd8e9a29dab791197115b58061b215594211e72c1680f1eacc50b0394133a09f', 'e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a', 'open', '47', '45', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('5dda8dc216bd6a46fccaa4ed45d49404cdc1c82e', 'SQL Injection 3', 'challenge', 'Injection', '9815 1547 3214 7569', 'b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6', 'open', '70', '70', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('6319a2e38cc4b2dc9e6d840e1b81db11ee8e5342', 'Cross Site Scripting 3', 'challenge', 'XSS', '6abaf491c9122db375533c04df', 'ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e', 'open', '68', '65', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('cd7f70faed73d2457219b951e714ebe5775515d8', 'Cross Site Scripting 1', 'challenge', 'XSS', '445d0db4a8fc5d4acb164d022b', 'd72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa', 'open', '20', '20', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('d4e2c37d8f1298fcaf4edcea7292cb76e9eab09b', 'Cross Site Scripting 2', 'challenge', 'XSS', '495ab8cc7fe9532c6a75d378de', 't227357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888', 'open', '64', '60', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('f771a10efb42a79a9dba262fd2be2e44bf40b66d', 'SQL Injection 1', 'challenge', 'Injection', 'f62abebf5658a6a44c5c9babc7865110c62f5ecd9d0a7052db48c4dbee0200e3', 'ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b', 'open', '45', '45', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('408610f220b4f71f7261207a17055acbffb8a747', 'SQL Injection', 'lesson', 'Injection', '3c17f6bf34080979e0cebda5672e989c07ceec9fa4ee7b7c17c9e3ce26bc63e0', 'e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594', 'open', '30', '30', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('ca8233e0398ecfa76f9e05a49d49f4a7ba390d07', 'Cross Site Scripting', 'lesson', 'XSS', 'ea7b563b2935d8587539d747d', 'zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a', 'open', '16', '15', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('453d22238401e0bf6f1ff5d45996407e98e45b07', 'Cross Site Request Forgery', 'lesson', 'CSRF', '666980771c29857b8a84c686751ce7edaae3d6ac1', 'ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7', 'open', '43', '40', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('20e755179a5840be5503d42bb3711716235005ea', 'CSRF 1', 'challenge', 'CSRF', '7639c952a191d569a0c741843b599604c37e33f9f5d8eb07abf0254635320b07', 's74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52', 'open', '56', '55', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('94cd2de560d89ef59fc450ecc647ff4d4a55c15d', 'CSRF 2', 'challenge', 'CSRF', '45309dbaf8eaf6d1a5f1ecb1bf1b6be368a6542d3da35b9bf0224b88408dc001', 'z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e', 'open', '71', '70', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('5ca9115f3279b9b9f3308eb6a59a4fcd374846d6', 'CSRF 3', 'challenge', 'CSRF', '6bdbe1901cbe2e2749f347efb9ec2be820cc9396db236970e384604d2d55b62a', 'z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c', 'open', '235', '50', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('9533e21e285621a676bec58fc089065dec1f59f5', 'Broken Session Management', 'lesson', 'Session Management', '6594dec9ff7c4e60d9f8945ca0d4', 'b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806', 'open', '11', '10', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('a4bf43f2ba5ced041b03d0b3f9fa3541c520d65d', 'Session Management Challenge 1', 'challenge', 'Session Management', 'db7b1da5d7a43c7100a6f01bb0c', 'dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a', 'open', '40', '40', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('b70a84f159876bb9885b6e0087d22f0a52abbfcf', 'Session Management Challenge 2', 'challenge', 'Session Management', '4ba31e5ffe29de092fe1950422a', 'd779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7', 'open', '55', '55', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('0e9e650ffca2d1fe516c5d7b0ce5c32de9e53d1e', 'Session Management Challenge 3', 'challenge', 'Session Management', 'e62008dc47f5eb065229d48963', 't193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3', 'open', '60', '60', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('0dbea4cb5811fff0527184f99bd5034ca9286f11', 'Insecure Direct Object References', 'lesson', 'Insecure Direct Object References', '59e571b1e59441e76e0c85e5b49', 'fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100', 'open', '5', '10', '10', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('2dc909fd89c2b03059b1512e7b54ce5d1aaa4bb4', 'Insecure Direct Object Reference Challenge 1', 'challenge', 'Insecure Direct Object References', 'dd6301b38b5ad9c54b85d07c087aebec89df8b8c769d4da084a55663e6186742', 'o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c', 'open', '36', '35', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('b6432a6b5022cb044e9946315c44ab262ab59e88', 'Unvalidated Redirects and Forwards', 'lesson', 'Unvalidated Redirects and Forwards', '658c43abcf81a61ca5234cfd7a2', 'f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f', 'open', '46', '45', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('52c5394cdedfb2e95b3ad8b92d0d6c9d1370ea9a', 'Failure to Restrict URL Access', 'lesson', 'Failure to Restrict URL Access', 'f60d1337ac4d35cb67880a3adda79', 'oed23498d53ad1d965a589e257d8366d74eb52ef955e103c813b592dba0477e3', 'open', '15', '15', '5', 0);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('201ae6f8c55ba3f3b5881806387fbf34b15c30c2', 'Insecure Cryptographic Storage', 'lesson', 'Insecure Cryptographic Storage', 'base64isNotEncryptionBase64isEncodingBase64HidesNothingFromYou', 'if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c29ef2', 'open', '26', '25', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('0709410108f91314fb6f7721df9b891351eb2fcc', 'Insecure Cryptographic Storage Challenge 2', 'challenge', 'Insecure Cryptographic Storage', 'TheVigenereCipherIsAmethodOfEncryptingAlphabeticTextByUsingPoly', 'h8aa0fdc145fb8089661997214cc0e685e5f86a87f30c2ca641e1dde15b01177', 'open', '66', '65', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('891a0208a95f1791287be721a4b851d4c584880a', 'Insecure Cryptographic Storage Challenge 1', 'challenge', 'Insecure Cryptographic Storage', 'mylovelyhorserunningthroughthefieldwhereareyougoingwithyourbiga', 'x9c408d23e75ec92495e0caf9a544edb2ee8f624249f3e920663edb733f15cd7', 'open', '35', '35', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('82e8e9e2941a06852b90c97087309b067aeb2c4c', 'Insecure Direct Object Reference Challenge 2', 'challenge', 'Insecure Direct Object References', '1f746b87a4e3628b90b1927de23f6077abdbbb64586d3ac9485625da21921a0f', 'vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4', 'open', '67', '65', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998', 'SQL Injection 4', 'challenge', 'Injection', 'd316e80045d50bdf8ed49d48f130b4acf4a878c82faef34daff8eb1b98763b6f', '1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629', 'open', '77', '75', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('a84bbf8737a9ca749d81d5226fc87e0c828138ee', 'SQL Injection 5', 'challenge', 'Injection', '343f2e424d5d7a2eff7f9ee5a5a72fd97d5a19ef7bff3ef2953e033ea32dd7ee', '8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62', 'open', '90', '90', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('ad332a32a6af1f005f9c8d1e98db264eb2ae5dfe', 'SQL Injection 6', 'challenge', 'Injection', '17f999a8b3fbfde54124d6e94b256a264652e5087b14622e1644c884f8a33f82', 'd0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2', 'open', '95', '95', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('182f519ef2add981c77a584380f41875edc65a56', 'Cross Site Scripting 4', 'challenge', 'XSS', '515e05137e023dd7828adc03f639c8b13752fbdffab2353ccec', '06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751', 'open', '76', '75', '5', 0);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('fccf8e4d5372ee5a73af5f862dc810545d19b176', 'Cross Site Scripting 5', 'challenge', 'XSS', '7d7cc278c30cca985ab027e9f9e09e2f759e5a3d1f63293', 'f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671', 'open', '86', '85', '5', 0);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('0a37cb9296ff3763f7f3a45ff313bce47afa9384', 'CSRF 4', 'challenge', 'CSRF', '8f34078ef3e53f619618d9def1ede8a6a9117c77c2fad22f76bba633da83e6d4', '70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49', 'open', '81', '80', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('04a5bd8656fdeceac26e21ef6b04b90eaafbd7d5', 'CSRF 5', 'challenge', 'CSRF', 'df611f54325786d42e6deae8bbd0b9d21cf2c9282ec6de4e04166abe2792ac00', '2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569', 'open', '91', '90', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5', 'CSRF 6', 'challenge', 'CSRF', '849e1efbb0c1e870d17d32a3e1b18a8836514619146521fbec6623fce67b73e8', '7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3', 'open', '120', '120', '5', 1);
-INSERT INTO `core`.`modules` (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('53a53a66cb3bf3e4c665c442425ca90e29536edd', 'Mobile Insecure Data Storage', 'lesson', 'Mobile Insecure Data Storage', 'Battery777', 'ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f', 'open', '25', '25', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('307f78f18fd6a87e50ed6705231a9f24cd582574', 'Insecure Data Storage 1', 'challenge', 'Mobile Insecure Data Storage', 'WarshipsAndWrenches', '362f84cf26bf96aeae358d5d0bbee31e9291aaa5367594c29b3af542a7572c01', 'open', '61', '60', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('da3de2e556494a9c2fb7308a98454cf55f3a4911', 'Insecure Data Storage 2', 'challenge', 'Mobile Insecure Data Storage', 'starfish123', 'ec09515a304d2de1f552e961ab769967bdc75740ad2363803168b7907c794cd4', 'open', '69', '65', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('335440fef02d19259254ed88293b62f31cccdd41', 'Client Side Injection', 'lesson', 'Mobile Injection', 'VolcanicEruptionsAbruptInterruptions', 'f758a97011ec4452cc0707e546a7c0f68abc6ef2ab747ea87e0892767152eae1', 'open', '51', '50', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('a3f7ffd0f9c3d15564428d4df0b91bd927e4e5e4', 'Client Side Injection 1', 'challenge', 'Mobile Injection', 'SourHatsAndAngryCats', '8855c8bb9df4446a546414562eda550520e29f7a82400a317c579eb3a5a0a8ef', 'open', '72', '70', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('e635fce334aa61fdaa459c21c286d6332eddcdd3', 'Client Side Injection 2', 'challenge', 'Mobile Injection', 'BurpingChimneys', 'cfe68711def42bb0b201467b859322dd2750f633246842280dc68c858d208425', 'open', '80', '80', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('2ab09c0c18470ae5f87d219d019a1f603e66f944', 'Reverse Engineering', 'lesson', 'Mobile Reverse Engineering', 'DrumaDrumaDrumBoomBoom', '19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9', 'open', '50', '50', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('f16bf2ab1c1bf400d36330f91e9ac6045edcd003', 'Reverse Engineering 1', 'challenge', 'Mobile Reverse Engineering', 'FireStoneElectric', '5bc811f9e744a71393a277c51bfd8fbb5469a60209b44fa3485c18794df4d5b1', 'open', '53', '55', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('9e46e3c8bde42dc16b9131c0547eedbf265e8f16', 'Reverse Engineering 2', 'challenge', 'Mobile Reverse Engineering', 'C1babd72225f0e9934YZ8', 'dbae0baa3f71f196c4d2c6c984d45a6c1c635bf1b482dccfe32e9b01b69a042b', 'open', '74', '70', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('ef6496892b8e48ac2f349cdd7c8ecb889fc982af', 'Broken Crypto', 'lesson', 'Mobile Broken Crypto', '33edeb397d665ed7d1a580f3148d4b2f', '911fa7f4232e096d6a74a0623842c4157e29b9bcc44e8a827be3bb7e58c9a212', 'open', '52', '50', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('1506f22cd73d14d8a73e0ee32006f35d4f234799', 'Unintended Data Leakage', 'lesson', 'Mobile Data Leakage', 'SilentButSteadyRedLed', '392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec', 'open', '42', '40', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('3d5b46abc6865ba09aaff98a8278a5f5e339abff', 'Failure To Restrict URL Access Challenge 1', 'challenge', 'Failure to Restrict URL Access', 'c776572b6a9d5b5c6e4aa672a4771213', '4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99', 'open', '41', '40', '5', 0);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('c7ac1e05faa2d4b1016cfcc726e0689419662784', 'Failure To Restrict URL Access Challenge 2', 'challenge', 'Failure to Restrict URL Access', '40b675e3d404c52b36abe31d05842b283975ec62e8', '278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa', 'open', '85', '85', '5', 0);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('b3cfd5890649e6815a1c7107cc41d17c82826cfa', 'Insecure Cryptographic Storage Challenge 3', 'challenge', 'Insecure Cryptographic Storage', 'THISISTHESECURITYSHEPHERDABCENCRYPTIONKEY', '2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1', 'open', '78', '75', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('ced925f8357a17cfe3225c6236df0f681b2447c4', 'Session Management Challenge 4', 'challenge', 'Session Management', '238a43b12dde07f39d14599a780ae90f87a23e', 'ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6', 'open', '75', '75', '5', 0);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('c6841bcc326c4bad3a23cd4fa6391eb9bdb146ed', 'Cross Site Scripting 6', 'challenge', 'XSS', 'c13e42171dbd41a7020852ffdd3399b63a87f5', 'd330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf', 'open', '95', '95', '5', 0);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('3f010a976bcbd6a37fba4a10e4a057acc80bdc09', 'Broken Crypto 1', 'challenge', 'Mobile Broken Crypto', 'd1f2df53084b970ab538457f5af34c8b', 'd2f8519f8264f9479f56165465590b499ceca941ab848805c00f5bf0a40c9717', 'open', '62', '60', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('63bc4811a2e72a7c833962e5d47a41251cd90de3', 'Broken Crypto 2', 'challenge', 'Mobile Broken Crypto', 'DancingRobotChilliSauce', 'fb5c9ce0f5539b737e534fd317befff7427f6610ed626dfd43abf35295f106bc', 'open', '79', '75', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('831cea34ab83d523cf04cf2d3fc1b908361fa42f', 'Unintended Data Leakage 1', 'challenge', 'Mobile Data Leakage', 'UpsideDownPizzaDip', '83dee43e50f65876d9c24a9355200f7c10569dc94e51349f7b857fb68b4e6bdf', 'open', '200', '50', '5', 1);
-INSERT INTO modules (moduleId, moduleName, moduleType, moduleCategory, moduleResult, moduleHash, moduleStatus, incrementalRank, scoreValue, scoreBonus, hardcodedKey) VALUES ('ed732e695b85baca21d80966306a9ab5ec37477f', 'Session Management Challenge 5', 'challenge', 'Session Management', 'a15b8ea0b8a3374a1dedc326dfbe3dbae26', '7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1', 'open', '105', '110', '5', 0); 
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('0dbea4cb5811fff0527184f99bd5034ca9286f11', 'Insecure Direct Object References', 'lesson', 'Insecure Direct Object References', '59e571b1e59441e76e0c85e5b49', 'fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100', 'open', '5', '10', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('9533e21e285621a676bec58fc089065dec1f59f5', 'Broken Session Management', 'lesson', 'Session Management', '6594dec9ff7c4e60d9f8945ca0d4', 'b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806', 'open', '16', '10', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('52c5394cdedfb2e95b3ad8b92d0d6c9d1370ea9a', 'Failure to Restrict URL Access', 'lesson', 'Failure to Restrict URL Access', 'f60d1337ac4d35cb67880a3adda79', 'oed23498d53ad1d965a589e257d8366d74eb52ef955e103c813b592dba0477e3', 'open', '25', '15', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('ca8233e0398ecfa76f9e05a49d49f4a7ba390d07', 'Cross Site Scripting', 'lesson', 'XSS', 'ea7b563b2935d8587539d747d', 'zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a', 'open', '26', '15', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('cd7f70faed73d2457219b951e714ebe5775515d8', 'Cross Site Scripting 1', 'challenge', 'XSS', '445d0db4a8fc5d4acb164d022b', 'd72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa', 'open', '35', '20', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('53a53a66cb3bf3e4c665c442425ca90e29536edd', 'Insecure Data Storage', 'lesson', 'Mobile Insecure Data Storage', 'Battery777', 'ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f', 'open', '45', '25', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('201ae6f8c55ba3f3b5881806387fbf34b15c30c2', 'Insecure Cryptographic Storage', 'lesson', 'Insecure Cryptographic Storage', 'base64isNotEncryptionBase64isEncodingBase64HidesNothingFromYou', 'if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c29ef2', 'open', '46', '25', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('408610f220b4f71f7261207a17055acbffb8a747', 'SQL Injection', 'lesson', 'Injection', '3c17f6bf34080979e0cebda5672e989c07ceec9fa4ee7b7c17c9e3ce26bc63e0', 'e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594', 'open', '55', '30', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('891a0208a95f1791287be721a4b851d4c584880a', 'Insecure Cryptographic Storage Challenge 1', 'challenge', 'Insecure Cryptographic Storage', 'mylovelyhorserunningthroughthefieldwhereareyougoingwithyourbiga', 'x9c408d23e75ec92495e0caf9a544edb2ee8f624249f3e920663edb733f15cd7', 'open', '65', '35', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('2dc909fd89c2b03059b1512e7b54ce5d1aaa4bb4', 'Insecure Direct Object Reference Challenge 1', 'challenge', 'Insecure Direct Object References', 'dd6301b38b5ad9c54b85d07c087aebec89df8b8c769d4da084a55663e6186742', 'o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c', 'open', '66', '35', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('a4bf43f2ba5ced041b03d0b3f9fa3541c520d65d', 'Session Management Challenge 1', 'challenge', 'Session Management', 'db7b1da5d7a43c7100a6f01bb0c', 'dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a', 'open', '75', '40', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('2ab09c0c18470ae5f87d219d019a1f603e66f944', 'Reverse Engineering', 'lesson', 'Mobile Reverse Engineering', 'DrumaDrumaDrumBoomBoom', '19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9', 'open', '75', '40', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('3d5b46abc6865ba09aaff98a8278a5f5e339abff', 'Failure To Restrict URL Access Challenge 1', 'challenge', 'Failure to Restrict URL Access', 'c776572b6a9d5b5c6e4aa672a4771213', '4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99', 'open', '76', '40', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('1506f22cd73d14d8a73e0ee32006f35d4f234799', 'Unintended Data Leakage', 'lesson', 'Mobile Data Leakage', 'SilentButSteadyRedLed', '392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec', 'open', '77', '40', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('453d22238401e0bf6f1ff5d45996407e98e45b07', 'Cross Site Request Forgery', 'lesson', 'CSRF', '666980771c29857b8a84c686751ce7edaae3d6ac1', 'ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7', 'open', '78', '40', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('52885a3db5b09adc24f38bc453fe348f850649b3', 'Reverse Engineering 1', 'challenge', 'Mobile Reverse Engineering', 'christopherjenkins', '072a9e4fc888562563adf8a89fa55050e3e1cfbbbe1d597b0537513ac8665295', 'open', '85', '50', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('f771a10efb42a79a9dba262fd2be2e44bf40b66d', 'SQL Injection 1', 'challenge', 'Injection', 'f62abebf5658a6a44c5c9babc7865110c62f5ecd9d0a7052db48c4dbee0200e3', 'ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b', 'open', '85', '45', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('b6432a6b5022cb044e9946315c44ab262ab59e88', 'Unvalidated Redirects and Forwards', 'lesson', 'Unvalidated Redirects and Forwards', '658c43abcf81a61ca5234cfd7a2', 'f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f', 'open', '86', '45', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('335440fef02d19259254ed88293b62f31cccdd41', 'Client Side Injection', 'lesson', 'Mobile Injection', 'VolcanicEruptionsAbruptInterruptions', 'f758a97011ec4452cc0707e546a7c0f68abc6ef2ab747ea87e0892767152eae1', 'open', '86', '50', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('544aa22d3dd16a8232b093848a6523b0712b23da', 'SQL Injection 2', 'challenge', 'Injection', 'fd8e9a29dab791197115b58061b215594211e72c1680f1eacc50b0394133a09f', 'e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a', 'open', '87', '45', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('0cdd1549e7c74084d7059ce748b93ef657b44457', 'Poor Authentication', 'lesson', 'Mobile Poor Authentication', 'UpsideDownPizzaDip', '77777b312d5b56a17c1f30550dd34e8d6bd8b037f05341e64e94f5411c10ac8e', 'open', '90', '50', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('ef6496892b8e48ac2f349cdd7c8ecb889fc982af', 'Broken Crypto', 'lesson', 'Mobile Broken Crypto', '33edeb397d665ed7d1a580f3148d4b2f', '911fa7f4232e096d6a74a0623842c4157e29b9bcc44e8a827be3bb7e58c9a212', 'open', '97', '50', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('f16bf2ab1c1bf400d36330f91e9ac6045edcd003', 'Reverse Engineering 2', 'challenge', 'Mobile Reverse Engineering', 'FireStoneElectric', '5bc811f9e744a71393a277c51bfd8fbb5469a60209b44fa3485c18794df4d5b1', 'open', '98', '50', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('b70a84f159876bb9885b6e0087d22f0a52abbfcf', 'Session Management Challenge 2', 'challenge', 'Session Management', '4ba31e5ffe29de092fe1950422a', 'd779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7', 'open', '105', '55', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('20e755179a5840be5503d42bb3711716235005ea', 'CSRF 1', 'challenge', 'CSRF', '7639c952a191d569a0c741843b599604c37e33f9f5d8eb07abf0254635320b07', 's74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52', 'open', '106', '55', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('307f78f18fd6a87e50ed6705231a9f24cd582574', 'Insecure Data Storage 1', 'challenge', 'Mobile Insecure Data Storage', 'WarshipsAndWrenches', '362f84cf26bf96aeae358d5d0bbee31e9291aaa5367594c29b3af542a7572c01', 'open', '116', '60', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('0e9e650ffca2d1fe516c5d7b0ce5c32de9e53d1e', 'Session Management Challenge 3', 'challenge', 'Session Management', 'e62008dc47f5eb065229d48963', 't193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3', 'open', '115', '60', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('3f010a976bcbd6a37fba4a10e4a057acc80bdc09', 'Broken Crypto 1', 'challenge', 'Mobile Broken Crypto', 'd1f2df53084b970ab538457f5af34c8b', 'd2f8519f8264f9479f56165465590b499ceca941ab848805c00f5bf0a40c9717', 'open', '117', '60', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('d4e2c37d8f1298fcaf4edcea7292cb76e9eab09b', 'Cross Site Scripting 2', 'challenge', 'XSS', '495ab8cc7fe9532c6a75d378de', 't227357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888', 'open', '119', '60', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('9e46e3c8bde42dc16b9131c0547eedbf265e8f16', 'Reverse Engineering 3', 'challenge', 'Mobile Reverse Engineering', 'C1babd72225f0e9934YZ8', 'dbae0baa3f71f196c4d2c6c984d45a6c1c635bf1b482dccfe32e9b01b69a042b', 'open', '120', '76', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('0709410108f91314fb6f7721df9b891351eb2fcc', 'Insecure Cryptographic Storage Challenge 2', 'challenge', 'Insecure Cryptographic Storage', 'TheVigenereCipherIsAmethodOfEncryptingAlphabeticTextByUsingPoly', 'h8aa0fdc145fb8089661997214cc0e685e5f86a87f30c2ca641e1dde15b01177', 'open', '126', '65', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('82e8e9e2941a06852b90c97087309b067aeb2c4c', 'Insecure Direct Object Reference Challenge 2', 'challenge', 'Insecure Direct Object References', '1f746b87a4e3628b90b1927de23f6077abdbbb64586d3ac9485625da21921a0f', 'vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4', 'open', '127', '65', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('6319a2e38cc4b2dc9e6d840e1b81db11ee8e5342', 'Cross Site Scripting 3', 'challenge', 'XSS', '6abaf491c9122db375533c04df', 'ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e', 'open', '128', '65', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('da3de2e556494a9c2fb7308a98454cf55f3a4911', 'Insecure Data Storage 2', 'challenge', 'Mobile Insecure Data Storage', 'starfish123', 'ec09515a304d2de1f552e961ab769967bdc75740ad2363803168b7907c794cd4', 'open', '129', '65', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('cb7d696bdf88899e8077063d911fc8da14176702', 'Insecure Data Storage 3', 'challenge', 'Mobile Insecure Data Storage', 'c4ptainBrunch', '11ccaf2f3b2aa4f88265b9cacb5e0ed26b11af978523e34528cf0bb9d32de851', 'open', '130', '60', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('f40b0cd5d45327c9426675313f581cf70c7c7c28', 'Unintended Data Leakage 1', 'challenge', 'Mobile Data Leakage', 'BagsofSalsa', '517622a535ff89f7d90674862740b48f53aad7b41390fe46c6f324fee748d136', 'open', '130', '60', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('5dda8dc216bd6a46fccaa4ed45d49404cdc1c82e', 'SQL Injection 3', 'challenge', 'Injection', '9815 1547 3214 7569', 'b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6', 'open', '135', '70', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('94cd2de560d89ef59fc450ecc647ff4d4a55c15d', 'CSRF 2', 'challenge', 'CSRF', '45309dbaf8eaf6d1a5f1ecb1bf1b6be368a6542d3da35b9bf0224b88408dc001', 'z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e', 'open', '136', '70', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('5ca9115f3279b9b9f3308eb6a59a4fcd374846d6', 'CSRF 3', 'challenge', 'CSRF', '6bdbe1901cbe2e2749f347efb9ec2be820cc9396db236970e384604d2d55b62a', 'z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c', 'open', '137', '70', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('a3f7ffd0f9c3d15564428d4df0b91bd927e4e5e4', 'Client Side Injection 1', 'challenge', 'Mobile Injection', 'SourHatsAndAngryCats', '8855c8bb9df4446a546414562eda550520e29f7a82400a317c579eb3a5a0a8ef', 'open', '138', '70', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('cfbf7b915ee56508ad46ab79878f37fd9afe0d27', 'CSRF 4', 'challenge', 'CSRF', 'bb78f73c7efefec25e518c3a91d50d789b689c4515b453b6140a2e4e1823d203', '84118752e6cd78fecc3563ba2873d944aacb7b72f28693a23f9949ac310648b5', 'open', '139', '70', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('1e3c02ad49fa9a9e396a3b268d7da8f0b647d8f9', 'Unintended Data Leakage 2', 'challenge', 'Mobile Data Leakage', '627884736748', '85ceae7ec397c8f4448be51c33a634194bf5da440282227c15954bbdfb54f0c7', 'open', '140', '50', '5', 1);																																																												
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('ced925f8357a17cfe3225c6236df0f681b2447c4', 'Session Management Challenge 4', 'challenge', 'Session Management', '238a43b12dde07f39d14599a780ae90f87a23e', 'ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6', 'open', '145', '75', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('182f519ef2add981c77a584380f41875edc65a56', 'Cross Site Scripting 4', 'challenge', 'XSS', '515e05137e023dd7828adc03f639c8b13752fbdffab2353ccec', '06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751', 'open', '146', '75', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998', 'SQL Injection 4', 'challenge', 'Injection', 'd316e80045d50bdf8ed49d48f130b4acf4a878c82faef34daff8eb1b98763b6f', '1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629', 'open', '147', '75', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('b3cfd5890649e6815a1c7107cc41d17c82826cfa', 'Insecure Cryptographic Storage Challenge 3', 'challenge', 'Insecure Cryptographic Storage', 'THISISTHESECURITYSHEPHERDABCENCRYPTIONKEY', '2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1', 'open', '148', '75', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('63bc4811a2e72a7c833962e5d47a41251cd90de3', 'Broken Crypto 2', 'challenge', 'Mobile Broken Crypto', 'DancingRobotChilliSauce', 'fb5c9ce0f5539b737e534fd317befff7427f6610ed626dfd43abf35295f106bc', 'open', '149', '75', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('e635fce334aa61fdaa459c21c286d6332eddcdd3', 'Client Side Injection 2', 'challenge', 'Mobile Injection', 'BurpingChimneys', 'cfe68711def42bb0b201467b859322dd2750f633246842280dc68c858d208425', 'open', '155', '80', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('0a37cb9296ff3763f7f3a45ff313bce47afa9384', 'CSRF 5', 'challenge', 'CSRF', '8f34078ef3e53f619618d9def1ede8a6a9117c77c2fad22f76bba633da83e6d4', '70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49', 'open', '156', '80', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('ba6e65e4881c8499b5e53eb33b5be6b5d0f1fb2c', 'Poor Authentication 1', 'challenge', 'Mobile Poor Authentication', 'MegaKillerExtremeCheese', 'efa08298fc6a4add4b9a4bbdbbbb18ac934667971fa275bd7d234589bd8a8467', 'open', '160', '60', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('c7ac1e05faa2d4b1016cfcc726e0689419662784', 'Failure To Restrict URL Access Challenge 2', 'challenge', 'Failure to Restrict URL Access', '40b675e3d404c52b36abe31d05842b283975ec62e8', '278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa', 'open', '165', '85', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('fccf8e4d5372ee5a73af5f862dc810545d19b176', 'Cross Site Scripting 5', 'challenge', 'XSS', '7d7cc278c30cca985ab027e9f9e09e2f759e5a3d1f63293', 'f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671', 'open', '166', '85', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('a84bbf8737a9ca749d81d5226fc87e0c828138ee', 'SQL Injection 5', 'challenge', 'Injection', '343f2e424d5d7a2eff7f9ee5a5a72fd97d5a19ef7bff3ef2953e033ea32dd7ee', '8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62', 'open', '175', '90', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('04a5bd8656fdeceac26e21ef6b04b90eaafbd7d5', 'CSRF 6', 'challenge', 'CSRF', 'df611f54325786d42e6deae8bbd0b9d21cf2c9282ec6de4e04166abe2792ac00', '2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569', 'open', '176', '90', '4', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('145111e80400e4fd48bd3aa5aca382e9c5640793', 'Insecure Cryptographic Storage Challenge 4', 'challenge', 'Insecure Cryptographic Storage', '50980917266ce6ec07471f49b1a046ca6a5034eb9261fb44c3ffc4b16931255c', 'b927fc4d8c9f70a78f8b6fc46a0cc18533a88b2363054a1f391fe855954d12f9', 'open', '177', '90', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('3b1af0ad239325bf494c6e606585320b31612e72', 'Broken Crypto 3', 'challenge', 'Mobile Broken Crypto', 'ShaveTheSkies', 'f5a3f19dd44b53c6d29dda65fa90791bb312a3044b3110acb8a65d165376bf34', 'open', '180', '180', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('c6841bcc326c4bad3a23cd4fa6391eb9bdb146ed', 'Cross Site Scripting 6', 'challenge', 'XSS', 'c13e42171dbd41a7020852ffdd3399b63a87f5', 'd330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf', 'open', '185', '95', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('ad332a32a6af1f005f9c8d1e98db264eb2ae5dfe', 'SQL Injection 6', 'challenge', 'Injection', '17f999a8b3fbfde54124d6e94b256a264652e5087b14622e1644c884f8a33f82', 'd0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2', 'open', '186', '95', '5', 1);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('ed732e695b85baca21d80966306a9ab5ec37477f', 'Session Management Challenge 5', 'challenge', 'Session Management', 'a15b8ea0b8a3374a1dedc326dfbe3dbae26', '7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1', 'open', '205', '110', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('adc845f9624716eefabcc90d172bab4096fa2ac4', 'Failure to Restrict URL Access 3', 'challenge', 'Failure to Restrict URL Access', '8c1dbfdc7cad35a116535f76f21e448c6c7c0ebc395be2be80e5690e01adec18', 'e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4', 'open', '206', '110', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('9294ba32bdbd680e3260a0315cd98bf6ce8b69bd', 'Session Management Challenge 6', 'challenge', 'Session Management', 'bb0eb566322d6b1f1dff388f5eee9929f6f1f9f5cac9eed266ef6e5053fe08e6', 'b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316ece', 'open', '207', '110', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('368491877a0318e9a774ba5d648c33cb0165ba1e', 'Session Management Challenge 7', 'challenge', 'Session Management', '9042eeaa8455f71deea31a5a32ae51e71477b1581c3612972902206ac51bb621', '269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80', 'open', '208', '110', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('64070f5aec0593962a29a141110b9239d73cd7b3', 'SQL Injection 7', 'challenge', 'Injection', '4637cae3d9b961fdff880d6d5ce4f69e91fe23db0aae7dcd4038e20ed8a287dc', '8c2dd7e9818e5c6a9f8562feefa002dc0e455f0e92c8a46ab0cf519b1547eced', 'open', '209', '110', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('7153290d128cfdef5f40742dbaeb129a36ac2340', 'Session Management Challenge 8', 'challenge', 'Session Management', '11d84b0ad628bb6e99e0640ff1791a29a1938609829ef5bdccee92b2bccd2bcd', '714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54705bb1ea4316334', 'open', '215', '115', '5', 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5', 'CSRF 7', 'challenge', 'CSRF', '849e1efbb0c1e870d17d32a3e1b18a8836514619146521fbec6623fce67b73e8', '7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3', 'open', '235', '120', '5', 0);
+
+
+
+
+
 COMMIT;
 
 -- -----------------------------------------------------
@@ -1245,8 +1441,7 @@ INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solu
 INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('c0b869ff8a4cd1f388e5e6bdd6525d176175c296', '408610f220b4f71f7261207a17055acbffb8a747', '2012-02-10 10:11:53', "The lesson can be completed with the following attack string<br/>\' OR \'1\' = \'1");
 INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('c0ed3f81fc615f28a39ed2c23555cea074e513f0', '0709410108f91314fb6f7721df9b891351eb2fcc', '2012-02-10 10:11:53', 'To complete this challenge, inspect the javascript that executes when the &quot;check&quot; is performed. The encryption key is stored in the &quot;theKey&quot; parameter. The last IF statment in the script checks if the output is equal to the encrypted Result Key.<br/>So the key and ciphertext is stored in the script. You can use this informaiton to decypt the result key manually with the vigenere cipher. You can also modify the javascript to decode the key for you. To do this, make the following changes;<br/> 1) Change the line &quot;input\\_char\\_value += alphabet . indexOf (theKey . charAt (theKey\\_index));&quot; to: <br/>&quot;input\\_char\\_value -= alphabet . indexOf (theKey . charAt (theKey\\_index));&quot;<br/>This inverts the process to decrypt instead of decrypt<br/>2) Add the following line to the end of the script:<br/>$(&quot;#resultDiv&quot;).html(&quot;Decode Result: &quot; + output);');
 INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('d0a0742494656c79767864b2898247df4f37b728', '6319a2e38cc4b2dc9e6d840e1b81db11ee8e5342', '2012-02-10 10:11:53', 'Input is been filtered. What is been filtered out is been completly removed. The filter does not act in a recurrive fashion so with enough nested javascript triggers, it can be defeated. To complete this challenge, enter the following attack string;<br/>&lt;input type=&quot;button&quot; oncliconcliconcliconcliconclickkkkk=&quot;alert(&#39;XSS&#39;)&quot;/&gt;');
-INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('d51277769f9452b6508a3a22d9f52bea3b0ff84d', 'f771a10efb42a79a9dba262fd2be2e44bf40b66d', '2012-02-10 10:11:53', 'To complete this challenge, the following attack string will return all rows from the table:<br/>&#39; &#39; OR &#39;1&#39; = &#39;1<br/>The filter is implemented very poorly for this challenge, as it only removes the first apostraphy in a string, rather than a recursive funciton.');
-INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('e4cb1c92453cf0e6adb5fe0e66abd408cb5b76ea', 'ac944b716c1ec5603f1d09c68e7a7e6e75b0d601', '2012-02-10 10:11:53', 'A step by step guid is not yet available for this lesson. You will need a tool like <a>Wire Shark</a> and you will need to search for the packet with the result key! The packet is broadcasted with UDP.');
+INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('d51277769f9452b6508a3a22d9f52bea3b0ff84d', 'f771a10efb42a79a9dba262fd2be2e44bf40b66d', '2012-02-10 10:11:53', 'To complete this challenge, the following attack string will return all rows from the table:<br/>test&#39;or&#39;!=&#39;2@test.com<br/>The input is validated as an email address before it is passed to the DB.');
 INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('e7e44ba680b2ab1f6958b1344c9e43931b81164a', '5dda8dc216bd6a46fccaa4ed45d49404cdc1c82e', '2012-02-10 10:11:53', 'To complete this challenge, you must craft a second statment to return Mary Martin\'\'s credit card number as the current statement only returns the customerName attribute. The following string will perform this; </br> &#39; UNION ALL SELECT creditCardNumber FROM customers WHERE customerName = &#39;Mary Martin<br/> The filter in this challenge is difficult to get around. But the \'\'UNION\'\' operator is not been filtered. Using the UNION command you are able to return the results of custom statements.');
 INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('f392e5a69475b14fbe5ae17639e174f379c0870e', '201ae6f8c55ba3f3b5881806387fbf34b15c30c2', '2012-02-10 10:11:53', 'The lesson is encoded in Base64. Most proxy applicaitons include a decoder for this encoding.');
 INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('6afa50948e10466e9a94c7c2b270b3f958e412c6', '82e8e9e2941a06852b90c97087309b067aeb2c4c', '2012-02-10 10:11:53', "The user Id\'s in this challenge are hashed using MD5. You can google the ID\'s to find their plain text if you have an internet connection to find their plain text. The sequence of ID\'\'s is as follows;<br/>2, 3, 5, 7, 9, 11<br/>The next number in the sequence is 13. Modify the request with a proxy so that the id is the MD5 of 13 (c51ce410c124a10e0db5e4b97fc2af39)");
@@ -1268,7 +1463,7 @@ CALL cheatsheetCreate('307f78f18fd6a87e50ed6705231a9f24cd582574', "The Admin cre
 CALL cheatsheetCreate('da3de2e556494a9c2fb7308a98454cf55f3a4911', "The Admin credentials are hashed (but not salted) in a db file. Go to /data/data/insecuredata2/databases and cat the db file called Password.db. The key is a password which has been hashed using MD5, there are online tools which will attempt to crack this hashed value. ");
 CALL cheatsheetCreate('335440fef02d19259254ed88293b62f31cccdd41', "The Login is vulnerable to SQL injection, Admin ' OR 1 = 1 ; -- will work in the username field and anything in the password field (So a blank field error does not occur).");
 CALL cheatsheetCreate('a3f7ffd0f9c3d15564428d4df0b91bd927e4e5e4', "The login is vulnerable to SQL injection however, some input is being filtered. OR + 1 = 1 will be filtering into spaces of comments. anyOtherValue=anyOtherValue will work as well as 0r.");
-CALL cheatsheetCreate('e635fce334aa61fdaa459c21c286d6332eddcdd3', "The login is vulnerable to SQL injection however the username name field has stronger filtering where as the password field is weaker.");
+CALL cheatsheetCreate('e635fce334aa61fdaa459c21c286d6332eddcdd3', "The login is vulnerable to SQL injection however there is filtering in place, to get an OR in the statement use OORR, to get a comment use -OR-. So the following statement should work: Admin ' oorr 'a' = 'a' ; -or- ");
 CALL cheatsheetCreate('ef6496892b8e48ac2f349cdd7c8ecb889fc982af', "The chat has not been encrypted but encoded using hex, this can be decoded using burp or the following site:http://www.asciitohex.com/ ");
 CALL cheatsheetCreate('3f010a976bcbd6a37fba4a10e4a057acc80bdc09', "The chat has been encrypted using DES. The same key is used every time and the key is stored insecurely within the app package. ");
 CALL cheatsheetCreate('63bc4811a2e72a7c833962e5d47a41251cd90de3', "The chat has been encrypted using AES (with CBC mode). Multiple keys are used this time but keys are stored insecurely on the App. key 1 decrypts message 1, key 2 decrypts message 2 and so forth. ");
@@ -1278,6 +1473,26 @@ CALL cheatsheetCreate('9e46e3c8bde42dc16b9131c0547eedbf265e8f16', "The key is no
 CALL cheatsheetCreate('1506f22cd73d14d8a73e0ee32006f35d4f234799', 'Logs are stored insecurely on the App. These contain the key. The logs can be found in a directory called \"files\" within the app package in the data/data directory. Every time the app is interacted with, new logs are generated. ');
 CALL cheatsheetCreate('831cea34ab83d523cf04cf2d3fc1b908361fa42f', 'Logs, however this time the user has revealed the answers to their secret questions in order to reset the password. Investigate the logs, get the secret questions and reset the password to login. The answers are \"Chicken\" and \"Meade\". Once logged in, the key will be revealed.');
 CALL cheatSheetCreate('ed732e695b85baca21d80966306a9ab5ec37477f', "In this challenge you must craft a HTTP request to reset an admin accounts password. The HTTP request is described in the javascript contained in the challenge page (The last function in the script). The token value in this request must be a base 64 encoded date time value such as the following;<br><br> <b>Thu Aug 28 18:48:10 BST 2014</b><br><br> The token value must be less than 10 minutes from the servers time.");
+CALL cheatSheetCreate('cfbf7b915ee56508ad46ab79878f37fd9afe0d27', "To complete this challenge a user must craft a CSRF attack that sends a POST request, to the request described in the challenge write up, with their CSRF token. This CSRF Token will work on any user.");
+CALL cheatSheetCreate('9294ba32bdbd680e3260a0315cd98bf6ce8b69bd', "The first step in completing this challenge is to get an admin user's email address. Try to sign in as 'root' or 'superuser' to get one. To complete this challenge a user must use SQL Injection in the email Parameter in the GET request to the SecretQuestion servlet. The following email submission will achieve the response of the users secret answer (This example is URL Encoded)<br><br/>&quot;UNION+SELECT+secretAnswer+FROM+users+WHERE+userName=&quot;<b>root</b><br><br>You can then use this answer along with a user email address to complete the level.");
+CALL cheatSheetCreate('7153290d128cfdef5f40742dbaeb129a36ac2340', "To complete this challenge a user must send the server a request with the 'challengeRole' value set to 'nmHqLjQknlHs'. The challengeRole cookie is encoded with ATOM-128. The value 'nmHqLjQknlHs' when decoded is 'superuser'.");
+CALL cheatSheetCreate('145111e80400e4fd48bd3aa5aca382e9c5640793', "To complete this challenge a user must deobfusticate the javascript found in /couponCheck.js and extract the relevent cyrpto information to manually decrypt a javascript array of encrypted coupons, or to manipulate the javascript so that it returns the decrypted coupons. The Coupon code for free trolls is <b>e!c!3etZoumo@Stu4rU176</b>");
+CALL cheatSheetCreate('adc845f9624716eefabcc90d172bab4096fa2ac4', "To complete this challenge, a SQL Injection Flaw must be exploited to learn the name of the super admin. The injection is performed through the BASE64 encoded cookie named 'currentPerson'. a simple &quot;or&quot;1&quot;!=&quot;0 vector will work. take the super admin's name and submit it encoded for BASE64 as the currentPerson cookie value in the request that is submitted when the Admin button is clicked. This will return the result key for the challenge.");
+CALL cheatSheetCreate('64070f5aec0593962a29a141110b9239d73cd7b3', "To complete this challenge, a SQL injection flaw must be exploited. The vulnerable paramater is 'subUserEmail'. It must be mostly well formed as an email address to get past the validation process. The following vector, which is URL encoded, will sign the user in as user 1. <br><br><b>'or'1'='1'union%0aselect%0auserName%0afrom%0ausers%0awhere''!='%40v</b>");
+CALL cheatSheetCreate('1e3c02ad49fa9a9e396a3b268d7da8f0b647d8f9', "To complete this challenge, connect the android debug bridge to the VM and run  adb logcat –d \<file location\> to dump logs to a text file. Trigger the key log by pressing the lotto button");
+CALL cheatSheetCreate('f40b0cd5d45327c9426675313f581cf70c7c7c28', "To complete this challenge, start the app, go to the command line of the VM using ALT F1 and then navigate to /sdcard/, pictorial logs are places there. Connect adb to the device and run the adb pull command on the logs. ");
+CALL cheatSheetCreate('ba6e65e4881c8499b5e53eb33b5be6b5d0f1fb2c', "To complete this challenge, start the app, and login to get the key. you must login with an auth code. the code must be odd, must contain the numbers 2 and 4 and must be six digits long. previous codes may show up in a suggestion when typing the code in which will reveal this pattern.");
+CALL cheatSheetCreate('52885a3db5b09adc24f38bc453fe348f850649b3', "To complete this challenge, find jarsigner which comes with the jdk and in a command line run the following:  jarsigner -verify -verbose -certs ReverseEngineer2.apk.");
+CALL cheatSheetCreate('3b1af0ad239325bf494c6e606585320b31612e72', "To complete this challenge, use adb pull to grab the key file and the key.db file from the app's /data/data/ directory. With the db password: Pa88w0rd1234 decrypt the database to get the key to the level. This will either require a small amount of coding or you can download and build sqlcipher. Finally there is an App on the playstore which can be used called SQLCipher Decrypt.");
+CALL cheatSheetCreate('0cdd1549e7c74084d7059ce748b93ef657b44457', "To complete this challenge, you need to login to the App. The password reset function rquires two answers which can be gathered from the logs on the App. The answers are chicken and meade. This will reset the password to a six digit code and allow you to login and view the key.");
+
+
+
+
+
+
+
+
 COMMIT;
 
 -- Default admin user
@@ -1351,8 +1566,6 @@ CREATE  TABLE IF NOT EXISTS `backup`.`users` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
-
-
 
 -- -----------------------------------------------------
 -- Table `core`.`modules`

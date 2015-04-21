@@ -20,6 +20,7 @@ import utils.Hash;
 import utils.ShepherdLogManager;
 import utils.Validate;
 import dbProcs.Database;
+import dbProcs.Getter;
 
 /**
  * Session Management Challenge Two
@@ -47,7 +48,6 @@ public class SessionManagement2 extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement2.class);
 	private static String levelName = "Session Management Challenge Two";
 	private static String levelHash = "d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7";
-	private static String levelResult = "4ba31e5ffe29de092fe1950422a";
 	/**
 	 * The user attempts to use this function to sign into a sub schema. If they successfully sign in then they are able to retrieve the result key for the challenge
 	 * If they sign in with a correct user name but incorrect password then the email address of the user will be returned in a error message
@@ -62,6 +62,7 @@ public class SessionManagement2 extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
+			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
@@ -105,7 +106,7 @@ public class SessionManagement2 extends HttpServlet
 				{
 					log.debug("Successful Login");
 					// Get key and add it to the output
-					String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
+					String userKey = Hash.generateUserSolution(Getter.getModuleResultFromHash(ApplicationRoot, levelHash), (String)ses.getAttribute("userName"));
 					htmlOutput = "<h2 class='title'>Welcome " + encoder.encodeForHTML(resultSet.getString(1)) + "</h2>" +
 							"<p>" +
 							"The result key is <a>" + userKey + "</a>" +

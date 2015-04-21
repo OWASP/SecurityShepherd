@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+                    <EditText
+                        android:id="@+id/etSecret"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="153dp"
+                        android:background="@drawable/edittext"
+                        android:ems="10"
+                        android:hint="Enter the Secret Key"
+                        android:inputType="textPassword"
+                        android:textColor="#DA70D6" >
+
+                        <requestFocus />
+                    </EditText>
+
+                    <Button
+                        android:id="@+id/bVerify"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/etSecret"
+                        android:layout_marginTop="33dp"
+                        android:background="@drawable/button"
+                        android:onClick="checkKey"
+                        android:text="Verify"
+                        android:layout_alignRight="@+id/etSecret"
+                        android:layout_alignEnd="@+id/etSecret"
+                        android:layout_alignLeft="@+id/etSecret"
+                        android:layout_alignStart="@+id/etSecret" />
+                
+</RelativeLayout>

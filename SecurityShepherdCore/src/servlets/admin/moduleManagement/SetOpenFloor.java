@@ -52,11 +52,12 @@ public class SetOpenFloor extends HttpServlet
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
-		if(Validate.validateAdminSession(ses))
+		Cookie tokenCookie = Validate.getToken(request.getCookies());
+		Object tokenParmeter = request.getParameter("csrfToken");
+		if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		{
-			Cookie tokenCookie = Validate.getToken(request.getCookies());
-			Object tokenParmeter = request.getParameter("csrfToken");
-			if(Validate.validateTokens(tokenCookie, tokenParmeter) && ModulePlan.isIncrementalFloor())
+			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
+			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
 				ModulePlan.setOpenFloor();
 				log.debug("Open Floor Plan enabled");

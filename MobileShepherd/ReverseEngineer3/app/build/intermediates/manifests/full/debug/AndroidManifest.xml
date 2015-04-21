@@ -21,19 +21,19 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.mobshep.reverseengineer3.Reverse_Engineering3"
+            android:name="com.mobshep.reverseengineer3.Triangle"
             android:label="@string/app_name"
             android:permission="com.app.mobshep.RE3.START_ACTIVITY"
             android:theme="@style/ShepherdTheme" >
             <intent-filter>
-                <action android:name="com.mobshep.ReverseEngineer3.Reverse_Engineering3" />
+                <action android:name="com.mobshep.reverseengineer3.Triangle" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mobshep.reverseengineer3.Splash"
-            android:label="@string/app_name" >
+            android:name="com.mobshep.reverseengineer3.splash"
+            android:theme="@style/ShepherdTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

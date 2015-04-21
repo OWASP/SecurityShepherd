@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background" >
+
+    <TextView
+        android:id="@+id/tvQuestion1"
+        style="@android:style/TextAppearance.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="What is your favourite food?"
+        android:textColor="#DA70D6" />
+
+    <Button
+        android:id="@+id/bReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/button"
+        android:onClick="reset"
+        android:text="Reset Password" />
+
+    <EditText
+        android:id="@+id/etQuestion2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bReset"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="54dp"
+        android:background="@drawable/edittext"
+        android:ems="10"
+        android:hint="Enter Answer"
+        android:textColor="#DA70D6" />
+
+    <EditText
+        android:id="@+id/etQuestion1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tvQuestion1"
+        android:background="@drawable/edittext"
+        android:ems="10"
+        android:hint="Enter Answer"
+        android:textColor="#DA70D6" />
+
+    <Button
+        android:id="@+id/bCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/bReset"
+        android:layout_below="@+id/bReset"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/button"
+        android:onClick="cancel"
+        android:text="Return" />
+
+    <TextView
+        android:id="@+id/tvQuestion2"
+        style="@android:style/TextAppearance.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/etQuestion2"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="29dp"
+        android:text="What is your Mother&apos;s maiden name?"
+        android:textColor="#DA70D6" />
+
+    <TextView
+        android:id="@+id/tempPass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etQuestion2"
+        android:layout_marginLeft="92dp"
+        android:layout_toRightOf="@+id/tvQuestion2"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#DA70D6" />
+
+
+</RelativeLayout>

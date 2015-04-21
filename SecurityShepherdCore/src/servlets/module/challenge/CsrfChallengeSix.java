@@ -18,7 +18,7 @@ import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * Cross Site Request Forgery Challenge Six - Does not return result Key
+ * Cross Site Request Forgery Challenge Six 
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -41,7 +41,7 @@ public class CsrfChallengeSix extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeSix.class);
-	private static final String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
+	private static final String levelHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
 	private static String levelName = "CSRF Challenge 6";
 	/**
 	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
@@ -53,7 +53,7 @@ public class CsrfChallengeSix extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Cross-SiteForegery Challenge Six Servlet");
+		log.debug(levelName + " Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -61,6 +61,7 @@ public class CsrfChallengeSix extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				Cookie tokenCookie = Validate.getToken(request.getCookies());
 				Object tokenParmeter = request.getParameter("csrfToken");
@@ -92,5 +93,4 @@ public class CsrfChallengeSix extends HttpServlet
 			out.write("An Error Occurred! You must be getting funky!");
 		}
 	}
-
 }

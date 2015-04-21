@@ -38,10 +38,12 @@ if (request.getSession() != null) //Session If
 	}
 	// validateAdminSession ensures a valid session, and valid administrator credentials
 	// Also, if tokenCookie != null, then the page is good to continue loading
-	if (Validate.validateAdminSession(ses) && tokenCookie != null) //Valid Session if
+	// Token is now validated when accessing admin pages to stop attackers causing other users to tigger logs of access attempts
+	Object tokenParmeter = request.getParameter("csrfToken");
+	if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 	{
 		//Logging Username
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 		// Getting Session Variables
 		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
 		Encoder encoder = ESAPI.encoder();
@@ -55,7 +57,7 @@ if (request.getSession() != null) //Session If
 		}
 		catch(SQLException e)
 		{
-			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString(), ses.getAttribute("userName"));
 			showClasses = false;
 		}
 %>
@@ -99,7 +101,7 @@ if (request.getSession() != null) //Session If
 												}
 												catch(SQLException e)
 												{
-													ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+													ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString(), ses.getAttribute("userName"));
 													showClasses = false;
 												}
 											}

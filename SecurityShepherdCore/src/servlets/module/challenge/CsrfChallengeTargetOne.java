@@ -59,6 +59,7 @@ public class CsrfChallengeTargetOne extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				String plusId = request.getParameter("userid");
 				log.debug("User Submitted - " + plusId);

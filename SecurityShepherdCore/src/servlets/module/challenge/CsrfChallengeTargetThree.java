@@ -50,7 +50,7 @@ public class CsrfChallengeTargetThree extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Cross-SiteForegery Challenge Three Target Servlet");
+		log.debug("Cross-SiteForegery Challenge Three Target");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -59,6 +59,7 @@ public class CsrfChallengeTargetThree extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				String plusId = request.getParameter("userid");
 				log.debug("User Submitted - " + plusId);

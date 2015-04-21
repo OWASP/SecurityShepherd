@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherd/MobileShepherd/ReverseEngineer3/app/src/main/res/values-v11/styles.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/src/main/res/values-v11/styles.xml -->
     <eat-comment/>
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
         <!-- API 11 theme customizations can go here. -->
     </style>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherd/MobileShepherd/ReverseEngineer3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values-v11/values.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values-v11/values.xml -->
     <eat-comment/>
     <style name="Base.TextAppearance.AppCompat.Inverse">
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>

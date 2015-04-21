@@ -21,7 +21,7 @@
  */
 
 //No Quotes In level Name
-String levelName = "What is Unintended Data Leakage?";
+String levelName = "What is Mobile Unintended Data Leakage?";
 //Alphanumeric Only
 String levelHash = "392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -45,7 +45,7 @@ if (request.getSession() != null)
 	// If tokenCookie == null, then the page is not going to continue loading
 	if (Validate.validateSession(ses) && tokenCookie != null)
 	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -95,6 +95,10 @@ if (request.getSession() != null)
 			 <li>Analytic data sent to third parties </li>
 			
 			</ul>
+			
+			<br>
+			Collecting logs can be done with the <a>Android Debug Bridge</a> Once you know the IP of a mobile device, you can perform the command <a>adb connect</a> followed with <a></a> to see the any Logs the App is generating.
+			<br>
 			
 			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
 				</div>

@@ -39,7 +39,7 @@
  	if (Validate.validateSession(ses) && tokenCookie != null)
  	{
  		//Log User Name
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Scoreboard accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
  		// Getting Session Variables
  		boolean canSeeScoreboard = ScoreboardStatus.canSeeScoreboard((String)ses.getAttribute("userRole"));
  		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
@@ -80,42 +80,115 @@
 		</div>
 		<!-- end page -->
 		<% if(canSeeScoreboard) { %>
-			<script>			
+			<script>
+				var windowIsActive = true;
+	
+				window.onfocus = function windowFocus () { 
+					windowIsActive = true; 
+				}; 
+	
+				window.onblur = function windowBlur () { 
+					windowIsActive = false; 
+				}; 
+				
+				function timeSince(date) {
+
+				    var seconds = Math.floor((new Date() - date) / 1000);
+
+				    var interval = Math.floor(seconds / 31536000);
+
+				    if (interval > 1) {
+				        return interval + " years";
+				    }
+				    interval = Math.floor(seconds / 2592000);
+				    if (interval > 1) {
+				        return interval + " months";
+				    }
+				    interval = Math.floor(seconds / 86400);
+				    if (interval > 1) {
+				        return interval + " days";
+				    }
+				    interval = Math.floor(seconds / 3600);
+				    if (interval > 1) {
+				        return interval + " hours";
+				    }
+				    interval = Math.floor(seconds / 60);
+				    if (interval > 1) {
+				        return interval + " minutes";
+				    }
+				    
+				    if (Math.floor(seconds) >= 60) {
+				    	return "1 minute"
+				    }
+				    else {
+				    	return "< 1 minute";
+				    }
+				}
+				
+				var lastUpdated = new Date();
+				
 				//Scoreboard based on http://mightystuff.net/dynamic-leaderboard
 				function poll() {
-					$.ajax({
-						type: "POST",
-						url: 'scoreboard', // needs to return a JSON array of items having the following properties: id, score, username
-						dataType: 'json',
-						data: {
-							csrfToken: "<%= csrfToken %>"
-						},
-						success: function(o) {
-							for(i=0;i<o.length;i++) {
-								if ($('#userbar-'+ o[i].id).length == 0) {
-									// this id doesn't exist, so add it to our list.
-									var newUser = '<li class="scoreLine"><div id="userbar-'+ o[i].id + '" class="scoreBar" title="' + o[i].usernameTitle + ' with ' + o[i].score + ' points" style="width: ' + o[i].scale + '\u0025;">' +
-											'<div id="userplace-'+ o[i].id + '" class="place"><h3 style="display:none;" id="user-' + o[i].id + '">' + o[i].order + '</h3>' + getGetOrdinal(o[i].place) + ': </div>' 
-											+ '<div class="scoreName" >'+ o[i].username + ' </div><div class="scoreNumber" id="userscore-'+ o[i].id + '">' + o[i].score + '</div></div></li>';
-									$("#leaderboard").append(newUser);
-								} else {
-									// this id does exist
-									//update user elements in the list item.
-									$('#userbar-'+ o[i].id).prop('title', o[i].usernameTitle + ' with ' + o[i].score + ' points');
-									$('#userscore-'+o[i].id).html(o[i].score);
-									$('#userplace-'+o[i].id).html('<h3 style="display:none;" id="user-' + o[i].id + '">' + o[i].order + '</h3>' + getGetOrdinal(o[i].place) + ': ');
-									
-									$('#userbar-'+ o[i].id).animate({
-								        width: o[i].scale+"%"
-								    }, 300 );
+					if(!windowIsActive) { //If Window/Tab is currently not in focus, wait to do the magic
+						console.log ( 'Window not active. Waiting' );
+						$("#badData").html('<center>Scoreboard last updated ' + timeSince(lastUpdated) + ' ago</center>');
+						$("#badData").show("slow");
+						t=setTimeout("poll()", 500); // try again really soon
+					}
+					else { // Window is Active. Do Magic
+						console.log ( 'Window Active. Refreshing' );
+						var ajaxCall = $.ajax({
+							type: "POST",
+							url: 'scoreboard', // needs to return a JSON array of items having the following properties: id, score, username
+							dataType: 'json',
+							data: {
+								csrfToken: "<%= csrfToken %>"
+							},
+							async: false,
+							success: function(o) {
+								$("#badData").hide("fast");
+								for(i=0;i<o.length;i++) {
+									if ($('#userbar-'+ o[i].id).length == 0) {
+										// this id doesn't exist, so add it to our list.
+										var newUser = '<li class="scoreLine"><div id="userbar-'+ o[i].id + '" class="scoreBar" title="' + o[i].userTitle + '" style="width: ' + o[i].scale + '\u0025;">' +
+												'<div id="userplace-'+ o[i].id + '" class="place"><h3 style="display:none;" id="user-' + o[i].id + '">' + o[i].order + '</h3>' + getGetOrdinal(o[i].place) + ': </div>' 
+												+ '<div class="scoreName" >'+ o[i].username
+													+ '<div id="goldMedals-' + o[i].id + '" class="medalContainer"><div style="' + o[i].goldDisplay + '"><div class="goldMedalAmountBubble">' + o[i].goldMedalCount + '</div></div></div>'
+													+ '<div id="silverMedals-' + o[i].id + '" class="medalContainer"><div style="' + o[i].silverDisplay + '"><div class="silverMedalAmountBubble">' + o[i].silverMedalCount + '</div></div></div>'
+													+ '<div id="bronzeMedals-' + o[i].id + '" class="medalContainer"><div style="' + o[i].bronzeDisplay + '"><div class="bronzeMedalAmountBubble">' + o[i].bronzeMedalCount + '</div></div></div>'
+												+ '</div><div class="scoreNumber" id="userscore-'+ o[i].id + '">' + o[i].score + '</div></div></li>';
+										$("#leaderboard").append(newUser);
+									} else {
+										// this id does exist
+										//update user elements in the list item.
+										$('#userbar-'+ o[i].id).prop('title', o[i].userTitle);
+										$('#userscore-'+o[i].id).html(o[i].score);
+										$('#userplace-'+o[i].id).html('<h3 style="display:none;" id="user-' + o[i].id + '">' + o[i].order + '</h3>' + getGetOrdinal(o[i].place) + ': ');
+										$('#goldMedals-' + o[i].id).html('<div style="' + o[i].goldDisplay + '"><div class="goldMedalAmountBubble">' + o[i].goldMedalCount + '</div></div></div>');
+										$('#silverMedals-' + o[i].id).html('<div style="' + o[i].silverDisplay + '"><div class="silverMedalAmountBubble">' + o[i].silverMedalCount + '</div></div></div>');
+										$('#bronzeMedals-' + o[i].id).html('<div style="' + o[i].bronzeDisplay + '"><div class="bronzeMedalAmountBubble">' + o[i].bronzeMedalCount + '</div></div></div>');
+										$('#userbar-'+ o[i].id).animate({
+									        width: o[i].scale+"%"
+									    }, 1300 );
+									}
 								}
+								sort();
 							}
-							sort();
-						},
-					});	
-	
-					// play it again, sam (10 secs)
-					t=setTimeout("poll()",10000);
+						});	
+						var fullResponse = new String(ajaxCall.responseText);
+						if (fullResponse.startsWith("ERROR:")) {
+							console.log ('Response contained error: ' + fullResponse);
+							$("#badData").html('<center>' + fullResponse + '</center>');
+							$("#badData").show("slow");
+							//Scoreboard will not refresh after this
+							console.log("Scoreboard will not refresh following this error");
+						} else {
+							$("#badData").hide("fast");
+							lastUpdated = new Date().getTime();
+							// play it again, sam (7 secs)
+							t=setTimeout("poll()",7000);
+						}
+					}
 				}
 				
 				//Algorithm from http://tinysort.sjeiti.com/

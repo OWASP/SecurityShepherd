@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
-	// Cross Site Request Forgery Challenge 4
+	// Cross Site Request Forgery Challenge 5
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -21,7 +21,7 @@
  * 
  * @author Mark Denihan
  */
-String levelName = "CSRF 4";
+String levelName = "CSRF 5";
 String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -41,7 +41,7 @@ if (request.getSession() != null)
 	// If tokenCookie == null, then the page is not going to continue loading
 	if (Validate.validateSession(ses) && tokenCookie != null)
 	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 		// Getting Session Variables
 		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
 		Encoder encoder = ESAPI.encoder();
@@ -58,26 +58,35 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross Site Request Forgery Challenge Four</title>
+	<title>Security Shepherd - <%= levelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Cross Site Request Forgery Challenge Four</h2>
+			<h2 class="title"><%= levelName %></h2>
 			<p> 
 				To complete this challenge, you must get your CSRF counter above 0. The request to increment your counter is as follows
 				<br/>
 				<br/>
-				<a> POST /user/csrfchallengefour/plusplus</a>
+				<a> POST /user/csrfchallengefive/plusplus</a>
 				<br/>
 				With the following parameters; <a>userId = exampleId</a> and <a>csrfToken = yourCsrfToken</a>
 				<br/>
 				<br/>
-				Where exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>
+				Where exampleId is the ID of the user who's CSRF counter is been incremented. Your ID is <a><%= userId %></a>. Any user than you may increment your counter for this challenge, except you. Exploit the CSRF vulnerability in the request described above against other users to complete this challenge. Once you have successfully CSRF'd another Security Shepherd user, the solution key will appear just below this message.
 				<br/>
 				<br/>
-				You can use the CSRF forum below to post a message with HTML.				
+				You can use the CSRF forum below to post a message with HTML.
+				<% 
+				String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);	
+				if (Getter.isCsrfLevelComplete(ApplicationRoot, moduleId, userId)) 
+				{ %>
+					<h2 class='title'>This CSRF Challenge has been Completed</h2>
+					<p>
+					Congratulations, you have completed this CSRF challenge by successfully carrying out a CSRF attack on another user for this level's target. The result key is 
+					<b><a><%=	encoder.encodeForHTML(Hash.generateUserSolution(Getter.getModuleResult(ApplicationRoot, moduleId), (String)ses.getAttribute("userName"))) %></a></b><br/><br/>
+				<% } %>			
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>

@@ -488,8 +488,8 @@ INSERT INTO `bugTrackingBug`.`projectBugs` (`bugId`, `projectId`, `shortDesc`, `
 INSERT INTO `bugTrackingBug`.`projectBugs` (`bugId`, `projectId`, `shortDesc`, `longDesc`) VALUES (2, 2, 'Towels still wet', 'Need to increase the environments draft rate and heating so drying time ');
 INSERT INTO `bugTrackingBug`.`projectBugs` (`bugId`, `projectId`, `shortDesc`, `longDesc`) VALUES (1, 3, 'Level Solution', 'The key for this level is 1f71d61d65e5f03d3924588cf5970030dadade5713e53819505d56b90791ce03');
 INSERT INTO `bugTrackingBug`.`projectBugs` (`bugId`, `projectId`, `shortDesc`, `longDesc`) VALUES (1, 5, 'Spelling Error', 'Run a spell check in the Controller responses. Its annoying that greek guy');
-INSERT INTO `bugTrackingBug`.`projectBugs` (`bugId`, `projectId`, `shortDesc`, `longDesc`) VALUES (2, 5, 'Bad Crypto', 'Got a note from that Greek guy saying he wants to fix that he wasnt happy with the non standard vigenere cipher for the crypto. I told him nobody would even know so he\'s fine');
-INSERT INTO `bugTrackingBug`.`projectBugs` (`bugId`, `projectId`, `shortDesc`, `longDesc`) VALUES (3, 5, 'Add a new Role', 'Need to add a new role to the server. So I better figure out what the password needs to be for a \'viewr\'. Has to be 5 characters or the role sentence doesn\'t read properly.');
+INSERT INTO `bugTrackingBug`.`projectBugs` (`bugId`, `projectId`, `shortDesc`, `longDesc`) VALUES (2, 5, 'Bad Crypto', "Got a note from that Greek guy saying he wants to fix that he wasnt happy with the non standard vigenere cipher for the crypto. I told him nobody would even know so he\'s fine");
+INSERT INTO `bugTrackingBug`.`projectBugs` (`bugId`, `projectId`, `shortDesc`, `longDesc`) VALUES (3, 5, 'Add a new Role', "Need to add a new role to the server. So I better figure out what the password needs to be for a \'viewr\'. Has to be 5 characters or the role sentence doesn\'t read properly.");
 
 COMMIT;
 
@@ -675,26 +675,58 @@ INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestio
 
 COMMIT;
 
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- csrfChallengeEnumTokens Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-DROP SCHEMA IF EXISTS `csrfChallengeSix` ;
-CREATE SCHEMA IF NOT EXISTS `csrfChallengeSix` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-USE `csrfChallengeSix` ;
+DROP SCHEMA IF EXISTS `csrfChallengeEnumTokens` ;
+CREATE SCHEMA IF NOT EXISTS `csrfChallengeEnumTokens` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `csrfChallengeEnumTokens` ;
 
 -- -----------------------------------------------------
--- Table `csrfChallengeSix`.`csrfTokens`
+-- Table `csrfChallengeEnumTokens`.`csrfTokens`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `csrfChallengeSix`.`csrfTokens` (
+CREATE TABLE IF NOT EXISTS `csrfChallengeEnumTokens`.`csrfTokens` (
   `userId` VARCHAR(64) NOT NULL,
   `csrfTokenscol` VARCHAR(256) NULL,
   PRIMARY KEY (`userId`))
 ENGINE = InnoDB;
 
--- ======================================================
--- BrokenAuthAndSessMangChalFive
--- ======================================================
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- csrfChallengeFour Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+DROP SCHEMA IF EXISTS `csrfChallengeFour` ;
+CREATE SCHEMA IF NOT EXISTS `csrfChallengeFour` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `csrfChallengeFour` ;
+
+-- -----------------------------------------------------
+-- Table `csrfChallengeFour`.`csrfTokens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csrfChallengeFour`.`csrfTokens` (
+  `userId` VARCHAR(64) NOT NULL,
+  `csrfTokenscol` VARCHAR(256) NULL,
+  PRIMARY KEY (`userId`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- BrokenAuthAndSessMangChalFive Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalFive` ;
 CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalFive` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 USE `BrokenAuthAndSessMangChalFive`;
@@ -758,6 +790,301 @@ INSERT INTO `BrokenAuthAndSessMangChalFive`.`users` (`userId`, `userName`, `user
 
 COMMIT;
 
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Session Management Challenge Six Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalSix` ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSix` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `BrokenAuthAndSessMangChalSix` ;
+
+-- -----------------------------------------------------
+-- Table `BrokenAuthAndSessMangChalSix`.`users`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `BrokenAuthAndSessMangChalSix`.`users` (
+  `userId` INT NOT NULL ,
+  `userName` VARCHAR(32) NOT NULL ,
+  `userPassword` VARCHAR(128) NOT NULL ,
+  `userAddress` VARCHAR(128) NOT NULL ,
+  `secretQuestion` VARCHAR(256) NOT NULL ,
+  `secretAnswer` VARCHAR(128) NOT NULL, 
+  PRIMARY KEY (`userId`) )
+ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `BrokenAuthAndSessMangChalSix`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `BrokenAuthAndSessMangChalSix`;
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (1224, 'manager', 		'!148972hsfalkjlkfi381', 'zoidberg23@shepherd.com',	'What is the first name of the person you first kissed?', 'Lena Andrysiak');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (1225, 'sean',	 		'!148972hsfalkjlkfi381', 'zoidberg24@shepherd.com',	'What is the first name of the person you first kissed?', 'Ronit Tornincasa');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (3214, 'administrator', 	'!148972hsfalkjlkfi381', 'buzzthebald@shepherd.com','What is the last name of the teacher who gave you your first failing grade?', 'Aran Keegan');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (3212, 'root', 			'!148972hsfalkjlkfi381', 'elitehacker@shepherd.com','What is the name of the place your wedding reception was held?', 'Deerburn Hotel');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6344, 'superuser', 		'!148972hsfalkjlkfi381', 'superman@security.com',	'Who was the first person to beat you up when you were 8 years old?', 'Lileas Lockwood');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (4524, 'privileged', 		'1489!72hsfalkjlkfi381', 'spoiltbrat@security.com',	'What was the name of the person who stole your TV the second time?', 'Olwen Sordi');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6343, 'mark', 			'148!972hsfalkjlkfi381', 'superman2@security.com',	'Who is your favourite Barista?', 'Buzz Fendall');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6342, 'markdenihan', 	'148!972hsfalkjlkfi381', 'superman3@security.com',	'Who is your most favourite person you have not met?', 'Etna Filippi');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6341, 'seanduggan', 		'148972!hsfalkjlkfi381', 'superman4@security.com',	'Who is your most favourite person you have not met?', 'Emily Fabian');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6551, 'rootuser', 		'14897!2hsfalkjlkfi381', 'superman6@security.com',	'Who is your most favourite person you have not met?', 'Leola Naggia');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6552, 'adminuser', 		'1489!72hsfalkjlkfi381', 'superman7@security.com',	'Who is your most favourite person you have not met?', 'Gladys Gabrielli');
+INSERT INTO `BrokenAuthAndSessMangChalSix`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6559, 'shepherd', 		'148972hsfalk!jlkfi381', 'superman8@security.com',	'Who is your most favourite person you have not met?', 'Morag Bristol');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Session Management Challenge Seven Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalSeven` ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSeven` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `BrokenAuthAndSessMangChalSeven` ;
+
+-- -----------------------------------------------------
+-- Table `BrokenAuthAndSessMangChalSeven`.`users`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `BrokenAuthAndSessMangChalSeven`.`users` (
+  `userId` INT NOT NULL ,
+  `userName` VARCHAR(32) NOT NULL ,
+  `userPassword` VARCHAR(128) NOT NULL ,
+  `userAddress` VARCHAR(128) NOT NULL ,
+  `secretQuestion` VARCHAR(256) NOT NULL ,
+  `secretAnswer` VARCHAR(128) NOT NULL, 
+  PRIMARY KEY (`userId`) )
+ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `BrokenAuthAndSessMangChalSeven`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `BrokenAuthAndSessMangChalSeven`;
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (1224, 'manager', 		'!148972hsfalkjlkfi381', 'zoidberg23@shepherd.com',		'What is your favourite flower?', 'Jade Vine');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (1225, 'sean',	 		'!148972hsfalkjlkfi381', 'zoidberg24@shepherd.com',		'What is your favourite flower?', 'Corpse Flower');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (3214, 'administrator', 	'!148972hsfalkjlkfi381', 'buzzthebald@shepherd.com','What is your favourite flower?', 'Gibraltar Campion');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (3212, 'root', 			'!148972hsfalkjlkfi381', 'elitehacker@shepherd.com',	'What is your favourite flower?', 'Franklin Tree');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6344, 'superuser', 		'!148972hsfalkjlkfi381', 'superman@security.com',	'What is your favourite flower?', 'Jade Vine');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (4524, 'privileged', 		'1489!72hsfalkjlkfi381', 'spoiltbrat@security.com',	'What is your favourite flower?', 'Middlemist Red');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6343, 'mark', 			'148!972hsfalkjlkfi381', 'superman2@security.com',		'What is your favourite flower?', 'Chocolate Cosmos');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6342, 'markdenihan', 	'148!972hsfalkjlkfi381', 'superman3@security.com',		'What is your favourite flower?', 'Ghost Orchid');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6341, 'seanduggan', 		'148972!hsfalkjlkfi381', 'superman4@security.com',	'What is your favourite flower?', 'Jade Vine');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6551, 'rootuser', 		'14897!2hsfalkjlkfi381', 'superman6@security.com',		'What is your favourite flower?', 'Ghost Orchid');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6552, 'adminuser', 		'1489!72hsfalkjlkfi381', 'superman7@security.com',	'What is your favourite flower?', 'Corpse Flower');
+INSERT INTO `BrokenAuthAndSessMangChalSeven`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `secretQuestion`, `secretAnswer`) VALUES (6559, 'shepherd', 		'148972hsfalk!jlkfi381', 'superman8@security.com',		'What is your favourite flower?', 'Gibraltar Campion');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- CryptShop Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+DROP SCHEMA IF EXISTS `CryptShop` ;
+CREATE SCHEMA IF NOT EXISTS `CryptShop` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `CryptShop` ;
+
+-- -----------------------------------------------------
+-- Table `CryptShop`.`items`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CryptShop`.`items` (
+  `itemId` INT NOT NULL,
+  `itemName` VARCHAR(45) NULL,
+  `itemCost` INT NULL,
+  PRIMARY KEY (`itemId`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `CryptShop`.`coupons`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CryptShop`.`coupons` (
+  `couponId` INT NOT NULL,
+  `perCentOff` INT NULL,
+  `couponCode` VARCHAR(128) NULL,
+  `itemId` INT NOT NULL,
+  PRIMARY KEY (`couponId`),
+  INDEX `fk_coupons_items_idx` (`itemId` ASC),
+  CONSTRAINT `fk_coupons_items`
+    FOREIGN KEY (`itemId`)
+    REFERENCES `CryptShop`.`items` (`itemId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `CryptShop`.`items`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `CryptShop`;
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'MeGusta', 30);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Troll', 3000);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Rage', 45);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'NotBad', 15);
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `CryptShop`.`coupons`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `CryptShop`;
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeARage', 3);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'RageMemeForFree', 3);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeATroll', 2);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffTroll', 2);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeANotBad', 4);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffNotBad', 4);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (432197, 100, 'e!c!3etZoumo@Stu4rU176', 2);
+COMMIT;
+
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Failure to Restrict URL Access Challenge Three Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+DROP SCHEMA IF EXISTS `UrlAccessThree` ;
+CREATE SCHEMA IF NOT EXISTS `UrlAccessThree` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `UrlAccessThree` ;
+
+-- -----------------------------------------------------
+-- Table `UrlAccessThree`.`users`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `UrlAccessThree`.`users` (
+  `userId` INT NOT NULL ,
+  `userName` VARCHAR(32) NOT NULL ,
+  `userPassword` VARCHAR(128) NOT NULL ,
+  `userAddress` VARCHAR(128) NOT NULL ,
+  `userRole` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (`userId`) )
+ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `UrlAccessThree`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `UrlAccessThree`;
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (1223, 'aGuest', 		'!14897-hs.alNj.kFim81', 'zoidberg23@shepherd.com', 'guest');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (1224, 'manager', 		'!14897-hs.alNj.kFim81', 'zoidberg23@shepherd.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (1225, 'sean',	 		'!14897-hs.alNj.kFim81', 'zoidberg24@shepherd.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (3214, 'administrator', 	'!14897-hs.alNj.kFim81', 'buzzthebald@shepherd.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (3212, 'root', 			'!14897-hs.alNj.kFim81', 'elitehacker@shepherd.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6344, 'superuser', 		'!14897-hs.alNj.kFim81', 'superman@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6345, 'MrJohnReillyTheSecond', 		'!14897-hs.alNj.kFim81', 'MrJohnReillyTheSecond@security.com', 'superadmin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6346, 'megauser', 		'!14897-hs.alNj.kFim81', 'megaman@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6347, 'hyperuser', 		'!14897-hs.alNj.kFim81', 'hmegaman@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6348, 'godzilla', 		'!14897-hs.alNj.kFim81', 'godzilla@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6349, 'kinguser', 		'!14897-hs.alNj.kFim81', 'kinguser@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (4524, 'privileged', 		'1489!72hsfalkjlkfi381', 'spoiltbrat@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6343, 'mark', 			'148!97-hs.alNj.kFim81', 'superman2@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6342, 'markdenihan', 	'148!97-hs.alNj.kFim81', 'superman3@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6341, 'seanduggan', 		'148972!hsfalkjlkfi381', 'superman4@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6551, 'rootuser', 		'14897!2hsfalkjlkfi381', 'superman6@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6552, 'adminuser', 		'1489!72hsfalkjlkfi381', 'superman7@security.com', 'admin');
+INSERT INTO `UrlAccessThree`.`users` (`userId`, `userName`, `userPassword`, `userAddress`, `userRole`) VALUES (6559, 'shepherd', 		'148972hsfalk!jlkfi381', 'superman8@security.com', 'admin');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- sqlInjectSeven Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+
+DROP SCHEMA IF EXISTS `sqlInjectSeven` ;
+CREATE SCHEMA IF NOT EXISTS `sqlInjectSeven` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `sqlInjectSeven`;
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+
+-- -----------------------------------------------------
+-- Table `sqlInjectSeven`.`users`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `sqlInjectSeven`.`users` (
+  `userId` INT NOT NULL ,
+  `userName` VARCHAR(32) NOT NULL ,
+  `userPassword` VARCHAR(128) NOT NULL ,
+  `userEmail` VARCHAR(128) NOT NULL ,
+  `userRole` VARCHAR(8) NOT NULL DEFAULT 'default' ,
+  PRIMARY KEY (`userId`) )
+ENGINE = InnoDB;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `sqlInjectSeven`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `sqlInjectSeven`;
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (40, 'User 1', 'de1027fnNys6687as!283619fj1237fault', 'UserJohn1@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (41, 'User 2', 'd128361027fnNys6687as!9fj1237efault', 'UserJim2@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (42, 'User 3', 'defa1283619f027fnNys6687as!j1237ult', 'UserJone3@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (43, 'User 4', 'd1283619fj12027fnNys6687as!37efault', 'UserBell4@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (44, 'User 5', 'defau1283619fj1237lt', 'UserConan5@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (45, 'User 6', 'de1283619fj1237fault', 'UserSmioth6@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (46, 'User 7', 'def1d88027fnNys6687as!sd&dsault', 'UserHat7@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (47, 'User 8', 'def1d027fnNys6687as!88sd&dsault', 'UserPage8@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (48, 'User 9', 'defaul027fnNys6687as!1d88sd&dst', 'UserCube9@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (49, 'User 11', 'd1d88027fnNys6687as!sd&dsefault', 'MrsJohn1@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (50, 'User 12', 'defau027fnNys6687as!l1d88sd&dst', 'MrsJim2@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (51, 'User 13', 'def_926diUUscnaosOault', 'MrsJone3@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (52, 'User 14', 'd_926diUUscnaosOefault', 'MrsBell4@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (53, 'User 15', 'defaul_926diUUscnaosOt', 'MrsConan5@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (54, 'User 16', 'de_926diUUscnaosOfault', 'MrsSmioth6@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (55, 'User 17', 'defaul_926diUUscnaosOt', 'MrsHat7@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (56, 'User 18', 'de_926diUUscnaosOfault', 'MrsPage8@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (57, 'User 19', 'defa_926diUUscnaosOult', 'MrsCube9@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (58, 'User 20', 'd_926diUUscnaosOefault', 'Mr20@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (59, 'User 21', 'defa1027fnNys6687as!ult', 'Mr2John1@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (60, 'User 22', 'de027fnNys6687as!fault', 'Mr2Jim2@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (61, 'User 23', 'defau027fnNys6687as!lt', 'Mr2Jone3@User.com', 'default');
+INSERT INTO `sqlInjectSeven`.`users` (`userId`, `userName`, `userPassword`, `userEmail`, `userRole`) VALUES (62, 'User 10', 'def027fnNys6687as!ault', 'Mrs0@User.com', 'default');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Module Schema Users
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
@@ -830,14 +1157,40 @@ DROP USER 'secureDood'@'localhost';
 CREATE USER  'secureDood'@'localhost' IDENTIFIED BY 'iCantEv3n';
 GRANT SELECT ON `SqlChalFourSuperSecure`.`users` TO 'secureDood'@'localhost';
 
-DROP USER 'csrfChalSixer'@'localhost';
-CREATE USER  'csrfChalSixer'@'localhost' IDENTIFIED BY 'c4n1bUplZ';
-GRANT SELECT ON `csrfChallengeSix`.`csrfTokens` TO 'csrfChalSixer'@'localhost';
-GRANT INSERT ON `csrfChallengeSix`.`csrfTokens` TO 'csrfChalSixer'@'localhost';
-GRANT UPDATE ON `csrfChallengeSix`.`csrfTokens` TO 'csrfChalSixer'@'localhost';
+DROP USER 'csrfChalEnuer'@'localhost';
+CREATE USER  'csrfChalEnuer'@'localhost' IDENTIFIED BY 'c4n1bUplZ';
+GRANT SELECT ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'localhost';
+GRANT INSERT ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'localhost';
+GRANT UPDATE ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'localhost';
 
 DROP USER  'l3tsg0cra'@'localhost';
 CREATE USER 'l3tsg0cra'@'localhost' IDENTIFIED BY '83ururMa';
 GRANT SELECT ON `BrokenAuthAndSessMangChalFive`.`users` TO 'l3tsg0cra'@'localhost';
 GRANT UPDATE ON `BrokenAuthAndSessMangChalFive`.`users` TO 'l3tsg0cra'@'localhost';
 
+DROP USER 'csrfChalFour'@'localhost';
+CREATE USER  'csrfChalFour'@'localhost' IDENTIFIED BY 'R1n13U2pv';
+GRANT SELECT ON `csrfChallengeFour`.`csrfTokens` TO 'csrfChalFour'@'localhost';
+GRANT INSERT ON `csrfChallengeFour`.`csrfTokens` TO 'csrfChalFour'@'localhost';
+GRANT UPDATE ON `csrfChallengeFour`.`csrfTokens` TO 'csrfChalFour'@'localhost';
+
+DROP USER  'randomMoFoName'@'localhost';
+CREATE USER 'randomMoFoName'@'localhost' IDENTIFIED BY 'c2zXlq_ZoT';
+GRANT SELECT ON `BrokenAuthAndSessMangChalSix`.`users` TO 'randomMoFoName'@'localhost';
+
+DROP USER  'randomFlower'@'localhost';
+CREATE USER 'randomFlower'@'localhost' IDENTIFIED BY 'c21-le_6oT';
+GRANT SELECT ON `BrokenAuthAndSessMangChalSeven`.`users` TO 'randomFlower'@'localhost';
+
+DROP USER 'tSwsfUSer'@'localhost';
+CREATE USER 'tSwsfUSer'@'localhost' IDENTIFIED BY '9s31iusd-n';
+GRANT SELECT ON `CryptShop`.`items` TO 'tSwsfUSer'@'localhost';
+GRANT SELECT ON `CryptShop`.`coupons` TO 'tSwsfUSer'@'localhost';
+
+DROP USER  'yourOrEll'@'localhost';
+CREATE USER 'yourOrEll'@'localhost' IDENTIFIED BY '91dj3:766f';
+GRANT SELECT ON `UrlAccessThree`.`users` TO 'yourOrEll'@'localhost';
+
+DROP USER  'r1ndomFlower'@'localhost';
+CREATE USER 'r1ndomFlower'@'localhost' IDENTIFIED BY 'c41-l2_6oT';
+GRANT SELECT ON `sqlInjectSeven`.`users` TO 'r1ndomFlower'@'localhost';

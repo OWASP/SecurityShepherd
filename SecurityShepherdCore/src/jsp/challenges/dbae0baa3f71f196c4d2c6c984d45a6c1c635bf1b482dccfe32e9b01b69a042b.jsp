@@ -20,7 +20,7 @@
  * @author Sean Duggan
  */
 //No Quotes In level Name
-String levelName = "Mobile Reverse Engineering 2";
+String levelName = "Mobile Reverse Engineering 3";
 //Alphanumeric Only
 String levelHash = "dbae0baa3f71f196c4d2c6c984d45a6c1c635bf1b482dccfe32e9b01b69a042b.jsp";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
@@ -43,7 +43,7 @@ if (request.getSession() != null)
 	// If tokenCookie == null, then the page is not going to continue loading
 	if (Validate.validateSession(ses) && tokenCookie != null)
 	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -61,10 +61,10 @@ if (request.getSession() != null)
 		<p>
 
 			<%=levelBlurb%>
-			<br /> The developers of this App have decided to use an algorithm to confirm or deny the authenticity of the key. You must Reverse Engineer ReverseEngineer3.APK to find this algorithm. If you are unsure whether or not the key is correct, there is a key validity checker in the App. <br />
+			<br /> The developers of this App, <a>ReverseEngineer4</a>, have decided to use an algorithm to confirm or deny the authenticity of the key. You must Reverse Engineer ReverseEngineer3.APK to find this algorithm. If you are unsure whether or not the key is correct, there is a key validity checker in the App. <br />
 			<br>
 			<br/>
-			<%= Analytics.getMobileLevelBlurb("ReverseEngineer3.apk") %>
+			<%= Analytics.getMobileLevelBlurb("ReverseEngineer4.apk") %>
 		</p>
 	</div>
 	<% if (Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

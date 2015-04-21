@@ -46,7 +46,6 @@ public class Insecure_Data_Storage3 extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ids);
-		referenceXML();
 
 		String destinationDir = "/data/data/" + getPackageName() + "/databases/";
 
@@ -68,32 +67,7 @@ public class Insecure_Data_Storage3 extends Activity {
 			}
 		}
 
-		login.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// what to do if you login
-				Toast toast = Toast.makeText(Insecure_Data_Storage3.this,
-						"Logging in...", Toast.LENGTH_SHORT);
-				toast.show();
-
-				String CheckName = username.getText().toString();
-				String CheckPass = password.getText().toString();
-
-				if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
-					Toast toast2 = Toast.makeText(Insecure_Data_Storage3.this,
-							"Blank fields detected!", Toast.LENGTH_SHORT);
-					toast2.show();
-				}
-
-				else {
-					Toast toast4 = Toast.makeText(Insecure_Data_Storage3.this,
-							"Invalid Credentials!", Toast.LENGTH_SHORT);
-					toast4.show();
-
-				}
-			}
-		});
 	}
 
 	public void copyDatabase(InputStream iStream, OutputStream oStream)
@@ -108,11 +82,5 @@ public class Insecure_Data_Storage3 extends Activity {
 
 	}
 
-	public void referenceXML() {
-		login = (Button) findViewById(R.id.bLogin);
-		username = (EditText) findViewById(R.id.etName);
-		password = (EditText) findViewById(R.id.etPass);
-
-	}
 
 }

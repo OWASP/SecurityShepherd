@@ -23,7 +23,8 @@ import android.os.Bundle;
  * @author Sean Duggan
  */
 
-public class Splash extends Activity {
+
+public class splash extends Activity {
 
 	@Override
 	protected void onCreate(Bundle Mobile) {
@@ -35,13 +36,13 @@ public class Splash extends Activity {
 			public void run() {
 				// catch exceptions
 				try {
-					sleep(5000);
+					sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} finally
 
 				{
-					Intent gotoMain = new Intent(Splash.this, Reverse_Engineering3.class);
+					Intent gotoMain = new Intent(splash.this, Triangle.class);
 					startActivity(gotoMain);
 				}
 

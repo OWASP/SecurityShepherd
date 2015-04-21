@@ -41,7 +41,7 @@ public class CsrfChallengeFive extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeFive.class);
-	private static final String levelHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
+	private static final String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
 	private static String levelName = "CSRF Challenge 5";
 	/**
 	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that
@@ -53,7 +53,7 @@ public class CsrfChallengeFive extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("Cross-SiteForegery Challenge Five Servlet");
+		log.debug(levelName + " Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -61,6 +61,7 @@ public class CsrfChallengeFive extends HttpServlet
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				Cookie tokenCookie = Validate.getToken(request.getCookies());
 				Object tokenParmeter = request.getParameter("csrfToken");
@@ -72,7 +73,7 @@ public class CsrfChallengeFive extends HttpServlet
 					
 					log.debug("Updating User's Stored Message");
 					String ApplicationRoot = getServletContext().getRealPath("");
-					String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);
+					String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, CsrfChallengeFive.levelHash);
 					String userId = (String)ses.getAttribute("userStamp");
 					Setter.setStoredMessage(ApplicationRoot, myMessage, userId, moduleId);
 					
@@ -90,6 +91,7 @@ public class CsrfChallengeFive extends HttpServlet
 		catch(Exception e)
 		{
 			out.write("An Error Occurred! You must be getting funky!");
+			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 }

@@ -8,7 +8,7 @@ package utils;
 public class Analytics 
 {
 
-	public static boolean googleAnalyticsOn = false;
+	public static boolean googleAnalyticsOn = true;
 	public static String googleAnalyticsScript = "<script>\n" +
 		"(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n" +
 		"(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n" +
@@ -21,7 +21,7 @@ public class Analytics
 	public static String sourceForgeMobileVmLinkBlurb = new String(""
 			+ "To complete this challenge you'll need to use the <a href='http://bit.ly/mobileShepherdVm'>Security Shepherd Android Virtual Machine</a> that contains the app. ");
 	private static String mobileVmLinkBlurb1 = new String("To complete this challenge you'll need to use the ");
-	private static String mobileVmLinkBlurb2 = new String(" app found in the <a href='http://bit.ly/mobileShepherdVm'>Security Shepherd Android Virtual Machine</a>.");
+	private static String mobileVmLinkBlurb2 = new String(" app found in the <a href='http://bit.ly/mobileShepherdVm' target='_blank'>Security Shepherd Android Virtual Machine</a>.");
 	
 	public static String getMobileLevelBlurb (String appName)
 	{

@@ -1,157 +1,275 @@
-package com.mobshep.udataleakage2;
+package com.mobshep.UDataLeakage2;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import android.graphics.Canvas;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
-import java.util.Random;
+import java.util.UUID;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-public class UDataLeakage2 extends Activity implements OnClickListener {
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
-	Button bLogin;
-	Button bForgot;
-	EditText username;
-	String usernameVar = "Jack";
-	EditText password;
-	static String tempPass;
-	static Boolean passwordReset = false;
 
-	private static final String TAG = "MyActivity";
+public class UDataLeakage2 extends ActionBarActivity implements View.OnClickListener {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+    Button submit;
+    CheckBox checkbox;
+    EditText secret;
+    private RelativeLayout relativeLayout;
+    private Bitmap myBitmap;
 
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.broken);
-		referenceXML();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        referenceXML();
 
-		logDetails("My name is Jack Meade, I'm here to kick ass and drink gravy... and I'm all outta gravey!");
-		logDetails("Today I had chicken again! I love Chicken! #deliciousChicken #whyDoIDoThis");
-		logDetails("The house is flooded... uh oh");
-		logDetails("Misplaced my phone again, found it in the microwave.");
-		logDetails("My mother just married again! Goodbye Mrs. Meade hello Mrs Jenkins!");
-		logDetails("Sunglasses! Sunglasses everywhere!");
+        try {
+            saveStaticImage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
-	private void referenceXML() {
-		// TODO Auto-generated method stub
-		bLogin = (Button) findViewById(R.id.bLogin);
-		bForgot = (Button) findViewById(R.id.bForgot);
-		username = (EditText) findViewById(R.id.etName);
-		password = (EditText) findViewById(R.id.etPass);
-		bForgot.setOnClickListener(this);
-		bLogin.setOnClickListener(this);
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
 
-	}
+        // Check which checkbox was clicked
+        if (((CheckBox) view).isChecked()) {
+            secret.setInputType(InputType.TYPE_CLASS_TEXT);
+            // secret.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        } else {
+            secret.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            secret.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+    }
 
-	public void onClick(View arg0) {
-		switch (arg0.getId()) {
+    public void onClick(View v) {
+        switch (v.getId()) {
 
-		case (R.id.bForgot):
-			Intent gotoForgot = new Intent("com.app.mobshep.UDL2.Forgotton");
-			startActivity(gotoForgot);
-			break;
+            case (R.id.bSubmit):
+                submitClicked();
+                secret.setText(null);
+        }
+    }
 
-		case (R.id.bLogin):
 
-			String CheckName = username.getText().toString();
-			String CheckPass = password.getText().toString();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-			Log.d(TAG, "temp pass = " + Forgotton.tempPassVar
-					+ "passwordReset = " + passwordReset);
+        if (id == R.id.action_license) {
 
-			if (passwordReset == true)
 
-				if (CheckName.equals(usernameVar)) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
 
-					if (CheckPass.equals(tempPass)) {
-						Toast loggedIn = Toast.makeText(UDataLeakage2.this,
-								"Logged in!", Toast.LENGTH_LONG);
-						loggedIn.show();
+            // set title
+            alertDialogBuilder.setTitle("License");
 
-						Intent loggedInIntent = new Intent(
-								"com.app.mobshep.UDL2.Main");
-						startActivity(loggedInIntent);
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("This App is part of the Security Shepherd Project. The Security Shepherd project is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. The Security Shepherd project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with the Security Shepherd project.  If not, see http://www.gnu.org/licenses.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close
+                            // current activity
+                            dialog.cancel();
+                        }
+                    });
 
-					}
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
 
-				} else {
-					Toast locked = Toast.makeText(UDataLeakage2.this,
-							"Invalid Password!", Toast.LENGTH_SHORT);
-					locked.show();
+            // show it
+            alertDialog.show();
 
-					Log.d(TAG, "The password is " + tempPass);
-				}
+            return true;
+        }
 
-			else {
-				Toast locked = Toast.makeText(UDataLeakage2.this,
-						"You're account has been locked!", Toast.LENGTH_SHORT);
-				locked.show();
-				break;
-			}
 
-			if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
-				Toast empty = Toast.makeText(UDataLeakage2.this,
-						"Empty Fields Detected.", Toast.LENGTH_SHORT);
-				empty.show();
-			}
+        if (id == R.id.action_disclaimer) {
 
-			if (CheckName.equals("Jack") == false
-					|| CheckPass.equals(Forgotton.tempPassVar) == false
-					|| passwordReset == false) {
-				Toast invalid = Toast.makeText(UDataLeakage2.this,
-						"Invalid Credentials!", Toast.LENGTH_SHORT);
-				invalid.show();
 
-				Log.d(TAG, CheckName);
-				Log.d(TAG, CheckPass);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
 
-				Log.d(TAG, "temp pass = " + Forgotton.tempPassVar
-						+ "passwordReset = " + passwordReset);
-				break;
-			}
-			break;
-		}
-	}
+            // set title
+            alertDialogBuilder.setTitle("Disclaimer");
 
-	private void logDetails(String content) {
-		// TODO Auto-generated method stub
-		Date date = new Date();
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("This App may collect logs via various methods. By using this App you agree to this.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close
+                            // current activity
+                            dialog.cancel();
+                        }
+                    });
 
-		Random rand = new Random(5);
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
 
-		String filename = "Log" + rand;
-		String EOL = System.getProperty("line.seperator");
-		BufferedWriter writer = null;
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(
-					filename, Context.MODE_WORLD_READABLE)));
-			writer.write(content + EOL);
-			writer.write(date + EOL);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+            // show it
+            alertDialog.show();
 
-	}
-}
+            return true;
+        }
+
+
+        if (id == R.id.action_exit){
+            finish();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void referenceXML() {
+        submit = (Button) findViewById(R.id.bSubmit);
+        secret = (EditText) findViewById(R.id.etSecret);
+        checkbox = (CheckBox) findViewById(R.id.checkbox);
+        submit.setOnClickListener(this);
+
+    }
+        private void submitClicked() {
+
+            relativeLayout = (RelativeLayout)findViewById(R.id.mainLayout);
+            relativeLayout.post(new Runnable() {
+                public void run() {
+
+                    //take screenshot
+                    myBitmap = captureScreen(relativeLayout);
+
+                    Toast.makeText(getApplicationContext(), "Message Posted!", Toast.LENGTH_LONG).show();
+
+                    try {
+                        if(myBitmap!=null){
+                            //save image to SD card
+                            saveImage(myBitmap);
+                        }
+                        Toast.makeText(getApplicationContext(), "Message saved!", Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+    public static Bitmap captureScreen(View v) {
+
+        Bitmap screenshot = null;
+        try {
+
+            if(v!=null) {
+
+                screenshot = Bitmap.createBitmap(v.getMeasuredWidth(),v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(screenshot);
+                v.draw(canvas);
+            }
+
+        }catch (Exception e){
+            Log.d("ScreenShotActivity", "Failed to capture screenshot because:" + e.getMessage());
+        }
+
+        return screenshot;
+    }
+
+    public static void saveImage(Bitmap bitmap) throws IOException{
+
+        Date date = new Date();
+
+        final String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+
+        String filename = "Log" + uuid;
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 40, bytes);
+        File f = new File(Environment.getExternalStorageDirectory() + File.separator  + filename + " .png");
+        f.createNewFile();
+        FileOutputStream fo = new FileOutputStream(f);
+        fo.write(bytes.toByteArray());
+        fo.close();
+    }
+
+
+    public void saveStaticImage() throws IOException{
+
+
+        String filename = "Log0b10cb9b9244ce1e1cdc34";
+        String destinationDir = this.getFilesDir().getParentFile().getPath()+"/files/";
+
+
+        String destinationPath = destinationDir + "Log0b10cb9b9244ce1e1cdc34";
+
+        File f = new File(destinationPath);
+
+        if (!f.exists()) {
+            File directory = new File(destinationDir);
+            directory.mkdirs();
+
+            try {
+                copyImages(getBaseContext().getAssets().open("Log0b10cb9b9244ce1e1cdc34"),
+                        new FileOutputStream(destinationPath));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    public void copyImages(InputStream iStream, OutputStream oStream)
+            throws IOException {
+        byte[] buffer = new byte[4096];
+        int i;
+        while ((i = iStream.read(buffer)) > 0) {
+            oStream.write(buffer, 0, i);
+        }
+        iStream.close();
+        oStream.close();
+    }
+
+    }
+
+

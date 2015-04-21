@@ -7,7 +7,8 @@ import java.util.List;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 import org.apache.log4j.Logger;
-import org.owasp.validator.html.*; 
+import org.owasp.validator.html.*;
+import org.w3c.css.*;
 
 /**
  * Class is responsible for finding valid XSS and CSRF attacks in user submissions

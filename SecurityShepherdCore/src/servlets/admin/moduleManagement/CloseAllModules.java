@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
 import dbProcs.Setter;
 import utils.ShepherdLogManager;
@@ -37,10 +35,11 @@ public class CloseAllModules extends HttpServlet
 		out.print(getServletInfo());
 		String htmlOutput = new String();
 		HttpSession ses = request.getSession(true);
-		if(Validate.validateAdminSession(ses))
+		Cookie tokenCookie = Validate.getToken(request.getCookies());
+		Object tokenParmeter = request.getParameter("csrfToken");
+		if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		{
-			Cookie tokenCookie = Validate.getToken(request.getCookies());
-			Object tokenParmeter = request.getParameter("csrfToken");
+			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
 				String ApplicationRoot = getServletContext().getRealPath("");

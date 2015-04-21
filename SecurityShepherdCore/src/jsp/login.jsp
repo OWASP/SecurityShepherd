@@ -93,6 +93,12 @@ if(ses.getAttribute("loginFailed") != null)
 				</table>
 			</form>
 			<br/>
+			<center><div style="width: 300px; border-color:#A878EF; border-style:dashed; background-color: #D4D4D4;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;" align="center">
+					<center><big style="color:#A878EF;">OWASP LATAM Tour CTF</big></center>
+  					<p>CTF Commences 8th April<br>CTF Closes 21st April<br>Levels Released Periodically
+					<br>
+					Announcements Found <a href="https://twitter.com/LatamTourCtf" style="text-decoration: none;">@LatamTourCtf</a></p>
+			</div></center>
 			<br/>
 			<div align="center">
 				<a id="tools" href="javascript:;">Do you need a Proxy?</a>
@@ -136,7 +142,8 @@ if(ses.getAttribute("loginFailed") != null)
 			<a href="http://bit.ly/BccRiskAdvisorySite"><img src="css/images/bccRiskAdvisorySmallLogo.jpg" alt="BCC Risk Advisory"/></a>
 			<a href="http://bit.ly/EdgeScan"><img src="css/images/edgescanSmallLogo.jpg" alt="EdgeScan" /></a>
 			<br/><br/>
-			The OWASP Security Shepherd Project would also like to thank Dr. Anthony Keane and the ITB Research Lab for hosting http://owasp.securityShepherd.eu!  
+			The OWASP Security Shepherd Project would also like to thank Dr. Anthony Keane and the ITB Research Lab for hosting http://owasp.securityShepherd.eu!<br>
+			<a href="http://securityresearch.ie/"><img src="https://www.owasp.org/images/thumb/2/24/Fontlogo.png/300px-Fontlogo.png"/></a>  
 		</p>
 		</div>
 	</div>

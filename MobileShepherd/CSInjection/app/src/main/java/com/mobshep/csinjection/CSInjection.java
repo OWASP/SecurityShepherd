@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-import net.sqlcipher.database.*;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -17,6 +21,8 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import net.sqlcipher.database.SQLiteDatabase;
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -257,4 +263,6 @@ try{
 			error.show();
 		}
 	}
+
+
 }

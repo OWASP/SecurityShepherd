@@ -15,59 +15,24 @@
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_weight="0.63">
+        android:layout_weight="0.31">
 
         <RelativeLayout android:id="@+id/innerBox"
             android:layout_width="500dip"
             android:background="@drawable/box"
             android:layout_height="fill_parent"
             android:layout_centerHorizontal="true">
-
-            <EditText
-                android:id="@+id/etName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edittext"
-                android:ems="10"
-                android:hint="Username"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#DA70D6"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
-
-            <EditText
-                android:id="@+id/etPass"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Password"
-                android:layout_marginTop="20dp"
-                android:inputType="textPassword"
-                android:gravity="center"
-                android:background="@drawable/edittext"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#DA70D6"
-                android:layout_below="@+id/etName"
-                android:layout_centerHorizontal="true" />
-
-            <Button
-                android:id="@+id/bLogin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button"
-                android:filterTouchesWhenObscured="true"
-                android:text="@string/login"
-                android:layout_below="@+id/etPass"
-                android:layout_alignLeft="@+id/etPass"
-                android:layout_marginTop="20dp"
-                android:layout_alignStart="@+id/etPass"
-                android:layout_alignRight="@+id/etPass"
-                android:layout_alignEnd="@+id/etPass" />
-
             <requestFocus />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="The Key is not here."
+                android:textColor="#DA70D6"
+                android:id="@+id/textView"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
 
         </RelativeLayout>
 

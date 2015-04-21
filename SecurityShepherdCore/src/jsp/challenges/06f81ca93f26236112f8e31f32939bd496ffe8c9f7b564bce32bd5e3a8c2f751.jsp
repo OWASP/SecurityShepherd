@@ -43,7 +43,7 @@ String levelHash = "06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2
  	// If tokenCookie == null, then the page is not going to continue loading
  	if (Validate.validateSession(ses) && tokenCookie != null)
  	{
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
  		// Getting Session Variables
 		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
 		Encoder encoder = ESAPI.encoder();

@@ -1,0 +1,65 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    android:weightSum="1">
+    <RelativeLayout android:id="@+id/Spacer"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="100dp"
+        android:layout_weight="0.08">
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="0.31">
+
+        <RelativeLayout android:id="@+id/innerBox"
+            android:layout_width="500dip"
+            android:background="@drawable/box"
+            android:layout_height="fill_parent"
+            android:layout_centerHorizontal="true">
+
+
+            <requestFocus />
+
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/etQuery"
+                android:hint="Query..."
+                android:inputType="textMultiLine"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#DA70D6"
+                android:background="@drawable/edittext"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/bQuery"
+        android:onClick="querySent"
+        android:layout_width="294dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:filterTouchesWhenObscured="true"
+        android:text="Submit Query"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.08" />
+</LinearLayout>

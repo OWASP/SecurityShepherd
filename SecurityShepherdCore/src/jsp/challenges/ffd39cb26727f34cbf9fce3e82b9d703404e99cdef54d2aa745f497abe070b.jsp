@@ -40,7 +40,7 @@ String levelName = "SQL Injection Challenge One";
  	// If tokenCookie == null, then the page is not going to continue loading
  	if (Validate.validateSession(ses) && tokenCookie != null)
  	{
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -57,10 +57,10 @@ String levelName = "SQL Injection Challenge One";
 				To complete this challenge, you must exploit the SQL injection flaw in the following form to find the result key.
 				<div id="hint" style="display: none;">
 					<h2 class="title">Challenge Hint</h2>
-					This is the query you are attempting to inject code into... But your input is been filtered by the server!
+					This is the query you are attempting to inject code into... But your input is been validated by the server before being sent to the interpreter!
 					<br />
 					<br />
-					<div>SELECT * FROM customers WHERE customerId ='<a id="userContent"></a>';</div>
+					<div>SELECT * FROM customers WHERE customerAddress ='<a id="userContent"></a>';</div>
 					<br />
 					<br />
 				</div>
@@ -68,7 +68,7 @@ String levelName = "SQL Injection Challenge One";
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>Customer Id</a> of the user that you want to look up
+						Please enter the <a>Customer Email</a> of the user that you want to look up
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="userIdentity" type="text"/>

@@ -338,8 +338,7 @@ int drawable button 0x7f020034
 int drawable edittext 0x7f020035
 int drawable ic_launcher 0x7f020036
 int drawable splash 0x7f020037
-int id Splash 0x7f080042
-int id about 0x7f080043
+int id Splash 0x7f080044
 int id action_bar 0x7f080031
 int id action_bar_activity_content 0x7f080000
 int id action_bar_container 0x7f080030
@@ -355,12 +354,11 @@ int id action_mode_bar_stub 0x7f08002d
 int id action_mode_close_button 0x7f080020
 int id activity_chooser_view_content 0x7f080021
 int id always 0x7f080016
-int id bVerify 0x7f080041
+int id bRevealKey 0x7f080041
 int id background 0x7f08003f
 int id beginning 0x7f080013
 int id checkbox 0x7f080029
 int id collapseActionView 0x7f080017
-int id credits 0x7f080044
 int id decor_content_parent 0x7f08002f
 int id default_activity_button 0x7f080024
 int id dialog 0x7f08001b
@@ -368,8 +366,7 @@ int id disableHome 0x7f08000c
 int id dropdown 0x7f08001c
 int id edit_query 0x7f080033
 int id end 0x7f080014
-int id etSecret 0x7f080040
-int id exit 0x7f080045
+int id etPassword 0x7f080042
 int id expand_activities_button 0x7f080022
 int id expanded_menu 0x7f080028
 int id home 0x7f080004
@@ -402,8 +399,10 @@ int id showHome 0x7f080010
 int id showTitle 0x7f080011
 int id split_action_bar 0x7f080007
 int id submit_area 0x7f08003c
+int id tab2 0x7f080040
 int id tabMode 0x7f08000b
 int id title 0x7f080027
+int id tvKey1 0x7f080043
 int id up 0x7f080008
 int id useLogo 0x7f080012
 int id withText 0x7f08001a
@@ -435,7 +434,6 @@ int layout abc_simple_dropdown_hint 0x7f030016
 int layout reverse 0x7f030017
 int layout splash 0x7f030018
 int layout support_simple_spinner_dropdown_item 0x7f030019
-int menu firstkey 0x7f0c0000
 int string RIntro 0x7f0a0000
 int string abc_action_bar_home_description 0x7f0a0001
 int string abc_action_bar_home_description_format 0x7f0a0002

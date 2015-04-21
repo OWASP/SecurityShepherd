@@ -38,10 +38,12 @@ catch(Exception htmlE)
 }
 // validateAdminSession ensures a valid session, and valid administrator credentials
 // Also, if tokenCookie != null, then the page is good to continue loading
-if (Validate.validateAdminSession(ses) && tokenCookie != null)
+// Token is now validated when accessing admin pages to stop attackers causing other users to tigger logs of access attempts
+Object tokenParmeter = request.getParameter("csrfToken");
+if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 {
 	//Logging Username
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 // Getting Session Variables
 //This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
 Encoder encoder = ESAPI.encoder();
@@ -52,7 +54,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 		<h1 class="title">CTF Mode</h1>
 		<div class="entry">
 			<form id="theForm" action="javascript:;">
-				<% if (ModulePlan.isOpenFloor()) {%>
+				<% if (!ModulePlan.incrementalFloor) {%>
 					<p>If you enable the CTF floor plan, players will have to complete lessons to unlock links to the next module.</p>
 					<div id="badData"></div>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>

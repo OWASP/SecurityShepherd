@@ -1306,8 +1306,7 @@ containing a value of this type.
         public static final int splash=0x7f020037;
     }
     public static final class id {
-        public static final int Splash=0x7f080042;
-        public static final int about=0x7f080043;
+        public static final int Splash=0x7f080044;
         public static final int action_bar=0x7f080031;
         public static final int action_bar_activity_content=0x7f080000;
         public static final int action_bar_container=0x7f080030;
@@ -1323,12 +1322,11 @@ containing a value of this type.
         public static final int action_mode_close_button=0x7f080020;
         public static final int activity_chooser_view_content=0x7f080021;
         public static final int always=0x7f080016;
-        public static final int bVerify=0x7f080041;
+        public static final int bRevealKey=0x7f080041;
         public static final int background=0x7f08003f;
         public static final int beginning=0x7f080013;
         public static final int checkbox=0x7f080029;
         public static final int collapseActionView=0x7f080017;
-        public static final int credits=0x7f080044;
         public static final int decor_content_parent=0x7f08002f;
         public static final int default_activity_button=0x7f080024;
         public static final int dialog=0x7f08001b;
@@ -1336,8 +1334,7 @@ containing a value of this type.
         public static final int dropdown=0x7f08001c;
         public static final int edit_query=0x7f080033;
         public static final int end=0x7f080014;
-        public static final int etSecret=0x7f080040;
-        public static final int exit=0x7f080045;
+        public static final int etPassword=0x7f080042;
         public static final int expand_activities_button=0x7f080022;
         public static final int expanded_menu=0x7f080028;
         public static final int home=0x7f080004;
@@ -1370,8 +1367,10 @@ containing a value of this type.
         public static final int showTitle=0x7f080011;
         public static final int split_action_bar=0x7f080007;
         public static final int submit_area=0x7f08003c;
+        public static final int tab2=0x7f080040;
         public static final int tabMode=0x7f08000b;
         public static final int title=0x7f080027;
+        public static final int tvKey1=0x7f080043;
         public static final int up=0x7f080008;
         public static final int useLogo=0x7f080012;
         public static final int withText=0x7f08001a;
@@ -1407,9 +1406,6 @@ containing a value of this type.
         public static final int reverse=0x7f030017;
         public static final int splash=0x7f030018;
         public static final int support_simple_spinner_dropdown_item=0x7f030019;
-    }
-    public static final class menu {
-        public static final int firstkey=0x7f0c0000;
     }
     public static final class string {
         public static final int RIntro=0x7f0a0000;

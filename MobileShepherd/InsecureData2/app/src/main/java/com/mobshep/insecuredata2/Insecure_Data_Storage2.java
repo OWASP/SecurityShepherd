@@ -35,12 +35,6 @@ import android.widget.Toast;
 
 public class Insecure_Data_Storage2 extends Activity {
 
-    Button insert;
-    Button select;
-    Button login;
-    EditText password;
-    EditText username;
-
 
 
     @Override
@@ -48,77 +42,28 @@ public class Insecure_Data_Storage2 extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ids);
-        referenceXML();
 
-
-
-        String destinationDir = "/data/data/" +getPackageName() + "/databases/";
+        String destinationDir = "/data/data/" + getPackageName() + "/databases/";
         String destinationPath = destinationDir + "Members";
 
         File f = new File(destinationPath);
 
-        if (!f.exists()){
+        if (!f.exists()) {
             File directory = new File(destinationDir);
             directory.mkdirs();
             //assets members.db -> /databases/
 
-            try{
+            try {
                 copyDatabase(getBaseContext().getAssets().open("Members"), new FileOutputStream(destinationPath));
-            }catch(FileNotFoundException e){
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
 
-
-        login.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // what to do if you login
-                Toast toast = Toast.makeText(Insecure_Data_Storage2.this,
-                        "Logging in...", Toast.LENGTH_SHORT);
-                toast.show();
-
-                String CheckName = username.getText().toString();
-                String CheckPass = password.getText().toString();
-
-
-                if (CheckName.contentEquals("") || CheckPass.contentEquals("")) {
-                    Toast toast2 = Toast.makeText(Insecure_Data_Storage2.this,
-                            "Blank fields detected!", Toast.LENGTH_SHORT);
-                    toast2.show();
-
-
-                }
-
-                if (CheckName.contentEquals("Root")
-                        || CheckName.contentEquals("user1")
-                        || CheckName.contentEquals("bottles")
-                        || CheckName.contentEquals("Patrick")
-                        || CheckName.contentEquals("Troolman")
-                        || CheckName.contentEquals("Toothbrush")
-                        || CheckName.contentEquals("Tyrkyr")) {
-
-                    Toast locked = Toast.makeText(Insecure_Data_Storage2.this,
-                            "That Account is locked.", Toast.LENGTH_SHORT);
-                    locked.show();
-
-                }
-
-                else {
-                    Toast toast4 = Toast.makeText(Insecure_Data_Storage2.this,
-                            "Invalid Credentials!", Toast.LENGTH_SHORT);
-                    toast4.show();
-
-                }
-            }
-        });
     }
-
-
 
     public void copyDatabase(InputStream iStream, OutputStream oStream)
             throws IOException {
@@ -132,11 +77,6 @@ public class Insecure_Data_Storage2 extends Activity {
 
     }
 
-    public void referenceXML() {
-        login = (Button) findViewById(R.id.bLogin);
-        username = (EditText) findViewById(R.id.etName);
-        password = (EditText) findViewById(R.id.etPass);
 
-    }
 
 }

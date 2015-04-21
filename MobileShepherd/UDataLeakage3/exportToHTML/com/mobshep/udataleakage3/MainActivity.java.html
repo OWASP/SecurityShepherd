@@ -1,0 +1,163 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { }
+.s2 { color: rgb(128,128,128); font-style: italic; }
+.s3 { color: rgb(0,128,0); font-weight: bold; }
+.s4 { color: rgb(0,0,255); }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+MainActivity.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+
+<span class="s0">package </span><span class="s1">com.mobshep.udataleakage3; 
+ 
+</span><span class="s0">import </span><span class="s1">android.app.AlertDialog; 
+</span><span class="s0">import </span><span class="s1">android.content.DialogInterface; 
+</span><span class="s0">import </span><span class="s1">android.content.Intent; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.ActionBarActivity; 
+</span><span class="s0">import </span><span class="s1">android.os.Bundle; 
+</span><span class="s0">import </span><span class="s1">android.util.Log; 
+</span><span class="s0">import </span><span class="s1">android.view.Menu; 
+</span><span class="s0">import </span><span class="s1">android.view.MenuInflater; 
+</span><span class="s0">import </span><span class="s1">android.view.MenuItem; 
+</span><span class="s0">import </span><span class="s1">android.view.View; 
+</span><span class="s0">import </span><span class="s1">android.widget.ArrayAdapter; 
+</span><span class="s0">import </span><span class="s1">android.widget.Spinner; 
+</span><span class="s0">import </span><span class="s1">android.widget.Toast; 
+ 
+</span><span class="s0">import </span><span class="s1">java.util.Random; 
+ 
+ 
+</span><span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">ActionBarActivity { 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) { 
+        </span><span class="s0">super</span><span class="s1">.onCreate(savedInstanceState); 
+        setContentView(R.layout.functions); 
+ 
+    } 
+ 
+ 
+    @Override 
+    </span><span class="s0">public boolean </span><span class="s1">onCreateOptionsMenu(Menu menu) { 
+        </span><span class="s2">// Inflate the menu; this adds items to the action bar if it is present.</span><span class="s1"> 
+            MenuInflater inflater = getMenuInflater(); 
+            inflater.inflate(R.menu.menu_main, menu); 
+            </span><span class="s0">return true</span><span class="s1">; 
+        } 
+ 
+    </span><span class="s0">public void </span><span class="s1">lottoClicked(View v){ 
+        Log.i(</span><span class="s3">&quot;LOG&quot;</span><span class="s1">, </span><span class="s3">&quot;Getting Winning Number from Server...&quot;</span><span class="s1">); 
+ 
+        Log.i(</span><span class="s3">&quot;LOG&quot;</span><span class="s1">, </span><span class="s3">&quot;Input Field Blank, no message sent.&quot;</span><span class="s1">); 
+ 
+        String yourNumber = getRandomNumber(</span><span class="s4">11</span><span class="s1">); 
+ 
+        Log.i(</span><span class="s3">&quot;LOG&quot;</span><span class="s1">, </span><span class="s3">&quot;Winning number:627884736748 &quot; </span><span class="s1">+ </span><span class="s3">&quot; is not equal to your number &quot;</span><span class="s1">+ yourNumber); 
+ 
+        Toast loser = Toast.makeText(MainActivity.</span><span class="s0">this</span><span class="s1">, 
+                </span><span class="s3">&quot;So Sorry.... You did not win today.&quot;</span><span class="s1">, Toast.LENGTH_LONG); 
+        loser.show(); 
+ 
+            } 
+ 
+ 
+    @Override 
+    </span><span class="s0">public boolean </span><span class="s1">onOptionsItemSelected(MenuItem item) { 
+        </span><span class="s0">int </span><span class="s1">id = item.getItemId(); 
+ 
+        </span><span class="s0">if </span><span class="s1">(id == R.id.action_license) { 
+ 
+            Log.i(</span><span class="s3">&quot;LOG&quot;</span><span class="s1">, </span><span class="s3">&quot;License MenuItem Selected.&quot;</span><span class="s1">); 
+ 
+            AlertDialog.Builder alertDialogBuilder = </span><span class="s0">new </span><span class="s1">AlertDialog.Builder( 
+                    </span><span class="s0">this</span><span class="s1">); 
+ 
+            </span><span class="s2">// set title</span><span class="s1"> 
+            alertDialogBuilder.setTitle(</span><span class="s3">&quot;License&quot;</span><span class="s1">); 
+ 
+            </span><span class="s2">// set dialog message</span><span class="s1"> 
+            alertDialogBuilder 
+                    .setMessage(</span><span class="s3">&quot;This App is part of the Security Shepherd Project. The Security Shepherd project is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. The Security Shepherd project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with the Security Shepherd project.  If not, see http://www.gnu.org/licenses.&quot;</span><span class="s1">) 
+                    .setCancelable(</span><span class="s0">false</span><span class="s1">) 
+                    .setPositiveButton(</span><span class="s3">&quot;OK&quot;</span><span class="s1">,</span><span class="s0">new </span><span class="s1">DialogInterface.OnClickListener() { 
+                        </span><span class="s0">public void </span><span class="s1">onClick(DialogInterface dialog,</span><span class="s0">int </span><span class="s1">id) { 
+                            </span><span class="s2">// if this button is clicked, close</span><span class="s1"> 
+                            </span><span class="s2">// current activity</span><span class="s1"> 
+                            dialog.cancel(); 
+                        } 
+                    }); 
+ 
+            </span><span class="s2">// create alert dialog</span><span class="s1"> 
+            AlertDialog alertDialog = alertDialogBuilder.create(); 
+ 
+            </span><span class="s2">// show it</span><span class="s1"> 
+            alertDialog.show(); 
+ 
+ 
+            </span><span class="s0">return true</span><span class="s1">; 
+        } 
+ 
+        </span><span class="s0">if </span><span class="s1">(id == R.id.action_exit){ 
+            Log.i(</span><span class="s3">&quot;LOG&quot;</span><span class="s1">, </span><span class="s3">&quot;Exit MenuItem Selected.&quot;</span><span class="s1">); 
+ 
+            finish(); 
+        } 
+ 
+ 
+        </span><span class="s0">if </span><span class="s1">(id == R.id.action_feedback) 
+        { 
+            Log.i(</span><span class="s3">&quot;LOG&quot;</span><span class="s1">, </span><span class="s3">&quot;Feedback MenuItem Selected.&quot;</span><span class="s1">); 
+ 
+ 
+            Intent goToFeedback = </span><span class="s0">new </span><span class="s1">Intent(</span><span class="s0">this</span><span class="s1">, Feedback.</span><span class="s0">class</span><span class="s1">); 
+            startActivity(goToFeedback); 
+            </span><span class="s0">return true</span><span class="s1">; 
+        } 
+ 
+        </span><span class="s0">if </span><span class="s1">(id == R.id.action_query) 
+        { 
+            Log.i(</span><span class="s3">&quot;LOG&quot;</span><span class="s1">, </span><span class="s3">&quot;Query MenuItem Selected.&quot;</span><span class="s1">); 
+ 
+            Intent goToQuery = </span><span class="s0">new </span><span class="s1">Intent(</span><span class="s0">this</span><span class="s1">, Query.</span><span class="s0">class</span><span class="s1">); 
+            startActivity(goToQuery); 
+            </span><span class="s0">return true</span><span class="s1">; 
+        } 
+ 
+ 
+        </span><span class="s0">if </span><span class="s1">(id == R.id.action_main) 
+        { 
+            Log.i(</span><span class="s3">&quot;LOG&quot;</span><span class="s1">, </span><span class="s3">&quot;Lotto MenuItem Selected.&quot;</span><span class="s1">); 
+ 
+ 
+            Intent goToMain = </span><span class="s0">new </span><span class="s1">Intent(</span><span class="s0">this</span><span class="s1">, MainActivity.</span><span class="s0">class</span><span class="s1">); 
+            startActivity(goToMain); 
+            </span><span class="s0">return true</span><span class="s1">; 
+ 
+        } 
+ 
+        </span><span class="s0">return super</span><span class="s1">.onOptionsItemSelected(item); 
+    } 
+ 
+    </span><span class="s0">private static </span><span class="s1">Random random = </span><span class="s0">new </span><span class="s1">Random(); 
+ 
+    </span><span class="s0">public static </span><span class="s1">String getRandomNumber(</span><span class="s0">int </span><span class="s1">digCount) { 
+        StringBuilder sb = </span><span class="s0">new </span><span class="s1">StringBuilder(digCount); 
+        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s1">; i &lt; digCount; i++) 
+            sb.append((</span><span class="s0">char</span><span class="s1">) (</span><span class="s3">'0' </span><span class="s1">+ random.nextInt(</span><span class="s4">10</span><span class="s1">))); 
+        </span><span class="s0">return </span><span class="s1">sb.toString(); 
+    } 
+} 
+</span></pre>
+</body>
+</html>

@@ -37,55 +37,7 @@ import org.owasp.esapi.codecs.MySQLCodec;
  */
 public class Setter 
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(Setter.class);
-	/**
-	 * Used to create a user the application can use to sign on as when interacting with a specific schema on the vulnerable database server
-	 * @param conn Connection to the vulnerable server
-	 * @param userName Database user name
-	 * @param userPass Database user password
-	 * @param schemaName NNB: schemaName must be escaped for the mySQL codec before entry to this method.
-	 * @param tableName Table name that this new database user will have access to
-	 * @throws SQLException Thrown if the user cannot be created
-	 */
-	@SuppressWarnings("deprecation")
-	public static void addRestrictedUserToVulnerableDb (Connection conn, String userName, String userPass, String schemaName, String tableName)
-	throws SQLException
-	{
-		log.debug("*** Setter.addRestrictedUserToVulnerableDb ***");
-		Encoder encoder = ESAPI.encoder();
-		Codec mySql = new MySQLCodec(MySQLCodec.MYSQL_MODE);
-		PreparedStatement prepStat;
-		//Schema Name should be entered as an mysql escaped string.
-		tableName = "tb_" + encoder.encodeForSQL(mySql, tableName);
-		try
-		{
-			log.debug("Preparing CREATE USER statement");
-			prepStat = conn.prepareStatement("CREATE USER ?@'localhost' IDENTIFIED BY ?;");
-			prepStat.setString(1, userName);
-			prepStat.setString(2, userPass);
-			log.debug("Executing CREATE USER");
-			prepStat.execute();
-			
-			//AGAIN -- SCHEMA NAME SHOULD BE ESCAPED UPON ENTRY TO THIS METHOD. IF IT ISNT, SQL INJECTION!
-			log.debug("Preparing GRANT statement for user " + userName);
-			prepStat = conn.prepareStatement("GRANT SELECT ON " + schemaName + "." +
-					tableName +" TO ?@'localhost';");
-			prepStat.setString(1, userName);
-			log.debug("Executing GRANT for SELECT");
-			prepStat.execute();
-			
-			log.debug("Committing Changes");
-			prepStat = conn.prepareStatement("COMMIT;");
-			prepStat.execute();
-		}
-		catch(SQLException e)
-		{
-			log.error("Could not add user to vulnerable database: " + e.toString());
-			throw e;
-		}
-		log.debug("*** END Setter.addRestrictedUserToVulnerableDb ***");
-	}
-	
+	private static org.apache.log4j.Logger log = Logger.getLogger(Setter.class);	
 	/**
 	 * Database procedure just adds this. So this method just prepares the statement
 	 * @param ApplicationRoot
@@ -302,6 +254,37 @@ public class Setter
 	}
 	
 	/**
+	 * Used to increment bad submission counter in DB. DB will handle point deductions once the counter hits 40
+	 * @param ApplicationRoot application running context
+	 * @param userId user identifier to increment 
+	 * @return False if the statement fails to execute
+	 */
+	public static boolean incrementBadSubmission(String ApplicationRoot, String userId)
+	{
+		log.debug("*** Setter.incrementBadSubmission ***");
+		
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			log.debug("Prepairing bad Submission call");
+			PreparedStatement callstmnt = conn.prepareCall("CALL userBadSubmission(?)");
+			callstmnt.setString(1, userId);
+			log.debug("Executing userBadSubmission statement on id '" + userId + "'");
+			callstmnt.execute();
+			result = true;
+		}
+		catch(SQLException e)
+		{
+			log.error("userBadSubmission Failure: " + e.toString());
+			result = false;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END userBadSubmisison ***");
+		return result;
+	}
+	
+	/**
 	 * This method sets every module status to Open.
 	 * @param ApplicationRoot Current running director of the application
 	 * @param moduleId The identifier of the module that is been set to open status
@@ -503,6 +486,37 @@ public class Setter
 	}
 	
 	/**
+	 * Resets user bad submission counter to 0
+	 * @param ApplicationRoot Application's running context
+	 * @param userId User Identifier to reset
+	 * @return
+	 */
+	public static boolean resetBadSubmission(String ApplicationRoot, String userId)
+	{
+		log.debug("*** Setter.resetBadSubmission ***");
+		
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			log.debug("Prepairing resetUserBadSubmission call");
+			PreparedStatement callstmnt = conn.prepareCall("CALL resetUserBadSubmission(?)");
+			callstmnt.setString(1, userId);
+			log.debug("Executing resetUserBadSubmission statement on id '" + userId + "'");
+			callstmnt.execute();
+			result = true;
+		}
+		catch(SQLException e)
+		{
+			log.error("resetUserBadSubmission Failure: " + e.toString());
+			result = false;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END resetBadSubmission ***");
+		return result;
+	}
+	
+	/**
 	 * This method converts the default database properties file at applicationRoot/WEB-INF/site.properties
 	 * @param applicationRoot The directory that the server is actually in
 	 * @param url The Url of the core Database
@@ -539,42 +553,91 @@ public class Setter
 	}
 	
 	/**
+	 * This method is used to store a CSRF Token for a specific user in the csrfChallengeSeven DB Schema. May not necessarily be a new CSRF token after running
+	 * @param userId User Identifier
+	 * @param csrfToken CSRF Token to add to the csrfChallengeSix DB Schema
+	 * @param ApplicationRoot Running context of the application
+	 * @return Returns current CSRF token for user for CSRF Ch4 
+	 */
+	public static String setCsrfChallengeFourCsrfToken (String userId, String csrfToken, String ApplicationRoot)
+	{
+		log.debug("*** setCsrfChallengeFourToken ***");
+		Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeFour");
+		try
+		{
+			boolean tokenExists = false;
+			log.debug("Preparing setSsrfChallengeFourToken call");
+			PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?");
+			callstmnt.setString(1, userId);
+			log.debug("Executing setCsrfChallengeFourToken");
+			ResultSet rs = callstmnt.executeQuery();
+			if(rs.next())
+			{
+				//Need to Update CSRF token rather than Insert
+				log.debug("CSRF for Challenge 4 already is set");
+				csrfToken = rs.getString(1); //overwrite token with DB Stored Entry
+				tokenExists = true;
+			}
+			else
+			{
+				log.debug("No CSRF token Found for Challenge 4... Creating");
+			}
+			rs.close();
+			
+			String whatToDo = new String();
+			if(!tokenExists)
+				whatToDo = "INSERT INTO `csrfChallengeFour`.`csrfTokens` (`csrfTokenscol`, `userId`) VALUES (?, ?)";
+			callstmnt = conn.prepareStatement(whatToDo);
+			callstmnt.setString(1, csrfToken);
+			callstmnt.setString(2, userId);
+			callstmnt.execute();
+			callstmnt.close();
+		}
+		catch(SQLException e)
+		{
+			log.error("CsrfChallenge4 TokenUpdate Failure: " + e.toString());
+		}
+		Database.closeConnection(conn);		
+		return csrfToken;
+	}
+	
+	/**
 	 * This method is used to store a CSRF Token for a specific user in the csrfChallengeSix DB Schema
 	 * @param userId User Identifier
 	 * @param csrfToken CSRF Token to add to the csrfChallengeSix DB Schema
 	 * @param ApplicationRoot Running context of the application
 	 * @return
 	 */
-	public static boolean setCsrfChallengeSixCsrfToken (String userId, String csrfToken, String ApplicationRoot)
+	public static boolean setCsrfChallengeSevenCsrfToken (String userId, String csrfToken, String ApplicationRoot)
 	{
-		log.debug("*** setCsrfChallengeSixToken ***");
+		log.debug("*** setCsrfChallengeSevenToken ***");
 		boolean result = false;
-		Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeSix");
+		Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeEnumerateTokens");
 		try
 		{
 			boolean updateToken = false;
-			log.debug("Preparing setCsrfChallengeSixToken call");
+			log.debug("Preparing setCsrfChallengeSevenToken call");
 			PreparedStatement callstmnt = conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?");
 			callstmnt.setString(1, userId);
-			log.debug("Executing setCsrfChallengeSixToken");
+			log.debug("Executing setCsrfChallengeSevenToken");
 			ResultSet rs = callstmnt.executeQuery();
 			if(rs.next())
 			{
 				//Need to Update CSRF token rather than Insert
-				log.debug("CSRF token Found for Challenge 6... Updating");
+				log.debug("CSRF token Found for Challenge 7... Updating");
 				updateToken = true;
 			}
 			else
 			{
-				log.debug("No CSRF token Found for Challenge 6... Creating");
+				log.debug("No CSRF token Found for Challenge 7... Creating");
 			}
 			rs.close();
 			
 			String whatToDo = new String();
 			if(updateToken)
-				whatToDo = "UPDATE `csrfChallengeSix`.`csrfTokens` SET csrfTokenscol = ? WHERE userId = ?";
+				whatToDo = "UPDATE `csrfChallengeEnumTokens`.`csrfTokens` SET csrfTokenscol = ? WHERE userId = ?";
 			else
-				whatToDo = "INSERT INTO `csrfChallengeSix`.`csrfTokens` (`csrfTokenscol`, `userId`) VALUES (?, ?)";
+				whatToDo = "INSERT INTO `csrfChallengeEnumTokens`.`csrfTokens` (`csrfTokenscol`, `userId`) VALUES (?, ?)";
 			callstmnt = conn.prepareStatement(whatToDo);
 			callstmnt.setString(1, csrfToken);
 			callstmnt.setString(2, userId);
@@ -584,7 +647,7 @@ public class Setter
 		}
 		catch(SQLException e)
 		{
-			log.error("CsrfChallenge6 TokenUpdate Failure: " + e.toString());
+			log.error("csrfChallenge7EnumTokens TokenUpdate Failure: " + e.toString());
 		}
 		Database.closeConnection(conn);		
 		return result;
@@ -743,6 +806,70 @@ public class Setter
 	}
 	
 	/**
+	 * Sets user to suspended in the database for a specific amount of time. This prevents them from signing into the application
+	 * @param ApplicationRoot Running context of application
+	 * @param userId User Identifier of the to be suspended user
+	 * @param numberOfMinutes Amount of minutes to suspend user
+	 * @return Returns true if statement succeeds without fatal error
+	 */
+	public static boolean suspendUser(String ApplicationRoot, String userId, int numberOfMinutes)
+	{
+		log.debug("*** Setter.suspendUser ***");
+		
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			log.debug("Prepairing suspendUser call");
+			PreparedStatement callstmnt = conn.prepareCall("CALL suspendUser(?, ?)");
+			callstmnt.setString(1, userId);
+			callstmnt.setInt(2, numberOfMinutes);
+			log.debug("Executing suspendUser statement on id '" + userId + "'");
+			callstmnt.execute();
+			result = true;
+		}
+		catch(SQLException e)
+		{
+			log.error("suspendUser Failure: " + e.toString());
+			result = false;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END suspendUser ***");
+		return result;
+	}
+	
+	/**
+	 * Revokes a suspension that may have been applied to a user
+	 * @param ApplicationRoot Running context of application
+	 * @param userId The Identifier of the user that will be released from suspension
+	 * @return
+	 */
+	public static boolean unSuspendUser(String ApplicationRoot, String userId)
+	{
+		log.debug("*** Setter.unSuspendUser ***");
+		
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			log.debug("Prepairing suspendUser call");
+			PreparedStatement callstmnt = conn.prepareCall("CALL unSuspendUser(?)");
+			callstmnt.setString(1, userId);
+			log.debug("Executing unSuspendUser statement on id '" + userId + "'");
+			callstmnt.execute();
+			result = true;
+		}
+		catch(SQLException e)
+		{
+			log.error("unSuspendUser Failure: " + e.toString());
+			result = false;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END unSuspendUser ***");
+		return result;
+	}
+	
+	/**
 	 * Used to update a module's cheat sheet
 	 * @param applicationRoot The current running context of the application
 	 * @param moduleId The identifier of the module to update
@@ -832,6 +959,38 @@ public class Setter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END updatePassword ***");
+		return result;
+	}
+	
+	/**
+	 * Updates a player's password without needing the current password
+	 * @param ApplicationRoot Running context of the applicaiton
+	 * @param userName The username of the user to update
+	 * @param newPassword The new password to assign to the user
+	 * @return
+	 */
+	public static boolean updatePasswordAdmin (String ApplicationRoot, String userId, String newPassword)
+	{
+		log.debug("*** Setter.updatePasswordAdmin ***");
+		
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			log.debug("Preparing userPasswordChangeAdmin call");
+			CallableStatement callstmnt = conn.prepareCall("call userPasswordChangeAdmin(?, ?)");
+			callstmnt.setString(1, userId);
+			callstmnt.setString(2, newPassword);
+			log.debug("Executing userPasswordChangeAdmin");
+			callstmnt.execute();
+			result = true;
+		}
+		catch(SQLException e)
+		{
+			log.error("updatePasswordAdmin Failure: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END updatePasswordAdmin ***");
 		return result;
 	}
 	
@@ -940,6 +1099,38 @@ public class Setter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END updatePlayerResult ***");
+		return result;
+	}
+	
+	/**
+	 * Adds or Subtracts points from a user. 
+	 * @param ApplicationRoot Running context of application
+	 * @param userId Identifier of user to update
+	 * @param points Positive or Negative number of points to update by
+	 * @return Returns true if statement executes without fatal error
+	 */
+	public static boolean updateUserPoints (String ApplicationRoot, String userId, int points)
+	{
+		log.debug("*** Setter.updateUserPoints ***");
+		
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			log.debug("Preparing updateUserPoints call");
+			CallableStatement callstmnt = conn.prepareCall("UPDATE users SET userScore = userScore + ? WHERE userId = ?");
+			callstmnt.setInt(1, points);
+			callstmnt.setString(2, userId);
+			log.debug("Executing updateUserPoints");
+			callstmnt.execute();
+			result = true;
+		}
+		catch(SQLException e)
+		{
+			log.error("updateUserPoints Failure: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END updateUserPoints ***");
 		return result;
 	}
 	

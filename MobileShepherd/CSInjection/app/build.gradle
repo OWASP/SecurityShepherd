@@ -22,6 +22,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.2.1'
+
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile files('libs/sqlcipher-javadoc.jar')
     compile files('libs/sqlcipher.jar')

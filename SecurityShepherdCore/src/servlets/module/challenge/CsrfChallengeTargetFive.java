@@ -42,8 +42,7 @@ import dbProcs.Setter;
 public class CsrfChallengeTargetFive extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static String moduleHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
-	private static final String[] csrfArray ={"c4ca4238a0b923820dcc509a6f75849b", "c81e728d9d4c2f636f067f89cc14862c", "eccbc87e4b5ce2fe28308fd9f2a7baf3"};
+	private static final String levelHash = "70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49";
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeTargetFive.class);
 	private static String levelName = "CSRF 5 Target";
 	/**
@@ -55,37 +54,37 @@ public class CsrfChallengeTargetFive extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("CSRF Challenge Five Target Servlet");
+		log.debug(levelName + " Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String storedToken = new String();
 		try
 		{
-			String csrfTokenName = "csrfChallengeFiveNonce";
 			boolean result = false;
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
+				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				//Get CSRF Token From session
-				if(ses.getAttribute(csrfTokenName) == null || ses.getAttribute(csrfTokenName).toString().isEmpty())
+				if(ses.getAttribute("csrfChallengeFiveNonce") == null || ses.getAttribute("csrfChallengeFiveNonce").toString().isEmpty())
 				{
 					log.debug("No CSRF Token associated with user");
 					Random random = new Random();
 					int newToken = random.nextInt(3);
-					storedToken = csrfArray[newToken];
-					out.write("No CSRF Token Detected for this Challenge. You're token is now " + storedToken + "<br><br>");
-					ses.setAttribute(csrfTokenName, storedToken);
+					out.write("No CSRF Token Detected for this Challenge. You're token is now " + newToken + "<br><br>");
+					storedToken = "" + newToken;
+					ses.setAttribute("csrfChallengeFiveNonce", newToken);
 				}
 				else
 				{
-					storedToken = "" + ses.getAttribute(csrfTokenName);
+					storedToken = "" + ses.getAttribute("csrfChallengeFiveNonce");
 				}
 				String userId = (String)ses.getAttribute("userStamp");
 				
-				String plusId = request.getParameter("userId").trim();;
+				String plusId = (String)request.getParameter("userId").trim();
 				log.debug("User Submitted - " + plusId);
-				String csrfToken = request.getParameter("csrfToken").trim();;
+				String csrfToken = (String)request.getParameter("csrfToken").trim();;
 				log.debug("csrfToken Submitted - " + csrfToken);
 				
 				if(!userId.equals(plusId))
@@ -101,7 +100,7 @@ public class CsrfChallengeTargetFive extends HttpServlet
 							log.debug(userName + " is been CSRF'd by " + attackerName);
 							
 							log.debug("Attempting to Increment ");
-							String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, moduleHash);
+							String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);
 							result = Setter.updateCsrfCounter(ApplicationRoot, moduleId, plusId);
 						}
 						else
@@ -136,7 +135,7 @@ public class CsrfChallengeTargetFive extends HttpServlet
 		catch(Exception e)
 		{
 				out.write("An Error Occurred! You must be getting funky!");
-				log.fatal("Cross Site Request Forgery Target Challenge 5 - " + e.toString());
+				log.fatal(levelName + " - " + e.toString());
 		}
 	}
 }

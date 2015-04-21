@@ -18,7 +18,6 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
-import utils.SqlFilter;
 import utils.Validate;
 import dbProcs.Database;
 
@@ -63,6 +62,7 @@ public class SqlInjection1 extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
+			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
@@ -72,35 +72,42 @@ public class SqlInjection1 extends HttpServlet
 			{
 				String userIdentity = request.getParameter("userIdentity");
 				log.debug("User Submitted - " + userIdentity);
-				userIdentity = SqlFilter.levelOne(userIdentity);
-				log.debug("Filtered to " + userIdentity);
-				String ApplicationRoot = getServletContext().getRealPath("");
-				log.debug("Servlet root = " + ApplicationRoot );
-				
-				log.debug("Getting Connection to Database");
-				Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeOne");
-				Statement stmt = conn.createStatement();
-				log.debug("Gathering result set");
-				ResultSet resultSet = stmt.executeQuery("SELECT * FROM customers WHERE customerId = '" + userIdentity + "'");
-				
-				int i = 0;
-				htmlOutput = "<h2 class='title'>Search Results</h2>";
-				htmlOutput += "<table><tr><th>Name</th><th>Address</th><th>Comment</th></tr>";
-				
-				log.debug("Opening Result Set from query");
-				while(resultSet.next())
+				if(Validate.isValidEmailAddress(userIdentity))
 				{
-					log.debug("Adding Customer " + resultSet.getString(2));
-					htmlOutput += "<tr><td>"
-						+ encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" 
-						+ encoder.encodeForHTML(resultSet.getString(3)) + "</td><td>"
-						+ encoder.encodeForHTML(resultSet.getString(4)) + "</td></tr>";
-					i++;
+					log.debug("Filtered to " + userIdentity);
+					String ApplicationRoot = getServletContext().getRealPath("");
+					log.debug("Servlet root = " + ApplicationRoot );
+					
+					log.debug("Getting Connection to Database");
+					Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeOne");
+					Statement stmt = conn.createStatement();
+					log.debug("Gathering result set");
+					ResultSet resultSet = stmt.executeQuery("SELECT * FROM customers WHERE customerAddress = '" + userIdentity + "'");
+					
+					int i = 0;
+					htmlOutput = "<h2 class='title'>Search Results</h2>";
+					htmlOutput += "<table><tr><th>Name</th><th>Address</th><th>Comment</th></tr>";
+					
+					log.debug("Opening Result Set from query");
+					while(resultSet.next())
+					{
+						log.debug("Adding Customer " + resultSet.getString(2));
+						htmlOutput += "<tr><td>"
+							+ encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" 
+							+ encoder.encodeForHTML(resultSet.getString(3)) + "</td><td>"
+							+ encoder.encodeForHTML(resultSet.getString(4)) + "</td></tr>";
+						i++;
+					}
+					conn.close();
+					htmlOutput += "</table>";
+					if(i == 0)
+					{
+						htmlOutput = "<p>There were no results found in your search</p>";
+					}
 				}
-				htmlOutput += "</table>";
-				if(i == 0)
+				else
 				{
-					htmlOutput = "<p>There were no results found in your search</p>";
+					htmlOutput = new String("<h2 class='title'>Search Error</h2><p>Invalid Email Address was submitted");
 				}
 			}
 			catch (SQLException e)

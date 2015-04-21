@@ -40,7 +40,7 @@ String levelName = "Insecure Cryptographic Storage Challenge 2";
  	// If tokenCookie == null, then the page is not going to continue loading
  	if (Validate.validateSession(ses) && tokenCookie != null)
  	{
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString());
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">

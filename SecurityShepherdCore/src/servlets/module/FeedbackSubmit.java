@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
-import servlets.OneTimePad;
 import utils.Hash;
 import utils.ModulePlan;
 import utils.ShepherdLogManager;
@@ -48,8 +47,8 @@ public class FeedbackSubmit extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(SolutionSubmit.class);
 	/**
 	 * Initiated by a dynamic form returned by servlets.module.SolutionSubmit.doPost() 
-	 * this method checks the existace of the submitted module identifier before ensuring that the submission is correct.
-	 * If the module solution submission is found to be valid then the feedback submiited is stored, marking the module as completed for the user
+	 * this method checks the existence of the submitted module identifier before ensuring that the submission is correct.
+	 * If the module solution submission is found to be valid then the feedback submitted is stored, marking the module as completed for the user
 	 * If the submission is found to be valid then the user is returned with a feedback form.
 	 * @param mouleId The identifier of the module that the solution is been submitted for
 	 * @param solutionKey The solution key for the proposed module
@@ -72,6 +71,7 @@ public class FeedbackSubmit extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
+			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug("Current User: " + ses.getAttribute("userName").toString());
 			Cookie tokenCookie = Validate.getToken(request.getCookies());
 			Object tokenParmeter = request.getParameter("csrfToken");
@@ -81,10 +81,7 @@ public class FeedbackSubmit extends HttpServlet
 				String storedResult = null;
 				try
 				{
-					
-					log.debug("Getting ApplicationRoot");
 					String ApplicationRoot = getServletContext().getRealPath("");
-					log.debug("Servlet root = " + ApplicationRoot );
 					
 					log.debug("Getting Parameters");
 					String moduleId = (String)request.getParameter("moduleId");;
@@ -120,40 +117,59 @@ public class FeedbackSubmit extends HttpServlet
 						else
 						{
 							//Encrypted Solution key,  must be decrypted before compare
-							String decryptedKey = Hash.decrypt(Validate.validateEncryptionKey(userName), solutionKey);
+							String decryptedKey = Hash.decryptUserSpecificSolution(Validate.validateEncryptionKey(userName), solutionKey);
+							storedResult += Hash.getCurrentSalt(); //Add server solution salt to base key before compare with decrypted key
 							validKey = storedResult.compareTo(decryptedKey) == 0;
+							log.debug("Decrypted Submitted Key: " + decryptedKey);
+							log.debug("Stored Expected Key    : " + storedResult);
 						}
 						if(validKey)
 						{
-							log.debug("Correct key submitted, updating user result");
-							//Marking module complete by user 
-							String result = Setter.updatePlayerResult(ApplicationRoot, moduleId, userId, additionalInfo, before, after, difficulty);
-							if(result != null)
+							log.debug("Correct key submitted, checking user has not already completed");
+							String hasNotCompletedBefore = Getter.checkPlayerResult(ApplicationRoot, moduleId, userId);
+							if(hasNotCompletedBefore != null)
 							{
-								log.debug("User Result for module " + result + " succeeded");
-								htmlOutput = new String("<h2 class=\"title\">Solution Submission Success</h2><br>" +
-										"<p>" +
-										encoder.encodeForHTML(result) + " completed! Congratulations.");
-								htmlOutput += "</p>";
-								if(ModulePlan.isIncrementalFloor())
-									htmlOutput += refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter));
+								//Marking module complete by user 
+								String result = Setter.updatePlayerResult(ApplicationRoot, moduleId, userId, additionalInfo, before, after, difficulty);
+								if(result != null)
+								{
+									log.debug("User Result for module " + result + " succeeded");
+									htmlOutput = new String("<h2 class=\"title\">Solution Submission Success</h2><br>" +
+											"<p>" +
+											encoder.encodeForHTML(result) + " completed! Congratulations.");
+									htmlOutput += "</p>";
+									if(ModulePlan.isIncrementalFloor())
+										htmlOutput += refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter));
+								}
+								else
+								{
+									htmlOutput = new String("Could not update user result");
+									out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
+											"<p><font color=\"red\">" +
+											"Sorry but an error Occurred!" +
+											"</font></p>");
+								}
 							}
-							else
+							else //User Has already completed this level
 							{
-								htmlOutput = new String("Could not update user result");
-								out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
-										"<p><font color=\"red\">" +
-										"Sorry but an error Occurred!" +
-										"</font></p>");
+								log.error("User has completed this module before. Returning Error");
+								out.write("<h2 class=\"title\">Haven't You Done This Already?</h2><br>" +
+										"<p>" +
+										"Our records say you have already completed this module! Go try another one!" +
+										"</p>");
 							}
 						}
 						else
 						{
-							log.debug("Incorrect key submitted, returning error");
-							htmlOutput = new String("<h2 class=\"title\">Feedback Submission Failure</h2><br>" +
+							log.error("Incorrect key submitted, returning error");
+							out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
 									"<p><font color=\"red\">" +
-									"Incorrect Solution Key Submitted." +
+									"Incorrect Solution Key Submitted.<br><br>You have limited amounts of incorrect key submissions before you will loose 10% of your points. Contact the OWASP Security Shepherd if you think you have found the correct key but it is failing you." +
 									"</font></p>");
+							
+							log.error("Invoking Bad Submission procedure...");
+							Setter.incrementBadSubmission(ApplicationRoot, userId);
+							log.error(userName + " has been warned and potentially has lost points");
 						}
 					}
 					else

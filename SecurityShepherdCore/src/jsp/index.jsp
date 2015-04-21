@@ -41,7 +41,7 @@ if (request.getSession() != null)
 	if (Validate.validateSession(ses) && tokenCookie != null)
 	{
 		//Log User Name
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 		// Getting Session Variables
 		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
 		Encoder encoder = ESAPI.encoder();
@@ -122,8 +122,9 @@ if (request.getSession() != null)
 								<li>
 									<a id="moduleManagementList" href="javascript:;">Module Management</a>
 									<ul id="theModuleManagementList" style="display: none;">
-										<li><a id="openFloorModuleLink" href="javascript:;">Open Floor Modules</a></li>
-										<li><a id="incrementalModulesLink" href="javascript:;">CTF Mode</a></li>
+										<li><a id="openFloorModuleLink" href="javascript:;">Open Floor Plan</a></li>
+										<li><a id="tournamentFloorModuleLink" href="javascript:;">Tournament Floor Plan</a></li>
+										<li><a id="incrementalModulesLink" href="javascript:;">CTF Floor Plan</a></li>
 										<li><a id="stopHereLink" href="javascript:;">Enable Module Block</a></li>
 										<li><a id="disableBlockLink" href="javascript:;">Disable Module Block</a></li>
 										<li><a id="setModuleStatusLink" href="javascript:;">Open and Close Modules</a></li>
@@ -138,6 +139,10 @@ if (request.getSession() != null)
 										<li><a id="createNewAdminLink" href="javascript:;">Create New Admin</a></li>
 										<li><a id="upgradePlayersLink" href="javascript:;">Upgrade Player to Admin</a></li>
 										<li><a id="addPlayersLink" href="javascript:;">Add Players</a></li>
+										<li><a id="updatePlayerScoreLink" href="javascript:;">Add / Deduct Player Points</a></li>
+										<li><a id="changePlayerPasswordLink" href="javascript:;">Reset Password</a></li>
+										<li><a id="suspendPlayerLink" href="javascript:;">Suspend Player</a></li>
+										<li><a id="unSuspendPlayerLink" href="javascript:;">Cancel Suspension</a></li>
 										<li><a id="createNewClassLink" href="javascript:;">Create Class</a></li>
 										<li><a id="setDefaultClassForRegistrationLink" href="javascript:;">Set Default Player Class</a></li>
 										<li><a id="assignPlayersLink" href="javascript:;">Assign Players to Class</a></li>
@@ -186,10 +191,7 @@ if (request.getSession() != null)
 							</div>
 						<% } else {%>
 						<li>
-							<a id="challengeList" href="javascript:;"><div class="menuButton">Challenges</div></a>
-							<ul id="theChallengeList" style="display: none;">
 							<%= Getter.getTournamentModules(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
-							</ul>
 						</li>
 						<% }
 					} //End of Module List Output %>
@@ -207,7 +209,386 @@ if (request.getSession() != null)
 		<% //Hide UI Scripts from Users (Blocked at session level anyway, just stops spiders finding the links)
 		if (userRole.compareTo("admin") == 0){ %>
 			<script src="js/adminToggle.js"></script>
-			<script src="js/adminAjaxCalls.js"></script>
+			<script>
+
+			$("#updatePlayerScoreLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/givePoints.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#suspendPlayerLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/suspendUser.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#unSuspendPlayerLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/unSuspendUser.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#changePlayerPasswordLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/changeUserPassword.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#createNewAdminLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/createNewAdmin.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#createNewClassLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/createNewClass.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#addPlayersLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/addPlayers.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#assignPlayersLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/assignPlayers.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#setDefaultClassForRegistrationLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/setDefaultClassForRegistration.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#upgradePlayersLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/upgradePlayers.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#enableCheatsLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/cheatManagement/enableCheats.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});
+				});	
+			});
+
+			$("#disableCheatsLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/cheatManagement/disableCheats.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});
+				});	
+			});
+
+			$("#createCheatsLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/cheatManagement/createCheat.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#openFloorModuleLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/openFloor.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#tournamentFloorModuleLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/tournamentFloor.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#incrementalModulesLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/incrementalModules.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});
+				});
+			});
+
+			$("#feedbackLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/feedback.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#setModuleStatusLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/setStatus.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#openCloseByCategory").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/openCloseByCategory.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});
+				});	
+			});
+
+			$("#registrationLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/updateRegistration.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#progressLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/classProgress.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#scoreboardLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/scoreboard.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#stopHereLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/stopHere.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#disableBlockLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/moduleManagement/removeModuleBlock.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#setCoreDatabaseLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/config/setCoreDatabase.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#enableFeedbackLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/config/enableFeedback.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+
+			$("#disableFeedbackLink").click(function(){
+					$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/config/disableFeedback.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});
+				});	
+			});
+			</script>
 		<% } %>
 		
 		<script>
@@ -360,6 +741,49 @@ if (request.getSession() != null)
 				$("#solutionDiv").show("fast");
 			});
 		});
+		<% } %>
+		
+		<% if(ModulePlan.tornyFloor){%>
+			$("#fieldTrainingList").click(function () {
+				$("#theFieldTrainingList").toggle("slow");
+				$("#theCorporalList").hide("fast");
+				$("#theSergeantList").hide("fast");
+				$("#theMajorList").hide("fast");
+				$("#theAdmiralList").hide("fast");
+			});  
+			
+			$("#corporalList").click(function () {
+				$("#theCorporalList").toggle("slow");
+				$("#theFieldTrainingList").hide("fast");
+				$("#theSergeantList").hide("fast");
+				$("#theMajorList").hide("fast");
+				$("#theAdmiralList").hide("fast");
+			});  
+			
+			$("#sergeantList").click(function () {
+				$("#theSergeantList").toggle("slow");
+				$("#theFieldTrainingList").hide("fast");
+				$("#theCorporalList").hide("fast");
+				$("#theMajorList").hide("fast");
+				$("#theAdmiralList").hide("fast");
+			});  
+			
+			$("#majorList").click(function () {
+				$("#theMajorList").toggle("slow");
+				$("#theFieldTrainingList").hide("fast");
+				$("#theCorporalList").hide("fast");
+				$("#theSergeantList").hide("fast");
+				$("#theAdmiralList").hide("fast");
+			}); 
+			
+			$("#admiralList").click(function () {
+				$("#theAdmiralList").toggle("slow");
+				$("#theFieldTrainingList").hide("fast");
+				$("#theCorporalList").hide("fast");
+				$("#theSergeantList").hide("fast");
+				$("#theMajorList").hide("fast");
+			}); 
+			
 		<% } %>
 		
 		</script>

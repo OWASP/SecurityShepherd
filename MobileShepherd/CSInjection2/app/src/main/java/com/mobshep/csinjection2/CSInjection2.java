@@ -107,23 +107,23 @@ public class CSInjection2 extends Activity implements OnClickListener {
 			try {
 				if (login(sanitizeName, sanitizePass) == true) {
 					outputKey(this, dbPassword);
-					Toast toast = Toast.makeText(CSInjection2.this,
-							"Logged in!", Toast.LENGTH_LONG);
-					toast.show();
+					                    Toast loggedin = Toast.makeText(CSInjection2.this,
+                            "Logged in!", Toast.LENGTH_LONG);
+                    loggedin.show();
 
 				}
 			} catch (IOException e1) {
-				Toast toast = Toast.makeText(CSInjection2.this,
+				Toast error = Toast.makeText(CSInjection2.this,
 						"An error occurred!", Toast.LENGTH_LONG);
-				toast.show();
+				error.show();
 			}
 
 			try {
 				if (login(sanitizeName, sanitizePass) == false) {
-					Toast toast = Toast.makeText(CSInjection2.this,
+					Toast invalid = Toast.makeText(CSInjection2.this,
 							"Invalid Credentials, " + sanitizeName,
 							Toast.LENGTH_LONG);
-					toast.show();
+					invalid.show();
 
 				}
 			} catch (IOException e) {
@@ -133,9 +133,9 @@ public class CSInjection2 extends Activity implements OnClickListener {
 
 			if (sanitizeName.contentEquals("")
 					|| sanitizePass.contentEquals("")) {
-				Toast toast2 = Toast.makeText(CSInjection2.this,
+				Toast blank = Toast.makeText(CSInjection2.this,
 						"Empty Fields Detected.", Toast.LENGTH_SHORT);
-				toast2.show();
+				blank.show();
 
 			}
 
