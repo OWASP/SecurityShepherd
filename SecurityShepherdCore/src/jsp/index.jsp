@@ -63,7 +63,9 @@ if (request.getSession() != null)
 		<!-- You are currently looking at the core server. 
 			Nothing related to the levels in Security Shepherd will be found in here. 
 			You might be looking for the iframe embeded in the page.
-			Try a tool like Firebug to make this stuff easier. -->
+			Try a tool like Firebug to make this stuff easier.
+			
+			Security Shepherd Version: 2.3 -->
 
 		<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 		<link rel="shortcut icon" href="css/images/flavicon.jpg" type="image/jpeg" />

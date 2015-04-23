@@ -21,7 +21,7 @@
  * @author Mark Denihan
  */
 
- String levelName = "SQL Injection Challenge 8";
+ String levelName = "SQL Injection Challenge 7";
  String levelHash = "8c2dd7e9818e5c6a9f8562feefa002dc0e455f0e92c8a46ab0cf519b1547eced";
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)

@@ -49,7 +49,7 @@ public class SessionManagement7SecretQuestion extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement7SecretQuestion.class);
-	private static String levelName = "Session Management Challenge NEW1 (Secret Question)";
+	private static String levelName = "Session Management Challenge 7 (Secret Question)";
 	private static String levelHash = "269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80";
 	//To catch most requests before calling the DB, the in comming Answers must be one of the following flowers
 	private static String possibleAnswers[] = {new String("Jade Vine"), new String("Corpse Flower"), 
@@ -82,12 +82,12 @@ public class SessionManagement7SecretQuestion extends HttpServlet
 				Object ansObj = request.getParameter("subAnswer");
 				String subAns = Validate.validateParameter(ansObj, 35);
 				log.debug("subAnswer = " + subAns);
+				Object emailObj = request.getParameter("subEmail");
+				String subEmail = Validate.validateParameter(emailObj, 60);
+				log.debug("subEmail = " + subEmail);
 				if(validAnswer(subAns))
 				{
-					Object emailObj = request.getParameter("subEmail");
-					String subEmail = Validate.validateParameter(emailObj, 60);
-					log.debug("subEmail = " + subEmail);
-					
+					log.debug("Submitted answer is a possible valid answer");
 					String ApplicationRoot = getServletContext().getRealPath("");
 					try
 					{
@@ -134,6 +134,7 @@ public class SessionManagement7SecretQuestion extends HttpServlet
 				}
 				else
 				{
+					log.debug("Invalid answer submitted for any user, skipping rest of function");
 					htmlOutput = new String("<h2 class='title'>Incorrect Answer</h2><p>Are you sure you are who you say you are?");
 				}
 				log.debug("Outputting HTML");

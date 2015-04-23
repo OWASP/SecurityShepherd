@@ -69,8 +69,10 @@ if(!changePassword)
 		<div class="entry">
 			<% if(ModulePlan.openFloor) { %>
 			Now that you've signed in, lets get started with some Security Shepherd modules! To start a module, click on the list headers, <span><a>Lessons</a></span> or <span><a>Modules</a></span>, in the side menu to see what modules are currently available!
-			<% } else { %>
+			<% } else if (ModulePlan.incrementalFloor) { %>
 			Now that you've signed in, lets get started with some Security Shepherd challenges! To start one, click the &quot;Get Next Challenge&quot; button on the left!
+			<% } else {%>
+			Now that you've signed in, lets get started with some Security Shepherd modules! To start a module, click on the list headers, such as <span><a>Field Training</a></span> or <span><a>Corporal</a></span>, in the side menu to see what modules are currently available! The lower down in the side menu that the module is listed, the more points it is worth! 
 			<% } %>
 			<% if(isAdmin) {%>
 			<h2 class="title">Configure Shepherd</h2>

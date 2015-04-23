@@ -114,19 +114,6 @@ if(ses.getAttribute("errorMessage") != null)
 				
 				<br/>
 				<div style="width: 400px; border-color:#A878EF; border-style:dashed; background-color: #D4D4D4;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;" align="justify">
-					<center><big style="color:#A878EF;">CTF RULES</big></center>
-					<br/>
-					- No Denial of Service Attacks.<br>
-					- No automated Scans (you might get banned).<br>
-					- Do not generate large amounts of traffic.<br>
-					- No destructive attacks (don't delete stuff).<br>
-					- Confine hacking on the tasks that are explicitly free to hack.<br>
-					- If you find a cheat or trick to solve things more easily, please report it for Bonus Points.<br>
-					- The organizers might change the rules throughout the challenge.<br>
-					- Participants breaking these rules might be penalized or excluded from the competition.<br>
-					- The CTF will run from April 8th until April 21st 19:30 GMT+1<br>
-					<br/>
-					All traffic sent to the CTF is logged and analysed. You will be caught if you break these rules.<br/><br/>
 					<center><big style="color:#A878EF;">SHEPHERD DISCLAIMER</big></center>
 					<br/>
 					<br/>

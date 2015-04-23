@@ -450,10 +450,6 @@ BEGIN
     INSERT INTO class VALUES (theId, theClassName, theClassYear);
 END
 
-
-
-
-
 $$
 
 DELIMITER ;
@@ -686,8 +682,6 @@ SELECT moduleName, moduleResult FROM modules
     AND moduleResult IS NOT NULL;
 END
 
-
-
 $$
 
 DELIMITER ;
@@ -851,9 +845,6 @@ SELECT userName, resultSubmission FROM results
     AND moduleId = theModuleId;
 END
 
-
-
-
 $$
 
 DELIMITER ;
@@ -872,9 +863,6 @@ UPDATE results SET
     AND userId = theUserId;
 COMMIT;
 END
-
-
-
 
 $$
 
@@ -1407,10 +1395,6 @@ INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('7153290d128cfdef5f40742dbaeb129a36ac2340', 'Session Management Challenge 8', 'challenge', 'Session Management', '11d84b0ad628bb6e99e0640ff1791a29a1938609829ef5bdccee92b2bccd2bcd', '714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54705bb1ea4316334', 'open', '215', '115', '5', 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleType`, `moduleCategory`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5', 'CSRF 7', 'challenge', 'CSRF', '849e1efbb0c1e870d17d32a3e1b18a8836514619146521fbec6623fce67b73e8', '7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3', 'open', '235', '120', '5', 0);
 
-
-
-
-
 COMMIT;
 
 -- -----------------------------------------------------
@@ -1485,13 +1469,7 @@ CALL cheatSheetCreate('ba6e65e4881c8499b5e53eb33b5be6b5d0f1fb2c', "To complete t
 CALL cheatSheetCreate('52885a3db5b09adc24f38bc453fe348f850649b3', "To complete this challenge, find jarsigner which comes with the jdk and in a command line run the following:  jarsigner -verify -verbose -certs ReverseEngineer2.apk.");
 CALL cheatSheetCreate('3b1af0ad239325bf494c6e606585320b31612e72', "To complete this challenge, use adb pull to grab the key file and the key.db file from the app's /data/data/ directory. With the db password: Pa88w0rd1234 decrypt the database to get the key to the level. This will either require a small amount of coding or you can download and build sqlcipher. Finally there is an App on the playstore which can be used called SQLCipher Decrypt.");
 CALL cheatSheetCreate('0cdd1549e7c74084d7059ce748b93ef657b44457', "To complete this challenge, you need to login to the App. The password reset function rquires two answers which can be gathered from the logs on the App. The answers are chicken and meade. This will reset the password to a six digit code and allow you to login and view the key.");
-
-
-
-
-
-
-
+CALL cheatSheetCreate('368491877a0318e9a774ba5d648c33cb0165ba1e', "This challenge requires a bit of thinking to complete organically. First you must find some admin email addresses. The login function will return them when valid usernames are submitted. Try using root or superuser with any password. Use the email address in the secret question function to get that user's Secret Question. The secret question for each user is 'What is your favourite flower?'. There are only so many flowers. Any of the following flowers are valid answers. Root's favourite flower is 'Franklin Tree'. <br><br> Valid answers: Jade Vine, Corpse Flower, Gibraltar Campion, Franklin Tree, Middlemist Red, Chocolate Cosmos or Ghost Orchid");
 
 COMMIT;
 
@@ -1513,7 +1491,6 @@ SET @@global.event_scheduler = 1;
 
 USE core;
 DELIMITER $$
-
 
 drop event IF EXISTS update_status;
 
