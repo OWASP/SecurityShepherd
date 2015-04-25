@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ReverseEngineer</string>
+    <string name="action_settings">Settings</string>
+	
+	<!-- Defind Strings for challenge 9, RE -->
+	<string name="titleIntro9">Reverse Engineering</string>
+	<string name="RIntro">Since you are running this app, you no doubt have access to the APK file for it. This means it is possible to reverse engineer the APK file in order to view the inner workings of this application. Viewing the code can reveal things like hard coded values. An application could rely on a hard coded password to unlock admin features. This can also be an eample of poor authorization.</string>
+	
+	<!-- Generic Application wide Strings -->
+	<string name="pword">Password</string>
+	<string name="uname">Username</string>
+	<string name="login">Login</string>
+	<string name="selectData">Select Data</string>
+	<string name="insertData">Insert Data</string>
+	<string name="status">status</string>	
+
+</resources>

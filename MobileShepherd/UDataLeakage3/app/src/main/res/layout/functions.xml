@@ -1,0 +1,67 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    android:weightSum="1">
+    <RelativeLayout android:id="@+id/Spacer"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="45dp">
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="0.64">
+
+        <RelativeLayout android:id="@+id/innerBox"
+            android:layout_width="500dip"
+            android:background="@drawable/box"
+            android:layout_height="fill_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true">
+
+
+
+            <ImageButton
+                android:id="@+id/bLotto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button"
+                android:filterTouchesWhenObscured="true"
+                android:text="Submit"
+                android:onClick="lottoClicked"
+                android:src="@drawable/sheepbutton"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+
+            <requestFocus />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#DA70D6"
+                android:text="Did you win the lotto today?"
+                android:id="@+id/tvLotto"
+                android:layout_above="@+id/bLotto"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#DA70D6"
+                android:text="Sorry, you did not win..."
+                android:id="@+id/tvResult"
+                android:visibility="invisible"
+                android:layout_below="@+id/bLotto"
+                android:layout_centerHorizontal="true" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>

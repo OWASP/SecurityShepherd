@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">UDataLeakage</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_license">License</string>
+    <string name = "action_disclaimer">Disclaimer</string>
+    <string name="action_exit">Exit</string>
+
+</resources>

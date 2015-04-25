@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CSInjection</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_license">License</string>
+    <string name = "action_disclaimer">Disclaimer</string>
+    <string name="action_exit">Exit</string>
+   
+	<!-- Defind Strings for challenge -->
+	<string name="titleIntro6">Client Side Injection</string>
+	<string name="BCDescrip">Client Side Injection occurrs when an App does not sanitize input from a user. In this case the App contains a login which uses a query to check if a row exists in a table. The data being passed into the query by the user is username and password. If the query returns a result, the user will be logged in. SQL Injection can be used to bypass this login and get the key.</string>
+	<string name="PFrag">CSinjection</string>
+	
+	<!-- Generic Application wide Strings -->
+	<string name="pword">Password</string>
+	<string name="uname">Username</string>
+	<string name="login">Login</string>
+	<string name="selectData">Select Data</string>
+	<string name="insertData">Insert Data</string>
+	<string name="status">status</string>	
+
+	<!--  Preferences -->
+	<string name="dialog_based_preferences">Server Preferences</string>
+		
+	<string name="server_title">Server Address</string>
+    <string name="server_summary">Enter Server address here</string>
+    <string name="server_dialog_title">Enter Server Address</string>
+    
+    <string name="database_title">Database Address</string>
+    <string name="database_summary">Enter database address here</string>
+    <string name="database_dialog_title">Enter Database Address</string>
+    
+	<string name="launch_preferences">App preferences</string>    
+	<string name="title_intent_preference">Restart Challenge</string>
+    <string name="summary_intent_preference">Restarts the current Challenge</string>    
+        
+	<string name="title_test_preference">Test Server Connection</string>
+    <string name="summary_test_preference">Tests the specified Server connection</string>    
+    
+    <string name="title_parent_preference">Enable Hints</string>
+    <string name="preference_attributes">Hints</string>
+    
+    <style name="ButtonText">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textColor">#ffffff</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_margin">3dp</item>
+    <item name="android:textSize">30dp</item>
+    <item name="android:shadowColor">#000000</item>
+    <item name="android:shadowDx">1</item>
+    <item name="android:shadowDy">1</item>
+    <item name="android:shadowRadius">2</item>
+</style>
+    
+	
+</resources>

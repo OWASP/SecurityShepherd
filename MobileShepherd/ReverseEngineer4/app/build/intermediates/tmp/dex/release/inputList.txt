@@ -1,0 +1,5 @@
+C:\Users\IBM_ADMIN\git\owaspSecurityShepherdLATAM\MobileShepherd\ReverseEngineer4\app\build\intermediates\classes\release
+C:\Users\IBM_ADMIN\git\owaspSecurityShepherdLATAM\MobileShepherd\ReverseEngineer4\app\build\intermediates\pre-dexed\release\support-annotations-21.0.3-f1eaa9d971f9a1547128c9e9abbaabfb6c473017.jar
+C:\Users\IBM_ADMIN\git\owaspSecurityShepherdLATAM\MobileShepherd\ReverseEngineer4\app\build\intermediates\pre-dexed\release\internal_impl-21.0.3-ff6058bb302f23112ea5304a60b7e1b380adec0a.jar
+C:\Users\IBM_ADMIN\git\owaspSecurityShepherdLATAM\MobileShepherd\ReverseEngineer4\app\build\intermediates\pre-dexed\release\classes-0553ca9551671a47da119846eaec782e166c0374.jar
+C:\Users\IBM_ADMIN\git\owaspSecurityShepherdLATAM\MobileShepherd\ReverseEngineer4\app\build\intermediates\pre-dexed\release\classes-cab971e0a28500a09988f5de13f9b1eb9be86bab.jar

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">InsecureData</string>
+    <string name="action_settings">Settings</string>
+
+
+    <!-- Defind Strings for challenge 2, IDS -->
+    <string name="titleIntro2">Insecure Data Storage</string>
+
+    <!-- Defind Strings for challenge 3, IDS2 -->
+    <string name="titleIntro3">Insecure Data Storage</string>
+    <string name="status2">Status</string>
+
+
+    <!-- Generic Application wide Strings -->
+    <string name="pword">Password</string>
+    <string name="uname">Username</string>
+    <string name="login">Login</string>
+    <string name="selectData">Select Data</string>
+    <string name="insertData">Insert Data</string>
+    <string name="status">status</string>
+
+</resources>

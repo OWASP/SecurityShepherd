@@ -1,0 +1,44 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    android:weightSum="1">
+<RelativeLayout android:id="@+id/Spacer"
+    android:layout_width="fill_parent"
+    android:orientation="horizontal"
+    android:layout_height="100dp"
+    android:layout_weight="0.08">
+</RelativeLayout>
+<RelativeLayout android:id="@+id/RelativeLayout01"
+android:layout_width="fill_parent"
+android:layout_height="100dp"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_weight="0.63">
+
+<RelativeLayout android:id="@+id/innerBox"
+    android:layout_width="500dip"
+    android:background="@drawable/box"
+    android:layout_height="fill_parent"
+    android:layout_centerHorizontal="true">
+
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="You are looking in the wrong place!"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#DA70D6"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+
+
+</RelativeLayout>
+
+</RelativeLayout>
+</LinearLayout>

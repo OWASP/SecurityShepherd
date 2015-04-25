@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+    <TabHost
+        android:id="@+id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#DA70D6" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <RelativeLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:textColor="#DA70D6" >
+
+                    <Button
+                        android:id="@+id/bLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button"
+                        android:text="@string/login"
+                        android:textColor="#fa000000"
+                        android:layout_centerVertical="true"
+                        android:layout_alignRight="@+id/etPass"
+                        android:layout_alignEnd="@+id/etPass"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_alignStart="@+id/etPass" />
+
+                     <TextView
+                         android:id="@+id/tvTitle"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignLeft="@+id/etName"
+                         android:layout_alignParentTop="true"
+                         android:layout_marginTop="36dp"
+                         android:text="@string/login"
+                         android:textAppearance="?android:attr/textAppearanceLarge"
+                         android:textColor="#DA70D6" />
+
+                     <EditText
+                         android:id="@+id/etName"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignLeft="@+id/etPass"
+                         android:layout_below="@+id/tvTitle"
+                         android:layout_marginTop="22dp"
+                         android:background="@drawable/edittext"
+                         android:ems="10"
+                         android:hint="Username"
+                         android:textAppearance="?android:attr/textAppearanceLarge"
+                         android:textColor="#DA70D6" >
+
+                         <requestFocus />
+                     </EditText>
+
+                     <EditText
+                         android:id="@+id/etPass"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_below="@+id/etName"
+                         android:layout_centerHorizontal="true"
+                         android:layout_marginTop="37dp"
+                         android:ems="10"
+                         android:background="@drawable/edittext"
+                         android:hint="Password"
+                         android:inputType="textPassword"
+                         android:textAppearance="?android:attr/textAppearanceLarge"
+                         android:textColor="#DA70D6" />
+                    
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#DA70D6" >
+
+                    <EditText
+                        android:id="@+id/etKey"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/edittext"
+                        android:layout_marginTop="58dp"
+                        android:hint="The key is only shown to authenticated users."
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:orientation="vertical" >
+
+                    <EditText
+                        android:id="@+id/miniNote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:background="@drawable/edittext"
+                        android:ems="10"
+                        android:hint="New Mini Note"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <ListView
+                        android:id="@+id/noteList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#DA70D6"
+                        android:background="@drawable/button"
+                        >
+                    </ListView>
+
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+</LinearLayout>

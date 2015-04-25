@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+        <style name="ShepherdTheme" parent="@android:style/Theme">
+            <item name="android:tabWidgetStyle">@style/ShepherdTabWidget</item>
+        </style>
+
+        <style name="ShepherdTabWidget" parent="@android:style/Widget.TabWidget">
+            <item name="android:textAppearance">@style/ShepherdTabWidgetText</item>
+        </style>
+
+        <style name="ShepherdTabWidgetText" parent="@android:style/TextAppearance.Widget.TabWidget">
+            <item name="android:textSize">20sp</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:textColor">#DA70D6</item>
+        </style>
+
+    </resources>
