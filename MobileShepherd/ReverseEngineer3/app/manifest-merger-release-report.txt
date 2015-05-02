@@ -27,7 +27,7 @@ MERGED from com.android.support:support-v4:21.0.3:15:5
 		ADDED from AndroidManifest.xml:8:9
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
-permission#com.mobshep.RE3.START_ACTIVITY
+permission#com.mobshep.RE4.START_ACTIVITY
 ADDED from AndroidManifest.xml:11:5
 	android:icon
 		ADDED from AndroidManifest.xml:13:9
@@ -49,7 +49,7 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 		ADDED from AndroidManifest.xml:20:9
 	android:theme
 		ADDED from AndroidManifest.xml:22:9
-activity#com.mobshep.reverseengineer3.Triangle
+activity#com.mobshep.reverseengineer4.Reverse_Engineering4
 ADDED from AndroidManifest.xml:23:9
 	android:label
 		ADDED from AndroidManifest.xml:25:13
@@ -59,9 +59,9 @@ ADDED from AndroidManifest.xml:23:9
 		ADDED from AndroidManifest.xml:26:13
 	android:name
 		ADDED from AndroidManifest.xml:24:13
-intent-filter#android.intent.category.DEFAULT+com.mobshep.reverseengineer3.Triangle
+intent-filter#android.intent.category.DEFAULT+com.mobshep.ReverseEngineer4.Reverse_Engineering4
 ADDED from AndroidManifest.xml:28:13
-action#com.mobshep.reverseengineer3.Triangle
+action#com.mobshep.ReverseEngineer4.Reverse_Engineering4
 ADDED from AndroidManifest.xml:29:17
 	android:name
 		ADDED from AndroidManifest.xml:29:25
@@ -69,9 +69,9 @@ category#android.intent.category.DEFAULT
 ADDED from AndroidManifest.xml:31:17
 	android:name
 		ADDED from AndroidManifest.xml:31:27
-activity#com.mobshep.reverseengineer3.splash
+activity#com.mobshep.reverseengineer4.Splash
 ADDED from AndroidManifest.xml:34:9
-	android:theme
+	android:label
 		ADDED from AndroidManifest.xml:36:13
 	android:name
 		ADDED from AndroidManifest.xml:35:13

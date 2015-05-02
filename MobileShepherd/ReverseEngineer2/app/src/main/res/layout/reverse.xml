@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"     
+    android:id="@+id/background" 
+    android:background="@drawable/background">
+
+           
+                <RelativeLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                     <Button
+                         android:id="@+id/bRevealKey"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignParentTop="true"
+                         android:layout_centerHorizontal="true"
+                         android:layout_marginTop="140dp"
+                         android:text="Reveal Key"
+                         android:background="@drawable/button"
+                          />
+
+                     <EditText
+                         android:id="@+id/etPassword"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignBottom="@+id/bRevealKey"
+                         android:layout_centerHorizontal="true"
+                         android:layout_marginBottom="68dp"
+                         android:ems="10"
+                         android:background="@drawable/edittext"
+                         android:inputType="textPassword"
+                         android:hint="Password"
+                         android:textColor="#DA70D6" />
+
+                     <TextView
+                         android:id="@+id/tvKey1"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_above="@+id/etPassword"
+                         android:layout_centerHorizontal="true"
+                         android:layout_marginBottom="16dp"
+                         android:text="Admin Password:"
+                         android:textColor="#DA70D6" />
+                     
+                </RelativeLayout>
+
+  
+</LinearLayout>

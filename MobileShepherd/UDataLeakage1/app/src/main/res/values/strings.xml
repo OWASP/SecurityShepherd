@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">UDataLeakage1</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_license">License</string>
+    <string name = "action_disclaimer">Disclaimer</string>
+    <string name="action_exit">Exit</string>
+
+    <!--  Preferences -->
+    <string name="dialog_based_preferences">Server Preferences</string>
+
+    <string name="server_title">Server Address</string>
+    <string name="server_summary">Enter Server address here</string>
+    <string name="server_dialog_title">Enter Server Address</string>
+
+    <string name="database_title">Database Address</string>
+    <string name="database_summary">Enter database address here</string>
+    <string name="database_dialog_title">Enter Database Address</string>
+
+    <string name="launch_preferences">App preferences</string>
+    <string name="title_intent_preference">Restart Challenge</string>
+    <string name="summary_intent_preference">Restarts the current Challenge</string>
+
+    <string name="title_test_preference">Test Server Connection</string>
+    <string name="summary_test_preference">Tests the specified Server connection</string>
+
+    <string name="title_parent_preference">Enable Hints</string>
+    <string name="preference_attributes">Hints</string>
+
+
+</resources>

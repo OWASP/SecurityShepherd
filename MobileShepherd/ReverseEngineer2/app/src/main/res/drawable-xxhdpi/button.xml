@@ -16,7 +16,6 @@
                 android:bottom="10dp" />
         </shape>
     </item>
-
     <item>
         <shape>
             <gradient

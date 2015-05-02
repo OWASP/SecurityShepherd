@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.mobshep.reverseengineer2"
+        applicationId "com.mobshep.reverseengineer3"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
@@ -14,6 +14,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
