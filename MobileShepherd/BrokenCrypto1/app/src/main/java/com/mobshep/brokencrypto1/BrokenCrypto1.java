@@ -14,7 +14,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -37,20 +40,19 @@ import android.widget.Button;
 
 public class BrokenCrypto1 extends Activity {
 
-	Button messageOne, messageTwo, messageThree;
 
-	/*
-	Toast copied = Toast.makeText(BrokenCrypto2.this,
-			"Message Copied to Clipboard!", Toast.LENGTH_SHORT);
-	*/
+    Button messageOne, messageTwo, messageThree;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(com.mobshep.brokencrypto1.R.layout.broken);
 		referenceXML();
 
-		String destinationDir = "/data/data/" + getPackageName() + "/encrypt/";
+
+
+        String destinationDir = "/data/data/" + getPackageName() + "/encrypt/";
 
 		String destinationPath = destinationDir + "desKey";
 
@@ -78,16 +80,7 @@ public class BrokenCrypto1 extends Activity {
 
 	}
 
-	private void referenceXML() {
-		// TODO Auto-generated method stub
-		messageOne = (Button) findViewById(com.mobshep.brokencrypto1.R.id.Message1);
-		messageTwo = (Button) findViewById(com.mobshep.brokencrypto1.R.id.Message2);
-		messageThree = (Button) findViewById(com.mobshep.brokencrypto1.R.id.Message3);
-		messageOne.setVisibility(View.INVISIBLE);
-		messageTwo.setVisibility(View.INVISIBLE);
-		messageThree.setVisibility(View.INVISIBLE);
 
-	}
 
 	private void startTimerOne() {
 		final Handler handler = new Handler();
@@ -172,11 +165,13 @@ public class BrokenCrypto1 extends Activity {
 		ClipData clip = ClipData.newPlainText("message1", copiedMessage);
 		clipboard.setPrimaryClip(clip);
 
-	//	copied.show();
+	    showToast();
 
 	}
 
-	public void copyMessage2(View v) {
+
+
+    public void copyMessage2(View v) {
 
 		String copiedMessage2 = messageTwo.getText().toString();
 
@@ -184,7 +179,7 @@ public class BrokenCrypto1 extends Activity {
 		ClipData clip = ClipData.newPlainText("message2", copiedMessage2);
 		clipboard.setPrimaryClip(clip);
 
-	//	copied.show();
+        showToast();
 
 	}
 
@@ -196,7 +191,27 @@ public class BrokenCrypto1 extends Activity {
 		ClipData clip = ClipData.newPlainText("message3", copiedMessage3);
 		clipboard.setPrimaryClip(clip);
 
-		// copied.show();
+        showToast();
 	}
+
+    private void showToast() {
+
+        Toast copied = Toast.makeText(BrokenCrypto1.this,
+                "Message copied to clipboard.", Toast.LENGTH_LONG);
+        copied.show();
+
+    }
+
+    private void referenceXML() {
+        // TODO Auto-generated method stub
+        messageOne = (Button) findViewById(com.mobshep.brokencrypto1.R.id.Message1);
+        messageTwo = (Button) findViewById(com.mobshep.brokencrypto1.R.id.Message2);
+        messageThree = (Button) findViewById(com.mobshep.brokencrypto1.R.id.Message3);
+        messageOne.setVisibility(View.INVISIBLE);
+        messageTwo.setVisibility(View.INVISIBLE);
+        messageThree.setVisibility(View.INVISIBLE);
+
+
+    }
 
 }
