@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/mainLayout"
+    android:background="@mipmap/background"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+
+    <RelativeLayout android:id="@+id/Spacer"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="1000dp"
+        android:layout_weight="0.08">
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="400dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="0.31">
+
+
+
+    <RelativeLayout android:id="@+id/innerBox"
+        android:background="@xml/box"
+        android:layout_width="500dip"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true">
+
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:hint="Username"
+            android:background="@xml/edittext"
+            android:textColor="#DA70D6"
+            android:textColorHint="#FFFFFF"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#FFFFFF"
+            android:hint="Password"
+            android:textColor="#DA70D6"
+            android:background="@xml/edittext"
+            android:inputType="textPassword"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/etUsername"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="100px"
+            android:layout_height="wrap_content"
+            android:background="@xml/button"
+            android:onClick="loginClicked"
+            android:text="Submit"
+            android:layout_below="@+id/cbReveal"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="26dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Details"
+        android:background="@xml/checkbox"
+        android:textColor="#DA70D6"
+        android:id="@+id/cbReveal"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+</RelativeLayout>
+
+</RelativeLayout>

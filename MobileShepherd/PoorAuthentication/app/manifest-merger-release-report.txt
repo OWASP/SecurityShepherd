@@ -125,9 +125,9 @@ ADDED from AndroidManifest.xml:61:9
 		ADDED from AndroidManifest.xml:64:13
 	android:name
 		ADDED from AndroidManifest.xml:62:13
-intent-filter#android.intent.category.DEFAULT+com.mobshep.PA.Main
+intent-filter#android.intent.category.DEFAULT+com.mobshep.PoorAuthentication.Main
 ADDED from AndroidManifest.xml:66:13
-action#com.mobshep.PA.Main
+action#com.mobshep.PoorAuthentication.Main
 ADDED from AndroidManifest.xml:67:17
 	android:name
 		ADDED from AndroidManifest.xml:67:25

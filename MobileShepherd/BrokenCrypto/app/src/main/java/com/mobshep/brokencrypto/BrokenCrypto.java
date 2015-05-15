@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 /**
@@ -185,7 +186,7 @@ public class BrokenCrypto extends Activity {
 		ClipData clip = ClipData.newPlainText("message1", copiedMessage);
 		clipboard.setPrimaryClip(clip);
 
-		//copied.show();
+        showToast();
 		
 	}
 
@@ -197,8 +198,10 @@ public class BrokenCrypto extends Activity {
 		ClipData clip = ClipData.newPlainText("message2", copiedMessage2);
 		clipboard.setPrimaryClip(clip);
 
-		
-	}
+        showToast();
+
+
+    }
 
 	public void copyMessage3(View v) {
 
@@ -207,9 +210,11 @@ public class BrokenCrypto extends Activity {
 		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		ClipData clip = ClipData.newPlainText("message3", copiedMessage3);
 		clipboard.setPrimaryClip(clip);
-		
-	
-	}
+
+        showToast();
+
+
+    }
 
 	public void copyMessage4(View v) {
 
@@ -218,9 +223,11 @@ public class BrokenCrypto extends Activity {
 		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		ClipData clip = ClipData.newPlainText("message4", copiedMessage4);
 		clipboard.setPrimaryClip(clip);
-		
-	
-	}
+
+        showToast();
+
+
+    }
 
 	public void copyMessage5(View v) {
 
@@ -229,7 +236,17 @@ public class BrokenCrypto extends Activity {
 		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		ClipData clip = ClipData.newPlainText("message5", copiedMessage5);
 		clipboard.setPrimaryClip(clip);
-	
+
+        showToast();
+
 	}
+
+    private void showToast() {
+
+        Toast copied = Toast.makeText(BrokenCrypto.this,
+                "Message copied to clipboard.", Toast.LENGTH_LONG);
+        copied.show();
+
+    }
 
 }

@@ -1,5 +1,16 @@
 package com.mobshep.brokencrypto3;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
+import net.sqlcipher.database.SQLiteDatabase;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -7,212 +18,198 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.widget.Button;
 
-public class BrokenCrypto3 extends Activity {
+public class BrokenCrypto3 extends ActionBarActivity {
 
-	Button messageOne, messageTwo, messageThree;
-	
-	/*
-	Toast copied = Toast.makeText(BrokenCrypto3.this,
-			"Message Copied to Clipboard!", Toast.LENGTH_SHORT);
-*/
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.broken);
-		
-		referenceXML();
-		startTimerOne();
-		startTimerTwo();
-		startTimerThree();
-		
-		String destinationDir = "/data/data/" +getPackageName() + "/encrypt/";
-		
-		String destinationPath1 = destinationDir + "key1";
-		
-		File f = new File(destinationPath1);
-		
-		if (!f.exists()){
-			File directory = new File(destinationDir);
-			directory.mkdirs();
-			//assets members.db -> /databases/
-			
-			try{
-				copyKey(getBaseContext().getAssets().open("key1"), new FileOutputStream(destinationPath1));
-			}catch(FileNotFoundException e){
-				e.printStackTrace();
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-		}
-						
-			String destinationPath2 = destinationDir + "key2";
-			
-			File g = new File(destinationPath2);
-			
-			if (!g.exists()){
-				File directory2 = new File(destinationDir);
-				directory2.mkdirs();
-				//assets members.db -> /databases/
-				
-				try{
-					copyKey(getBaseContext().getAssets().open("key2"), new FileOutputStream(destinationPath2));
-				}catch(FileNotFoundException e){
-					e.printStackTrace();
-				}catch(IOException e){
-					e.printStackTrace();
-				}
-			}
-				
-				String destinationPath3 = destinationDir + "key3";
-				
-				File e = new File(destinationPath3);
-				
-				if (!e.exists()){
-					File directory3 = new File(destinationDir);
-					directory3.mkdirs();
-					//assets members.db -> /databases/
-					
-					try{
-						copyKey(getBaseContext().getAssets().open("key3"), new FileOutputStream(destinationPath3));
-					}catch(FileNotFoundException e1){
-						e1.printStackTrace();
-					}catch(IOException e1){
-						e1.printStackTrace();
-					}
-				}
-			
-		
-		
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_broken_crypto3);
 
-	private void referenceXML() {
-		// TODO Auto-generated method stub
-		messageOne = (Button) findViewById(R.id.Message1);
-		messageTwo = (Button) findViewById(R.id.Message2);
-		messageThree = (Button) findViewById(R.id.Message3);
-		messageOne.setVisibility(View.INVISIBLE);
-		messageTwo.setVisibility(View.INVISIBLE);
-		messageThree.setVisibility(View.INVISIBLE);
-	}
+        generateKey();
+        generateDB(this);
 
-	private void startTimerOne() {
-		final Handler handler = new Handler();
-		Runnable runnable = new Runnable() {
-			public void run() {
+        String destinationDir = this.getFilesDir().getParentFile().getPath() + "/crypto/";
 
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				handler.post(new Runnable() {
-					public void run() {
-						messageOne.setVisibility(View.VISIBLE);
-					}
-				});
+        String destinationPath = destinationDir + "key.txt";
 
-			}
-		};
-		new Thread(runnable).start();
-	}
+        File f = new File(destinationPath);
 
-	private void startTimerTwo() {
-		final Handler handler = new Handler();
-		Runnable runnable = new Runnable() {
-			public void run() {
+        if (!f.exists()) {
+            File directory = new File(destinationDir);
+            directory.mkdirs();
 
-				try {
-					Thread.sleep(8000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				handler.post(new Runnable() {
-					public void run() {
-						messageTwo.setVisibility(View.VISIBLE);
-					}
-				});
+            try {
+                copyDatabase(getBaseContext().getAssets().open("key.txt"),
+                        new FileOutputStream(destinationPath));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-			}
-		};
-		new Thread(runnable).start();
-	}
+        }
+    }
 
-	private void startTimerThree() {
-		final Handler handler = new Handler();
-		Runnable runnable = new Runnable() {
-			public void run() {
+    public void copyDatabase(InputStream iStream, OutputStream oStream)
+            throws IOException {
+        byte[] buffer = new byte[1024];
+        int i;
+        while ((i = iStream.read(buffer)) > 0) {
+            oStream.write(buffer, 0, i);
+        }
+        iStream.close();
+        oStream.close();
+    }
 
-				try {
-					Thread.sleep(11000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				handler.post(new Runnable() {
-					public void run() {
-						messageThree.setVisibility(View.VISIBLE);
-					}
-				});
 
-			}
-		};
-		new Thread(runnable).start();
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_broken_crypto4, menu);
+        return true;
+    }
 
-	public void copyKey(InputStream iStream, OutputStream oStream)
-			throws IOException {
-		byte[] buffer = new byte[1024];
-		int i;
-		while ((i = iStream.read(buffer)) > 0) {
-			oStream.write(buffer, 0, i);
-		}
-		iStream.close();
-		oStream.close();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-	}
-	
-	public void copyMessage1(View v) {
+        //noinspection SimplifiableIfStatement
 
-		String copiedMessage = messageOne.getText().toString();
+        if (id == R.id.action_license) {
 
-		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		ClipData clip = ClipData.newPlainText("message1", copiedMessage);
-		clipboard.setPrimaryClip(clip);
 
-		//copied.show();
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
 
-	}
+            // set title
+            alertDialogBuilder.setTitle("License");
 
-	public void copyMessage2(View v) {
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("This App is part of the Security Shepherd Project. The Security Shepherd project is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. The Security Shepherd project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with the Security Shepherd project.  If not, see http://www.gnu.org/licenses.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close
+                            // current activity
+                            dialog.cancel();
+                        }
+                    });
 
-		String copiedMessage2 = messageTwo.getText().toString();
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
 
-		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		ClipData clip = ClipData.newPlainText("message2", copiedMessage2);
-		clipboard.setPrimaryClip(clip);
+            // show it
+            alertDialog.show();
 
-		//copied.show();
+            return true;
+        }
 
-	}
+        if (id == R.id.action_exit)
+        {
+            finish();
+        }
 
-	public void copyMessage3(View v) {
+        if (id == R.id.action_info) {
 
-		String copiedMessage3 = messageThree.getText().toString();
 
-		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		ClipData clip = ClipData.newPlainText("message3", copiedMessage3);
-		clipboard.setPrimaryClip(clip);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
 
-		//copied.show();
-	}
+            // set title
+            alertDialogBuilder.setTitle("Information");
 
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("This App has encrypted it's data using SQLCipher! This will stop hackers from stealing data on this App.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close
+                            // current activity
+                            dialog.cancel();
+                        }
+                    });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+            return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+    public void generateDB(Context context) {
+        try {
+            SQLiteDatabase.loadLibs(context);
+
+            String dbPath = context.getDatabasePath("key.db").getPath();
+
+            File dbPathFile = new File(dbPath);
+            if (!dbPathFile.exists())
+                dbPathFile.getParentFile().mkdirs();
+
+            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
+                    "Pa88w0rd1234", null);
+
+            db.execSQL("DROP TABLE IF EXISTS key");
+            db.execSQL("CREATE TABLE key(key VARCHAR)");
+
+            db.execSQL("INSERT INTO key VALUES('The Key is ShaveTheSkies.')");
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            Toast error = Toast.makeText(BrokenCrypto3.this,
+                    "An error occurred.", Toast.LENGTH_LONG);
+            error.show();
+
+        }
+
+    }
+
+    public void generateKey()
+    {
+        String destinationDir = this.getFilesDir().getParentFile().getPath() + "/crypto/encrypt/";
+
+        String destinationPath = destinationDir + "key";
+
+
+        File f = new File(destinationPath);
+
+        if (!f.exists()) {
+            File directory = new File(destinationDir);
+            directory.mkdirs();
+
+            try {
+                copyKey(getBaseContext().getAssets().open("key"),
+                        new FileOutputStream(destinationPath));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void copyKey(InputStream iStream, OutputStream oStream)
+            throws IOException {
+        byte[] buffer = new byte[1024];
+        int i;
+        while ((i = iStream.read(buffer)) > 0) {
+            oStream.write(buffer, 0, i);
+        }
+        iStream.close();
+        oStream.close();
+    }
 }

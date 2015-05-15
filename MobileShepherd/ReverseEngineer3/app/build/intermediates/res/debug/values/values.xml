@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
     <attr format="reference" name="drawerArrowStyle"/>
     <attr format="dimension" name="height"/>
@@ -121,11 +121,11 @@
     <dimen name="abc_text_size_subtitle_material_toolbar">16dp</dimen>
     <dimen name="abc_text_size_title_material">20sp</dimen>
     <dimen name="abc_text_size_title_material_toolbar">20dp</dimen>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
     <item name="dialog_fixed_height_major" type="dimen">80%</item>
     <item name="dialog_fixed_height_minor" type="dimen">100%</item>
@@ -143,10 +143,10 @@
     <item name="split_action_bar" type="id"/>
     <item name="up" type="id"/>
     <integer name="abc_max_action_buttons">2</integer>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/src/main/res/values/strings.xml -->
     <eat-comment/>
-    <string name="RIntro">In an attempt to prevent a malicious user from reverse engineering an APK and reading it\'s contents a developer may obsfucate the code. Obsfucation involves making the code unreadable. This adds another layer of defense to hard coded values but the issue of hard coded values is still present. If an attacker can undo the obsfucation or detect patterns, the attacker could gain an understanding of the code and therefore find any hard coded passwords. </string>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
+    <string name="RIntro">Since you are running this app, you no doubt have access to the APK file for it. This means it is possible to reverse engineer the APK file in order to view the inner workings of this application. Viewing the code can reveal things like hard coded values. An application could rely on a hard coded password to unlock admin features. This can also be an eample of poor authorization.</string>
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
     <string name="abc_action_bar_home_description">Navigate home</string>
     <string name="abc_action_bar_home_description_format">%1$s, %2$s</string>
@@ -164,18 +164,18 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="action_settings">Settings</string>
-    <string name="app_name">ReverseEngineer3</string>
+    <string name="app_name">ReverseEngineer4</string>
     <string name="insertData">Insert Data</string>
     <string name="login">Login</string>
     <string name="pword">Password</string>
     <string name="selectData">Select Data</string>
     <string name="status">status</string>
-    <string name="titleIntro9">Reverse Engineering 3</string>
+    <string name="titleIntro9">Reverse Engineering</string>
     <string name="uname">Username</string>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppBaseTheme" parent="android:Theme.Holo">
         <!--
@@ -188,7 +188,7 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
     </style>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
     <style name="Base.TextAppearance.AppCompat" parent="android:TextAppearance">
         <item name="android:textColor">?android:textColorPrimary</item>
@@ -1108,7 +1108,7 @@
     <style name="RtlOverlay.Widget.AppCompat.SearchView.MagIcon" parent="android:Widget">
         <item name="android:layout_marginLeft">@dimen/abc_dropdownitem_text_padding_left</item>
     </style>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="ShepherdTabWidget" parent="@android:style/Widget.TabWidget">
         <item name="android:textAppearance">@style/ShepherdTabWidgetText</item>
@@ -1127,7 +1127,7 @@
         <item name="android:textColor">#DA70D6</item>
         <item name="android:typeface">monospace</item>
     </style>
-    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
+    <!-- From: file:/C:/Users/IBM_ADMIN/git/owaspSecurityShepherdLATAM/MobileShepherd/ReverseEngineer4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
     <style name="TextAppearance.AppCompat" parent="Base.TextAppearance.AppCompat"/>
     <style name="TextAppearance.AppCompat.Body1" parent="Base.TextAppearance.AppCompat.Body1"/>

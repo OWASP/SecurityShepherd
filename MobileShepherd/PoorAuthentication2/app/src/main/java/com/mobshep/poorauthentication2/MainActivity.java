@@ -1,188 +1,149 @@
 package com.mobshep.poorauthentication2;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
-import java.io.*;
-import java.util.Arrays;
-
-import android.widget.Toast;
+import android.widget.TextView;
 
 
-/**
- * This file is part of the Security Shepherd Project.
- *
- * The Security Shepherd project is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
- *
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
- *
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author Sean Duggan
- */
+public class MainActivity extends ActionBarActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-public class MainActivity extends Activity {
+    /**
+     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     */
+    private NavigationDrawerFragment mNavigationDrawerFragment;
 
-
-    private static final String[] authCodes = {"784921", "425925", "257943", "524215", "624665"};
-
-
-    Button login;
-    AutoCompleteTextView authCode;
+    /**
+     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+     */
+    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        referenceXML();
-        String destinationDir = this.getFilesDir().getParentFile().getPath() + "/cache/";
 
-        String destinationPath = destinationDir + "usedAuthCodes";
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();
 
-        File f = new File(destinationPath);
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+    }
 
-        if (!f.exists()) {
-            File directory = new File(destinationDir);
-            directory.mkdirs();
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        // update the main content by replacing fragments
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .commit();
+    }
 
-            try {
-                copyCache(getBaseContext().getAssets().open("usedAuthCodes"),
-                        new FileOutputStream(destinationPath));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+    public void onSectionAttached(int number) {
+        switch (number) {
+            case 1:
+                mTitle = getString(R.string.title_section1);
+                break;
+            case 2:
+                mTitle = getString(R.string.title_section2);
+                break;
+            case 3:
+                mTitle = getString(R.string.title_section3);
+                break;
         }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, authCodes);
-        authCode.setAdapter(adapter);
-
-
     }
 
-    public void loginClicked(View v) {
-
-        if (checkTheCode() == true) {
-            Intent goToKey = new Intent(this, LoggedIn.class);
-            startActivity(goToKey);
-        } else {
-            showError();
-        }
-
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
     }
 
 
-    private void showError() {
-        Toast loginFailed = Toast.makeText(MainActivity.this,
-                "Invalid Credentials!", Toast.LENGTH_LONG);
-        loginFailed.show();
-
-    }
-
-
-    public boolean checkTheCode() {
-        String codeString = authCode.getText().toString();
-
-        int codeEntered = Integer.parseInt(codeString);
-
-
-        //rule 1: auth code must be an odd number
-        //rule 2: auth code must contain a 2
-        //rule 3: auth code must contain a 4
-        //rule 4: must be a six digit number
-        //rule 5: number must not have been used before
-
-        boolean isNumberOdd = false;
-        boolean notUsedBefore = false;
-        boolean contains2 = false;
-        boolean contains4 = false;
-        boolean isSixNumbers = false;
-
-        //requires fixing
-        // if (codeString.contentEquals("784921") || codeString.contentEquals("425925") || codeString.contentEquals("257943") || codeString.contentEquals("722347") || codeString.contentEquals("524215") || codeString.contentEquals("924315") || codeString.contentEquals("624665")) {
-
-
-        int mod = codeEntered % 2;
-        {
-
-            if (mod != 0) {
-
-                isNumberOdd = true;
-                Log.i("LOG", "Number is odd...");
-
-                if (String.valueOf(codeString).contains("2")) {
-
-                    contains2 = true;
-                    Log.i("LOG", "Number contains 2...");
-
-
-                    if (String.valueOf(codeString).contains("4")) {
-
-                        contains4 = true;
-                        Log.i("LOG", "Number contains 4...");
-
-
-                        if ((authCode.length() == 6)) {
-                            isSixNumbers = true;
-                            Log.i("LOG", "Number contains six digits...");
-
-
-                            if (isNumberOdd == true && contains2 == true && contains4 == true && isSixNumbers == true) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-
-                        } else {
-                            return false;
-                        }
-
-                    } else {
-                        return false;
-                    }
-
-                } else {
-                    return false;
-                }
-
-            }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            getMenuInflater().inflate(R.menu.main, menu);
+            restoreActionBar();
             return true;
         }
+        return super.onCreateOptionsMenu(menu);
     }
 
-    public void referenceXML() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-        login = (Button) findViewById(R.id.bLogin);
-        authCode = (AutoCompleteTextView) findViewById(R.id.etCode);
-
-    }
-
-
-    public void copyCache(InputStream iStream, OutputStream oStream)
-            throws IOException {
-        byte[] buffer = new byte[1024];
-        int i;
-        while ((i = iStream.read(buffer)) > 0) {
-            oStream.write(buffer, 0, i);
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
         }
-        iStream.close();
-        oStream.close();
+
+        return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((MainActivity) activity).onSectionAttached(
+                    getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
 
 }

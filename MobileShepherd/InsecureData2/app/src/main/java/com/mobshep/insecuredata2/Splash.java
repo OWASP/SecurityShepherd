@@ -35,13 +35,13 @@ public class Splash extends Activity {
 			public void run() {
 				// catch exceptions
 				try {
-					sleep(2000);
+					sleep(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} finally
 
 				{
-					Intent gotoMain = new Intent(Splash.this, Insecure_Data_Storage2.class);
+					Intent gotoMain = new Intent(Splash.this,Insecure_Data_Storage2.class);
 					startActivity(gotoMain);
 				}
 

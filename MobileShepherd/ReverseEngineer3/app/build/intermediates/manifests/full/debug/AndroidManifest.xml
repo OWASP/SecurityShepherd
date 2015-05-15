@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mobshep.reverseengineer3"
+    package="com.mobshep.reverseengineer4"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -9,7 +9,7 @@
         android:targetSdkVersion="21" />
 
     <permission
-        android:name="com.mobshep.RE3.START_ACTIVITY"
+        android:name="com.mobshep.RE4.START_ACTIVITY"
         android:icon="@drawable/ic_launcher"
         android:logo="@drawable/ic_launcher"
         android:protectionLevel="dangerous" >
@@ -21,19 +21,19 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.mobshep.reverseengineer3.Triangle"
+            android:name="com.mobshep.reverseengineer4.Reverse_Engineering4"
             android:label="@string/app_name"
-            android:permission="com.app.mobshep.RE3.START_ACTIVITY"
+            android:permission="com.app.mobshep.RE4.START_ACTIVITY"
             android:theme="@style/ShepherdTheme" >
             <intent-filter>
-                <action android:name="com.mobshep.reverseengineer3.Triangle" />
+                <action android:name="com.mobshep.ReverseEngineer4.Reverse_Engineering4" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mobshep.reverseengineer3.splash"
-            android:theme="@style/ShepherdTheme" >
+            android:name="com.mobshep.reverseengineer4.Splash"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

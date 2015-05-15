@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">InsecureData1</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Generic Application wide Strings -->
+    <string name="pword">Password</string>
+    <string name="uname">Username</string>
+    <string name="login">Login</string>
+    <string name="selectData">Select Data</string>
+    <string name="insertData">Insert Data</string>
+    <string name="status">status</string>
+
+</resources>

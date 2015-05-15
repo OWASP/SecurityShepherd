@@ -64,7 +64,7 @@
             android:persistent="true"
             android:theme="@style/ShepherdTheme" >
             <intent-filter>
-                <action android:name="com.mobshep.PA.Main" />
+                <action android:name="com.mobshep.PoorAuthentication.Main" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

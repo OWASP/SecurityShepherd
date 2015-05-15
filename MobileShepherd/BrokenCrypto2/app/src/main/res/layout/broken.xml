@@ -2,8 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@drawable/background"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -25,9 +25,9 @@
             android:id="@+id/Message1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="copyMessage1"
             android:layout_marginTop="38dp"
             android:background="@drawable/purple"
-            android:onClick="copyMessage1"
             android:text="@string/message1"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textIsSelectable="true" />
@@ -36,9 +36,9 @@
             android:id="@+id/Message2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="copyMessage2"
             android:layout_marginTop="39dp"
             android:background="@drawable/green"
-            android:onClick="copyMessage2"
             android:text="@string/message2"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textIsSelectable="true" />
@@ -48,13 +48,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="38dp"
-            android:background="@drawable/purple"
             android:onClick="copyMessage3"
+            android:background="@drawable/purple"
             android:text="@string/message3"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textIsSelectable="true" />
-
-
     </LinearLayout>
 
 </ScrollView>
