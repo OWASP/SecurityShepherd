@@ -35,6 +35,16 @@
 		<servlet-name>/login</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/mobileLogin</servlet-name>
+		<servlet-class>servlets.MobileLogin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/mobileLogin</servlet-name>
+		<url-pattern>/mobileLogin</url-pattern>
+	</servlet-mapping>
+	
 
 	<servlet>
 		<servlet-name>/register</servlet-name>
