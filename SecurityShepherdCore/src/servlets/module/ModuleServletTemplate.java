@@ -79,7 +79,6 @@ extends HttpServlet
 				//If you want to call a database function, this section if for you. All the way up until if(returnKey)
 				//Get Running Context of Application to make Database Call with
 				String applicationRoot = getServletContext().getRealPath("");
-				log.debug("Servlet root = " + applicationRoot );
 				String output = doLevelSqlStuff(applicationRoot, aUserName);
 				log.debug("output returned is " + output);
 				String htmlOutput = "<h2 class='title'>Search Results</h2>";
