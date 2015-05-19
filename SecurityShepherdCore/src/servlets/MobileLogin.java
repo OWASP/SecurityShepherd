@@ -58,9 +58,7 @@ public class MobileLogin extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		PrintWriter out = response.getWriter(); 
 		out.print(getServletInfo());
-		try 
-		{
-		   response.setContentType("application/json"); 
+		response.setContentType("application/json"); 
 		   // params
 		   String p_login = request.getParameter("login");
 		   log.debug("userName: " + p_login);
@@ -123,8 +121,6 @@ public class MobileLogin extends HttpServlet
 		   }
 		   else
 		   {
-			   String loginFailed = "Invalid User name or Password.";
-			   ses.setAttribute("loginFailed", loginFailed);
 				//Lagging Response
 				try 
 				{
@@ -134,18 +130,9 @@ public class MobileLogin extends HttpServlet
 				{
 				    Thread.currentThread().interrupt();
 				}
-			   response.sendRedirect("login.jsp");
+			   out.write("ERROR: Could not Authenticate");
 			   return;
-		   }
-		}
-		catch (IOException e)
-		{
-			String loginFailed = "Incorrect User name or Password";
-			ses.setAttribute("loginFailed", loginFailed);
-			log.error("Failed to Process Request: " + e.toString());
-		}
-		log.debug("**** End servlets.Login ***");
-		
+		   }	
 	}
 	
 	//Handy 
