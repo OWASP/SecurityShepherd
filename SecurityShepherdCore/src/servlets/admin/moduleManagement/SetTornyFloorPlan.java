@@ -59,7 +59,7 @@ public class SetTornyFloorPlan extends HttpServlet
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter) && ModulePlan.isOpenFloor())
 			{
-				ModulePlan.setTornyFloor();
+				ModulePlan.setTournyFloor();
 				log.debug("Tournament Mode enabled");
 				out.write("<h2 class='title'>Tournament Mode Enabled</h2>" +
 				"<p>Security Shepherd User is now using the tournament floor plan</p>");
