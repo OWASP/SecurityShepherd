@@ -178,8 +178,8 @@ public class SessionManagement7 extends HttpServlet
 	}
 	
 	private static String htmlStart = "<table>";
-	private static String htmlEnd = "<tr><td>Username:</td><td><input type='text' id='subUserName'/></td></tr>" +
-			"<tr><td>Password:</td><td><input type='password' id='subUserPassword'/></td></tr>" +
+	private static String htmlEnd = "<tr><td>Username:</td><td><input type='text' id='subName'/></td></tr>" +
+			"<tr><td>Password:</td><td><input type='password' id='subPassword'/></td></tr>" +
 			"<tr><td colspan='2'><div id='submitButton'><input type='submit' value='Sign In'/>" +
 			"</div></td></tr>" +
 			"</table>";
