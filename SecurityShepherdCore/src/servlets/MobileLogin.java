@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import utils.Hash;
@@ -94,6 +93,7 @@ public class MobileLogin extends HttpServlet
 				   log.debug("Setting CSRF cookie");
 				   csrfToken = Hash.randomString();
 				   Cookie token = new Cookie("token", csrfToken);
+				   token.setSecure(true);
 				   response.addCookie(token);
 				   authenticated = true;
 				   

@@ -43,6 +43,7 @@ import dbProcs.Database;
 public class SqlInjection5 extends HttpServlet
 {
 	private static final String levelName = "SQLi C5 Shop";
+	private static String levelHash = "8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62";
 	private static String levelSolution = "343f2e424d5d7a2eff7f9ee5a5a72fd97d5a19ef7bff3ef2953e033ea32dd7ee";
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection5.class);
@@ -133,7 +134,7 @@ public class SqlInjection5 extends HttpServlet
 				rageCost = rageCost - (rageCost * (perCentOffRage/100));
 				notBadCost = notBadCost - (notBadCost * (perCentOffNotBad/100));
 				trollCost = trollCost - (trollCost * (perCentOffTroll/100));
-				int finalCost = megustaCost + rageCost + notBadAmount + trollCost;
+				int finalCost = megustaCost + rageCost + notBadCost + trollCost;
 				
 				//Output Order
 				htmlOutput = "<h3>Order Complete</h3>"

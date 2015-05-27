@@ -62,59 +62,51 @@ public class Login extends HttpServlet
 		 
 		   boolean mustRedirect = false;
 		   
-		   if (ses.isNew()) 
+		   // session is not new, try to set credentials
+		   p_login = nvl(p_login, (String)ses.getAttribute("login"));
+		   p_pwd = nvl(p_pwd, (String)ses.getAttribute("password"));
+		   // get credentials
+		   log.debug("Getting ApplicationRoot");
+		   String ApplicationRoot = getServletContext().getRealPath("");
+		   log.debug("Servlet root = " + ApplicationRoot );
+		   try
 		   {
-			   // new session has nothing, set it up
-			   ses.setAttribute("login", nvl(p_login));
-			   ses.setAttribute("password", nvl(p_pwd));
-		   }
-		   else 
-		   {
-			   // session is not new, try to set credentials
-			   p_login = nvl(p_login, (String)ses.getAttribute("login"));
-			   p_pwd = nvl(p_pwd, (String)ses.getAttribute("password"));
-			   // get credentials
-			   log.debug("Getting ApplicationRoot");
-			   String ApplicationRoot = getServletContext().getRealPath("");
-			   log.debug("Servlet root = " + ApplicationRoot );
-			   try
+			   String user[] = Getter.authUser(ApplicationRoot, p_login, p_pwd);
+			   if(user != null && !user[0].isEmpty())
 			   {
-				   String user[] = Getter.authUser(ApplicationRoot, p_login, p_pwd);
-				   if(user != null && !user[0].isEmpty())
+				   
+				   //Kill Session and Create a new one with user logged in
+				   log.debug("Creating new session for " + user[2] + " " + user[1]);
+				   ses.invalidate();
+				   ses = request.getSession(true);
+				   ses.setAttribute("userStamp", user[0]);
+				   ses.setAttribute("userName", user[1]);
+				   ses.setAttribute("userRole", user[2]);
+				   //Used to make returned Keys user specific. Transferred to Exposed Server
+				   String encyptedUserName = Hash.encrypt(Hash.userNameKey, p_login);
+				   ses.setAttribute("ThreadSequenceId", encyptedUserName);
+				   log.debug("userClassId = " + user[4]);
+				   
+				   ses.setAttribute("userClass", user[4]);
+				   log.debug("Setting CSRF cookie");
+				   Cookie token = new Cookie("token", Hash.randomString());
+				   token.setSecure(true);
+				   response.addCookie(token);
+				   mustRedirect = true;
+				   
+				   if(user[3].equalsIgnoreCase("true"))
 				   {
-					   
-					   //Kill Session and Create a new one with user logged in
-					   log.debug("Creating new session for " + user[2] + " " + user[1]);
-					   ses.invalidate();
-					   ses = request.getSession(true);
-					   ses.setAttribute("userStamp", user[0]);
-					   ses.setAttribute("userName", user[1]);
-					   ses.setAttribute("userRole", user[2]);
-					   //Used to make returned Keys user specific. Transferred to Exposed Server
-					   String encyptedUserName = Hash.encrypt(Hash.userNameKey, p_login);
-					   ses.setAttribute("ThreadSequenceId", encyptedUserName);
-					   log.debug("userClassId = " + user[4]);
-					   
-					   ses.setAttribute("userClass", user[4]);
-					   log.debug("Setting CSRF cookie");
-					   Cookie token = new Cookie("token", Hash.randomString());
-					   response.addCookie(token);
-					   mustRedirect = true;
-					   
-					   if(user[3].equalsIgnoreCase("true"))
-					   {
-						   log.debug("Temporary Password Detected, user will be prompted to change");
-						   ses.setAttribute("ChangePassword", "true");
-					   }
-					   
-					   //Removing user from kick list. If they were on it before, their suspension must have ended if they DB authentication Succeeded
-					   UserKicker.removeFromKicklist(user[1]);
+					   log.debug("Temporary Password Detected, user will be prompted to change");
+					   ses.setAttribute("ChangePassword", "true");
 				   }
+				   
+				   //Removing user from kick list. If they were on it before, their suspension must have ended if they DB authentication Succeeded
+				   UserKicker.removeFromKicklist(user[1]);
 			   }
-			   catch(Exception e)
-			   {
-				   log.error("Could not Find User: " + e.toString());
-			   }
+		   }
+		   catch(Exception e)
+		   {
+			   log.error("Could not Find User: " + e.toString());
 		   }
 		   if (mustRedirect) 
 		   {

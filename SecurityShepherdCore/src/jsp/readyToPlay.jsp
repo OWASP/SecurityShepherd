@@ -47,6 +47,7 @@
 		{
 			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Thread Parameter = " + parameter, ses.getAttribute("userName"));
 			Cookie cookie = new Cookie("JSESSIONID3", parameter);
+			cookie.setSecure(true);
 		    ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Thread Cookie Value = " + cookie.getValue(), ses.getAttribute("userName"));
 		    response.addCookie(cookie);
 		}

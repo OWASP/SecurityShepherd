@@ -1474,6 +1474,7 @@ CALL cheatSheetCreate('0cdd1549e7c74084d7059ce748b93ef657b44457', "To complete t
 CALL cheatSheetCreate('368491877a0318e9a774ba5d648c33cb0165ba1e', "This challenge requires a bit of thinking to complete organically. First you must find some admin email addresses. The login function will return them when valid usernames are submitted. Try using root or superuser with any password. Use the email address in the secret question function to get that user's Secret Question. The secret question for each user is 'What is your favourite flower?'. There are only so many flowers. Any of the following flowers are valid answers. Root's favourite flower is 'Franklin Tree'. <br><br> Valid answers: Jade Vine, Corpse Flower, Gibraltar Campion, Franklin Tree, Middlemist Red, Chocolate Cosmos or Ghost Orchid");
 CALL cheatSheetCreate('6be5de81223cc1b38b6e427cc44f8b6a28d2bc96', "The shopping cart application does not validate the number of items you are buying. Set the troll amount to 1 and the MeGusta Amount to -101. ");
 CALL cheatSheetCreate('3b14ca3c8f9b90c9b2c8cd1fba9fa67add1272a3', "The shopping cart application only ensures that the amount of items bought is a positive number. By buying 999295724 trolls, the total cost integer value will overflow and enter a negative state.");
+CALL cheatSheetCreate('b9d82aa7b46ddaddb6acfe470452a8362136a31e', "Enter a valid number in the submit box and click submit number. Capture the request in a HTTP proxy and modify the number to a negative value.");
 
 COMMIT;
 
