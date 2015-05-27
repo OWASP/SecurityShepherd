@@ -165,7 +165,7 @@ if (request.getSession() != null)
 					<% } %>
 					<% if(canSeeScoreboard) { %>
 					<div id="scoreboardButton">
-						<a id="showScoreboard" href="/scoreboard.jsp" target="bar"><div class="menuButton">Scoreboard</div></a>
+						<a id="showScoreboard" href="scoreboard.jsp" target="bar"><div class="menuButton">Scoreboard</div></a>
 					</div>
 					<% } %>
 					<% if(showCheatSheet) { %>
