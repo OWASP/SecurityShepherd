@@ -1066,4 +1066,31 @@
 		<url-pattern>/challenges/714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54705bb1ea4316334</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>/challenges/ca0e89caf3c50dbf9239a0b3c6f6c17869b2a1e2edc3aa6f029fd30925d66c7e</servlet-name>
+		<servlet-class>servlets.module.challenge.PoorValidation1</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/ca0e89caf3c50dbf9239a0b3c6f6c17869b2a1e2edc3aa6f029fd30925d66c7e</servlet-name>
+		<url-pattern>/challenges/ca0e89caf3c50dbf9239a0b3c6f6c17869b2a1e2edc3aa6f029fd30925d66c7e</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/20e8c4bb50180fed9c1c8d1bf6af5eac154e97d3ce97e43257c76e73e3bbe5d5</servlet-name>
+		<servlet-class>servlets.module.challenge.PoorValidation2</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/20e8c4bb50180fed9c1c8d1bf6af5eac154e97d3ce97e43257c76e73e3bbe5d5</servlet-name>
+		<url-pattern>/challenges/20e8c4bb50180fed9c1c8d1bf6af5eac154e97d3ce97e43257c76e73e3bbe5d5</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/lessons/4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f</servlet-name>
+		<servlet-class>servlets.module.lesson.PoorValidationLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f</servlet-name>
+		<url-pattern>/lessons/4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f</url-pattern>
+	</servlet-mapping>
+	
 </web-app>
