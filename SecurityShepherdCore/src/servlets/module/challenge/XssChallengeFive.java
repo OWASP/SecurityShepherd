@@ -77,7 +77,7 @@ public class XssChallengeFive extends HttpServlet
 					userPost = "<a href=\"" + searchTerm + "\">Your HTTP Link!</a>";
 					log.debug("After WhiteListing - " + searchTerm);
 					
-					boolean xssDetected = FindXSS.antiSamySearch(userPost, getServletContext().getRealPath(""));
+					boolean xssDetected = FindXSS.search(userPost);
 					if(xssDetected)
 					{
 						Encoder encoder = ESAPI.encoder();

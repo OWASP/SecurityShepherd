@@ -77,7 +77,7 @@ public class XssChallengeSix extends HttpServlet
 					userPost = "<a href=\"" + searchTerm + "\">Your HTTP Link!</a>";
 					log.debug("After Sanitising - " + searchTerm);
 					
-					boolean xssDetected = FindXSS.antiSamySearch(userPost, getServletContext().getRealPath(""));
+					boolean xssDetected = FindXSS.search(userPost);
 					if(xssDetected)
 					{
 						Encoder encoder = ESAPI.encoder();

@@ -84,7 +84,7 @@ public class XssChallengeFour extends HttpServlet
 						searchTerm = XssFilter.encodeForHtml(searchTerm);
 						userPost = "<a href=\"" + searchTerm + "\" alt=\"" + searchTerm + "\">" + searchTerm + "</a>";
 						log.debug("After Encoding - " + searchTerm);
-						if(FindXSS.antiSamySearch(userPost, getServletContext().getRealPath("")))
+						if(FindXSS.search(userPost))
 						{
 							Encoder encoder = ESAPI.encoder();
 							htmlOutput = "<h2 class='title'>Well Done</h2>" +

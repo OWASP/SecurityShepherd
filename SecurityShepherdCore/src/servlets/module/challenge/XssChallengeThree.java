@@ -46,7 +46,6 @@ public class XssChallengeThree extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(XssChallengeThree.class);
 	private static String levelName = "Cross Site Scripting Challenge Three";
 	private static String levelHash = "ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e";
-	private static String levelResult = ""; //Pulled from DB using levelHash
 	/**
 	 * Cross Site Request Forgery safe Reflected XSS vulnerability. cannot be remotly deployed, and therfore only is executable against the person initating the funciton.
 	 * @param searchTerm To be spat back out at the user after been filtered
@@ -75,8 +74,7 @@ public class XssChallengeThree extends HttpServlet
 					searchTerm = XssFilter.levelThree(searchTerm);
 					log.debug("After Filtering - " + searchTerm);
 					String htmlOutput = new String();
-					String applicationRoot = getServletContext().getRealPath("");
-					if(FindXSS.antiSamySearch(searchTerm, applicationRoot))
+					if(FindXSS.search(searchTerm))
 					{
 						Encoder encoder = ESAPI.encoder();
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +

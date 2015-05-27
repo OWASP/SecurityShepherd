@@ -1,14 +1,19 @@
 package utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 import org.apache.log4j.Logger;
-import org.owasp.validator.html.*;
-import org.w3c.css.*;
+import org.w3c.tidy.Tidy;
 
 /**
  * Class is responsible for finding valid XSS and CSRF attacks in user submissions
@@ -35,20 +40,11 @@ public class FindXSS
 	private static org.apache.log4j.Logger log = Logger.getLogger(FindXSS.class);
 	/**
 	 * Method used to detect valid java script in a user submission. Specifically the presence of a script that will execute an alert command.
-	 * Script tag, Url java script and java script tiggeres vectors are all including in this detection method.
+	 * Script tag, URI java script and java script triggers vectors are all including in this detection method.
 	 * @param xssString User XSS submission (After filter if any)
 	 * @return Boolean returned reflecting the presence of valid XSS attacks or not.
 	 */
-	private static String []  htmlElements = {
-		"a", "area", "br",	"button", "base","caption", "center", "cite", "col", "colgroup", "dd",
-		"del", "dfn", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "form", "h1",
-		"h2", "h3", "h4", "h5", "h6", "head", "hr", "html", "!", "iframe",
-		"img", "input", "ins", "isindex", "kbd", "label", "legend", "li",
-		"link", "map", "menu", "meta", "noframes", "noscript", "object", 
-		"ol", "optgroup", "option", "p", "param", "pre", "q", "s", "samp",
-		"script", "select", "small", "span", "strike", "strong", "style", 
-		"sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead",
-		"title", "tr", "tt", "u", "ul", "var"};
+
 	public static String[] javascriptTriggers = {
 		"onabort", "onbeforecopy", "onbeforecut", "onbeforepaste", "oncopy", "oncut", 
 		"oninput", "onkeydown", "onkeypress", "onkeyup", "onpaste", "onbeforeunload", 
@@ -70,138 +66,12 @@ public class FindXSS
 		"onloadeddata", "onloadedmetadata", "onloadstart", "onpause", "onplay", "onplaying", "onprogress", 
 		"onratechange", "onseeked", "onseeking", "onstalled", "onsuspend", "ontimeupdate", "onvolumechange",
 		"onwaiting", "onshow", "ontoggle"};
-	
-	/**
-	 * Search Strings for XSS attack vectors using the OWASP AntiSamy project
-	 * @param xssString String to search
-	 * @param applicationRoot Running context of the application
-	 * @return True or False for detected XSS
-	 */
-	public static boolean antiSamySearch (String xssString, String applicationRoot)
-	{
-		boolean result = false;
-		xssString = xssString.toLowerCase().trim();
-		log.debug("xssString  is " + xssString);
-		
-		//Create AntiSamy Object
-		String propertiesFile = applicationRoot+"/WEB-INF/antisamy-esapi.xml";
-		try
-		{
-			log.debug("Making AntiSamy Object");
-			AntiSamy as = new AntiSamy();
-			Policy policy = Policy.getInstance(propertiesFile);
-			log.debug("Scanning xssString...");
-			CleanResults cr = as.scan(xssString, policy, AntiSamy.SAX);		
-			String safeString = cr.getCleanHTML();
-			log.debug("safeString is " + safeString);
-			if(xssString.equalsIgnoreCase(safeString))
-			{
-				log.debug("Strings Match: No Xss Detected");
-			}
-			else
-			{
-				log.debug("Strings Differ: Possible Xss Detected");
-				log.debug("Number of errors: " + cr.getNumberOfErrors());
-				//Get the errors as they describe the XSS attack vector that was used
-				List<String> errors = cr.getErrorMessages();
-				int numberOfErrors = cr.getNumberOfErrors();
-				for(int i = 0; i < numberOfErrors; i++)
-				{
-					String error = errors.get(i);
-					log.debug("Error " + (i+1));
-					//Comment following line out out unless testing
-					log.debug("Error Reads: " + error);
-					//First check if error is about Script tags - This would imply simple xss has been submitted
-					String scriptTagErrorStart = new String("The script tag is not allowed for security reasons.");
-					if(error.startsWith(scriptTagErrorStart))
-					{
-						log.debug("Script tags detected");
-						result = true;
-					}
-					else
-					{
-						//log.debug("Simple XSS Script Tags not detected");
-						//iframe's with Javascript events do not get caught. So checking if error is Iframe error
-						String iframeErrorStart = new String("The iframe tag is not allowed for security reasons.");
-						if(error.startsWith(iframeErrorStart))
-						{
-							//If it is we're going to change it to an <A> element, because antiSamy will check the javascript events and URI attacks of that
-							xssString = xssString.replaceAll("iframe", "a");
-							//Calling Function Recurseivly atm. TODO// Make a Overwritten version of this search that searches for an error releated to a specific element
-							result = FindXSS.antiSamySearch(xssString, applicationRoot);
-						}
-						else
-						{
-							for(int j = 0; j < htmlElements.length; j++)
-							{
-								//We want errors that read like: "The a tag contained an attribute that we could not process. The "; // This will only catch "a" tag
-								//Loop goes checks to see if this error is one of a known HTML element of interest
-								//Make the error message we are expecting for this HTML Element
-								String expectedErrorStart = makeAntiSammyError(htmlElements[j]);
-								//log.debug("Searching for: " + expectedErrorStart);
-								//If the error starts with this error, we're interested.
-								if(error.startsWith(expectedErrorStart))
-								{
-									//Extracting important parts of the error message
-									error = error.substring(expectedErrorStart.length());
-									String errorAttribute = error.substring(0, error.indexOf(" "));
-									String errorAttibuteValue = error.substring(error.indexOf("\"")+1, error.indexOf("\"", error.indexOf("\"")+1));
-									Encoder encoder = ESAPI.encoder();
-									errorAttibuteValue = encoder.decodeForHTML(errorAttibuteValue.replaceAll("&#34;", ""));
-									
-									//Reconstructing attack vector used based on error message details
-									log.debug("Constructing attack vector from AntiSammy error");
-									String attackVector = "<" + htmlElements[j] + " " + errorAttribute + "=\"" + errorAttibuteValue + "\"";
-									//Does the Element need a </ELEMENT> tag or />
-									if(!isEmptyHtmlElement(htmlElements[j]))
-									{
-										attackVector += ">Attack</" + htmlElements[j] + ">";
-									}
-									else
-									{
-										attackVector += "/>";
-									}
-											
-									log.debug("attackVector: " + attackVector);
-									//log.debug("Searching for XSS in attackVector...");
-									if(FindXSS.searchWithoutSimple(attackVector))
-									{
-										log.debug("Xss Detected");
-										result = true;
-									}
-									else
-										log.debug("Xss Not Detected");
-								}
-								if(result)
-									break; //Xss Detected, time to get out of here
-							}
-						}
-					}
-					if(result)
-					{
-						break; //Xss Detected, time to get out of here
-					}
-					else
-					{
-						log.debug("Error Deemed Uninteresting");
-					}
-				}
-			}
-		} 
-		catch (ScanException e) 
-		{
-			log.debug("ScanException: " + e.toString());
-		} 
-		catch (PolicyException e)
-		{
-			log.debug("PolicyException: " + e.toString());
-		}
-		catch (Exception e)
-		{
-			log.debug("Unexpected Error! " + e.toString());
-		}
-		return result;
-	}
+	public static String[] uriAttributes = {
+			"href", "src", "action"
+	};
+	public static String[] colons = {
+			":", "&#x3a", "&#x3a;", "&#58", "&#58;"
+	};
 	
 	/**
 	 * Method used to validate GET request CSRF attacks embeded in IMG tags.
@@ -384,532 +254,121 @@ public class FindXSS
 		return validAttack;
 	}
 	
-	private static boolean isEmptyHtmlElement(String htmlElement)
-	{
-		boolean emptyHtmlElement = false;
-		String emptyElements[] = {"br", "hr", "link", "base", "meta", "img", "embed", "param", "area", "col", "input"};
-		for (int i = 0; i < emptyElements.length && !emptyHtmlElement; i++)
-		{
-			emptyHtmlElement = htmlElement.equalsIgnoreCase(emptyElements[i]);
-		}
-		return emptyHtmlElement;
-	}
-	
 	/**
-	 * Creates the leading string of an AntiSammy error for a specific html element
-	 * @param htmlElement the element to include in the error message
-	 * @return
+	 * Forms XSS Input for XHTML before Searching with Shepherd XSS Detector
+	 * @param xssString Untrusted User Input
+	 * @return Boolean value depicting if XSS was detected
 	 */
-	private static String makeAntiSammyError(String htmlElement)
-	{
-		return new String("The " + htmlElement + " tag contained an attribute that we could not process. The ");
-	}
-	
 	public static boolean search (String xssString)
 	{
+		boolean xssDetected = false;
+		log.debug("String to Search: " + xssString);
+		
+		//Need to tidy submitted string, similar to how a browser would when it interprets it
+		Tidy tidy = new Tidy();
+		tidy.setXHTML(true);
+		tidy.setQuiet(true);
+		tidy.setShowWarnings(false);
+		InputStream inputStream = new ByteArrayInputStream(xssString.getBytes());
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		tidy.parseDOM(inputStream, outputStream);
+		String tidyHtml = outputStream.toString().toLowerCase();
 		try
 		{
-			boolean elementFound = false, triggerFound = false, uriAttributeFound = false, possibleXssAttack = false;
-			xssString = xssString.toLowerCase();
-			xssString = xssString.trim();
-			log.debug("xssString is " + xssString);
-			//Test for <script> vector
-			int start;
-			int end;
-			int middle;
-			
-			start = xssString.indexOf("<script>");
-			end = xssString.indexOf("</script>", start);
-			middle = xssString.indexOf("alert");
-			if(start > -1 && end > -1 && (start < middle && middle < end))
-			{
-				log.debug("<script> Detected");
-				return true;
-			}
-			else
-			{
-				//Search for HTML Elements, and see if they have a script embeded in a src attribute, style attribute or javascript trigger
-				String[] uriAttributes = {
-						"href", "src", "action"
-				};
-				String[] colons = {
-						":", "&#x3a", "&#x3a;", "&#58", "&#58;"
-				};
-				
-				//log.debug("Cleaning Xss String");
-				String tempXss = xssString;
-				tempXss.replaceAll("\n", "");
-				while(tempXss.contains("< "))
-					tempXss = tempXss.replaceAll("< ", "<");
-				while(tempXss.contains(" >"))
-					tempXss = tempXss.replaceAll(" >", ">");
-				log.debug("Cleaned to: " + tempXss);
-				
-				String htmlElement = new String();
-				int k, l = 0, i, j = 0;
-				int tempStart, tempMiddle, tempEnd;
-				
-				do
-				{
-					//log.debug("Checking for elements from index [" + l + "]");
-					//Find element
-					for(k = l; k < htmlElements.length; k++)
-					{
-						if(tempXss.contains("<" + htmlElements[k]))
-						{
-							// log.debug("Possible <" + htmlElements[k] + ">");
-							tempStart = tempXss.indexOf("<" + htmlElements[k]);
-							tempMiddle = -1;
-							tempEnd = tempXss.indexOf("/>", tempStart + 1 + htmlElements[k].length());
-							if(tempEnd == -1)
-							{
-								tempMiddle = tempXss.indexOf(">", tempStart + 1 + htmlElements[k].length());
-								if(tempMiddle > -1)
-								{
-									// log.debug("Looking for </" + htmlElements[k] + "> in " + tempXss);
-									tempEnd = tempXss.indexOf("</" + htmlElements[k] + ">");
-								}
-							}
-							elementFound = tempStart > -1 && tempEnd > -1;
-							if(elementFound)
-							{
-								htmlElement = tempXss.substring(tempStart, tempEnd + 1);
-								// log.debug("Found HTML element: " + htmlElement);
-								l = k + 1;
-								break;
-							}
-							else
-							{
-								// log.debug("tempStart: " + tempStart);
-								// log.debug("tempEnd: " + tempEnd);
-								// log.debug("False Positive");
-							}
-						}
-					}
-					if(elementFound)
-					{
-						// log.debug("Search for URI attacks");
-						//Find URI attributes
-						for(i = j; i < uriAttributes.length; i++)
-						{
-							uriAttributeFound = htmlElement.indexOf(uriAttributes[i]) > -1;
-							if(uriAttributeFound)
-							{
-								j = i + 1;
-								break;
-							}
-						}
-						if(!uriAttributeFound)
-						{
-							// log.debug("Searching for javascript event triggers");
-							//Search for triggers
-							for(i = j; i < javascriptTriggers.length; i++)
-							{
-								triggerFound = htmlElement.indexOf(javascriptTriggers[i]) > -1;
-								if(triggerFound)
-								{
-									j = i + 1;
-									break;
-								}
-							}
-						}
-						else // URI Attribute was found
-						{
-							//Clear out start of html element
-							htmlElement = htmlElement.replaceFirst(htmlElements[k], "");
-							// Clear Spaces out
-							htmlElement = htmlElement.replaceAll(" ", "");
-							// Get rid of return characters if there are any
-							htmlElement = htmlElement.replaceAll("\n", "");
-							// Identify start index (after attribute)
-							start = htmlElement.indexOf(uriAttributes[i]) + uriAttributes[i].length();
-							log.debug("Start = " + start);
-							//URI Attacks can be encoded in HTML encoding and still be rendered by most browsers so this line decodes the values once if an ampersand exists
-							if(htmlElement.contains("&"))
-							{
-								log.debug("HTML Encoded URI attribute detected: " + htmlElement);
-								Encoder encoder = ESAPI.encoder();
-								htmlElement = encoder.decodeForHTML(htmlElement);
-								log.debug("Decoded Attribute = " + htmlElement);
-							}
-							
-							//URI Attacks need a Colon after data or javascript - Need to find that else it is invalid
-							boolean colonFound = false;
-							for(int colonCount = 0; colonCount < colons.length; colonCount++)
-							{
-								colonFound = htmlElement.contains(colons[colonCount]);
-								if(colonFound)
-								{
-									// log.debug("Detected colon in the form of '" + colons[colonCount] + "'");
-									middle = htmlElement.indexOf(colons[colonCount]);
-									// log.debug("middle = " + middle);
-									break;
-								}
-							}
-							
-							if(colonFound)
-							{
-								//Colon was found so now check if the uri value before the colon was data or javascript
-								String firstPartOfUriValue = htmlElement.substring(start, middle);
-								if(firstPartOfUriValue.startsWith("="))
-								{
-									// log.debug("Found = at start of string");
-									firstPartOfUriValue = firstPartOfUriValue.substring(1);
-									// log.debug("Striped to: " + firstPartOfUriValue);
-								}
-									
-								//Stripping off starting quote or apostrophe
-								if(firstPartOfUriValue.startsWith("\"") || firstPartOfUriValue.startsWith("'"))
-								{
-									// log.debug("Found quote at start of string");
-									firstPartOfUriValue = firstPartOfUriValue.substring(1);
-									// log.debug("Striped to: " + firstPartOfUriValue);
-								}
-								// log.debug("Checking to see if the string is equal to data or javascript");
-								// log.debug("Checking the string '" + firstPartOfUriValue + "'");
-								possibleXssAttack = firstPartOfUriValue.equalsIgnoreCase("data") || firstPartOfUriValue.equalsIgnoreCase("javascript");
-								
-								if(possibleXssAttack)
-									return true;
-							}
-							
-							
-						}
-						if(triggerFound)
-						{
-							htmlElement = htmlElement.replaceFirst(htmlElements[k], "");
-							htmlElement = htmlElement.replaceAll(" ", "");
-							htmlElement = htmlElement.replaceAll("\n", "");
-							start = htmlElement.indexOf(javascriptTriggers[i]) + javascriptTriggers[i].length();
-							middle = htmlElement.indexOf("alert");
-							if(start < middle)
-							{
-								char quote = htmlElement.charAt(start + 1);
-								//log.debug("quote = " + quote);
-								end = htmlElement.indexOf(quote, start + 2);
-								String payload = htmlElement.substring(start + 2, end);
-								//log.debug("The payload = " + payload);
-								int payloadStart = payload.indexOf("alert(");
-								int payloadEnd = payload.indexOf(")", payloadStart + 6);
-								payload = payload.substring(payloadStart + 6, payloadEnd);
-								//log.debug("alert payload = " + payload);
-								
-								if(!((payload.startsWith("\"") && payload.endsWith("\"")) || (payload.startsWith("'") && payload.endsWith("'"))))
-								{
-									Long.parseLong(payload);
-									triggerFound = true;
-								}
-								else
-								{
-									//Its not a number, so it has quotes, so it does matter.
-								}
-							}
-						}
-						else
-						{
-							elementFound = false;
-						}
-					}
-				}
-				while((elementFound != true && triggerFound != true && k < htmlElements.length));
-			}
-			return elementFound == true && triggerFound == true;
+			outputStream.close();
+			inputStream.close();
 		}
 		catch(Exception e)
 		{
-			log.error("FindXSS Error: " + e.toString());
-			return false;
+			log.error("Could not Cloud Tidy Input/Output Streams: " + e.toString());
 		}
-	}
-	
-	public static boolean searchForComplexLinkAttributeXss (String xssString, String applicationRoot)
-	{
-		boolean result = false;
-		xssString = xssString.toLowerCase().trim();
-		log.debug("xssString  is " + xssString);
+		// log.debug("String Tidied To: " + tidyHtml);
 		
-		//Create AntiSamy Object
-		String propertiesFile = applicationRoot+"/WEB-INF/antisamy-esapi.xml";
-	
-		try
+		//Now to Parse it and narrow down to the Body of the output
+		Document parsedHtml = Jsoup.parseBodyFragment(tidyHtml);
+		Element htmlBody = parsedHtml.body();
+		
+		//Now We're in Search Territory. Three main Stages
+		//Stage One: Detect <script> tags
+		Elements scriptTags = htmlBody.getElementsByTag("script");
+		for(Element scriptTag: scriptTags)
 		{
-			log.debug("Making AntiSamy Object");
-			AntiSamy as = new AntiSamy();
-			Policy policy = Policy.getInstance(propertiesFile);
-			log.debug("Scanning xssString...");
-			CleanResults cr = as.scan(xssString, policy, AntiSamy.SAX);		
-			String safeString = cr.getCleanHTML();
-			log.debug("safeString is " + safeString);
-			if(xssString.equalsIgnoreCase(safeString))
+			String tagContents = scriptTag.html();
+			//log.debug("tagContents: " + tagContents);
+			if(tagContents.contains("alert"))
 			{
-				log.debug("Strings Match: No Xss Detected");
+				log.debug("Script Tags detected");
+				xssDetected = true;
+				break;
 			}
-			else
-			{
-				log.debug("Strings Differ: Possible Xss Detected");
-				log.debug("Number of errors: " + cr.getNumberOfErrors());
-				List<String> errors = cr.getErrorMessages();
-				int numberOfErrors = cr.getNumberOfErrors();
-				for(int i = 0; i < numberOfErrors; i++)
-				{
-					String error = errors.get(i);
-					log.debug("Error " + (i+1));
-					String expectedErrorStart = "The a tag contained an attribute that we could not process. The "; // A tag attribute
-					if(error.startsWith(expectedErrorStart))
-					{
-						error = error.substring(expectedErrorStart.length());
-						String errorAttribute = error.substring(0, error.indexOf(" "));
-						String errorAttibuteValue = error.substring(error.indexOf("\"")+1, error.indexOf("\"", error.indexOf("\"")+1));
-						Encoder encoder = ESAPI.encoder();
-						errorAttibuteValue = encoder.decodeForHTML(errorAttibuteValue.replaceAll("&#34;", ""));
-						String attackVector = "<a " + errorAttribute + "=\"" + errorAttibuteValue + "\">Link</a>";
-						log.debug("attackVector: " + attackVector);
-						log.debug("Searching for XSS in attackVector...");
-						if(FindXSS.searchWithoutSimple(attackVector))
-						{
-							log.debug("Xss Detected");
-							result = true;
-						}
-						else
-							log.debug("Xss Not Detected");
-					}
-					else
-					{
-						log.debug("Error Deemed Uninteresting: Not an <a> element attribute error.");
-					}
-					if(result)
-						break;
-				}
-			}
-		} 
-		catch (ScanException e) 
-		{
-			log.debug("ScanException: " + e.toString());
-		} 
-		catch (PolicyException e)
-		{
-			log.debug("PolicyException: " + e.toString());
 		}
-		catch (Exception e)
+		if(!xssDetected) //If Stage One failed, Move onto Stage 2 and 3
 		{
-			log.debug("Unexpected Error! " + e.toString());
-		}
-		return result;
-	}
-	
-	/**
-	 * Does not include &lt;script>&lt;/script> searchMethod used to detect valid java script in a user submission. Specifically the presence of a script that will execute an alert command.
-	 * Script tag, Url java script and java script tiggers vectors are all including in this detection method.
-	 * @param xssString User XSS submission (After filter if any)
-	 * @return Boolean returned reflecting the presence of valid XSS attacks or not.
-	 */
-	public static boolean searchWithoutSimple (String xssString)
-	{
-		try
-		{
-			boolean elementFound = false, triggerFound = false, uriAttributeFound = false, possibleXssAttack = false;
-			xssString = xssString.toLowerCase();
-			xssString = xssString.trim();
-			int start;
-			int end;
-			int middle;
-			
-			middle = xssString.indexOf("alert");
-			
-			//Search for HTML Elements, and see if they have a script embeded in a src attribute, style attribute or javascript trigger
-			String[] uriAttributes = {
-					"href", "src", "action"
-			};
-			String[] colons = {
-					":", "&#x3a", "&#x3a;", "&#58", "&#58;"
-			};
-			//log.debug("Cleaning Xss String");
-			String tempXss = xssString;
-			tempXss.replaceAll("\n", "");
-			while(tempXss.contains("< "))
-				tempXss = tempXss.replaceAll("< ", "<");
-			while(tempXss.contains(" >"))
-				tempXss = tempXss.replaceAll(" >", ">");
-			log.debug("Cleaned to: " + tempXss);
-			
-			String htmlElement = new String();
-			int k, l = 0, i, j = 0;
-			int tempStart, tempMiddle, tempEnd;
-			
-			do
+			//Stage Two/three look for different types of Attribute Based XSS
+			//Search through every element
+			Elements elements = htmlBody.getAllElements();
+			for(Element element: elements)
 			{
-				//log.debug("Checking for elements from index [" + l + "]");
-				//Find element
-				for(k = l; k < htmlElements.length; k++)
+				//Stage Two: Look for URI attributes. 
+				//Don't really care if they're in the correct element, the vector would have worked if they had it in the right one.
+				//This way we'll return true on elements that newly support URI attributes in browsers
+				for(int i = 0; i < uriAttributes.length && !xssDetected; i++)
 				{
-					if(tempXss.contains("<" + htmlElements[k]))
+					String uriAttributeValue = element.attr(uriAttributes[i]);
+					if (!uriAttributeValue.isEmpty())
 					{
-						// log.debug("Possible <" + htmlElements[k] + ">");
-						tempStart = tempXss.indexOf("<" + htmlElements[k]);
-						tempMiddle = -1;
-						tempEnd = tempXss.indexOf("/>", tempStart + 1 + htmlElements[k].length());
-						if(tempEnd == -1)
+						log.debug("Found: " + uriAttributes[i] + " attribute");
+						log.debug("Value: " + uriAttributeValue);
+						//URI Attack Vectors can be Encoded for HTML and still be interpreted by browsers
+						if(uriAttributeValue.contains("&"))
 						{
-							tempMiddle = tempXss.indexOf(">", tempStart + 1 + htmlElements[k].length());
-							if(tempMiddle > -1)
-							{
-								// log.debug("Looking for </" + htmlElements[k] + "> in " + tempXss);
-								tempEnd = tempXss.indexOf("</" + htmlElements[k] + ">");
-							}
-						}
-						elementFound = tempStart > -1 && tempEnd > -1;
-						if(elementFound)
-						{
-							htmlElement = tempXss.substring(tempStart, tempEnd + 1);
-							// log.debug("Found HTML element: " + htmlElement);
-							l = k + 1;
-							break;
-						}
-						else
-						{
-							// log.debug("tempStart: " + tempStart);
-							// log.debug("tempEnd: " + tempEnd);
-							// log.debug("False Positive");
-						}
-					}
-				}
-				if(elementFound)
-				{
-					// log.debug("Search for URI attacks");
-					//Find URI attributes
-					for(i = j; i < uriAttributes.length; i++)
-					{
-						uriAttributeFound = htmlElement.indexOf(uriAttributes[i]) > -1;
-						if(uriAttributeFound)
-						{
-							j = i + 1;
-							break;
-						}
-					}
-					if(!uriAttributeFound)
-					{
-						// log.debug("Searching for javascript event triggers");
-						//Search for triggers
-						for(i = j; i < javascriptTriggers.length; i++)
-						{
-							triggerFound = htmlElement.indexOf(javascriptTriggers[i]) > -1;
-							if(triggerFound)
-							{
-								j = i + 1;
-								break;
-							}
-						}
-					}
-					else // URI Attribute was found
-					{
-						//Clear out start of html element
-						htmlElement = htmlElement.replaceFirst(htmlElements[k], "");
-						// Clear Spaces out
-						htmlElement = htmlElement.replaceAll(" ", "");
-						// Get rid of return characters if there are any
-						htmlElement = htmlElement.replaceAll("\n", "");
-						// Identify start index (after attriubte)
-						start = htmlElement.indexOf(uriAttributes[i]) + uriAttributes[i].length();
-						log.debug("Start = " + start);
-						//URI Attacks can be encoded in HTML encoding and still be rendered by most browsers so this line decodes the values once if an ampersand exists
-						if(htmlElement.contains("&"))
-						{
-							log.debug("HTML Encoded URI attriute detected: " + htmlElement);
+							log.debug("HTML Encoded URI attriute detected");
 							Encoder encoder = ESAPI.encoder();
-							htmlElement = encoder.decodeForHTML(htmlElement);
-							log.debug("Decoded Attribute = " + htmlElement);
+							uriAttributeValue = encoder.decodeForHTML(uriAttributeValue);
+							log.debug("Decoded Attribute = " + uriAttributeValue);
 						}
-						
 						//URI Attacks need a Colon after data or javascript - Need to find that else it is invalid
 						boolean colonFound = false;
 						for(int colonCount = 0; colonCount < colons.length; colonCount++)
 						{
-							colonFound = htmlElement.contains(colons[colonCount]);
+							colonFound = uriAttributeValue.contains(colons[colonCount]);
 							if(colonFound)
 							{
 								// log.debug("Detected colon in the form of '" + colons[colonCount] + "'");
-								middle = htmlElement.indexOf(colons[colonCount]);
-								// log.debug("middle = " + middle);
+								uriAttributeValue = uriAttributeValue.substring(0, uriAttributeValue.indexOf(colons[colonCount]));
+								//log.debug("URI Before colon: " + uriAttributeValue);
 								break;
 							}
 						}
-						
-						if(colonFound)
+						if(uriAttributeValue.equalsIgnoreCase("data") || uriAttributeValue.equalsIgnoreCase("javascript"))
 						{
-							//Colon was found so now check if the uri value before the colon was data or javascript
-							String firstPartOfUriValue = htmlElement.substring(start, middle);
-							if(firstPartOfUriValue.startsWith("="))
-							{
-								// log.debug("Found = at start of string");
-								firstPartOfUriValue = firstPartOfUriValue.substring(1);
-								// log.debug("Striped to: " + firstPartOfUriValue);
-							}
-								
-							//Stripping off starting quote or appostraphy
-							if(firstPartOfUriValue.startsWith("\"") || firstPartOfUriValue.startsWith("'"))
-							{
-								// log.debug("Found quote at start of string");
-								firstPartOfUriValue = firstPartOfUriValue.substring(1);
-								// log.debug("Stripted to: " + firstPartOfUriValue);
-							}
-							// log.debug("Checking to see if the string is equal to data or javascript");
-							// log.debug("Checking the string '" + firstPartOfUriValue + "'");
-							possibleXssAttack = firstPartOfUriValue.equalsIgnoreCase("data") || firstPartOfUriValue.equalsIgnoreCase("javascript");
-							
-							if(possibleXssAttack)
-								return true;
+							log.debug("URI XSS Detected");
+							xssDetected = true;
 						}
-						
-						
-					}
-					if(triggerFound)
+					} // else URI attribute not detected
+				}
+				//Stage Three: JavaScript Events
+				if(!xssDetected) //If a URI XSS Vector was detected, we can skip Stage Three
+				{
+					for(int i = 0; i < javascriptTriggers.length && !xssDetected; i++)
 					{
-						htmlElement = htmlElement.replaceFirst(htmlElements[k], "");
-						htmlElement = htmlElement.replaceAll(" ", "");
-						htmlElement = htmlElement.replaceAll("\n", "");
-						start = htmlElement.indexOf(javascriptTriggers[i]) + javascriptTriggers[i].length();
-						middle = htmlElement.indexOf("alert");
-						if(start < middle)
+						String javascriptTriggerValue = element.attr(javascriptTriggers[i]);
+						if(!javascriptTriggerValue.isEmpty())
 						{
-							char quote = htmlElement.charAt(start + 1);
-							//log.debug("quote = " + quote);
-							end = htmlElement.indexOf(quote, start + 2);
-							String payload = htmlElement.substring(start + 2, end);
-							//log.debug("The payload = " + payload);
-							int payloadStart = payload.indexOf("alert(");
-							int payloadEnd = payload.indexOf(")", payloadStart + 6);
-							payload = payload.substring(payloadStart + 6, payloadEnd);
-							//log.debug("alert payload = " + payload);
-							
-							if(!(
-									(payload.startsWith("\"") && payload.endsWith("\"")) ||
-									(payload.startsWith("'") && payload.endsWith("'")) ||
-									(payload.startsWith("/") && payload.endsWith("/"))
-								))
+							if(javascriptTriggerValue.startsWith("alert"))
 							{
-								//AntiSamy sometimes strips the JS of its double quotes so no longer check the validity of a number
-								//Long.parseLong(payload);
-								triggerFound = true;
-							}
-							else
-							{
-								//Its not a number, so it has quotes, so it does matter.
+								log.debug("Javascript Trigger XSS Detected");
+								xssDetected = true;
 							}
 						}
-					}
-					else
-					{
-						elementFound = false;
 					}
 				}
-			}
-			while((elementFound != true && triggerFound != true && k < htmlElements.length));
-			return elementFound == true && triggerFound == true;
+				if(xssDetected) //XSS was detected in this element: Break out of For Loop
+				{
+					break;
+				}
+			}			
 		}
-		catch(Exception e)
-		{
-			log.error("FindXSS Error: " + e.toString());
-			return false;
-		}
+		return xssDetected;
 	}
 }
