@@ -65,7 +65,7 @@ if (request.getSession() != null)
 			You might be looking for the iframe embeded in the page.
 			Try a tool like Firebug to make this stuff easier.
 			
-			Security Shepherd Version: 2.3 -->
+			Security Shepherd Version: 2.4 -->
 
 		<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 		<link rel="shortcut icon" href="css/images/flavicon.jpg" type="image/jpeg" />
@@ -154,6 +154,7 @@ if (request.getSession() != null)
 								<li>
 									<a id="configurationList" href="javascript:;">Configuration</a>
 									<ul id="theConfigurationList" style="display: none;">
+										<li><a id="aboutShepherdLink" href="javascript:;">About Security Shepherd</a></li>
 										<li><a id="scoreboardLink" href="javascript:;">Configure Scoreboard</a></li>
 										<li><a id="enableFeedbackLink" href="javascript:;">Enable Feedback</a></li>
 										<li><a id="disableFeedbackLink" href="javascript:;">Disable Feedback</a></li>
@@ -590,6 +591,20 @@ if (request.getSession() != null)
 					});
 				});	
 			});
+			
+			$("#aboutShepherdLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+				$("#contentDiv").hide("fast", function(){
+					$("#contentDiv").load("admin/config/aboutShepherd.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+					  if (status == "error") {
+						var msg = "Sorry but there was an error: ";
+						$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+					  }
+					  $("#contentDiv").show("fast");
+					});
+				});
+			});	
+		});
 			</script>
 		<% } %>
 		
