@@ -499,6 +499,15 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>/user/csrfchallengejson/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetJSON</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengejson/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengejson/plusplus</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>/user/csrfchallengethree/plusplus</servlet-name>
 		<servlet-class>servlets.module.challenge.CsrfChallengeTargetThree</servlet-class>
 	</servlet>
@@ -523,6 +532,15 @@
 	<servlet-mapping>
 		<servlet-name>/challenges/z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e</servlet-name>
 		<url-pattern>/challenges/z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeJSON</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb</servlet-name>
+		<url-pattern>/challenges/2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
