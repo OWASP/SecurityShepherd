@@ -1,4 +1,4 @@
-package servlets.admin.moduleManagement;
+package servlets.admin.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;

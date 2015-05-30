@@ -510,7 +510,7 @@ if (request.getSession() != null)
 			$("#scoreboardLink").click(function(){
 				$("#submitResult").slideUp("fast", function(){
 					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/moduleManagement/scoreboard.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						$("#contentDiv").load("admin/config/scoreboard.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
 							var msg = "Sorry but there was an error: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");

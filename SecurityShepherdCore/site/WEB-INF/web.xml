@@ -274,7 +274,7 @@
 	
 	<servlet>
 		<servlet-name>/EnableScoreboard</servlet-name>
-		<servlet-class>servlets.admin.moduleManagement.EnableScoreboard</servlet-class>
+		<servlet-class>servlets.admin.config.EnableScoreboard</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/EnableScoreboard</servlet-name>
@@ -283,7 +283,7 @@
 	
 	<servlet>
 		<servlet-name>/DisableScoreboard</servlet-name>
-		<servlet-class>servlets.admin.moduleManagement.DisableScoreboard</servlet-class>
+		<servlet-class>servlets.admin.config.DisableScoreboard</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/DisableScoreboard</servlet-name>
