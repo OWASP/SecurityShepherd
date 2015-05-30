@@ -1093,4 +1093,12 @@
 		<url-pattern>/lessons/4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>/lessons/fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833</servlet-name>
+		<servlet-class>servlets.module.lesson.SecurityMisconfigLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833</servlet-name>
+		<url-pattern>/lessons/fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833</url-pattern>
+	</servlet-mapping>
 </web-app>
