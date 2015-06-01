@@ -71,10 +71,12 @@ public class SetModuleStatus extends HttpServlet
 				{
 					log.debug("Nothing to Close");
 				}
+				out.write("<h3 class='title'>Modules Updated</h3><p>The modules you selected have been updated accordingly</p>");
 			}
 			else
 			{
 				log.debug("CSRF Tokens did not match");
+				out.write("<h3 class='title'>Error Occurred</h3><p>Please Refresh Your Browser</p>");
 			}
 		}
 		else

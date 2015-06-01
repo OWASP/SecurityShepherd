@@ -72,12 +72,24 @@ String ApplicationRoot = getServletContext().getRealPath("");
 								<td>Blocked Message to Give: </td>
 								<td><textarea id="blockedMessage" maxlength="500" style="width: 300px; height: 80px;"></textarea>
 							</tr><tr>
-								<td colspan="2">
-									<input type="submit" value="Enable Block"/>
+								<td colspan="2" align="center">
+									<input type="submit" value="Enable Block" style="width: 150px; height: 25px;"/>
 								</td>
 							</tr>
 						</table>
 					</div>
+					<% if(ModuleBlock.blockerEnabled){ %>
+					<div id="removeModuleBlockDiv">
+						<h2 class="title">Remove Module Block</h2>
+						<p>
+							Do you wish to remove the current module blocker? You can do this by clicking the following button;
+						</p>
+						<a href="javascript:;" style="text-decoration: none;" id="removeModuleBlockButton" title="Remove Module Block">
+							<div class="menuButton">Remove Module Block</div>
+						</a>
+					</div>
+					<% } %>
+					<br>
 					<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
 					<div id="resultDiv" class="informationBox" style="display:none;"></div>
 					<div id="badData"></div>
@@ -95,7 +107,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						$("#enableBlockForm").slideUp("fast", function(){
 							var ajaxCall = $.ajax({
 								type: "POST",
-								url: "stopHere",
+								url: "enableModuleBlock",
 								data: {
 									moduleId: theModule,
 									blockedMessage: theMessage,
@@ -121,6 +133,41 @@ String ApplicationRoot = getServletContext().getRealPath("");
 							});
 						});
 					});
+					<% if(ModuleBlock.blockerEnabled){ %>
+						$("#removeModuleBlockButton").click(function(){
+							var theCsrfToken = $('#csrfToken').val();
+							//The Ajax Operation
+							$("#badData").hide("fast");
+							$("#resultDiv").hide("fast");
+							$("#loadingSign").show("fast");
+							$("#removeModuleBlockDiv").slideUp("fast", function(){
+								var ajaxCall = $.ajax({
+									type: "POST",
+									url: "removeModuleLock",
+									data: {
+										csrfToken: theCsrfToken
+									},
+									async: false
+								});
+								$("#loadingSign").hide("fast", function(){
+									if(ajaxCall.status == 200)
+									{
+										$("#resultDiv").html(ajaxCall.responseText);
+										$("#resultDiv").show("fast");
+									}
+									else
+									{
+										$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+										$("#badData").show("slow");
+									}
+									$("#removeModuleBlockDiv").slideDown("slow");
+									$('html, body').animate({
+								        scrollTop: $("#resultDiv").offset().top
+								    }, 1000);
+								});
+							});
+						});
+					<% } %>
 					</script>
 					<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 			</form>

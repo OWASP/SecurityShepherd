@@ -44,7 +44,7 @@ public class RemoveModuleLock extends HttpServlet
 	public static String blockerMessage = "";
 	public static boolean blockerEnabled = false;
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(StopHere.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(EnableModuleBlock.class);
 	/**
 	 * Used to remove a limit on the progress a player can make in a CTF environment
 	 */

@@ -246,12 +246,12 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>/stopHere</servlet-name>
-		<servlet-class>servlets.admin.moduleManagement.StopHere</servlet-class>
+		<servlet-name>/enableModuleBlock</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.EnableModuleBlock</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>/stopHere</servlet-name>
-		<url-pattern>/stopHere</url-pattern>
+		<servlet-name>/enableModuleBlock</servlet-name>
+		<url-pattern>/enableModuleBlock</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>

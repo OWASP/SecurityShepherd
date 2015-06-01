@@ -50,15 +50,15 @@ Encoder encoder = ESAPI.encoder();
 String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<div id="formDiv" class="post">
+	<div class="post">
 		<h1 class="title">Open and Close Levels</h1>
-		<div class="entry">
+		<div id="formDiv" class="entry">
 			<div id="badData"></div>
 				<form id="theForm" action="javascript:;">
 					<p>Use this form to open and close levels by name. Levels that are closed will not appear in any level listings.</p>
 					<div id="badData"></div>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<div  id="submitButton" align="center">
+					<div  id="formDiv" align="center">
 						<div>
 							<table>
 							<%= Getter.getModuleStatusMenu(ApplicationRoot) %>
@@ -66,49 +66,57 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						</div>
 						<div><input type="submit" value="Update Module Status"/></div>
 					</div>
-					<div id="loadingSign" style="display: none;"><p>Loading...</p></div> 
 				</form>
-			<div id="resultDiv"></div>
-			<script>					
-			$("#theForm").submit(function(){
-				var toBeOpened = $("#toOpen").val();
-				var toBeClosed = $("#toClose").val();
-				var theCsrfToken = $('#csrfToken').val();
-				var theModule = $("#theModule").val();
-				//The Ajax Operation
-				$("#badData").hide("fast");
-				$("#submitButton").hide("fast");
-				$("#loadingSign").show("slow");
-				$("#resultDiv").hide("fast", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "setModuleStatus",
-						data: {
-							toClose: toBeClosed,
-							toOpen: toBeOpened,
-							csrfToken: theCsrfToken
-						},
-						async: false
-					});
-					if(ajaxCall.status == 200)
-					{
-						$("#resultDiv").html(ajaxCall.responseText);
-						$("#resultDiv").show("fast");
-					}
-					else
-					{
-						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-						$("#badData").show("slow");
-					}
-				});
-				$("#loadingSign").hide("fast", function(){
-					$("#submitButton").show("slow");
-				});
-			});
-			</script>
-			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+			
 		</div>
+		<br />
 	</div>
+	<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
+	<div id="resultDiv" class="informationBox" style="display: none;"></div>
+	<script>					
+	$("#theForm").submit(function(){
+		var toBeOpened = $("#toOpen").val();
+		var toBeClosed = $("#toClose").val();
+		var theCsrfToken = $('#csrfToken').val();
+		var theModule = $("#theModule").val();
+		//The Ajax Operation
+		$("#loadingSign").show("fast");
+		$("#badData").hide("fast");
+		$("#resultDiv").hide("fast");
+		$("#formDiv").slideUp("fast", function(){
+			var ajaxCall = $.ajax({
+				type: "POST",
+				url: "setModuleStatus",
+				data: {
+					toClose: toBeClosed,
+					toOpen: toBeOpened,
+					csrfToken: theCsrfToken
+				},
+				async: false
+			});
+			$("#loadingSign").hide("fast", function(){
+				if(ajaxCall.status == 200)
+				{
+					$("#resultDiv").html(ajaxCall.responseText);
+					$("#resultDiv").show("fast");
+					//Update toOpen and toClose lists before showing again
+					$("#toClose option:selected").remove().appendTo('#toOpen').removeAttr("selected");
+					$("#toOpen option:selected").remove().appendTo('#toClose').removeAttr("selected");
+				}
+				else
+				{
+					$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+					$("#badData").show("slow");
+				}
+				$("#formDiv").slideDown("slow");
+				$('html, body').animate({
+			        scrollTop: $("#resultDiv").offset().top
+			    }, 1000);
+			});
+		});
+	});
+	</script>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 	<%
 }
 else

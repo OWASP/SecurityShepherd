@@ -126,16 +126,15 @@ if (request.getSession() != null)
 									<ul id="theConfigurationList" style="display: none;">
 										<li><a id="aboutShepherdLink" href="javascript:;">About Security Shepherd</a></li>
 										<li><a id="levelLayoutLink" href="javascript:;">Change Module Layout</a></li>
-										<li><a id="configureFeedbackLink" href="javascript:;">Configure Feedback</a></li>
-										<li><a id="scoreboardLink" href="javascript:;">Configure Scoreboard</a></li>
+										<li><a id="configureFeedbackLink" href="javascript:;">Feedback Configuration</a></li>
+										<li><a id="scoreboardLink" href="javascript:;">Scoreboard Configuration</a></li>
 										<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
 									</ul>
 								</li>
 								<li>
 									<a id="moduleManagementList" href="javascript:;">Module Management</a>
 									<ul id="theModuleManagementList" style="display: none;">
-										<li><a id="disableBlockLink" href="javascript:;">Disable Module Block</a></li>
-										<li><a id="stopHereLink" href="javascript:;">Enable Module Block</a></li>
+										<li><a id="moduleBlockLink" href="javascript:;">Module Block Setup</a></li>
 										<li><a id="setModuleStatusLink" href="javascript:;">Open and Close Modules</a></li>
 										<li><a id="openCloseByCategory" href="javascript:;">Open or Close by Category</a></li>
 										<li><a id="feedbackLink" href="javascript:;">View Feedback</a></li>
@@ -477,24 +476,10 @@ if (request.getSession() != null)
 				});
 			});
 
-			$("#stopHereLink").click(function(){
+			$("#moduleBlockLink").click(function(){
 				$("#submitResult").slideUp("fast", function(){
 					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/moduleManagement/stopHere.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
-						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
-							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
-						  }
-						  $("#contentDiv").show("fast");
-						});
-					});	
-				});
-			});
-
-			$("#disableBlockLink").click(function(){
-				$("#submitResult").slideUp("fast", function(){
-					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/moduleManagement/removeModuleBlock.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						$("#contentDiv").load("admin/moduleManagement/moduleBlock.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
 							var msg = "Sorry but there was an error: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
