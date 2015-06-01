@@ -53,57 +53,72 @@ String ApplicationRoot = getServletContext().getRealPath("");
 	<div id="formDiv" class="post">
 		<h1 class="title">Set a Module Blocker</h1>
 		<div class="entry">
-			<div id="badData"></div>
+			
 			<form id="theForm" action="javascript:;">
-					<p>Selecting a module blocker will not allow users to take that specific module. In a CTF environement this will stop them from progress past this point until you disable it or enable it to a further down the line module.<br/><br/>
+					<p>Selecting a module blocker will not allow users to take that specific module. In a CTF environment this will stop them from progress past this point until you disable it or enable it to a further down the line module.<br/><br/>
 					
 					Select the module you would like to see the feedback from and the message informing them when the blocker will be lifted. </p>
-					<div id="badData"></div>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<div  id="submitButton" align="center">
-						<div>
-							<select id="theModule" style="width: 300px">
-								<%= Getter.getModulesInOptionTagsCTF(ApplicationRoot) %>
-							</select>
-						</div>
-						<div>
-							<textarea style="width: 350px; height: 100px;" id="message"></textarea>
-						</div>
-						<div><input type="submit" value="Enable Block"/></div>
+					<div id="enableBlockForm" align="center">
+						<table>
+							<tr>
+								<td>The Module To Block: </td>
+								<td>
+									<select id="theModule" style="width: 300px">
+										<%= Getter.getModulesInOptionTagsCTF(ApplicationRoot) %>
+									</select>
+								</td>
+							</tr><tr>
+								<td>Blocked Message to Give: </td>
+								<td><textarea id="blockedMessage" maxlength="500" style="width: 300px; height: 80px;"></textarea>
+							</tr><tr>
+								<td colspan="2">
+									<input type="submit" value="Enable Block"/>
+								</td>
+							</tr>
+						</table>
 					</div>
-					<div id="loadingSign" style="display: none;"><p>Loading...</p></div> 
-					<div id="resultDiv"></div>
+					<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
+					<div id="resultDiv" class="informationBox" style="display:none;"></div>
+					<div id="badData"></div>
+					
 					<script>					
 					$("#theForm").submit(function(){
 						var theCsrfToken = $('#csrfToken').val();
+						var theMessage = $("#blockedMessage").val();
 						var theModule = $("#theModule").val();
+						console.log("message: " + theMessage);
 						//The Ajax Operation
 						$("#badData").hide("fast");
-						$("#submitButton").hide("fast");
-						$("#loadingSign").show("slow");
-						$("#resultDiv").hide("fast", function(){
+						$("#resultDiv").hide("fast");
+						$("#loadingSign").show("fast");
+						$("#enableBlockForm").slideUp("fast", function(){
 							var ajaxCall = $.ajax({
 								type: "POST",
 								url: "stopHere",
 								data: {
 									moduleId: theModule,
+									blockedMessage: theMessage,
 									csrfToken: theCsrfToken
 								},
 								async: false
 							});
-							if(ajaxCall.status == 200)
-							{
-								$("#resultDiv").html(ajaxCall.responseText);
-								$("#resultDiv").show("fast");
-							}
-							else
-							{
-								$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-								$("#badData").show("slow");
-							}
-						});
-						$("#loadingSign").hide("fast", function(){
-							$("#submitButton").show("slow");
+							$("#loadingSign").hide("fast", function(){
+								if(ajaxCall.status == 200)
+								{
+									$("#resultDiv").html(ajaxCall.responseText);
+									$("#resultDiv").show("fast");
+								}
+								else
+								{
+									$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+									$("#badData").show("slow");
+								}
+								$("#enableBlockForm").slideDown("slow");
+								$('html, body').animate({
+							        scrollTop: $("#resultDiv").offset().top
+							    }, 1000);
+							});
 						});
 					});
 					</script>

@@ -351,7 +351,7 @@ public class Validate
 	 * Validates objects received through a function request. Also ensures max length is not too high.
 	 * @param input Object to validate
 	 * @param maxLength Maximum length of object
-	 * @return Boolean value reflecting if valid or not
+	 * @return Validated String value or empty string value
 	 */
 	public static String validateParameter (Object input, int maxLength)
 	{

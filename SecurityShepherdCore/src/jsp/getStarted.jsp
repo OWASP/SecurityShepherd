@@ -78,8 +78,9 @@ if(!changePassword)
 			<h2 class="title">Configure Shepherd</h2>
 			<p>
 			As you are an Administrator you can define the scope of Security Shepherd. You can quickly change the game layout to Web or Mobile Application focused with the following buttons, or you can open the Admin Module Management menu, at the top left of the page, to open or close specific topics.
-			<br/><br/>
-			<div id="scopeResultsDiv"></div>
+			<br/>
+			<div id="scopeResultsDiv" class="informationBox" style="display: none;"></div>
+			<br/>
 			<div id="setScopeDiv">
 				<a href="javascript:;" style="text-decoration: none;" id="allApplication"><div class="menuButton">Open All Levels</div></a>
 				<a href="javascript:;" style="text-decoration: none;" id="onlyWebApplication"><div class="menuButton">Open Web App Levels Only</div></a>

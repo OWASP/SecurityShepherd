@@ -46,13 +46,13 @@ public class OpenWebModules extends HttpServlet
 			{
 				String ApplicationRoot = getServletContext().getRealPath("");
 				Setter.openOnlyWebCategories(ApplicationRoot);
-				htmlOutput = "<h2 class='title'>Only Web Levels Are Now Open</h2>"
+				htmlOutput = "<h3 class='title'>Only Web Levels Are Now Open</h3>"
 						+ "<p>All of the Security Shepherd Web Application Security levels are now open! All other categories have been closed.</p>";
 			}
 			else
 			{
 				log.debug("CSRF Tokens did not match");
-				htmlOutput = "<h2 class='title'>Error</h2><p>CSRF Tokens Did Not Match. Function Aborted</p>";
+				htmlOutput = "<h3 class='title'>Error</h3><p>CSRF Tokens Did Not Match. Function Aborted</p>";
 			}
 		}
 		else

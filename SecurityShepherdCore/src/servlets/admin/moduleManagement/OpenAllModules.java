@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
 import dbProcs.Setter;
 import utils.ShepherdLogManager;
@@ -46,13 +44,13 @@ public class OpenAllModules extends HttpServlet
 			{
 				String ApplicationRoot = getServletContext().getRealPath("");
 				Setter.openAllModules(ApplicationRoot);
-				htmlOutput = "<h2 class='title'>All Modules are Now Open</h2>"
+				htmlOutput = "<h3 class='title'>All Modules are Now Open</h3>"
 						+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
 			}
 			else
 			{
 				log.debug("CSRF Tokens did not match");
-				htmlOutput = "<h2 class='title'>Error</h2><p>CSRF Tokens Did Not Match. Function Aborted</p>";
+				htmlOutput = "<h3 class='title'>Error</h3><p>CSRF Tokens Did Not Match. Function Aborted</p>";
 			}
 		}
 		else

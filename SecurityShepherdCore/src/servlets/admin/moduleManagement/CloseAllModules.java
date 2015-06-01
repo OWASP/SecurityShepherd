@@ -44,13 +44,13 @@ public class CloseAllModules extends HttpServlet
 			{
 				String ApplicationRoot = getServletContext().getRealPath("");
 				Setter.closeAllModules(ApplicationRoot);
-				htmlOutput = "<h2 class='title'>All Modules are Now Closed</h2>"
+				htmlOutput = "<h3 class='title'>All Modules are Now Closed</h3>"
 						+ "<p>All of the Security Shepherd levels are now closed and not available for any user to access or submit solutions for!</p>";
 			}
 			else
 			{
 				log.debug("CSRF Tokens did not match");
-				htmlOutput = "<h2 class='title'>Error</h2><p>CSRF Tokens Did Not Match. Function Aborted</p>";
+				htmlOutput = "<h3 class='title'>Error</h3><p>CSRF Tokens Did Not Match. Function Aborted</p>";
 			}
 		}
 		else

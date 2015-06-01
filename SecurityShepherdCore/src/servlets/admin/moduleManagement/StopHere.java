@@ -67,37 +67,37 @@ public class StopHere extends HttpServlet
 				String storedResult = null;
 				try
 				{
-					log.debug("Getting ApplicationRoot");
-					String ApplicationRoot = getServletContext().getRealPath("");
-					log.debug("Servlet root = " + ApplicationRoot );
+					String applicationRoot = getServletContext().getRealPath("");
 					
 					log.debug("Getting Parameters");
 					String moduleId = (String)request.getParameter("moduleId");;
 					log.debug("moduleId = " + moduleId.toString());
+					String blockedMessage = Validate.validateParameter(request.getParameter("blockedMessage"), 500);
 					
 					String message = new String();
-					if(request.getParameter("message") != null)
-						message = (String)request.getParameter("message");
-					else
+					if(blockedMessage.isEmpty())
 						message = "Ask your administrator when these modules will be made available";
-					log.debug("message = " + message);
+					else
+					{	
+						log.debug("Custom Message Detected");
+						message = blockedMessage;
+					}
+					log.debug("Blocked Message = " + message);
 					
 					//Validation
 					notNull = (moduleId != null);
 					if(notNull)
 					{
-						storedResult = Getter.getModuleResult(ApplicationRoot, moduleId);
+						storedResult = Getter.getModuleResult(applicationRoot, moduleId);
 					}
 					if(notNull && storedResult != null)
 					{
 						//Data is good, Module exists! Store it as the Blocking module. Storing the message as well to show 
 						ModuleBlock.blockerId = moduleId;
-						ModuleBlock.blockerMessage = "<h2 class=\"title\">Well Done!</h2><p>You've done very well, but you can go no further at this time!" +
-								" The administrator has temporary marked the following modules as closed.</p>" +
-								"<p>" + message + "</p>";
+						ModuleBlock.setMessage(message);
 						ModuleBlock.blockerEnabled = true;
 						log.debug("Blocker Enabled on module ");
-						out.write("<h2 class='title'>Block Enabled</h2><p>The block has been enabled successfully</p>");
+						out.write("<h3 class='title'>Block Enabled</h3><p>The block has been enabled successfully</p>");
 					}
 					else
 					{
@@ -110,7 +110,7 @@ public class StopHere extends HttpServlet
 						{
 							log.error("Module not found");
 						}
-						out.write("<h2 class='title'>Error</h2><p>Invalid data recieved</p>");
+						out.write("<h3 class='title'>Error</h3><p>Invalid data recieved</p>");
 					}
 				}
 				catch (Exception e)
