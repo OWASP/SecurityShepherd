@@ -66,7 +66,7 @@ public class DisableFeedback extends HttpServlet
 				try
 				{					
 					FeedbackStatus.setDisabled();
-					out.print("<h2 class=\"title\">Feedback Disabled</h2><br>" +
+					out.print("<h3 class=\"title\">Feedback Disabled</h3><br>" +
 						"<p>" +
 						"Users no longer have to submit a feedback form to complete a module." +
 						"<p>");
@@ -74,7 +74,7 @@ public class DisableFeedback extends HttpServlet
 				catch (Exception e)
 				{
 					log.error("Disable Feedback Error: " + e.toString());
-					out.print("<h2 class=\"title\">Disable Feedback Failure</h2><br>" +
+					out.print("<h3 class=\"title\">Disable Feedback Failure</h3><br>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -83,7 +83,7 @@ public class DisableFeedback extends HttpServlet
 			else
 			{
 				log.debug("CSRF tokens did not match");
-				out.print("<h2 class=\"title\">Disable Feedback Failure</h2><br>" +
+				out.print("<h3 class=\"title\">Disable Feedback Failure</h3><br>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 					"<p>");
@@ -91,7 +91,7 @@ public class DisableFeedback extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">Disable Feedback Failure</h2><br>" +
+			out.print("<h3 class=\"title\">Disable Feedback Failure</h3><br>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please log in or try non administrator functions!</font>" +
 					"<p>");

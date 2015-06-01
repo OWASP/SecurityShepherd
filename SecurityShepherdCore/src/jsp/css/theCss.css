@@ -30,7 +30,7 @@ h2 a {
 }
 
 h3 {
-	font-size: 1em;
+	font-size: 1.5em;
 }
 
 p, ul, ol {
@@ -299,4 +299,17 @@ a:hover {
 	display: inline-block;
 	margin-left: 5px;
 	line-height: 23px;
+}
+
+.informationBox {
+	display: block; 
+	margin 0; 
+	border-color:#A878EF; 
+	border-style:dashed; 
+	background-color: #D4D4D4; 
+	padding-top:5px; 
+	padding-bottom:5px; 
+	padding-right:5px; 
+	padding-left:5px;
+	margin-bottom: 5px;
 }

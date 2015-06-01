@@ -48,18 +48,6 @@ if (request.getSession() != null) //Session If
 		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
 		Encoder encoder = ESAPI.encoder();
 		String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
-		String ApplicationRoot = getServletContext().getRealPath("");
-		ResultSet classList = Getter.getClassInfo(ApplicationRoot);
-		boolean showClasses = true;
-		try
-		{
-			showClasses = classList.next();
-		}
-		catch(SQLException e)
-		{
-			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString(), ses.getAttribute("userName"));
-			showClasses = false;
-		}
 %>
 			<div id="formDiv" class="post">
 				<h1 class="title">Change Module Layout</h1>

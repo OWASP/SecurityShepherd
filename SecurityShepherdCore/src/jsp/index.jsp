@@ -126,9 +126,8 @@ if (request.getSession() != null)
 									<ul id="theConfigurationList" style="display: none;">
 										<li><a id="aboutShepherdLink" href="javascript:;">About Security Shepherd</a></li>
 										<li><a id="levelLayoutLink" href="javascript:;">Change Module Layout</a></li>
+										<li><a id="configureFeedbackLink" href="javascript:;">Configure Feedback</a></li>
 										<li><a id="scoreboardLink" href="javascript:;">Configure Scoreboard</a></li>
-										<li><a id="disableFeedbackLink" href="javascript:;">Disable Feedback</a></li>
-										<li><a id="enableFeedbackLink" href="javascript:;">Enable Feedback</a></li>
 										<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
 									</ul>
 								</li>
@@ -534,10 +533,10 @@ if (request.getSession() != null)
 				});
 			});
 
-			$("#disableFeedbackLink").click(function(){
+			$("#configureFeedbackLink").click(function(){
 					$("#submitResult").slideUp("fast", function(){
 					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/config/disableFeedback.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						$("#contentDiv").load("admin/config/configFeedback.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
 							var msg = "Sorry but there was an error: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
