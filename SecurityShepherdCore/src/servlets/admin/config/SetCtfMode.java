@@ -1,4 +1,4 @@
-package servlets.admin.moduleManagement;
+package servlets.admin.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,8 +15,9 @@ import org.apache.log4j.Logger;
 import utils.ModulePlan;
 import utils.ShepherdLogManager;
 import utils.Validate;
+
 /**
- * This control class is responsible for achieve the server functionality section of the Open Floor Schema
+ * Control class that modifies the server floor plan to a CTF/Incremental state. This is due a name change
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -35,10 +36,10 @@ import utils.Validate;
  * @author Mark Denihan
  *
  */
-public class SetOpenFloor extends HttpServlet
+public class SetCtfMode extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SetOpenFloor.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(SetCtfMode.class);
 	/**
 	 * Called to change the status of the utils.ModulePlan class. Once this has been called by a valid administrator, the utils.ModulePlan will be changed.
 	 * @param csrfToken
@@ -48,7 +49,7 @@ public class SetOpenFloor extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("*** servlets.Admin.SetOpenFloor ***");
+		log.debug("*** servlets.Admin.SetCtfMode ***");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -59,16 +60,18 @@ public class SetOpenFloor extends HttpServlet
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
-				ModulePlan.setOpenFloor();
-				log.debug("Open Floor Plan enabled");
-				out.write("<h2 class='title'>Open Floor Plan Enabled</h2>" +
-				"<p>Security Shepherd User is now using an open floor plan</p>");
+				ModulePlan.setIncrementalFloor();
+				log.debug("CTF Mode enabled");
+				out.write("<h2 class='title'>CTF Mode Enabled</h2>" +
+				"<p>Security Shepherd User is now using the CTF mode floor plan. You will need to refresh your page to see the changes</p>");
 			}
 			else
 			{
-				out.write("Error Occurred!");
+				String errorMessage = "Invalid CSRF Tokens Detected.";
+				log.debug(errorMessage);
+				out.write("Error Occurred! " + errorMessage + " Please refresh your page.");
 			}
 		}
-		log.debug("*** END servlets.Admin.SetOpenFloor ***");
+		log.debug("*** END servlets.Admin.SetCtfMode ***");
 	}
 }

@@ -116,19 +116,27 @@ if (request.getSession() != null)
 								<li>
 									<a id="cheatSheetManagementList" href="javascript:;">Cheat Sheet Management</a>
 									<ul id="theCheatSheetManagementList" style="display: none;">
-										<li><a id="enableCheatsLink" href="javascript:;">Enable Cheat Sheets</a></li>
-										<li><a id="disableCheatsLink" href="javascript:;">Disable Cheat Sheets</a></li>
 										<li><a id="createCheatsLink" href="javascript:;">Create New Cheat Sheet</a></li>
+										<li><a id="disableCheatsLink" href="javascript:;">Disable Cheat Sheets</a></li>
+										<li><a id="enableCheatsLink" href="javascript:;">Enable Cheat Sheets</a></li>										
+									</ul>
+								</li>
+								<li>
+									<a id="configurationList" href="javascript:;">Configuration</a>
+									<ul id="theConfigurationList" style="display: none;">
+										<li><a id="aboutShepherdLink" href="javascript:;">About Security Shepherd</a></li>
+										<li><a id="levelLayoutLink" href="javascript:;">Change Module Layout</a></li>
+										<li><a id="scoreboardLink" href="javascript:;">Configure Scoreboard</a></li>
+										<li><a id="disableFeedbackLink" href="javascript:;">Disable Feedback</a></li>
+										<li><a id="enableFeedbackLink" href="javascript:;">Enable Feedback</a></li>
+										<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
 									</ul>
 								</li>
 								<li>
 									<a id="moduleManagementList" href="javascript:;">Module Management</a>
 									<ul id="theModuleManagementList" style="display: none;">
-										<li><a id="openFloorModuleLink" href="javascript:;">Open Floor Plan</a></li>
-										<li><a id="tournamentFloorModuleLink" href="javascript:;">Tournament Floor Plan</a></li>
-										<li><a id="incrementalModulesLink" href="javascript:;">CTF Floor Plan</a></li>
-										<li><a id="stopHereLink" href="javascript:;">Enable Module Block</a></li>
 										<li><a id="disableBlockLink" href="javascript:;">Disable Module Block</a></li>
+										<li><a id="stopHereLink" href="javascript:;">Enable Module Block</a></li>
 										<li><a id="setModuleStatusLink" href="javascript:;">Open and Close Modules</a></li>
 										<li><a id="openCloseByCategory" href="javascript:;">Open or Close by Category</a></li>
 										<li><a id="feedbackLink" href="javascript:;">View Feedback</a></li>
@@ -138,27 +146,17 @@ if (request.getSession() != null)
 								<li>
 									<a id="userManagementList" href="javascript:;">User Management</a>
 									<ul id="theUserManagementList" style="display: none;">
-										<li><a id="createNewAdminLink" href="javascript:;">Create New Admin</a></li>
-										<li><a id="upgradePlayersLink" href="javascript:;">Upgrade Player to Admin</a></li>
 										<li><a id="addPlayersLink" href="javascript:;">Add Players</a></li>
 										<li><a id="updatePlayerScoreLink" href="javascript:;">Add / Deduct Player Points</a></li>
-										<li><a id="changePlayerPasswordLink" href="javascript:;">Reset Password</a></li>
-										<li><a id="suspendPlayerLink" href="javascript:;">Suspend Player</a></li>
-										<li><a id="unSuspendPlayerLink" href="javascript:;">Cancel Suspension</a></li>
-										<li><a id="createNewClassLink" href="javascript:;">Create Class</a></li>
-										<li><a id="setDefaultClassForRegistrationLink" href="javascript:;">Set Default Player Class</a></li>
 										<li><a id="assignPlayersLink" href="javascript:;">Assign Players to Class</a></li>
+										<li><a id="createNewClassLink" href="javascript:;">Create Class</a></li>
+										<li><a id="createNewAdminLink" href="javascript:;">Create New Admin</a></li>
 										<li><a id="registrationLink" href="javascript:;">Open/Close Registration</a></li>
-									</ul>
-								</li>
-								<li>
-									<a id="configurationList" href="javascript:;">Configuration</a>
-									<ul id="theConfigurationList" style="display: none;">
-										<li><a id="aboutShepherdLink" href="javascript:;">About Security Shepherd</a></li>
-										<li><a id="scoreboardLink" href="javascript:;">Configure Scoreboard</a></li>
-										<li><a id="enableFeedbackLink" href="javascript:;">Enable Feedback</a></li>
-										<li><a id="disableFeedbackLink" href="javascript:;">Disable Feedback</a></li>
-										<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
+										<li><a id="changePlayerPasswordLink" href="javascript:;">Reset Password</a></li>
+										<li><a id="setDefaultClassForRegistrationLink" href="javascript:;">Set Default Player Class</a></li>
+										<li><a id="suspendPlayerLink" href="javascript:;">Suspend Player</a></li>
+										<li><a id="unSuspendPlayerLink" href="javascript:;">Unsuspend Player</a></li>
+										<li><a id="upgradePlayersLink" href="javascript:;">Upgrade Player to Admin</a></li>
 									</ul>
 								</li>
 							</ul>
@@ -396,48 +394,6 @@ if (request.getSession() != null)
 				});
 			});
 
-			$("#openFloorModuleLink").click(function(){
-				$("#submitResult").slideUp("fast", function(){
-					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/moduleManagement/openFloor.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
-						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
-							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
-						  }
-						  $("#contentDiv").show("fast");
-						});
-					});	
-				});
-			});
-
-			$("#tournamentFloorModuleLink").click(function(){
-				$("#submitResult").slideUp("fast", function(){
-					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/moduleManagement/tournamentFloor.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
-						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
-							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
-						  }
-						  $("#contentDiv").show("fast");
-						});
-					});	
-				});
-			});
-
-			$("#incrementalModulesLink").click(function(){
-				$("#submitResult").slideUp("fast", function(){
-					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/moduleManagement/incrementalModules.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
-						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
-							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
-						  }
-						  $("#contentDiv").show("fast");
-						});
-					});
-				});
-			});
-
 			$("#feedbackLink").click(function(){
 				$("#submitResult").slideUp("fast", function(){
 					$("#contentDiv").hide("fast", function(){
@@ -594,17 +550,31 @@ if (request.getSession() != null)
 			
 			$("#aboutShepherdLink").click(function(){
 				$("#submitResult").slideUp("fast", function(){
-				$("#contentDiv").hide("fast", function(){
-					$("#contentDiv").load("admin/config/aboutShepherd.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
-					  if (status == "error") {
-						var msg = "Sorry but there was an error: ";
-						$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
-					  }
-					  $("#contentDiv").show("fast");
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/config/aboutShepherd.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
 					});
-				});
-			});	
-		});
+				});	
+			});
+			
+			$("#levelLayoutLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/config/changeLevelLayout.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "Sorry but there was an error: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});
+				});	
+			});
 			</script>
 		<% } %>
 		

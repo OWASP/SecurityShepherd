@@ -210,12 +210,12 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>/tournyFloorModules</servlet-name>
-		<servlet-class>servlets.admin.moduleManagement.SetTournyFloor</servlet-class>
+		<servlet-name>/tournamentModeModules</servlet-name>
+		<servlet-class>servlets.admin.config.SetTournamentMode</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>/tournyFloorModules</servlet-name>
-		<url-pattern>/tournyFloorModules</url-pattern>
+		<servlet-name>/tournamentModeModules</servlet-name>
+		<url-pattern>/tournamentModeModules</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
@@ -364,7 +364,7 @@
 	
 	<servlet>
 		<servlet-name>/openFloorModules</servlet-name>
-		<servlet-class>servlets.admin.moduleManagement.SetOpenFloor</servlet-class>
+		<servlet-class>servlets.admin.config.SetOpenFloorMode</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/openFloorModules</servlet-name>
@@ -372,12 +372,12 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>/incrementalModules</servlet-name>
-		<servlet-class>servlets.admin.moduleManagement.SetIncrementalFloorPlan</servlet-class>
+		<servlet-name>/setCtfMode</servlet-name>
+		<servlet-class>servlets.admin.config.SetCtfMode</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>/incrementalModules</servlet-name>
-		<url-pattern>/incrementalModules</url-pattern>
+		<servlet-name>/setCtfMode</servlet-name>
+		<url-pattern>/setCtfMode</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
