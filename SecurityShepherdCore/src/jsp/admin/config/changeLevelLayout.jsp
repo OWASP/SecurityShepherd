@@ -68,7 +68,7 @@ if (request.getSession() != null) //Session If
 						</a>
 					</div>
 					<div id="ctfLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-					<div id="ctfResultDiv" style="display: none"></div>
+					<div id="ctfResultDiv" style="display: none" class="informationBox"></div>
 					<div id="ctfBadData" style="display: none"></div>
 					<br>
 					
@@ -83,7 +83,7 @@ if (request.getSession() != null) //Session If
 						</a>
 					</div>
 					<div id="openFloorLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-					<div id="openFloorResultDiv" style="display:none;"></div>
+					<div id="openFloorResultDiv" style="display:none;" class="informationBox"></div>
 					<div id="openFloorBadData" style="display:none;"></div>
 					<br>
 					
@@ -98,7 +98,7 @@ if (request.getSession() != null) //Session If
 						</a>
 					</div>
 					<div id="tournamentLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-					<div id="tournamentResultDiv" style="display:none;"></div>
+					<div id="tournamentResultDiv" style="display:none;" class="informationBox"></div>
 					<div id="tournamentBadData" style="display:none;"></div>
 					<br>
 					<script>
@@ -131,8 +131,10 @@ if (request.getSession() != null) //Session If
 									$("#ctfBadData").show("slow");
 									$("#ctfDiv").slideDown("slow");
 								}
+								$('html, body').animate({
+							        scrollTop: $("#ctfResultDiv").offset().top
+							    }, 1000);
 							});
-							
 						});
 					});
 					
@@ -162,7 +164,10 @@ if (request.getSession() != null) //Session If
 									$("#openFloorBadData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
 									$("#openFloorBadData").show("slow");
 									$("#openFlood").slideDown("slow");
-								}										
+								}
+								$('html, body').animate({
+							        scrollTop: $("#openFloorResultDiv").offset().top
+							    }, 1000);
 							});
 						});
 					});
@@ -192,7 +197,10 @@ if (request.getSession() != null) //Session If
 									$("#tournamentBadData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
 									$("#tournamentBadData").show("slow");
 									$("#tournament").slideDown("slow");
-								}								
+								}	
+								$('html, body').animate({
+							        scrollTop: $("#tournamentResultDiv").offset().top
+							    }, 1000);
 							});
 						});
 					});

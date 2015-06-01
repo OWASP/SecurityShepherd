@@ -62,7 +62,7 @@ public class SetCtfMode extends HttpServlet
 			{
 				ModulePlan.setIncrementalFloor();
 				log.debug("CTF Mode enabled");
-				out.write("<h2 class='title'>CTF Mode Enabled</h2>" +
+				out.write("<h3 class='title'>CTF Mode Enabled</h3>" +
 				"<p>Security Shepherd User is now using the CTF mode floor plan. You will need to refresh your page to see the changes</p>");
 			}
 			else

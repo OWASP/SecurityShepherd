@@ -51,9 +51,9 @@ String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
 	<h1 class="title">Core Database Server Info</h1>
-	If you are using a non-standard database configuration for Security Shepherd, you will need to specify the following information for your core database.
-	The core database and exposed databases are normally seperated to seperate database servser to minimise any potential attacks on the core server data. 
-	If you run both schemas on the same database server you will still be secure, unless a custom level has been added that exposed your entire database to takeover! Database seperation is recommended.
+	<p>
+		If you are using a non-standard database configuration for Security Shepherd, you will need to specify the following information for your core database.
+	</p>
 	
 	<br/>
 	<br/>
@@ -66,19 +66,22 @@ String ApplicationRoot = getServletContext().getRealPath("");
 			<tr><td><p>Password:</p></td><td><input type="password" id="databasePassword" /></td></tr>
 			<tr><td colspan="2" align="center">
 				<input type="submit" id="submitButton" value="Set Core Database Data"/>
-				<div id="loadingSign" style="display: none;"><p>Loading...</p></div>
 			</td></tr>
 		</table>
 	</form>
+	<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
+	<div id="resultsDiv" class="informationBox" style="display: none;"></div>
 	</div>
 	<script>
 	$("#leForm").submit(function(){
 		$("#badData").hide("fast");
+		$("#resultsDiv").hide("fast");
+		$("#loadingSign").show("fast");
 		var url = $("#databaseURL").val();
 		var username = $("#databaseUsername").val();
 		var password = $("#databasePassword").val();
 		$("#submitButton").hide("fast");
-		$("#loadingSign").show("slow", function(){
+		$("#theStep").slideUp("fast", function(){
 			var ajaxCall = $.ajax({
 				dataType: "text",
 				type: "POST",
@@ -91,19 +94,21 @@ String ApplicationRoot = getServletContext().getRealPath("");
 				},
 				async: false
 			});
-			$("#theStep").hide("fast", function(){
+			$("#loadingSign").hide("fast", function(){
 				if(ajaxCall.status == 200)
 				{
-					$("#theStep").html(ajaxCall.responseText);
+					$("#resultsDiv").html(ajaxCall.responseText);
+					$("#resultsDiv").show("fast");
 				}
 				else
 				{
-					$("#badData").html("<p> An Error Occured: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+					$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
 					$("#badData").show("slow");
 				}
-			});
-			$("#loadingSign").hide("fast", function(){
-				$("#theStep").show("slow");
+				$("#theStep").slideDown("slow");
+				$('html, body').animate({
+			        scrollTop: $("#resultsDiv").offset().top
+			    }, 1000);
 			});
 		});
 	});

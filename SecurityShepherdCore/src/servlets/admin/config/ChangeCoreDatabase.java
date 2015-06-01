@@ -78,12 +78,12 @@ public class ChangeCoreDatabase extends HttpServlet
 					String userName = Validate.validateParameter(request.getParameter("databaseUsername"), 256);
 					log.debug("userName = " + userName);
 					String password = Validate.validateParameter(request.getParameter("databasePassword"), 256);
-					log.debug("password = " + password);
+					log.debug("password = NOTSHOWN");
 					
 					boolean validData = !url.isEmpty() && !userName.isEmpty() && !password.isEmpty();
 					if(Setter.setCoreDatabaseInfo(ApplicationRoot, url, userName, password))
 					{
-						out.write("<h2 class='title'>Core Database Info Updated</h2>" +
+						out.write("<h3 class='title'>Core Database Info Updated</h3>" +
 								"<p>The Core Database properties have successfully been updated!</p>");
 					}
 					else
@@ -100,7 +100,7 @@ public class ChangeCoreDatabase extends HttpServlet
 							log.error("Unexpected Failure");
 							errorMessage = "An Error Occurred";
 						}
-						out.print("<h2 class=\"title\">Core Database Info Update Failure</h2><br>" +
+						out.print("<h3 class=\"title\">Core Database Info Update Failure</h3><br>" +
 								"<p><font color=\"red\">" +
 								encoder.encodeForHTML(errorMessage) +
 								"</font><p>");
@@ -109,7 +109,7 @@ public class ChangeCoreDatabase extends HttpServlet
 				catch (Exception e)
 				{
 					log.error("Core Database Info Update Error: " + e.toString());
-					out.print("<h2 class=\"title\">Core Database Info Update Failure</h2><br>" +
+					out.print("<h3 class=\"title\">Core Database Info Update Failure</h3><br>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -118,7 +118,7 @@ public class ChangeCoreDatabase extends HttpServlet
 			else
 			{
 				log.debug("CSRF tokens did not match");
-				out.print("<h2 class=\"title\">Core Database Info Update Failure</h2><br>" +
+				out.print("<h3 class=\"title\">Core Database Info Update Failure</h3><br>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 					"<p>");
@@ -126,7 +126,7 @@ public class ChangeCoreDatabase extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">Core Database Info Update Failure</h2><br>" +
+			out.print("<h3 class=\"title\">Core Database Info Update Failure</h3><br>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please log in or try non administrator functions!</font>" +
 					"<p>");

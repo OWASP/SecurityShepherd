@@ -96,7 +96,6 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				async: false
 			});
 			$("#enableLoadingDiv").hide("fast", function(){
-				//$("#ctfDiv").show("slow"); //Commented out because I like the way The Option is gone after it has been clicked
 				if(ajaxCall.status == 200)
 				{
 					$("#enableResultDiv").html(ajaxCall.responseText);
@@ -110,7 +109,7 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				$("#enableFeedback").slideDown("slow");
 				$('html, body').animate({
 			        scrollTop: $("#enableResultDiv").offset().top
-			    }, 2000);
+			    }, 1000);
 			});
 		});
 	});
@@ -130,7 +129,6 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				async: false
 			});
 			$("#disableLoadingDiv").hide("fast", function(){
-				//$("#ctfDiv").show("slow"); //Commented out because I like the way The Option is gone after it has been clicked
 				if(ajaxCall.status == 200)
 				{
 					$("#disableResultDiv").html(ajaxCall.responseText);
@@ -144,7 +142,7 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				$("#disableFeedback").slideDown("slow");
 				$('html, body').animate({
 			        scrollTop: $("#disableResultDiv").offset().top
-			    }, 2000);
+			    }, 1000);
 			});
 		});
 	});

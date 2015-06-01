@@ -519,20 +519,6 @@ if (request.getSession() != null)
 				});
 			});
 
-			$("#enableFeedbackLink").click(function(){
-				$("#submitResult").slideUp("fast", function(){
-					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/config/enableFeedback.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
-						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
-							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
-						  }
-						  $("#contentDiv").show("fast");
-						});
-					});	
-				});
-			});
-
 			$("#configureFeedbackLink").click(function(){
 					$("#submitResult").slideUp("fast", function(){
 					$("#contentDiv").hide("fast", function(){

@@ -69,14 +69,14 @@ public class DisableScoreboard extends HttpServlet
 					ScoreboardStatus.disableScoreboard();
 					htmlOutput = "Scoreboard is now disabled and cannot be accessed.";
 					log.debug(htmlOutput);
-					htmlOutput = "<h2 class='title'>Scoreboard Settings Updated</h2>"
+					htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
 							+ "<p>" + htmlOutput +"</p>";
 					out.write(htmlOutput);
 				}
 				catch (Exception e)
 				{
 					log.error("SetDefaultClass Error: " + e.toString());
-					out.print("<h2 class=\"title\">Scoreboard Configuration Failure</h2><br>" +
+					out.print("<h3 class=\"title\">Scoreboard Configuration Failure</h3><br>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -85,7 +85,7 @@ public class DisableScoreboard extends HttpServlet
 			else
 			{
 				log.debug("CSRF Tokens did not match");
-				out.print("<h2 class=\"title\">Scoreboard Configuration Failure</h2><br>" +
+				out.print("<h3 class=\"title\">Scoreboard Configuration Failure</h3><br>" +
 						"<p>" +
 						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"<p>");
@@ -93,7 +93,7 @@ public class DisableScoreboard extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">Failure</h2><br>" +
+			out.print("<h3 class=\"title\">Failure</h3><br>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");

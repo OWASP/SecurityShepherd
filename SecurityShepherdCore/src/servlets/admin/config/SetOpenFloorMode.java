@@ -61,8 +61,8 @@ public class SetOpenFloorMode extends HttpServlet
 			{
 				ModulePlan.setOpenFloor();
 				log.debug("Open Floor Plan enabled");
-				out.write("<h2 class='title'>Open Floor Plan Enabled</h2>" +
-				"<p>Security Shepherd User is now using an open floor plan</p>");
+				out.write("<h3 class='title'>Open Floor Plan Enabled</h3>" +
+				"<p>Security Shepherd Users are now using an open floor plan. Refresh your browser to see these settings in effect.</p>");
 			}
 			else
 			{

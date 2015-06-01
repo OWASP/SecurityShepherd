@@ -50,14 +50,15 @@ Encoder encoder = ESAPI.encoder();
 String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<h1 class="title">About the OWASP Security Shepherd Projet</h1>
-	You are currently using Security Shepherd Version 2.4
-	<br><br>
-	The OWASP Security Shepherd project is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skillset to security expert status. 
-	For More information, please visit the <a href="http://bit.ly/owaspSecurityShepherd">OWASP Security Shepherd Wiki Page</a>.
-	<br><br>
-	Please report any bugs or any feature requets on the <a href="http://bit.ly/securityShepherdGithub">OWASP Security Shepherd Git Repository</a>.
-	
+	<h1 class="title">About the OWASP Security Shepherd Project</h1>
+	<p>
+		You are currently using Security Shepherd Version 2.4
+		<br><br>
+		The OWASP Security Shepherd project is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skill set to security expert status. 
+		For More information, please visit the <a href="http://bit.ly/owaspSecurityShepherd">OWASP Security Shepherd Wiki Page</a>.
+		<br><br>
+		Please report any bugs or any feature requests on the <a href="http://bit.ly/securityShepherdGithub">OWASP Security Shepherd Git Repository</a>.
+	</p>
 	<br/>
 	<br/>
 	<div id="badData" style="display: none;"></div>

@@ -98,7 +98,7 @@ public class EnableScoreboard extends HttpServlet
 					}
 					if(htmlOutput.isEmpty())
 					{
-						htmlOutput = "<h2 class='title'>Scoreboard Settings are Unchanged</h2>"
+						htmlOutput = "<h3 class='title'>Scoreboard Settings are Unchanged</h3>"
 								+ "<p>Invalid data was submitted. Please try again.</p>";
 					}
 					else //Function must have completed if this isn't empty
@@ -107,14 +107,14 @@ public class EnableScoreboard extends HttpServlet
 						if(restrictedScoreboard.isEmpty()) //Public Scoreboard
 						{
 							log.debug("Public Scoreboard Enabled");
-							htmlOutput = "<h2 class='title'>Scoreboard Settings Updated</h2>"
+							htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
 								+ "<p>" + htmlOutput +"</p>";
 						}
 						else
 						{
 							ScoreboardStatus.setScoreboardAdminOnly();
 							log.debug("Admin Only Scoreboard Enabled");
-							htmlOutput = "<h2 class='title'>Scoreboard Settings Updated</h2>"
+							htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
 								+ "<p>" + htmlOutput +" The scoreboard is only accessible by administrators</p>";
 						}
 					}
@@ -123,7 +123,7 @@ public class EnableScoreboard extends HttpServlet
 				catch (Exception e)
 				{
 					log.error("SetDefaultClass Error: " + e.toString());
-					out.print("<h2 class=\"title\">Scoreboard Configuration Failure</h2><br>" +
+					out.print("<h3 class=\"title\">Scoreboard Configuration Failure</h3><br>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -132,7 +132,7 @@ public class EnableScoreboard extends HttpServlet
 			else
 			{
 				log.debug("CSRF Tokens did not match");
-				out.print("<h2 class=\"title\">Scoreboard Configuration Failure</h2><br>" +
+				out.print("<h3 class=\"title\">Scoreboard Configuration Failure</h3><br>" +
 						"<p>" +
 						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"<p>");
@@ -140,7 +140,7 @@ public class EnableScoreboard extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">Failure</h2><br>" +
+			out.print("<h3 class=\"title\">Failure</h3><br>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");
