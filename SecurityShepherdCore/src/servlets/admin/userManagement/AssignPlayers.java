@@ -81,8 +81,6 @@ public class AssignPlayers extends HttpServlet
 					String[] players = request.getParameterValues("players[]");;
 					log.debug("players = " + players.toString());
 					
-					
-					
 					//Validation
 					notNull = (players != null);
 					log.debug("Ensuring strings are not empty");
@@ -91,7 +89,6 @@ public class AssignPlayers extends HttpServlet
 						log.debug("classId is empty; nulling");
 						classId = null;
 					}
-					
 					if(notNull)
 					{
 						if(classId != null)
@@ -109,8 +106,7 @@ public class AssignPlayers extends HttpServlet
 						{
 							log.debug("Validating player " + players[i]);
 							validPlayer = Getter.findPlayerById(ApplicationRoot, players[i]);
-						}
-							
+						}	
 					}
 					if(notNull && validPlayer)
 					{

@@ -53,10 +53,8 @@ String ApplicationRoot = getServletContext().getRealPath("");
 	<div id="formDiv" class="post">
 		<h1 class="title">Open and Close Levels</h1>
 		<div class="entry">
-			<div id="badData"></div>
 			<form id="theForm" action="javascript:;">
 				<p>Use this form to open and close levels by entire categories. Levels that are closed will not appear in any level listings.</p>
-				<div id="badData"></div>
 				<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
 				<div id="submitButton" align="center">
 					<div>
@@ -73,8 +71,8 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					</div>
 				</div>
 			</form>
-			<div id="loadingSign" style="display: none;"><p>Loading...</p></div> 
-			
+			<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
+			<div id="badData"></div>
 			<div id="resultDiv"></div>
 			<script>					
 			$("#theForm").submit(function(){
@@ -82,9 +80,9 @@ String ApplicationRoot = getServletContext().getRealPath("");
 				var theCsrfToken = $('#csrfToken').val();
 				//The Ajax Operation
 				$("#badData").hide("fast");
-				$("#submitButton").hide("fast");
+				$("#resultDiv").hide("fast");
 				$("#loadingSign").show("slow");
-				$("#resultDiv").hide("fast", function(){
+				$("#submitButton").slideUp("fast", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
 						url: "openCloseModuleCategories",
@@ -95,19 +93,22 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						},
 						async: false
 					});
-					if(ajaxCall.status == 200)
-					{
-						$("#resultDiv").html(ajaxCall.responseText);
-						$("#resultDiv").show("fast");
-					}
-					else
-					{
-						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-						$("#badData").show("slow");
-					}
-				});
-				$("#loadingSign").hide("fast", function(){
-					$("#submitButton").show("slow");
+					$("#loadingSign").hide("fast", function(){
+						if(ajaxCall.status == 200)
+						{
+							$("#resultDiv").html(ajaxCall.responseText);
+							$("#resultDiv").show("fast");
+						}
+						else
+						{
+							$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+							$("#badData").show("slow");
+						}
+						$("#submitButton").slideDown("slow");
+						$('html, body').animate({
+					        scrollTop: $("#resultDiv").offset().top
+					    }, 1000);
+					});
 				});
 			});
 			

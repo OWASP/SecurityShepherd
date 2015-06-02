@@ -55,7 +55,7 @@ public class GetPlayersByClass extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.GetPlayersByClass ***");
-		Encoder encoder = ESAPI.encoder();
+	
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -77,7 +77,7 @@ public class GetPlayersByClass extends HttpServlet
 					
 					log.debug("Getting Parameters");
 					String classId = (String)request.getParameter("classId");
-					log.debug("classId = " + classId);
+					log.debug("classId = '" + classId + "'");
 					
 					//Validation
 					log.debug("Ensuring not empty");
@@ -103,27 +103,9 @@ public class GetPlayersByClass extends HttpServlet
 					}
 					if(classId == null || classInfo != null)
 					{
-						try
-						{
-							String players = new String();
-							ResultSet playerList = Getter.getPlayersByClass(ApplicationRoot, classId);
-							log.debug("Iterating through playerList");
-							playerList.beforeFirst();
-							while(playerList.next())
-							{
-								
-								players +=
-									"<option value=\"" + encoder.encodeForHTMLAttribute(playerList.getString(1)) + "\">" +
-									encoder.encodeForHTML(playerList.getString(2)) +
-									"</option>";
-								log.debug("Adding " + playerList.getString(2) + " to output");
-							}
-							out.print(players);
-						}
-						catch(SQLException e1)
-						{
-							log.error("Error Occurred when handling playerList ResultSet");
-						}
+						ResultSet playerList = Getter.getPlayersByClass(ApplicationRoot, classId);
+						String players = playersInOptionTags(playerList);
+						out.print(players);
 					}
 					else
 					{
@@ -137,7 +119,7 @@ public class GetPlayersByClass extends HttpServlet
 				}
 				catch (Exception e)
 				{
-					log.error("Create New Admin Error: " + e.toString());
+					log.error("Get Players by Class Error: " + e.toString());
 					out.print("fail");
 				}
 			}
@@ -153,6 +135,32 @@ public class GetPlayersByClass extends HttpServlet
 			out.print("fail");
 		}
 		log.debug("*** GetPlayersByClass END ***");
+	}
+
+	public static String playersInOptionTags(ResultSet playerList) 
+	{
+		String players = new String();
+		Encoder encoder = ESAPI.encoder();
+		log.debug("Iterating through playerList");
+		try
+		{
+			playerList.beforeFirst();
+			while(playerList.next())
+			{
+				
+				players +=
+					"<option value=\"" + encoder.encodeForHTMLAttribute(playerList.getString(1)) + "\">" +
+					encoder.encodeForHTML(playerList.getString(2)) +
+					"</option>";
+				log.debug("Adding " + playerList.getString(2) + " to output");
+			}
+		}
+		catch(SQLException e1)
+		{
+			log.error("Error Occurred when handling playerList ResultSet");
+		}
+		log.debug("Returning: " + players);
+		return players;
 	}
 
 }

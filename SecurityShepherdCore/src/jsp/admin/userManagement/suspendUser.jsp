@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*, servlets.admin.userManagement.GetPlayersByClass" errorPage="" %>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: suspendUser.jsp *************************");
@@ -111,7 +111,11 @@ catch(SQLException e)
 						<td colspan="2">
 							<p>Select the player that you want to assign here</p>
 							<div id="playerSelect">	
-								<p>Please select a class above to continue.</p>
+								<center>
+									<select id='playerId' style='width: 300px;' multiple>
+										<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
+									</select>
+								</center>
 							</div>
 						</td>
 					</tr>

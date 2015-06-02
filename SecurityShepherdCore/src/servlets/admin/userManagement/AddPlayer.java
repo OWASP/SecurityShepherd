@@ -91,20 +91,23 @@ public class AddPlayer extends HttpServlet
 					log.debug("passWord retrieved");
 					String passWordConfirm = (String)request.getParameter("passWordConfirm");
 					log.debug("passWordConfirm retrieved");
-					String userAddress = (String)request.getParameter("userAddress");
+					String userAddress = Validate.validateParameter(request.getParameter("userAddress"), 128);
 					log.debug("userAddress = " + userAddress);
-					String userAddressCnf = (String)request.getParameter("userAddressCnf");
+					String userAddressCnf = Validate.validateParameter(request.getParameter("userAddressCnf"), 128);
 					log.debug("userAddressCnf = " + userAddressCnf);
 					
 					//Validation
-					notNull = (userName != null && passWord != null && userAddress != null);
+					notNull = (userName != null && passWord != null);
 					log.debug("Ensuring strings are not empty");
-					notEmpty = (!userName.isEmpty() && !passWord.isEmpty() && !userAddress.isEmpty());
+					notEmpty = (!userName.isEmpty() && !passWord.isEmpty());
 					log.debug("Validating passwords");
 					validPasswords = passWord.compareTo(passWordConfirm) == 0; // 0 returned if the same
 					log.debug("Validating addresses");
 					validAddress = userAddress.compareTo(userAddressCnf) == 0;
-					validAddress = (Validate.isValidEmailAddress(userAddress) && validAddress);
+					if(userAddress.isEmpty())
+						validAddress = true; //Null Addresses are ok
+					else
+						validAddress = (Validate.isValidEmailAddress(userAddress) && validAddress); //Malformed Addresses are Not ok
 					
 					boolean basicValidation = validPasswords && validAddress && notNull && notEmpty;
 					if(basicValidation)
@@ -120,15 +123,15 @@ public class AddPlayer extends HttpServlet
 						log.debug("Adding player to class " + classInfo[0] + " " + classInfo[1]);
 						if(Setter.userCreate(ApplicationRoot, classId, userName, passWord, "player", userAddress, true))
 						{
-							reponseMessage = "<div id='successAlert' class='successAlert'><p>" +
+							reponseMessage = "<div id='success' class='informationBox'><p>" +
 								"Player <a>" + encoder.encodeForHTML(userName) +"</a> added to <a>" + encoder.encodeForHTML(classInfo[0] + " " + classInfo[1]) + "</a> created successfully." +
 								"</p></div>";
 						}
 						else
 						{
-							reponseMessage = "<div id='errorAlert' class='errorAlert'><p>" +
+							reponseMessage = "<div id='error' class='informationBox'><p colour='red'><strong>" +
 							encoder.encodeForHTML(userName) + " was not added to the system due to an error." +
-							"</p></div>";
+							"</strong></p></div>";
 						}
 						out.print(reponseMessage);
 					}
@@ -161,33 +164,33 @@ public class AddPlayer extends HttpServlet
 							log.debug("Class Not Found");
 							errorMessage += "Class not found.";
 						}
-						out.print("<div id='errorAlert' class='errorAlert'><p>" +
+						out.print("<div id='error' class='informationBox'><p colour='red'><strong>" +
 								encoder.encodeForHTML(errorMessage) +
-								"</p></div>");
+								"</strong></p></div>");
 					}
 				}
 				catch (Exception e)
 				{
 					log.error("Create New Class Error: " + e.toString());
-					out.print("<div id='errorAlert' class='errorAlert'><p>" +
+					out.print("<div id='error' class='informationBox'><p colour='red'><strong>" +
 							"An error Occurred! Please try again." +
-							"</p></div>");
+							"</strong></p></div>");
 				}
 			}
 			else
 			{
 				log.debug("CSRF tokens did not match");
-				out.print("<div id='errorAlert' class='errorAlert'><p>" +
+				out.print("<div id='error' class='informationBox'><p colour='red'><strong>" +
 						"An error Occurred! CSRF Tokens did not match." +
-						"<p></div>");
+						"</strong><p></div>");
 			}
 		}
 		else
 		{
 			out.print(
-					"<div id='errorAlert' class='errorAlert'><p>" +
+					"<div id='error' class='informationBox'><p colour='red'><strong>" +
 					"An error Occurred! Please try non administrator functions!" +
-					"</p></div>");
+					"</strong></p></div>");
 		}
 		log.debug("*** addPlayer END ***");
 	}

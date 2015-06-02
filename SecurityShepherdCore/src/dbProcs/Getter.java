@@ -1426,6 +1426,7 @@ public class Getter
 	{
 		ResultSet result = null;
 		log.debug("*** Getter.getPlayersByClass (Single Class) ***");
+		log.debug("classId: '" + classId + "'");
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{

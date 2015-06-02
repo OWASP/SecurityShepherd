@@ -75,39 +75,39 @@ catch(SQLException e)
 				<table align="center">
 					<tr>
 						<td>
-							<p>Class :</p>
+							<p>Class<font color="red"><small>* </small></font> :</p>
 						</td>
 						<td>
 							<select id="classId">
 								<option value=""></option>
 								<%
 									if(showClasses)
-														{
-															try
-															{
-																do
-																{
-																	String classId = encoder.encodeForHTMLAttribute(classList.getString(1));
-																	String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+									{
+										try
+										{
+											do
+											{
+												String classId = encoder.encodeForHTMLAttribute(classList.getString(1));
+												String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+												%>
+													<option value="<%=classId%>"><%=classYearName%></option>
+												<%
+											}
+											while(classList.next());
+										}
+										catch(SQLException e)
+										{
+											ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+											showClasses = false;
+										}
+									}
 								%>
-												<option value="<%=classId%>"><%=classYearName%></option>
-											<%
-												}
-																			while(classList.next());
-																		}
-																		catch(SQLException e)
-																		{
-																			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
-																			showClasses = false;
-																		}
-																	}
-											%>
 							</select>
 						</td>
 					</tr>
-					<tr><td><p>Username:</p></td><td><input type="text" id="userName" value=""/></td></tr>
-					<tr><td><p>Password:</p></td><td><input type="password" id="passWord" /></td></tr>
-					<tr><td><p>Confirm Password:</p></td><td><input type="password" id="passWordConfirm" /></td></tr>
+					<tr><td><p>Username<font color="red"><small>* </small></font> :</p></td><td><input type="text" id="userName" value=""/></td></tr>
+					<tr><td><p>Password<font color="red"><small>* </small></font> :</p></td><td><input type="password" id="passWord" /></td></tr>
+					<tr><td><p>Confirm Password<font color="red"><small>* </small></font> :</p></td><td><input type="password" id="passWordConfirm" /></td></tr>
 					<tr><td><p>Email Address:</p></td><td><input type="text" id="userAddress" value=""/></td></tr>
 					<tr><td><p>Confirm Address:</p></td><td><input type="text" id="userAddressCnf" /></td></tr>
 					<tr><td colspan="2" align="center">
@@ -129,9 +129,7 @@ catch(SQLException e)
 		//Validation
 		if (theUserName.length == 0 ||
 			thePassWord.length == 0 ||
-			thePassWordConfirm.length == 0 ||
-			theUserAddress.length == 0 ||
-			theUserAddressCnf.length == 0)
+			thePassWordConfirm.length == 0)
 		{
 			$('#badData').html("<p><strong><font color='red'>All fields are required</font></strong></p>");
 		}
@@ -155,21 +153,6 @@ catch(SQLException e)
 			$('#passWord').css("background", "#E42217");
 			$('#passWordConfirm').css("background", "#E42217");
 			$('#badData').html("<p><strong><font color='red'>Password fields did not match. Please try Again.</font></strong></p>");
-		}
-		else if(theUserAddress.lenght <= 4 || theUserAddress.lenght > 128)
-		{
-			$('#userAddress').val("");
-			$('#userAddressCnf').val("");
-			$('#userAddress').css("background", "#E42217");
-			$('#badData').html("<p><strong><font color='red'>Invalid email address. Please try Again.</font></strong></p>");
-		}
-		else if(theUserAddress != theUserAddressCnf)
-		{
-			$('#userAddress').val("");
-			$('#userAddressCnf').val("");
-			$('#userAddress').css("background", "#E42217");
-			$('#userAddressCnf').css("background", "#E42217");
-			$('#badData').html("<p><strong><font color='red'>Email fields did not match. Please try Again.</font></strong></p>");
 		}
 		else
 		{
@@ -199,7 +182,7 @@ catch(SQLException e)
 			}
 			else
 			{
-				$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+				$("#badData").html("<div class='infomationBox'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
 			}
 		}
 	});

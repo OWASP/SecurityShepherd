@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*, servlets.admin.userManagement.GetPlayersByClass" errorPage="" %>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: assignPlayers.jsp *************************");
@@ -82,35 +82,39 @@ catch(SQLException e)
 								<option value="">Unassigned Players</option>
 								<%
 									if(showClasses)
-														{
-															try
-															{
-																do
-																{
-																	String classId = encoder.encodeForHTML(classList.getString(1));
-																	String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+									{
+										try
+										{
+											do
+											{
+												String classId = encoder.encodeForHTML(classList.getString(1));
+												String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+												%>
+													<option value="<%=classId%>"><%=classYearName%></option>
+												<%
+											}
+											while(classList.next());
+											classList.first();
+										}
+										catch(SQLException e)
+										{
+											ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+											showClasses = false;
+										}
+									}
 								%>
-												<option value="<%=classId%>"><%=classYearName%></option>
-											<%
-												}
-																			while(classList.next());
-																			classList.first();
-																		}
-																		catch(SQLException e)
-																		{
-																			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
-																			showClasses = false;
-																		}
-																	}
-											%>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">
 							<p>Select the players that you want to assign here</p>
-							<div id="playerSelect">	
-								<p>Please select a class above to continue.</p>
+							<div id="playerSelect" >
+								<center>
+									<select id='playerId' style='width: 300px;' multiple>
+										<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
+									</select>
+								</center>
 							</div>
 						</td>
 					</tr>
@@ -120,29 +124,29 @@ catch(SQLException e)
 						</td>
 						<td>
 							<select id="classId">
-								<option value="">Unassigned Players</option>
+								<option value="" id="nullClassOption">Unassigned Players</option>
 								<%
 									if(showClasses)
-														{
-															try
-															{
-																do
-																{
-																	String classId = encoder.encodeForHTML(classList.getString(1));
-																	String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+									{
+										try
+										{
+											do
+											{
+												String classId = encoder.encodeForHTML(classList.getString(1));
+												String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+												%>
+													<option value="<%=classId%>"><%=classYearName%></option>
+												<%
+											}
+											while(classList.next());
+										}
+										catch(SQLException e)
+										{
+											ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+											showClasses = false;
+										}
+									}
 								%>
-												<option value="<%=classId%>"><%=classYearName%></option>
-											<%
-												}
-																			while(classList.next());
-																		}
-																		catch(SQLException e)
-																		{
-																			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
-																			showClasses = false;
-																		}
-																	}
-											%>
 							</select>
 						</td>
 					</tr>
@@ -152,42 +156,50 @@ catch(SQLException e)
 				</table>
 			</form>
 		</div>
+		<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
 	</div>
 	<script>
 	$("#selectClass").change(function () {
+		refreshClassList()
+	});
+	
+	function refreshClassList() {
 		var theCsrfToken = $('#csrfToken').val();
-		var ajaxCall = $.ajax({
-			type: "POST",
-			url: "getPlayersByClass",
-			data: {
-				classId: $("#selectClass option:selected").val(),
-				csrfToken: theCsrfToken
-			},
-			async: false
-		});
-		if(ajaxCall.status == 200)
-		{
-			$("#playerSelect").hide("fast", function(){
-				if(ajaxCall.responseText == '')
+		$("#playerSelect").slideUp("slow", function(){
+			var ajaxCall = $.ajax({
+				type: "POST",
+				url: "getPlayersByClass",
+				data: {
+					classId: $("#selectClass option:selected").val(),
+					csrfToken: theCsrfToken
+				},
+				async: false
+			});
+			$("#loadingSign").hide("fast", function(){
+				if(ajaxCall.status == 200)
 				{
-					$("#playerSelect").html("<p><font color='red'>Sorry, but there are no players in this class</font></p>");
-				}
-				else if(ajaxCall.responseText == 'fail')
-				{
-					$("#playerSelect").html("<p><font color='red'>Sorry, but an error occured! Please try again!</font></p>");
+					if(ajaxCall.responseText == '')
+					{
+						$("#playerSelect").html("<p><font color='red'>Sorry, but there are no players in this class</font></p>");
+					}
+					else if(ajaxCall.responseText == 'fail')
+					{
+						$("#playerSelect").html("<p><font color='red'>Sorry, but an error occured! Please try again!</font></p>");
+					}
+					else
+					{
+						$("#playerSelect").html("<center><select id='playerId' style='width: 300px;' multiple>" + ajaxCall.responseText + "</select></center>");
+					}
 				}
 				else
 				{
-					$("#playerSelect").html("<center><select id='playerId' style='width: 300px;' multiple>" + ajaxCall.responseText + "</select></center>");
+					$("#badData").html("<p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+					$("#badData").show("slow");
 				}
-				$("#playerSelect").show("slow");
+				$("#playerSelect").slideDown("slow");
 			});
-		}
-		else
-		{
-			$("#badData").html("<p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-		}
-	});
+		});
+	}
 	
 	$("#theForm").submit(function(){
 		var theClass = $("#classId").val();
