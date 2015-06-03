@@ -68,7 +68,7 @@ catch(SQLException e)
 %>
 	<div id="formDiv" class="post">
 		<h1 class="title">Suspend Player</h1>
-		<div class="entry">
+		<div id="suspendDiv" class="entry">
 			<form id="theForm" action="javascript:;">
 				<p>Please select the player that you would like to suspend;</p>
 				<div id="badData"></div>
@@ -126,6 +126,10 @@ catch(SQLException e)
 				</table>
 			</form>
 		</div>
+		<br>
+		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+		<div id="resultDiv" style="display:none;" class="informationBox"></div>
+		<div id="badData"></div>
 	</div>
 	<script>
 	$("#selectClass").change(function () {
@@ -164,6 +168,7 @@ catch(SQLException e)
 	});
 	
 	$("#theForm").submit(function(){
+		//Get Data
 		var theCsrfToken = $('#csrfToken').val();
 		var theNumberOfMinutes = $('#numberOfMinutes').val();
 		var thePlayers = $("#playerId").val();
@@ -174,28 +179,37 @@ catch(SQLException e)
 		}
 		else
 		{
-			//The Ajax Operation
-			var ajaxCall = $.ajax({
-				type: "POST",
-				url: "suspendPlayer",
-				data: {
-					player: thePlayers,
-					numberOfMinutes: theNumberOfMinutes,
-					csrfToken: theCsrfToken
-				},
-				async: false
-			});
-			if(ajaxCall.status == 200)
-			{
-				$("#contentDiv").hide("fast", function(){
-					$("#contentDiv").html(ajaxCall.responseText);
-					$("#contentDiv").show("fast");
+			//Hide&Show Stuff
+			$("#loadingDiv").show("fast");
+			$("#badData").hide("fast");
+			$("#resultDiv").hide("fast");
+			$("#suspendDiv").slideUp("fast", function(){
+				//The Ajax Operation
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "suspendPlayer",
+					data: {
+						player: thePlayers,
+						numberOfMinutes: theNumberOfMinutes,
+						csrfToken: theCsrfToken
+					},
+					async: false
 				});
-			}
-			else
-			{
-				$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-			}
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					$("#suspendDiv").slideDown("slow");
+				});
+			});
 		}
 	});
 	</script>

@@ -100,12 +100,12 @@ public class SetDefaultClass extends HttpServlet
 					}
 					if(htmlOutput.isEmpty())
 					{
-						htmlOutput = "<h2 class='title'>Default Class is Unchanged</h2>"
+						htmlOutput = "<h3 class='title'>Default Class is Unchanged</h3>"
 								+ "<p>Invalid data was submitted. Please try again.</p>";
 					}
 					else //Function must have completed if this isn't empty
 					{
-						htmlOutput = "<h2 class='title'>Default Class Updated</h2>"
+						htmlOutput = "<h3 class='title'>Default Class Updated</h3>"
 								+ "<p>" + htmlOutput +"</p>";
 					}
 					out.write(htmlOutput);
@@ -113,7 +113,7 @@ public class SetDefaultClass extends HttpServlet
 				catch (Exception e)
 				{
 					log.error("SetDefaultClass Error: " + e.toString());
-					out.print("<h2 class=\"title\">Set Default Class Failure</h2><br>" +
+					out.print("<h3 class=\"title\">Set Default Class Failure</h3>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -122,7 +122,7 @@ public class SetDefaultClass extends HttpServlet
 			else
 			{
 				log.debug("CSRF Tokens did not match");
-				out.print("<h2 class=\"title\">Player Assignment Failure</h2><br>" +
+				out.print("<h3 class=\"title\">Player Assignment Failure</h3>" +
 						"<p>" +
 						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"<p>");
@@ -130,7 +130,7 @@ public class SetDefaultClass extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">Failure</h2><br>" +
+			out.print("<h3 class=\"title\">Failure</h3>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");

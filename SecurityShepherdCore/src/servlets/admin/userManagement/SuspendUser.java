@@ -98,10 +98,10 @@ public class SuspendUser extends HttpServlet
 						{
 							reponseMessage += "<font color='red'>User could not be suspended. Please try again.</font><br/>";
 						}
-						out.print("<h2 class=\"title\">" + functionName + " Result</h2><br>" +
+						out.print("<h3 class=\"title\">User Suspended</h3>" +
 								"<p>" +
 								reponseMessage +
-								"<p>");
+								". Their active session will be killed at the next oppertunity.<p>");
 					}
 					else
 					{
@@ -117,7 +117,7 @@ public class SuspendUser extends HttpServlet
 							log.error("Player not found");
 							errorMessage += "Player Not Found. Please try again";
 						}
-						out.print("<h2 class=\"title\">" + functionName + " Failure</h2><br>" +
+						out.print("<h3 class=\"title\">" + functionName + " Failure</h3>" +
 								"<p><font color=\"red\">" +
 								encoder.encodeForHTML(errorMessage) +
 								"</font><p>");
@@ -126,7 +126,7 @@ public class SuspendUser extends HttpServlet
 				catch (Exception e)
 				{
 					log.error(functionName + " Error: " + e.toString());
-					out.print("<h2 class=\"title\">" + functionName + " Failure</h2><br>" +
+					out.print("<h3 class=\"title\">" + functionName + " Failure</h3>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -135,7 +135,7 @@ public class SuspendUser extends HttpServlet
 			else
 			{
 				log.debug("CSRF Tokens did not match");
-				out.print("<h2 class=\"title\">" + functionName + " Failure</h2><br>" +
+				out.print("<h3 class=\"title\">" + functionName + " Failure</h3>" +
 						"<p>" +
 						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"<p>");
@@ -143,7 +143,7 @@ public class SuspendUser extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">" + functionName + " Failure</h2><br>" +
+			out.print("<h3 class=\"title\">" + functionName + " Failure</h3>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");

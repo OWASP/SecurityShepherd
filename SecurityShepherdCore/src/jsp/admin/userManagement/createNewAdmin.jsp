@@ -79,7 +79,6 @@ if(ses.getAttribute("errorMessage") != null)
 		<div id="createUserDiv" class="entry">
 			<form id="theForm" action="javascript:;">
 			<p>Please input what data you want the new administrator to have. Please note that the password will be temporary.</p>
-			<div id="badData"></div>
 			<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
 				<table align="center">
 					<tr><td><p>Username<font color="red"><small>* </small></font> :</p></td><td><input type="text" id="userName" value="<%= newUserName %>"/></td></tr>

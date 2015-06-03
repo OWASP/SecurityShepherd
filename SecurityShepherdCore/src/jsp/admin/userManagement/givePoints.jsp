@@ -71,7 +71,6 @@ catch(SQLException e)
 		<div class="entry">
 			<form id="theForm" action="javascript:;">
 				<p>Use this function to reward or punish your players. Use the following form with a positive or negitive number to modify the amount of points a player has. For the best results, ensure your users can see the Shepherd Scoreboard. If you push a player into negative points they will not appear on the scoreboard.</p>
-				<div id="badData"></div>
 				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
 				<div id="updatePointsDiv">
 					<table align="center">
@@ -127,6 +126,7 @@ catch(SQLException e)
 						</td></tr>
 					</table>
 				</div>
+				<br>
 				<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
 				<div id="resultDiv" style="display:none;" class="informationBox"></div>
 				<div id="badData"></div>

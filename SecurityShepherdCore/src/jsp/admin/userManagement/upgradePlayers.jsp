@@ -68,7 +68,7 @@ catch(SQLException e)
 %>
 	<div id="formDiv" class="post">
 		<h1 class="title">Upgrade Players</h1>
-		<div class="entry">
+		<div id="upgradeDiv" class="entry">
 			<form id="theForm" action="javascript:;">
 				<p>Please select the player that you would like to upgrade to an administrator</p>
 				<div id="badData"></div>
@@ -112,7 +112,7 @@ catch(SQLException e)
 							<p>Select the players that you want to assign here</p>
 							<div id="playerSelect">	
 								<center>
-									<select id='playerId' style='width: 300px;' multiple>
+									<select id='playerId' style='width: 300px;'>
 										<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
 									</select>
 								</center>
@@ -125,6 +125,10 @@ catch(SQLException e)
 				</table>
 			</form>
 		</div>
+		<br>
+		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+		<div id="resultDiv" style="display:none;" class="informationBox"></div>
+		<div id="badData"></div>
 	</div>
 	<script>
 	$("#selectClass").change(function () {
@@ -163,6 +167,7 @@ catch(SQLException e)
 	});
 	
 	$("#theForm").submit(function(){
+		//Get Data
 		var theCsrfToken = $('#csrfToken').val();
 		var thePlayers = $("#playerId").val();
 		//Validation
@@ -172,27 +177,36 @@ catch(SQLException e)
 		}
 		else
 		{
-			//The Ajax Operation
-			var ajaxCall = $.ajax({
-				type: "POST",
-				url: "upgradePlayer",
-				data: {
-					players: thePlayers, 
-					csrfToken: theCsrfToken
-				},
-				async: false
-			});
-			if(ajaxCall.status == 200)
-			{
-				$("#contentDiv").hide("fast", function(){
-					$("#contentDiv").html(ajaxCall.responseText);
-					$("#contentDiv").show("fast");
+			//Hide&Show Stuff
+			$("#loadingDiv").show("fast");
+			$("#badData").hide("fast");
+			$("#resultDiv").hide("fast");
+			$("#upgradeDiv").slideUp("fast", function(){
+				//The Ajax Operation
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "upgradePlayer",
+					data: {
+						players: thePlayers, 
+						csrfToken: theCsrfToken
+					},
+					async: false
 				});
-			}
-			else
-			{
-				$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-			}
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					$("#upgradeDiv").slideDown("slow");
+				});
+			});
 		}
 	});
 	</script>

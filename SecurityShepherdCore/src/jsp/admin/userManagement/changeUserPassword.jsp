@@ -68,43 +68,43 @@ catch(SQLException e)
 %>
 	<div id="formDiv" class="post">
 		<h1 class="title">Change Player Password</h1>
-		<div class="entry">
+		<div id="resetPasswordDiv" class="entry">
 			<form id="theForm" action="javascript:;">
-				<p>Please select the player that you would like to change the password of;</p>
+				<p>You can use this function to update a users password. This password will be temporary, and they will be forced to change it upon sign in.</p>
 				<div id="badData"></div>
 				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
 				<table align="center">
 					<tr>
-						<td>
-							<p>Class:</p>
-						</td>
-						<td>
-							<select id="selectClass">
+						<td colspan="2">
+							<p>Pick the class of the player you wish to modify</p>
+							<center>
+							<select id="selectClass" style="width: 300px;">
 								<option value="">Unassigned Players</option>
 								<%
-									if(showClasses)
+								if(showClasses)
+								{
+									try
 									{
-										try
+										do
 										{
-											do
-											{
-												String classId = encoder.encodeForHTML(classList.getString(1));
-												String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
-												%>
-												<option value="<%=classId%>"><%=classYearName%></option>
-												<%
-											}
-											while(classList.next());
-											classList.first();
-										}
-										catch(SQLException e)
-										{
-											ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
-											showClasses = false;
-										}
-									}
+											String classId = encoder.encodeForHTML(classList.getString(1));
+											String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
 											%>
+											<option value="<%=classId%>"><%=classYearName%></option>
+											<%
+										}
+										while(classList.next());
+										classList.first();
+									}
+									catch(SQLException e)
+									{
+										ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+										showClasses = false;
+									}
+								}
+								%>
 							</select>
+							</center>
 						</td>
 					</tr>
 					<tr>
@@ -116,6 +116,7 @@ catch(SQLException e)
 										<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
 									</select>
 								</center>
+								<br>
 							</div>
 						</td>
 					</tr>
@@ -126,6 +127,10 @@ catch(SQLException e)
 				</table>
 			</form>
 		</div>
+		<br>
+				<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+				<div id="resultDiv" style="display:none;" class="informationBox"></div>
+				<div id="badData"></div>
 	</div>
 	<script>
 	$("#selectClass").change(function () {
@@ -164,6 +169,7 @@ catch(SQLException e)
 	});
 	
 	$("#theForm").submit(function(){
+		//Get Data
 		var theCsrfToken = $('#csrfToken').val();
 		var theNewPassword = $('#newPassword').val();
 		var thePlayers = $("#playerId").val();
@@ -178,28 +184,37 @@ catch(SQLException e)
 		}
 		else
 		{
-			//The Ajax Operation
-			var ajaxCall = $.ajax({
-				type: "POST",
-				url: "changeUserPassword",
-				data: {
-					player: thePlayers,
-					password: theNewPassword,
-					csrfToken: theCsrfToken
-				},
-				async: false
-			});
-			if(ajaxCall.status == 200)
-			{
-				$("#contentDiv").hide("fast", function(){
-					$("#contentDiv").html(ajaxCall.responseText);
-					$("#contentDiv").show("fast");
+			//Hide&Show Stuff
+			$("#loadingDiv").show("fast");
+			$("#badData").hide("fast");
+			$("#resultDiv").hide("fast");
+			$("#resetPasswordDiv").slideUp("fast", function(){
+				//The Ajax Operation
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "changeUserPassword",
+					data: {
+						player: thePlayers,
+						password: theNewPassword,
+						csrfToken: theCsrfToken
+					},
+					async: false
 				});
-			}
-			else
-			{
-				$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-			}
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					$("#resetPasswordDiv").slideDown("slow");
+				});
+			});
 		}
 	});
 	</script>
