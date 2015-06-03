@@ -1,8 +1,11 @@
 # OWASP Security Shepherd
-The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skillset to security expert status.
+The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skill set to security expert status.
   
 # Where can I download Security Shepherd?
-You can download Security Shepherd VM's or Manual Instalation Packs from [SourceForge](http://bit.ly/1JbtQtP)
+You can download Security Shepherd VM's or Manual Installation Packs from [SourceForge](http://bit.ly/1JbtQtP)
+
+# How do I setup Security Shepherd?
+We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.
   
 # What can Security Shepherd be used for?
 Security Shepherd can be used as a;
@@ -33,7 +36,7 @@ Security Shepherd has a configurable scoreboard to encourage a competitive learn
 * **User Management**  
 Security Shepherd admins can create users, create admins, suspend, unsuspend, add bonus points or take penalty points away user accounts with the admin user management controls. Admins can also segment their students into specific class groups. Admins can view the progress a class has made to identify struggling participants. An admin can even close public registration and manually create users if they wish for a private experience.
 * **Robust Service**  
-Shepherd has been used to run online CTFs such as the OWASP Global CTF and OWASP LATAM Tour CTF 2015, both surpassing 200 active users and running with no downtime, bar planned maintenance periods.
+Shepherd has been used to run online CTFs such as the OWASP Global CTF and OWASP LATAM Tour CTF 2015, both surpassing 200 active users and running with no down time, bar planned maintenance periods.
 * **Configurable Feedback**  
 An administrator can enable a feedback process, which must be completed by users before a level is marked as complete. This is used both to facilitate project improvements based on feedback submitted and for system administrators to collect "Reports of Understanding" from their students.
 * **Granular Logging**  
