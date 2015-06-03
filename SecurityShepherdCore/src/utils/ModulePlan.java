@@ -22,9 +22,9 @@ package utils;
  */
 public class ModulePlan
 {
-	public static boolean openFloor = false;
+	public static boolean openFloor = true;
 	public static boolean incrementalFloor = false;
-	public static boolean tornyFloor = true;
+	public static boolean tornyFloor = false;
 	
 	public static boolean isIncrementalFloor() 
 	{
@@ -60,5 +60,17 @@ public class ModulePlan
 		openFloor = false;
 		incrementalFloor = false;
 		tornyFloor = true;
+	}
+	
+	public static String currentMode()
+	{
+		String result = new String();
+		if(openFloor)
+			result = "Open Floor";
+		else if (incrementalFloor)
+			result = "CTF";
+		else
+			result = "Tournament";
+		return result;
 	}
 }

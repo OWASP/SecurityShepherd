@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*, java.util.Calendar, java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: createNewClass.jsp *************************");
@@ -55,23 +55,27 @@ String ApplicationRoot = getServletContext().getRealPath("");
 %>
 	<div id="formDiv" class="post">
 		<h1 class="title">Create New Class</h1>
-		<div class="entry">
+		<div id="createClassDiv" class="entry">
 			<form id="theForm" action="javascript:;">
-			<p>Please input the data you would like the new class to have. The class year format should be YY/YY, such as 11/12.</p>
-			<div id="badData"></div>
+			<p>Please input the data you would like the new class to have. The class year format should be YYYY, such as 2010.</p>
 			<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
 				<table align="center">
 					<tr><td><p>Class Name:</p></td><td><input type="text" id="className" value=""/></td></tr>
-					<tr><td><p>Class Year:</p></td><td><input type="text" id="classYear" /></td></tr>
+					<tr><td><p>Class Year:</p></td><td><input type="text" id="classYear" value="<%= Calendar.getInstance().get(Calendar.YEAR) %>"/></td></tr>
 					<tr><td colspan="2" align="center">
 						<input type="submit" id="submitButton" value="Create New Class"/>
 					</td></tr>
 				</table>
 			</form>
 		</div>
+		<br>
+		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+		<div id="resultDiv" style="display:none;" class="informationBox"></div>
+		<div id="badData"></div>
 	</div>
 	<script>
 	$("#theForm").submit(function(){
+		//Get Data
 		var theClassName = $("#className").attr('value');
 		var theClassYear = $('#classYear').attr('value');
 		var theCsrfToken = $('#csrfToken').attr('value');
@@ -86,35 +90,45 @@ String ApplicationRoot = getServletContext().getRealPath("");
 			$('#className').css("background", "#E42217");
 			$('#badData').html("<p><strong><font color='red'>Invalid Class Name. Please try Again.</font></strong></p>");
 		}
-		else if(theClassYear.length != 5)
+		else if(theClassYear.length != 4)
 		{
 			$('#classYear').val("");
 			$('#classYear').css("background", "#E42217");
-			$('#badData').html("<p><strong><font color='red'>Invalid class year. Please try again with the YY/YY format (eg: 11/12)</font></strong></p>");
+			$('#badData').html("<p><strong><font color='red'>Invalid class year. Please try again with the YYYY format (eg: 2010)</font></strong></p>");
 		}
 		else
 		{
-			//The Ajax Operation
-			var ajaxCall = $.ajax({
-				type: "POST",
-				url: "createNewClass",
-				data: {
-					className: theClassName, 
-					classYear: theClassYear, 
-					csrfToken: theCsrfToken
-				},
-				async: false
+			//Hide&Show Stuff
+			$("#loadingDiv").show("fast");
+			$("#badData").hide("fast");
+			$("#resultDiv").hide("fast");
+			$("#createClassDiv").slideUp("fast", function(){
+				//The Ajax Operation
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "createNewClass",
+					data: {
+						className: theClassName, 
+						classYear: theClassYear, 
+						csrfToken: theCsrfToken
+					},
+					async: false
+				});
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					$("#createClassDiv").slideDown("slow");
+				});
 			});
-			$("#contentDiv").hide("fast");
-			if(ajaxCall.status == 200)
-			{
-				$("#contentDiv").html(ajaxCall.responseText);
-			}
-			else
-			{
-				$("#contentDiv").html("<p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-			}
-			$("#contentDiv").show("fast");
 		}
 	});
 	</script>

@@ -85,20 +85,28 @@ public class GiveTakePoints extends HttpServlet
 					{
 						//Data is good, Add user
 						log.debug("Updating Player Score by " + amountOfPointsString + " points");
-						String reponseMessage = new String();
+						String responseMessage = new String();
 						if(Setter.updateUserPoints(ApplicationRoot, player, amountOfPoints))
 						{
 							String userName = new String(Getter.getUserName(ApplicationRoot, player));
-							reponseMessage += "<a>" + encoder.encodeForHTML(userName) + "</a> has been updated by <b>" + amountOfPoints + "</b> points.<br>";
+							responseMessage += "<a>" + encoder.encodeForHTML(userName) + "</a> has been ";
+							if(amountOfPoints >= 0)
+								responseMessage += "given";
+							else
+								responseMessage += "deducted";
+							responseMessage += " <b>" + amountOfPoints + "</b> points.<br>";
 						}
 						else
 						{
-							reponseMessage += "<font color='red'>User score could not be updated. Please try again.</font><br/>";
+							responseMessage += "<font color='red'>User score could not be updated. Please try again.</font><br/>";
 						}
-						out.print("<h2 class=\"title\">" + functionName + " Result</h2><br>" +
-								"<p>" +
-								reponseMessage +
-								"<p>");
+						String htmlOutput = "<h3 class=\"title\"> Points ";
+						if (amountOfPoints >= 0)
+							htmlOutput += "Added ";
+						else
+							htmlOutput += "Subtracted";
+						htmlOutput += "</h3>" + "<p>" + responseMessage +	"<p>";
+						out.write(htmlOutput);
 					}
 					else
 					{
@@ -114,7 +122,7 @@ public class GiveTakePoints extends HttpServlet
 							log.error("Player not found");
 							errorMessage += "Player Not Found. Please try again";
 						}
-						out.print("<h2 class=\"title\">" + functionName + " Failure</h2><br>" +
+						out.print("<h3 class=\"title\">" + functionName + " Failure</h3><br>" +
 								"<p><font color=\"red\">" +
 								encoder.encodeForHTML(errorMessage) +
 								"</font><p>");
@@ -123,7 +131,7 @@ public class GiveTakePoints extends HttpServlet
 				catch (Exception e)
 				{
 					log.error(functionName + " Error: " + e.toString());
-					out.print("<h2 class=\"title\">" + functionName + " Failure</h2><br>" +
+					out.print("<h3 class=\"title\">" + functionName + " Failure</h3><br>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -132,7 +140,7 @@ public class GiveTakePoints extends HttpServlet
 			else
 			{
 				log.debug("CSRF Tokens did not match");
-				out.print("<h2 class=\"title\">" + functionName + " Failure</h2><br>" +
+				out.print("<h3 class=\"title\">" + functionName + " Failure</h3><br>" +
 						"<p>" +
 						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"<p>");
@@ -140,7 +148,7 @@ public class GiveTakePoints extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">" + functionName + " Failure</h2><br>" +
+			out.print("<h3 class=\"title\">" + functionName + " Failure</h3><br>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");

@@ -101,12 +101,12 @@ public class Validate
 	public static boolean isValidClassYear(String classYear)
 	{
 		boolean result = false;
-		result = classYear.length() == 5;
+		result = classYear.length() == 4;
 		if(result)
 		{
 			try
 			{
-				result = Integer.parseInt(classYear.substring(0, 2)) < Integer.parseInt(classYear.substring(3, 5));
+				result = Integer.parseInt(classYear) > 2010;
 			}
 			catch(Exception e)
 			{

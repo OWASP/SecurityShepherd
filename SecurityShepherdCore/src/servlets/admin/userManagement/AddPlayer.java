@@ -123,9 +123,11 @@ public class AddPlayer extends HttpServlet
 						log.debug("Adding player to class " + classInfo[0] + " " + classInfo[1]);
 						if(Setter.userCreate(ApplicationRoot, classId, userName, passWord, "player", userAddress, true))
 						{
-							reponseMessage = "<div id='success' class='informationBox'><p>" +
+							if(userAddress.isEmpty())
+								userAddress = "blank"; //For Output Message
+							reponseMessage = "<p>" +
 								"Player <a>" + encoder.encodeForHTML(userName) +"</a> added to <a>" + encoder.encodeForHTML(classInfo[0] + " " + classInfo[1]) + "</a> created successfully." +
-								"</p></div>";
+								"</p>";
 						}
 						else
 						{

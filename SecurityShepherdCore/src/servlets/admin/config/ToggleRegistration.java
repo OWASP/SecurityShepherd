@@ -1,4 +1,4 @@
-package servlets.admin.userManagement;
+package servlets.admin.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -67,13 +67,17 @@ public class ToggleRegistration extends HttpServlet
 					String ApplicationRoot = getServletContext().getRealPath("");
 					log.debug("Servlet root = " + ApplicationRoot );
 					OpenRegistration.toggle();
-					out.write("<h2 class='title'>Registration Availability Updated</h2>" +
-							"<p>The application Registration Availability has been updated</p>");
+					String htmlOutput = new String();
+					if(OpenRegistration.isDisabled())
+						htmlOutput = "<h3 class='title'>Registration Closed</h3><p>The application Registration has been disabled. Users will not be able to register new users.</p>";
+					else
+						htmlOutput = "<h3 class='title'>Registration Opened</h3><p>The application Registration has been enabled. Users will now be able to register new users.</p>";
+					out.write(htmlOutput);
 				}
 				catch (Exception e)
 				{
 					log.error("Registration Availability Update Error: " + e.toString());
-					out.print("<h2 class=\"title\">Registration Availability Update Failure</h2><br>" +
+					out.print("<h3 class=\"title\">Registration Availability Update Failure</h3><br>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -82,7 +86,7 @@ public class ToggleRegistration extends HttpServlet
 			else
 			{
 				log.debug("CSRF tokens did not match");
-				out.print("<h2 class=\"title\">Registration Availability Update Failure</h2><br>" +
+				out.print("<h3 class=\"title\">Registration Availability Update Failure</h3><br>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 					"<p>");
@@ -90,7 +94,7 @@ public class ToggleRegistration extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">Registration Availability Update Failure</h2><br>" +
+			out.print("<h3 class=\"title\">Registration Availability Update Failure</h3><br>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please log in or try non administrator functions!</font>" +
 					"<p>");

@@ -82,7 +82,7 @@ if(ses.getAttribute("loginFailed") != null)
 			<% } %>
 			<form name="loginForm" method="POST" action="login">
 				<table>
-					<tr><td><p>Username:</td><td><input type="text" name="login" value="" autocomplete="OFF"/></p></td></tr>
+					<tr><td><p>Username:</td><td><input type="text" name="login" value="" autocomplete="OFF" autofocus/></p></td></tr>
 					<tr><td><p>Password:&nbsp;&nbsp;&nbsp;&nbsp;
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

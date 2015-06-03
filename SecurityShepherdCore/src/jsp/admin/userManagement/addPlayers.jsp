@@ -67,10 +67,9 @@ catch(SQLException e)
 %>
 	<div id="formDiv" class="post">
 		<h1 class="title">Add Players</h1>
-		<div class="entry">
+		<div id="createUserDiv" class="entry">
 			<form id="theForm" action="javascript:;">
 			<p>Please select the class you would like to add a player to and input the player information for the player you wish to create.</p>
-			<div id="badData"></div>
 			<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
 				<table align="center">
 					<tr>
@@ -116,9 +115,14 @@ catch(SQLException e)
 				</table>
 			</form>
 		</div>
+		<br>
+		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+		<div id="resultDiv" style="display:none;" class="informationBox"></div>
+		<div id="badData"></div>
 	</div>
 	<script>
 	$("#theForm").submit(function(){
+		//Get Data
 		var theClass = $("#classId").val();
 		var theUserName = $("#userName").attr('value');
 		var thePassWord = $('#passWord').attr('value');
@@ -131,7 +135,7 @@ catch(SQLException e)
 			thePassWord.length == 0 ||
 			thePassWordConfirm.length == 0)
 		{
-			$('#badData').html("<p><strong><font color='red'>All fields are required</font></strong></p>");
+			$('#badData').html("<p><strong><font color='red'>All required fields must be populated </font></strong></p>");
 		}
 		else if(theUserName.length < 5 || theUserName.lenght > 32)
 		{
@@ -156,34 +160,47 @@ catch(SQLException e)
 		}
 		else
 		{
-			//The Ajax Operation
-			var ajaxCall = $.ajax({
-				type: "POST",
-				url: "addPlayer",
-				data: {
-					classId: theClass,
-					userName: theUserName, 
-					passWord: thePassWord, 
-					passWordConfirm: thePassWordConfirm,
-					userAddress: theUserAddress,
-					userAddressCnf: theUserAddressCnf,
-					csrfToken: theCsrfToken
-				},
-				async: false
+			//Hide&Show Stuff
+			$("#loadingDiv").show("fast");
+			$("#badData").hide("fast");
+			$("#resultDiv").hide("fast");
+			$("#createUserDiv").slideUp("fast", function(){
+				//The Ajax Operation
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "addPlayer",
+					data: {
+						classId: theClass,
+						userName: theUserName, 
+						passWord: thePassWord, 
+						passWordConfirm: thePassWordConfirm,
+						userAddress: theUserAddress,
+						userAddressCnf: theUserAddressCnf,
+						csrfToken: theCsrfToken
+					},
+					async: false
+				});
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Reset Form
+						$("#userName").val('');
+						$('#passWord').val('');
+						$('#passWordConfirm').val('');
+						$('#userAddress').val('');
+						$('#userAddressCnf').val('');
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					$("#createUserDiv").slideDown("slow");
+				});
 			});
-			if(ajaxCall.status == 200)
-			{
-				$("#userName").val('');
-				$('#passWord').val('');
-				$('#passWordConfirm').val('');
-				$('#userAddress').val('');
-				$('#userAddressCnf').val('');
-				$("#contentDiv").append(ajaxCall.responseText);
-			}
-			else
-			{
-				$("#badData").html("<div class='infomationBox'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-			}
 		}
 	});
 	</script>

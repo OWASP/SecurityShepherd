@@ -112,7 +112,7 @@ catch(SQLException e)
 							<p>Select the player that you want to assign here</p>
 							<div id="playerSelect">	
 								<center>
-									<select id='playerId' style='width: 300px;' multiple>
+									<select id='playerId' style='width: 300px;'>
 										<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
 									</select>
 								</center>

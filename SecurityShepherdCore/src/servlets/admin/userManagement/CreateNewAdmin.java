@@ -87,22 +87,26 @@ public class CreateNewAdmin extends HttpServlet
 					log.debug("passWord retrieved");
 					String passWordConfirm = (String)request.getParameter("passWordConfirm");
 					log.debug("passWordConfirm retrieved");
-					String userAddress = (String)request.getParameter("userAddress");
+					String userAddress = Validate.validateParameter(request.getParameter("userAddress"), 128);
 					log.debug("userAddress = " + userAddress);
-					String userAddressCnf = (String)request.getParameter("userAddressCnf");
+					String userAddressCnf = Validate.validateParameter(request.getParameter("userAddressCnf"), 128);
 					log.debug("userAddressCnf = " + userAddressCnf);
 					
 					//Validation
 					log.debug("String Casting should have set off any null alarms... Checking again anyway");
-					notNull = (userName != null && passWord != null && userAddress != null);
+					notNull = (userName != null && passWord != null);
 					log.debug("Ensuring strings are not empty");
-					notEmpty = (!userName.isEmpty() && !passWord.isEmpty() && !userAddress.isEmpty());
+					notEmpty = (!userName.isEmpty() && !passWord.isEmpty());
 					log.debug("Validating passwords");
 					validPasswords = passWord.compareTo(passWordConfirm) == 0; // 0 returned if the same
 					log.debug("Validating addresses");
-					validAddress = userAddress.compareTo(userAddressCnf) == 0;
-					validAddress = (Validate.isValidEmailAddress(userAddress) && validAddress);
-					
+					if(userAddress.isEmpty())
+						validAddress = true;
+					else
+					{
+						validAddress = userAddress.compareTo(userAddressCnf) == 0;
+						validAddress = (Validate.isValidEmailAddress(userAddress) && validAddress);
+					}
 					boolean basicValidation = validPasswords && validAddress && notNull && notEmpty;
 					if(basicValidation)
 						userValidate = (Validate.isValidUser(userName, passWord, userAddress));
@@ -111,8 +115,10 @@ public class CreateNewAdmin extends HttpServlet
 						//Data is good, Add user
 						log.debug("Adding player to database, with null classId");
 						Setter.userCreate(ApplicationRoot, null, userName, passWord, "admin", userAddress, true);
+						if(userAddress.isEmpty())
+							userAddress = "blank"; //For Output Message
 						String reponseMessage = "<a>" + encoder.encodeForHTML(userName) +"</a> created successfully with email address " + encoder.encodeForHTML(userAddress);
-						out.print("<h2 class=\"title\">Admin Created</h2><br>" +
+						out.print("<h3 class=\"title\">Admin Created</h3>" +
 								"<p>" +
 								reponseMessage +
 								"<p>");
@@ -141,7 +147,7 @@ public class CreateNewAdmin extends HttpServlet
 							log.error("JavaScript validation bypassed");
 							errorMessage += "Invalid Request. Please try again";
 						}
-						out.print("<h2 class=\"title\">Admin Create Failure</h2><br>" +
+						out.print("<h3 class=\"title\">Admin Create Failure</h3>" +
 								"<p><font color=\"red\">" +
 								encoder.encodeForHTML(errorMessage) +
 								"</font><p>");
@@ -150,7 +156,7 @@ public class CreateNewAdmin extends HttpServlet
 				catch (Exception e)
 				{
 					log.error("Create New Admin Error: " + e.toString());
-					out.print("<h2 class=\"title\">Admin Create Failure</h2><br>" +
+					out.print("<h3 class=\"title\">Admin Create Failure</h3>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -159,7 +165,7 @@ public class CreateNewAdmin extends HttpServlet
 			else
 			{
 				log.debug("CSRF tokens did not match");
-				out.print("<h2 class=\"title\">Admin Create Failure</h2><br>" +
+				out.print("<h3 class=\"title\">Admin Create Failure</h3>" +
 						"<p>" +
 						"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 						"<p>");
@@ -167,7 +173,7 @@ public class CreateNewAdmin extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">Admin Create Failure</h2><br>" +
+			out.print("<h3 class=\"title\">Admin Create Failure</h3>" +
 				"<p>" +
 				"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 				"<p>");

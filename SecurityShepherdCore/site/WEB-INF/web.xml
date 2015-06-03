@@ -175,7 +175,7 @@
 	
 	<servlet>
 		<servlet-name>/updateRegistration</servlet-name>
-		<servlet-class>servlets.admin.userManagement.ToggleRegistration</servlet-class>
+		<servlet-class>servlets.admin.config.ToggleRegistration</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/updateRegistration</servlet-name>

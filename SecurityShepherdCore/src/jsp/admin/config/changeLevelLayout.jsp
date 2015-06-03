@@ -50,15 +50,17 @@ if (request.getSession() != null) //Session If
 		String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
 %>
 			<div id="formDiv" class="post">
-				<h1 class="title">Change Module Layout</h1>
+				<h1 class="title">Current Mode: <div id="currentModeTitle" style="display: inline;"><%= ModulePlan.currentMode() %></div></h1>
 				<div class="entry">
 					<p>
-						You can change the layout in which modules are presented to players. There are three options;
+						You can change the layout in which modules are presented to players. Use the following functions to change the current Shepherd Mode.
 					</p>
+					<div id="resultDiv" style="display: none" class="informationBox"></div>
+					<div id="badData" style="display: none"></div>
 					
 					<!-- CTF Mode Section -->
-					<div id="ctfDiv">
-						<h2 class="title">CTF Mode</h2>
+					<div id="ctfDiv" <% if(ModulePlan.isIncrementalFloor()) { %>style="display: none;"<% } %>>
+						<h2 class="title">Enable CTF Mode</h2>
 						<p>
 							When Shepherd has been deployed in the CTF mode, a user can only access one uncompleted module at a time. The first module presented to the user is the easiest in Security Shepherd, which has not been marked as closed by the administrator. 
 							The levels increase slowly in difficulty and jump from one topic to another. This layout is the recommended setting when using Security Shepherd for a competitive training scenario.
@@ -68,13 +70,11 @@ if (request.getSession() != null) //Session If
 						</a>
 					</div>
 					<div id="ctfLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-					<div id="ctfResultDiv" style="display: none" class="informationBox"></div>
-					<div id="ctfBadData" style="display: none"></div>
 					<br>
 					
 					<!-- Open Floor Mode Section -->
-					<div id="openFloor">
-						<h2 class="title">Open Floor Mode</h2>
+					<div id="openFloor" <% if(ModulePlan.isOpenFloor()) { %>style="display: none;"<% } %>>
+						<h2 class="title">Enable Open Floor Mode</h2>
 						<p>
 							When Shepherd has been deployed in the Open Floor mode, a user can access any level that is marked as open by the admin. Modules are sorted into their Security Risk Categories, and the lessons are presented first. This layout is ideal for users wishing to explore security risks.
 						</p>
@@ -83,13 +83,11 @@ if (request.getSession() != null) //Session If
 						</a>
 					</div>
 					<div id="openFloorLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-					<div id="openFloorResultDiv" style="display:none;" class="informationBox"></div>
-					<div id="openFloorBadData" style="display:none;"></div>
 					<br>
 					
 					<!-- Tournament Mode Section -->
-					<div id="tournament">
-						<h2 class="title">Tournament Mode</h2>
+					<div id="tournament" <% if(ModulePlan.isTournyFloor()) { %>style="display: none;"<% } %>>
+						<h2 class="title">Enable Tournament Mode</h2>
 						<p>
 							When Shepherd has been deployed in the Tournament Mode, a user can access any level that is marked as open by the admin. Modules are sorted into difficulty bands, from least to most difficult. This layout is ideal when Shepherd is being utilised as an open application security competition.
 						</p>	
@@ -98,16 +96,14 @@ if (request.getSession() != null) //Session If
 						</a>
 					</div>
 					<div id="tournamentLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-					<div id="tournamentResultDiv" style="display:none;" class="informationBox"></div>
-					<div id="tournamentBadData" style="display:none;"></div>
 					<br>
 					<script>
 					var theCsrfToken = "<%= csrfToken %>";
 					
 					$("#enableCtfMode").click(function(){
 						$("#ctfLoadingDiv").show("fast");
-						$("#ctfBadData").hide("fast");
-						$("#ctfResultDiv").hide("fast");
+						$("#badData").hide("fast");
+						$("#resultDiv").hide("fast");
 						//The Ajax Operation
 						$("#ctfDiv").slideUp("fast", function(){
 							var ajaxCall = $.ajax({
@@ -122,17 +118,28 @@ if (request.getSession() != null) //Session If
 								//$("#ctfDiv").show("slow"); //Commented out because I like the way The Option is gone after it has been clicked
 								if(ajaxCall.status == 200)
 								{
-									$("#ctfResultDiv").html(ajaxCall.responseText);
-									$("#ctfResultDiv").show("fast");
+									//Dont Show this Div, Show Others
+									console.log("Hiding CTF Menu, Showing Others");
+									//$("#ctfDiv").slideDown("slow");
+									$("#openFloor").slideDown("slow");
+									$("#tournament").slideDown("slow");
+									//Relist Current mode
+									$("#currentModeTitle").fadeOut("slow", function(){
+										$("#currentModeTitle").text("CTF");
+									});
+									$("#currentModeTitle").fadeIn("slow");
+									//Show Results
+									$("#resultDiv").html(ajaxCall.responseText);
+									$("#resultDiv").show("fast");
 								}
 								else
 								{
-									$("#ctfBadData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-									$("#ctfBadData").show("slow");
+									$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+									$("#badData").show("slow");
 									$("#ctfDiv").slideDown("slow");
 								}
 								$('html, body').animate({
-							        scrollTop: $("#ctfResultDiv").offset().top
+							        scrollTop: $("#currentModeTitle").offset().top
 							    }, 1000);
 							});
 						});
@@ -140,8 +147,8 @@ if (request.getSession() != null) //Session If
 					
 					$("#enableOpenFloorMode").click(function(){
 						$("#openFloorLoadingDiv").show("fast");
-						$("#openFloorBadData").hide("fast");
-						$("#openFloorResultDiv").hide("fast");
+						$("#badData").hide("fast");
+						$("#resultDiv").hide("fast");
 						//The Ajax Operation
 						$("#openFloor").slideUp("fast", function(){
 							var ajaxCall = $.ajax({
@@ -155,18 +162,28 @@ if (request.getSession() != null) //Session If
 							$("#openFloorLoadingDiv").hide("fast", function(){
 								if(ajaxCall.status == 200)
 								{
-									console.log("200 Ok. Revealing openFloorResultDiv");
-									$("#openFloorResultDiv").html(ajaxCall.responseText);
-									$("#openFloorResultDiv").show("fast");
+									//Dont Show this Div, Show Others
+									console.log("Hiding Open Floor Menu, Showing Others");
+									$("#ctfDiv").slideDown("slow");
+									//$("#openFloor").slideDown("slow");
+									$("#tournament").slideDown("slow");
+									//Relist Current mode
+									$("#currentModeTitle").fadeOut("slow", function(){
+										$("#currentModeTitle").text("Open Floor");
+									});
+									$("#currentModeTitle").fadeIn("slow");
+									//Show Results
+									$("#resultDiv").html(ajaxCall.responseText);
+									$("#resultDiv").show("fast");
 								}
 								else
 								{
-									$("#openFloorBadData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-									$("#openFloorBadData").show("slow");
-									$("#openFlood").slideDown("slow");
+									$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+									$("#badData").show("slow");
+									$("#openFloor").slideDown("slow");
 								}
 								$('html, body').animate({
-							        scrollTop: $("#openFloorResultDiv").offset().top
+							        scrollTop: $("#currentModeTitle").offset().top
 							    }, 1000);
 							});
 						});
@@ -174,8 +191,8 @@ if (request.getSession() != null) //Session If
 					
 					$("#enableTournamentMode").click(function(){
 						$("#tournamentLoadingDiv").show("fast");
-						$("#tournamentBadData").hide("fast");
-						$("#tournamentResultDiv").hide("fast");
+						$("#badData").hide("fast");
+						$("#resultDiv").hide("fast");
 						//The Ajax Operation
 						$("#tournament").slideUp("fast", function(){
 							var ajaxCall = $.ajax({
@@ -189,17 +206,28 @@ if (request.getSession() != null) //Session If
 							$("#tournamentLoadingDiv").hide("fast", function(){
 								if(ajaxCall.status == 200)
 								{
-									$("#tournamentResultDiv").html(ajaxCall.responseText);
-									$("#tournamentResultDiv").show("fast");
+									//Dont Show this Div, Show Others
+									console.log("Hiding Tournament Menu, Showing Others");
+									$("#ctfDiv").slideDown("slow");
+									$("#openFloor").slideDown("slow");
+									//$("#tournament").slideDown("slow");
+									//Relist Current mode
+									$("#currentModeTitle").fadeOut("slow", function(){
+										$("#currentModeTitle").text("Tournament");
+									});
+									$("#currentModeTitle").fadeIn("slow");
+									//Show Results
+									$("#resultDiv").html(ajaxCall.responseText);
+									$("#resultDiv").show("fast");
 								}
 								else
 								{
-									$("#tournamentBadData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-									$("#tournamentBadData").show("slow");
+									$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+									$("#badData").show("slow");
 									$("#tournament").slideDown("slow");
 								}	
 								$('html, body').animate({
-							        scrollTop: $("#tournamentResultDiv").offset().top
+							        scrollTop: $("#currentModeTitle").offset().top
 							    }, 1000);
 							});
 						});

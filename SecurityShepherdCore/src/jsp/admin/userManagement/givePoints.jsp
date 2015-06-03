@@ -70,60 +70,66 @@ catch(SQLException e)
 		<h1 class="title">Reward / Deduct Points</h1>
 		<div class="entry">
 			<form id="theForm" action="javascript:;">
-				<p>Please select the player that you would like to award or deduct points from;</p>
+				<p>Use this function to reward or punish your players. Use the following form with a positive or negitive number to modify the amount of points a player has. For the best results, ensure your users can see the Shepherd Scoreboard. If you push a player into negative points they will not appear on the scoreboard.</p>
 				<div id="badData"></div>
 				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
-				<table align="center">
-					<tr>
-						<td>
-							<p>Class:</p>
-						</td>
-						<td>
-							<select id="selectClass">
-								<option value="">Unassigned Players</option>
-								<%
-									if(showClasses)
-									{
-										try
-										{
-											do
-											{
-												String classId = encoder.encodeForHTML(classList.getString(1));
-												String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
-												%>
-												<option value="<%=classId%>"><%=classYearName%></option>
-												<%
-											}
-											while(classList.next());
-											classList.first();
-										}
-										catch(SQLException e)
-										{
-											ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
-											showClasses = false;
-										}
-									}
-											%>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<p>Select the player that you want to assign here</p>
-							<div id="playerSelect">	
+				<div id="updatePointsDiv">
+					<table align="center">
+						<tr>
+							<td colspan="2">
+								<p>Pick the class of the player you wish to modify</p>
 								<center>
-									<select id='playerId' style='width: 300px;' multiple>
-										<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
-									</select>
+								<select id="selectClass" style="width: 300px;">
+									<option value="">Unassigned Players</option>
+									<%
+										if(showClasses)
+										{
+											try
+											{
+												do
+												{
+													String classId = encoder.encodeForHTML(classList.getString(1));
+													String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+													%>
+													<option value="<%=classId%>"><%=classYearName%></option>
+													<%
+												}
+												while(classList.next());
+												classList.first();
+											}
+											catch(SQLException e)
+											{
+												ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+												showClasses = false;
+											}
+										}
+												%>
+								</select>
 								</center>
-							</div>
-						</td>
-					</tr>
-					<tr><td>Number of Points:</td><td><input type="input" style='width: 200px' id="numberOfPoints"/></td></tr>
-					<tr><td colspan="2" align="center">
-						<input type="submit" id="submitButton" value="Update Player Points"/>
-					</td></tr>
-				</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<p>Select the player that you want to give/take points from</p>
+								<div id="playerSelect">	
+									<center>
+										<select id='playerId' style='width: 300px;'>
+											<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
+										</select>
+									</center>
+								</div>
+								<br>
+							</td>
+						</tr>
+						<tr><td>Number of Points:</td><td><input type="input" style='width: 200px' id="numberOfPoints"/><br></td></tr>
+						<tr><td colspan="2" align="center">
+							<input type="submit" id="submitButton" value="Update Player Points"/>
+						</td></tr>
+					</table>
+				</div>
+				<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+				<div id="resultDiv" style="display:none;" class="informationBox"></div>
+				<div id="badData"></div>
 			</form>
 		</div>
 	</div>
@@ -164,6 +170,7 @@ catch(SQLException e)
 	});
 	
 	$("#theForm").submit(function(){
+		//Get Data
 		var theCsrfToken = $('#csrfToken').val();
 		var theNumberOfPoints = $('#numberOfPoints').val();
 		var thePlayers = $("#playerId").val();
@@ -174,28 +181,37 @@ catch(SQLException e)
 		}
 		else
 		{
-			//The Ajax Operation
-			var ajaxCall = $.ajax({
-				type: "POST",
-				url: "giveTakePoints",
-				data: {
-					player: thePlayers,
-					numberOfPoints: theNumberOfPoints,
-					csrfToken: theCsrfToken
-				},
-				async: false
-			});
-			if(ajaxCall.status == 200)
-			{
-				$("#contentDiv").hide("fast", function(){
-					$("#contentDiv").html(ajaxCall.responseText);
-					$("#contentDiv").show("fast");
+			//Hide&Show Stuff
+			$("#loadingDiv").show("fast");
+			$("#badData").hide("fast");
+			$("#resultDiv").hide("fast");
+			$("#updatePointsDiv").slideUp("fast", function(){
+				//The Ajax Operation
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "giveTakePoints",
+					data: {
+						player: thePlayers,
+						numberOfPoints: theNumberOfPoints,
+						csrfToken: theCsrfToken
+					},
+					async: false
 				});
-			}
-			else
-			{
-				$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-			}
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					$("#updatePointsDiv").slideDown("slow");
+				});
+			});
 		}
 	});
 	</script>

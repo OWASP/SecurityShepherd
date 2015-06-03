@@ -55,7 +55,7 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 	If you would like to submit the collected feedback to the Security Shepherd Project Development Team, please follow the steps <a href="https://github.com/markdenihan/owaspSecurityShepherd/wiki/How-to-Submit-Shepherd-DB-Stored-User-Feedback">found here</a>.</p>
 	
 	<!-- Enable Feedback Section -->
-	<div id="enableFeedback">
+	<div id="enableFeedback" <% if(FeedbackStatus.isEnabled()) {%>style="display: none;"<% } %>>
 		<h2 class="title">Enable Feedback</h2>
 		<p>Enable feedback to force users to submit feedback on each module before they can complete them</p>
 		<a href="javascript:;" style="text-decoration: none;" id="enableFeedback" title="Enable Feedback">
@@ -63,12 +63,9 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		</a>
 		<br>
 	</div>
-	<div id="enableLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-	<div id="enableResultDiv" class="informationBox" style="display:none;"></div>
-	<div id="enableBadData" style="display:none;"></div>
 	
 	<!-- Disable feedback Section -->
-	<div id="disableFeedback">
+	<div id="disableFeedback" <% if(FeedbackStatus.isDisabled()) {%>style="display: none;"<% } %>>
 		<h2 class="title">Disable Feedback</h2>
 		<p>Disable feedback to allow users to complete modules without having to submit a feedback form</p>
 		<a href="javascript:;" style="text-decoration: none;" id="disableFeedback" title="Disable Feedback">
@@ -76,15 +73,15 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		</a>
 		<br>
 	</div>
-	<div id="disableLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-	<div id="disableResultDiv" class="informationBox" style="display:none;"></div>
-	<div id="disableBadData" style="display:none;"></div>
+	<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+	<div id="resultDiv" class="informationBox" style="display:none;"></div>
+	<div id="badData" style="display:none;"></div>
 	<script>
 	var theCsrfToken = "<%= csrfToken %>";
 	$("#enableFeedback").click(function(){
-		$("#enableLoadingDiv").show("fast");
-		$("#enableBadData").hide("fast");
-		$("#enableResultDiv").hide("fast");
+		$("#loadingDiv").show("fast");
+		$("#badData").hide("fast");
+		$("#resultDiv").hide("fast");
 		//The Ajax Operation
 		$("#enableFeedback").slideUp("fast", function(){
 			var ajaxCall = $.ajax({
@@ -95,29 +92,30 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				},
 				async: false
 			});
-			$("#enableLoadingDiv").hide("fast", function(){
+			$("#loadingDiv").hide("fast", function(){
 				if(ajaxCall.status == 200)
 				{
-					$("#enableResultDiv").html(ajaxCall.responseText);
-					$("#enableResultDiv").show("fast");
+					$("#resultDiv").html(ajaxCall.responseText);
+					$("#resultDiv").show("fast");
 				}
 				else
 				{
-					$("#enableBadData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-					$("#enableBadData").show("slow");
+					$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+					$("#badData").show("slow");
 				}
-				$("#enableFeedback").slideDown("slow");
+				//Show Disable Dialog
+				$("#disableFeedback").slideDown("slow");
 				$('html, body').animate({
-			        scrollTop: $("#enableResultDiv").offset().top
+			        scrollTop: $("#resultDiv").offset().top
 			    }, 1000);
 			});
 		});
 	});
 	
 	$("#disableFeedback").click(function(){
-		$("#disableLoadingDiv").show("fast");
-		$("#disableBadData").hide("fast");
-		$("#disableResultDiv").hide("fast");
+		$("#loadingDiv").show("fast");
+		$("#badData").hide("fast");
+		$("#resultDiv").hide("fast");
 		//The Ajax Operation
 		$("#disableFeedback").slideUp("fast", function(){
 			var ajaxCall = $.ajax({
@@ -128,20 +126,21 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				},
 				async: false
 			});
-			$("#disableLoadingDiv").hide("fast", function(){
+			$("#loadingDiv").hide("fast", function(){
 				if(ajaxCall.status == 200)
 				{
-					$("#disableResultDiv").html(ajaxCall.responseText);
-					$("#disableResultDiv").show("fast");
+					$("#resultDiv").html(ajaxCall.responseText);
+					$("#resultDiv").show("fast");
 				}
 				else
 				{
-					$("#disableBadData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-					$("#disableBadData").show("slow");
+					$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+					$("#badData").show("slow");
 				}
-				$("#disableFeedback").slideDown("slow");
+				//Show Enable Dialog
+				$("#enableFeedback").slideDown("slow");
 				$('html, body').animate({
-			        scrollTop: $("#disableResultDiv").offset().top
+			        scrollTop: $("#resultDiv").offset().top
 			    }, 1000);
 			});
 		});

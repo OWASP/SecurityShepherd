@@ -127,6 +127,7 @@ if (request.getSession() != null)
 										<li><a id="aboutShepherdLink" href="javascript:;">About Security Shepherd</a></li>
 										<li><a id="levelLayoutLink" href="javascript:;">Change Module Layout</a></li>
 										<li><a id="configureFeedbackLink" href="javascript:;">Feedback Configuration</a></li>
+										<li><a id="registrationLink" href="javascript:;">Open/Close Registration</a></li>
 										<li><a id="scoreboardLink" href="javascript:;">Scoreboard Configuration</a></li>
 										<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
 									</ul>
@@ -149,7 +150,6 @@ if (request.getSession() != null)
 										<li><a id="assignPlayersLink" href="javascript:;">Assign Players to Class</a></li>
 										<li><a id="createNewClassLink" href="javascript:;">Create Class</a></li>
 										<li><a id="createNewAdminLink" href="javascript:;">Create New Admin</a></li>
-										<li><a id="registrationLink" href="javascript:;">Open/Close Registration</a></li>
 										<li><a id="changePlayerPasswordLink" href="javascript:;">Reset Password</a></li>
 										<li><a id="setDefaultClassForRegistrationLink" href="javascript:;">Set Default Player Class</a></li>
 										<li><a id="suspendPlayerLink" href="javascript:;">Suspend Player</a></li>
@@ -437,7 +437,7 @@ if (request.getSession() != null)
 			$("#registrationLink").click(function(){
 				$("#submitResult").slideUp("fast", function(){
 					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/userManagement/updateRegistration.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						$("#contentDiv").load("admin/config/updateRegistration.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
 							var msg = "Sorry but there was an error: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");

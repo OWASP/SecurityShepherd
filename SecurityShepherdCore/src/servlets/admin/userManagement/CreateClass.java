@@ -100,14 +100,14 @@ public class CreateClass extends HttpServlet
 						log.debug("Adding class to database");
 						if(Setter.classCreate(ApplicationRoot, className, classYear))
 						{
-							reponseMessage = "<h2 class=\"title\">Class Created</h2><br>" +
+							reponseMessage = "<h3 class=\"title\">Class Created</h3>" +
 								"<p>" +
 								"Class <a>" + encoder.encodeForHTML(className) +"</a> of <a>" + encoder.encodeForHTML(classYear) + "</a> created successfully." +
 								"</p>";
 						}
 						else
 						{
-							reponseMessage = "<h2 class=\"title\">Class Create Failure</h2><br>" +
+							reponseMessage = "<h3 class=\"title\">Class Create Failure</h3>" +
 							"<p>" +
 							"Sorry but an error Occurred! Please try again. If the problem persists please contact an administrator!" +
 							"<p>";
@@ -133,7 +133,7 @@ public class CreateClass extends HttpServlet
 							log.error("Invalid Class Name");
 							errorMessage += "Invalid Class Name. Please try again";
 						}
-						out.print("<h2 class=\"title\">Class Create Failure</h2><br>" +
+						out.print("<h3 class=\"title\">Class Create Failure</h3>" +
 								"<p><font color=\"red\">" +
 								encoder.encodeForHTML(errorMessage) +
 								"</font><p>");
@@ -142,7 +142,7 @@ public class CreateClass extends HttpServlet
 				catch (Exception e)
 				{
 					log.error("Create New Class Error: " + e.toString());
-					out.print("<h2 class=\"title\">Class Create Failure</h2><br>" +
+					out.print("<h3 class=\"title\">Class Create Failure</h3>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -151,7 +151,7 @@ public class CreateClass extends HttpServlet
 			else
 			{
 				log.debug("CSRF tokens did not match");
-				out.print("<h2 class=\"title\">Class Create Failure</h2><br>" +
+				out.print("<h3 class=\"title\">Class Create Failure</h3>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! CSRF Tokens did not match.</font>" +
 					"<p>");
@@ -159,7 +159,7 @@ public class CreateClass extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">Class Create Failure</h2><br>" +
+			out.print("<h3 class=\"title\">Class Create Failure</h3>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");

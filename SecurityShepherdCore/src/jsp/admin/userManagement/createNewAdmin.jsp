@@ -76,15 +76,15 @@ if(ses.getAttribute("errorMessage") != null)
 %>
 	<div id="formDiv" class="post">
 		<h1 class="title">Create New Admin</h1>
-		<div class="entry">
+		<div id="createUserDiv" class="entry">
 			<form id="theForm" action="javascript:;">
 			<p>Please input what data you want the new administrator to have. Please note that the password will be temporary.</p>
 			<div id="badData"></div>
 			<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
 				<table align="center">
-					<tr><td><p>Username:</p></td><td><input type="text" id="userName" value="<%= newUserName %>"/></td></tr>
-					<tr><td><p>Password:</p></td><td><input type="password" id="passWord" /></td></tr>
-					<tr><td><p>Confirm Password:</p></td><td><input type="password" id="passWordConfirm" /></td></tr>
+					<tr><td><p>Username<font color="red"><small>* </small></font> :</p></td><td><input type="text" id="userName" value="<%= newUserName %>"/></td></tr>
+					<tr><td><p>Password<font color="red"><small>* </small></font> :</p></td><td><input type="password" id="passWord" /></td></tr>
+					<tr><td><p>Confirm Password<font color="red"><small>* </small></font> :</p></td><td><input type="password" id="passWordConfirm" /></td></tr>
 					<tr><td><p>Email Address:</p></td><td><input type="text" id="userAddress" value="<%= userAddress %>"/></td></tr>
 					<tr><td><p>Confirm Address:</p></td><td><input type="text" id="userAddressCnf" /></td></tr>
 					<tr><td colspan="2" align="center">
@@ -93,9 +93,14 @@ if(ses.getAttribute("errorMessage") != null)
 				</table>
 			</form>
 		</div>
+		<br>
+		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+		<div id="resultDiv" style="display:none;" class="informationBox"></div>
+		<div id="badData"></div>
 	</div>
 	<script>
 	$("#theForm").submit(function(){
+		//Get data
 		var theUserName = $("#userName").attr('value');
 		var thePassWord = $('#passWord').attr('value');
 		var thePassWordConfirm = $('#passWordConfirm').attr('value');
@@ -105,11 +110,9 @@ if(ses.getAttribute("errorMessage") != null)
 		//Validation
 		if (theUserName.length == 0 ||
 			thePassWord.length == 0 ||
-			thePassWordConfirm.length == 0 ||
-			theUserAddress.length == 0 ||
-			theUserAddressCnf.length == 0)
+			thePassWordConfirm.length == 0)
 		{
-			$('#badData').html("<p><strong><font color='red'>All fields are required</font></strong></p>");
+			$('#badData').html("<p><strong><font color='red'>All required fields must be populated </font></strong></p>");
 		}
 		else if(theUserName.length < 5 || theUserName.lenght > 32)
 		{
@@ -132,47 +135,47 @@ if(ses.getAttribute("errorMessage") != null)
 			$('#passWordConfirm').css("background", "#E42217");
 			$('#badData').html("<p><strong><font color='red'>Password fields did not match. Please try Again.</font></strong></p>");
 		}
-		else if(theUserAddress.lenght <= 4 || theUserAddress.lenght > 128)
-		{
-			$('#userAddress').val("");
-			$('#userAddressCnf').val("");
-			$('#userAddress').css("background", "#E42217");
-			$('#badData').html("<p><strong><font color='red'>Invalid email address. Please try Again.</font></strong></p>");
-		}
-		else if(theUserAddress != theUserAddressCnf)
-		{
-			$('#userAddress').val("");
-			$('#userAddressCnf').val("");
-			$('#userAddress').css("background", "#E42217");
-			$('#userAddressCnf').css("background", "#E42217");
-			$('#badData').html("<p><strong><font color='red'>Email fields did not match. Please try Again.</font></strong></p>");
-		}
 		else
 		{
-			//The Ajax Operation
-			var ajaxCall = $.ajax({
-				type: "POST",
-				url: "createNewAdmin",
-				data: {
-					userName: theUserName, 
-					passWord: thePassWord, 
-					passWordConfirm: thePassWordConfirm,
-					userAddress: theUserAddress,
-					userAddressCnf: theUserAddressCnf,
-					csrfToken: theCsrfToken
-				},
-				async: false
+			$("#loadingDiv").show("fast");
+			$("#badData").hide("fast");
+			$("#resultDiv").hide("fast");
+			$("#createUserDiv").slideUp("fast", function(){
+				//The Ajax Operation
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "createNewAdmin",
+					data: {
+						userName: theUserName, 
+						passWord: thePassWord, 
+						passWordConfirm: thePassWordConfirm,
+						userAddress: theUserAddress,
+						userAddressCnf: theUserAddressCnf,
+						csrfToken: theCsrfToken
+					},
+					async: false
+				});
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Reset Form
+						$("#userName").val('');
+						$('#passWord').val('');
+						$('#passWordConfirm').val('');
+						$('#userAddress').val('');
+						$('#userAddressCnf').val('');
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					$("#createUserDiv").slideDown("slow");
+				});
 			});
-			$("#contentDiv").hide("fast");
-			if(ajaxCall.status == 200)
-			{
-				$("#contentDiv").html(ajaxCall.responseText);
-			}
-			else
-			{
-				$("#contentDiv").html("<p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-			}
-			$("#contentDiv").show("fast");
 		}
 	});
 	</script>
