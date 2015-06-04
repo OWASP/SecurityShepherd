@@ -44,14 +44,14 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 {
 	//Logging Username
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString());
-// Getting Session Variables
-//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-Encoder encoder = ESAPI.encoder();
-String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
-String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
-String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
-String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
-String ApplicationRoot = getServletContext().getRealPath("");
+	// Getting Session Variables
+	//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
+	Encoder encoder = ESAPI.encoder();
+	String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
+	String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
+	String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
+	String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
+	String ApplicationRoot = getServletContext().getRealPath("");
 %>
 	<div id="formDiv" class="post">
 		<h1 class="title">Enable Cheat Sheets</h1>
@@ -62,7 +62,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					<p>Are you sure that you want to enable <a>cheat sheets</a> for all users?</p>
 					<div id="badData"></div>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<table align="center">
+					<table id="cheatSheetTable" align="center">
 						<tr><td colspan="2" align="center">
 							<input type="submit" id="submitButton" value="Enable Cheat Sheets For Admins"/>
 						</td></tr>
@@ -71,56 +71,78 @@ String ApplicationRoot = getServletContext().getRealPath("");
 							<input type="button" id="openAll" value="Enable Cheat Sheets For All"/>
 						</td></tr>
 					</table>
+					<br>
+					<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+					<div id="resultDiv" style="display:none;" class="informationBox"></div>
+					<div id="badData"></div>
 					</form>
 					<script>					
 					$("#theForm").submit(function(){
+						//Get Data
 						var theCsrfToken = $('#csrfToken').val();
 						//The Ajax Operation
-						var ajaxCall = $.ajax({
-							type: "POST",
-							url: "enableCheats",
-							data: {
-								enableForAll: "nope",
-								csrfToken: theCsrfToken
-							},
-							async: false
-						});
-						if(ajaxCall.status == 200)
-						{
-							$("#contentDiv").hide("fast", function(){
-								$("#contentDiv").html(ajaxCall.responseText);
-								$("#contentDiv").show("fast");
+						$("#loadingDiv").show("fast");
+						$("#badData").hide("fast");
+						$("#resultDiv").hide("fast");
+						$("#cheatSheetTable").slideUp("fast", function(){
+							var ajaxCall = $.ajax({
+								type: "POST",
+								url: "enableCheats",
+								data: {
+									enableForAll: "nope",
+									csrfToken: theCsrfToken
+								},
+								async: false
 							});
-						}
-						else
-						{
-							$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-						}
+							$("#loadingDiv").hide("fast", function(){
+								if(ajaxCall.status == 200)
+								{
+									//Now output Result Div and Show
+									$("#resultDiv").html(ajaxCall.responseText);
+									$("#resultDiv").show("fast");
+								}
+								else
+								{
+									$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+									$("#badData").show("slow");
+								}
+								$("#cheatSheetTable").slideDown("slow");
+							});
+						});
 					});
 					
 					$("#openAll").click(function(){
+						//Get Data
 						var theCsrfToken = $('#csrfToken').val();
-						//The Ajax Operation
-						var ajaxCall = $.ajax({
-							type: "POST",
-							url: "enableCheats",
-							data: {
-								enableForAll: "true",
-								csrfToken: theCsrfToken
-							},
-							async: false
-						});
-						if(ajaxCall.status == 200)
-						{
-							$("#contentDiv").hide("fast", function(){
-								$("#contentDiv").html(ajaxCall.responseText);
-								$("#contentDiv").show("fast");
+						$("#loadingDiv").show("fast");
+						$("#badData").hide("fast");
+						$("#resultDiv").hide("fast");
+						$("#cheatSheetTable").slideUp("fast", function(){
+							//The Ajax Operation
+							var ajaxCall = $.ajax({
+								type: "POST",
+								url: "enableCheats",
+								data: {
+									enableForAll: "true",
+									csrfToken: theCsrfToken
+								},
+								async: false
 							});
-						}
-						else
-						{
-							$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-						}
+							$("#loadingDiv").hide("fast", function(){
+								if(ajaxCall.status == 200)
+								{
+									//Now output Result Div and Show
+									$("#resultDiv").html(ajaxCall.responseText);
+									$("#resultDiv").show("fast");
+								}
+								else
+								{
+									$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+									$("#badData").show("slow");
+								}
+								$("#cheatSheetTable").slideDown("slow");
+							});
+						});
 					});
 					</script>
 				<% } else { %>

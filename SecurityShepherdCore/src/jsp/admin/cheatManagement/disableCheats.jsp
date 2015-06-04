@@ -56,36 +56,48 @@ String ApplicationRoot = getServletContext().getRealPath("");
 			<form id="theForm" action="javascript:;">
 				<% if (CheatSheetStatus.isEnabledAtAll()) {%>
 					<p>Are you sure that you want to disable <a>cheat sheets</a> for all users?</p>
-					<div id="badData"></div>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<table align="center">
+					<table id="cheatSheetTable" align="center">
 						<tr><td colspan="2" align="center">
 							<input type="submit" id="submitButton" value="Disable Cheat Sheets"/>
 						</td></tr>
 					</table>
+					<br>
+					<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+					<div id="resultDiv" style="display:none;" class="informationBox"></div>
+					<div id="badData"></div>
 					<script>					
 					$("#theForm").submit(function(){
+						//Get Data
 						var theCsrfToken = $('#csrfToken').val();
 						//The Ajax Operation
-						var ajaxCall = $.ajax({
-							type: "POST",
-							url: "disableCheats",
-							data: {
-								csrfToken: theCsrfToken
-							},
-							async: false
-						});
-						if(ajaxCall.status == 200)
-						{
-							$("#contentDiv").hide("fast", function(){
-								$("#contentDiv").html(ajaxCall.responseText);
-								$("#contentDiv").show("fast");
+						$("#loadingDiv").show("fast");
+							$("#badData").hide("fast");
+							$("#resultDiv").hide("fast");
+							$("#cheatSheetTable").slideUp("fast", function(){
+							var ajaxCall = $.ajax({
+								type: "POST",
+								url: "disableCheats",
+								data: {
+									csrfToken: theCsrfToken
+								},
+								async: false
 							});
-						}
-						else
-						{
-							$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-						}
+							$("#loadingDiv").hide("fast", function(){
+								if(ajaxCall.status == 200)
+								{
+									//Now output Result Div and Show
+									$("#resultDiv").html(ajaxCall.responseText);
+									$("#resultDiv").show("fast");
+								}
+								else
+								{
+									$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+									$("#badData").show("slow");
+								}
+								$("#cheatSheetTable").slideDown("slow");
+							});
+						});
 					});
 					</script>
 				<% } else { %>

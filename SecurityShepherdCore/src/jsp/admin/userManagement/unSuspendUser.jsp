@@ -71,7 +71,6 @@ catch(SQLException e)
 		<div id="suspendDiv" class="entry">
 			<form id="theForm" action="javascript:;">
 				<p>Please select the player that you would like unsuspend;</p>
-				<div id="badData"></div>
 				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
 				<table align="center">
 					<tr>

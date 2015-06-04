@@ -44,24 +44,23 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 {
 	//Logging Username
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
-// Getting Session Variables
-//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-Encoder encoder = ESAPI.encoder();
-String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
-String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
-String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
-String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
-String ApplicationRoot = getServletContext().getRealPath("");
-ArrayList modules = Getter.getAllModuleInfo(ApplicationRoot);
+	// Getting Session Variables
+	//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
+	Encoder encoder = ESAPI.encoder();
+	String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
+	String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
+	String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
+	String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
+	String ApplicationRoot = getServletContext().getRealPath("");
+	ArrayList modules = Getter.getAllModuleInfo(ApplicationRoot);
 %>
 	<div id="formDiv" class="post">
 		<h1 class="title">Create a Cheat Sheet</h1>
 		<div class="entry">
 			<form id="theForm" action="javascript:;">
-					<p>Are you sure that you want to disable <a>cheat sheets</a> for all users?</p>
-					<div id="badData"></div>
+					<p>Pick the module that you want to update the cheat cheat for;</p>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<table align="center">
+					<table id="cheatSheetTable" align="center">
 						<tr><td align="center">
 							<select id="moduleId" style='width: 300px;' multiple>
 								<% int h = 0;
@@ -83,39 +82,49 @@ ArrayList modules = Getter.getAllModuleInfo(ApplicationRoot);
 							<input type="submit" id="submitButton" value="Create New Cheat Sheet"/>
 						</td></tr>
 					</table>
+					<br>
+					<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+					<div id="resultDiv" style="display:none;" class="informationBox"></div>
+					<div id="badData"></div>
 					<script>					
 					$("#theForm").submit(function(){
+						//Get Data
 						var theCsrfToken = $('#csrfToken').val();
 						var theModule = $('#moduleId').val();
 						var theSolution = $("#newSolution").val();
 						//validation
 						if(theModule != null && theSolution != null && theSolution.length > 5)
 						{
-							//The Ajax Operation
-							var ajaxCall = $.ajax({
-								type: "POST",
-								url: "createCheat",
-								data: {
-									moduleId: theModule,
-									newSolution: theSolution,
-									csrfToken: theCsrfToken
-								},
-								async: false
+							$("#loadingDiv").show("fast");
+							$("#badData").hide("fast");
+							$("#resultDiv").hide("fast");
+							$("#cheatSheetTable").slideUp("fast", function(){
+								//The Ajax Operation
+								var ajaxCall = $.ajax({
+									type: "POST",
+									url: "createCheat",
+									data: {
+										moduleId: theModule,
+										newSolution: theSolution,
+										csrfToken: theCsrfToken
+									},
+									async: false
+								});
+								$("#loadingDiv").hide("fast", function(){
+									if(ajaxCall.status == 200)
+									{
+										//Now output Result Div and Show
+										$("#resultDiv").html(ajaxCall.responseText);
+										$("#resultDiv").show("fast");
+									}
+									else
+									{
+										$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+										$("#badData").show("slow");
+									}
+									$("#cheatSheetTable").slideDown("slow");
+								});
 							});
-							if(ajaxCall.status == 200)
-							{
-								$("#contentDiv").hide("fast", function(){
-									$("#contentDiv").html(ajaxCall.responseText);
-									$("#contentDiv").show("fast");
-								});
-							}
-							else
-							{
-								$("#badData").hide("fast", function(){
-									$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-									$("#badData").show("fast");
-								});
-							}
 						}
 						else
 						{
