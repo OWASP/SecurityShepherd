@@ -64,10 +64,29 @@ public class GetJsonScore extends HttpServlet
 			boolean canSeeScoreboard = ScoreboardStatus.canSeeScoreboard((String)ses.getAttribute("userRole"));
 			Cookie tokenCookie = Validate.getToken(request.getCookies());
 			Object tokenParmeter = request.getParameter("csrfToken");
+			String scoreboardClass = new String();
 			if(Validate.validateTokens(tokenCookie, tokenParmeter) && canSeeScoreboard)
 			{
+				//What Class to List?
+				if(ScoreboardStatus.getClassSpecificScoreboard())
+				{
+					if(ses.getAttribute("userRole").toString().compareTo("admin") == 0)
+					{
+						//Admin should get default class Scoreboard
+						scoreboardClass = Register.getDefaultClass();
+					}
+					else
+					{
+						//User should get their class scoreboard
+						scoreboardClass = ses.getAttribute("userClass").toString();
+					}
+				}
+				else
+				{
+					scoreboardClass = ScoreboardStatus.getScoreboardClass();
+				}
 				String applicationRoot = getServletContext().getRealPath("");
-				String jsonOutput = Getter.getJsonScore(applicationRoot, ScoreboardStatus.getScoreboardClass());
+				String jsonOutput = Getter.getJsonScore(applicationRoot, scoreboardClass);
 				if(jsonOutput.isEmpty())
 					jsonOutput = "ERROR: No Scoreboard Data Right Now";
 				out.write(jsonOutput);

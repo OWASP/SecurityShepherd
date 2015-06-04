@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="servlets.Register,java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: scoreboard Config.jsp *************************");
@@ -70,69 +70,29 @@ if (request.getSession() != null) //Session If
 						<a href="javascript:;" style="text-decoration: none;" id="enableAdminScoreboard" title="Disable the scoreboard"><div class="menuButton">Enable Scoreboard for Admins</div></a>
 						<a href="javascript:;" style="text-decoration: none;" id="disableScoreboard" title="Disable the scoreboard"><div class="menuButton">Disable Scoreboard</div></a>
 						<br/>
-						<h2 class="title">Enable Class Specific Scoreboard</h2>
-						<form id="theForm" action="javascript:;">
-								<p>Use this form to enable a scoreboard that only lists user from the specific class chosen below;</p>
-								<div id="badData"></div>
-								<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
-								<table align="center">
-									<tr>
-										<td>
-											Class: 
-										</td>
-										<td>
-										<select id="classId" style="width: 100%">
-											<option value=""></option>
-											<%
-												if(showClasses)
-												{
-													try
-													{
-														do
-														{
-															String classId = encoder.encodeForHTMLAttribute(classList.getString(1));
-															String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
-													%>
-														<option value="<%=classId%>"><%=classYearName%></option>
-													<%
-														}
-														while(classList.next());
-													}
-													catch(SQLException e)
-													{
-														ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString(), ses.getAttribute("userName"));
-														showClasses = false;
-													}
-												}
-													%>
-										</select>
-										</td>
-									</tr>
-									<tr><td colspan="2" align="center">
-										<div id="submitDiv">
-											<div id="submitButton" style="display: inline;"><input type="submit" value="Enable Class Scoreboard"/></div>
-											 or <div id="submitButton2" style="display: inline;"><input type="button" value="Enable Class Scoreboard for Admins"/></div>
-										 </div>
-									</td></tr>
-								</table>
-							</form>
-						</div>
-						<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
-						<div id="badData" style="display:none;"></div>
-						<div id="resultDiv" style="display:none;" class="informationBox"></div>
+						<h2 class="title">Enable Class Specific Scoreboards</h2>
+						<p>
+							When users visit the scoreboard, they will only see a list of users from their class. Admins that visit the scoreboard will still see the scoreboard the default class.
+						</p>
+						<a href="javascript:;" style="text-decoration: none;" id="classSpecific" title="Enable Class Specific Scoreboard"><div class="menuButton">Enable Class Specific Scoreboard</div></a>
+						<a href="javascript:;" style="text-decoration: none;" id="adminClassSpecific" title="Enable Class Specific Scoreboard For Admins"><div class="menuButton">Enable Class Specific Scoreboard for Admins</div></a>
 					</div>
+					<br>
+					<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
+					<div id="badData" style="display:none;"></div>
+					<div id="resultDiv" style="display:none;" class="informationBox"></div>
 				</div>
+			</div>
 			<script>
-			var theCsrfToken;
+			var theCsrfToken = "<%= csrfToken %>";
 			var theClass;
 			var theUsers = new Array();
 			var topOfStack = 0;
 			
-			$("#theForm").submit(function(){
-				$("#loadingSign").show("slow");
+			$("#classSpecific").click(function(){
+				$("#loadingSign").show("fast");
+				$("#badData").hide("fast");
 				$("#resultDiv").hide("fast");
-				theCsrfToken = $('#csrfToken').val();
-				theClass = $("#classId").val();
 				//The Ajax Operation
 				//$("#badData").hide("fast");
 				$("#configureScoreboardDiv").slideUp("fast", function(){
@@ -140,7 +100,7 @@ if (request.getSession() != null) //Session If
 						type: "POST",
 						url: "EnableScoreboard",
 						data: {
-							classId: theClass,
+							classId: "classSpecific",
 							csrfToken: theCsrfToken
 						},
 						async: false
@@ -164,10 +124,10 @@ if (request.getSession() != null) //Session If
 				});
 			});
 			
-			$("#submitButton2").click(function(){
-				$("#loadingSign").show("slow");
+			$("#adminClassSpecific").click(function(){
+				$("#loadingSign").show("fast");
+				$("#badData").hide("fast");
 				$("#resultDiv").hide("fast");
-				theCsrfToken = $('#csrfToken').val();
 				theClass = $("#classId").val();
 				//The Ajax Operation
 				//$("#badData").hide("fast");
@@ -176,7 +136,7 @@ if (request.getSession() != null) //Session If
 						type: "POST",
 						url: "EnableScoreboard",
 						data: {
-							classId: theClass,
+							classId: "<%= Register.getDefaultClass() %>",
 							restricted: "true",
 							csrfToken: theCsrfToken
 						},
@@ -202,9 +162,9 @@ if (request.getSession() != null) //Session If
 			});
 			
 			$("#enableScoreboard").click(function(){
-				$("#loadingSign").show("slow");
+				$("#loadingSign").show("fast");
+				$("#badData").hide("fast");
 				$("#resultDiv").hide("fast");
-				theCsrfToken = $('#csrfToken').val();
 				//The Ajax Operation
 				//$("#badData").hide("fast");
 				$("#configureScoreboardDiv").slideUp("fast", function(){
@@ -237,9 +197,9 @@ if (request.getSession() != null) //Session If
 			});
 			
 			$("#enableAdminScoreboard").click(function(){
-				$("#loadingSign").show("slow");
+				$("#loadingSign").show("fast");
+				$("#badData").hide("fast");
 				$("#resultDiv").hide("fast");
-				theCsrfToken = $('#csrfToken').val();
 				//The Ajax Operation
 				//$("#badData").hide("fast");
 				$("#configureScoreboardDiv").slideUp("fast", function(){
@@ -274,9 +234,9 @@ if (request.getSession() != null) //Session If
 			});
 			
 			$("#disableScoreboard").click(function(){
-				$("#loadingSign").show("slow");
+				$("#loadingSign").show("fast");
+				$("#badData").hide("fast");
 				$("#resultDiv").hide("fast");
-				theCsrfToken = $('#csrfToken').val();
 				//The Ajax Operation
 				$("#configureScoreboardDiv").slideUp("fast", function(){
 					var ajaxCall = $.ajax({

@@ -10,6 +10,7 @@ public class ScoreboardStatus
 	private static boolean scoreboardEnabled = true;
 	private static String scoreboardClass = new String();
 	private static boolean adminOnlyScoreboard = false;
+	private static boolean classSpecificScoreboard = false;
 	
 	/**
 	 * Returns if user is authorised to see scoreboard currenly. 
@@ -32,6 +33,16 @@ public class ScoreboardStatus
 		scoreboardEnabled = false;
 		adminOnlyScoreboard = false;
 		scoreboardClass = new String();
+		classSpecificScoreboard = false;
+	}
+	
+	/**
+	 * Used to tell if the current scoreboard config is set to Class Specific
+	 * @return Boolean Value
+	 */
+	public static boolean getClassSpecificScoreboard()
+	{
+		return classSpecificScoreboard;
 	}
 	
 	public static String getScoreboardClass()
@@ -65,6 +76,18 @@ public class ScoreboardStatus
 		scoreboardClass = theClass;
 		scoreboardEnabled = true;
 		adminOnlyScoreboard = false;
+		classSpecificScoreboard = false;
+	}
+	
+	/**
+	 * Sets the scoreboard to show users the score from their class only
+	 */
+	public static void setScoreboardClassSpecific()
+	{
+		scoreboardEnabled = true;
+		scoreboardClass = new String();
+		adminOnlyScoreboard = false;
+		classSpecificScoreboard = true;
 	}
 	
 	/**
@@ -75,5 +98,6 @@ public class ScoreboardStatus
 		scoreboardEnabled = true;
 		scoreboardClass = new String();
 		adminOnlyScoreboard = false;
+		classSpecificScoreboard = false;
 	}
 }

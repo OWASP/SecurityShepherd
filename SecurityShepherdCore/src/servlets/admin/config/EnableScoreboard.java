@@ -76,13 +76,18 @@ public class EnableScoreboard extends HttpServlet
 					log.debug("Getting Parameters");
 					String classId = (String)request.getParameter("classId");
 					log.debug("classId = " + classId);
-					
+					String scoreboardMessage = new String();
 					if(classId.isEmpty()) // Null Submitted - configure scoreboard to list all players regardless of class
 					{
 						log.debug("Null Class submitted");
 						ScoreboardStatus.setScoreboeardOpen();
-						htmlOutput = "Scoreboard is now enabled and lists all users regardless of their class.";
-						log.debug(htmlOutput);
+						scoreboardMessage = "Scoreboard is now enabled and lists all users regardless of their class.";
+					}
+					else if (classId.equalsIgnoreCase("classSpecific"))
+					{
+						//Set Class Specific Scoreboards
+						ScoreboardStatus.setScoreboardClassSpecific();
+						scoreboardMessage = "Scoreboard has been enabled and only lists users from the viewer's class. Admin users will still see the scoreboard of the default class.";
 					}
 					else
 					{
@@ -92,30 +97,30 @@ public class EnableScoreboard extends HttpServlet
 						{
 							log.debug("Valid Class Submitted");
 							ScoreboardStatus.setScoreboardClass(classId);
-							htmlOutput = "Scoreboard has been enabled and only lists users from " + encoder.encodeForHTML(classInfo[0]);
-							log.debug(htmlOutput);
+							scoreboardMessage = "Scoreboard has been enabled and only lists users from " + encoder.encodeForHTML(classInfo[0]);
 						}
 					}
-					if(htmlOutput.isEmpty())
+					if(scoreboardMessage.isEmpty())
 					{
 						htmlOutput = "<h3 class='title'>Scoreboard Settings are Unchanged</h3>"
 								+ "<p>Invalid data was submitted. Please try again.</p>";
 					}
 					else //Function must have completed if this isn't empty
 					{
+						log.debug(scoreboardMessage);
 						String restrictedScoreboard = Validate.validateParameter(request.getParameter("restricted"), 5);
 						if(restrictedScoreboard.isEmpty()) //Public Scoreboard
 						{
 							log.debug("Public Scoreboard Enabled");
 							htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
-								+ "<p>" + htmlOutput +"</p>";
+								+ "<p>" + scoreboardMessage +"</p>";
 						}
 						else
 						{
 							ScoreboardStatus.setScoreboardAdminOnly();
 							log.debug("Admin Only Scoreboard Enabled");
 							htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
-								+ "<p>" + htmlOutput +" The scoreboard is only accessible by administrators</p>";
+								+ "<p>" + scoreboardMessage +" The scoreboard is only accessible by administrators</p>";
 						}
 					}
 					out.write(htmlOutput);

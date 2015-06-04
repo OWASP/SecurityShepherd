@@ -143,20 +143,21 @@ catch(SQLException e)
 					},
 					async: false
 				});
-			});
-			$("#loadingDiv").hide("fast", function(){
-				if(ajaxCall.status == 200)
-				{
-					//Now output Result Div and Show
-					$("#resultDiv").html(ajaxCall.responseText);
-					$("#resultDiv").show("fast");
-				}
-				else
-				{
-					$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-					$("#badData").show("slow");
-				}
-				$("#setDefaultClassDiv").slideDown("slow");
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					console.log("All Done. displaying Menu");
+					$("#setDefaultClassDiv").slideDown("slow");
+				});
 			});
 		}
 	});
