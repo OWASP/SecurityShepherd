@@ -60,28 +60,30 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 			<form id="theForm" action="javascript:;">
 					<p>Pick the module that you want to update the cheat cheat for;</p>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<table id="cheatSheetTable" align="center">
-						<tr><td align="center">
-							<select id="moduleId" style='width: 300px;' multiple>
-								<% int h = 0;
-								while(h < modules.size()) 
-								{
-									String[] theModule = (String[])modules.get(h); 
-								%>
-									<option value="<%= encoder.encodeForHTML(theModule[0]) %>"><%= encoder.encodeForHTML(theModule[1]) %></option>
-								<% 
-								h++; 
-								} %>
-							</select>
-						</td></tr>
-						<tr><td align="center">
-							<p>Enter the new information for the cheat sheet here;
-							<textarea id='newSolution' style="width: 660px; height: 140px;"></textarea>
-						</td></tr>
-						<tr><td align="center">
-							<input type="submit" id="submitButton" value="Create New Cheat Sheet"/>
-						</td></tr>
-					</table>
+					<div id="cheatSheetTable">
+						<table align="center">
+							<tr><td align="center">
+								<select id="moduleId" style='width: 300px;' multiple>
+									<% int h = 0;
+									while(h < modules.size()) 
+									{
+										String[] theModule = (String[])modules.get(h); 
+									%>
+										<option value="<%= encoder.encodeForHTML(theModule[0]) %>"><%= encoder.encodeForHTML(theModule[1]) %></option>
+									<% 
+									h++; 
+									} %>
+								</select>
+							</td></tr>
+							<tr><td align="center">
+								<p>Enter the new information for the cheat sheet here;
+								<textarea id='newSolution' style="width: 660px; height: 140px;"></textarea>
+							</td></tr>
+							<tr><td align="center">
+								<input type="submit" id="submitButton" value="Create New Cheat Sheet"/>
+							</td></tr>
+						</table>
+					</div>
 					<br>
 					<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
 					<div id="resultDiv" style="display:none;" class="informationBox"></div>

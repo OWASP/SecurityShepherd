@@ -92,16 +92,16 @@ public class SuspendUser extends HttpServlet
 							String userName = new String(Getter.getUserName(ApplicationRoot, player));
 							//Adding to Kick List So they application signs them out if they are currently logged in
 							UserKicker.addUserToKickList(userName);
-							reponseMessage += "<a>" + encoder.encodeForHTML(userName) + "</a> has been suspended for <b>" + amountOfMinutes + "</b> minutes.<br>";
+							reponseMessage += "<a>" + encoder.encodeForHTML(userName) + "</a> has been suspended for <b>" + amountOfMinutes + "</b> minutes.";
 						}
 						else
 						{
-							reponseMessage += "<font color='red'>User could not be suspended. Please try again.</font><br/>";
+							reponseMessage += "<font color='red'>User could not be suspended. Please try again.</font>";
 						}
 						out.print("<h3 class=\"title\">User Suspended</h3>" +
 								"<p>" +
 								reponseMessage +
-								". Their active session will be killed at the next oppertunity.<p>");
+								" Their active session will be killed at the next oppertunity.<p>");
 					}
 					else
 					{

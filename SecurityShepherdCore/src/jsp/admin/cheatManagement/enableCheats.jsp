@@ -62,15 +62,17 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 					<p>Are you sure that you want to enable <a>cheat sheets</a> for all users?</p>
 					<div id="badData"></div>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<table id="cheatSheetTable" align="center">
-						<tr><td colspan="2" align="center">
-							<input type="submit" id="submitButton" value="Enable Cheat Sheets For Admins"/>
-						</td></tr>
-						<tr><td colspan="2" align="center">
-							<br>Or<br><br>
-							<input type="button" id="openAll" value="Enable Cheat Sheets For All"/>
-						</td></tr>
-					</table>
+					<div id="cheatSheetTable">
+						<table align="center">
+							<tr><td colspan="2" align="center">
+								<input type="submit" id="submitButton" value="Enable Cheat Sheets For Admins"/>
+							</td></tr>
+							<tr><td colspan="2" align="center">
+								<br>Or<br><br>
+								<input type="button" id="openAll" value="Enable Cheat Sheets For All"/>
+							</td></tr>
+						</table>
+					</div>
 					<br>
 					<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
 					<div id="resultDiv" style="display:none;" class="informationBox"></div>

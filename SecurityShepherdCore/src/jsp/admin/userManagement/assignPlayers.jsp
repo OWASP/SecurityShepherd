@@ -44,33 +44,32 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 {
 	//Logging Username
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
-// Getting Session Variables
-//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-Encoder encoder = ESAPI.encoder();
-String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
-String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
-String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
-String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
-String ApplicationRoot = getServletContext().getRealPath("");
-boolean showClasses = false;
-
-ResultSet classList = Getter.getClassInfo(ApplicationRoot);
-try
-{
-	showClasses = classList.next();
-}
-catch(SQLException e)
-{
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
-	showClasses = false;
-}
+	// Getting Session Variables
+	//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
+	Encoder encoder = ESAPI.encoder();
+	String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
+	String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
+	String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
+	String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
+	String ApplicationRoot = getServletContext().getRealPath("");
+	boolean showClasses = false;
+	
+	ResultSet classList = Getter.getClassInfo(ApplicationRoot);
+	try
+	{
+		showClasses = classList.next();
+	}
+	catch(SQLException e)
+	{
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
+		showClasses = false;
+	}
 %>
 	<div id="formDiv" class="post">
 		<h1 class="title">Assign Players</h1>
-		<div class="entry">
+		<div id="assignDiv" class="entry">
 			<form id="theForm" action="javascript:;">
 				<p>Please select the users you would like to assign and the class that you would like to assign them to.</p>
-				<div id="badData"></div>
 				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
 				<table align="center">
 					<tr>
@@ -156,7 +155,10 @@ catch(SQLException e)
 				</table>
 			</form>
 		</div>
-		<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
+		<br>
+		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
+		<div id="resultDiv" style="display:none;" class="informationBox"></div>
+		<div id="badData"></div>
 	</div>
 	<script>
 	$("#selectClass").change(function () {
@@ -202,6 +204,7 @@ catch(SQLException e)
 	}
 	
 	$("#theForm").submit(function(){
+		//Get Data
 		var theClass = $("#classId").val();
 		var theCsrfToken = $('#csrfToken').val();
 		var thePlayers = $("#playerId").val();
@@ -212,28 +215,41 @@ catch(SQLException e)
 		}
 		else
 		{
-			//The Ajax Operation
-			var ajaxCall = $.ajax({
-				type: "POST",
-				url: "assignPlayers",
-				data: {
-					classId: theClass,
-					players: thePlayers, 
-					csrfToken: theCsrfToken
-				},
-				async: false
-			});
-			if(ajaxCall.status == 200)
-			{
-				$("#contentDiv").hide("fast", function(){
-					$("#contentDiv").html(ajaxCall.responseText);
-					$("#contentDiv").show("fast");
+			//Show and Hide Stuff
+			$("#loadingDiv").show("fast");
+			$("#badData").hide("fast");
+			$("#resultDiv").hide("fast");
+			$("#assignDiv").slideUp("fast", function(){
+				//The Ajax Operation
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "assignPlayers",
+					data: {
+						classId: theClass,
+						players: thePlayers, 
+						csrfToken: theCsrfToken
+					},
+					async: false
 				});
-			}
-			else
-			{
-				$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-			}
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					console.log('Showing Form');
+					$("#assignDiv").slideDown("slow");
+					$('html, body').animate({
+				        scrollTop: $("#resultDiv").offset().top
+				    }, 1000);
+				});
+			});
 		}
 	});
 	</script>

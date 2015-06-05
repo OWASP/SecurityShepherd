@@ -71,18 +71,22 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					</div>
 				</div>
 			</form>
-			<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
+			<br>
+			<div id="resultDiv" style="display:none;" class="informationBox"></div>
+			<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
 			<div id="badData"></div>
-			<div id="resultDiv"></div>
 			<script>					
 			$("#theForm").submit(function(){
+				//Get Data
 				var toDo = $("#toDo").val();
 				var theCsrfToken = $('#csrfToken').val();
-				//The Ajax Operation
+				
+				//Show and Hide Stuff
+				$("#loadingDiv").show("fast");
 				$("#badData").hide("fast");
 				$("#resultDiv").hide("fast");
-				$("#loadingSign").show("slow");
 				$("#submitButton").slideUp("fast", function(){
+					//The Ajax Operation
 					var ajaxCall = $.ajax({
 						type: "POST",
 						url: "openCloseModuleCategories",
@@ -93,9 +97,10 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						},
 						async: false
 					});
-					$("#loadingSign").hide("fast", function(){
+					$("#loadingDiv").hide("fast", function(){
 						if(ajaxCall.status == 200)
 						{
+							//Now output Result Div and Show
 							$("#resultDiv").html(ajaxCall.responseText);
 							$("#resultDiv").show("fast");
 						}
@@ -104,6 +109,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 							$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
 							$("#badData").show("slow");
 						}
+						console.log('Showing Form');
 						$("#submitButton").slideDown("slow");
 						$('html, body').animate({
 					        scrollTop: $("#resultDiv").offset().top
@@ -115,11 +121,12 @@ String ApplicationRoot = getServletContext().getRealPath("");
 			$("#openCategories").click(function(){
 				var toDo = $("#toDo").val();
 				var theCsrfToken = $('#csrfToken').val();
-				//The Ajax Operation
+				//Show and Hide Stuff
+				$("#loadingDiv").show("fast");
 				$("#badData").hide("fast");
-				$("#submitButton").hide("fast");
-				$("#loadingSign").show("slow");
-				$("#resultDiv").hide("fast", function(){
+				$("#resultDiv").hide("fast");
+				$("#submitButton").slideUp("fast", function(){
+					//The Ajax Operation
 					var ajaxCall = $.ajax({
 						type: "POST",
 						url: "openCloseModuleCategories",
@@ -130,19 +137,24 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						},
 						async: false
 					});
-					if(ajaxCall.status == 200)
-					{
-						$("#resultDiv").html(ajaxCall.responseText);
-						$("#resultDiv").show("fast");
-					}
-					else
-					{
-						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
-						$("#badData").show("slow");
-					}
-				});
-				$("#loadingSign").hide("fast", function(){
-					$("#submitButton").show("slow");
+					$("#loadingDiv").hide("fast", function(){
+						if(ajaxCall.status == 200)
+						{
+							//Now output Result Div and Show
+							$("#resultDiv").html(ajaxCall.responseText);
+							$("#resultDiv").show("fast");
+						}
+						else
+						{
+							$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+							$("#badData").show("slow");
+						}
+						console.log('Showing Form');
+						$("#submitButton").slideDown("slow");
+						$('html, body').animate({
+					        scrollTop: $("#resultDiv").offset().top
+					    }, 1000);
+					});
 				});
 			});
 			</script>

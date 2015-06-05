@@ -50,7 +50,7 @@ Encoder encoder = ESAPI.encoder();
 String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<h1 class="title">About the OWASP Security Shepherd Project</h1>
+	<h1 class="title">The OWASP Security Shepherd Project</h1>
 	<p>
 		You are currently using Security Shepherd Version 2.4
 		<br><br>

@@ -69,9 +69,9 @@ public class ToggleRegistration extends HttpServlet
 					OpenRegistration.toggle();
 					String htmlOutput = new String();
 					if(OpenRegistration.isDisabled())
-						htmlOutput = "<h3 class='title'>Registration Closed</h3><p>The application Registration has been disabled. Users will not be able to register new users.</p>";
+						htmlOutput = "<h3 class='title'>Registration Closed</h3><p>The application Registration has been disabled. Users will not be able to register new accounts.</p>";
 					else
-						htmlOutput = "<h3 class='title'>Registration Opened</h3><p>The application Registration has been enabled. Users will now be able to register new users.</p>";
+						htmlOutput = "<h3 class='title'>Registration Opened</h3><p>The application Registration has been enabled. Users will now be able to register new accounts.</p>";
 					out.write(htmlOutput);
 				}
 				catch (Exception e)

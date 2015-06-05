@@ -133,7 +133,7 @@ public class AssignPlayers extends HttpServlet
 								reponseMessage += "<font color='red'>User could not be updated. Please try again.</font><br/>";
 							}
 						}
-						out.print("<h2 class=\"title\">Player Assignment Result</h2><br>" +
+						out.print("<h3 class=\"title\">Player Assignment Result</h3>" +
 								"<p>" +
 								reponseMessage +
 								"<p>");
@@ -152,7 +152,7 @@ public class AssignPlayers extends HttpServlet
 							log.error("Player not found");
 							errorMessage += "Player(s) Not Found. Please try again";
 						}
-						out.print("<h2 class=\"title\">Player Assignment Failure</h2><br>" +
+						out.print("<h3 class=\"title\">Player Assignment Failure</h3>" +
 								"<p><font color=\"red\">" +
 								encoder.encodeForHTML(errorMessage) +
 								"</font><p>");
@@ -161,7 +161,7 @@ public class AssignPlayers extends HttpServlet
 				catch (Exception e)
 				{
 					log.error("Assign Players Error: " + e.toString());
-					out.print("<h2 class=\"title\">Player Assignment Failure</h2><br>" +
+					out.print("<h3 class=\"title\">Player Assignment Failure</h3>" +
 							"<p>" +
 							"<font color=\"red\">An error Occurred! Please try again.</font>" +
 							"<p>");
@@ -170,7 +170,7 @@ public class AssignPlayers extends HttpServlet
 			else
 			{
 				log.debug("CSRF Tokens did not match");
-				out.print("<h2 class=\"title\">Player Assignment Failure</h2><br>" +
+				out.print("<h3 class=\"title\">Player Assignment Failure</h3>" +
 						"<p>" +
 						"<font color=\"red\">An error Occurred! Please try again.</font>" +
 						"<p>");
@@ -178,7 +178,7 @@ public class AssignPlayers extends HttpServlet
 		}
 		else
 		{
-			out.print("<h2 class=\"title\">Player Assignment Failure</h2><br>" +
+			out.print("<h3 class=\"title\">Player Assignment Failure</h3>" +
 					"<p>" +
 					"<font color=\"red\">An error Occurred! Please try non administrator functions!</font>" +
 					"<p>");

@@ -57,11 +57,13 @@ String ApplicationRoot = getServletContext().getRealPath("");
 				<% if (CheatSheetStatus.isEnabledAtAll()) {%>
 					<p>Are you sure that you want to disable <a>cheat sheets</a> for all users?</p>
 					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<table id="cheatSheetTable" align="center">
-						<tr><td colspan="2" align="center">
-							<input type="submit" id="submitButton" value="Disable Cheat Sheets"/>
-						</td></tr>
-					</table>
+					<div id="cheatSheetTable">
+						<table id="cheatSheetTable" align="center">
+							<tr><td colspan="2" align="center">
+								<input type="submit" id="submitButton" value="Disable Cheat Sheets"/>
+							</td></tr>
+						</table>
+					</div>
 					<br>
 					<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
 					<div id="resultDiv" style="display:none;" class="informationBox"></div>
@@ -72,9 +74,9 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						var theCsrfToken = $('#csrfToken').val();
 						//The Ajax Operation
 						$("#loadingDiv").show("fast");
-							$("#badData").hide("fast");
-							$("#resultDiv").hide("fast");
-							$("#cheatSheetTable").slideUp("fast", function(){
+						$("#badData").hide("fast");
+						$("#resultDiv").hide("fast");
+						$("#cheatSheetTable").slideUp("fast", function(){
 							var ajaxCall = $.ajax({
 								type: "POST",
 								url: "disableCheats",
