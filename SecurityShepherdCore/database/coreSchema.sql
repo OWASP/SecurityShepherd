@@ -669,6 +669,22 @@ $$
 DELIMITER ;
 
 -- -----------------------------------------------------
+-- procedure lessonInfo
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`lessonInfo` (IN theUserId VARCHAR(64))
+BEGIN
+(SELECT moduleName, moduleCategory, moduleId, finishTime
+FROM modules LEFT JOIN results USING (moduleId) WHERE userId = theUserId AND moduleType = 'lesson' AND moduleStatus = 'open') UNION (SELECT moduleName, moduleCategory, moduleId, null FROM modules WHERE moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId AND moduleType = 'lesson' AND moduleStatus = 'open') AND moduleType = 'lesson'  AND moduleStatus = 'open') ORDER BY moduleName, moduleCategory, moduleName;
+END
+
+$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
 -- procedure moduleGetResult
 -- -----------------------------------------------------
 

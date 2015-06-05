@@ -707,7 +707,19 @@ if (request.getSession() != null)
 				$("#theSergeantList").hide("fast");
 				$("#theMajorList").hide("fast");
 				$("#theAdmiralList").hide("fast");
+				$("#thePrivateList").hide("fast");
+				$("#theLieutenantList").hide("fast");
 			});  
+			
+			$("#privateList").click(function () {
+				$("#thePrivateList").toggle("slow");
+				$("#theCorporalList").hide("fast");
+				$("#theSergeantList").hide("fast");
+				$("#theMajorList").hide("fast");
+				$("#theAdmiralList").hide("fast");
+				$("#theFieldTrainingList").hide("fast");
+				$("#theLieutenantList").hide("fast");
+			}); 
 			
 			$("#corporalList").click(function () {
 				$("#theCorporalList").toggle("slow");
@@ -715,6 +727,8 @@ if (request.getSession() != null)
 				$("#theSergeantList").hide("fast");
 				$("#theMajorList").hide("fast");
 				$("#theAdmiralList").hide("fast");
+				$("#thePrivateList").hide("fast");
+				$("#theLieutenantList").hide("fast");
 			});  
 			
 			$("#sergeantList").click(function () {
@@ -723,7 +737,19 @@ if (request.getSession() != null)
 				$("#theCorporalList").hide("fast");
 				$("#theMajorList").hide("fast");
 				$("#theAdmiralList").hide("fast");
+				$("#thePrivateList").hide("fast");
+				$("#theLieutenantList").hide("fast");
 			});  
+			
+			$("#lieutenantList").click(function () {
+				$("#theLieutenantList").toggle("slow");
+				$("#theFieldTrainingList").hide("fast");
+				$("#theCorporalList").hide("fast");
+				$("#theSergeantList").hide("fast");
+				$("#theAdmiralList").hide("fast");
+				$("#thePrivateList").hide("fast");
+				$("#theMajorList").hide("fast");
+			}); 
 			
 			$("#majorList").click(function () {
 				$("#theMajorList").toggle("slow");
@@ -731,6 +757,8 @@ if (request.getSession() != null)
 				$("#theCorporalList").hide("fast");
 				$("#theSergeantList").hide("fast");
 				$("#theAdmiralList").hide("fast");
+				$("#thePrivateList").hide("fast");
+				$("#theLieutenantList").hide("fast");
 			}); 
 			
 			$("#admiralList").click(function () {
@@ -739,6 +767,8 @@ if (request.getSession() != null)
 				$("#theCorporalList").hide("fast");
 				$("#theSergeantList").hide("fast");
 				$("#theMajorList").hide("fast");
+				$("#thePrivateList").hide("fast");
+				$("#theLieutenantList").hide("fast");
 			}); 
 			
 		<% } %>

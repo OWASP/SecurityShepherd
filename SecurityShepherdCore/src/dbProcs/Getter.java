@@ -944,10 +944,9 @@ public class Getter
 		try
 		{
 			//Get the lesson modules
-			CallableStatement callstmt = conn.prepareCall("call moduleAllInfo(?, ?)");
-			callstmt.setString(1, "lesson");
-			callstmt.setString(2, userId);
-			log.debug("Gathering moduleAllInfo ResultSet for user " + userId);
+			CallableStatement callstmt = conn.prepareCall("call lessonInfo(?)");
+			callstmt.setString(1, userId);
+			log.debug("Gathering lessonInfo ResultSet for user " + userId);
 			ResultSet lessons = callstmt.executeQuery();
 			log.debug("Opening Result Set from moduleAllInfo");
 			int rowNumber = 0; // Used to identify the first row, as it is slightly different to all other rows for output
@@ -1631,22 +1630,32 @@ public class Getter
 							levelMasterList += "<a id=\"fieldTrainingList\" href=\"javascript:;\"><div class=\"menuButton\">Field Training</div></a>"
 								+ "<ul id=\"theFieldTrainingList\" style=\"display: none;\">\n";
 							break;
-						case 2: //corporal
+						case 2: //private
+							//log.debug("Starting Private List");
+							levelMasterList += "<a id=\"privateList\" href=\"javascript:;\"><div class=\"menuButton\">Private</div></a>"
+								+ "<ul id=\"thePrivateList\" style=\"display: none;\">\n";
+							break;
+						case 3: //corporal
 							//log.debug("Starting Corporal List");
 							levelMasterList += "<a id=\"corporalList\" href=\"javascript:;\"><div class=\"menuButton\">Corporal</div></a>"
 								+ "<ul id=\"theCorporalList\" style=\"display: none;\">\n";
 							break;
-						case 3: //sergeant
+						case 4: //sergeant
 							//log.debug("Starting Sergeant List");
 							levelMasterList += "<a id=\"sergeantList\" href=\"javascript:;\"><div class=\"menuButton\">Sergeant</div></a>"
 								+ "<ul id=\"theSergeantList\" style=\"display: none;\">\n";
 							break;
-						case 4: //major
+						case 5: //Lieutenant
+							//log.debug("Starting Lieutenant List");
+							levelMasterList += "<a id=\"lieutenantList\" href=\"javascript:;\"><div class=\"menuButton\">Lieutenant</div></a>"
+								+ "<ul id=\"theLieutenantList\" style=\"display: none;\">\n";
+							break;
+						case 6: //major
 							//log.debug("Starting Major List");
 							levelMasterList += "<a id=\"majorList\" href=\"javascript:;\"><div class=\"menuButton\">Major</div></a>"
 								+ "<ul id=\"theMajorList\" style=\"display: none;\">\n";
 							break;
-						case 5: //admiral
+						case 7: //admiral
 							//log.debug("Starting Admiral List");
 							levelMasterList += "<a id=\"admiralList\" href=\"javascript:;\"><div class=\"menuButton\">Admiral</div></a>"
 								+ "<ul id=\"theAdmiralList\" style=\"display: none;\">\n";
@@ -1677,25 +1686,31 @@ public class Getter
 		return levelMasterList;
 	}
 	
-	private static int fieldTrainingCap = 50;
-	private static int corporalCap = 100;
-	private static int sergeantCap = 150;
-	private static int majorCap = 200;
+	private static int fieldTrainingCap = 45;
+	private static int privateCap = 80;
+	private static int corporalCap = 105;
+	private static int sergeantCap = 130;
+	private static int lieutenantCap = 145;
+	private static int majorCap = 175;
 	private static int admiralCap = 999; //everything above Major is Admiral
 	private static int getTounnamentSectionFromRankNumber (int rankNumber)
 	{
 		if(rankNumber < fieldTrainingCap)
 			return 1;
-		else if (rankNumber < corporalCap)
+		else if (rankNumber < privateCap)
 			return 2;
-		else if (rankNumber < sergeantCap)
+		else if (rankNumber < corporalCap)
 			return 3;
-		else if (rankNumber < majorCap)
+		else if (rankNumber < sergeantCap)
 			return 4;
-		else if (rankNumber < admiralCap)
+		else if (rankNumber < lieutenantCap)
 			return 5;
+		else if (rankNumber < majorCap)
+			return 6;
+		else if (rankNumber < admiralCap)
+			return 7;
 		else
-			return 5; //Max level is 5.
+			return 7; //Max level is 7.
 	}
 	
 	/**
