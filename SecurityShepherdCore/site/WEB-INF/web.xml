@@ -634,15 +634,6 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>/quickConfig</servlet-name>
-		<servlet-class>servlets.admin.config.QuickConfiguration</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>/quickConfig</servlet-name>
-		<url-pattern>/quickConfig</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
 		<servlet-name>/challenges/06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751</servlet-name>
 		<servlet-class>servlets.module.challenge.XssChallengeFour</servlet-class>
 	</servlet>
@@ -1118,5 +1109,14 @@
 	<servlet-mapping>
 		<servlet-name>/lessons/fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833</servlet-name>
 		<url-pattern>/lessons/fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4</servlet-name>
+		<servlet-class>servlets.module.challenge.SecurityMisconfigStealTokens</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4</servlet-name>
+		<url-pattern>/challenges/c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4</url-pattern>
 	</servlet-mapping>
 </web-app>

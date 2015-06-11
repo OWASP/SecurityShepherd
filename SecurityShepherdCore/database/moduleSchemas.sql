@@ -959,6 +959,70 @@ COMMIT;
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+-- securityMisconfigStealToken Schema
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+DROP SCHEMA IF EXISTS `securityMisconfigStealToken` ;
+CREATE SCHEMA IF NOT EXISTS `securityMisconfigStealToken` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `securityMisconfigStealToken` ;
+
+-- -----------------------------------------------------
+-- Table `securityMisconfigStealToken`.`tokens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `securityMisconfigStealToken`.`tokens` (
+  `idtokens` INT NOT NULL AUTO_INCREMENT,
+  `userId` VARCHAR(64) NULL,
+  `token` VARCHAR(64) NULL,
+  PRIMARY KEY (`idtokens`),
+  UNIQUE INDEX `userId_UNIQUE` (`userId` ASC),
+  UNIQUE INDEX `token_UNIQUE` (`token` ASC))
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- getToken Procedure
+DELIMITER $$
+USE `securityMisconfigStealToken`$$
+CREATE PROCEDURE `securityMisconfigStealToken`.`getToken` (IN theUserId VARCHAR(64))
+BEGIN
+DECLARE tokenExists INT;
+COMMIT;
+SELECT count(token) FROM `securityMisconfigStealToken`.`tokens` WHERE userId = theUserId INTO tokenExists;
+IF (tokenExists < 1) THEN
+	INSERT INTO tokens (userId, token) VALUES (theUserId, SHA2(CONCAT(RAND(), now()), 256));
+	COMMIT;
+END IF;
+SELECT token FROM tokens WHERE userId = theUserId;
+END
+$$
+
+DELIMITER ;
+
+-- validToken Procedure
+DELIMITER $$
+USE `securityMisconfigStealToken`$$
+CREATE PROCEDURE `securityMisconfigStealToken`.`validToken` (IN theUserId VARCHAR(64), theToken VARCHAR(64))
+BEGIN
+COMMIT;
+SELECT count(token) FROM `securityMisconfigStealToken`.`tokens` WHERE userId != theUserId AND token = theToken;
+END
+$$
+
+DELIMITER ;
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- Module Schema Users
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -1067,3 +1131,10 @@ GRANT SELECT ON `UrlAccessThree`.`users` TO 'yourOrEll'@'localhost';
 DROP USER  'r1ndomFlower'@'localhost';
 CREATE USER 'r1ndomFlower'@'localhost' IDENTIFIED BY 'c41-l2_6oT';
 GRANT SELECT ON `sqlInjectSeven`.`users` TO 'r1ndomFlower'@'localhost';
+
+DROP USER  'al1th3Tokens'@'localhost';
+CREATE USER 'al1th3Tokens'@'localhost' IDENTIFIED BY '87SDO63yUN.';
+GRANT SELECT ON `securityMisconfigStealToken`.`tokens` TO 'al1th3Tokens'@'localhost';
+GRANT INSERT ON `securityMisconfigStealToken`.`tokens` TO 'al1th3Tokens'@'localhost';
+GRANT EXECUTE ON PROCEDURE `securityMisconfigStealToken`.`getToken` TO 'al1th3Tokens'@'localhost';
+GRANT EXECUTE ON PROCEDURE `securityMisconfigStealToken`.`validToken`  TO 'al1th3Tokens'@'localhost';

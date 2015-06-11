@@ -70,6 +70,7 @@ public class Database
 		   log.debug("Level Properties File = " + path + ".properties");
 		   //Add DB Schema to the end of the connectionURL
 		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
+		   //log.debug("Connection URL: " + connectionURL);
 		   String username=FileInputProperties.readfile(props, "databaseUsername");
 		   String password=FileInputProperties.readfile(props, "databasePassword");
 		   
