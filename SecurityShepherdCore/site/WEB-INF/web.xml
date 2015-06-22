@@ -1119,4 +1119,49 @@
 		<servlet-name>/challenges/c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4</servlet-name>
 		<url-pattern>/challenges/c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankLogin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cReg</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankRegistration</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cReg</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cReg</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cCurrentBalance</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankCurrentBalance</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cCurrentBalance</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cCurrentBalance</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cTransfer</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankTransfer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cTransfer</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cTransfer</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankLogout</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</url-pattern>
+	</servlet-mapping>
 </web-app>
