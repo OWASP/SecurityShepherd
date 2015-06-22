@@ -81,7 +81,7 @@ public class XssChallengeTwo extends HttpServlet
 						Encoder encoder = ESAPI.encoder();
 						htmlOutput = "<h2 class='title'>Well Done</h2>" +
 								"<p>You successfully executed the JavaScript alert command!<br />" +
-								"The result key for this lesson is <a>" +
+								"The result key for this challenge is <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
 												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
