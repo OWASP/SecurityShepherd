@@ -786,6 +786,15 @@
 		<servlet-name>/challenges/b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6</servlet-name>
 		<url-pattern>/challenges/b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjectionStoredProcedure</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</servlet-name>
+		<url-pattern>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</url-pattern>
+	</servlet-mapping>
   	
   	<servlet>
 		<servlet-name>/lessons/b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806</servlet-name>
