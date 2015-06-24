@@ -59,6 +59,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 		<br><br>
 		Please report any bugs or any feature requests on the <a href="http://bit.ly/securityShepherdGithub">OWASP Security Shepherd Git Repository</a>.
 	</p>
+	<%= Analytics.sponsorshipMessage %>
 	<br/>
 	<br/>
 	<div id="badData" style="display: none;"></div>
