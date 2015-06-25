@@ -1164,4 +1164,12 @@
 		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</servlet-name>
 		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</url-pattern>
 	</servlet-mapping>
+		<servlet>
+		<servlet-name>/challenges/d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66</servlet-name>
+		<servlet-class>servlets.module.challenge.NoSqlInjection1</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66</servlet-name>
+		<url-pattern>/challenges/d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66</url-pattern>
+	</servlet-mapping>
 </web-app>
