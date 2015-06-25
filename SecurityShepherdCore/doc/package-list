@@ -1,6 +1,5 @@
 dbProcs
 servlets
-servlets.admin.builder
 servlets.admin.cheatSheet
 servlets.admin.config
 servlets.admin.moduleManagement

@@ -127,18 +127,7 @@ if(ses.getAttribute("loginFailed") != null)
 			poor security configuration. The modules have been crafted to provide not only a challenge for a 
 			security novice, but security professionals as well.
 		</p>
-		<h2 class="title">Project Sponsors</h2>
-		<p>
-			The OWASP Security Shepherd project would like to acknowledge and thank the generous support of our sponsors. 
-			Please be certain to visit their stall at the <a href="http://bit.ly/AppSecEu2014">OWASP AppSec EU 2014</a> 
-			conference as well as follow them on <a href="http://bit.ly/bccRiskAdvisory">twitter</a>.
-			<br/><br/>
-			<a href="http://bit.ly/BccRiskAdvisorySite"><img src="css/images/bccRiskAdvisorySmallLogo.jpg" alt="BCC Risk Advisory"/></a>
-			<a href="http://bit.ly/EdgeScan"><img src="css/images/edgescanSmallLogo.jpg" alt="EdgeScan" /></a>
-			<br/><br/>
-			The OWASP Security Shepherd Project would also like to thank Dr. Anthony Keane and the ITB Research Lab for hosting http://owasp.securityShepherd.eu!<br>
-			<a href="http://securityresearch.ie/"><img src="https://www.owasp.org/images/thumb/2/24/Fontlogo.png/300px-Fontlogo.png"/></a>  
-		</p>
+		<%= Analytics.sponsorshipMessage %>
 		</div>
 	</div>
 	<!-- end content -->
