@@ -12,6 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     EditText showKey;
     SharedPreferences storedPref;
     SharedPreferences.Editor toEdit;
+    String serverKey="ea8acb8145f7e3c55e696e83d3746e327fed0bc8115554ca43bfe1fe2d295b94";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +55,52 @@ public class MainActivity extends AppCompatActivity {
             else{
             Toast gettingKey = Toast.makeText(MainActivity.this,
                     "Getting the key...", Toast.LENGTH_LONG);
-            gettingKey.show();
+
+
+            ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+            postParameters.add(new BasicNameValuePair("getPoorSessionKey", serverKey));
+
+            try {
+
+                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                String address = SP.getString("server_preference", "NA");
+
+                String res = CustomHttpClient.executeHttpPost(address , postParameters);
+
+                JSONObject jObject = new JSONObject(res);
+
+                String response = (String) jObject.getString("JSESSIONID");
+
+                System.out.println("SessionId: " + response);
+
+                response = response.replaceAll("\\s+", "");
+
+                Toast responseError = Toast.makeText(MainActivity.this,
+                        response, Toast.LENGTH_SHORT);
+                responseError.show();
+
+
+                if (response.contains("Value ERROR")==true){
+                    showKey.setText("Invalid Session Detected");
+                }
+                else {
+                    showKey.setText(response);
+                }
+
+            } catch (Exception e) {
+
+                Toast responseError = Toast.makeText(MainActivity.this,
+                        e.toString(), Toast.LENGTH_LONG);
+                responseError.show();
+
+                showKey.setText(e.toString());
+
             }
 
         }
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

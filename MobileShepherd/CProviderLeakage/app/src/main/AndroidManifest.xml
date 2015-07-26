@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mobshep.cproviderleakage" >
+    package="com.somewhere.hidden" >
 
     <application
         android:allowBackup="true"
@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <provider
+            android:name=".SecretProvider"
+            android:authorities="com.somewhere.hidden.SecretProvider"
+            android:exported="true"
+            android:multiprocess="true" >
+        </provider>
     </application>
 
 </manifest>
