@@ -331,7 +331,7 @@ public class Getter
 					output+= "<img src='css/images/uncompleted.gif'/>"; //Incomplete marker
 				}
 				//Final out put compilation
-				output +="<a class='challenge' id='" 
+				output +="<a class='lesson' id='" 
 					+ encoder.encodeForHTMLAttribute(challenges.getString(3))
 					+ "' href='javascript:;'>" 
 					+ encoder.encodeForHTML(challenges.getString(1)) 
@@ -708,7 +708,7 @@ public class Getter
 			else //final tags to ensure valid HTML
 			{
 				log.debug("Appending End tags");
-				output += "</ul></li>";
+				//output += "</ul></li>"; //Commented Out to prevent Search Box being pushed into Footer
 			}
 			
 			//This is the script for menu interaction

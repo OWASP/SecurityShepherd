@@ -73,6 +73,7 @@ if (request.getSession() != null)
 		</head>
 		<body>
 		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jqueryUI.js"></script>
 		<div id="wrapper">
 		<div id="header">
 			<h1>Security Shepherd</h1>
@@ -170,30 +171,64 @@ if (request.getSession() != null)
 						<a id="showSolution" href="javascript:;"><div class="menuButton">Cheat</div></a>
 					</div>
 					<% } %>
-					<% if(ModulePlan.isOpenFloor()) { %>
-						<li>
-							<a id="lessonList" href="javascript:;"><div class="menuButton">Lessons</div></a>
-							<ul id="theLessonList" style="display: none;">
-								<%= Getter.getLessons(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
-							</ul>
-						</li>
-						<li>
-							<a id="challengeList" href="javascript:;"><div class="menuButton">Challenges</div></a>
-							<ul id="theChallengeList" style="display: none;">
-								<%= Getter.getChallenges(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
-							</ul>
-						</li>
-					<% } else {
-						if(ModulePlan.isIncrementalFloor()){ %>
-							<div id="sideMenuWrapper">
-								<%= Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), csrfToken) %>
-							</div>
-						<% } else {%>
-						<li>
-							<%= Getter.getTournamentModules(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
-						</li>
-						<% }
-					} //End of Module List Output %>
+					<!-- Search Module Bar -->
+					<!-- TODO: Make pretty -->
+					
+					<div id="levelListDiv">
+						<% if(ModulePlan.isOpenFloor()) { %>
+							<li>
+								<a id="lessonList" href="javascript:;"><div class="menuButton">Lessons</div></a>
+								<ul id="theLessonList" style="display: none;">
+									<%= Getter.getLessons(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+								</ul>
+							</li>
+							<li>
+								<a id="challengeList" href="javascript:;"><div class="menuButton">Challenges</div></a>
+								<ul id="theChallengeList" style="display: none;">
+									<%= Getter.getChallenges(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+								</ul>
+							</li>
+						<% } else {
+							if(ModulePlan.isIncrementalFloor()){ %>
+								<div id="sideMenuWrapper">
+									<%= Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), csrfToken) %>
+								</div>
+							<% } else {%>
+							<li>
+								<%= Getter.getTournamentModules(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+							</li>
+							<% }
+						} //End of Module List Output %>
+					</div>
+					<div>
+						<input id="searchModules" class="moduleSearchBox" type="search" placeholder="Search Modules...">
+					</div> 
+					<script>
+						//Make list for module search box
+						console.log("Making Search List...");
+						var availableModules = [];
+						$(".lesson").each(function(index){
+							availableModules.push($(this).text());
+						}); //Make array out of available modules listed
+						console.log(availableModules.length + " modules added to search list");
+						$("#searchModules").autocomplete({
+							source: availableModules
+						});
+						
+						$("#searchModules").on("autocompleteselect", function( event, ui ) {
+							var toOpen = ui.item.value
+							console.log("Opening: " + toOpen);
+							$(".lesson").each(function(index){
+								console.log($(this));
+								if($(this).html().indexOf(toOpen) > -1){ //If the Level description exists in the lesson entry, then we have the right one
+									console.log("Clicking lesson entry...");
+									$(this).click();
+									return false;
+								}
+							});
+							console.log("Select Function Finish");
+						});
+					</script>
 				</ul>
 				<!-- You are currently looking at the core server. 
 				Nothing related to the levels in Security Shepherd will be found in here. 
