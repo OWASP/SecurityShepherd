@@ -68,6 +68,7 @@ if (request.getSession() != null)
 			Security Shepherd Version: 2.4 -->
 
 		<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="css/theResponsiveCss.css" rel="stylesheet" type="text/css" media="screen">
 		<link rel="shortcut icon" href="css/images/flavicon.jpg" type="image/jpeg" />
 
 		</head>
@@ -86,12 +87,12 @@ if (request.getSession() != null)
 		</div>
 		
 		<div id="page">
-			<div id="submitResult" style="display: none; float: right;, width: 800px;">
+			<div id="submitResult">
 				<form action="javascript:;" id="resultForm" >
 				<input type="hidden" id="currentModule" value="">
-					<table>
-					<tr><td>
-						Submit Result Key:</td><td> <input style="width: 470px;" type="text" id="moduleResult" value="" autocomplete="OFF"/></td><td><div id="submitForm"><input type="submit" value="Submit"/></div>
+					<table class="resultTable">
+					<tr>
+						<td> <input type="text" id="moduleResult" class="resultbox" placeholder="Submit Result Key Here..." autocomplete="OFF"/></td><td><div id="submitForm"><input type="submit" value="Submit"/></div>
 						<div id="submitLoading" style="display: none;">Loading... </div>
 					</td></tr>
 					</table>
@@ -108,133 +109,135 @@ if (request.getSession() != null)
 			<div id="contentDiv">
 				<!-- Ajax Div -->
 			</div>
-			<div id="sidebar">
-				<ul>
-					<% if (userRole.compareTo("admin") == 0){ %>
-						<li>
-							 <a id="adminList" href="javascript:;"><div class='menuButton'>Admin</div></a>
-							<ul id="theAdminList" style="display: none;">
-								<li>
-									<a id="cheatSheetManagementList" href="javascript:;">Cheat Sheet Management</a>
-									<ul id="theCheatSheetManagementList" style="display: none;">
-										<li><a id="createCheatsLink" href="javascript:;">Create New Cheat Sheet</a></li>
-										<li><a id="disableCheatsLink" href="javascript:;">Disable Cheat Sheets</a></li>
-										<li><a id="enableCheatsLink" href="javascript:;">Enable Cheat Sheets</a></li>										
-									</ul>
-								</li>
-								<li>
-									<a id="configurationList" href="javascript:;">Configuration</a>
-									<ul id="theConfigurationList" style="display: none;">
-										<li><a id="aboutShepherdLink" href="javascript:;">About Security Shepherd</a></li>
-										<li><a id="levelLayoutLink" href="javascript:;">Change Module Layout</a></li>
-										<li><a id="configureFeedbackLink" href="javascript:;">Feedback Configuration</a></li>
-										<li><a id="registrationLink" href="javascript:;">Open/Close Registration</a></li>
-										<li><a id="scoreboardLink" href="javascript:;">Scoreboard Configuration</a></li>
-										<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
-									</ul>
-								</li>
-								<li>
-									<a id="moduleManagementList" href="javascript:;">Module Management</a>
-									<ul id="theModuleManagementList" style="display: none;">
-										<li><a id="moduleBlockLink" href="javascript:;">Module Block Setup</a></li>
-										<li><a id="setModuleStatusLink" href="javascript:;">Open and Close Modules</a></li>
-										<li><a id="openCloseByCategory" href="javascript:;">Open or Close by Category</a></li>
-										<li><a id="feedbackLink" href="javascript:;">View Feedback</a></li>
-										<li><a id="progressLink" href="javascript:;">View Progress</a></li>
-									</ul>
-								</li>
-								<li>
-									<a id="userManagementList" href="javascript:;">User Management</a>
-									<ul id="theUserManagementList" style="display: none;">
-										<li><a id="addPlayersLink" href="javascript:;">Add Players</a></li>
-										<li><a id="updatePlayerScoreLink" href="javascript:;">Add / Deduct Player Points</a></li>
-										<li><a id="assignPlayersLink" href="javascript:;">Assign Players to Class</a></li>
-										<li><a id="createNewClassLink" href="javascript:;">Create Class</a></li>
-										<li><a id="createNewAdminLink" href="javascript:;">Create New Admin</a></li>
-										<li><a id="changePlayerPasswordLink" href="javascript:;">Reset Password</a></li>
-										<li><a id="setDefaultClassForRegistrationLink" href="javascript:;">Set Default Player Class</a></li>
-										<li><a id="suspendPlayerLink" href="javascript:;">Suspend Player</a></li>
-										<li><a id="unSuspendPlayerLink" href="javascript:;">Unsuspend Player</a></li>
-										<li><a id="upgradePlayersLink" href="javascript:;">Upgrade Player to Admin</a></li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-					<% } %>
-					<% if(canSeeScoreboard) { %>
-					<div id="scoreboardButton">
-						<a id="showScoreboard" href="scoreboard.jsp" target="bar"><div class="menuButton">Scoreboard</div></a>
-					</div>
-					<% } %>
-					<% if(showCheatSheet) { %>
-					<div id="cheatSheetButton" style="display: none;">
-						<a id="showSolution" href="javascript:;"><div class="menuButton">Cheat</div></a>
-					</div>
-					<% } %>
-					<!-- Search Module Bar -->
-					<!-- TODO: Make pretty -->
-					
-					<div id="levelListDiv">
-						<% if(ModulePlan.isOpenFloor()) { %>
+			<div class="sidebarWrapper">
+				<div class="menuIcon">
+					&#9776;
+				</div>
+				<div id="sidebar">
+					<ul>
+						<% if (userRole.compareTo("admin") == 0){ %>
 							<li>
-								<a id="lessonList" href="javascript:;"><div class="menuButton">Lessons</div></a>
-								<ul id="theLessonList" style="display: none;">
-									<%= Getter.getLessons(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+								 <a id="adminList" href="javascript:;"><div class='menuButton'>Admin</div></a>
+								<ul id="theAdminList" style="display: none;">
+									<li>
+										<a id="cheatSheetManagementList" href="javascript:;">Cheat Sheet Management</a>
+										<ul id="theCheatSheetManagementList" style="display: none;">
+											<li><a id="createCheatsLink" href="javascript:;">Create New Cheat Sheet</a></li>
+											<li><a id="disableCheatsLink" href="javascript:;">Disable Cheat Sheets</a></li>
+											<li><a id="enableCheatsLink" href="javascript:;">Enable Cheat Sheets</a></li>										
+										</ul>
+									</li>
+									<li>
+										<a id="configurationList" href="javascript:;">Configuration</a>
+										<ul id="theConfigurationList" style="display: none;">
+											<li><a id="aboutShepherdLink" href="javascript:;">About Security Shepherd</a></li>
+											<li><a id="levelLayoutLink" href="javascript:;">Change Module Layout</a></li>
+											<li><a id="configureFeedbackLink" href="javascript:;">Feedback Configuration</a></li>
+											<li><a id="registrationLink" href="javascript:;">Open/Close Registration</a></li>
+											<li><a id="scoreboardLink" href="javascript:;">Scoreboard Configuration</a></li>
+											<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
+										</ul>
+									</li>
+									<li>
+										<a id="moduleManagementList" href="javascript:;">Module Management</a>
+										<ul id="theModuleManagementList" style="display: none;">
+											<li><a id="moduleBlockLink" href="javascript:;">Module Block Setup</a></li>
+											<li><a id="setModuleStatusLink" href="javascript:;">Open and Close Modules</a></li>
+											<li><a id="openCloseByCategory" href="javascript:;">Open or Close by Category</a></li>
+											<li><a id="feedbackLink" href="javascript:;">View Feedback</a></li>
+											<li><a id="progressLink" href="javascript:;">View Progress</a></li>
+										</ul>
+									</li>
+									<li>
+										<a id="userManagementList" href="javascript:;">User Management</a>
+										<ul id="theUserManagementList" style="display: none;">
+											<li><a id="addPlayersLink" href="javascript:;">Add Players</a></li>
+											<li><a id="updatePlayerScoreLink" href="javascript:;">Add / Deduct Player Points</a></li>
+											<li><a id="assignPlayersLink" href="javascript:;">Assign Players to Class</a></li>
+											<li><a id="createNewClassLink" href="javascript:;">Create Class</a></li>
+											<li><a id="createNewAdminLink" href="javascript:;">Create New Admin</a></li>
+											<li><a id="changePlayerPasswordLink" href="javascript:;">Reset Password</a></li>
+											<li><a id="setDefaultClassForRegistrationLink" href="javascript:;">Set Default Player Class</a></li>
+											<li><a id="suspendPlayerLink" href="javascript:;">Suspend Player</a></li>
+											<li><a id="unSuspendPlayerLink" href="javascript:;">Unsuspend Player</a></li>
+											<li><a id="upgradePlayersLink" href="javascript:;">Upgrade Player to Admin</a></li>
+										</ul>
+									</li>
 								</ul>
 							</li>
-							<li>
-								<a id="challengeList" href="javascript:;"><div class="menuButton">Challenges</div></a>
-								<ul id="theChallengeList" style="display: none;">
-									<%= Getter.getChallenges(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
-								</ul>
-							</li>
-						<% } else {
-							if(ModulePlan.isIncrementalFloor()){ %>
-								<div id="sideMenuWrapper">
-									<%= Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), csrfToken) %>
-								</div>
-							<% } else {%>
-							<li>
-								<%= Getter.getTournamentModules(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
-							</li>
-							<% }
-						} //End of Module List Output %>
-					</div>
-					<div>
-						<input id="searchModules" class="moduleSearchBox" type="search" placeholder="Search Modules...">
-					</div> 
-					<script>
-						//Make list for module search box
-						console.log("Making Search List...");
-						var availableModules = [];
-						$(".lesson").each(function(index){
-							availableModules.push($(this).text());
-						}); //Make array out of available modules listed
-						console.log(availableModules.length + " modules added to search list");
-						$("#searchModules").autocomplete({
-							source: availableModules
-						});
-						
-						$("#searchModules").on("autocompleteselect", function( event, ui ) {
-							var toOpen = ui.item.value
-							console.log("Opening: " + toOpen);
+						<% } %>
+						<% if(canSeeScoreboard) { %>
+						<div id="scoreboardButton">
+							<a id="showScoreboard" href="scoreboard.jsp" target="bar"><div class="menuButton">Scoreboard</div></a>
+						</div>
+						<% } %>
+						<% if(showCheatSheet) { %>
+						<div id="cheatSheetButton" style="display: none;">
+							<a id="showSolution" href="javascript:;"><div class="menuButton">Cheat</div></a>
+						</div>
+						<% } %>					
+						<div id="levelListDiv">
+							<% if(ModulePlan.isOpenFloor()) { %>
+								<li>
+									<a id="lessonList" href="javascript:;"><div class="menuButton">Lessons</div></a>
+									<ul id="theLessonList" style="display: none;">
+										<%= Getter.getLessons(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+									</ul>
+								</li>
+								<li>
+									<a id="challengeList" href="javascript:;"><div class="menuButton">Challenges</div></a>
+									<ul id="theChallengeList" style="display: none;">
+										<%= Getter.getChallenges(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+									</ul>
+								</li>
+							<% } else {
+								if(ModulePlan.isIncrementalFloor()){ %>
+									<div id="sideMenuWrapper">
+										<%= Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), csrfToken) %>
+									</div>
+								<% } else {%>
+								<li>
+									<%= Getter.getTournamentModules(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+								</li>
+								<% }
+							} //End of Module List Output %>
+						</div>
+						<div>
+							<input id="searchModules" class="moduleSearchBox" type="search" placeholder="Search Modules...">
+						</div> 
+						<script>
+							//Make list for module search box
+							console.log("Making Search List...");
+							var availableModules = [];
 							$(".lesson").each(function(index){
-								console.log($(this));
-								if($(this).html().indexOf(toOpen) > -1){ //If the Level description exists in the lesson entry, then we have the right one
-									console.log("Clicking lesson entry...");
-									$(this).click();
-									return false;
-								}
+								availableModules.push($(this).text());
+							}); //Make array out of available modules listed
+							console.log(availableModules.length + " modules added to search list");
+							$("#searchModules").autocomplete({
+								source: availableModules
 							});
-							console.log("Select Function Finish");
-						});
-					</script>
-				</ul>
-				<!-- You are currently looking at the core server. 
-				Nothing related to the levels in Security Shepherd will be found in here. 
-				You might be looking for the iframe embeded in the page.
-				Try a tool like Firebug to make this stuff easier. -->
-			</div>
+							
+							$("#searchModules").on("autocompleteselect", function( event, ui ) {
+								var toOpen = ui.item.value
+								console.log("Opening: " + toOpen);
+								$(".lesson").each(function(index){
+									console.log($(this));
+									if($(this).html().indexOf(toOpen) > -1){ //If the Level description exists in the lesson entry, then we have the right one
+										console.log("Clicking lesson entry...");
+										$(this).click();
+										return false;
+									}
+								});
+								console.log("Select Function Finish");
+							});
+						</script>
+					</ul>
+					<!-- You are currently looking at the core server. 
+					Nothing related to the levels in Security Shepherd will be found in here. 
+					You might be looking for the iframe embeded in the page.
+					Try a tool like Firebug to make this stuff easier. -->
+				</div> <!-- End of Sidebar -->
+			</div> <!-- End of Sidebar Wrapper -->
 		</div>
 		</div>
 		<script src="js/toggle.js"></script>
@@ -602,7 +605,7 @@ if (request.getSession() != null)
 				if(ajaxCall.status == 200)
 				{
 					theActualFile = ajaxCall.responseText;
-					$('#contentDiv').html("<iframe frameborder='no' style='word-wrap: break-word; width: 685px; height: 2056px;' id='theChallenge' src='" + theActualFile + "'></iframe>");
+					$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theChallenge' src='" + theActualFile + "'></iframe>");
 					$("#theChallenge").load(function(){
 						<% if(showCheatSheet) { %>
 							$("#submitResult").slideDown("fast", function(){
@@ -643,7 +646,7 @@ if (request.getSession() != null)
 				if(ajaxCall.status == 200)
 				{
 					theActualFile = ajaxCall.responseText;
-					$('#contentDiv').html("<iframe frameborder='no' style='word-wrap: break-word; width: 685px; height: 2056px;' id='theLesson' src='" + theActualFile + "'></iframe>");
+					$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
 					$("#theLesson").load(function(){
 					<% if(showCheatSheet) { %>
 						$("#submitResult").slideDown("fast", function(){

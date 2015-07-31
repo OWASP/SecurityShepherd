@@ -80,7 +80,7 @@ a:hover {
 
 #contentDiv {
 	float: right;
-	width: 685px;
+	width: 100%;
 	margin: 0;
 	padding-left:20px;
 }
