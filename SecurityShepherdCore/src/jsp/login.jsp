@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
+
+<%@ include file="translation.jsp"%>
 
 <%
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody Conntected to login.jsp ...");
@@ -56,102 +58,90 @@ if(ses.getAttribute("loginFailed") != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>OWASP Security Shepherd - Login</title>
+	<title>OWASP Security Shepherd - Login</title>
 
-<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
-<script type="text/javascript" src="js/jquery.js"></script>
-<div id="wrapper">
-<!-- start header -->
-<div id="header">
-	<h1>Security Shepherd</h1>
-</div>
-<!-- end header -->
-<!-- start page -->
-<div id="page">
-	<!-- start content -->
-	<div id="content" style="margin-left: auto; margin-right: auto; width:320px">
-		<div class="post">
-			<h1 class="title">Login</h1>
-			<p>Use your <a><span>Security Shepherd Credentials</span></a> to Login.</p>
-			<% if(OpenRegistration.isEnabled()) { %>
-				<p>Register a <a href="register.jsp"><span>Security Shepherd Account</span></a> here!</p>
-			<% } if(!loginFailed.isEmpty()) {%>
-				<p><strong><font color="red"><%= loginFailed %></font></strong></p>
-			<% } %>
-			<form name="loginForm" method="POST" action="login">
-				<table>
-					<tr><td><p>Username:</td><td><input type="text" name="login" value="" autocomplete="OFF" autofocus/></p></td></tr>
-					<tr><td><p>Password:&nbsp;&nbsp;&nbsp;&nbsp;
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										</td><td><input type="password" name="pwd" autocomplete="OFF"/><br /></td></tr>
-					<tr><td colspan="2" align="center">
-						<input type="submit" name="submit" value="Login" />
-					</td></tr>
-				</table>
-			</form>
-			<br/>
-			<br/>
-			<div align="center">
-				<a id="tools" href="javascript:;">Do you need a Proxy?</a>
-				<div id="toolsTable" style="display: none;">
-				<p>Download a HTTP Proxy here;</p>
-				<table>
-					<tr><td align="center"><a href="http://bit.ly/zapWindows">ZAP for Windows</a></td></tr>
-					<tr><td align="center"><a href="http://bit.ly/zapLinux">ZAP for Linux</a></td></tr>
-					<tr><td align="center"><a href="http://bit.ly/zapForMac">ZAP for Mac</a></td></tr>
-				</table>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<div id="wrapper">
+	<jsp:include page="translation-select.jsp" />
+	<!-- start header -->
+	<div id="header">
+		<h1>Security Shepherd</h1>
+	</div>
+	<!-- end header -->
+	<!-- start page -->
+	<div id="page">
+		<!-- start content -->
+		<div id="content" style="margin-left: auto; margin-right: auto; width:320px">
+			<div class="post">
+				<h1 class="title" id="login_title"><label for="login_title"><fmt:message key="login.label.title" /></label></h1>
+				<p id="login-info"><label for="login-info"><fmt:message key="login.label.info" /></label></p>
+				<% if(OpenRegistration.isEnabled()) { %>
+					<p id="register_info"><label for="register_info"><fmt:message key="login.label.regInfo" /></label></p>
+				<% } if(!loginFailed.isEmpty()) {%>
+					<p><strong><font color="red"><%= loginFailed %></font></strong></p>
+				<% } %>
+				<form name="loginForm" method="POST" action="login">
+					<table>
+						<tr><td><p><fmt:message key="login.label.username" />:</td><td><input type="text" name="login" value="" autocomplete="OFF" autofocus/></p></td></tr>
+						<tr><td><p><fmt:message key="login.label.password" />:&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											</td><td><input type="password" name="pwd" autocomplete="OFF"/><br /></td></tr>
+						<tr><td colspan="2" align="center">
+							<fmt:message key="login.button.submit" var="buttonValue" />
+								<input type="submit" name="submit" value="${buttonValue}" />
+						</td></tr>
+					</table>
+				</form>
+				<br/>
+				<br/>
+				<div align="center">
+					<a id="tools" href="javascript:;"><fmt:message key="login.label.proxy_question" />?</a>
+					<div id="toolsTable" style="display: none;">
+					<p><fmt:message key="login.label.download_proxy" />;</p>
+					<table>
+						<tr><td align="center"><a href="http://bit.ly/zapWindows"><fmt:message key="login.label.zap_win" /></a></td></tr>
+						<tr><td align="center"><a href="http://bit.ly/zapLinux"><fmt:message key="login.label.zap_lin" /></a></td></tr>
+						<tr><td align="center"><a href="http://bit.ly/zapForMac"><fmt:message key="login.label.zap_mac" /></a></td></tr>
+					</table>
+					</div>
+					<br><a id="showAbout" href="javascript:;"><fmt:message key="login.label.about_shepherd" /></a>
 				</div>
-				<br><a id="showAbout" href="javascript:;">About Security Shepherd</a>
 			</div>
 		</div>
-	</div>
-	<div align="justify">
-		
-		<div id="aboutDiv" style="display: none;">
-		<h2 class="title">About Security Shepherd</h2>
-		<p>
-			The OWASP Security Shepherd project has been designed and implemented with the aim of fostering and improving application security
-			 awareness among a varied skill-set demographic.This project enables users to learn or to 
-			 improve upon existing manual penetration testing skills. This is accomplished through 
-			 lesson and challenge techniques. A lesson provides a user with a lot of help in completing 
-			 that module, where a challenge puts what the user learned in the lesson to use.
-			<br/>
-			<br/>
-			The OWASP Security Shepherd project covers the OWASP Top Ten web app risks and also covers the OWASP Top Ten Mobile risks as well. 
-			Using these risks as a challenge test bed, common security vulnerabilities can be explored and their 
-			impact on a system understood. Many of these levels include insufficient mitigations and protections to these risks, 
-			such as blacklist filters, atrocious encoding schemes, barbaric security mechanisms and 
-			poor security configuration. The modules have been crafted to provide not only a challenge for a 
-			security novice, but security professionals as well.
-		</p>
-		<%= Analytics.sponsorshipMessage %>
+		<div align="justify">
+			
+			<div id="aboutDiv" style="display: none;">
+			<h2 class="title"><fmt:message key="login.label.about_shepherd" /></h2>
+			<p id="about_shepherd_blurb"><label for="about_shepherd_blurb"><fmt:message key="login.label.about_blurb" /></label></p>
+			<%= Analytics.sponsorshipMessage %>
+			</div>
 		</div>
+		<!-- end content -->
+		<!-- start sidebar -->
+		<!-- end sidebar -->
 	</div>
-	<!-- end content -->
-	<!-- start sidebar -->
-	<!-- end sidebar -->
-</div>
-</div>
-<!-- end page -->
-<script>
-	jQuery.fn.center = function () 
-	{
-		this.css("position","absolute");
-		this.css("left", (($(window).width() - this.outerWidth()) / 2) + $(window).scrollLeft() + "px");
-		return this;
-	}	
-	
-	$("#tools").click(function(){
-		$("#toolsTable").show("slow");
-	});
-	
-	$("#showAbout").click(function(){
-		$("#aboutDiv").show("slow");
-	});
-</script>
-<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	</div>
+	<!-- end page -->
+	<script>
+		jQuery.fn.center = function () 
+		{
+			this.css("position","absolute");
+			this.css("left", (($(window).width() - this.outerWidth()) / 2) + $(window).scrollLeft() + "px");
+			return this;
+		}	
+		
+		$("#tools").click(function(){
+			$("#toolsTable").show("slow");
+		});
+		
+		$("#showAbout").click(function(){
+			$("#aboutDiv").show("slow");
+		});
+	</script>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
