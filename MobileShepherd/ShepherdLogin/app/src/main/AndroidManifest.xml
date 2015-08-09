@@ -40,6 +40,13 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:name=".SessionProvider"
+            android:authorities="com.mobshep.shepherdlogin.SessionProvider"
+            android:exported="true"
+            android:multiprocess="true" >
+        </provider>
+
     </application>
 
 </manifest>

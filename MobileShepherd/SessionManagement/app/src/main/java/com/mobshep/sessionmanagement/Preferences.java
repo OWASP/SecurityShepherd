@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 /**
@@ -33,11 +34,12 @@ public class Preferences extends Activity {
 
         // Display the fragment as the main content.
         FragmentManager mFragmentManager = getFragmentManager();
-        FragmentTransaction mFragmentTransaction = mFragmentManager
+        FragmentTransaction fragmentTransaction = mFragmentManager
                 .beginTransaction();
-        PrefsFragment mPrefsFragment = new PrefsFragment();
-        mFragmentTransaction.replace(android.R.id.content, mPrefsFragment);
-        mFragmentTransaction.commit();
+        PrefsFragment PrefsFragment = new PrefsFragment();
+        fragmentTransaction.replace(android.R.id.content, PrefsFragment);
+        fragmentTransaction.commit();
+
     }
 
     public static class PrefsFragment extends PreferenceFragment {

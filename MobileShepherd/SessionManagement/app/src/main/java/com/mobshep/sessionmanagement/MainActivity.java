@@ -3,6 +3,7 @@ package com.mobshep.sessionmanagement;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,6 +19,24 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+/**
+ * This file is part of the Security Shepherd Project.
+ *
+ * The Security Shepherd project is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.<br/>
+ *
+ * The Security Shepherd project is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.<br/>
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Sean Duggan
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,81 +44,40 @@ public class MainActivity extends AppCompatActivity {
     EditText showKey;
     SharedPreferences storedPref;
     SharedPreferences.Editor toEdit;
-    String serverKey="ea8acb8145f7e3c55e696e83d3746e327fed0bc8115554ca43bfe1fe2d295b94";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        showKey = (EditText) findViewById(R.id.etKey);
 
         storedPref = getSharedPreferences("Sessions", MODE_WORLD_READABLE);
         toEdit = storedPref.edit();
-        toEdit.putString("SessionToken", "null");
+        toEdit.putString("SessionToken", "");
         toEdit.commit();
 
     }
-
 
     public void getKeyClicked(View v) {
 
         SharedPreferences prefs = this.getSharedPreferences("SessionToken", MODE_PRIVATE);
         String session = prefs.getString("SessionToken", null);
 
-        if (session == "null") {
+        if (session==null) {
             Toast noSession = Toast.makeText(MainActivity.this,
                     "You do not have an active session!", Toast.LENGTH_LONG);
             noSession.show();
         }
 
             else{
+            // temp solution until SSO is implemented
             Toast gettingKey = Toast.makeText(MainActivity.this,
                     "Getting the key...", Toast.LENGTH_LONG);
+            gettingKey.show();
 
-
-            ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-            postParameters.add(new BasicNameValuePair("getPoorSessionKey", serverKey));
-
-            try {
-
-                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                String address = SP.getString("server_preference", "NA");
-
-                String res = CustomHttpClient.executeHttpPost(address , postParameters);
-
-                JSONObject jObject = new JSONObject(res);
-
-                String response = (String) jObject.getString("JSESSIONID");
-
-                System.out.println("SessionId: " + response);
-
-                response = response.replaceAll("\\s+", "");
-
-                Toast responseError = Toast.makeText(MainActivity.this,
-                        response, Toast.LENGTH_SHORT);
-                responseError.show();
-
-
-                if (response.contains("Value ERROR")==true){
-                    showKey.setText("Invalid Session Detected");
-                }
-                else {
-                    showKey.setText(response);
-                }
-
-            } catch (Exception e) {
-
-                Toast responseError = Toast.makeText(MainActivity.this,
-                        e.toString(), Toast.LENGTH_LONG);
-                responseError.show();
-
-                showKey.setText(e.toString());
-
-            }
-
+            showKey.setText("BlueBanjosNewNachos");
         }
-
-
     }
 
     @Override
@@ -124,6 +102,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(goToSettings);
                 return true;
 
+            case R.id.action_restart:
+
+                storedPref = getSharedPreferences("Sessions", MODE_WORLD_READABLE);
+                toEdit = storedPref.edit();
+                toEdit.putString("SessionToken", "");
+                toEdit.commit();
+
+                break;
+
             case R.id.action_exit:
 
                 this.finish();
@@ -134,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
-
     }
 
 }

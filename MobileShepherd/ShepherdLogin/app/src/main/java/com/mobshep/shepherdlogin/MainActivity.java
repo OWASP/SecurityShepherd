@@ -1,7 +1,9 @@
 package com.mobshep.shepherdlogin;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -118,14 +120,21 @@ public class MainActivity extends ActionBarActivity {
                 toEdit.putString("sessionId", response);
                 toEdit.commit();
 
+                //store the session in content provider
+                ContentValues values = new ContentValues();
+                values.put(SessionProvider.key, response);
+
+                // Provides access to other applications Content Providers
+                Uri uri = getContentResolver().insert(SessionProvider.CONTENT_URL, values);
+
+                Toast.makeText(getBaseContext(), "New Session Stored", Toast.LENGTH_LONG).show();
+
                 Intent intent = new Intent(MainActivity.this, LoggedIn.class);
                 startActivity(intent);
 
             } else {
 
-                Toast invalid = Toast.makeText(MainActivity.this,
-                        "Invalid Credentials!", Toast.LENGTH_SHORT);
-                invalid.show();
+                Toast.makeText(getBaseContext(), "Invalid Credentials!", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
 

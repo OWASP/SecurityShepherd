@@ -18,8 +18,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/textView"
-        android:layout_alignEnd="@+id/textView" />
+        android:layout_alignRight="@+id/etKey"
+        android:layout_alignEnd="@+id/etKey" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Key"
         android:background="@xml/box"
-        android:id="@+id/textView"
+        android:id="@+id/etKey"
         android:textColor="#DA70D6"
         android:layout_above="@+id/button"
         android:layout_alignParentRight="true"
