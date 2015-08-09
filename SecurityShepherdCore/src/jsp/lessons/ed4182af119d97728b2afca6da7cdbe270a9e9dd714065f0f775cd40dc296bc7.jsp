@@ -3,25 +3,25 @@
 <%
 /**
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- * 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
+ *
  * @author Mark Denihan
  */
- 
+
  String levelName = new String("CSRF Lesson");
- 
+
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -60,43 +60,43 @@
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
 			<h2 class="title">What is a Cross-Site Request Forgery?</h2>
-			<p> 
+			<p>
 				<div id="lessonIntro">
-					A Cross-Site Request Forgery, or <a>CSRF</a>, attack forces a user's browser to send a 
-					<a>forged HTTP request</a> with the user's session cookie to an application, 
-					tricking the user into unknowingly interacting with an application that they are 
-					currently logged into. CSRF attacks are possible when the application is not ensuring 
-					that a user is in fact interacting with it. The severity of a CSRF attack varies with the 
-					functionality of the application the victim is been tricked into interacting with. 
-					If the attack is aimed at an administrator, the severity will be a lot higher than that of a 
-					guest user. 
+					A Cross-Site Request Forgery, or <a>CSRF</a>, attack forces a user's browser to send a
+					<a>forged HTTP request</a> with the user's session cookie to an application,
+					tricking the user into unknowingly interacting with an application that they are
+					currently logged into. CSRF attacks are possible when the application does not ensure
+					that a user is in fact interacting with it. The severity of a CSRF attack varies with the
+					functionality of the application the victim is tricked into interacting with.
+					If the attack is aimed at an administrator, the severity will be a lot higher than those
+					aimed at a guest user.
 					<br />
 					<br />
-					To prevent CSRF attacks, every request must contain a <a>nonce</a> token (an unpredictable 
-					number) to be included with every request. To find CSRF vulnerabilities in applications, this 
-					is the token that is tested. If a request does not contain a nonce at all, 
-					then it is likely vulnerable to CSRF attacks. If a request does contain a nonce, 
-					then there are more steps to include in testing for CSRF. Even though the nonce 
-					is in the request it may not be validated or may work with a null value. 
-					It is possible that the applications nonce management will allow an attack to use 
+					To prevent CSRF attacks, every request must contain a <a>nonce</a> token (an unpredictable
+					number) to be included with every request. To find CSRF vulnerabilities in applications, this
+					is the token that is tested. If a request does not contain a nonce at all,
+					then it is likely vulnerable to CSRF attacks. If a request does contain a nonce,
+					then there are more steps to include in testing for CSRF. Even though the nonce
+					is in the request it may not be validated or may work with a null value.
+					It is possible that the application's nonce management will allow an attacker to use
 					their valid nonce in other user requests!
 					<br />
 					<br />
-					HTTP requests can be sent using JavaScript. Requests that are sent this way include a 
-					"X-Requested-With" HTTP header. If this is checked for on incoming requests, this can serve as 
-					CSRF protection without a nonce value. This header cannot be replicated from a remote domain, 
-					due to the <a>Same Origin Policy</a>, preventing an attacker from delivering the attack remotely. 
-					It is not advised to use this as a sole CSRF protection model, as browser issues are commonly found that 
+					HTTP requests can be sent using JavaScript. Requests that are sent this way include an
+					"X-Requested-With" HTTP header. If this is checked for on incoming requests, this can serve as
+					CSRF protection without a nonce value. This header cannot be replicated from a remote domain,
+					due to the <a>Same Origin Policy</a>, preventing an attacker from delivering the attack remotely.
+					It is not advised to use this as a sole CSRF protection model, as browser issues are commonly found that
 					allow attackers to send cross-domain requests from a browser.
 					<br />
 					<br />
-					CSRF attacks can be performed on <a>GET</a> and <a>POST</a> HTTP requests. To force a victim to seamlessly 
-					submit a request in a GET request, the request (highlighted) can be embedded into an image tag on a web page 
+					CSRF attacks can be performed on <a>GET</a> and <a>POST</a> HTTP requests. To force a victim to seamlessly
+					submit a request in a GET request, the request (highlighted) can be embedded into an image tag on a web page
 					such as follows;<br />
 					&lt;img src=&quot;<a>http://www.secureBank.ie/sendMoney?giveMoneyTo=hacker&amp;giveAmount=1000</a>&quot;/&gt;
 					<br />
 					<br />
-					To force a victim to send a POST request, it requires a little more effort. The easiest way is to create a 
+					To force a victim to send a POST request, it requires a little more effort. The easiest way is to create a
 					form that automatically submits using JavaScript, such as the following example;<br/>
 					&lt;form name=&quot;csrfForm&quot; action=&quot;<a>http://www.secureBank.ie/sendMoney</a>&quot; method=&quot;<a>POST</a>&quot;&gt;<br />
 					&lt;input type=&quot;hidden&quot; name=&quot;<a>giveMoneyTo</a>&quot; value=&quot;hacker&quot; /&gt;<br />
@@ -112,14 +112,14 @@
 				<input type="button" value="Show CSRF Introduction" id="showLesson"  style="display: none;"/>
 				<br />
 				<br />
-				The function used by an administrator to mark this lesson as complete for a user is initiated by the following 
+				The function used by an administrator to mark this lesson as complete for a user is initiated by the following
 				GET request to this server, where 'exampleId' is a valid userId;
 				<br/>
 				<br/>
 				GET <a href="<%= encoder.encodeForHTML("../root/grantComplete/csrfLesson?userId=exampleId") %>">/root/grantComplete/csrfLesson?userId=exampleId </a>
 				<br />
-				To complete this lesson, send the administrator a message with a image URL, that will show in an 
-				embedded <a>&lt;img&gt;</a> tag that will force them to submit the request described above, 
+				To complete this lesson, send the administrator a message with a image URL, that will show in an
+				embedded <a>&lt;img&gt;</a> tag that will force them to submit the request described above,
 				replacing the exampleId attribute with your temp userId: <a><%= falseId %></a>
 				<br />
 				<br />
@@ -128,7 +128,7 @@
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>URL of the image</a> that you want to send to one of Security Shepherds 24 
+						Please enter the <a>URL of the image</a> that you want to send to one of Security Shepherds 24
 						hour administrators.
 					</td></tr>
 					<tr><td>
@@ -140,7 +140,7 @@
 					</td></tr>
 					</table>
 				</form>
-				
+
 				<div id="resultsDiv"></div>
 			</p>
 		</div>
@@ -174,13 +174,13 @@
 					});
 				});
 			});
-			
+
 			$('#hideLesson').click(function(){
 				$("#lessonIntro").hide("slow", function(){
 					$("#showLesson").show("fast");
 				});
 			});
-			
+
 			$("#showLesson").click(function(){
 				$('#showLesson').hide("fast", function(){
 					$("#lessonIntro").show("slow");

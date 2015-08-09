@@ -6,21 +6,21 @@ String levelName = new String("Unvalidated Redirects and Forwards Lesson");
 
 /**
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -58,34 +58,34 @@ String levelName = new String("Unvalidated Redirects and Forwards Lesson");
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
 			<h2 class="title">What are Unvalidated Redirects and Forwards?</h2>
-			<p> 
+			<p>
 				<div id="lessonIntro">
-					Unvalidated redirects and forwards occur in applications that <a>redirect</a> or <a>forward</a> 
-					its users to a <a>target</a> that is specified by a unvalidated parameter. An unvalidated parameter 
-					that is used to redirect a user to a normally safe location can be used by an attacker to 
-					trick victims into visiting phishing pages or even have malware installed on their machines. 
+					Unvalidated redirects and forwards occur in applications that <a>redirect</a> or <a>forward</a>
+					their users to a <a>target</a> that is specified by an unvalidated parameter. An unvalidated parameter
+					that is used to redirect a user to a normally safe location can be used by an attacker to
+					trick victims into visiting phishing pages or even have malware installed on their machines.
 					<br />
 					<br />
-					This attack takes advantage of a users trust in an application. A victim is more likely to click 
-					on a link from a site that they trust than one they have never seen before. 
+					This attack takes advantage of a user's trust in an application. A victim is more likely to click
+					on a link from a site that they trust than one they have never seen before.
 					<br />
 					<br />
-					These attacks can also be used to bypass access control schemes. 
-					This is done when a page that a user would not normally have access to, 
-					such as <a>administrator</a> pages, is included in a unvalidated redirect. 
+					These attacks can also be used to bypass access control schemes.
+					This is done when a page that a user would not normally have access to,
+					such as <a>administrator</a> pages, is included in a unvalidated redirect.
 					<br/>
 					<br/>
 					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
 				</div>
-				
+
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
-				To mark this lesson as complete, you must exploit this <a>Cross Site Request Forgery</a> vulnerability using an <a>Unvalidated Redirect</a> security risk. 
-				The CSRF protection that has been implemented in this function is insufficient and can be bypassed easily with 
-				an unvalidated redirect vulnerability. To protect against CSRF attacks the application is checking that the requests <a>Referer</a> HTTP header 
-				is from the same host name the application is running on. This is easily bypassed when the request originates 
-				from inside the application. When an unvalidated redirect is used, the Referer header will be the URL of 
+				To mark this lesson as complete, you must exploit this <a>Cross Site Request Forgery</a> vulnerability using an <a>Unvalidated Redirect</a> security risk.
+				The CSRF protection that has been implemented in this function is insufficient and can be bypassed easily with
+				an unvalidated redirect vulnerability. To protect against CSRF attacks the application is checking that the request's <a>Referer</a> HTTP header
+				is from the same host name the application is running on. This is easily bypassed when the request originates
+				from inside the application. When an unvalidated redirect is used, the Referer header will be the URL of
 				the redirect page.
 				<br />
 				<br />
@@ -112,7 +112,7 @@ String levelName = new String("Unvalidated Redirects and Forwards Lesson");
 					</td></tr>
 					</table>
 				</form>
-				
+
 				<div id="resultsDiv"></div>
 			</p>
 		</div>
@@ -146,13 +146,13 @@ String levelName = new String("Unvalidated Redirects and Forwards Lesson");
 					});
 				});
 			});
-			
+
 			$('#hideLesson').click(function(){
 				$("#lessonIntro").hide("slow", function(){
 					$("#showLesson").show("fast");
 				});
 			});
-			
+
 			$("#showLesson").click(function(){
 				$('#showLesson').hide("fast", function(){
 					$("#lessonIntro").show("slow");

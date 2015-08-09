@@ -7,19 +7,19 @@ String levelName = "Failure to Restrict URL Access Lesson";
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Mark Denihan
  */
@@ -56,9 +56,9 @@ String levelName = "Failure to Restrict URL Access Lesson";
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
 			<h2 class="title">What is a Failure to Restrict URL Access?</h2>
-			<p> 
+			<p>
 				<div id="lessonIntro">
-					An application that <a>fails to restrict URL access</a> is an application that is not protecting it's "protected" pages sufficiently. This occurs when an application hides functionality from basic users. In an application that fails to restrict URL access, administration links are only put onto the page if the user is an administrator. If users discover a page's address, they can still access it via URL access.
+					An application that <a>fails to restrict URL access</a> is an application that is not protecting its "protected" pages sufficiently. This occurs when an application hides functionality from basic users. In an application that fails to restrict URL access, administration links are only put onto the page if the user is an administrator. If users discover a page's address, they can still access it via URL access.
 					<br/>
 					<br/>
 					Preventing unauthorized URL access requires selecting an approach for requiring proper authentication and proper authorization for each page. The easier the authentication is to include in a page the more likely that all pages will be covered by the policy.
@@ -66,7 +66,7 @@ String levelName = "Failure to Restrict URL Access Lesson";
 					<br/>
 					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
 				</div>
-				
+
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
@@ -79,13 +79,13 @@ String levelName = "Failure to Restrict URL Access Lesson";
 				</div>
 			</p>
 		</div>
-		<script>			
+		<script>
 			$('#hideLesson').click(function(){
 				$("#lessonIntro").hide("slow", function(){
 					$("#showLesson").show("fast");
 				});
 			});
-			
+
 			$("#showLesson").click(function(){
 				$('#showLesson').hide("fast", function(){
 					$("#lessonIntro").show("slow");

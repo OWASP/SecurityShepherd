@@ -6,19 +6,19 @@ String levelName = "Insecure Direct Object References Lesson";
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Mark Denihan
  */
@@ -55,26 +55,26 @@ String levelName = "Insecure Direct Object References Lesson";
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
 			<h2 class="title">What are Insecure Direct Object References?</h2>
-			<p> 
+			<p>
 				<div id="lessonIntro">
-					Imagine a web page that allows you to view your personal information. The web page that shows the user their information is generated based on a user ID. If this page was vulnerable to <a>insecure Direct Object References</a> an attacker would be able to modify the user identifier parameter to reference any user object in the system. Insecure Direct Object References occur when an application references an object by it's actual ID or name. This object that is referenced directly is used to generate a web page. If the application does not verify that the user is allowed to reference this object, then the object is <a>insecurely referenced</a>.
+					Imagine a web page that allows you to view your personal information. The web page that shows the user their information is generated based on a user ID. If this page was vulnerable to <a>insecure Direct Object References</a> an attacker would be able to modify the user identifier parameter to reference any user object in the system. Insecure Direct Object References occur when an application references an object by its actual ID or name. This object that is referenced directly is used to generate a web page. If the application does not verify that the user is allowed to reference this object, then the object is <a>insecurely referenced</a>.
 					<br />
 					<br />
-					Attackers can use insecure object references to compromise any information that can be referenced by the parameter in question. In the above example, the attacker can access any users personal information. 
+					Attackers can use insecure object references to compromise any information that can be referenced by the parameter in question. In the above example, the attacker can access any user's personal information.
 					<br />
 					<br />
-					The severity of insecure direct object references varies depending on the data that is been compromised. If the data been compromised is publicly available or not supposed to be restricted, it becomes a very low severity vulnerability. Consider an scenario where one company is able to retrieve their competitors information. Suddenly, the business impact of the vulnerability is critical. These vulnerabilities still need to be fixed and should never be found in professional grade applications.
+					The severity of insecure direct object references varies depending on the data that is compromised. If the compromised data is publicly available or not supposed to be restricted, it becomes a very low severity vulnerability. Consider a scenario where one company is able to retrieve their competitor's information. Suddenly, the business impact of the vulnerability is critical. These vulnerabilities still need to be fixed and should never be found in professional grade applications.
 					<br/>
 					<br/>
 					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
 				</div>
-				
+
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
 				The result key to complete this lesson is stored in the administrators profile.
 				<br />
-				<br />				
+				<br />
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
@@ -84,7 +84,7 @@ String levelName = "Insecure Direct Object References Lesson";
 					</td></tr>
 					</table>
 				</form>
-				
+
 				<div id="resultsDiv">
 				<h2 class='title'>User: Guest</h2>
 				<table>
@@ -124,13 +124,13 @@ String levelName = "Insecure Direct Object References Lesson";
 					});
 				});
 			});
-			
+
 			$('#hideLesson').click(function(){
 				$("#lessonIntro").hide("slow", function(){
 					$("#showLesson").show("fast");
 				});
 			});
-			
+
 			$("#showLesson").click(function(){
 				$('#showLesson').hide("fast", function(){
 					$("#lessonIntro").show("slow");
