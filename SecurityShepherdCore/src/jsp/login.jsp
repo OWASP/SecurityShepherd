@@ -76,10 +76,10 @@ if(ses.getAttribute("loginFailed") != null)
 		<!-- start content -->
 		<div id="content" style="margin-left: auto; margin-right: auto; width:320px">
 			<div class="post">
-				<h1 class="title" id="login_title"><label for="login_title"><fmt:message key="login.label.title" /></label></h1>
-				<p id="login-info"><label for="login-info"><fmt:message key="login.label.info" /></label></p>
+				<h1 class="title" id="login_title"><fmt:message key="login.label.title" /></h1>
+				<p id="login-info"><fmt:message key="login.label.info" /></label>
 				<% if(OpenRegistration.isEnabled()) { %>
-					<p id="register_info"><label for="register_info"><fmt:message key="login.label.regInfo" /></label></p>
+					<p id="register_info"><fmt:message key="login.label.regInfo" /></p>
 				<% } if(!loginFailed.isEmpty()) {%>
 					<p><strong><font color="red"><%= loginFailed %></font></strong></p>
 				<% } %>
@@ -116,7 +116,7 @@ if(ses.getAttribute("loginFailed") != null)
 			
 			<div id="aboutDiv" style="display: none;">
 			<h2 class="title"><fmt:message key="login.label.about_shepherd" /></h2>
-			<p id="about_shepherd_blurb"><label for="about_shepherd_blurb"><fmt:message key="login.label.about_blurb" /></label></p>
+			<p id="about_shepherd_blurb"><fmt:message key="login.label.about_blurb" /></p>
 			<%= Analytics.sponsorshipMessage %>
 			</div>
 		</div>

@@ -5,6 +5,6 @@
 					<option value="en" ${language == 'en' ? 'selected' : ''}>English</option>
 					<option value="es" ${language == 'es' ? 'selected' : ''}>Español</option>					
 					<option value="ga" ${language == 'ga' ? 'selected' : ''}>Gaeilge</option>
-					<option value="cn" ${language == 'cn' ? 'selected' : ''}>中文</option>
+					<option value="zh" ${language == 'zh' ? 'selected' : ''}>中文</option>
 				</select>
 			</form>
