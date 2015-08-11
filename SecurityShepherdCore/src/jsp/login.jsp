@@ -1,9 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
-
-<%@ include file="translation.jsp"%>
+<%@ include file="translation.jsp" %>
 
 <%
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody Conntected to login.jsp ...");
+
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -25,6 +24,8 @@ ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwar
  */
  
 HttpSession ses = request.getSession();
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody ("+ ses.getAttribute("lang") +") Conntected to login.jsp ...");
+
 if(request.getSession() != null)
 {
 	if(ses.getAttribute("loginFailed") == null 
@@ -33,6 +34,11 @@ if(request.getSession() != null)
 	{
 		ses.invalidate();
 		ses = request.getSession(true);
+		String language = request.getParameter("lang");
+		if(language != null){
+			ses.setAttribute("lang", language);
+		}
+		
 	}
 }
 String url = (request.getRequestURL()).toString();
@@ -77,7 +83,7 @@ if(ses.getAttribute("loginFailed") != null)
 		<div id="content" style="margin-left: auto; margin-right: auto; width:320px">
 			<div class="post">
 				<h1 class="title" id="login_title"><fmt:message key="login.label.title" /></h1>
-				<p id="login-info"><fmt:message key="login.label.info" /></label>
+				<p id="login-info"><fmt:message key="login.label.info" />
 				<% if(OpenRegistration.isEnabled()) { %>
 					<p id="register_info"><fmt:message key="login.label.regInfo" /></p>
 				<% } if(!loginFailed.isEmpty()) {%>
@@ -99,7 +105,7 @@ if(ses.getAttribute("loginFailed") != null)
 				<br/>
 				<br/>
 				<div align="center">
-					<a id="tools" href="javascript:;"><fmt:message key="login.label.proxy_question" />?</a>
+					<a id="tools" href="javascript:;"><fmt:message key="login.label.proxy_question" /></a>
 					<div id="toolsTable" style="display: none;">
 					<p><fmt:message key="login.label.download_proxy" />;</p>
 					<table>

@@ -59,6 +59,7 @@ public class Login extends HttpServlet
 		   // params
 		   String p_login = request.getParameter("login");
 		   String p_pwd = request.getParameter("pwd");
+		   Object language = ses.getAttribute("lang");
 		 
 		   boolean mustRedirect = false;
 		   
@@ -82,6 +83,8 @@ public class Login extends HttpServlet
 				   ses.setAttribute("userStamp", user[0]);
 				   ses.setAttribute("userName", user[1]);
 				   ses.setAttribute("userRole", user[2]);
+				   ses.setAttribute("lang", language);
+				   
 				   //Used to make returned Keys user specific. Transferred to Exposed Server
 				   String encyptedUserName = Hash.encrypt(Hash.userNameKey, p_login);
 				   ses.setAttribute("ThreadSequenceId", encyptedUserName);
@@ -156,9 +159,8 @@ public class Login extends HttpServlet
 	 /**
 	  * Redirects user to index.jsp
 	  */
-		public void doGet (HttpServletRequest request, HttpServletResponse response) 
-	    throws ServletException, IOException
-	    {
-			response.sendRedirect("index.jsp");
-	    }
+	 public void doGet (HttpServletRequest request, HttpServletResponse response) 
+			 throws ServletException, IOException{
+		 response.sendRedirect("index.jsp");
+		 }
 }

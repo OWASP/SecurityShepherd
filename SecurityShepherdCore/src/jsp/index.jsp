@@ -1,5 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ include file="translation.jsp" %>
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: index.jsp *************************");
 
@@ -76,12 +76,13 @@ if (request.getSession() != null)
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/jqueryUI.js"></script>
 		<div id="wrapper">
+		<jsp:include page="translation-select.jsp" />
 		<div id="header">
 			<h1>Security Shepherd</h1>
 			<div style="position: absolute;right: 100px;">
 				<p>
-					<strong>Welcome <%= userName %></strong><br />
-					<strong><a href="logout?csrfToken=<%= csrfToken %>">Logout</a></strong>
+					<strong><fmt:message key="index.label.welcome" /> <%= userName %></strong><br />
+					<strong><a href="logout?csrfToken=<%= csrfToken %>"><fmt:message key="index.label.logout" /></a></strong>
 				</p>
 			</div>
 		</div>
@@ -117,50 +118,50 @@ if (request.getSession() != null)
 					<ul>
 						<% if (userRole.compareTo("admin") == 0){ %>
 							<li>
-								 <a id="adminList" href="javascript:;"><div class='menuButton'>Admin</div></a>
+								 <a id="adminList" href="javascript:;"><div class='menuButton'><fmt:message key="index.button.admin" /></div></a>
 								<ul id="theAdminList" style="display: none;">
 									<li>
-										<a id="cheatSheetManagementList" href="javascript:;">Cheat Sheet Management</a>
+										<a id="cheatSheetManagementList" href="javascript:;"><fmt:message key="index.link.admin.cheatSheet.manage" /></a>
 										<ul id="theCheatSheetManagementList" style="display: none;">
-											<li><a id="createCheatsLink" href="javascript:;">Create New Cheat Sheet</a></li>
-											<li><a id="disableCheatsLink" href="javascript:;">Disable Cheat Sheets</a></li>
-											<li><a id="enableCheatsLink" href="javascript:;">Enable Cheat Sheets</a></li>										
+											<li><a id="createCheatsLink" href="javascript:;"><fmt:message key="index.link.admin.cheatSheet.manage.create" /></a></li>
+											<li><a id="disableCheatsLink" href="javascript:;"><fmt:message key="index.link.admin.cheatSheet.manage.disable" /></a></li>
+											<li><a id="enableCheatsLink" href="javascript:;"><fmt:message key="index.link.admin.cheatSheet.manage.enable" /></a></li>										
 										</ul>
 									</li>
 									<li>
-										<a id="configurationList" href="javascript:;">Configuration</a>
+										<a id="configurationList" href="javascript:;"><fmt:message key="index.link.admin.config" /></a>
 										<ul id="theConfigurationList" style="display: none;">
-											<li><a id="aboutShepherdLink" href="javascript:;">About Security Shepherd</a></li>
-											<li><a id="levelLayoutLink" href="javascript:;">Change Module Layout</a></li>
-											<li><a id="configureFeedbackLink" href="javascript:;">Feedback Configuration</a></li>
-											<li><a id="registrationLink" href="javascript:;">Open/Close Registration</a></li>
-											<li><a id="scoreboardLink" href="javascript:;">Scoreboard Configuration</a></li>
-											<li><a id="setCoreDatabaseLink" href="javascript:;">Set Core Database</a></li>
+											<li><a id="aboutShepherdLink" href="javascript:;"><fmt:message key="index.link.admin.config.about" /></a></li>
+											<li><a id="levelLayoutLink" href="javascript:;"><fmt:message key="index.link.admin.config.change" /></a></li>
+											<li><a id="configureFeedbackLink" href="javascript:;"><fmt:message key="index.link.admin.config.feedback" /></a></li>
+											<li><a id="registrationLink" href="javascript:;"><fmt:message key="index.link.admin.config.openClose" /></a></li>
+											<li><a id="scoreboardLink" href="javascript:;"><fmt:message key="index.link.admin.config.scoreboard" /></a></li>
+											<li><a id="setCoreDatabaseLink" href="javascript:;"><fmt:message key="index.link.admin.config.coreDb" /></a></li>
 										</ul>
 									</li>
 									<li>
-										<a id="moduleManagementList" href="javascript:;">Module Management</a>
+										<a id="moduleManagementList" href="javascript:;"><fmt:message key="index.link.admin.moduleManage" /></a>
 										<ul id="theModuleManagementList" style="display: none;">
-											<li><a id="moduleBlockLink" href="javascript:;">Module Block Setup</a></li>
-											<li><a id="setModuleStatusLink" href="javascript:;">Open and Close Modules</a></li>
-											<li><a id="openCloseByCategory" href="javascript:;">Open or Close by Category</a></li>
-											<li><a id="feedbackLink" href="javascript:;">View Feedback</a></li>
-											<li><a id="progressLink" href="javascript:;">View Progress</a></li>
+											<li><a id="moduleBlockLink" href="javascript:;"><fmt:message key="index.link.admin.moduleManage.block" /></a></li>
+											<li><a id="setModuleStatusLink" href="javascript:;"><fmt:message key="index.link.admin.moduleManage.openClose" /></a></li>
+											<li><a id="openCloseByCategory" href="javascript:;"><fmt:message key="index.link.admin.moduleManage.openCloseCategory" /></a></li>
+											<li><a id="feedbackLink" href="javascript:;"><fmt:message key="index.link.admin.moduleManage.feedback" /></a></li>
+											<li><a id="progressLink" href="javascript:;"><fmt:message key="index.link.admin.moduleManage.progress" /></a></li>
 										</ul>
 									</li>
 									<li>
-										<a id="userManagementList" href="javascript:;">User Management</a>
+										<a id="userManagementList" href="javascript:;"><fmt:message key="index.link.admin.userMange" /></a>
 										<ul id="theUserManagementList" style="display: none;">
-											<li><a id="addPlayersLink" href="javascript:;">Add Players</a></li>
-											<li><a id="updatePlayerScoreLink" href="javascript:;">Add / Deduct Player Points</a></li>
-											<li><a id="assignPlayersLink" href="javascript:;">Assign Players to Class</a></li>
-											<li><a id="createNewClassLink" href="javascript:;">Create Class</a></li>
-											<li><a id="createNewAdminLink" href="javascript:;">Create New Admin</a></li>
-											<li><a id="changePlayerPasswordLink" href="javascript:;">Reset Password</a></li>
-											<li><a id="setDefaultClassForRegistrationLink" href="javascript:;">Set Default Player Class</a></li>
-											<li><a id="suspendPlayerLink" href="javascript:;">Suspend Player</a></li>
-											<li><a id="unSuspendPlayerLink" href="javascript:;">Unsuspend Player</a></li>
-											<li><a id="upgradePlayersLink" href="javascript:;">Upgrade Player to Admin</a></li>
+											<li><a id="addPlayersLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.addPlayer" /></a></li>
+											<li><a id="updatePlayerScoreLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.addPoints" /></a></li>
+											<li><a id="assignPlayersLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.assignPlayer" /></a></li>
+											<li><a id="createNewClassLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.createClass" /></a></li>
+											<li><a id="createNewAdminLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.createAdmin" /></a></li>
+											<li><a id="changePlayerPasswordLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.resetPass" /></a></li>
+											<li><a id="setDefaultClassForRegistrationLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.setDefaultPlayerClass" /></a></li>
+											<li><a id="suspendPlayerLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.suspendPlayer" /></a></li>
+											<li><a id="unSuspendPlayerLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.unsuspendPlayer" /></a></li>
+											<li><a id="upgradePlayersLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.upgradeToAdmin" /></a></li>
 										</ul>
 									</li>
 								</ul>
@@ -168,24 +169,24 @@ if (request.getSession() != null)
 						<% } %>
 						<% if(canSeeScoreboard) { %>
 						<div id="scoreboardButton">
-							<a id="showScoreboard" href="scoreboard.jsp" target="bar"><div class="menuButton">Scoreboard</div></a>
+							<a id="showScoreboard" href="scoreboard.jsp" target="bar"><div class="menuButton"><fmt:message key="index.button.scoreboard" /></div></a>
 						</div>
 						<% } %>
 						<% if(showCheatSheet) { %>
 						<div id="cheatSheetButton" style="display: none;">
-							<a id="showSolution" href="javascript:;"><div class="menuButton">Cheat</div></a>
+							<a id="showSolution" href="javascript:;"><div class="menuButton"><fmt:message key="index.button.cheat" /></div></a>
 						</div>
 						<% } %>					
 						<div id="levelListDiv">
 							<% if(ModulePlan.isOpenFloor()) { %>
 								<li>
-									<a id="lessonList" href="javascript:;"><div class="menuButton">Lessons</div></a>
+									<a id="lessonList" href="javascript:;"><div class="menuButton"><fmt:message key="index.button.lessons" /></div></a>
 									<ul id="theLessonList" style="display: none;">
 										<%= Getter.getLessons(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
 									</ul>
 								</li>
 								<li>
-									<a id="challengeList" href="javascript:;"><div class="menuButton">Challenges</div></a>
+									<a id="challengeList" href="javascript:;"><div class="menuButton"><fmt:message key="index.button.challenges" /></div></a>
 									<ul id="theChallengeList" style="display: none;">
 										<%= Getter.getChallenges(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
 									</ul>
