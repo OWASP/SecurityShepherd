@@ -110,7 +110,7 @@ if (request.getSession() != null)
 			<div id="contentDiv">
 				<!-- Ajax Div -->
 			</div>
-			<div class="sidebarWrapper">
+			<div id="theSidebarWrapper" class="sidebarWrapper">
 				<div class="menuIcon">
 					&#9776;
 				</div>
@@ -230,6 +230,16 @@ if (request.getSession() != null)
 									}
 								});
 								console.log("Select Function Finish");
+							});
+							
+							$("#searchModules").on("autocompleteopen", function( event, ui ) {
+								console.log("Module Search Box Opened");
+								$('#theSidebarWrapper').removeClass('sidebarWrapper').addClass("sidebarWrapperAlwaysOpen");
+							});
+							
+							$("#searchModules").on("autocompleteclose", function( event, ui ) {
+								console.log("Module Search Box Closed");
+								$('#theSidebarWrapper').removeClass('sidebarWrapperAlwaysOpen').addClass("sidebarWrapper");
 							});
 						</script>
 					</ul>

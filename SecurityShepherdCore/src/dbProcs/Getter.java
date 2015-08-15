@@ -324,11 +324,11 @@ public class Getter
 				output += "<li>"; //Starts next LI element
 				if(challenges.getString(4) != null)
 				{
-					output += "<img src='css/images/completed.gif'/>"; //Completed marker
+					output += "<img src='css/images/completed.png'/>"; //Completed marker
 				}
 				else
 				{
-					output+= "<img src='css/images/uncompleted.gif'/>"; //Incomplete marker
+					output+= "<img src='css/images/uncompleted.png'/>"; //Incomplete marker
 				}
 				//Final out put compilation
 				output +="<a class='lesson' id='" 
@@ -957,11 +957,11 @@ public class Getter
 				//Markers for completion
 				if(lessons.getString(4) != null)
 				{
-					output += "<img src='css/images/completed.gif'/>";
+					output += "<img src='css/images/completed.png'/>";
 				}
 				else
 				{
-					output+= "<img src='css/images/uncompleted.gif'/>";
+					output+= "<img src='css/images/uncompleted.png'/>";
 				}
 				//Prepare lesson output
 				output += "<a class='lesson' id='" 
@@ -1597,11 +1597,11 @@ public class Getter
 				//Markers for completion
 				if(levels.getString(4) != null)
 				{
-					listEntry += "<img src='css/images/completed.gif'/>";
+					listEntry += "<img src='css/images/completed.png'/>";
 				}
 				else
 				{
-					listEntry += "<img src='css/images/uncompleted.gif'/>";
+					listEntry += "<img src='css/images/uncompleted.png'/>";
 				}
 				//Prepare entry output
 				listEntry += "<a class='lesson' id='" 
