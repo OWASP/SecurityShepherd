@@ -311,6 +311,25 @@ public class Setter
 		return result;
 	}
 	
+	final static String webModuleCategoryHardcodedWhereClause = new String(""
+			+ "moduleCategory = 'CSRF'"
+			+ " OR moduleCategory = 'Failure to Restrict URL Access'"
+			+ " OR moduleCategory = 'Injection'"
+			+ " OR moduleCategory = 'Insecure Cryptographic Storage'"
+			+ " OR moduleCategory = 'Insecure Direct Object References'"
+			+ " OR moduleCategory = 'Session Management'"
+			+ " OR moduleCategory = 'Unvalidated Redirects and Forwards'"
+			+ " OR moduleCategory = 'XSS'"
+			+ " OR moduleCategory = 'Poor Data Validation'"
+			+ " OR moduleCategory = 'Security Misconfigurations'");
+	final static String mobileModuleCategoryHardcodedWhereClause = new String(""
+			+ "moduleCategory = 'Mobile Data Leakage'"
+			+ " OR moduleCategory = 'Mobile Injection'"
+			+ " OR moduleCategory = 'Mobile Insecure Data Storage'"
+			+ " OR moduleCategory = 'Mobile Reverse Engineering'"
+			+ " OR moduleCategory = 'Mobile Broken Crypto'"
+			+ " OR moduleCategory = 'Mobile Mobile Poor Authentication'");
+	
 	/**
 	 * This is used to only open Mobile category levels
 	 * @param ApplicationRoot Used to locate database properties file
@@ -321,21 +340,6 @@ public class Setter
 		log.debug("*** Setter.openOnlyMobileCategories ***");
 		boolean result = false;
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		final String webModuleCategoryHardcodedWhereClause = new String(""
-				+ "moduleCategory = 'CSRF'"
-				+ " OR " + "moduleCategory = 'Failure to Restrict URL Access'"
-				+ " OR " + "moduleCategory = 'Injection'"
-				+ " OR " + "moduleCategory = 'Insecure Cryptographic Storage'"
-				+ " OR " + "moduleCategory = 'Insecure Direct Object References'"
-				+ " OR " + "moduleCategory = 'Session Management'"
-				+ " OR " + "moduleCategory = 'Unvalidated Redirects and Forwards'"
-				+ " OR " + "moduleCategory = 'XSS'");
-		final String mobileModuleCategoryHardcodedWhereClause = new String(""
-				+ "moduleCategory = 'Mobile Data Leakage'"
-				+ " OR " + "moduleCategory = 'Mobile Injection'"
-				+ " OR " + "moduleCategory = 'Mobile Insecure Data Storage'"
-				+ " OR " + "moduleCategory = 'Mobile Reverse Engineering'"
-				+ " OR " + "moduleCategory = 'Mobile Broken Crypto'");
 		try
 		{
 			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed' WHERE " + webModuleCategoryHardcodedWhereClause);
@@ -365,21 +369,6 @@ public class Setter
 		log.debug("*** Setter.openOnlyWebCategories ***");
 		boolean result = false;
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		final String webModuleCategoryHardcodedWhereClause = new String(""
-				+ "moduleCategory = 'CSRF'"
-				+ " OR " + "moduleCategory = 'Failure to Restrict URL Access'"
-				+ " OR " + "moduleCategory = 'Injection'"
-				+ " OR " + "moduleCategory = 'Insecure Cryptographic Storage'"
-				+ " OR " + "moduleCategory = 'Insecure Direct Object References'"
-				+ " OR " + "moduleCategory = 'Session Management'"
-				+ " OR " + "moduleCategory = 'Unvalidated Redirects and Forwards'"
-				+ " OR " + "moduleCategory = 'XSS'");
-		final String mobileModuleCategoryHardcodedWhereClause = new String(""
-				+ "moduleCategory = 'Mobile Data Leakage'"
-				+ " OR " + "moduleCategory = 'Mobile Injection'"
-				+ " OR " + "moduleCategory = 'Mobile Insecure Data Storage'"
-				+ " OR " + "moduleCategory = 'Mobile Reverse Engineering'"
-				+ " OR " + "moduleCategory = 'Mobile Broken Crypto'");
 		try
 		{
 			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE " + webModuleCategoryHardcodedWhereClause);
