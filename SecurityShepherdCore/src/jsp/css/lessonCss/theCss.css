@@ -34,15 +34,26 @@ h3 {
 
 p, ul, ol {
 	line-height: 200%;
+	word-wrap: break-word;
 }
 
 a {
 	color: #9B1AC8;
+	word-wrap: break-word;
+}
+
+b {
+	word-wrap: break-word;
 }
 
 a:hover {
 	text-decoration: none;
 	color: #E6B715;
+}
+
+td {
+	word-wrap:break-word; 
+	max-width: 600px;
 }
 
 #wrapper {
@@ -83,6 +94,11 @@ a:hover {
 	width: 100%;
 	margin: 0;
 	padding-left:20px;
+}
+
+#resultDiv {
+	word-wrap:break-word; 
+	max-width: 610px;
 }
 
 .errorMessage {
