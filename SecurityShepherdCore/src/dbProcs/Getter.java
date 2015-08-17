@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -330,11 +327,11 @@ public class Getter
 				output += "<li>"; //Starts next LI element
 				if(challenges.getString(4) != null)
 				{
-					output += "<img src='css/images/completed.gif'/>"; //Completed marker
+					output += "<img src='css/images/completed.png'/>"; //Completed marker
 				}
 				else
 				{
-					output+= "<img src='css/images/uncompleted.gif'/>"; //Incomplete marker
+					output+= "<img src='css/images/uncompleted.png'/>"; //Incomplete marker
 				}
 				//Final out put compilation
 				output +="<a class='lesson' id='" 
@@ -653,8 +650,6 @@ public class Getter
 		Locale.setDefault(new Locale("en"));
 		Locale locale = new Locale(lang);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
-		//log.debug("LOCALE: " + locale.toString());
-		//log.debug("BUNDLE: " + bundle.getLocale());
 		
 		try
 		{
@@ -669,7 +664,7 @@ public class Getter
 			
 			//Preparing first Category header; "Completed"
 			output = "<li><a id='completedList' href='javascript:;'><div class='menuButton'>Completed</div></a>\n" +
-				"<ul id='theCompletedList' style='display: none;'>";
+				"<ul id='theCompletedList' style='display: none;' class='levelList'>";
 			
 			while(modules.next() && !lastRow)
 			{
@@ -970,11 +965,11 @@ public class Getter
 				//Markers for completion
 				if(lessons.getString(4) != null)
 				{
-					output += "<img src='css/images/completed.gif'/>";
+					output += "<img src='css/images/completed.png'/>";
 				}
 				else
 				{
-					output+= "<img src='css/images/uncompleted.gif'/>";
+					output+= "<img src='css/images/uncompleted.png'/>";
 				}
 				//Prepare lesson output
 				output += "<a class='lesson' id='" 
@@ -1610,11 +1605,11 @@ public class Getter
 				//Markers for completion
 				if(levels.getString(4) != null)
 				{
-					listEntry += "<img src='css/images/completed.gif'/>";
+					listEntry += "<img src='css/images/completed.png'/>";
 				}
 				else
 				{
-					listEntry += "<img src='css/images/uncompleted.gif'/>";
+					listEntry += "<img src='css/images/uncompleted.png'/>";
 				}
 				//Prepare entry output
 				listEntry += "<a class='lesson' id='" 
@@ -1641,37 +1636,37 @@ public class Getter
 						case 1: //fieldTraining
 							//log.debug("Starting Field Training List");
 							levelMasterList += "<a id=\"fieldTrainingList\" href=\"javascript:;\"><div class=\"menuButton\">Field Training</div></a>"
-								+ "<ul id=\"theFieldTrainingList\" style=\"display: none;\">\n";
+								+ "<ul id=\"theFieldTrainingList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 2: //private
 							//log.debug("Starting Private List");
 							levelMasterList += "<a id=\"privateList\" href=\"javascript:;\"><div class=\"menuButton\">Private</div></a>"
-								+ "<ul id=\"thePrivateList\" style=\"display: none;\">\n";
+								+ "<ul id=\"thePrivateList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 3: //corporal
 							//log.debug("Starting Corporal List");
 							levelMasterList += "<a id=\"corporalList\" href=\"javascript:;\"><div class=\"menuButton\">Corporal</div></a>"
-								+ "<ul id=\"theCorporalList\" style=\"display: none;\">\n";
+								+ "<ul id=\"theCorporalList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 4: //sergeant
 							//log.debug("Starting Sergeant List");
 							levelMasterList += "<a id=\"sergeantList\" href=\"javascript:;\"><div class=\"menuButton\">Sergeant</div></a>"
-								+ "<ul id=\"theSergeantList\" style=\"display: none;\">\n";
+								+ "<ul id=\"theSergeantList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 5: //Lieutenant
 							//log.debug("Starting Lieutenant List");
 							levelMasterList += "<a id=\"lieutenantList\" href=\"javascript:;\"><div class=\"menuButton\">Lieutenant</div></a>"
-								+ "<ul id=\"theLieutenantList\" style=\"display: none;\">\n";
+								+ "<ul id=\"theLieutenantList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 6: //major
 							//log.debug("Starting Major List");
 							levelMasterList += "<a id=\"majorList\" href=\"javascript:;\"><div class=\"menuButton\">Major</div></a>"
-								+ "<ul id=\"theMajorList\" style=\"display: none;\">\n";
+								+ "<ul id=\"theMajorList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 7: //admiral
 							//log.debug("Starting Admiral List");
 							levelMasterList += "<a id=\"admiralList\" href=\"javascript:;\"><div class=\"menuButton\">Admiral</div></a>"
-								+ "<ul id=\"theAdmiralList\" style=\"display: none;\">\n";
+								+ "<ul id=\"theAdmiralList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 					}
 				}

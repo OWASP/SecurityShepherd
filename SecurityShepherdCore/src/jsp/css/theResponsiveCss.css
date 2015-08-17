@@ -51,6 +51,29 @@
 		display: none;
 	}
 	
+	.sidebarWrapperAlwaysOpen {
+		width: 200px;
+		background: #AEACAC;
+		border-top: 3px solid #A878EF;
+		border-right: 3px solid #A878EF;
+		position: absolute;
+		height: 100%;
+		border-radius: 2px;
+		text-decoration: none;
+		vertical-align: top;
+		padding-left: 10px;
+		padding-right: 10px;
+		padding-top: 10px;
+	}
+	
+	.sidebarWrapperAlwaysOpen  #sidebar{
+		display: block;
+	}
+	
+	.sidebarWrapperAlwaysOpen .menuIcon{
+		display: none;
+	}
+	
 	.menuIcon{
 		display:block;
 	}
