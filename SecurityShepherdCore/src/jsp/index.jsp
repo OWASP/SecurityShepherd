@@ -69,12 +69,14 @@ if (request.getSession() != null)
 
 		<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 		<link href="css/theResponsiveCss.css" rel="stylesheet" type="text/css" media="screen">
+		<link href="css/jquery.mCustomScrollbar.min.css" rel="stylesheet" type="text/css" media="screen">
 		<link rel="shortcut icon" href="css/images/flavicon.jpg" type="image/jpeg" />
 
 		</head>
 		<body>
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/jqueryUI.js"></script>
+		<script type="text/javascript" src="js/jquery.mCustomScrollbar.concat.min.js"></script>
 		<div id="wrapper">
 		<jsp:include page="translation-select.jsp" />
 		<div id="header">
@@ -821,7 +823,16 @@ if (request.getSession() != null)
 			}); 
 			
 		<% } %>
-		
+		</script>
+		<script>
+		(function($){
+	        $(window).load(function(){
+	            $(".levelList").mCustomScrollbar({
+	            	theme:"dark-thin",
+	            	mouseWheel:{ scrollAmount: 120 }
+	            });
+	        });
+	    })(jQuery);
 		</script>
 		<!-- You are currently looking at the core server. 
 		Nothing related to the levels in Security Shepherd will be found in here. 

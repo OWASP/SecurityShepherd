@@ -360,6 +360,5 @@ a:hover {
 }
 
 .levelList{
-	height: 220px; 
-	overflow-y: scroll;
+	max-height: 230px; 
 }
