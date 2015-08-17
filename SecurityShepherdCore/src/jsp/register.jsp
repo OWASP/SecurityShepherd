@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" llanguage="java" import="utils.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
 <%@ include file="translation.jsp" %>
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: register.jsp *************************");
@@ -30,6 +30,10 @@ if(request.getSession() != null)
 	{
 		ses.invalidate();
 		ses = request.getSession(true);
+		String language = request.getParameter("lang");
+		if(language != null){
+			ses.setAttribute("lang", language);
+		}
 	}
 	if(ses.getAttribute("userName") != null)
 	{
@@ -82,6 +86,7 @@ if(ses.getAttribute("errorMessage") != null)
 <body>
 <script type="text/javascript" src="js/jquery.js"></script>
 <div id="wrapper">
+<jsp:include page="translation-select.jsp" />
 <!-- start header -->
 <div id="header">
 	<h1>Security Shepherd</h1>
@@ -105,11 +110,11 @@ if(ses.getAttribute("errorMessage") != null)
 				<div align="center">
 				<br/>
 				<table>
-					<tr><td><p><fmt:message key="generic.label.username" /><font color="red"><small>* </small></font>:</p></td><td><input type="text" id="userName" value="<%=userName%>"/></td></tr>
-					<tr><td><p><fmt:message key="generic.label.password" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWord" autocomplete="OFF" /></td></tr>
-					<tr><td><p><fmt:message key="generic.label.confirmPasswd" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWordConfirm" autocomplete="OFF" /></td></tr>
-					<tr><td><p><fmt:message key="generic.label.emailAddr" />:</p></td><td><input type="text" id="userAddress" value="<%=userAddress%>"/></td></tr>
-					<tr><td><p><fmt:message key="generic.label.confirmEmailAddr" />:</p></td><td><input type="text" id="userAddressCnf" /></td></tr>
+					<tr><td><p><fmt:message key="generic.text.username" /><font color="red"><small>* </small></font>:</p></td><td><input type="text" id="userName" value="<%=userName%>"/></td></tr>
+					<tr><td><p><fmt:message key="generic.text.password" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWord" autocomplete="OFF" /></td></tr>
+					<tr><td><p><fmt:message key="generic.text.confirmPasswd" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWordConfirm" autocomplete="OFF" /></td></tr>
+					<tr><td><p><fmt:message key="generic.text.emailAddr" />:</p></td><td><input type="text" id="userAddress" value="<%=userAddress%>"/></td></tr>
+					<tr><td><p><fmt:message key="generic.text.confirmEmailAddr" />:</p></td><td><input type="text" id="userAddressCnf" /></td></tr>
 				</table>
 				
 				<br/>
