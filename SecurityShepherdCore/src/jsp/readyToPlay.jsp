@@ -1,5 +1,6 @@
 <%@ page import="org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, utils.ShepherdLogManager" %>
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"  language="java" import="utils.*" errorPage="" %>
+<%@ include file="translation.jsp" %>
 <%
 /**
  * This file assigns the tracking cookie for the exposed server
@@ -61,27 +62,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Ready to Go?</title>
+	<title><fmt:message key="readyToPlay.title.readyToPlay" /></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">		
 			<% if(parameter.isEmpty()) { %>
-			<h2 class="title">You are not ready!</h2>
-			<p>
-				Refresh the home page! If this error persists; Log out and back in! If this error continues to persist, please contact an Administrator!
-			</p>
+			<h2 class="title"><fmt:message key="readyToPlay.header.notReady" /></h2>
+			<p><fmt:message key="readyToPlay.text.info.notReady" /></p>
 			<% } else { %>
-			<h2 class="title">You have entered the game!</h2>
-			<p> 
-				Now that you can see this, you're good to go! Get cracking on lessons and challenges! 
-				<br/><br/>
-				Remember, the levels you are playing are sub applications. Keep the game play in these applications! 
-				Stay away from your session ID's! You'll just log yourself out of you change them!
-				<br/><br/>
-				If you havn't already configured a web proxy, you better! It makes things much easier!
-			</p>
+			<h2 class="title"><fmt:message key="readyToPlay.title.enteredGame" /></h2>
+			<p> <fmt:message key="readyToPlay.text.info.enteredGame" /> </p>
 			<% } %>
 			<%= Analytics.sponsorshipMessage %>
 			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

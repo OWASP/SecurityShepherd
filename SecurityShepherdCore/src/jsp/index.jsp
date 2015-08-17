@@ -81,8 +81,8 @@ if (request.getSession() != null)
 			<h1>Security Shepherd</h1>
 			<div style="position: absolute;right: 100px;">
 				<p>
-					<strong><fmt:message key="index.label.welcome" /> <%= userName %></strong><br />
-					<strong><a href="logout?csrfToken=<%= csrfToken %>"><fmt:message key="index.label.logout" /></a></strong>
+					<strong><fmt:message key="generic.text.welcome" /> <%= userName %></strong><br />
+					<strong><a href="logout?csrfToken=<%= csrfToken %>"><fmt:message key="generic.text.logout" /></a></strong>
 				</p>
 			</div>
 		</div>
@@ -118,7 +118,7 @@ if (request.getSession() != null)
 					<ul>
 						<% if (userRole.compareTo("admin") == 0){ %>
 							<li>
-								 <a id="adminList" href="javascript:;"><div class='menuButton'><fmt:message key="index.button.admin" /></div></a>
+								 <a id="adminList" href="javascript:;"><div class='menuButton'><fmt:message key="generic.text.admin" /></div></a>
 								<ul id="theAdminList" style="display: none;">
 									<li>
 										<a id="cheatSheetManagementList" href="javascript:;"><fmt:message key="index.link.admin.cheatSheet.manage" /></a>
@@ -129,9 +129,9 @@ if (request.getSession() != null)
 										</ul>
 									</li>
 									<li>
-										<a id="configurationList" href="javascript:;"><fmt:message key="index.link.admin.config" /></a>
+										<a id="configurationList" href="javascript:;"><fmt:message key="generic.text.configuration" /></a>
 										<ul id="theConfigurationList" style="display: none;">
-											<li><a id="aboutShepherdLink" href="javascript:;"><fmt:message key="index.link.admin.config.about" /></a></li>
+											<li><a id="aboutShepherdLink" href="javascript:;"><fmt:message key="generic.text.aboutSecShep" /></a></li>
 											<li><a id="levelLayoutLink" href="javascript:;"><fmt:message key="index.link.admin.config.change" /></a></li>
 											<li><a id="configureFeedbackLink" href="javascript:;"><fmt:message key="index.link.admin.config.feedback" /></a></li>
 											<li><a id="registrationLink" href="javascript:;"><fmt:message key="index.link.admin.config.openClose" /></a></li>
@@ -169,24 +169,24 @@ if (request.getSession() != null)
 						<% } %>
 						<% if(canSeeScoreboard) { %>
 						<div id="scoreboardButton">
-							<a id="showScoreboard" href="scoreboard.jsp" target="bar"><div class="menuButton"><fmt:message key="index.button.scoreboard" /></div></a>
+							<a id="showScoreboard" href="scoreboard.jsp" target="bar"><div class="menuButton"><fmt:message key="generic.text.scoreboard" /></div></a>
 						</div>
 						<% } %>
 						<% if(showCheatSheet) { %>
 						<div id="cheatSheetButton" style="display: none;">
-							<a id="showSolution" href="javascript:;"><div class="menuButton"><fmt:message key="index.button.cheat" /></div></a>
+							<a id="showSolution" href="javascript:;"><div class="menuButton"><fmt:message key="index.text.cheat" /></div></a>
 						</div>
 						<% } %>					
 						<div id="levelListDiv">
 							<% if(ModulePlan.isOpenFloor()) { %>
 								<li>
-									<a id="lessonList" href="javascript:;"><div class="menuButton"><fmt:message key="index.button.lessons" /></div></a>
+									<a id="lessonList" href="javascript:;"><div class="menuButton"><fmt:message key="generic.text.lessons" /></div></a>
 									<ul id="theLessonList" style="display: none;">
 										<%= Getter.getLessons(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
 									</ul>
 								</li>
 								<li>
-									<a id="challengeList" href="javascript:;"><div class="menuButton"><fmt:message key="index.button.challenges" /></div></a>
+									<a id="challengeList" href="javascript:;"><div class="menuButton"><fmt:message key="generic.text.challenges" /></div></a>
 									<ul id="theChallengeList" style="display: none;">
 										<%= Getter.getChallenges(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
 									</ul>
@@ -194,7 +194,7 @@ if (request.getSession() != null)
 							<% } else {
 								if(ModulePlan.isIncrementalFloor()){ %>
 									<div id="sideMenuWrapper">
-										<%= Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), csrfToken) %>
+										<%= Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), ses.getAttribute("lang").toString(), csrfToken) %>
 									</div>
 								<% } else {%>
 								<li>

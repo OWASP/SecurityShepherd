@@ -6,6 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -48,6 +53,7 @@ public class Getter
 	 * @param password The submitted password in plain text to be used in authentication
 	 * @return A string array made up of nothing or information to be consumed by the initiating authentication process.
 	 */
+	
 	public static String[] authUser (String ApplicationRoot, String userName, String password)
 	{
 		String[] result = null;
@@ -637,12 +643,19 @@ public class Getter
 	 * @param csrfToken The cross site request forgery token
 	 * @return A HTML menu of a users current module progress and a script for interaction with this menu
 	 */
-	public static String getIncrementalModules (String ApplicationRoot, String userId, String csrfToken)
+	public static String getIncrementalModules (String ApplicationRoot, String userId, String lang, String csrfToken)
 	{
 		log.debug("*** Getter.getIncrementalChallenges ***");
 		String output = new String();
 		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		
+		Locale.setDefault(new Locale("en"));
+		Locale locale = new Locale(lang);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
+		//log.debug("LOCALE: " + locale.toString());
+		//log.debug("BUNDLE: " + bundle.getLocale());
+		
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)");
@@ -690,7 +703,7 @@ public class Getter
 					output += "<a class='lesson' id='" 
 						+ encoder.encodeForHTMLAttribute(modules.getString(3))
 						+ "' href='javascript:;'>" 
-						+ "<div class='menuButton'>Get Next Challenge</div>" 
+						+ "<div class='menuButton'>" + bundle.getString("getter.button.nextChallenge")+ "</div>" 
 						+ "</a>";
 					output += "</li>";					
 				}

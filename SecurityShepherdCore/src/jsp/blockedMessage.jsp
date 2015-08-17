@@ -43,17 +43,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Level Currently Blocked</title>
+	<title><fmt:message key="blockedMessage.text.heading.levelBlocked" /></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Please Wait!</h2>
+			<h2 class="title"><fmt:message key="generic.label.pleaseWait" /></h2>
 			<p> 
-				Your doing very well! An administrator has currently marked this level as closed. 
-				To find out when this level will be available, your going to have to ask the person who 
-				is in charge on the application!
+				<fmt:message key="blockedMessage.text.info.levelBlocked" />
 				<br/><br/>
 				<%= ModuleBlock.getBlockerMessage() %>
 			</p>

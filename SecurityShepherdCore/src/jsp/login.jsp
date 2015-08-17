@@ -82,22 +82,22 @@ if(ses.getAttribute("loginFailed") != null)
 		<!-- start content -->
 		<div id="content" style="margin-left: auto; margin-right: auto; width:320px">
 			<div class="post">
-				<h1 class="title" id="login_title"><fmt:message key="login.label.title" /></h1>
-				<p id="login-info"><fmt:message key="login.label.info" />
+				<h1 class="title" id="login_title"><fmt:message key="generic.text.login" /></h1>
+				<p id="login-info"><fmt:message key="login.text.info" />
 				<% if(OpenRegistration.isEnabled()) { %>
-					<p id="register_info"><fmt:message key="login.label.regInfo" /></p>
+					<p id="register_info"><fmt:message key="login.text.regInfo" /></p>
 				<% } if(!loginFailed.isEmpty()) {%>
 					<p><strong><font color="red"><%= loginFailed %></font></strong></p>
 				<% } %>
 				<form name="loginForm" method="POST" action="login">
 					<table>
-						<tr><td><p><fmt:message key="login.label.username" />:</td><td><input type="text" name="login" value="" autocomplete="OFF" autofocus/></p></td></tr>
-						<tr><td><p><fmt:message key="login.label.password" />:&nbsp;&nbsp;&nbsp;&nbsp;
+						<tr><td><p><fmt:message key="generic.text.username" />:</td><td><input type="text" name="login" value="" autocomplete="OFF" autofocus/></p></td></tr>
+						<tr><td><p><fmt:message key="generic.text.password" />:&nbsp;&nbsp;&nbsp;&nbsp;
 											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 											</td><td><input type="password" name="pwd" autocomplete="OFF"/><br /></td></tr>
 						<tr><td colspan="2" align="center">
-							<fmt:message key="login.button.submit" var="buttonValue" />
+							<fmt:message key="generic.text.submit" var="buttonValue" />
 								<input type="submit" name="submit" value="${buttonValue}" />
 						</td></tr>
 					</table>
@@ -105,24 +105,24 @@ if(ses.getAttribute("loginFailed") != null)
 				<br/>
 				<br/>
 				<div align="center">
-					<a id="tools" href="javascript:;"><fmt:message key="login.label.proxy_question" /></a>
+					<a id="tools" href="javascript:;"><fmt:message key="login.text.proxy_question" /></a>
 					<div id="toolsTable" style="display: none;">
-					<p><fmt:message key="login.label.download_proxy" />;</p>
+					<p><fmt:message key="login.text.download_proxy" />;</p>
 					<table>
-						<tr><td align="center"><a href="http://bit.ly/zapWindows"><fmt:message key="login.label.zap_win" /></a></td></tr>
-						<tr><td align="center"><a href="http://bit.ly/zapLinux"><fmt:message key="login.label.zap_lin" /></a></td></tr>
-						<tr><td align="center"><a href="http://bit.ly/zapForMac"><fmt:message key="login.label.zap_mac" /></a></td></tr>
+						<tr><td align="center"><a href="http://bit.ly/zapWindows"><fmt:message key="login.link.zap_win" /></a></td></tr>
+						<tr><td align="center"><a href="http://bit.ly/zapLinux"><fmt:message key="login.link.zap_lin" /></a></td></tr>
+						<tr><td align="center"><a href="http://bit.ly/zapForMac"><fmt:message key="login.link.zap_mac" /></a></td></tr>
 					</table>
 					</div>
-					<br><a id="showAbout" href="javascript:;"><fmt:message key="login.label.about_shepherd" /></a>
+					<br><a id="showAbout" href="javascript:;"><fmt:message key="generic.text.aboutSecShep" /></a>
 				</div>
 			</div>
 		</div>
 		<div align="justify">
 			
 			<div id="aboutDiv" style="display: none;">
-			<h2 class="title"><fmt:message key="login.label.about_shepherd" /></h2>
-			<p id="about_shepherd_blurb"><fmt:message key="login.label.about_blurb" /></p>
+			<h2 class="title"><fmt:message key="generic.text.aboutSecShep" /></h2>
+			<p id="about_shepherd_blurb"><fmt:message key="login.text.about_blurb" /></p>
 			<%= Analytics.sponsorshipMessage %>
 			</div>
 		</div>

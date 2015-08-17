@@ -1,5 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ include file="translation.jsp" %>
 <%
 /**
  * This file is part of the Security Shepherd Project.
@@ -65,33 +65,33 @@ if(!changePassword)
 %>
 	<div id="getStarted" style="display:none;">
 	<div class="post">
-		<h1 class="title">Lets Get Started</h1>
+		<h1 class="title"><fmt:message key="getStarted.text.lets_start" /></h1>
 		<div class="entry">
 			<% if(ModulePlan.openFloor) { %>
-			Now that you've signed in, lets get started with some Security Shepherd modules! To start a module, click on the list headers, <span><a>Lessons</a></span> or <span><a>Modules</a></span>, in the side menu to see what modules are currently available!
+				<fmt:message key="getStarted.text.moduleInfo.openFloor" />
 			<% } else if (ModulePlan.incrementalFloor) { %>
-			Now that you've signed in, lets get started with some Security Shepherd challenges! To start one, click the &quot;Get Next Challenge&quot; button on the left!
+				<fmt:message key="getStarted.text.moduleInfo.incrementalFloor" />
 			<% } else {%>
-			Now that you've signed in, lets get started with some Security Shepherd modules! To start a module, click on the list headers, such as <span><a>Field Training</a></span> or <span><a>Corporal</a></span>, in the side menu to see what modules are currently available! The lower down in the side menu that the module is listed, the more points it is worth! 
+				<fmt:message key="getStarted.text.moduleInfo" />
 			<% } %>
 			<% if(isAdmin) {%>
-			<h2 class="title">Configure Shepherd</h2>
+			<h2 class="title"><fmt:message key="generic.text.configureShepherd" /></h2>
 			<p>
-			As you are an Administrator you can define the scope of Security Shepherd. You can quickly change the game layout to Web or Mobile Application focused with the following buttons, or you can open the Admin Module Management menu, at the top left of the page, to open or close specific topics.
+			<fmt:message key="getStarted.text.configureShepherd.asAnAdmin" />
 			<br/>
 			<div id="scopeResultsDiv" class="informationBox" style="display: none;"></div>
 			<br/>
 			<div id="setScopeDiv">
-				<a href="javascript:;" style="text-decoration: none;" id="allApplication"><div class="menuButton">Open All Levels</div></a>
-				<a href="javascript:;" style="text-decoration: none;" id="onlyWebApplication"><div class="menuButton">Open Web App Levels Only</div></a>
-				<a href="javascript:;" style="text-decoration: none;" id="onlyMobileApplication"><div class="menuButton">Open Mobile Levels Only</div></a>
-				<a href="javascript:;" style="text-decoration: none;" id="noApplication"><div class="menuButton">Close All Levels</div></a>
+				<a href="javascript:;" style="text-decoration: none;" id="allApplication"><div class="menuButton"><fmt:message key="getStarted.button.openLevels.all" /></div></a>
+				<a href="javascript:;" style="text-decoration: none;" id="onlyWebApplication"><div class="menuButton"><fmt:message key="getStarted.button.openLevels.web" /></div></a>
+				<a href="javascript:;" style="text-decoration: none;" id="onlyMobileApplication"><div class="menuButton"><fmt:message key="getStarted.button.openLevels.mobile" /></div></a>
+				<a href="javascript:;" style="text-decoration: none;" id="noApplication"><div class="menuButton"><fmt:message key="getStarted.button.closeLevels" /></div></a>
 			</div>
-			<div id="scopeLoadingDiv" style="display: none;">Loading...</div>
+			<div id="scopeLoadingDiv" style="display: none;"><fmt:message key="generic.text.loading" /></div>
 			</p>
 			<% } %>
 			<br/><br/>
-			If you cannot see the message below this paragraph, please ensure that the Security Shepherd instance is correctly configured.</a>.
+			<fmt:message key="getStarted.text.checkShepConfigMsg" /></a>.
 		</div>
 		<br/>
 	<div id="cantSee">
@@ -232,7 +232,7 @@ else	//IF the  user doesnt need to change their pass, just post up the get Start
 {
 	%>
 	<div class="errorWrapper">
-		Your password is a temporary password. This means that somebody else knows it! Lets keep things secure and change your password now!
+		<fmt:message key="getStarted.text.info.changePassword" />
 		<br /><br />
 		<div class="errorMessage">
 			<form id="changePassword" method="POST" action="passwordChange">
