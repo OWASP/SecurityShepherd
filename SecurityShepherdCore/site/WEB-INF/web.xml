@@ -1172,4 +1172,13 @@
 		<servlet-name>/challenges/d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66</servlet-name>
 		<url-pattern>/challenges/d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjectionEscaping</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4</servlet-name>
+		<url-pattern>/challenges/8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4</url-pattern>
+	</servlet-mapping>
 </web-app>

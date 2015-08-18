@@ -1172,6 +1172,48 @@ DELIMITER ;
 COMMIT;
 
 -- -----------------------------------------------------
+-- ======================================================
+-- ======================================================
+-- SQL Injection Poor Escaping (email)
+-- ======================================================
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+DROP SCHEMA IF EXISTS `SqlPoorEscape` ;
+CREATE SCHEMA IF NOT EXISTS `SqlPoorEscape` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `SqlPoorEscape` ;
+
+-- -----------------------------------------------------
+-- Table `SqlPoorEscape`.`customers`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `SqlPoorEscape`.`customers` (
+  `customerId` VARCHAR(64) NOT NULL ,
+  `customerName` VARCHAR(32) NOT NULL ,
+  `customerAddress` VARCHAR(32) NOT NULL ,
+  `comment` LONGTEXT NULL ,
+  PRIMARY KEY (`customerId`) )
+ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `SqlPoorEscape`.`customers`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `SqlPoorEscape`;
+INSERT INTO `SqlPoorEscape`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('019h53d60a6b875b20095705d53f8c7b0ca', 'John Fits', 'thislifecouldbethelast@example.com', NULL);
+INSERT INTO `SqlPoorEscape`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('44e2bdc105ifdua464e5ba9a34b927614d7fee55', 'Rita Hanolan', 'dontfoolyourself@example.com', 'Well Done! The Result key is 0dcf9078ba5d878f9e23809ac8f013d1a08fdc8f12c5036f1a4746dbe86c0aac');
+INSERT INTO `SqlPoorEscape`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('051594asdjd6869ccfd76d77a2ed4ba7c2023f0cb', 'Rubix Man', 'dontkidyourself@cube.com', NULL);
+INSERT INTO `SqlPoorEscape`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('6c5c26adjdccf4a87059deb0a3fb463ff7d62fd5', 'Paul O Brien', 'andweretooyoungtosee@deaf.com', NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Module Schema Users
 -- -----------------------------------------------------
@@ -1303,3 +1345,7 @@ DROP USER 'procChalUser'@'localhost';
 CREATE USER 'procChalUser'@'localhost' IDENTIFIED BY 'k61dSmsM*8n';
 GRANT SELECT ON `SqlChalStoredProc`.`customers` TO 'procChalUser'@'localhost';
 GRANT EXECUTE ON PROCEDURE `SqlChalStoredProc`.`findUser` TO 'procChalUser'@'localhost';
+
+DROP USER 'imVideoingThis'@'localhost';
+CREATE USER 'imVideoingThis'@'localhost' IDENTIFIED BY 'auoi@7723dj';
+GRANT SELECT ON `SqlPoorEscape`.`customers` TO 'imVideoingThis'@'localhost';

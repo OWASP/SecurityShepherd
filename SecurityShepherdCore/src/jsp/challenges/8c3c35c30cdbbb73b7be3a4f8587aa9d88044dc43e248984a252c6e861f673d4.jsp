@@ -1,0 +1,147 @@
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%
+/**
+ * SQL Injection Escaping Challenge
+ * <br/><br/>
+ * This file is part of the Security Shepherd Project.
+ * 
+ * The Security Shepherd project is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.<br/>
+ * 
+ * The Security Shepherd project is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.<br/>
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * @author Mark Denihan
+ */
+
+String levelName = "SQL Injection Escaping Challenge";
+ ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+ if (request.getSession() != null)
+ {
+ 	HttpSession ses = request.getSession();
+ 	//Getting CSRF Token from client
+ 	Cookie tokenCookie = null;
+ 	try
+ 	{
+ 		tokenCookie = Validate.getToken(request.getCookies());
+ 	}
+ 	catch(Exception htmlE)
+ 	{
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
+ 	}
+ 	// validateSession ensures a valid session, and valid role credentials
+ 	// If tokenCookie == null, then the page is not going to continue loading
+ 	if (Validate.validateSession(ses) && tokenCookie != null)
+ 	{
+ 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
+
+%>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Security Shepherd - <%= levelName %></title>
+	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+</head>
+<body>
+	<script type="text/javascript" src="../js/jquery.js"></script>
+		<div id="contentDiv">
+			<h2 class="title"><%= levelName %></h2>
+			<p> 
+				To complete this challenge, you must exploit SQL injection flaw in the following form to find the result key. The developer of this level has attempted to stop SQL Injection attacks by escaping apostrophes so the database interpreter will know not to pay attention to user submitted apostrophes.
+				<div id="hint" style="display: none;">
+					<h2 class="title">Challenge Hint</h2>
+					This is the query you are injecting code into! Be aware that your apostrophes are being escaped with a leading backslash before being sent to the interpreter.
+					<br />
+					<br />
+					<div>SELECT * FROM customers WHERE customerId =&quot;<a id="userContent"></a>&quot;;</div>
+					<br />
+					<br />
+				</div>
+				
+				<form id="leForm" action="javascript:;">
+					<table>
+					<tr><td>
+						Please enter the <a>Customer Id</a> of the user that you want to look up
+					</td></tr>
+					<tr><td>
+						<input style="width: 400px;" id="aUserId" type="text"/>
+					</td></tr>
+					<tr><td>
+						<div id="submitButton"><input type="submit" value="Get user"/></div>
+						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+					</td></tr>
+					</table>
+				</form>
+				
+				<div id="resultsDiv"></div>
+			</p>
+		</div>
+		<script>
+			var counter = 0;
+			$("#leForm").submit(function(){
+				counter = counter + 1;
+				$("#submitButton").hide("fast");
+				$("#loadingSign").show("slow");
+				$("#userContent").text($("#aUserId").val());
+				var theName = $("#aUserId").val();
+				$("#resultsDiv").hide("slow", function(){
+					var ajaxCall = $.ajax({
+						type: "POST",
+						url: "8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4",
+						data: {
+							aUserId: theName
+						},
+						async: false
+					});
+					if(ajaxCall.status == 200)
+					{
+						$("#resultsDiv").html(ajaxCall.responseText);
+					}
+					else
+					{
+						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+					}
+					$("#resultsDiv").show("slow", function(){
+						$("#loadingSign").hide("fast", function(){
+							$("#submitButton").show("slow");
+							if (counter == 3)
+							{
+								$("#hintButton").show("slow");
+							}
+						});
+					});
+				});
+			});
+			$("#aUserId").change(function () {
+				$("#userContent").text($(this).val());
+			}).change();
+			$("#theHintButton").click(function() {
+				$("#hintButton").hide("fast", function(){
+					$("#hint").show("fast");
+				});
+			});;
+		</script>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+</body>
+</html>
+<%
+	}
+	else
+	{
+		response.sendRedirect("../loggedOutSheep.html");
+	}
+}
+else
+{
+	response.sendRedirect("../loggedOutSheep.html");
+}
+%>
