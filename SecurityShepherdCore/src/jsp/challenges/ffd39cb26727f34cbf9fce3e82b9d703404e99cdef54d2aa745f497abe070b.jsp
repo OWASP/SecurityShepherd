@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
 <%
 /**
- * SQL Injection Challenge One
+ * SQL Injection Challenge Two
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -21,7 +21,7 @@
  * @author Mark Denihan
  */
 
-String levelName = "SQL Injection Challenge One";
+String levelName = "SQL Injection Challenge Two";
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -46,13 +46,13 @@ String levelName = "SQL Injection Challenge One";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - SQL Injection Challenge One</title>
+	<title>Security Shepherd - <%= levelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">SQL Injection Challenge One</h2>
+			<h2 class="title"><%= levelName %></h2>
 			<p> 
 				To complete this challenge, you must exploit the SQL injection flaw in the following form to find the result key.
 				<div id="hint" style="display: none;">

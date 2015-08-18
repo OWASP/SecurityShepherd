@@ -18,11 +18,12 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
+import utils.SqlFilter;
 import utils.Validate;
 import dbProcs.Database;
 
 /**
- * SQL Injection Challenge One - Does not use user specific keys
+ * SQL Injection Challenge 1 - Does not use User specific keys
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -43,16 +44,16 @@ import dbProcs.Database;
  */
 public class SqlInjection1 extends HttpServlet
 {
-	//SQL Challenge One
+	//SQL Challenge 1
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection1.class);
-	private static String levelName = "SQL Injection Challenge One";
-	private static String levelHash = "ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b";
-	private static String levelResult = ""; // Stored in Vulnerable DB. Not user Specific
+	private static String levelName = "SQL Injection Challenge 1";
+	private static String levelHash = "e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a";
+	private static String levelResult = ""; //Stored in vulnerable DB. Not user Specific
 	/**
 	 * This function is used to make a call to a database and process its results. The call made to the database is secured using an insufficient privilege. 
 	 * Players must overcome this filter to complete the module
-	 * @param userIdentity Used to filter database results
+	 * @param aUserId Used to filter database results
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -70,44 +71,35 @@ public class SqlInjection1 extends HttpServlet
 			Encoder encoder = ESAPI.encoder();
 			try
 			{
-				String userIdentity = request.getParameter("userIdentity");
-				log.debug("User Submitted - " + userIdentity);
-				if(Validate.isValidEmailAddress(userIdentity))
+				String aUserId = request.getParameter("aUserId");
+				log.debug("User Submitted - " + aUserId);
+				String ApplicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + ApplicationRoot );
+				
+				log.debug("Getting Connection to Database");
+				Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeOne");
+				Statement stmt = conn.createStatement();
+				log.debug("Gathering result set");
+				ResultSet resultSet = stmt.executeQuery("SELECT * FROM customers WHERE customerId = \"" + aUserId + "\"");
+				
+				int i = 0;
+				htmlOutput = "<h2 class='title'>Search Results</h2>";
+				htmlOutput += "<table><tr><th>Name</th><th>Address</th><th>Comment</th></tr>";
+				
+				log.debug("Opening Result Set from query");
+				while(resultSet.next())
 				{
-					log.debug("Filtered to " + userIdentity);
-					String ApplicationRoot = getServletContext().getRealPath("");
-					log.debug("Servlet root = " + ApplicationRoot );
-					
-					log.debug("Getting Connection to Database");
-					Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeOne");
-					Statement stmt = conn.createStatement();
-					log.debug("Gathering result set");
-					ResultSet resultSet = stmt.executeQuery("SELECT * FROM customers WHERE customerAddress = '" + userIdentity + "'");
-					
-					int i = 0;
-					htmlOutput = "<h2 class='title'>Search Results</h2>";
-					htmlOutput += "<table><tr><th>Name</th><th>Address</th><th>Comment</th></tr>";
-					
-					log.debug("Opening Result Set from query");
-					while(resultSet.next())
-					{
-						log.debug("Adding Customer " + resultSet.getString(2));
-						htmlOutput += "<tr><td>"
-							+ encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" 
-							+ encoder.encodeForHTML(resultSet.getString(3)) + "</td><td>"
-							+ encoder.encodeForHTML(resultSet.getString(4)) + "</td></tr>";
-						i++;
-					}
-					conn.close();
-					htmlOutput += "</table>";
-					if(i == 0)
-					{
-						htmlOutput = "<p>There were no results found in your search</p>";
-					}
+					log.debug("Adding Customer " + resultSet.getString(2));
+					htmlOutput += "<tr><td>"
+						+ encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" 
+						+ encoder.encodeForHTML(resultSet.getString(3)) + "</td><td>"
+						+ encoder.encodeForHTML(resultSet.getString(4)) + "</td></tr>";
+					i++;
 				}
-				else
+				htmlOutput += "</table>";
+				if(i == 0)
 				{
-					htmlOutput = new String("<h2 class='title'>Search Error</h2><p>Invalid Email Address was submitted");
+					htmlOutput = "<p>There were no results found in your search</p>";
 				}
 			}
 			catch (SQLException e)

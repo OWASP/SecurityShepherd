@@ -61,20 +61,60 @@ INSERT INTO `SqlInjLesson`.`tb_users` (`usersId`, `username`, `comment`) VALUES 
 COMMIT;
 
 -- ======================================================
--- SQL Challenge One
+-- SQL Challenge Two (email)
 -- ======================================================
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
-DROP SCHEMA IF EXISTS `SqlChalOne` ;
+DROP SCHEMA IF EXISTS `SqlChalEmail` ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalEmail` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `SqlChalEmail` ;
+
+-- -----------------------------------------------------
+-- Table `SqlChalEmail`.`customers`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `SqlChalEmail`.`customers` (
+  `customerId` VARCHAR(64) NOT NULL ,
+  `customerName` VARCHAR(32) NOT NULL ,
+  `customerAddress` VARCHAR(32) NOT NULL ,
+  `comment` LONGTEXT NULL ,
+  PRIMARY KEY (`customerId`) )
+ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `SqlChalEmail`.`customers`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `SqlChalEmail`;
+INSERT INTO `SqlChalEmail`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('019ce129ee8960a6b875b20095705d53f8c7b0ca', 'John Fits', 'crazycat@example.com', NULL);
+INSERT INTO `SqlChalEmail`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('44e2bdc1059903f464e5ba9a34b927614d7fee55', 'Rita Hanolan', 'thenightbefore@example.com', 'Well Done! The Result key is f62abebf5658a6a44c5c9babc7865110c62f5ecd9d0a7052db48c4dbee0200e3');
+INSERT INTO `SqlChalEmail`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('05159435826869ccfd76d77a2ed4ba7c2023f0cb', 'Rubix Man', 'manycolours@cube.com', NULL);
+INSERT INTO `SqlChalEmail`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('6c5c26a1deccf4a87059deb0a3fb463ff7d62fd5', 'Paul O Brien', 'sixshooter@deaf.com', NULL);
+
+COMMIT;
+
+-- ======================================================
+-- SQL Challenge 1
+-- ======================================================
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
 CREATE SCHEMA IF NOT EXISTS `SqlChalOne` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 USE `SqlChalOne` ;
 
 -- -----------------------------------------------------
 -- Table `SqlChalOne`.`customers`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `SqlChalOne`.`customers` ;
+
 CREATE  TABLE IF NOT EXISTS `SqlChalOne`.`customers` (
   `customerId` VARCHAR(64) NOT NULL ,
   `customerName` VARCHAR(32) NOT NULL ,
@@ -93,49 +133,9 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 START TRANSACTION;
 USE `SqlChalOne`;
 INSERT INTO `SqlChalOne`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('019ce129ee8960a6b875b20095705d53f8c7b0ca', 'John Fits', 'crazycat@example.com', NULL);
-INSERT INTO `SqlChalOne`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('44e2bdc1059903f464e5ba9a34b927614d7fee55', 'Rita Hanolan', 'thenightbefore@example.com', 'Well Done! The Result key is f62abebf5658a6a44c5c9babc7865110c62f5ecd9d0a7052db48c4dbee0200e3');
+INSERT INTO `SqlChalOne`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('44e2bdc1059903f464e5ba9a34b927614d7fee55', 'Rita Hanolan', 'thenightbefore@example.com', NULL);
 INSERT INTO `SqlChalOne`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('05159435826869ccfd76d77a2ed4ba7c2023f0cb', 'Rubix Man', 'manycolours@cube.com', NULL);
-INSERT INTO `SqlChalOne`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('6c5c26a1deccf4a87059deb0a3fb463ff7d62fd5', 'Paul O Brien', 'sixshooter@deaf.com', NULL);
-
-COMMIT;
-
--- ======================================================
--- SQL Challenge 2
--- ======================================================
-
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
-
-CREATE SCHEMA IF NOT EXISTS `SqlChalTwo` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
-USE `SqlChalTwo` ;
-
--- -----------------------------------------------------
--- Table `SqlChalTwo`.`customers`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `SqlChalTwo`.`customers` ;
-
-CREATE  TABLE IF NOT EXISTS `SqlChalTwo`.`customers` (
-  `customerId` VARCHAR(64) NOT NULL ,
-  `customerName` VARCHAR(32) NOT NULL ,
-  `customerAddress` VARCHAR(32) NOT NULL ,
-  `comment` LONGTEXT NULL ,
-  PRIMARY KEY (`customerId`) )
-ENGINE = InnoDB;
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
--- -----------------------------------------------------
--- Data for table `SqlChalTwo`.`customers`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `SqlChalTwo`;
-INSERT INTO `SqlChalTwo`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('019ce129ee8960a6b875b20095705d53f8c7b0ca', 'John Fits', 'crazycat@example.com', NULL);
-INSERT INTO `SqlChalTwo`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('44e2bdc1059903f464e5ba9a34b927614d7fee55', 'Rita Hanolan', 'thenightbefore@example.com', NULL);
-INSERT INTO `SqlChalTwo`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('05159435826869ccfd76d77a2ed4ba7c2023f0cb', 'Rubix Man', 'manycolours@cube.com', NULL);
-INSERT INTO `SqlChalTwo`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('6c5c26a1deccf4a87059deb0a3fb463ff7d62fd5', 'Paul O Brien', 'sixshooter@deaf.com', 'Well Done! The reuslt Key is fd8e9a29dab791197115b58061b215594211e72c1680f1eacc50b0394133a09f');
+INSERT INTO `SqlChalOne`.`customers` (`customerId`, `customerName`, `customerAddress`, `comment`) VALUES ('6c5c26a1deccf4a87059deb0a3fb463ff7d62fd5', 'Paul O Brien', 'sixshooter@deaf.com', 'Well Done! The reuslt Key is fd8e9a29dab791197115b58061b215594211e72c1680f1eacc50b0394133a09f');
 
 COMMIT;
 
@@ -1211,11 +1211,11 @@ GRANT SELECT ON `SqlInjLesson`.`tb_users` TO 'firstBloodyMessL'@'localhost';
 
 DROP USER 'CharlieSeabrook'@'localhost';
 CREATE USER 'CharlieSeabrook'@'localhost' IDENTIFIED BY 'shallowHal';
-GRANT SELECT ON `SqlChalOne`.`customers` TO 'CharlieSeabrook'@'localhost';
+GRANT SELECT ON `SqlChalEmail`.`customers` TO 'CharlieSeabrook'@'localhost';
 
 DROP USER 'RightGuard3d'@'localhost';
 CREATE USER 'RightGuard3d'@'localhost' IDENTIFIED BY 'logic3Speaker';
-GRANT SELECT ON `SqlChalTwo`.`customers` TO 'RightGuard3d'@'localhost';
+GRANT SELECT ON `SqlChalOne`.`customers` TO 'RightGuard3d'@'localhost';
 
 DROP USER 'HdmiNoSignal'@'localhost';
 CREATE USER 'HdmiNoSignal'@'localhost' IDENTIFIED BY '1nforma1ion';

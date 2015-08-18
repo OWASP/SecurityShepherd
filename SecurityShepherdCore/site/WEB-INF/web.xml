@@ -761,7 +761,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b</servlet-name>
-		<servlet-class>servlets.module.challenge.SqlInjection1</servlet-class>
+		<servlet-class>servlets.module.challenge.SqlInjectionEmail</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b</servlet-name>
@@ -770,7 +770,7 @@
 	
 	<servlet>
 		<servlet-name>/challenges/e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a</servlet-name>
-		<servlet-class>servlets.module.challenge.SqlInjection2</servlet-class>
+		<servlet-class>servlets.module.challenge.SqlInjection1</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/challenges/e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a</servlet-name>
@@ -1163,8 +1163,6 @@
 		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</servlet-name>
 		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</url-pattern>
 	</servlet-mapping>
-	
-	
 
 	<servlet>
 		<servlet-name>/challenges/d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66</servlet-name>
