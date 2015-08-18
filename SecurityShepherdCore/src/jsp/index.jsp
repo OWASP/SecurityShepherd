@@ -176,7 +176,7 @@ if (request.getSession() != null)
 						<% } %>
 						<% if(showCheatSheet) { %>
 						<div id="cheatSheetButton" style="display: none;">
-							<a id="showSolution" href="javascript:;"><div class="menuButton"><fmt:message key="index.text.cheat" /></div></a>
+							<a id="showSolution" href="javascript:;"><div class="menuButton"><fmt:message key="generic.text.cheat" /></div></a>
 						</div>
 						<% } %>					
 						<div id="levelListDiv">
