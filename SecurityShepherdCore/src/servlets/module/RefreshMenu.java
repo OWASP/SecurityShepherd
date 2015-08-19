@@ -70,7 +70,7 @@ public class RefreshMenu extends HttpServlet
 						String ApplicationRoot = getServletContext().getRealPath("");
 						log.debug("Servlet root = " + ApplicationRoot );
 						
-						out.write(Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp") ,(String)tokenParmeter));
+						out.write(Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"),  ses.getAttribute("lang").toString(), (String)tokenParmeter));
 					}
 					catch (Exception e)
 					{

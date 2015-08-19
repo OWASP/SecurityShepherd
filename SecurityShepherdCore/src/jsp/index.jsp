@@ -195,7 +195,7 @@ if (request.getSession() != null)
 							<% } else {
 								if(ModulePlan.isIncrementalFloor()){ %>
 									<div id="sideMenuWrapper">
-										<%= Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), csrfToken) %>
+										<%= Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), ses.getAttribute("lang").toString() ,csrfToken) %>
 									</div>
 								<% } else {%>
 								<li>
