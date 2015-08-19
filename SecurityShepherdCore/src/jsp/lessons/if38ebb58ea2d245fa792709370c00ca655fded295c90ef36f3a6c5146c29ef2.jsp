@@ -1,14 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.insecure_crypto.if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c29ef2" />
 <%
-String levelName = "Insecure Crypto Lesson";
 String levelHash = "if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c29ef2";
+String levelName = "Insecure Crypto Lesson";
+//Translation stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession().getAttribute("lang").toString()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.insecure_crypto." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("title.question.insecure_crypto");
+
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -53,13 +54,13 @@ String levelHash = "if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c2
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Insecure Cryptographic Storage Lesson</title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="title.question.insecure_crypto" /></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
 					The most common flaw in this area is simply <a>not encrypting data</a> that deserves encryption. When encryption is employed, unsafe key generation and storage, not rotating keys and weak algorithm usage is common. Use of weak or unsalted hashes to protect passwords is also common. These mistakes can compromise all of the data that should have been encrypted. Typically this information includes sensitive data such as health records, credentials, personal data, credit cards, etc.

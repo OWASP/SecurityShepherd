@@ -348,6 +348,24 @@ public class Validate
 	}
 	
 	/**
+	 * Function that will check if a valid language is set. if not, returns en (English)
+	 * @param lang Session Language Parameter
+	 * @return en by default, or the valid setting found in the submitted lang
+	 */
+	public static String validateLanguage(String lang)
+	{
+		String result = "en";
+		log.debug("lang submitted: " + lang);
+		if(lang != null)
+		{
+			if (!lang.isEmpty())
+				result = lang;
+		}
+		log.debug("lang set to: " + result);
+		return result;
+	}
+	
+	/**
 	 * Validates objects received through a function request. Also ensures max length is not too high.
 	 * @param input Object to validate
 	 * @param maxLength Maximum length of object
@@ -431,7 +449,7 @@ public class Validate
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This method compares the two submitted tokens after ensuring they are not null and not empty.
 	 * @param cookieToken CSRF cookie Token
@@ -476,7 +494,7 @@ public class Validate
 		}	
 		return result;
 	}
-
+	
 	/**
 	 * Validates file name attributes to defend against path traversal
 	 * @param fileName File name to validate
