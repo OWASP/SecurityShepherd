@@ -141,11 +141,6 @@ public class MobileLogin extends HttpServlet
 	 {
 		 return (x == null? def : x);
 	 }
-	  
-	 private static String nvl(String x) 
-	 {
-		 return (x == null? "" : x);
-	 }
 	 
 	 /**
 	  * Redirects user to index.jsp
