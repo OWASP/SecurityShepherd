@@ -11,15 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
 import utils.Validate;
 import dbProcs.Getter;
 
 /**
- * This control class is responseable for the server operation in the Get Progress function
+ * This control class is responsible for the server operation in the Get Progress function
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 

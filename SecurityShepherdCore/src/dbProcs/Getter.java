@@ -751,7 +751,7 @@ public class Getter
 		"		if(ajaxCall.status == 200)" +
 		"		{" +
 		"			theActualFile = ajaxCall.responseText;" +
-		"			$('#contentDiv').html(\"<iframe frameborder='no' style='width: 685px; height: 2056px;' id='theLesson' src='\" + theActualFile + \"'></iframe>\");" +
+		"			$('#contentDiv').html(\"<iframe frameborder='no' class='levelIframe' id='theLesson' src='\" + theActualFile + \"'></iframe>\");" +
 		"			$(\"#theLesson\").load(function(){" +
 		"				$(\"#submitResult\").slideDown(\"fast\", function(){" +
 		"					$(\"#contentDiv\").slideDown(\"slow\");" +
@@ -956,7 +956,6 @@ public class Getter
 			log.debug("Gathering lessonInfo ResultSet for user " + userId);
 			ResultSet lessons = callstmt.executeQuery();
 			log.debug("Opening Result Set from moduleAllInfo");
-			int rowNumber = 0; // Used to identify the first row, as it is slightly different to all other rows for output
 			while(lessons.next())
 			{
 				//log.debug("Adding " + lessons.getString(1));
@@ -977,7 +976,6 @@ public class Getter
 					+ encoder.encodeForHTML(lessons.getString(1)) 
 					+ "</a>";
 				output += "</li>";
-				rowNumber++;
 			}
 			//If no output has been found, return an error message
 			if(output.isEmpty())

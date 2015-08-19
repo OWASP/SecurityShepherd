@@ -67,13 +67,15 @@ if(!changePassword)
 	<div class="post">
 		<h1 class="title"><fmt:message key="getStarted.text.lets_start" /></h1>
 		<div class="entry">
-			<% if(ModulePlan.openFloor) { %>
-				<fmt:message key="getStarted.text.moduleInfo.openFloor" />
-			<% } else if (ModulePlan.incrementalFloor) { %>
-				<fmt:message key="getStarted.text.moduleInfo.incrementalFloor" />
-			<% } else {%>
-				<fmt:message key="getStarted.text.moduleInfo" />
-			<% } %>
+			<p>
+				<% if(ModulePlan.openFloor) { %>
+					<fmt:message key="getStarted.text.moduleInfo.openFloor" />
+				<% } else if (ModulePlan.incrementalFloor) { %>
+					<fmt:message key="getStarted.text.moduleInfo.incrementalFloor" />
+				<% } else {%>
+					<fmt:message key="getStarted.text.moduleInfo" />
+				<% } %>
+			</p>
 			<% if(isAdmin) {%>
 			<h2 class="title"><fmt:message key="generic.text.configureShepherd" /></h2>
 			<p>
@@ -101,7 +103,7 @@ if(!changePassword)
 	</div>
 	<script>
 	$('#getStarted').slideDown("slow");
-	$('#cantSee').html("<iframe style='width: 685px; height: 600px;' frameborder='no' id='theStart' src='readyToPlay.jsp?ThreadSequenceId=<%=encoder.encodeForHTMLAttribute(encoder.encodeForURL(threadId))%>'></iframe>");
+	$('#cantSee').html("<iframe class='levelIframe' frameborder='no' id='theStart' src='readyToPlay.jsp?ThreadSequenceId=<%=encoder.encodeForHTMLAttribute(encoder.encodeForURL(threadId))%>'></iframe>");
 	$('#cantSee').html(function(){
 		$("#theStart").load(function(){
 			$("#contentDiv").slideDown("slow");

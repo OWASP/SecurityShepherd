@@ -81,10 +81,9 @@ if (request.getSession() != null)
 		<jsp:include page="translation-select.jsp" />
 		<div id="header">
 			<h1>Security Shepherd</h1>
-			<div style="position: absolute;right: 100px;">
+			<div style="position: absolute; top: 12px; right: 100px;">
 				<p>
-					<strong><fmt:message key="generic.text.welcome" /> <%= userName %></strong><br />
-					<strong><a href="logout?csrfToken=<%= csrfToken %>"><fmt:message key="generic.text.logout" /></a></strong>
+					<strong><%= userName %>&nbsp;&#x7c;&nbsp;<a href="logout?csrfToken=<%= csrfToken %>"><fmt:message key="generic.text.logout" /></a></strong>
 				</p>
 			</div>
 		</div>
@@ -600,99 +599,132 @@ if (request.getSession() != null)
 		<% } %>
 		
 		<script>
-		$(".challenge").click(function(){
-			var whatFile = $(this).attr('id');
-			$("#currentModule").val(whatFile);
-			var theActualFile = "";
-			$("#solutionDiv").hide("fast");
-			$("#contentDiv").slideUp("slow", function(){
-				var ajaxCall = $.ajax({
-					type: "POST",
-					url: "getModule",
-					data: {
-						moduleId: whatFile,
-						csrfToken: "<%= csrfToken %>"
-					},
-					async: false
+		<% if (!ModulePlan.isIncrementalFloor()) { 
+			// If the Incremental Floor Plan is being used, a Specific Script is added by the Method 
+			// which generates the Menu. If these are still in the dom when that happens, 
+			// the browser will request each level twice %>
+			$(".challenge").click(function(){
+				var whatFile = $(this).attr('id');
+				$("#currentModule").val(whatFile);
+				var theActualFile = "";
+				$("#solutionDiv").hide("fast");
+				$("#contentDiv").slideUp("slow", function(){
+					var ajaxCall = $.ajax({
+						type: "POST",
+						url: "getModule",
+						data: {
+							moduleId: whatFile,
+							csrfToken: "<%= csrfToken %>"
+						},
+						async: false
+					});
+					if(ajaxCall.status == 200)
+					{
+						theActualFile = ajaxCall.responseText;
+						$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theChallenge' src='" + theActualFile + "'></iframe>");
+						$("#theChallenge").load(function(){
+							<% if(showCheatSheet) { %>
+								$("#submitResult").slideDown("fast", function(){
+									$("#cheatSheetButton").slideDown("fast", function(){
+										$("#contentDiv").slideDown("slow", function(){
+											var scrollTo = $("#moduleResult").offset().top;
+											scrollTo = scrollTo - 60;
+											console.log("Scroll Up to: " + scrollTo);
+											$('html, body').animate({
+												scrollTop: scrollTo
+											}, 1000);
+										});
+									});
+								});
+							<% } else { %>
+								$("#submitResult").slideDown("fast", function(){
+									$("#contentDiv").slideDown("slow", function(){
+										var scrollTo = $("#moduleResult").offset().top;
+										scrollTo = scrollTo - 60;
+										console.log("Scroll Up to: " + scrollTo);
+										$('html, body').animate({
+											scrollTop: scrollTo
+										}, 1000);
+									});
+								});
+							<% } %>
+						}).appendTo('#contentDiv');
+					}
+					else
+					{
+						$('#contentDiv').html("<p> Sorry but there was a challenge error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#contentDiv").slideDown("slow");
+					}
 				});
-				if(ajaxCall.status == 200)
-				{
-					theActualFile = ajaxCall.responseText;
-					$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theChallenge' src='" + theActualFile + "'></iframe>");
-					$("#theChallenge").load(function(){
+			});	
+	
+			$(".lesson").click(function(){
+				var whatFile = $(this).attr('id');
+				$("#currentModule").val(whatFile);
+				var theActualFile = "";
+				$("#solutionDiv").hide("fast");
+				$("#contentDiv").slideUp("slow", function(){
+					var ajaxCall = $.ajax({
+						type: "POST",
+						url: "getModule",
+						data: {
+							moduleId: whatFile,
+							csrfToken: "<%= csrfToken %>"
+						},
+						async: false
+					});
+					if(ajaxCall.status == 200)
+					{
+						theActualFile = ajaxCall.responseText;
+						$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
+						$("#theLesson").load(function(){
 						<% if(showCheatSheet) { %>
 							$("#submitResult").slideDown("fast", function(){
 								$("#cheatSheetButton").slideDown("fast", function(){
-									$("#contentDiv").slideDown("slow");
+									$("#contentDiv").slideDown("slow", function(){
+										var scrollTo = $("#moduleResult").offset().top;
+										scrollTo = scrollTo - 60;
+										console.log("Scroll Up to: " + scrollTo);
+										$('html, body').animate({
+											scrollTop: scrollTo
+										}, 1000);
+									});
 								});
 							});
 						<% } else { %>
 							$("#submitResult").slideDown("fast", function(){
-								$("#contentDiv").slideDown("slow");
+								$("#contentDiv").slideDown("slow", function(){
+									var scrollTo = $("#moduleResult").offset().top;
+									scrollTo = scrollTo - 60;
+									console.log("Scroll Up to: " + scrollTo);
+									$('html, body').animate({
+										scrollTop: scrollTo
+									}, 1000);
+								});
 							});
 						<% } %>
-					}).appendTo('#contentDiv');
-				}
-				else
-				{
-					$('#contentDiv').html("<p> Sorry but there was a challenge error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-					$("#contentDiv").slideDown("slow");
-				}
-			});
-		});	
-
-		$(".lesson").click(function(){
-			var whatFile = $(this).attr('id');
-			$("#currentModule").val(whatFile);
-			var theActualFile = "";
-			$("#solutionDiv").hide("fast");
-			$("#contentDiv").slideUp("slow", function(){
-				var ajaxCall = $.ajax({
-					type: "POST",
-					url: "getModule",
-					data: {
-						moduleId: whatFile,
-						csrfToken: "<%= csrfToken %>"
-					},
-					async: false
+						}).appendTo('#contentDiv');
+					}
+					else
+					{
+						$('#contentDiv').html("<p> Sorry but there was a lesson error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#contentDiv").slideDown("slow");
+					}
 				});
-				if(ajaxCall.status == 200)
-				{
-					theActualFile = ajaxCall.responseText;
-					$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
-					$("#theLesson").load(function(){
-					<% if(showCheatSheet) { %>
-						$("#submitResult").slideDown("fast", function(){
-							$("#cheatSheetButton").slideDown("fast", function(){
-								$("#contentDiv").slideDown("slow");
-							});
-						});
-					<% } else { %>
-						$("#submitResult").slideDown("fast", function(){
-							$("#contentDiv").slideDown("slow");
-						});
-					<% } %>
-					}).appendTo('#contentDiv');
-				}
-				else
-				{
-					$('#contentDiv').html("<p> Sorry but there was a lesson error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-					$("#contentDiv").slideDown("slow");
-				}
 			});
-		});
+		<% } //End of if(CTF Mode Enabled) %>
 
 		$("#resultForm").submit(function(){
 			var theKey = $("#moduleResult").val();
 			var theModuleId = $("#currentModule").val();
-			if(theKey != null || theKey.length > 5)
+			if(theKey != null)
 			{
-				$("#solutionDiv").hide("fast");
-				$("#resultResponse").hide("fast");
-				$("#submitForm").hide("fast");
-				$("#submitLoading").show("slow");
-				$("#contentDiv").slideUp("slow", function(){
-					$("#moduleResult").val("");
+				$("#submitLoading").slideDown("fast");
+				$("#solutionDiv").slideUp("fast");
+				$("#resultResponse").slideUp("fast");
+				$("#submitForm").slideUp("fast");
+				//The Ajax Operation
+				$("#contentDiv").slideUp("fast", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
 						url: "solutionSubmit",
@@ -703,25 +735,26 @@ if (request.getSession() != null)
 						},
 						async: false
 					});
-					if(ajaxCall.status == 200)
-					{
-						$('#contentDiv').html(ajaxCall.responseText);
-					}
-					else
-					{
-						$('#resultResponse').html("<br/><p> Sorry but there was a result form error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
-						$("#resultResponse").show("slow");
-					}
-					$("#contentDiv").slideDown("fast", function(){
-						$("#submitLoading").hide("fast", function(){
-							$("#submitForm").show("slow");
-						});
+					$("#submitLoading").slideUp("fast", function(){
+						if(ajaxCall.status == 200)
+						{
+							console.log("Request OK. Showing Reponse");
+							$('#contentDiv').html(ajaxCall.responseText);
+						}
+						else
+						{
+							$('#resultResponse').html("<br/><p> Sorry but there was a result form error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
+							$("#resultResponse").show("slow");
+						}
+						$("#moduleResult").val("");
+						$("#submitForm").slideDown("slow");
+						$("#contentDiv").slideDown("slow");
 					});
 				});
 			}
 			else
 			{
-				alert('Invalid Key');
+				console.log("No Key Submitted");
 			}
 		});
 		

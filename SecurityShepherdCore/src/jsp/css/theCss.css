@@ -322,6 +322,20 @@ a:hover {
 	margin-bottom: 5px;
 }
 
+.cheatBox {
+	float: right; 
+	margin 0; 
+	width: 685px;
+	border-color:#A878EF;
+	border-style:dashed;
+	background-color: #D4D4D4;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-right:5px;
+	padding-left:5px;
+	margin-bottom:10px;
+}
+
 .moduleSearchBox{
 	height: 26px;
 	width: 100%;

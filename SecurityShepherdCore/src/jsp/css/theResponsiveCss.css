@@ -11,9 +11,7 @@
 	
 	#contentDiv {
 		width: 85%;
-		position: absolute;
-		margin-left: 65px;
-		margin-right: 10px;
+		margin-right: 5%;
 	}
 	
 	.sidebarWrapper {
@@ -22,7 +20,7 @@
 		border-top: 3px solid #A878EF;
 		border-right: 3px solid #A878EF;
 		position: absolute;
-		height: 100%;
+		height: 400%;
 		border-radius: 2px;
 		text-decoration: none;
 		vertical-align: top;
@@ -34,7 +32,6 @@
 		border-top: 3px solid #A878EF;
 		border-right: 3px solid #A878EF;
 		position: absolute;
-		height: 100%;
 		border-radius: 2px;
 		text-decoration: none;
 		vertical-align: top;
@@ -57,7 +54,7 @@
 		border-top: 3px solid #A878EF;
 		border-right: 3px solid #A878EF;
 		position: absolute;
-		height: 100%;
+		height: 400%;
 		border-radius: 2px;
 		text-decoration: none;
 		vertical-align: top;
@@ -83,8 +80,9 @@
 	}
 	
 	#submitResult {
-		margin-left: 65px;
-		float: none; 
+		margin-left: 10%;
+		float: left; 
+		width: 90%;
 	}
 	
 	.resultTable {
@@ -95,4 +93,8 @@
 		width: 100%;
 	}
 	
+	.cheatBox{
+	    float: left;
+	    width: 90%;
+	}
 }
