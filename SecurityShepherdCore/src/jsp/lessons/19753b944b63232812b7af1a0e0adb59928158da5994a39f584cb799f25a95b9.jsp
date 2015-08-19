@@ -1,4 +1,11 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage=""%>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.m_reverse_engineering.19753b944b63232812b7af1a0e0adb59928158da5994a39f584cb799f25a95b9" />
 
 <%
 	/**
@@ -66,7 +73,7 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%=levelName%></h2>
+		<h2 class="title"><fmt:message key="title.question.m_reverse_engineering" /></h2>
 		<p>
 			<div id="lessonIntro">
 				One of the biggest dangers to Mobile Applications is reverse

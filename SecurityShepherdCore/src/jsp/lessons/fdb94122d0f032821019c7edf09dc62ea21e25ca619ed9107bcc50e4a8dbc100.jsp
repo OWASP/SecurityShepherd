@@ -1,7 +1,14 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.insecure_direct_object_ref.fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100" />
 <%
 String levelName = "Insecure Direct Object References Lesson";
+String levelHash = "fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100";
 
 /**
  * <br/><br/>
@@ -54,7 +61,7 @@ String levelName = "Insecure Direct Object References Lesson";
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">What are Insecure Direct Object References?</h2>
+			<h2 class="title"><fmt:message key="title.quesetion.insecure_direct_object_ref" /></h2>
 			<p>
 				<div id="lessonIntro">
 					Imagine a web page that allows you to view your personal information. The web page that shows the user their information is generated based on a user ID. If this page was vulnerable to <a>insecure Direct Object References</a> an attacker would be able to modify the user identifier parameter to reference any user object in the system. Insecure Direct Object References occur when an application references an object by its actual ID or name. This object that is referenced directly is used to generate a web page. If the application does not verify that the user is allowed to reference this object, then the object is <a>insecurely referenced</a>.

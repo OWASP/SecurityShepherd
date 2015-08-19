@@ -1,4 +1,12 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.m_content_provider_leakage.4d41997b5b81c88f7eb761c1975481c4ce397b80291d99307cfad69662277d39" />
+
 <%
 	//No Quotes In level Name
 	String levelName = "Content Provider Leakage Lesson";
@@ -58,7 +66,7 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<h2 class="title">What is Content Provider Leakage?</h2>
+		<h2 class="title"><fmt:message key="title.question.content_provider_leak" /></h2>
 		<p>
 		<div id="lessonIntro">
 

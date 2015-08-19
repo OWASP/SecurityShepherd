@@ -1,4 +1,11 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.unvalidated_redirects_forwards.f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f" />
 
 <%
 
@@ -57,7 +64,7 @@ String levelName = new String("Unvalidated Redirects and Forwards Lesson");
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">What are Unvalidated Redirects and Forwards?</h2>
+			<h2 class="title"><fmt:message key="title.question.unvalidated_redirects_forwards" /></h2>
 			<p>
 				<div id="lessonIntro">
 					Unvalidated redirects and forwards occur in applications that <a>redirect</a> or <a>forward</a>

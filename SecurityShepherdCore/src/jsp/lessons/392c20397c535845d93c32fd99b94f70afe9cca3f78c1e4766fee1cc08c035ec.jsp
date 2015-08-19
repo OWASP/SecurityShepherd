@@ -1,4 +1,12 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.m_unintended_data_leakage.392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec" />
+
 <%
 /**
  * <br/><br/>
@@ -65,7 +73,7 @@ if (request.getSession() != null)
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
 			%>
 			
-			<h2 class="title"> <%= levelName %></h2>
+			<h2 class="title"><fmt:message key="title.question.m_uninteded_data_leakage" /></h2>
 			<p> 
 				<div id="lessonIntro">
 

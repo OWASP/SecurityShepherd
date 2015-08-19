@@ -1,8 +1,16 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.xss.zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a" />
 
 <%
 
 String levelName = new String("Cross Site Scripting Lesson");
+String levelHash = "zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a";
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -55,53 +63,42 @@ if (request.getSession() != null)
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">What is Cross Site Scripting?</h2>
+			<h2 class="title"><fmt:message key="title.question.xss" /></h2>
 			<p> 
 				<div id="lessonIntro">
-					Cross-Site Scripting, or <a>XSS</a>, issues occur when an application uses <a>untrusted data</a> in a
-					web browser without sufficient <a>validation</a> or <a>escaping</a>. If untrusted data contains
-					a client side script, the browser will execute the script while it is interpreting the page.
+					<fmt:message key="paragraph.info.1" />
 					<br />
 					<br />
-					Attackers can use XSS attacks to execute scripts in a victim's browser which can hijack user sessions, 
-					deface web sites, or redirect the user to malicious sites. Anyone that can send data to the system, 
-					including administrators, are possible candidates for performing XSS attacks in an application. 
+					<fmt:message key="paragraph.info.2" /><br />
+					<br />
+					<fmt:message key="paragraph.info.3" />
 					<br />
 					<br />
-					According to OWASP, XSS is the most widespread vulnerability found in web applications today. 
-					This is partially due to the variety of <a>attack vectors</a> that are available. The easiest way 
-					of showing an XSS attack executing is using a simple <a>alert box</a> as a client side script pay load. 
-					To execute a XSS payload, a variety of an attack vectors may be necessary to overcome insufficient escaping 
-					or validation. The following are examples of some known attack vectors, that all create the same
-					 <a>alert</a> pop up that reads "XSS".
-					<br />
-					<br />
-					&lt;SCRIPT&gt;<a>alert(&#39;XSS&#39;)</a>&lt;/SCRIPT&gt;<br />
-					&lt;IMG SRC=&quot;&#x23;&quot; ONERROR=&quot;<a>alert(&#39;XSS&#39;)</a>&quot;/&gt;<br />
-					&lt;INPUT TYPE=&quot;BUTTON&quot; ONCLICK=&quot;<a>alert(&#39;XSS&#39;)</a>&quot;/&gt;<br />
-					&lt;IFRAME SRC=&quot;javascript:<a>alert(&#39;XSS&#39;)</a>;&quot;&gt;&lt;/IFRAME&gt;<br />
+					<fmt:message key="example.xss.1" /><br />
+					<fmt:message key="example.xss.2" /><br />
+					<fmt:message key="example.xss.3" /><br />
+					<fmt:message key="example.xss.4" /><br />
 					<br />
 					<br />
 					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
 				</div>
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
-				The following search box outputs untrusted data without any validation or escaping. 
-				Get an alert box to execute through this function to show that there is an XSS vulnerability present.
+				<fmt:message key="paragraph.whattodo.xss" />
 				<br />
 				<br />				
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>Search Term</a> that you want to look up
+						<fmt:message key="paragraph.info.searchTerm" />
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="searchTerm" type="text"/>
 					</td></tr>
 					<tr><td>
 						<div id="submitButton"><input type="submit" value="Get this user"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<p style="display: none;" id="loadingSign"><fmt:message key="word.info.loading" /></p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<fmt:message key="sentence.question.wouldYouLikeHint" />" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>

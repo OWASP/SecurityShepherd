@@ -1,4 +1,12 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+ 
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.m_client_side_injection.f758a97011ec4452cc0707e546a7c0f68abc6ef2ab747ea87e0892767152eae1" />
+
 <%
 	//No Quotes In level Name
 	String levelName = "Client Side Injection Lesson";
@@ -58,15 +66,11 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<h2 class="title">What is Mobile Client Side Injection?</h2>
+		<h2 class="title"><fmt:message key="title.question.csi" /></h2>
 		<p>
 		<div id="lessonIntro">
 
-			<br /> <a>Client Side Injection</a> occurs when the user can execute <a>SQLite</a>
-			commands through application input in order to change the query run by an App.
-			The APK for this lesson encrypts it's databases using <a>AES</a>. It would be
-			difficult to steal login details by attacking the encryption but a
-			lot easier to use SQL Injection to bypass the login.
+			<br /> <fmt:message key="paragraph.info.1" />
 			<br />
 			<br />
 			An ineffective defence against Client Side Injection is <a>Filtering user input</a>.

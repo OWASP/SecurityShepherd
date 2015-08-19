@@ -1,4 +1,12 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.session_manage.b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806" />
+
 <%
 
 /*
@@ -55,7 +63,7 @@ if (request.getSession() != null)
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">What is Broken Authentication and Session Management?</h2>
+			<h2 class="title"><fmt:message key="title.question.session_manage" /></h2>
 			<p> 
 				<div id="lessonIntro">
 					Attacks against an application's <a>authentication</a> and <a>session management</a> can be performed using security risks that other vulnerabilities present. For example, any application's session management can be overcome when a <a>Cross Site Scripting</a> vulnerability is used to steal user session tokens. This topic is more about flaws that exist in the applications authentication and session management schema.

@@ -640,7 +640,7 @@ public class Getter
 	 * @param csrfToken The cross site request forgery token
 	 * @return A HTML menu of a users current module progress and a script for interaction with this menu
 	 */
-	public static String getIncrementalModules (String ApplicationRoot, String userId, String lang, String csrfToken)
+	public static String getIncrementalModules (String ApplicationRoot, String userId, String csrfToken)
 	{
 		log.debug("*** Getter.getIncrementalChallenges ***");
 		String output = new String();
@@ -648,8 +648,7 @@ public class Getter
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		
 		Locale.setDefault(new Locale("en"));
-		Locale locale = new Locale(lang);
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text");
 		
 		try
 		{

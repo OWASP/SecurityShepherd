@@ -1,4 +1,11 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.security_misconfig.fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833" />
 
 <%
 String levelName = "Security Misconfiguration";
@@ -55,7 +62,7 @@ String levelHash = "fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">What is <%= levelName %></h2>
+			<h2 class="title"><fmt:message key="title.question.security_misconfig" /></h2>
 			<p> 
 				<div id="lessonIntro">
 					Security misconfiguration can happen in any part of an application, from the database server, third-party libraries to custom code settings. A security misconfiguration is any configuration which can be exploited by an attacker to perform any action they should not be able to. The impact of these issues vary from which configuration is being exploited. 

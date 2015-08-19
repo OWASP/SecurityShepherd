@@ -1,4 +1,12 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.m_poor_authentication.77777b312d5b56a17c1f30550dd34e8d6bd8b037f05341e64e94f5411c10ac8e" />
+
 <%
 /**
  * <br/><br/>
@@ -65,7 +73,7 @@ if (request.getSession() != null)
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
 			%>
 			
-			<h2 class="title"> <%= levelName %></h2>
+			<h2 class="title"><fmt:message key="title.question.m_poor_authentication" /></h2>
 			<p> 
 				<div id="lessonIntro">
 Poor Authentication is an isse which occurs when an App relies on an authentication method which is insecure. This can come in many different forms. One such example is password reset functions, which although convenient, can compromise the authentication process. In this app, we don't need to know the password as a rest function is available to us. Secondly, the App is leaking logs of what the user has typed during previous uses of the App. This information will provide you with the data you need to reset the password and get the key. 

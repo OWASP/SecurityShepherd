@@ -1,8 +1,14 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.insecure_crypto.if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c29ef2" />
 <%
 String levelName = "Insecure Crypto Lesson";
-
+String levelHash = "if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c29ef2";
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -53,7 +59,7 @@ String levelName = "Insecure Crypto Lesson";
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">What is Insecure Cryptographic Storage?</h2>
+			<h2 class="title"><fmt:message key="title.question.insecure_crypto" /></h2>
 			<p> 
 				<div id="lessonIntro">
 					The most common flaw in this area is simply <a>not encrypting data</a> that deserves encryption. When encryption is employed, unsafe key generation and storage, not rotating keys and weak algorithm usage is common. Use of weak or unsalted hashes to protect passwords is also common. These mistakes can compromise all of the data that should have been encrypted. Typically this information includes sensitive data such as health records, credentials, personal data, credit cards, etc.

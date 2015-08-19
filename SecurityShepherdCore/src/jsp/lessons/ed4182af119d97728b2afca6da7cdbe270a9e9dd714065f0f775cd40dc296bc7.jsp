@@ -1,4 +1,11 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@page import="java.util.Locale"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+ 
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="i18n.lessons.csrf.ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7" />
 
 <%
 /**
@@ -59,7 +66,7 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">What is a Cross-Site Request Forgery?</h2>
+			<h2 class="title"><fmt:message key="title.question.csrf" /></h2>
 			<p>
 				<div id="lessonIntro">
 					A Cross-Site Request Forgery, or <a>CSRF</a>, attack forces a user's browser to send a
