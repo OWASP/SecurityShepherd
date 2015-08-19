@@ -626,12 +626,26 @@ if (request.getSession() != null)
 							<% if(showCheatSheet) { %>
 								$("#submitResult").slideDown("fast", function(){
 									$("#cheatSheetButton").slideDown("fast", function(){
-										$("#contentDiv").slideDown("slow");
+										$("#contentDiv").slideDown("slow", function(){
+											var scrollTo = $("#moduleResult").offset().top;
+											scrollTo = scrollTo - 60;
+											console.log("Scroll Up to: " + scrollTo);
+											$('html, body').animate({
+												scrollTop: scrollTo
+											}, 1000);
+										});
 									});
 								});
 							<% } else { %>
 								$("#submitResult").slideDown("fast", function(){
-									$("#contentDiv").slideDown("slow");
+									$("#contentDiv").slideDown("slow", function(){
+										var scrollTo = $("#moduleResult").offset().top;
+										scrollTo = scrollTo - 60;
+										console.log("Scroll Up to: " + scrollTo);
+										$('html, body').animate({
+											scrollTop: scrollTo
+										}, 1000);
+									});
 								});
 							<% } %>
 						}).appendTo('#contentDiv');
@@ -667,12 +681,26 @@ if (request.getSession() != null)
 						<% if(showCheatSheet) { %>
 							$("#submitResult").slideDown("fast", function(){
 								$("#cheatSheetButton").slideDown("fast", function(){
-									$("#contentDiv").slideDown("slow");
+									$("#contentDiv").slideDown("slow", function(){
+										var scrollTo = $("#moduleResult").offset().top;
+										scrollTo = scrollTo - 60;
+										console.log("Scroll Up to: " + scrollTo);
+										$('html, body').animate({
+											scrollTop: scrollTo
+										}, 1000);
+									});
 								});
 							});
 						<% } else { %>
 							$("#submitResult").slideDown("fast", function(){
-								$("#contentDiv").slideDown("slow");
+								$("#contentDiv").slideDown("slow", function(){
+									var scrollTo = $("#moduleResult").offset().top;
+									scrollTo = scrollTo - 60;
+									console.log("Scroll Up to: " + scrollTo);
+									$('html, body').animate({
+										scrollTop: scrollTo
+									}, 1000);
+								});
 							});
 						<% } %>
 						}).appendTo('#contentDiv');
