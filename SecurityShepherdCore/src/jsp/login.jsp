@@ -67,6 +67,7 @@ if(ses.getAttribute("loginFailed") != null)
 	<title>OWASP Security Shepherd - Login</title>
 
 	<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="css/theResponsiveCss.css" rel="stylesheet" type="text/css" media="screen">
 </head>
 <body>
 	<script type="text/javascript" src="js/jquery.js"></script>
@@ -80,7 +81,7 @@ if(ses.getAttribute("loginFailed") != null)
 	<!-- start page -->
 	<div id="page">
 		<!-- start content -->
-		<div id="content" style="margin-left: auto; margin-right: auto; width:320px">
+		<div id="content" style="margin-right: auto; margin-left: auto; width: 40%; max-width: 320px;">
 			<div class="post">
 				<h1 class="title" id="login_title"><fmt:message key="generic.text.login" /></h1>
 				<p id="login-info"><fmt:message key="login.text.info" />

@@ -79,7 +79,7 @@ public class GetCheat extends HttpServlet
 						if(result != null)
 						{
 							out.write(
-									"<div id='theActualCheat' style='float: right; margin 0; width: 685px;border-color:#A878EF; border-style:dashed; background-color: #D4D4D4; padding-top:5px; padding-bottom:5px; padding-right:5px; padding-left:5px; margin-bottom:10px;'>" + 
+									"<div id='theActualCheat' class='cheatBox'>" + 
 									"<big style='color:#A878EF;'>" + encoder.encodeForHTML(result[0]) + " Cheat</big>" +
 									"<p>" +
 									result[1] +
