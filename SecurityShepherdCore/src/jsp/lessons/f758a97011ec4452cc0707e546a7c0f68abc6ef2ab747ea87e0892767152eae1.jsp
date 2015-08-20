@@ -71,29 +71,22 @@
 		<p>
 		<div id="lessonIntro">
 
-			<br /> <%= bundle.getString("paragraph.info.1") %>
+			<br /> 
+			<%= bundle.getString("paragraph.info.1") %>
 			<br />
 			<br />
-			An ineffective defence against Client Side Injection is <a>Filtering user input</a>.
-			This technique involves trying to predict the query which an attacker would execute and then replacing key words like
-			SELECT, WHERE, FROM with a dot or blank space. 
-			Filtering will make it more difficult for an attacker to exploit an injection flaw but will not stop. 
+			<%= bundle.getString("paragraph.info.2") %>
 			<br />
 			<br />
-			A security system is only as strongest as it's weakest link. We don't
-			need to know the user credentials. We do know that the APK uses a
-			textbook example of running an SQL query by appending the Username and
-			Password to a String in a Select statement in order to verify if a
-			Username and Password exist. If this statement returns true, the user
-			is logged in.
+			<%= bundle.getString("paragraph.info.3") %>
 			<br />
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson" />
+			<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
 		</div>
 	
-		<input type="button" value="Show Lesson Introduction" id="showLesson" style="display: none;" />
+		<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson" style="display: none;" />
 		<br />
 
-		Exploit the SQL Injection flaw in this challenges app to bypass the Client Side Login. Once you manage to log in as the admin, you will get the key. 
+		 <%= bundle.getString("challenge.description") %>
 		<br/>
 		<br>
 		<%= Analytics.getMobileLevelBlurb("CSInjection.apk") %>
