@@ -1,15 +1,15 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.sql_injection.e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594" />
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
 String levelName =  "SQL Injection Lesson";
 String levelHash = "e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.sql_injection." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("title.question.sql_injection");
 
 /**
  * <br/><br/>
@@ -56,13 +56,13 @@ String levelHash = "e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6fa
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - SQL Injection Lesson</title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="title.question.sql_injection" /></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
 					Injection flaws, such as <a>SQL injection</a>, occur when hostile data is sent to an interpreter as part of a command or query. The hostile data can trick the interpreter into executing unintended commands or accessing unauthorized data. Injections attacks are of a high severity. Injection flaws can be exploited to remove a system's confidentiality by accessing any information held on the system. These security risks can then be extended to execute updates to existing data affecting the systems integrity and availability. These attacks are easily exploitable as they can be initiated by anyone who can interact with the system through any data they pass to the application.

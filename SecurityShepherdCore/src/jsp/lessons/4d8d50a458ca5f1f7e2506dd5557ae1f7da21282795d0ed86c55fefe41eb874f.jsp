@@ -1,15 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.poor_data_validation.4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f" />
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
 String levelName = "Poor Data Validation";
 String levelHash = "4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.poor_data_validation." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("title.question.poor_data_validation");
 
 /**
  * <br/><br/>
@@ -56,13 +56,13 @@ String levelHash = "4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="title.question.poor_data_validation" /></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
 					Poor Data Validation occurs when an application does not validate submitted data correctly or sufficiently. Poor Data Validation application issues are generally low severity, they are more likely to be coupled with other security risks to increase their impact. If all data submitted to an application is validated correctly, security risks are significantly more difficult to exploit. 

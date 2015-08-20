@@ -1,37 +1,38 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.m_unintended_data_leakage.392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec" />
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
-/**
- * <br/><br/>
- * This file is part of the Security Shepherd Project.
- * 
- * The Security Shepherd project is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
- * 
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * @author Sean Duggan
- */
+	//No Quotes In level Name
+	String levelName = "What is Mobile Unintended Data Leakage?";
+	//Alphanumeric Only
+	String levelHash = "392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec";
+	//Translation Stuff
+	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_unintended_data_leakage." + levelHash, locale);
+	//Used more than once translations
+	String translatedLevelName = bundle.getString("title.question.m_uninteded_data_leakage");
+	
+	/**
+	 * <br/><br/>
+	 * This file is part of the Security Shepherd Project.
+	 * 
+	 * The Security Shepherd project is free software: you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation, either version 3 of the License, or
+	 * (at your option) any later version.<br/>
+	 * 
+	 * The Security Shepherd project is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.<br/>
+	 * 
+	 * You should have received a copy of the GNU General Public License
+	 * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+	 *
+	 * @author Sean Duggan
+	 */
 
-//No Quotes In level Name
-String levelName = "What is Mobile Unintended Data Leakage?";
-//Alphanumeric Only
-String levelHash = "392c20397c535845d93c32fd99b94f70afe9cca3f78c1e4766fee1cc08c035ec";
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
@@ -59,7 +60,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%=levelName%></title>
+<title>Security Shepherd - <%= translatedLevelName %></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
 	media="screen" />
 
@@ -69,15 +70,11 @@ if (request.getSession() != null)
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
 		<p>
-			<%
-				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
-			%>
 			
-			<h2 class="title"><fmt:message key="title.question.m_uninteded_data_leakage" /></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
 
-			<%=levelBlurb%>
 			<br /> Unintended data leakage occurs when an App inadvertently
 			places sensitive information or data in a location on the mobile
 			device that is accessible by attackers or other Apps on the

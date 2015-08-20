@@ -1,16 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.xss.zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a" />
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
 
 String levelName = new String("Cross Site Scripting Lesson");
 String levelHash = "zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.xss." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("title.question.xss");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -57,48 +57,48 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross Site Scripting Lesson</title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="title.question.xss" /></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
-					<fmt:message key="paragraph.info.1" />
+					<%= bundle.getString("paragraph.info.1") %>
 					<br />
 					<br />
-					<fmt:message key="paragraph.info.2" /><br />
+					<%= bundle.getString("paragraph.info.2")%><br />
 					<br />
-					<fmt:message key="paragraph.info.3" />
+					<%= bundle.getString("paragraph.info.3") %>
 					<br />
 					<br />
-					<fmt:message key="example.xss.1" /><br />
-					<fmt:message key="example.xss.2" /><br />
-					<fmt:message key="example.xss.3" /><br />
-					<fmt:message key="example.xss.4" /><br />
+					<%= bundle.getString("example.xss.1") %><br />
+					<%= bundle.getString("example.xss.2") %><br />
+					<%= bundle.getString("example.xss.3") %><br />
+					<%= bundle.getString("example.xss.4") %><br />
 					<br />
 					<br />
 					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
 				</div>
 				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
 				<br/>
-				<fmt:message key="paragraph.whattodo.xss" />
+				<%= bundle.getString("paragraph.whattodo.xss") %>
 				<br />
 				<br />				
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						<fmt:message key="paragraph.info.searchTerm" />
+						<%= bundle.getString("paragraph.info.searchTerm") %>
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="searchTerm" type="text"/>
 					</td></tr>
 					<tr><td>
 						<div id="submitButton"><input type="submit" value="Get this user"/></div>
-						<p style="display: none;" id="loadingSign"><fmt:message key="word.info.loading" /></p>
-						<div style="display: none;" id="hintButton"><input type="button" value="<fmt:message key="sentence.question.wouldYouLikeHint" />" id="theHintButton"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("word.info.loading") %></p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sentence.question.wouldYouLikeHint") %>" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -114,7 +114,7 @@ if (request.getSession() != null)
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a",
+						url: "<%= levelHash %>",
 						data: {
 							searchTerm: theSearchTerm,
 							csrfToken: "<%= csrfToken %>"

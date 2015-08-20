@@ -1,14 +1,17 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.m_uninteded_data_leak.bf16081ed057b2d1bc97f4b9da897149819a159a8114d4867c7f8f327f5453a8" />
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
+//No Quotes In level Name
+String levelName = "What is Mobile Unintended Data Leakage?";
+//Alphanumeric Only
+String levelHash = "bf16081ed057b2d1bc97f4b9da897149819a159a8114d4867c7f8f327f5453a8";
 
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_uninteded_data_leak." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("title.question.m_uninteded_data_leakage");
 
 /**
  * <br/><br/>
@@ -30,10 +33,6 @@
  * @author Sean Duggan
  */
  
-//No Quotes In level Name
-String levelName = "What is Mobile Unintended Data Leakage?";
-//Alphanumeric Only
-String levelHash = "bf16081ed057b2d1bc97f4b9da897149819a159a8114d4867c7f8f327f5453a8";
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
@@ -61,7 +60,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 	</script> 
@@ -69,7 +68,7 @@ if (request.getSession() != null)
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="title.question.m_uninteded_data_leakage" /></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				The App for this Challenge was rushed to completion, as a result some features which should not have made it to the final version were included. The result key can be found in <a>App logs</a> only intended for debugging. Submit it to complete this challenge. 
 				<br/>

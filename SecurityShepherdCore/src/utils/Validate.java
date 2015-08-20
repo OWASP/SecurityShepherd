@@ -352,16 +352,25 @@ public class Validate
 	 * @param lang Session Language Parameter
 	 * @return en by default, or the valid setting found in the submitted lang
 	 */
-	public static String validateLanguage(String lang)
+	public static String validateLanguage(HttpSession ses)
 	{
-		String result = "en";
-		log.debug("lang submitted: " + lang);
-		if(lang != null)
+		String result = "en_GB";
+		String lang = new String();
+		try
 		{
-			if (!lang.isEmpty())
-				result = lang;
+			lang = ses.getAttribute("lang").toString();
+			log.debug("lang submitted: " + lang);
+			if(lang != null)
+			{
+				if (!lang.isEmpty())
+					result = lang;
+			}
+			log.debug("lang set to: " + result);
 		}
-		log.debug("lang set to: " + result);
+		catch(Exception e)
+		{
+			log.debug("Could not Retrieve User Lang Setting");
+		}
 		return result;
 	}
 	

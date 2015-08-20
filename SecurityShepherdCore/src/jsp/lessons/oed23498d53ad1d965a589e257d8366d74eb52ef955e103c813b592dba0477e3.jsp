@@ -1,17 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
- 
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.failure_to_restrict_url_access.oed23498d53ad1d965a589e257d8366d74eb52ef955e103c813b592dba0477e3" />
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
 
 String levelName = "Failure to Restrict URL Access Lesson";
 String levelHash = "oed23498d53ad1d965a589e257d8366d74eb52ef955e103c813b592dba0477e3";
 
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.failure_to_restrict_url_access." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("title.question.fail_restrict_url_acc");
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -57,13 +56,13 @@ String levelHash = "oed23498d53ad1d965a589e257d8366d74eb52ef955e103c813b592dba04
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Failure to Restrict URL Access Lesson</title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="title.question.fail_restrict_url_acc" /></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p>
 				<div id="lessonIntro">
 					An application that <a>fails to restrict URL access</a> is an application that is not protecting its "protected" pages sufficiently. This occurs when an application hides functionality from basic users. In an application that fails to restrict URL access, administration links are only put onto the page if the user is an administrator. If users discover a page's address, they can still access it via URL access.

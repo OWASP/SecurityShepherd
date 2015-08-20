@@ -1,13 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
- 
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.csrf.ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7" />
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
+String levelHash = new String("ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7");
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.csrf." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("title.question.csrf");
+
 /**
  * This file is part of the Security Shepherd Project.
  *
@@ -60,13 +61,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross-Site Request Forgery Lesson</title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="title.question.csrf" /></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p>
 				<div id="lessonIntro">
 					A Cross-Site Request Forgery, or <a>CSRF</a>, attack forces a user's browser to send a
@@ -159,7 +160,7 @@
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7",
+						url: "<%= levelHash %>",
 						data: {
 							messageForAdmin: theMessageForAdmin,
 							csrfToken: "<%= csrfToken %>"

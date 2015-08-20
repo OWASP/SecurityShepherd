@@ -1,13 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.session_manage.b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806" />
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
+	String levelHash = new String("b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806");	
+
+	//Translation Stuff
+	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.session_manage." + levelHash, locale);
+	//Used more than once translations
+	String translatedLevelName = bundle.getString("title.question.session_manage");
 
 /*
  * <br/><br/>
@@ -57,13 +58,13 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Session Management Lesson</title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="title.question.session_manage" /></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
 					Attacks against an application's <a>authentication</a> and <a>session management</a> can be performed using security risks that other vulnerabilities present. For example, any application's session management can be overcome when a <a>Cross Site Scripting</a> vulnerability is used to steal user session tokens. This topic is more about flaws that exist in the applications authentication and session management schema.
@@ -119,7 +120,7 @@ if (request.getSession() != null)
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806",
+						url: "<%= levelHash %>",
 						async: false
 					});
 					if(ajaxCall.status == 200)

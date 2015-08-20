@@ -1,12 +1,17 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.m_broken_crypto.911fa7f4232e096d6a74a0623842c4157e29b9bcc44e8a827be3bb7e58c9a212" />
 <%
+	//No Quotes In level Name
+	String levelName = "Mobile Broken Crypto?";
+	//Alphanumeric Only
+	String levelHash = "911fa7f4232e096d6a74a0623842c4157e29b9bcc44e8a827be3bb7e58c9a212";
+	//Translation Stuff
+	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_broken_crypto." + levelHash, locale);
+	//Used more than once translations
+	String translatedLevelName = bundle.getString("title.question.mobile_broken_crypto");
+	
 	/**
 	 * <br/><br/>
 	 * This file is part of the Security Shepherd Project.
@@ -27,10 +32,6 @@
 	 * @author Sean Duggan
 	 */
 	 
-	//No Quotes In level Name
-	String levelName = "Mobile Broken Crypto?";
-	//Alphanumeric Only
-	String levelHash = "911fa7f4232e096d6a74a0623842c4157e29b9bcc44e8a827be3bb7e58c9a212";
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 	String levelBlurb = "";
 
@@ -58,7 +59,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%=levelName%></title>
+<title>Security Shepherd - <%= translatedLevelName %></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
 	media="screen" />
 
@@ -68,7 +69,7 @@
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
 		<p>
-		<h2 class="title"><fmt:message key="title.question.mobile_broken_crypto" /></h2>
+		<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
 			<br/>

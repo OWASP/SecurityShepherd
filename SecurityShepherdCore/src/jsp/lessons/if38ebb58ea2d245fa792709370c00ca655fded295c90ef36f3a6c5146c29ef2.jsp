@@ -5,7 +5,7 @@
 String levelHash = "if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c29ef2";
 String levelName = "Insecure Crypto Lesson";
 //Translation stuff
-Locale locale = new Locale(Validate.validateLanguage(request.getSession().getAttribute("lang").toString()));
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.insecure_crypto." + levelHash, locale);
 //Used more than once translations
 String translatedLevelName = bundle.getString("title.question.insecure_crypto");

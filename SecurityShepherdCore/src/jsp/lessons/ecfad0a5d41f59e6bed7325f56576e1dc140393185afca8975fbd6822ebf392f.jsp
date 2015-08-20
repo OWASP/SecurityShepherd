@@ -1,13 +1,17 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"  language="java" import="utils.*" errorPage=""%>
-<%@page import="java.util.Locale"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<fmt:requestEncoding value="UTF-8" />
-<fmt:setLocale value="${lang}" />
-<fmt:setBundle basename="i18n.lessons.m_insecure_data_storage.ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f" />
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
+	//No Quotes In level Name
+	String levelName = "What is Mobile Insecure Data Storage?";
+	//Alphanumeric Only
+	String levelHash = "ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f";
+	//Translation Stuff
+	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_insecure_data_storage." + levelHash, locale);
+	//Used more than once translations
+	String translatedLevelName = bundle.getString("title.question.m_insecure_data_storeage");
+	
 	/**
 	 * <br/><br/>
 	 * This file is part of the Security Shepherd Project.
@@ -27,10 +31,7 @@
 	 *
 	 * @author Sean Duggan
 	 */
-	//No Quotes In level Name
-	String levelName = "What is Mobile Insecure Data Storage?";
-	//Alphanumeric Only
-	String levelHash = "ecfad0a5d41f59e6bed7325f56576e1dc140393185afca8975fbd6822ebf392f";
+	
 	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 	String levelBlurb = "";
 
@@ -57,7 +58,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%=levelName%></title>
+<title>Security Shepherd - <%= translatedLevelName %></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
 	media="screen" />
 
@@ -66,7 +67,7 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><fmt:message key="title.question.m_insecure_data_storeage" /></h2>
+		<h2 class="title"><%= translatedLevelName %></h2>
 		<p> 
 			<div id="lessonIntro">
 			Insecure Data Storage occurs when an App stores sensitive data
