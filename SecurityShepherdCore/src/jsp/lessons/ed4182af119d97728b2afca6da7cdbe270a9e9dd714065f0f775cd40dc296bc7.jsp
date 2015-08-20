@@ -70,81 +70,47 @@ String translatedLevelName = bundle.getString("title.question.csrf");
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p>
 				<div id="lessonIntro">
-					A Cross-Site Request Forgery, or <a>CSRF</a>, attack forces a user's browser to send a
-					<a>forged HTTP request</a> with the user's session cookie to an application,
-					tricking the user into unknowingly interacting with an application that they are
-					currently logged into. CSRF attacks are possible when the application does not ensure
-					that a user is in fact interacting with it. The severity of a CSRF attack varies with the
-					functionality of the application the victim is tricked into interacting with.
-					If the attack is aimed at an administrator, the severity will be a lot higher than those
-					aimed at a guest user.
+					<%= bundle.getString("paragraph.info1") %>
 					<br />
 					<br />
-					To prevent CSRF attacks, every request must contain a <a>nonce</a> token (an unpredictable
-					number) to be included with every request. To find CSRF vulnerabilities in applications, this
-					is the token that is tested. If a request does not contain a nonce at all,
-					then it is likely vulnerable to CSRF attacks. If a request does contain a nonce,
-					then there are more steps to include in testing for CSRF. Even though the nonce
-					is in the request it may not be validated or may work with a null value.
-					It is possible that the application's nonce management will allow an attacker to use
-					their valid nonce in other user requests!
+					<%= bundle.getString("paragraph.info2") %>
 					<br />
 					<br />
-					HTTP requests can be sent using JavaScript. Requests that are sent this way include an
-					"X-Requested-With" HTTP header. If this is checked for on incoming requests, this can serve as
-					CSRF protection without a nonce value. This header cannot be replicated from a remote domain,
-					due to the <a>Same Origin Policy</a>, preventing an attacker from delivering the attack remotely.
-					It is not advised to use this as a sole CSRF protection model, as browser issues are commonly found that
-					allow attackers to send cross-domain requests from a browser.
+					<%= bundle.getString("paragraph.info3") %>
 					<br />
 					<br />
-					CSRF attacks can be performed on <a>GET</a> and <a>POST</a> HTTP requests. To force a victim to seamlessly
-					submit a request in a GET request, the request (highlighted) can be embedded into an image tag on a web page
-					such as follows;<br />
-					&lt;img src=&quot;<a>http://www.secureBank.ie/sendMoney?giveMoneyTo=hacker&amp;giveAmount=1000</a>&quot;/&gt;
+					<%= bundle.getString("paragraph.info4") %>
 					<br />
 					<br />
-					To force a victim to send a POST request, it requires a little more effort. The easiest way is to create a
-					form that automatically submits using JavaScript, such as the following example;<br/>
-					&lt;form name=&quot;csrfForm&quot; action=&quot;<a>http://www.secureBank.ie/sendMoney</a>&quot; method=&quot;<a>POST</a>&quot;&gt;<br />
-					&lt;input type=&quot;hidden&quot; name=&quot;<a>giveMoneyTo</a>&quot; value=&quot;hacker&quot; /&gt;<br />
-					&lt;input type=&quot;hidden&quot; name=&quot;<a>giveAmount</a>&quot; value=&quot;1000&quot; /&gt;<br />
-					&lt;input type=&quot;submit&quot;/&gt;<br />
-					&lt;/form&gt;<br />
-					&lt;script&gt;<br />
-					document.csrfForm.submit();<br />
-					&lt;/script&gt;<br />
+					<%= bundle.getString("paragraph.info5") %>
 					<br />
-					<input type="button" value="Hide CSRF Introduction" id="hideLesson"/>
+					<br />
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
-				<input type="button" value="Show CSRF Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br />
 				<br />
-				The function used by an administrator to mark this lesson as complete for a user is initiated by the following
-				GET request to this server, where 'exampleId' is a valid userId;
+				<%= bundle.getString("paragraph.info6") %>
 				<br/>
 				<br/>
 				GET <a href="<%= encoder.encodeForHTML("../root/grantComplete/csrfLesson?userId=exampleId") %>">/root/grantComplete/csrfLesson?userId=exampleId </a>
 				<br />
-				To complete this lesson, send the administrator a message with a image URL, that will show in an
-				embedded <a>&lt;img&gt;</a> tag that will force them to submit the request described above,
-				replacing the exampleId attribute with your temp userId: <a><%= falseId %></a>
+				<%= bundle.getString("paragraph.info7") %>: <a><%= falseId %></a>
 				<br />
 				<br />
 				<br />
-				<h2 class="title">Contact Admin</h2>
+				<h2 class="title"><%= bundle.getString("challenge.title") %></h2>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>URL of the image</a> that you want to send to one of Security Shepherds 24
-						hour administrators.
+						<%= bundle.getString("challenge.description") %>
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="messageForAdmin" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Send Message"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("button.sendMessage") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("generic.loading") %>...</p>
 					</td></tr>
 					</table>
 				</form>
@@ -173,7 +139,7 @@ String translatedLevelName = bundle.getString("title.question.csrf");
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("generic.error") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){
