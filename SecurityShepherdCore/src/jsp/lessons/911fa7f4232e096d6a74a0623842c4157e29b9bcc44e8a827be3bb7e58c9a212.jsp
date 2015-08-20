@@ -31,9 +31,6 @@
 	 *
 	 * @author Sean Duggan
 	 */
-	 
-	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-	String levelBlurb = "";
 
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 	if (request.getSession() != null)
@@ -68,48 +65,40 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<p>
 		<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
-			<br/>
-			
-			Cryptography is difficult to get right, as a result many Apps use cryptography poorly and become vulnerable to attack. An App can transfer encryption keys insecurely, use a known broken or deprecated cryptographic algorithm or developers can create their own Crypto algorithms.			
-			<br/>
-			
-			Poor key management can be due to hard coded keys, keys stored in directories, transferring the key in an insecure way or using the same key all the time. If the developers of an App make use a of custom, unproven, untested encryption algorithm then it is highly likely that the encrypted data is vulnerable.
-			Finally
-			<br/>
-			
-			
-			<br/>
-			
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<br/>
+					<%= bundle.getString("paragraph.info1") %>			
+					<br/>
+					<br/>
+					<%= bundle.getString("paragraph.info2") %>
+					<br/>
+					<br/>
+					
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
-			
-			
-			 <br/> The developers of this App are holding a competition, whoever can crack their secure chat wins. Unfortunately, the developers have misunderstood the definition of Cryptography. Reduce the intercepted messages exchanged to plain text to reveal the key. <br />
+				<br/> 
+				<%= bundle.getString("challenge.description") %>
 				<br/>
-			  <%= Analytics.getMobileLevelBlurb("BrokenCrypto.apk") %>
-
-				<script>
-				
+				<br/>
+				<%= Analytics.getMobileLevelBlurb("BrokenCrypto.apk") %>
+			</p>
+			<script>
 				$('#hideLesson').click(function(){
-				$("#lessonIntro").hide("slow", function(){
-					$("#showLesson").show("fast");
+					$("#lessonIntro").hide("slow", function(){
+						$("#showLesson").show("fast");
+					});
 				});
-			});
 			
-			$("#showLesson").click(function(){
-				$('#showLesson').hide("fast", function(){
-					$("#lessonIntro").show("slow");
+				$("#showLesson").click(function(){
+					$('#showLesson').hide("fast", function(){
+						$("#lessonIntro").show("slow");
+					});
 				});
-			});
-		</script>
-			
-		</p>
+			</script>
 	</div>
 	<% if (Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
