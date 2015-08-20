@@ -1,7 +1,14 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 String levelName = "Failure To Restrict URL Access Lesson Target";
 String levelResult = "f60d1337ac4d35cb67880a3adda79";
+String levelHash = "oed23498d53ad1d965a589e257d8366d74eb52ef955e103c813b592dba0477e3";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.failure_to_restrict_url_access." + levelHash, locale);
+
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
@@ -83,7 +90,7 @@ if (request.getSession() != null)
 <br/>
 <br/>
 <br/>
-<p>Result Key: <strong><%= Hash.generateUserSolution(levelResult, request.getCookies()) %></strong></p>
+<p><%= bundle.getString("challenge.resultKey") %>: <strong><%= Hash.generateUserSolution(levelResult, request.getCookies()) %></strong></p>
 </body></html>
 <%
 	}

@@ -65,23 +65,23 @@ String translatedLevelName = bundle.getString("title.question.fail_restrict_url_
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p>
 				<div id="lessonIntro">
-					An application that <a>fails to restrict URL access</a> is an application that is not protecting its "protected" pages sufficiently. This occurs when an application hides functionality from basic users. In an application that fails to restrict URL access, administration links are only put onto the page if the user is an administrator. If users discover a page's address, they can still access it via URL access.
+					<%= bundle.getString("paragraph.info1") %>
 					<br/>
 					<br/>
-					Preventing unauthorized URL access requires selecting an approach for requiring proper authentication and proper authorization for each page. The easier the authentication is to include in a page the more likely that all pages will be covered by the policy.
+					<%= bundle.getString("paragraph.info2") %>
 					<br/>
 					<br/>
-					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<input type="button" value="<%= bundle.getString("button.hideLesson") %>" id="hideLesson"/>
 				</div>
 
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showLesson") %>" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
-				The result key to this lesson is stored in a <a>web page</a> only administrators know about.
+				<%= bundle.getString("challenge.description") %>
 				<div id="hiddenDiv" style="display: none;">
-					<!-- This is only displayed for Administrators -->
+					<!-- <%= bundle.getString("challenge.adminComment") %> -->
 					<a href="adminOnly/resultKey.jsp">
-						Administrator Result Page
+						<%= bundle.getString("challenge.adminLink") %>
 					</a>
 				</div>
 			</p>
