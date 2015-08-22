@@ -43,7 +43,7 @@ public class SessionProvider extends ContentProvider {
 
 
     static final String id = "id";
-    static final String key = "key";
+    static final String sessionValue= "sessionValue";
     static final int uriCode = 1;
 
     private static HashMap<String, String> values;

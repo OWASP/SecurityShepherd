@@ -88,11 +88,11 @@ public class MainActivity extends ActionBarActivity {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
             String address = SP.getString("server_preference", "NA");
 
-            String res = CustomHttpClient.executeHttpPost(address , postParameters);
+            String res = CustomHttpClient.executeHttpPost("http://" + address + "/mobileLogin", postParameters);
 
             JSONObject jObject = new JSONObject(res);
 
-            String response = (String) jObject.getString("JSESSIONID");
+            String response = jObject.getString("JSESSIONID");
 
             System.out.println("SessionId: " + response);
 
@@ -122,7 +122,7 @@ public class MainActivity extends ActionBarActivity {
 
                 //store the session in content provider
                 ContentValues values = new ContentValues();
-                values.put(SessionProvider.key, response);
+                values.put(SessionProvider.sessionValue, response);
 
                 // Provides access to other applications Content Providers
                 Uri uri = getContentResolver().insert(SessionProvider.CONTENT_URL, values);
