@@ -60,12 +60,14 @@ if (request.getSession() != null)
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<title>OWASP Security Shepherd</title>
 
-		<!-- You are currently looking at the core server. 
-			Nothing related to the levels in Security Shepherd will be found in here. 
-			You might be looking for the iframe embeded in the page.
-			Try a tool like Firebug to make this stuff easier.
+		<!-- 
+			<fmt:message key="generic.text.commentMessage.1" /> 
+			<fmt:message key="generic.text.commentMessage.2" /> 
+			<fmt:message key="generic.text.commentMessage.3" /> 
+			<fmt:message key="generic.text.commentMessage.4" />
 			
-			Security Shepherd Version: 2.4 -->
+			<fmt:message key="generic.text.shepherdVersion" />
+		-->
 
 		<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 		<link href="css/theResponsiveCss.css" rel="stylesheet" type="text/css" media="screen">
@@ -94,8 +96,8 @@ if (request.getSession() != null)
 				<input type="hidden" id="currentModule" value="">
 					<table class="resultTable">
 					<tr>
-						<td> <input type="text" id="moduleResult" class="resultbox" placeholder="Submit Result Key Here..." autocomplete="OFF"/></td><td><div id="submitForm"><input type="submit" value="Submit"/></div>
-						<div id="submitLoading" style="display: none;">Loading... </div>
+						<td> <input type="text" id="moduleResult" class="resultbox" placeholder="<fmt:message key="generic.text.submitResult" />..." autocomplete="OFF"/></td><td><div id="submitForm"><input type="submit" value="<fmt:message key="generic.text.submit" />"/></div>
+						<div id="submitLoading" style="display: none;"><fmt:message key="generic.text.loading" /> </div>
 					</td></tr>
 					</table>
 					<div id="resultResponse"></div>
@@ -104,10 +106,10 @@ if (request.getSession() != null)
 					<div id="solutionDiv" style="display:none;"></div>
 				<% } %>
 			</div>
-			<!-- You are currently looking at the core server. 
-			Nothing related to the levels in Security Shepherd will be found in here. 
-			You might be looking for the iframe embeded in the page.
-			Try a tool like Firebug to make this stuff easier. -->
+			<!-- <fmt:message key="generic.text.commentMessage.1" /> 
+			<fmt:message key="generic.text.commentMessage.2" /> 
+			<fmt:message key="generic.text.commentMessage.3" /> 
+			<fmt:message key="generic.text.commentMessage.4" /> -->
 			<div id="contentDiv">
 				<!-- Ajax Div -->
 			</div>
@@ -205,7 +207,7 @@ if (request.getSession() != null)
 							} //End of Module List Output %>
 						</div>
 						<div>
-							<input id="searchModules" class="moduleSearchBox" type="search" placeholder="Search Modules...">
+							<input id="searchModules" class="moduleSearchBox" type="search" placeholder="<fmt:message key="generic.text.searchModules" />...">
 						</div> 
 						<script>
 							//Make list for module search box
@@ -244,10 +246,10 @@ if (request.getSession() != null)
 							});
 						</script>
 					</ul>
-					<!-- You are currently looking at the core server. 
-					Nothing related to the levels in Security Shepherd will be found in here. 
-					You might be looking for the iframe embeded in the page.
-					Try a tool like Firebug to make this stuff easier. -->
+					<!-- <fmt:message key="generic.text.commentMessage.1" /> 
+					<fmt:message key="generic.text.commentMessage.2" /> 
+					<fmt:message key="generic.text.commentMessage.3" /> 
+					<fmt:message key="generic.text.commentMessage.4" /> -->
 				</div> <!-- End of Sidebar -->
 			</div> <!-- End of Sidebar Wrapper -->
 		</div>
@@ -265,7 +267,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/givePoints.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -279,7 +281,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/suspendUser.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -293,7 +295,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/unSuspendUser.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -307,7 +309,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/changeUserPassword.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -321,7 +323,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/createNewAdmin.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -335,7 +337,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/createNewClass.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -349,7 +351,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/addPlayers.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -363,7 +365,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/assignPlayers.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -377,7 +379,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/setDefaultClassForRegistration.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -391,7 +393,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/upgradePlayers.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -405,7 +407,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/cheatManagement/enableCheats.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -419,7 +421,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/cheatManagement/disableCheats.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -433,7 +435,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/cheatManagement/createCheat.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -447,7 +449,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/moduleManagement/feedback.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -461,7 +463,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/moduleManagement/setStatus.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -475,7 +477,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/moduleManagement/openCloseByCategory.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -489,7 +491,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/config/updateRegistration.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -503,7 +505,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/moduleManagement/classProgress.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -517,7 +519,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/config/scoreboard.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -531,7 +533,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/moduleManagement/moduleBlock.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -545,7 +547,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/config/setCoreDatabase.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -559,7 +561,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/config/configFeedback.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -573,7 +575,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/config/aboutShepherd.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -587,7 +589,7 @@ if (request.getSession() != null)
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/config/changeLevelLayout.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
-							var msg = "Sorry but there was an error: ";
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 						  }
 						  $("#contentDiv").show("fast");
@@ -652,7 +654,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$('#contentDiv').html("<p> Sorry but there was a challenge error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 						$("#contentDiv").slideDown("slow");
 					}
 				});
@@ -707,7 +709,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$('#contentDiv').html("<p> Sorry but there was a lesson error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 						$("#contentDiv").slideDown("slow");
 					}
 				});
@@ -743,7 +745,7 @@ if (request.getSession() != null)
 						}
 						else
 						{
-							$('#resultResponse').html("<br/><p> Sorry but there was a result form error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
+							$('#resultResponse').html("<br/><p> <fmt:message key="generic.text.sorryError" />: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
 							$("#resultResponse").show("slow");
 						}
 						$("#moduleResult").val("");
@@ -777,7 +779,7 @@ if (request.getSession() != null)
 				}
 				else
 				{
-					$('#solutionDiv').html("<p> Sorry but there was a show solution error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+					$('#solutionDiv').html("<p> <fmt:message key="generic.text.sorryError" />: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 				}
 				$("#solutionDiv").show("fast");
 			});
@@ -858,19 +860,19 @@ if (request.getSession() != null)
 		<% } %>
 		</script>
 		<script>
-		(function($){
-	        $(window).load(function(){
-	            $(".levelList").mCustomScrollbar({
-	            	theme:"dark-thin",
-	            	mouseWheel:{ scrollAmount: 120 }
-	            });
-	        });
-	    })(jQuery);
+			(function($){
+		        $(window).load(function(){
+		            $(".levelList").mCustomScrollbar({
+		            	theme:"dark-thin",
+		            	mouseWheel:{ scrollAmount: 120 }
+		            });
+		        });
+		    })(jQuery);
 		</script>
-		<!-- You are currently looking at the core server. 
-		Nothing related to the levels in Security Shepherd will be found in here. 
-		You might be looking for the iframe embeded in the page.
-		Try a tool like Firebug to make this stuff easier. -->
+		<!-- <fmt:message key="generic.text.commentMessage.1" /> 
+		<fmt:message key="generic.text.commentMessage.2" /> 
+		<fmt:message key="generic.text.commentMessage.3" /> 
+		<fmt:message key="generic.text.commentMessage.4" /> -->
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		</body>
 		</html>

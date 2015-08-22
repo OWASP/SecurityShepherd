@@ -74,44 +74,34 @@
 		<h2 class="title"><%= translatedLevelName %></h2>
 		<p>
 			<div id="lessonIntro">
-				One of the biggest dangers to Mobile Applications is reverse
-				engineering. This is easily done and can reveal source code, API
-				keys, Encryption Keys, Hidden Admin Functionality or hard coded passwords. A developer may obfuscate their code in order to make it more difficult for an attacker to read. In some cases obfuscation is the only defence. 
-				
-				<br/>
-				<a>ProGuard</a> is a tool which now comes with the Android SDK and can be used to optimize,
-				shrink and <a>obfuscate code</a>. Obfuscation makes the code harder to
-				read for anyone who reverse engineers the APK. Although ProGuard is
-				an excellent tool, it will not secure your code. 
-				
-				ProGuard should generally be used all the time due to the other benefits it offers, but it will only slow down an attacker from gathering information and cannot prevent attackers from finding sensitive information.
-				
-				<br/>
-				Other obfuscation techniques involve not only making the code harder to read but also making the code more confusing. Instead of a hard coded string comparison, an App could use a function to check to validity of a password.<br/>
-				<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+				<%= bundle.getString("paragraph.info.1") %>
+				<br/><br>
+				<%= bundle.getString("paragraph.info.2") %>
+				<br><br/>
+				<%= bundle.getString("paragraph.info.3") %>
+				<br><br>
+				<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 			</div>
-			<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+			<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 			<br/>
 			<br/> 
-			There are two tools you will need to reverse engineer an APK. <a>Dex2Jar</a> and <a>JD-GUI</a>. Once you have
-			these tools and the target APK, use dex2jar to convert the APK to a	jar file then open the .jar file with JD-GUI. Carry this out against the app for this lesson and investigate the source code to retrieve the result key. <br />
-				
-				<br/>
-				<%= Analytics.getMobileLevelBlurb("ReverseEngineer.apk") %>
-				<script>
-				
+			<%= bundle.getString("challenge.description") %>
+			<br/>
+			<br/>
+			<%= Analytics.getMobileLevelBlurb("ReverseEngineer.apk") %>
+			<script>
 				$('#hideLesson').click(function(){
-				$("#lessonIntro").hide("slow", function(){
-					$("#showLesson").show("fast");
+					$("#lessonIntro").hide("slow", function(){
+						$("#showLesson").show("fast");
+					});
 				});
-			});
-			
-			$("#showLesson").click(function(){
-				$('#showLesson').hide("fast", function(){
-					$("#lessonIntro").show("slow");
+				
+				$("#showLesson").click(function(){
+					$('#showLesson').hide("fast", function(){
+						$("#lessonIntro").show("slow");
+					});
 				});
-			});
-		</script>
+			</script>
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		</p>
 	</div>

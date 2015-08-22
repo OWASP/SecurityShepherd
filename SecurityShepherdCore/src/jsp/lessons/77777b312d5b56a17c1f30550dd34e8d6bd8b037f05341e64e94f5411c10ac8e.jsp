@@ -32,9 +32,6 @@ String translatedLevelName = bundle.getString("title.question.m_poor_authenticat
  * @author Sean Duggan
  */
 
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "";
-
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
@@ -59,7 +56,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%=levelName%></title>
+<title>Security Shepherd - <%= translatedLevelName %></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
 	media="screen" />
 
@@ -76,39 +73,31 @@ if (request.getSession() != null)
 			<h2 class="title"><%= translatedLevelName  %></h2>
 			<p> 
 				<div id="lessonIntro">
-Poor Authentication is an isse which occurs when an App relies on an authentication method which is insecure. This can come in many different forms. One such example is password reset functions, which although convenient, can compromise the authentication process. In this app, we don't need to know the password as a rest function is available to us. Secondly, the App is leaking logs of what the user has typed during previous uses of the App. This information will provide you with the data you need to reset the password and get the key. 
-Authentication is validating that a user is who they say they are. Authorization is validating that a user has access to a given resource. (such as an Admin priveledge.) 
-
-			<%=levelBlurb%>
-			<br />  </br> 
-			 </br> 
-			 
-
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<%= bundle.getString("paragraph.info") %> 
+					<br/>
+					</br> 
+					</br> 
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
-			
-			
-		
-			<br>
-			<br/>
-			<%= Analytics.getMobileLevelBlurb("PoorAuthentication.apk") %>
-			
+				<br>
+				<br/>
+				<%= Analytics.getMobileLevelBlurb("PoorAuthentication.apk") %>
+			</p>
 			<script>
-				
 				$('#hideLesson').click(function(){
-				$("#lessonIntro").hide("slow", function(){
-					$("#showLesson").show("fast");
+					$("#lessonIntro").hide("slow", function(){
+						$("#showLesson").show("fast");
+					});
 				});
-			});
-			
-			$("#showLesson").click(function(){
-				$('#showLesson').hide("fast", function(){
-					$("#lessonIntro").show("slow");
+				
+				$("#showLesson").click(function(){
+					$('#showLesson').hide("fast", function(){
+						$("#lessonIntro").show("slow");
+					});
 				});
-			});
-		</script>
+			</script>
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		</p>
 	</div>
