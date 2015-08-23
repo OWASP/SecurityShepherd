@@ -32,10 +32,6 @@
 	 * @author Sean Duggan
 	 */
 
-
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "";
-
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
@@ -75,68 +71,52 @@ if (request.getSession() != null)
 			<p> 
 				<div id="lessonIntro">
 
-			<br /> Unintended data leakage occurs when an App inadvertently
-			places sensitive information or data in a location on the mobile
-			device that is accessible by attackers or other Apps on the
-			device. </br> Unintended Data Leakage comes in many forms, including:
-			 </br> 
-			 
-			 <ul>
-			 
-			 <li>URL Caching (Both request and response) </li> 
-			  
-			 <li>Keyboard Press Caching </li>
-			
-			 <li>Copy/Paste buffer Caching </li>
-			 
-			 <li>Application backgrounding </li>
-			  
-			 <li>Logging </bli>
-			  
-			 <li>HTML5 data storage </li> 
-			   
-			 <li>Browser cookie objects </li>
-			 
-			 <li>Analytic data sent to third parties </li>
-			
-			</ul>
-			
-			<br>
-			Collecting logs can be done with the <a>Android Debug Bridge</a> Once you know the IP of a mobile device, you can perform the command <a>adb connect</a> followed with <a></a> to see the any Logs the App is generating.
-			<br>
-			
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<br /> 
+					<%= bundle.getString("paragraph.info.1") %>
+					</br> 
+					<%= bundle.getString("paragraph.list.header") %>:
+					</br> 
+					<ul>
+					 <li><%= bundle.getString("paragraph.list.1") %> </li> 
+					 <li><%= bundle.getString("paragraph.list.2") %> </li>
+					 <li><%= bundle.getString("paragraph.list.3") %> </li>
+					 <li><%= bundle.getString("paragraph.list.4") %> </li>
+					 <li><%= bundle.getString("paragraph.list.5") %> </li>
+					 <li><%= bundle.getString("paragraph.list.6") %> </li> 
+					 <li><%= bundle.getString("paragraph.list.7") %> </li>
+					 <li><%= bundle.getString("paragraph.list.8") %> </li>
+					</ul>
+					
+					<br>
+					<%= bundle.getString("paragraph.info.1") %>
+					<br>
+					
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
+				<%= bundle.getString("challenge.description") %>
+				<br>
+				<br/>
+				<%= Analytics.getMobileLevelBlurb("UDataLeakage.apk") %>
 			
-			
-			Apps won't always use a SQLite database to store data. In
-			some cases logs yield useful information about the App and it's
-			users. Use this information to find the result key. In this lesson, the App <a>caches logs</a> on the device. The App itself acts as a notice board or to do list. Everything a user adds to the <a>ListView</a> in the App is logged. <br />
-			
-			<br>
-			<br/>
-			<%= Analytics.getMobileLevelBlurb("UDataLeakage.apk") %>
-			
-			<script>
-				
-				$('#hideLesson').click(function(){
-				$("#lessonIntro").hide("slow", function(){
-					$("#showLesson").show("fast");
-				});
-			});
-			
-			$("#showLesson").click(function(){
-				$('#showLesson').hide("fast", function(){
-					$("#lessonIntro").show("slow");
-				});
-			});
-		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-		</p>
-	</div>
-</body>
+				<script>	
+					$('#hideLesson').click(function(){
+						$("#lessonIntro").hide("slow", function(){
+							$("#showLesson").show("fast");
+						});
+					});
+					
+					$("#showLesson").click(function(){
+						$('#showLesson').hide("fast", function(){
+							$("#lessonIntro").show("slow");
+						});
+					});
+				</script>
+				<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+			</p>
+		</div>
+	</body>
 </html>
 <%
 	}
