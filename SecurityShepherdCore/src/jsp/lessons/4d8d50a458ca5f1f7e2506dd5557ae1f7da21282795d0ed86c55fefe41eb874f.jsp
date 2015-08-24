@@ -65,25 +65,25 @@ String translatedLevelName = bundle.getString("title.question.poor_data_validati
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
-					Poor Data Validation occurs when an application does not validate submitted data correctly or sufficiently. Poor Data Validation application issues are generally low severity, they are more likely to be coupled with other security risks to increase their impact. If all data submitted to an application is validated correctly, security risks are significantly more difficult to exploit. 
+					<%= bundle.getString("paragraph.info.1") %>
 					<br />
 					<br />
-					Attackers can take advantage of poor data validation to perform business logic attacks or cause server errors.
+					<%= bundle.getString("paragraph.info.2") %>
 					<br />
 					<br />
-					When data is submitted to a web application, it should ensure that the data is strongly typed, has correct syntax, is within length boundaries, contains only permitted characters and within range boundaries. The data validation process should ideally be performed on the client side and again on the server side.  
+					<%= bundle.getString("paragraph.info.3") %>
 					<br/>
 					<br/>
-					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
 				
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
-				To get the result key to this lesson, you must bypass the validation in the following function and submit a negative number.
+				<%= bundle.getString("challenge.description")%>
 				<div id="hint" style="display: none;">
-					<h2 class="title">Lesson Hint</h2>
-					The lesson only validates the number on the client side. Try use your proxy to change the data after it has left the browser.
+					<h2 class="title"><%= bundle.getString("challenge.hintHeader") %></h2>
+					<%= bundle.getString("challenge.hint") %>
 					<br />
 					<br />
 				</div>
@@ -93,14 +93,14 @@ String translatedLevelName = bundle.getString("title.question.poor_data_validati
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Enter a number: 
+						<%= bundle.getString("challenge.enterNumber") %>: 
 						</td><td>
 						<input type="text" id="numberBox" autocomplete="off"/>
 						</td>
 					<tr><td colspan="2">
-						<div id="submitButton"><input type="submit" value="Submit Number"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("button.submitNumber") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("button.loading") %>...</p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("button.hint") %>?" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -118,12 +118,12 @@ String translatedLevelName = bundle.getString("title.question.poor_data_validati
 				if(number.length == 0)
 				{
 					console.log("No Number Submitted");
-					theError = "A number must be submitted";		
+					theError = "<%= bundle.getString("error.noNumber") %>";		
 				}
 				else if (number < 0)
 				{
 					console.log("Invalid Number Submitted");
-					theError = "Invalid Number: Number must be greater than 0";
+					theError = "<%= bundle.getString("error.badNumber") %>";
 				}
 				else
 				{
@@ -161,7 +161,7 @@ String translatedLevelName = bundle.getString("title.question.poor_data_validati
 				}
 				if (theError.length > 0)
 				{
-					$("#badData").html("<p> An Error Occurred: " + theError + "</p>");
+					$("#badData").html("<p> <%= bundle.getString("error.occured") %>:" + theError + "</p>");
 					$("#badData").show("slow");
 				}
 			});
