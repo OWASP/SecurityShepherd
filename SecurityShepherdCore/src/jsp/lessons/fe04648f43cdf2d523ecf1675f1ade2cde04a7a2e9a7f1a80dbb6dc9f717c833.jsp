@@ -67,25 +67,25 @@ String translatedLevelName = bundle.getString("title.question.security_misconfig
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
-					Security misconfiguration can happen in any part of an application, from the database server, third-party libraries to custom code settings. A security misconfiguration is any configuration which can be exploited by an attacker to perform any action they should not be able to. The impact of these issues vary from which configuration is being exploited. 
+					<%= bundle.getString("paragraph.info.1") %>
 					<br/>
 					<br/>
-					Attackers can exploit security misconfiguration by logging in with <a>default log in credentials</a> to the application, the operating system or any of the public services it is running (Such as Database or Samba services)  to gain unauthorized access to or knowledge of the system. Attackers can also exploit bad security configurations through unpatched flaws, unprotected files and directories to gain unauthorized access to or knowledge of the system.
+					<%= bundle.getString("paragraph.info.2") %>
 					<br/>
 					<br/>
-					Developers and system administrators need to work together to ensure that the entire stack is configured properly. Automated scanners are useful for detecting missing patches, misconfigurations, use of default accounts or unnecessary services. A process should be implemented for <a>keeping all software up to date</a>, with patches occurring in a timely manner to each deployed environment.
+					<%= bundle.getString("paragraph.info.3") %>
 					<br/>
 					<br/>
-					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
 				
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
-				To get the result key to this lesson, you must sign in with the default admin credentials which were never removed or updated.
+				<%= bundle.getString("challenge.description") %>
 				<div id="hint" style="display: none;">
-					<h2 class="title">Lesson Hint</h2>
-					The user name is admin. Try a seiries of generic passwords.
+					<h2 class="title"><%= bundle.getString("challenge.hintHeader") %></h2>
+					<%= bundle.getString("challenge.hint") %>
 					<br />
 					<br />
 				</div>
@@ -95,19 +95,19 @@ String translatedLevelName = bundle.getString("title.question.security_misconfig
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						User Name 
+						<%= bundle.getString("challenge.userName") %> 
 						</td><td>
 						<input type="text" id="userName" autocomplete="off"/>
 						</td>
 					<tr><td>
-						Password 
+						<%= bundle.getString("challenge.password") %>  
 						</td><td>
 						<input type="password" id="userPass" autocomplete="off"/>
 						</td>
 					<tr><td colspan="2">
-						<div id="submitButton"><input type="submit" value="Sign In"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.signIn") %> "/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.loading") %>...</p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("button.hint") %>" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -142,7 +142,7 @@ String translatedLevelName = bundle.getString("title.question.security_misconfig
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){
@@ -157,7 +157,7 @@ String translatedLevelName = bundle.getString("title.question.security_misconfig
 				}
 				if (theError.length > 0)
 				{
-					$("#badData").html("<p> An Error Occurred: " + theError + "</p>");
+					$("#badData").html("<p> <%= bundle.getString("error.occurred") %>: " + theError + "</p>");
 					$("#badData").show("slow");
 				}
 			});
