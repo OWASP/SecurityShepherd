@@ -86,7 +86,15 @@
 	}
 	
 	.resultTable {
-		width: 120%
+		width: 100%
+	}
+	
+	.resultBoxCell{
+		width: 85%
+	}
+	
+	.submitResultCell{
+		width: 15%
 	}
 	
 	.resultbox{

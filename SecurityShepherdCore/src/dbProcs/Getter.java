@@ -295,10 +295,12 @@ public class Getter
 	 * @param ApplicationRoot The current running context of the application
 	 * @return HTML menu for challenges	
 	 */
-	public static String getChallenges (String ApplicationRoot, String userId)
+	public static String getChallenges (String ApplicationRoot, String userId, Locale lang)
 	{
 		log.debug("*** Getter.getChallenges ***");
 		String output = new String();
+		//Getting Translated Level Names
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
 		//Encoder to prevent XSS
 		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
@@ -319,9 +321,9 @@ public class Getter
 					challengeCategory = challenges.getString(2);
 					//log.debug("New Category Detected: " + challengeCategory);
 					if(rowNumber > 0) //output prepared for Every row after row 1
-						output += "</ul></li><li><a href='javascript:;' class='challengeHeader' >" + encoder.encodeForHTML(challengeCategory)+ "</a><ul class='challengeList' style='display: none;'>";
+						output += "</ul></li><li><a href='javascript:;' class='challengeHeader' >" + encoder.encodeForHTML(bundle.getString("category." + challengeCategory))+ "</a><ul class='challengeList' style='display: none;'>";
 					else //output prepared for First row in entire challenge
-						output += "<li><a href='javascript:;' class='challengeHeader'>" + encoder.encodeForHTML(challengeCategory)+ "</a><ul class='challengeList' style='display: none;'>";
+						output += "<li><a href='javascript:;' class='challengeHeader'>" + encoder.encodeForHTML(bundle.getString("category." + challengeCategory))+ "</a><ul class='challengeList' style='display: none;'>";
 					//log.debug("Compiling Challenge Category - " + challengeCategory);
 				}
 				output += "<li>"; //Starts next LI element
@@ -337,7 +339,7 @@ public class Getter
 				output +="<a class='lesson' id='" 
 					+ encoder.encodeForHTMLAttribute(challenges.getString(3))
 					+ "' href='javascript:;'>" 
-					+ encoder.encodeForHTML(challenges.getString(1)) 
+					+ encoder.encodeForHTML(bundle.getString(challenges.getString(1))) 
 					+ "</a>";
 				output += "</li>";
 				rowNumber++;
@@ -650,6 +652,7 @@ public class Getter
 		Locale.setDefault(new Locale("en"));
 		Locale locale = new Locale(lang);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
+		ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
 		
 		try
 		{
@@ -663,7 +666,7 @@ public class Getter
 			
 			
 			//Preparing first Category header; "Completed"
-			output = "<li><a id='completedList' href='javascript:;'><div class='menuButton'>Completed</div></a>\n" +
+			output = "<li><a id='completedList' href='javascript:;'><div class='menuButton'>" + bundle.getString("getter.button.completed") + "</div></a>\n" +
 				"<ul id='theCompletedList' style='display: none;' class='levelList'>";
 			
 			while(modules.next() && !lastRow)
@@ -676,7 +679,7 @@ public class Getter
 					output += "<a class='lesson' id='" 
 						+ encoder.encodeForHTMLAttribute(modules.getString(3))
 						+ "' href='javascript:;'>" 
-						+ encoder.encodeForHTML(modules.getString(1)) 
+						+ encoder.encodeForHTML(levelNames.getString(modules.getString(1))) 
 						+ "</a>";
 					output += "</li>";
 				}
@@ -706,12 +709,12 @@ public class Getter
 			
 			if(!lastRow) //If true, then the user has completed all challenges
 			{
-				output += "<h2 id='uncompletedList'><a href='javascript:;'>You've Finished!</a></h2>\n" +
+				output += "<h2 id='uncompletedList'><a href='javascript:;'>" + bundle.getString("getter.button.finished") + "</a></h2>\n" +
 				"</li>";
 			}
 			if(output.isEmpty()) //If this method has gone so far without any output, create a error message
 			{
-				output = "<li><a href='javascript:;'>No Modules Fonud found</a></li>";
+				output = "<li><a href='javascript:;'>" + bundle.getString("getter.button.noModulesFound") + "</a></li>";
 			}
 			else //final tags to ensure valid HTML
 			{
@@ -761,7 +764,7 @@ public class Getter
 		"		}" +
 		"		else" +
 		"		{" +
-		"			$('#contentDiv').html(\"<p> Sorry but there was an error: \" + ajaxCall.status + \" \" + ajaxCall.statusText + \"</p>\");" +
+		"			$('#contentDiv').html(\"<p> " + bundle.getString("generic.text.sorryError") + ": \" + ajaxCall.status + \" \" + ajaxCall.statusText + \"</p>\");" +
 		"			$(\"#contentDiv\").slideDown(\"slow\");" +
 		"		}" +
 		"	});" +
@@ -943,9 +946,11 @@ public class Getter
 	 * @param userId Identifier of the user
 	 * @return HTML lesson menu.
 	 */
-	public static String getLessons (String ApplicationRoot, String userId)
+	public static String getLessons (String ApplicationRoot, String userId, Locale lang)
 	{
 		log.debug("*** Getter.getLesson ***");
+		//Getting Translated Level Names
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
 		String output = new String();
 		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
@@ -974,7 +979,7 @@ public class Getter
 				output += "<a class='lesson' id='" 
 					+ encoder.encodeForHTMLAttribute(lessons.getString(3))
 					+ "' href='javascript:;'>" 
-					+ encoder.encodeForHTML(lessons.getString(1)) 
+					+ encoder.encodeForHTML(bundle.getString(lessons.getString(1))) 
 					+ "</a>";
 				output += "</li>";
 			}
@@ -1579,14 +1584,18 @@ public class Getter
 	 * @param csrfToken The cross site request forgery token
 	 * @return A HTML menu of a users current module progress and a script for interaction with this menu
 	 */
-	public static String getTournamentModules (String ApplicationRoot, String userId)
+	public static String getTournamentModules (String ApplicationRoot, String userId, Locale lang)
 	{
 		log.debug("*** Getter.getTournamentModules ***");
 		String levelMasterList = new String();
 		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		//Getting Translations
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", lang);
+		ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
 		try
 		{
+			
 			String listEntry = new String();
 			//Get the modules
 			CallableStatement callstmt = conn.prepareCall("call moduleTournamentOpenInfo(?)");
@@ -1613,7 +1622,7 @@ public class Getter
 				listEntry += "<a class='lesson' id='" 
 					+ encoder.encodeForHTMLAttribute(levels.getString(3))
 					+ "' href='javascript:;'>" 
-					+ encoder.encodeForHTML(levels.getString(1)) 
+					+ encoder.encodeForHTML(levelNames.getString(levels.getString(1))) 
 					+ "</a>\n";
 				listEntry += "</li>";
 				//What section does this belong in? Current or Next?
@@ -1633,37 +1642,37 @@ public class Getter
 					{
 						case 1: //fieldTraining
 							//log.debug("Starting Field Training List");
-							levelMasterList += "<a id=\"fieldTrainingList\" href=\"javascript:;\"><div class=\"menuButton\">Field Training</div></a>"
+							levelMasterList += "<a id=\"fieldTrainingList\" href=\"javascript:;\"><div class=\"menuButton\">" + bundle.getString("getter.tournamentRank.1") + "</div></a>"
 								+ "<ul id=\"theFieldTrainingList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 2: //private
 							//log.debug("Starting Private List");
-							levelMasterList += "<a id=\"privateList\" href=\"javascript:;\"><div class=\"menuButton\">Private</div></a>"
+							levelMasterList += "<a id=\"privateList\" href=\"javascript:;\"><div class=\"menuButton\">" + bundle.getString("getter.tournamentRank.2") + "</div></a>"
 								+ "<ul id=\"thePrivateList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 3: //corporal
 							//log.debug("Starting Corporal List");
-							levelMasterList += "<a id=\"corporalList\" href=\"javascript:;\"><div class=\"menuButton\">Corporal</div></a>"
+							levelMasterList += "<a id=\"corporalList\" href=\"javascript:;\"><div class=\"menuButton\">" + bundle.getString("getter.tournamentRank.3") + "</div></a>"
 								+ "<ul id=\"theCorporalList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 4: //sergeant
 							//log.debug("Starting Sergeant List");
-							levelMasterList += "<a id=\"sergeantList\" href=\"javascript:;\"><div class=\"menuButton\">Sergeant</div></a>"
+							levelMasterList += "<a id=\"sergeantList\" href=\"javascript:;\"><div class=\"menuButton\">" + bundle.getString("getter.tournamentRank.4") + "</div></a>"
 								+ "<ul id=\"theSergeantList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 5: //Lieutenant
 							//log.debug("Starting Lieutenant List");
-							levelMasterList += "<a id=\"lieutenantList\" href=\"javascript:;\"><div class=\"menuButton\">Lieutenant</div></a>"
+							levelMasterList += "<a id=\"lieutenantList\" href=\"javascript:;\"><div class=\"menuButton\">" + bundle.getString("getter.tournamentRank.5") + "</div></a>"
 								+ "<ul id=\"theLieutenantList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 6: //major
 							//log.debug("Starting Major List");
-							levelMasterList += "<a id=\"majorList\" href=\"javascript:;\"><div class=\"menuButton\">Major</div></a>"
+							levelMasterList += "<a id=\"majorList\" href=\"javascript:;\"><div class=\"menuButton\">" + bundle.getString("getter.tournamentRank.6") + "</div></a>"
 								+ "<ul id=\"theMajorList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 						case 7: //admiral
 							//log.debug("Starting Admiral List");
-							levelMasterList += "<a id=\"admiralList\" href=\"javascript:;\"><div class=\"menuButton\">Admiral</div></a>"
+							levelMasterList += "<a id=\"admiralList\" href=\"javascript:;\"><div class=\"menuButton\">" + bundle.getString("getter.tournamentRank.7") + "</div></a>"
 								+ "<ul id=\"theAdmiralList\" style=\"display: none;\" class='levelList'>\n";
 							break;
 					}
@@ -1675,7 +1684,7 @@ public class Getter
 			//If no output has been found, return an error message
 			if(levelMasterList.isEmpty())
 			{
-				levelMasterList = "<ul><li><a href='javascript:;'>No modules found</a></li></ul>";
+				levelMasterList = "<ul><li><a href='javascript:;'>" + bundle.getString("getter.button.noModulesFound") + "</a></li></ul>";
 			}
 			else
 			{

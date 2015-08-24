@@ -1,8 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page import="java.util.Locale"%>
 <%@ include file="translation.jsp" %>
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: index.jsp *************************");
-
+	Locale lang = new Locale(Validate.validateLanguage(request.getSession()));
 /**
  * This file is part of the Security Shepherd Project.
  * 
@@ -96,7 +97,7 @@ if (request.getSession() != null)
 				<input type="hidden" id="currentModule" value="">
 					<table class="resultTable">
 					<tr>
-						<td> <input type="text" id="moduleResult" class="resultbox" placeholder="<fmt:message key="generic.text.submitResult" />..." autocomplete="OFF"/></td><td><div id="submitForm"><input type="submit" value="<fmt:message key="generic.text.submit" />"/></div>
+						<td class="resultBoxCell"> <input type="text" id="moduleResult" class="resultbox" placeholder="<fmt:message key="generic.text.submitResult" />..." autocomplete="OFF"/></td><td class="submitResultCell"><div id="submitForm"><input type="submit" value="<fmt:message key="generic.text.submit" />"/></div>
 						<div id="submitLoading" style="display: none;"><fmt:message key="generic.text.loading" /> </div>
 					</td></tr>
 					</table>
@@ -185,13 +186,13 @@ if (request.getSession() != null)
 								<li>
 									<a id="lessonList" href="javascript:;"><div class="menuButton"><fmt:message key="generic.text.lessons" /></div></a>
 									<ul id="theLessonList" style="display: none;">
-										<%= Getter.getLessons(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+										<%= Getter.getLessons(ApplicationRoot, (String)ses.getAttribute("userStamp"), lang) %>
 									</ul>
 								</li>
 								<li>
 									<a id="challengeList" href="javascript:;"><div class="menuButton"><fmt:message key="generic.text.challenges" /></div></a>
 									<ul id="theChallengeList" style="display: none;">
-										<%= Getter.getChallenges(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+										<%= Getter.getChallenges(ApplicationRoot, (String)ses.getAttribute("userStamp"), lang) %>
 									</ul>
 								</li>
 							<% } else {
@@ -201,7 +202,7 @@ if (request.getSession() != null)
 									</div>
 								<% } else {%>
 								<li>
-									<%= Getter.getTournamentModules(ApplicationRoot, (String)ses.getAttribute("userStamp")) %>
+									<%= Getter.getTournamentModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), lang) %>
 								</li>
 								<% }
 							} //End of Module List Output %>
