@@ -2,6 +2,8 @@ package servlets.module.lesson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -58,6 +60,12 @@ public class CsrfLesson extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug(levelName + " Servlet Accessed");
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.csrfLesson", locale);
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		Encoder encoder = ESAPI.encoder();
@@ -82,9 +90,9 @@ public class CsrfLesson extends HttpServlet
 					
 					if(validLessonAttack)
 					{
-						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>The administrator received your message and submitted the GET request embedded in it's image<br />" +
-								"The result key for this lesson is <a>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "</h2>" +
+								bundle.getString("result.youDidIt") + "<br />" +
+								bundle.getString("result.theKeyIs") + " <a>" + 
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
 												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
@@ -94,9 +102,9 @@ public class CsrfLesson extends HttpServlet
 								"</a>";
 					}
 					log.debug("Adding searchTerm to Html: " + messageForAdmin);
-					htmlOutput += "<h2 class='title'>Message Sent</h2>" +
-						"<p><table><tr><td>Sent To: </td><td>administrator@SecurityShepherd.com</td></tr>" +
-						"<tr><td>Message: </td><td> " +
+					htmlOutput += "<h2 class='title'>" + bundle.getString("challenge.messageSent") + "</h2>" +
+						"<p><table><tr><td>" + bundle.getString("challenge.sentTo") + ": </td><td>administrator@SecurityShepherd.com</td></tr>" +
+						"<tr><td>" + bundle.getString("challenge.message") + ": </td><td> " +
 						"<img src=\"" + encoder.encodeForHTMLAttribute(messageForAdmin) + "\"/>" +
 						"</td></tr></table></p>";
 					log.debug("Outputting HTML");
@@ -106,7 +114,7 @@ public class CsrfLesson extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 		log.debug("End of " + levelName + " Servlet");
