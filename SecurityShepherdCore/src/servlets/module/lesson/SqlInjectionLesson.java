@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -59,6 +61,12 @@ extends HttpServlet
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.sqlInjection", locale);
+		
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -72,15 +80,15 @@ extends HttpServlet
 				log.debug("Servlet root = " + ApplicationRoot );
 				String[][] output = getSqlInjectionResult(ApplicationRoot, aUserName);
 				log.debug("output returned. [0][0] is " + output[0][0]);
-				String htmlOutput = "<h2 class='title'>Search Results</h2>";
+				String htmlOutput = "<h2 class='title'>" + bundle.getString("response.searchResults") + "</h2>";
 				if (output[0][0] == null)
 				{
-					htmlOutput += "<p>No rows returned from that query! Make sure your <a>escaping</a> the string and changing the <a>boolean result</a> of the <a>WHERE</a> to be always true";
+					htmlOutput += "<p>" + bundle.getString("response.noResults") + "</p>";
 				}
 				else if(output[0][0].equalsIgnoreCase("error"))
 				{
 					log.debug("Setting Error Message");
-					htmlOutput += "<p>An error was detected!</p>" +
+					htmlOutput += "<p>" + errors.getString("error.detected") + "</p>" +
 							"<p>" + output[0][1] + "</p>";
 				}
 				else
@@ -88,7 +96,7 @@ extends HttpServlet
 					log.debug("Adding table");
 					int i = 0;
 					log.debug("outputLength = " + output.length);
-					htmlOutput += "<table><tr><th>User Id</th><th>User Name</th><th>Comment</th></tr>";
+					htmlOutput += "<table><tr><th>" + bundle.getString("response.userId") + "</th><th>" + bundle.getString("response.userName") + "</th><th>" + bundle.getString("response.comment") + "</th></tr>";
 					do
 					{
 						log.debug("Adding User " + output[i][1]);
@@ -106,11 +114,12 @@ extends HttpServlet
 			else
 			{
 				log.error(levelName + " accessed with no session");
+				out.write(errors.getString("error.noSession"));
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}
