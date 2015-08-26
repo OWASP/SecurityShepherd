@@ -90,7 +90,7 @@ String translatedLevelName = bundle.getString("title.question.sql_injection");
 					<%= bundle.getString("lesson.hint.1") %>
 					<br />
 					<br />
-					<div><%= bundle.getString("lesson.hint.2") %></div>
+					<div>SELECT * FROM tb_users WHERE username ='<a id="userContent"></a>';</div>
 					<br />
 					<br />
 				</div>
