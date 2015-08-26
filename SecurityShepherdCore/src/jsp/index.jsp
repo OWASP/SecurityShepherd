@@ -209,6 +209,9 @@ if (request.getSession() != null)
 						</div>
 						<div>
 							<input id="searchModules" class="moduleSearchBox" type="search" placeholder="<fmt:message key="generic.text.searchModules" />...">
+						</div>
+						<div id="searchResults">
+							<!-- Results from module search go here -->
 						</div> 
 						<script>
 							//Make list for module search box
@@ -219,7 +222,8 @@ if (request.getSession() != null)
 							}); //Make array out of available modules listed
 							console.log(availableModules.length + " modules added to search list");
 							$("#searchModules").autocomplete({
-								source: availableModules
+								source: availableModules,
+								appendTo: "#searchResults"
 							});
 							
 							$("#searchModules").on("autocompleteselect", function( event, ui ) {
