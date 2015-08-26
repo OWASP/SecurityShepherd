@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -62,6 +64,12 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		Encoder encoder = ESAPI.encoder();
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.unvalidatedRedirect", locale);
+		
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -123,9 +131,9 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 					
 					if(validSolution && validAttack)
 					{
-						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>The administrator received your message, clicked the link, and submitted the GET request automatically through the invalidated redirect<br />" +
-								"The result key for this lesson is <a>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "</h2>" +
+								"<p>" + bundle.getString("result.youDidIt") + "<br />" +
+								bundle.getString("result.resultKey") + " <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
 												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
@@ -137,11 +145,11 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 					if(validUrl)
 					{
 						log.debug("Adding message to Html: " + messageForAdmin);
-						htmlOutput += "<h2 class='title'>Message Sent</h2>" +
-							"<p><table><tr><td>Sent To: </td><td>administrator@SecurityShepherd.com</td></tr>" +
-							"<tr><td>Message: </td><td><a href='" +
+						htmlOutput += "<h2 class='title'>" + bundle.getString("response.messageSent") + "</h2>" +
+							"<p><table><tr><td>" + bundle.getString("response.sentTo") + ": </td><td>administrator@SecurityShepherd.com</td></tr>" +
+							"<tr><td>" + bundle.getString("response.message") + ": </td><td><a href='" +
 							encoder.encodeForHTMLAttribute(messageForAdmin) +
-							"'>" + encoder.encodeForHTML("Link from " + userName) +
+							"'>" + encoder.encodeForHTML("" + bundle.getString("response.linkFrom") + " " + userName) +
 							"</a></td></tr></table></p>";
 					}
 					log.debug("Outputting HTML");
@@ -151,7 +159,7 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 		log.debug("End of " + levelName + " Servlet");

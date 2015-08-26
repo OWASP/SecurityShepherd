@@ -85,13 +85,13 @@ String levelHash = new String("f15f2766c971e16e68aa26043e6016a0a7f6879283c873d94
 				<%= bundle.getString("challenge.description") %>
 				<br />
 				<br />
-				<%= bundle.getString("challenge.description.function") %>
+				<%= bundle.getString("challenge.description.function") %> <a href="../user/redirect?to=exampleUrl">/user/redirect?to=exampleUrl</a>
 				<br />
 				<br />
-				<%= bundle.getString("challenge.description.request") %>
+				<%= bundle.getString("challenge.description.request") %> <a href="../root/grantComplete/unvalidatedredirectlesson?userid=exampleId">/root/grantComplete/unvalidatedredirectlesson?userid=exampleId</a> <%= bundle.getString("challenge.description.request.2") %>
 				<br />
 				<br />
-				<%= bundle.getString("challenge.description.id") %>
+				<%= bundle.getString("challenge.description.id") %> <a><%= tempId %></a>
 				<br />
 				<br />
 				<form id="leForm" action="javascript:;">
