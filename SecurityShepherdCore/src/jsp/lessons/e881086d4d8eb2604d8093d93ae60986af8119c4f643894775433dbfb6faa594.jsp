@@ -65,32 +65,32 @@ String translatedLevelName = bundle.getString("title.question.sql_injection");
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
-					Injection flaws, such as <a>SQL injection</a>, occur when hostile data is sent to an interpreter as part of a command or query. The hostile data can trick the interpreter into executing unintended commands or accessing unauthorized data. Injections attacks are of a high severity. Injection flaws can be exploited to remove a system's confidentiality by accessing any information held on the system. These security risks can then be extended to execute updates to existing data affecting the systems integrity and availability. These attacks are easily exploitable as they can be initiated by anyone who can interact with the system through any data they pass to the application.
+					<%= bundle.getString("paragraph.info.1") %>
 					<br />
 					<br />
-					The following form's parameters are concatenated to a string that will be passed to a SQL server. This means that the data can be interpreted as part of the code. 
+					<%= bundle.getString("paragraph.info.2") %>
 					<br />
 					<br />
-					The objective here is to modify the result of the query with <a>SQL Injection</a> so that all of the table's rows are returned. This means you want to change the <a>boolean</a> result of the query's <a>WHERE</a> clause to return true for every row in the table. The easiest way to ensure the <a>boolean</a> result is always true is to inject a <a>boolean 'OR'</a> operator followed by a true statement like <a>1 = 1</a>.
+					<%= bundle.getString("paragraph.info.3") %>
 					<br />
 					<br />
-					If the parameter is been interpreted as a string, you can escape the string with an apostrophe. That means that everything after the apostrophe will be interpreted as SQL code.
+					<%= bundle.getString("paragraph.info.4") %>
 					<br />
 					<br />
-					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
 				
-				Exploit the <a>SQL Injection</a> flaw in the following example to retrieve all of the rows in the table. The lesson's solution key will be found in one of these rows! The results will be posted beneath the search form.
+				<%= bundle.getString("challenge.description") %>
 				<br />
 				<br />
 				<div id="hint" style="display: none;">
-					<h2 class="title">Lesson Hint</h2>
-					This is the query that you are adding data to. See if you can input something that will cause the <a>WHERE</a> clause to return <a>true</a> for every row in the table. Remember, you can escape a string using an apostrophe.
+					<h2 class="title"><%= bundle.getString("hint.title") %></h2>
+					<%= bundle.getString("lesson.hint.1") %>
 					<br />
 					<br />
-					<div>SELECT * FROM tb_users WHERE username ='<a id="userContent"></a>';</div>
+					<div><%= bundle.getString("lesson.hint.2") %></div>
 					<br />
 					<br />
 				</div>
@@ -98,15 +98,15 @@ String translatedLevelName = bundle.getString("title.question.sql_injection");
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>user name</a> of the user that you want to look up
+						<%= bundle.getString("enter.user.name") %>
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="aUserName" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Get this user"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("get.user.button") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("word.info.loading") %></p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sign.hint") %>" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -137,7 +137,7 @@ String translatedLevelName = bundle.getString("title.question.sql_injection");
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("generic.error") %> " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){
