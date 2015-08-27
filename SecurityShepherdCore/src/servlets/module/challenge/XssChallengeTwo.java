@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -59,6 +61,12 @@ public class XssChallengeTwo extends HttpServlet
 		log.debug(levelHash + " Servlet Accessed");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.xss2", locale);
+		
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -75,13 +83,12 @@ public class XssChallengeTwo extends HttpServlet
 					searchTerm = XssFilter.levelTwo(searchTerm);
 					log.debug("After Filtering - " + searchTerm);
 					String htmlOutput = new String();
-					String applicationRoot = getServletContext().getRealPath("");
 					if(FindXSS.search(searchTerm))
 					{
 						Encoder encoder = ESAPI.encoder();
-						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>You successfully executed the JavaScript alert command!<br />" +
-								"The result key for this challenge is <a>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "</h2>" +
+								"<p>" + bundle.getString("result.youDidIt") + "<br />" +
+								bundle.getString("result.resultKey") + " <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(
 												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
@@ -92,18 +99,23 @@ public class XssChallengeTwo extends HttpServlet
 						log.debug(levelName + " completed");
 					}
 					log.debug("Adding searchTerm to Html: " + searchTerm);
-					htmlOutput += "<h2 class='title'>Search Results</h2>" +
-						"<p>Sorry but there were no results found that related to " +
+					htmlOutput += "<h2 class='title'>" + bundle.getString("response.searchResults") + "</h2>" +
+						"<p>" + bundle.getString("response.noResults") + " " +
 						searchTerm +
 						"</p>";
 					log.debug("Outputting HTML");
 					out.write(htmlOutput);
 				}
 			}
+			else
+			{
+				log.error(levelName + " servlet was accessed without a valid session");
+				out.write(errors.getString("error.noSession"));
+			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("errors.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}
