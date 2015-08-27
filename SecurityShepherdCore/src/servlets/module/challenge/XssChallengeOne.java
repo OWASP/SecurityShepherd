@@ -65,7 +65,7 @@ public class XssChallengeOne extends HttpServlet
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.xss1", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.xss.xss1", locale);
 		
 		try
 		{

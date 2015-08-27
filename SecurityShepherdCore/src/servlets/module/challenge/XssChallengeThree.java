@@ -64,7 +64,7 @@ public class XssChallengeThree extends HttpServlet
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.xss3", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.xss.xss3", locale);
 		
 		
 		try
