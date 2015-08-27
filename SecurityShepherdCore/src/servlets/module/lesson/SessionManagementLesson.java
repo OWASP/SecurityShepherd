@@ -2,6 +2,8 @@ package servlets.module.lesson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -54,6 +56,12 @@ public class SessionManagementLesson extends HttpServlet
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.sessionManagement", locale);
+		
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -84,9 +92,9 @@ public class SessionManagementLesson extends HttpServlet
 						// Get key and add it to the output
 						String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 						
-						htmlOutput = "<h2 class='title'>Lesson Complete</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("result.lessonComplete") + "</h2>" +
 								"<p>" +
-								"Congratulations, you have bypassed this lessons <strong><a>VERY WEAK</a></strong> session management. The result key for this lesson is " +
+								bundle.getString("result.youDidIt") + " " +
 								"<a>"+ userKey + "</a>" +
 								"</p>";
 					}
@@ -94,9 +102,9 @@ public class SessionManagementLesson extends HttpServlet
 				if(htmlOutput == null)
 				{
 					log.debug("Lesson Not Complete");
-					htmlOutput = "<h2 class='title'>Lesson Not Complete</h2>" +
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.lessonNotComplete") + "</h2>" +
 							"<p>" +
-							"You have not completed this lesson yet." +
+							bundle.getString("response.youDidntDoIt") +
 							"</p>";
 				}
 				log.debug("Outputting HTML");
@@ -105,11 +113,12 @@ public class SessionManagementLesson extends HttpServlet
 			else
 			{
 				log.error(levelName + " servlet accessed with no session");
+				out.write(errors.getString("error.noSession"));
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

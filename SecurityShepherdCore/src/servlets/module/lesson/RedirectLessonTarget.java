@@ -2,6 +2,8 @@ package servlets.module.lesson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,6 +49,12 @@ public class RedirectLessonTarget extends HttpServlet
 		log.debug("Redirect Lesson Target Lesson Target Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.unvalidatedRedirect", locale);
+		
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -55,18 +63,18 @@ public class RedirectLessonTarget extends HttpServlet
 				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug("Current User: " + ses.getAttribute("userName").toString());
 				log.debug("RedirectLessonTarget Lesson Target Hit By Admin");
-				out.write("<p>User Marked as completed Redirect Lesson</p>");
+				out.write("<p>" + bundle.getString("target.completed") + "</p>");
 			}
 			else
 			{
 				log.debug("RedirectLessonTarget Lesson Target Hit");
-				out.write("<p>You must be an administrator to perform this function</p>");
+				out.write("<p>" + bundle.getString("target.completed") + "</p>");
 			}
 		}
 		catch(Exception e)
 		{
 			log.error("RedirectLessonTarget Error: " + e.toString());
-			out.write("You shouldn't be here!");
+			out.write(errors.getString("error.shouldNotBeHere"));
 		}
 	}
 }
