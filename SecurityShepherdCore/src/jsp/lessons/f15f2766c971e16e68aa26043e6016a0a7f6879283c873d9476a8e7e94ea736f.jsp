@@ -67,55 +67,44 @@ String levelHash = new String("f15f2766c971e16e68aa26043e6016a0a7f6879283c873d94
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p>
 				<div id="lessonIntro">
-					Unvalidated redirects and forwards occur in applications that <a>redirect</a> or <a>forward</a>
-					their users to a <a>target</a> that is specified by an unvalidated parameter. An unvalidated parameter
-					that is used to redirect a user to a normally safe location can be used by an attacker to
-					trick victims into visiting phishing pages or even have malware installed on their machines.
+					<%= bundle.getString("paragraph.info.1") %>
 					<br />
 					<br />
-					This attack takes advantage of a user's trust in an application. A victim is more likely to click
-					on a link from a site that they trust than one they have never seen before.
+					<%= bundle.getString("paragraph.info.2") %>
 					<br />
 					<br />
-					These attacks can also be used to bypass access control schemes.
-					This is done when a page that a user would not normally have access to,
-					such as <a>administrator</a> pages, is included in a unvalidated redirect.
+					<%= bundle.getString("paragraph.info.3") %>
 					<br/>
 					<br/>
-					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
 
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
-				To mark this lesson as complete, you must exploit this <a>Cross Site Request Forgery</a> vulnerability using an <a>Unvalidated Redirect</a> security risk.
-				The CSRF protection that has been implemented in this function is insufficient and can be bypassed easily with
-				an unvalidated redirect vulnerability. To protect against CSRF attacks the application is checking that the request's <a>Referer</a> HTTP header
-				is from the same host name the application is running on. This is easily bypassed when the request originates
-				from inside the application. When an unvalidated redirect is used, the Referer header will be the URL of
-				the redirect page.
+				<%= bundle.getString("challenge.description") %>
 				<br />
 				<br />
-				The function vulnerable to unvalidated redirects is <a href="../user/redirect?to=exampleUrl">/user/redirect?to=exampleUrl</a>
+				<%= bundle.getString("challenge.description.function") %> <a href="../user/redirect?to=exampleUrl">/user/redirect?to=exampleUrl</a>
 				<br />
 				<br />
-				The request to mark this lesson as complete is <a href="../root/grantComplete/unvalidatedredirectlesson?userid=exampleId">/root/grantComplete/unvalidatedredirectlesson?userid=exampleId</a> where the exampleId is a users TempId. <a></a>
+				<%= bundle.getString("challenge.description.request") %> <a href="../root/grantComplete/unvalidatedredirectlesson?userid=exampleId">/root/grantComplete/unvalidatedredirectlesson?userid=exampleId</a> <%= bundle.getString("challenge.description.request.2") %>
 				<br />
 				<br />
-				Your temporary ID is <a><%= tempId %></a>
+				<%= bundle.getString("challenge.description.id") %> <a><%= tempId %></a>
 				<br />
 				<br />
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						The administrator promises to go to any URL you send him. So please use the following form to send him something of interest!
+					<%= bundle.getString("challenge.description.admin.message") %>
 					</td></tr>
 					<tr><td>
 						<input type="input" type="text" id="theURL" style="width: 600px;"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Send Message"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("send.message.button") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("word.info.loading")%></p>
 					</td></tr>
 					</table>
 				</form>
@@ -144,7 +133,7 @@ String levelHash = new String("f15f2766c971e16e68aa26043e6016a0a7f6879283c873d94
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("generic.error") %> " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

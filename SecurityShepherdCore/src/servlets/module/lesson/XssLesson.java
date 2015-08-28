@@ -2,6 +2,8 @@ package servlets.module.lesson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -59,6 +61,12 @@ extends HttpServlet
 		log.debug(levelName + " Servlet Accessed");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.xss", locale);
+		
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -76,19 +84,19 @@ extends HttpServlet
 					if(FindXSS.search(searchTerm))
 					{
 						String theHash = this.getClass().getSimpleName();
-						log.debug("Completed Module! Module Hash: " + theHash);
+						log.debug("XSS Lesson Completed!");
 						Encoder encoder = ESAPI.encoder();
-						htmlOutput = "<h2 class='title'>Well Done</h2>" +
-								"<p>You successfully executed the JavaScript alert command!<br />" +
-								"The result key for this lesson is <a>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "/h2>" +
+								"<p>" + bundle.getString("result.youDidIt") + "<br />" +
+								"" + bundle.getString("result.resultKey") + " <a>" +
 								encoder.encodeForHTML(
 										Hash.generateUserSolution(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash), (String)ses.getAttribute("userName"))
 								) +
 								"</a>";
 					}
 					log.debug("Adding searchTerm to Html: " + searchTerm);
-					htmlOutput += "<h2 class='title'>Search Results</h2>" +
-						"<p>Sorry but there were no results found that related to '" +
+					htmlOutput += "<h2 class='title'>" + bundle.getString("response.searchResults") + "</h2>" +
+						"<p>" + bundle.getString("response.noResults") + " '" +
 						searchTerm +
 						"'</p>";
 					log.debug("Outputting HTML");
@@ -98,11 +106,12 @@ extends HttpServlet
 			else
 			{
 				log.error(levelName + " accessed with no session");
+				out.write(errors.getString("error.noSession"));
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 		log.debug("End of " + levelName + " Servlet");

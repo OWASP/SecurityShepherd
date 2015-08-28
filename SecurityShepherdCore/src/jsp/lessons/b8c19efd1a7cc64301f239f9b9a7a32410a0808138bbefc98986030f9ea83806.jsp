@@ -67,33 +67,33 @@ if (request.getSession() != null)
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
 				<div id="lessonIntro">
-					Attacks against an application's <a>authentication</a> and <a>session management</a> can be performed using security risks that other vulnerabilities present. For example, any application's session management can be overcome when a <a>Cross Site Scripting</a> vulnerability is used to steal user session tokens. This topic is more about flaws that exist in the applications authentication and session management schema.
+					<%= bundle.getString("paragraph.info.1") %>
 					<br />
 					<br />
-					Broken authentication and session management flaws are commonly found in functionalities such as logout, password management, secret question and account update. An attack can potentially abuse these functions to modify other users credentials by guessing their secret question or through parameter abuse. Finding such flaws can sometimes be difficult, as each implementation is unique.
+					<%= bundle.getString("paragraph.info.2") %>
 					<br />
 					<br />
-					The following scenarios are vulnerable to these security risks;
-					<br /><a>1)</a> User credentials are <a>stored</a> with insufficient <a>cryptographic</a> levels.
-					<br /><a>2)</a> User credentials can be guessed or changed through poor <a>account management</a>.
-					<br /><a>3)</a> Session identifiers are exposed in the URL.
-					<br /><a>4)</a> The application does not use sufficient transport protection (Such as <a>HTTPs</a> or <a>sFTP</a>).
-					<br /><a>5)</a> Session parameters can be manually changed by the user through application functionality.
+					<%= bundle.getString("paragraph.info.3") %>
+					<br /><a><%= bundle.getString("paragraph.info.number.1") %></a> <%= bundle.getString("paragraph.info.1.1") %>
+					<br /><a><%= bundle.getString("paragraph.info.number.2") %></a> <%= bundle.getString("paragraph.info.2.2") %>
+					<br /><a><%= bundle.getString("paragraph.info.number.3") %></a> <%= bundle.getString("paragraph.info.3.3") %>
+					<br /><a><%= bundle.getString("paragraph.info.number.4") %></a> <%= bundle.getString("paragraph.info.4.4") %>
+					<br /><a><%= bundle.getString("paragraph.info.number.5") %></a> <%= bundle.getString("paragraph.info.5.5") %>
 					<br />
 					<br />
-					Broken authentication and session management flaws allow an attacker to potentially compromise every account across an application. Once the attack has been performed, the attacker has the ability to do anything the user could do. For this reason, privileged accounts, such as administrators, are targeted.
+					<%= bundle.getString("paragraph.info.5.5") %>
 					<br />
-					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
 				
-				This lesson implements bad session management. Investigate the following function to see if you trick the server into thinking you have already completed this lesson to retrieve the result key.
+				<%= bundle.getString("challenge.description") %>
 				<br />
 				<br />
 				<div id="hint" style="display: none;">
-					<h2 class="title">Lesson Hint</h2>
-					This lesson stores unencrypted session information in a user's <a>cookies</a>
+					<h2 class="title"><%= bundle.getString("hint.title") %></h2>
+					<%= bundle.getString("lesson.hint.1") %>
 					<br />
 					<br />
 				</div>
@@ -101,9 +101,9 @@ if (request.getSession() != null)
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Complete This Lesson"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("complete.button") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("word.info.loading") %></p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sign.hint") %>" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -129,7 +129,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("generic.error") %> " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					document.cookie="lessonComplete=lessonNotComplete";
 					$("#resultsDiv").show("slow", function(){

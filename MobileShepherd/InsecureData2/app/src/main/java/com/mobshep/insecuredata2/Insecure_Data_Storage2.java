@@ -8,9 +8,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -33,52 +36,39 @@ import android.widget.EditText;
 
 public class Insecure_Data_Storage2 extends Activity {
 
-	Button insert;
-	Button select;
-	Button login;
-	EditText password;
-	EditText username;
+	SQLiteDatabase passwordDB = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ids);
-
-		String destinationDir = "/data/data/" + getPackageName() + "/databases/";
-
-		String destinationPath = destinationDir + "PasswordDB";
-
-		File f = new File(destinationPath);
-
-		if (!f.exists()) {
-			File directory = new File(destinationDir);
-			directory.mkdirs();
-
-			try {
-				copyDatabase(getBaseContext().getAssets().open("PasswordDB"),
-						new FileOutputStream(destinationPath));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
+		createDatabase();
+        insertKey();
 
 	}
 
-	public void copyDatabase(InputStream iStream, OutputStream oStream)
-			throws IOException {
-		byte[] buffer = new byte[1024];
-		int i;
-		while ((i = iStream.read(buffer)) > 0) {
-			oStream.write(buffer, 0, i);
-		}
-		iStream.close();
-		oStream.close();
+	public void createDatabase() {
+		try {
+			passwordDB = this.openOrCreateDatabase("passwordDB", MODE_PRIVATE, null);
+			passwordDB.execSQL("CREATE TABLE IF NOT EXISTS passwordDB " +
+							"(id integer primary key, name VARCHAR, password VARCHAR);"
+			);
 
+			File database = getApplication().getDatabasePath("passwordDB.db");
+
+			if (!database.exists()) {
+				Toast.makeText(this, "Database Created", Toast.LENGTH_SHORT).show();
+			} else
+				Toast.makeText(this, "Database Missing", Toast.LENGTH_SHORT).show();
+
+		} catch (Exception e) {
+			Log.e("DB ERROR", "Error Creating Database");
+		}
 	}
 
+	public void insertKey(){
+		passwordDB.execSQL("INSERT INTO passwordDB (name, password) VALUES ('Admin','0e3a0c8c3a571a855c958813d9b851a1');");
+	}
 
 }

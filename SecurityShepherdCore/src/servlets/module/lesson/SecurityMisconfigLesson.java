@@ -2,6 +2,8 @@ package servlets.module.lesson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -52,12 +54,18 @@ public class SecurityMisconfigLesson extends HttpServlet
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		//Attempting to recover username of session that made request
 		HttpSession ses = request.getSession(true);
+		PrintWriter out = response.getWriter();
+		out.print(getServletInfo());
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.securityMisconfig", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-			PrintWriter out = response.getWriter();
-			out.print(getServletInfo());
 			try
 			{
 				String userName = request.getParameter("userName");
@@ -69,34 +77,35 @@ public class SecurityMisconfigLesson extends HttpServlet
 				if(!loggedIn)
 				{
 					if(userName.contentEquals("admin"))
-						htmlOutput = "Incorrect Passsword Submitted";
+						htmlOutput = bundle.getString("response.incorrectPassword");
 					else
 					{
 						Encoder encoder = ESAPI.encoder();
-						htmlOutput = "No user records found for \"" + encoder.encodeForHTML(userName) + "\"";
+						htmlOutput = bundle.getString("response.noUserFound") + " \"" + encoder.encodeForHTML(userName) + "\"";
 					}
-					htmlOutput = "<h2 class='title'>Authentication Error</h2><p>" + htmlOutput + "</p>";
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.authError") + "</h2><p>" + htmlOutput + "</p>";
 				}
 				else
 				{
 					// Default username and password were used
 					log.debug("User has signed in as admin");
-					htmlOutput = "<h2 class='title'>Authentication Successful</h2><p>"
-							+ "You have successfully signed in with the default sign in details for this applicaiton. You should always change default passwords and avoid default administration usernames.<br><br>"
-							+ "Result Key: <a>" + Hash.generateUserSolution(levelResult, ses.getAttribute("userName").toString()) + "</a>";
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.authSuccess") + "</h2><p>"
+							+ bundle.getString("result.youDidIt") + "<br><br>"
+							+ bundle.getString("result.key") + ": <a>" + Hash.generateUserSolution(levelResult, ses.getAttribute("userName").toString()) + "</a>";
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}
 		else
 		{
 			log.error(levelName + " servlet accessed with no session");
+			out.write(bundle.getString("error.noSession"));
 		}
 	}
 }

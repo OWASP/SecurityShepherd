@@ -20,7 +20,7 @@
 		border-top: 3px solid #A878EF;
 		border-right: 3px solid #A878EF;
 		position: absolute;
-		height: 400%;
+		height: 100%;
 		border-radius: 2px;
 		text-decoration: none;
 		vertical-align: top;
@@ -54,7 +54,7 @@
 		border-top: 3px solid #A878EF;
 		border-right: 3px solid #A878EF;
 		position: absolute;
-		height: 400%;
+		height: 100%;
 		border-radius: 2px;
 		text-decoration: none;
 		vertical-align: top;
@@ -86,7 +86,15 @@
 	}
 	
 	.resultTable {
-		width: 120%
+		width: 100%
+	}
+	
+	.resultBoxCell{
+		width: 85%
+	}
+	
+	.submitResultCell{
+		width: 15%
 	}
 	
 	.resultbox{

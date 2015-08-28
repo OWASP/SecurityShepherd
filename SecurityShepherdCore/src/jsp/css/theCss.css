@@ -147,6 +147,19 @@ a:hover {
 #sidebar a:hover {
 }
 
+#searchResults {
+	width: 100%;
+}
+
+#searchResults li { 
+	cursor: pointer; 
+	cursor: hand;
+	border-bottom: 1px solid #d4d4d4;
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 90%;
+}
+
 /* Footer */
 
 #footer {

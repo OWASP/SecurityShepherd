@@ -65,41 +65,41 @@ String translatedLevelName = bundle.getString("title.quesetion.insecure_direct_o
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p>
 				<div id="lessonIntro">
-					Imagine a web page that allows you to view your personal information. The web page that shows the user their information is generated based on a user ID. If this page was vulnerable to <a>insecure Direct Object References</a> an attacker would be able to modify the user identifier parameter to reference any user object in the system. Insecure Direct Object References occur when an application references an object by its actual ID or name. This object that is referenced directly is used to generate a web page. If the application does not verify that the user is allowed to reference this object, then the object is <a>insecurely referenced</a>.
+					<%= bundle.getString("paragraph.info1") %>
 					<br />
 					<br />
-					Attackers can use insecure object references to compromise any information that can be referenced by the parameter in question. In the above example, the attacker can access any user's personal information.
+					<%= bundle.getString("paragraph.info2") %>
 					<br />
 					<br />
-					The severity of insecure direct object references varies depending on the data that is compromised. If the compromised data is publicly available or not supposed to be restricted, it becomes a very low severity vulnerability. Consider a scenario where one company is able to retrieve their competitor's information. Suddenly, the business impact of the vulnerability is critical. These vulnerabilities still need to be fixed and should never be found in professional grade applications.
+					<%= bundle.getString("paragraph.info3") %>
 					<br/>
 					<br/>
-					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
 
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
 				<br/>
-				The result key to complete this lesson is stored in the administrators profile.
+				<%= bundle.getString("challenge.description") %>
 				<br />
 				<br />
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Refresh your Profile"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.refresh") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %>...</p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sign.hint") %>?" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
 
 				<div id="resultsDiv">
-				<h2 class='title'>User: Guest</h2>
+				<h2 class='title'><%= bundle.getString("challenge.userTitle") %>: <%= bundle.getString("challenge.guest") %></h2>
 				<table>
-					<tr><th>Age:</th><td>22</td></tr>
-					<tr><th>Address:</th><td>54 Kevin Street, Dublin</td></tr>
-					<tr><th>Email:</th><td>guestAccount@securityShepherd.com</td></tr>
-					<tr><th>Private Message:</th><td>No Private Message Set</td></tr>
+					<tr><th><%= bundle.getString("challenge.age") %>:</th><td>22</td></tr>
+					<tr><th><%= bundle.getString("challenge.address") %>:</th><td>54 Kevin Street, Dublin</td></tr>
+					<tr><th><%= bundle.getString("challenge.email") %>:</th><td>guestAccount@securityShepherd.com</td></tr>
+					<tr><th><%= bundle.getString("challenge.message") %>:</th><td><%= bundle.getString("challenge.noMessage") %></td></tr>
 				</table>
 				</div>
 			</p>
@@ -111,7 +111,7 @@ String translatedLevelName = bundle.getString("title.quesetion.insecure_direct_o
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100",
+						url: "<%= levelHash %>",
 						data: {
 							username: "guest"
 						},
@@ -123,7 +123,7 @@ String translatedLevelName = bundle.getString("title.quesetion.insecure_direct_o
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("generic.error") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

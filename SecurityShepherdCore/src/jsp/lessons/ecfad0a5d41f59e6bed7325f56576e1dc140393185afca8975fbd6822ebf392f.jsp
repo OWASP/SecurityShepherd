@@ -70,34 +70,25 @@
 		<h2 class="title"><%= translatedLevelName %></h2>
 		<p> 
 			<div id="lessonIntro">
-			Insecure Data Storage occurs when an App stores sensitive data
-			such as user credentials, API keys, Credit Card information
-			insecurely. This issue occurs in numerous ways. Generally, for
-			storing client side information, an App will use an <a>Sqlite database</a>.
+			<%= bundle.getString("paragraph.info.1") %>
 			<br>
 			<br/>
-			This can be a favoured, cheaper method of storage instead of using a more expensive back end service.
-			As a result, any user can access the data stored by the App. Insecure Data Storage becomes a
-			danger when a user's App caches sensitive data, their phone is stolen or the attacker steals this information from local databases. Malware can also access this information easily. This risk is increased by the popularity of <a>rooting devices</a> which makes it
-			much easier for an attacker to access this information.
+			<%= bundle.getString("paragraph.info.2") %>
 			<br>
 			<br/>
-			There are other ways to store data insecurely. Using known broken hashing algorithms can lead to pain for the Apps users. Not only are they
-			susceptible to <a>collisions</a>, where two different passwords can	potentially generate the same hash and be interpreted as the same
-			password, the developer would have to assume that their user's use strong passwords. This is generally never the case and once a hashed value
-			has been cracked, an attacker merely needs to update their tables.
+			<%= bundle.getString("paragraph.info.3") %>
 			<br>
 			<br/>
-			This method still uses no key, Therefore one could assume it is not	truly encryption? Hashing algorithms are useful for comparing two
-			different files but should not be used for storage of passwords (Unless done correctly). <br />
+			 <%= bundle.getString("paragraph.info.4") %>
+			<br />
 			<br>
 			<br/>
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+			<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 		</div>
-		<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+		<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 		<br/>
 		<br/>
-		Typically an Android app will store it's database in the <a>/data/data/com.app.exampleApp/database/</a> directory. Anyone with a rooted device can access this directory. The Android App for this lesson stores it's under credentials in an <a>SQLite database</a>. The Admin's password is the result key to this lesson. 
+		<%= bundle.getString("challenge.description") %>
 		
 		<br/>
 		<br/>

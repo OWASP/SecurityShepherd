@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 
 /**
@@ -22,8 +22,14 @@
  * 
  * @author Mark Denihan
  */
+ String levelHash = "t27357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888";
  String levelName = "XSS Challenge 2";
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+ //Translation Stuff
+ Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.xss." + levelHash, locale);
+ //Used more than once translations
+ String translatedLevelName = bundle.getString("challenge.challengeName");
  if (request.getSession() != null)
  {
  	HttpSession ses = request.getSession();
@@ -51,27 +57,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross Site Scripting Challenge Two</title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Cross Site Scripting Challenge Two</h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
-				Find a XSS vulnerability in the following form. It would appear that your input is been filtered!
+				<%= bundle.getString("challenge.description") %>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>Search Term</a> that you want to look up
+						<%= bundle.getString("challenge.form.instruction") %>
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="searchTerm" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Get this user"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.getUser") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %>...</p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sign.hint") %>" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -88,7 +94,7 @@
 					var ajaxCall = $.ajax({
 						dataType: "text",
 						type: "POST",
-						url: "t27357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888",
+						url: "<%= levelHash %>",
 						data: {
 							searchTerm: theSearchTerm,
 							csrfToken: "<%= csrfToken %>"
@@ -101,7 +107,7 @@
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

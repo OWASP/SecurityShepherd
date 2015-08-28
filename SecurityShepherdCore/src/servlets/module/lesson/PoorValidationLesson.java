@@ -2,6 +2,8 @@ package servlets.module.lesson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -51,6 +53,12 @@ public class PoorValidationLesson extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.poorValidation", locale);
+		
 		//Attempting to recover username of session that made request
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
@@ -70,19 +78,19 @@ public class PoorValidationLesson extends HttpServlet
 					// Get key and add it to the output
 					String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 					log.debug("Negative Number Submitted");
-					htmlOutput = "<h2 class='title'>Validation Bypassed</h2><p>You defeated the lesson validation. Result Key: <a>" + userKey + "</a></p>";
+					htmlOutput = "<h2 class='title'>" + bundle.getString("result.validationBypassed") + "</h2><p>" + bundle.getString("result.youDidIt") + ". " + bundle.getString("result.resultKey") + ": <a>" + userKey + "</a></p>";
 				}
 				else
 				{
 					log.debug("Valid Number Submitted");
-					htmlOutput = "<h2 class='title'>Valid Number Submitted</h2><p>The Number " + userNumber + " is a valid number.";
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.validNumber") + "</h2><p>" + bundle.getString("response.theNumber") + " " + userNumber + " " + bundle.getString("response.valid") + ".";
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}

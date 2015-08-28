@@ -80,9 +80,9 @@ if (request.getSession() != null)
 					<%= bundle.getString("example.xss.4") %><br />
 					<br />
 					<br />
-					<input type="button" value="Hide Lesson Introduction" id="hideLesson"/>
+					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
-				<input type="button" value="Show Lesson Introduction" id="showLesson"  style="display: none;"/>
+				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
 				<br/>
 				<%= bundle.getString("paragraph.whattodo.xss") %>
 				<br />
@@ -96,7 +96,7 @@ if (request.getSession() != null)
 						<input style="width: 400px;" id="searchTerm" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Get this user"/></div>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("button.getUser") %>"/></div>
 						<p style="display: none;" id="loadingSign"><%= bundle.getString("word.info.loading") %></p>
 						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sentence.question.wouldYouLikeHint") %>" id="theHintButton"/></div>
 					</td></tr>
@@ -127,7 +127,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){
@@ -156,11 +156,11 @@ if (request.getSession() != null)
 	}
 	else
 	{
-		response.sendRedirect("../ajaxLogin.jsp");
+		response.sendRedirect("../loggedOutSheep.html");
 	}
 }
 else
 {
-	response.sendRedirect("../ajaxLogin.jsp");
+	response.sendRedirect("../loggedOutSheep.html");
 }
 %>

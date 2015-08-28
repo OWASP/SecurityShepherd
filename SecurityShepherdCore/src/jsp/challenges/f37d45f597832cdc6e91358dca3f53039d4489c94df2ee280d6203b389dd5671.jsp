@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * Cross Site Scripting Challenge 5
@@ -25,6 +25,11 @@
  String levelName = new String("Cross Site Scripting Five");
  String levelHash = "f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671";
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+ //Translation Stuff
+ Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.xss." + levelHash, locale);
+ //Used more than once translations
+ String translatedLevelName = bundle.getString("challenge.challengeName");
  if (request.getSession() != null)
  {
  	HttpSession ses = request.getSession();
@@ -52,28 +57,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= encoder.encodeForHTML(levelName) %></title>
+	<title>Security Shepherd - <%= encoder.encodeForHTML(translatedLevelName) %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= encoder.encodeForHTML(levelName) %></h2>
+			<h2 class="title"><%= encoder.encodeForHTML(translatedLevelName) %></h2>
 			<p> 
-				Demonstrate a XSS vulnerability in the following form by executing a JavaScript alert command. 
-				The developers of this sub application wanted to demonstrate how HTTP links can be embedded in HTML. Have a look by putting in your own HTTP link. 
-				The Developers are white listing input so only HTTP URLs are allowed!
+				<%= bundle.getString("challenge.description") %>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>URL</a> that you wish to post to your public profile;
+						<%= bundle.getString("challenge.form.instruction") %>;
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="searchTerm" autocomplete="off" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Make Post"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.makePost") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %>...</p>
 					</td></tr>
 					</table>
 				</form>
@@ -103,7 +106,7 @@
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

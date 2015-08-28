@@ -2,6 +2,8 @@ package servlets.module.lesson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,6 +46,11 @@ public class CsrfLessonTarget extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Cross-Site Request Forgery Lesson Target Servlet");
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.csrfLesson", locale);
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -54,12 +61,12 @@ public class CsrfLessonTarget extends HttpServlet
 				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug("Current User: " + ses.getAttribute("userName").toString());
 				log.debug("CSRF Lesson Target Hit By Admin");
-				out.write("<p>User Marked as completed CSRF Lesson</p>");
+				out.write("<p>" + bundle.getString("target.success") + "</p>");
 			}
 			else
 			{
 				log.debug("CSRF Lesson Target Hit");
-				out.write("<p>You must be an administrator to perform this function</p>");
+				out.write("<p>" + bundle.getString("target.notAdmin") + "</p>");
 			}
 		}
 		catch(Exception e)

@@ -1,11 +1,16 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 	// Cross Site Scripting Challenge 4
 
 String levelName = new String("Cross Site Scripting Four");
 String levelHash = "06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751";
 
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.xss." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("challenge.challengeName");
 /**
  * This file is part of the Security Shepherd Project.
  * 
@@ -53,27 +58,26 @@ String levelHash = "06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= encoder.encodeForHTML(levelName) %></title>
+	<title>Security Shepherd - <%= encoder.encodeForHTML(translatedLevelName) %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= encoder.encodeForHTML(levelName) %></h2>
+			<h2 class="title"><%= encoder.encodeForHTML(translatedLevelName) %></h2>
 			<p> 
-				Demonstrate a XSS vulnerability in the following form by executing a JavaScript alert command.   
-				The developers had heard that escaping is a better way of fixing XSS issues but they were not totally clear on how to implement it.
+				<%= bundle.getString("challenge.description") %>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>URL</a> that you wish to post to your public profile;
+						<%= bundle.getString("challenge.form.instruction") %>
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="searchTerm" autocomplete="off" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Make Post"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.makePost") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %>...</p>
 					</td></tr>
 					</table>
 				</form>
@@ -103,7 +107,7 @@ String levelHash = "06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

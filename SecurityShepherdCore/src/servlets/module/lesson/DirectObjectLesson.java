@@ -2,6 +2,8 @@ package servlets.module.lesson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -53,14 +55,20 @@ public class DirectObjectLesson extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.directObject", locale);
+		
 		//Attempting to recover username of session that made request
 		HttpSession ses = request.getSession(true);
+		PrintWriter out = response.getWriter();
+		out.print(getServletInfo());
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-			PrintWriter out = response.getWriter();
-			out.print(getServletInfo());
 			try
 			{
 				String userName = request.getParameter("username");
@@ -71,42 +79,50 @@ public class DirectObjectLesson extends HttpServlet
 				if(userName.equalsIgnoreCase("guest"))
 				{
 					log.debug("Guest Profile Found");
-					htmlOutput = htmlGuest;
+					htmlOutput = htmlGuest(bundle);
 				}
 				else if(userName.equalsIgnoreCase("admin"))
 				{
 					// Get key and add it to the output
 					String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 					log.debug("Admin Profile Found");
-					htmlOutput = htmlAdmin + userKey + "<a></a></td></tr></table>";
+					htmlOutput = htmlAdmin(bundle, userKey);
 				}
 				else
 				{
 					log.debug("No Profile Found");
 					Encoder encoder = ESAPI.encoder();
-					htmlOutput = "<h2 class='title'>User: 404 - User Not Found</h2><p>User '" + encoder.encodeForHTML(userName) + "' could not be found or does not exist.</p>";
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.user") + ": " + bundle.getString("response.notFound") + "</h2><p>" + bundle.getString("response.user") + " '" + encoder.encodeForHTML(userName) + "' " + bundle.getString("response.couldNotFind") + ".</p>";
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal("Insecure Direct Object Lesson Lesson - " + e.toString());
 			}
 		}
 		else
 		{
+			out.write(errors.getString("error.noSession"));
 			log.error(levelName + " servlet accessed with no session");
 		}
 	}
-	private static String htmlGuest = "<h2 class='title'>User: Guest</h2><table><tr><th>Age:</th><td>22</td></tr>" +
-			"<tr><th>Address:</th><td>54 Kevin Street, Dublin</td></tr>" +
-			"<tr><th>Email:</th><td>guestAccount@securityShepherd.com</td></tr>" +
-			"<tr><th>Private Message:</th><td>No Private Message Set</td></tr></table>";
-	private static String htmlAdmin = "<h2 class='title'>User: Admin</h2><table><tr><th>Age:</th><td>43</td></tr>" +
-			"<tr><th>Address:</th><td>12 Bolton Street, Dublin</td></tr>" +
-			"<tr><th>Email:</th><td>administratorAccount@securityShepherd.com</td></tr>" +
-			"<tr><th>Private Message:</th>" +
-			"<td>Result Key: ";
+	private static String htmlGuest (ResourceBundle bundle) 
+	{
+		return "<h2 class='title'>" + bundle.getString("response.user") + ": Guest</h2><table><tr><th>" + bundle.getString("response.age") + ":</th><td>22</td></tr>" +
+			"<tr><th>" + bundle.getString("response.address") + ":</th><td>54 Kevin Street, Dublin</td></tr>" +
+			"<tr><th>" + bundle.getString("response.email") + ":</th><td>guestAccount@securityShepherd.com</td></tr>" +
+			"<tr><th>" + bundle.getString("response.message") + ":</th><td>" + bundle.getString("response.noMessage") + "</td></tr></table>";
+	}
+	
+	private static String htmlAdmin (ResourceBundle bundle, String key)
+	{
+		return "<h2 class='title'>" + bundle.getString("response.user") + ": Admin</h2><table><tr><th>" + bundle.getString("response.age") + ":</th><td>43</td></tr>" +
+			"<tr><th>" + bundle.getString("response.address") + ":</th><td>12 Bolton Street, Dublin</td></tr>" +
+			"<tr><th>" + bundle.getString("response.email") + ":</th><td>administratorAccount@securityShepherd.com</td></tr>" +
+			"<tr><th>" + bundle.getString("response.message") + ":</th>" +
+			"<td>" + bundle.getString("result.resultKey") + ": " + key + "<a></a></td></tr></table>";
+	}
 }

@@ -2,8 +2,8 @@ package servlets.module.lesson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+
 
 
 import utils.ShepherdLogManager;
@@ -50,6 +51,12 @@ public class Redirect extends HttpServlet
 		log.debug("Redirect Lesson Target Lesson Target Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.unvalidatedRedirect", locale);
+		
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -60,19 +67,19 @@ public class Redirect extends HttpServlet
 				try
 				{
 					String redirectString = request.getParameter("to");
-					out.write("Hardened Vulnerable Redirect example...");
+					out.write(bundle.getString("target.example") + "...");
 					//No actual redirecting
 				}
 				catch(Exception e)
 				{
 					log.error("Invalid URL submitted to Redirect Function: " + e.toString());
-					out.write("Hardened Vulnerable Redirect example...");
+					out.write(bundle.getString("target.example") + "...");
 				}
 			}
 			else
 			{
 				log.debug("RedirectLessonTarget Lesson Target Hit");
-				out.write("<p>You must be an logged in to perform this function</p>");
+				out.write("<p>" + errors.getString("error.noSession") + "</p>");
 			}
 		}
 		catch(Exception e)

@@ -71,13 +71,12 @@
 		<p>
 		<div id="lessonIntro">
 
-			<br /> 	A <a>Content Provider</a> is used by Android to provide access to a structured set of data within a central repository.
-					 Content Providers are intended to be accessed by other applications, however with the <a>Android Debug Bridge</a>, they can be accessed by anyone with access to a device.
-					 
+			<br /> 	
+			<%= bundle.getString("paragraph.info.1") %>
+			<br />	
 			<br />
-					
+			<%= bundle.getString("paragraph.info.2") %>:
 			<br />
-			In order to query a Content Provider without an App, perform the following adb commands:		<br />
 			<br />
 			
 			<ul>
@@ -87,12 +86,13 @@
 			</ul>
 			
 			<br />
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson" />
+			<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
 		</div>
 	
-		<input type="button" value="Show Lesson Introduction" id="showLesson" style="display: none;" />
+		<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson" style="display: none;" />
 		<br />
-		The Key can be attained by querying the Content Provider. The URI is : <a>content://com.somewhere.hidden.SecretProvider/data</a>		<br/>
+		<%= bundle.getString("challenge.description") %>
+		<br/>
 		<br>
 		<%= Analytics.getMobileLevelBlurb("CProviderLeakage.apk") %>
 		
