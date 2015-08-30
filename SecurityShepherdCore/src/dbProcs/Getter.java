@@ -1309,11 +1309,13 @@ public class Getter
 	 * @param moduleId The identifier of the module to return the cheat sheet for
 	 * @return Module cheat sheet
 	 */
-	public static String[] getModuleSolution (String ApplicationRoot, String moduleId)
+	public static String[] getModuleSolution (String ApplicationRoot, String moduleId, Locale lang)
 	{
 		log.debug("*** Getter.getModuleSolution ***");
 		String[] result = new String[2];
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		//Getting Translations
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.cheatsheets.solutions", lang);
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call cheatSheetGetSolution(?)");
@@ -1322,8 +1324,9 @@ public class Getter
 			ResultSet resultSet = callstmt.executeQuery();
 			log.debug("Opening Result Set from cheatSheetGetSolution");
 			resultSet.next();
-			result[0] = resultSet.getString(1);
-			result[1] = resultSet.getString(2);
+			result[0] = resultSet.getString(1);//TODO investigate translation
+			result[1] = bundle.getString(resultSet.getString(2));
+			
 		}
 		catch (SQLException e)
 		{

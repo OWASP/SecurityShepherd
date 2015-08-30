@@ -1,5 +1,11 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
+
 <%
+String levelName = "NoSQL Injection Challange One";
+String levelHash = "d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66";
+
+
 /**
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
@@ -20,12 +26,11 @@
  * @author Paul McCann
  */
 
-//No Quotes In level Name
-String levelName = "NoSQL Injection Challenge One";
-//Alphanumeric Only
-String levelHash = "d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66";
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "<p style='font-size:13px'>You need to exploit a NoSQL injection vulnerability to retrieve Marlo's GamerID</p>";
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.injection." + levelHash, locale);
+
+String i18nLevelName = bundle.getString("challenge.challengeName");
+String levelBlurb = bundle.getString("challenge.description");
 
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -51,16 +56,14 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
-			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
-				
+			<h2 class="title"><%= i18nLevelName %></h2>
+			<p> 				
 				<%= levelBlurb %>
 				<br/>
 
@@ -68,7 +71,7 @@ if (request.getSession() != null)
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Hey Jimmy, press the button to get your Gamer details
+						<%= bundle.getString("challenge.para2") %>
 					</td></tr>
 					<tr><td>
 					</td></tr>
@@ -80,7 +83,7 @@ if (request.getSession() != null)
 					<tr><td>			
 						<div id="submitButton">
 						<input type="submit" value="Get Gamer Info"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %></p>
 					</td></tr>
 					</table>
 				</form>
@@ -112,7 +115,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p>" <%= bundle.getString("error.occurred") %>  + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){
