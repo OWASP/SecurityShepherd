@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,6 +43,12 @@ public class SqlInjection5CouponCheck extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli5CouponCheck", locale);
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -70,11 +78,11 @@ public class SqlInjection5CouponCheck extends HttpServlet
 						htmlOutput = new String("Valid Coupon for ");
 						log.debug("Found coupon for %" + coupons.getInt(2));
 						log.debug("For Item Name " + coupons.getString(3));
-						htmlOutput += "%" + coupons.getInt(2) + " off " + encoder.encodeForHTML(coupons.getString(3)) + " items";
+						htmlOutput += "" + bundle.getString("response.percent")+ "" + coupons.getInt(2) + " " + bundle.getString("response.off")+ " " + encoder.encodeForHTML(coupons.getString(3)) + " " + bundle.getString("response.items")+ "";
 					}
 					else
 					{
-						htmlOutput = "No Coupon Found";
+						htmlOutput = "" + bundle.getString("response.noCoupon")+ "";
 					}
 				}
 				catch(Exception e)
@@ -87,7 +95,7 @@ public class SqlInjection5CouponCheck extends HttpServlet
 			catch(Exception e)
 			{
 				log.debug("Did complete Check: " + e.toString());
-				htmlOutput = "Error Occurred: " + encoder.encodeForHTML(e.toString());
+				htmlOutput = "" + bundle.getString("errors.occured")+ "" + encoder.encodeForHTML(e.toString());
 			}
 			try
 			{

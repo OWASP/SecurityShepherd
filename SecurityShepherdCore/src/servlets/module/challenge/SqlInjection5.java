@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -56,6 +58,11 @@ public class SqlInjection5 extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli5", locale);
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -137,18 +144,18 @@ public class SqlInjection5 extends HttpServlet
 				int finalCost = megustaCost + rageCost + notBadCost + trollCost;
 				
 				//Output Order
-				htmlOutput = "<h3>Order Complete</h3>"
-						+ "Your order has been made and has been sent to our magic shipping department that knows where you want this to be delivered via brain wave sniffing techniques.<br/><br/>"
-						+ "Your order comes to a total of <a><strong>$" + finalCost + "</strong></a>";
+				htmlOutput = "<h3>" + bundle.getString("response.orderComplete")+ "</h3>"
+						+ "" + bundle.getString("response.response.orderComplete.p1")+ "<br/><br/>"
+						+ "" + bundle.getString("response.response.orderComplete.p2")+ "<a><strong>$" + finalCost + "</strong></a>";
 				if (trollAmount > 0 && trollCost == 0)
 				{
-					htmlOutput += "<br><br>Trolls were free, Well Done - <a><b>" + encoder.encodeForHTML(levelSolution) + "</b></a>";
+					htmlOutput += "<br><br>" + bundle.getString("response.trollsFreeSolution")+ "<a><b>" + encoder.encodeForHTML(levelSolution) + "</b></a>";
 				}
 			}
 			catch(Exception e)
 			{
 				log.debug("Didn't complete order: " + e.toString());
-				htmlOutput += "<p> Order Failed - Please try again later</p>";
+				htmlOutput += "<p>" + bundle.getString("response.response.orderFailed")+ "</p>";
 			}
 			try
 			{

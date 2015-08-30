@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,6 +62,11 @@ public class SqlInjectionEmail extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqliEmail", locale);
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -85,8 +92,8 @@ public class SqlInjectionEmail extends HttpServlet
 					ResultSet resultSet = stmt.executeQuery("SELECT * FROM customers WHERE customerAddress = '" + userIdentity + "'");
 					
 					int i = 0;
-					htmlOutput = "<h2 class='title'>Search Results</h2>";
-					htmlOutput += "<table><tr><th>Name</th><th>Address</th><th>Comment</th></tr>";
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.searchResults")+ "</h2>";
+					htmlOutput += "<table><tr><th>"+ bundle.getString("response.table.name") +"</th><th>"+ bundle.getString("response.table.address") +"</th><th>"+ bundle.getString("response.table.comment") +"</th></tr>";
 					
 					log.debug("Opening Result Set from query");
 					while(resultSet.next())
@@ -102,23 +109,23 @@ public class SqlInjectionEmail extends HttpServlet
 					htmlOutput += "</table>";
 					if(i == 0)
 					{
-						htmlOutput = "<p>There were no results found in your search</p>";
+						htmlOutput = "<p>"+bundle.getString("response.noResults")+"</p>";
 					}
 				}
 				else
 				{
-					htmlOutput = new String("<h2 class='title'>Search Error</h2><p>Invalid Email Address was submitted");
+					htmlOutput = new String("<h2 class='title'>"+bundle.getString("response.searchError")+"</h2><p>"+bundle.getString("response.invalidEmail")+"");
 				}
 			}
 			catch (SQLException e)
 			{
 				log.debug("SQL Error caught - " + e.toString());
-				htmlOutput += "<p>An error was detected!</p>" +
+				htmlOutput += "<p>"+errors.getString("error.detected")+"</p>" +
 					"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 			log.debug("Outputting HTML");
