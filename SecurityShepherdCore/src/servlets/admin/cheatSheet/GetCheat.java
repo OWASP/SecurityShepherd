@@ -2,6 +2,7 @@ package servlets.admin.cheatSheet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -72,10 +73,11 @@ public class GetCheat extends HttpServlet
 				{
 					String ApplicationRoot = getServletContext().getRealPath("");
 					String moduleId = request.getParameter("moduleId");
+					Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 					log.debug(ses.getAttribute("userName") + " submitted the following moduleId: " + moduleId);
 					if(moduleId != null)
 					{
-						result = Getter.getModuleSolution(ApplicationRoot, moduleId);
+						result = Getter.getModuleSolution(ApplicationRoot, moduleId, locale);
 						if(result != null)
 						{
 							out.write(
