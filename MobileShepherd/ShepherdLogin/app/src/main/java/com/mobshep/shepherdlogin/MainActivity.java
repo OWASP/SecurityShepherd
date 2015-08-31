@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
             String address = SP.getString("server_preference", "NA");
 
-            String res = CustomHttpClient.executeHttpPost("http://" + address + "/mobileLogin", postParameters);
+            String res = CustomHttpClient.executeHttpPost(address + "/mobileLogin", postParameters);
 
             JSONObject jObject = new JSONObject(res);
 

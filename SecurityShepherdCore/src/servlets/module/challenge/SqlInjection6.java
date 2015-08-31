@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -57,6 +59,11 @@ public class SqlInjection6 extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli6", locale);
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -83,17 +90,17 @@ public class SqlInjection6 extends HttpServlet
 				{
 					if(users.next())
 					{
-						htmlOutput = "<h3>Welcome back " + encoder.encodeForHTML(users.getString(1)) + "</h3>"
-								+ "<p>You're authentication number is now " + encoder.encodeForHTML(Hash.randomString()) + "</p>";
+						htmlOutput = "<h3>" + bundle.getString("response.welcomeBack")+ "" + encoder.encodeForHTML(users.getString(1)) + "</h3>"
+								+ "<p>" + bundle.getString("response.authNumber")+ "" + encoder.encodeForHTML(Hash.randomString()) + "</p>";
 					}
 					else
 					{
-						htmlOutput = "<h3>Incorrect Password / User name</h3><p>Careful now!</p>";
+						htmlOutput = "<h3>" + bundle.getString("response.incorrectCreds")+ "</h3><p>" + bundle.getString("response.carefulNow")+ "</p>";
 					}
 				}
 				catch(Exception e)
 				{
-					htmlOutput = "<h3>Incorrect Password / User name</h3><p>Careful now!</p>";
+					htmlOutput = "<h3>" + bundle.getString("response.incorrectCreds")+ "</h3><p>" + bundle.getString("response.carefulNow")+ "</p>";
 					log.debug("Could Not Find User: " + e.toString());
 					try
 					{
@@ -109,7 +116,7 @@ public class SqlInjection6 extends HttpServlet
 			catch(Exception e)
 			{
 				log.debug("Could not Search for User: " + e.toString());
-				htmlOutput += "<p>Bad Request? Please be careful!</p>";
+				htmlOutput += "<p>" + bundle.getString("response.badRequest")+ "</p>";
 				try
 				{
 					Thread.sleep(1000);
