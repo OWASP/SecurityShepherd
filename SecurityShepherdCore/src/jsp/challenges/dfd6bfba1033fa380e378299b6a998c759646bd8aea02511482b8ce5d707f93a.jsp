@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * Broken Authentication and Session Management Challenge One
@@ -20,9 +21,16 @@
  *
  * @author Mark Denihan
  */
-
-String levelName = "Session Management Challenge One ";
- ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+String levelHash = "dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a";
+String levelName = "Session Management Challenge One";
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+	
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sessionManagement." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("challenge.challengeName");
+	
  if (request.getSession() != null)
  {
  	HttpSession ses = request.getSession();
@@ -45,21 +53,21 @@ String levelName = "Session Management Challenge One ";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Session Management Challenge One</title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Broken Authentication and Session Management Challenge One</h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
-				Only administrators of the following sub-application can retrieve the result key.
+				<%= bundle.getString("challenge.description") %>
 				<br />
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Administrator Only Button"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.adminButton") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 					</td></tr>
 					</table>
 				</form>
@@ -77,7 +85,7 @@ String levelName = "Session Management Challenge One ";
 					document.cookie="checksum=dXNlclJvbGU9dXNlcg==";
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a",
+						url: "<%= levelHash %>",
 						data: {
 							adminDetected: "false",
 							returnPassword: "false",
@@ -91,7 +99,7 @@ String levelName = "Session Management Challenge One ";
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){
