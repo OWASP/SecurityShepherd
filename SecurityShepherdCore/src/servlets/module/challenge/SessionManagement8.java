@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -58,6 +60,12 @@ public class SessionManagement8 extends HttpServlet
 		String redherringThr = new String("adminDetected");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement8", locale);
+		
 		try
 		{
 			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
@@ -78,7 +86,7 @@ public class SessionManagement8 extends HttpServlet
 						break; //End Loop, because we found the token
 					}
 				}
-				String htmlOutput = null;
+				String htmlOutput = new String();
 				if(theCookie != null)
 				{
 					log.debug("Cookie value: " + theCookie.getValue());
@@ -88,16 +96,16 @@ public class SessionManagement8 extends HttpServlet
 						log.debug("Super User Cookie detected");
 						// Get key and add it to the output
 						String userKey = Hash.generateUserSolution(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash), (String)ses.getAttribute("userName"));
-						htmlOutput = "<h2 class='title'>Super User Only Club</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("response.superUserClub") + "</h2>" +
 								"<p>" +
-								"Welcome super user! Your result key is as follows " +
+								bundle.getString("response.welcomeSuperUser") + " " +
 								"<a>" + userKey + "</a>" +
 								"</p>";
 					}
 					else if (!theCookie.getValue().equals("LmH6nmbC"))
 					{
 						log.debug("Tampered role cookie detected: " + theCookie.getValue());
-						htmlOutput += "<!-- Invalid Role Detected -->";
+						htmlOutput += "<!-- " + bundle.getString("response.invalidRole") + " -->";
 					}
 					else
 					{
@@ -125,16 +133,16 @@ public class SessionManagement8 extends HttpServlet
 					}
 					if(!hackDetected)
 					{
-						htmlOutput = "<h2 class='title'>You're not a privileged User!!!</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("response.notPrivileged") + "</h2>" +
 								"<p>" +
-								"Stay away from the privileged only section. The super aggressive dogs have been released." +
+								bundle.getString("response.notPrivileged.message") +
 								"</p>";
 					}
 					else
 					{
-						htmlOutput = "<h2 class='title'>HACK DETECTED</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("response.hackDetected") + "</h2>" +
 								"<p>" +
-								"A possible attack has been detected. Functionality Stopped before any damage was done" +
+								bundle.getString("response.hackDetected.message") + 
 								"</p>";
 					}
 				}
@@ -148,7 +156,7 @@ public class SessionManagement8 extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

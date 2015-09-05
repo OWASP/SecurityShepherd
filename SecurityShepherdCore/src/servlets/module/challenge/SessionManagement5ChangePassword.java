@@ -5,14 +5,13 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,6 +65,12 @@ public class SessionManagement5ChangePassword extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement5", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -103,7 +108,7 @@ public class SessionManagement5ChangePassword extends HttpServlet
 				catch (UnsupportedEncodingException e)
 				{
 					log.debug("Could not decode password token");
-					errorMessage += "<p>Could not Decode Token</p>";
+					errorMessage += "<p>" + bundle.getString("changePass.noDecode") + "</p>";
 				}
 				if(tokenTime.isEmpty())
 				{
@@ -127,7 +132,7 @@ public class SessionManagement5ChangePassword extends HttpServlet
 					catch (ParseException e) 
 					{
 						log.error("Date Parsing Error: " + e.toString());
-						errorMessage += "Could not parse/manipulate date or time from token: " + e.toString();
+						errorMessage += bundle.getString("changePass.badTokenData") + ": " + e.toString();
 					}
 					
 					if(tokenLife < 10 && tokenLife >= 0)
@@ -156,12 +161,12 @@ public class SessionManagement5ChangePassword extends HttpServlet
 							callstmt.execute();
 							log.debug("Changes committed.");
 							
-							htmlOutput = "<p>Password change request success.</p>";
+							htmlOutput = "<p>" + bundle.getString("changePass.success") + "</p>";
 						}
 						else
 						{
 							log.debug("Invalid password submitted: " + newPass);
-							htmlOutput = "<p>Change Password Failed. Must be at least 12 characters.</p>";
+							htmlOutput = "<p>" + bundle.getString("changePass.failure") + "</p>";
 						}
 					}
 					else
@@ -173,17 +178,17 @@ public class SessionManagement5ChangePassword extends HttpServlet
 						else if(tokenLife >= 10)
 						{
 							log.debug("Token too old");
-							htmlOutput = "<p>Token is too old or none was submitted. Please get another one</p>";
+							htmlOutput = "<p>" + bundle.getString("changePass.oldToken") + "</p>";
 						}
 						else if (tokenLife < 0)
 						{
 							log.debug("Token to young");
-							htmlOutput = "<p>Invalid Token Recieved. Too Young.</p>";
+							htmlOutput = "<p>" + bundle.getString("changePass.youngToken") + "</p>";
 						}
 						else
 						{
 							log.error("Token to Strange: Unexpected Error");
-							htmlOutput = "<p>Invalid Token Recieved. Too Funky.</p>";
+							htmlOutput = "<p>" + bundle.getString("changePass.funkyToken") + "</p>";
 						}
 					}
 				}
@@ -192,7 +197,7 @@ public class SessionManagement5ChangePassword extends HttpServlet
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - Change Password - " + e.toString());
 			}
 		}

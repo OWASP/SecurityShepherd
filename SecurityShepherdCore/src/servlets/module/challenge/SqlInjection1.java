@@ -20,7 +20,6 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
-import utils.SqlFilter;
 import utils.Validate;
 import dbProcs.Database;
 

@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -62,6 +64,12 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement6", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -98,26 +106,26 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 							log.debug("Correct Answer Submitted");
 							// Get key and add it to the output
 							String userKey = Hash.generateUserSolution(Getter.getModuleResultFromHash(ApplicationRoot, levelHash), (String)ses.getAttribute("userName"));
-							htmlOutput = "<h2 class='title'>Welcome " + encoder.encodeForHTML(rs.getString(1)) + "</h2>" +
+							htmlOutput = "<h2 class='title'>" + bundle.getString("response.welcome") + " " + encoder.encodeForHTML(rs.getString(1)) + "</h2>" +
 									"<p>" +
-									"The result key is <a>" + userKey + "</a>" +
+									bundle.getString("response.welcome")+ " <a>" + userKey + "</a>" +
 									"</p>";
 						}
 						else
 						{
 							log.debug("Bad Answer Submitted");
-							htmlOutput = new String("<h2 class='title'>Incorrect Answer</h2><p>Are you sure you are who you say you are?");
+							htmlOutput = new String("<h2 class='title'>" + bundle.getString("question.badAnswer") + "</h2><p>" + bundle.getString("question.whoAreYou"));
 						}
 						Database.closeConnection(conn);
 					}
 					else
 					{
 						log.debug("Invalid data submitted");
-						htmlOutput = new String("<b>Invalid Data Submitted: </b>");
+						htmlOutput = new String("<b>" + bundle.getString("question.invalidData") + ": </b>");
 						if(subAns.length() < 5)
-							htmlOutput += "Invalid Answer";
+							htmlOutput += bundle.getString("question.invalidAns");
 						else
-							htmlOutput += "Invalid Email";
+							htmlOutput += bundle.getString("question.invalidEmail");
 					}
 				}
 				catch(SQLException e)
@@ -129,7 +137,7 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}
@@ -150,6 +158,12 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement6", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -190,7 +204,7 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 							if(subEmail.length() < 10)
 							{
 								log.debug("Invalid data submitted");
-								htmlOutput = new String("<b>Invalid Data Submitted: </b>Invalid Email Address");
+								htmlOutput = new String("<b>" + bundle.getString("question.invalidData") + ": </b>" + bundle.getString("question.invalidEmail"));
 							}
 							else
 							{
@@ -202,12 +216,13 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 								{
 									log.debug("'Valid' User Detected");
 									log.debug("Encoding for output: " + rs.getString(1));
+									//rs.getString(1) contains the question for the user to answer. This question is asked in English as it must be answered in English to successfully pass the level
 									htmlOutput = new String(encoder.encodeForHTML(rs.getString(1)));
 								}
 								else
 								{
 									log.debug("No question found for user");
-									htmlOutput = new String("No question found for that user");
+									htmlOutput = bundle.getString("question.noQuestion");
 								}
 								Database.closeConnection(conn);
 							}
@@ -222,20 +237,20 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 					else
 					{
 						log.debug("Tampered cookie detected");
-						htmlOutput = new String("500: INVALID ANSWER CONTROL CONFIGURATION SET");
+						htmlOutput = new String(bundle.getString("response.configError"));
 					}
 				}
 				else
 				{
 					log.debug("Tampered cookie detected");
-					htmlOutput = new String("500: INVALID ANSWER CONTROL CONFIGURATION SET");
+					htmlOutput = new String(bundle.getString("response.configError"));
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}
