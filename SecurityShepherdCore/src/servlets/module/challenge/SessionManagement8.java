@@ -116,7 +116,7 @@ public class SessionManagement8 extends HttpServlet
 				{
 					log.debug("No Role Cookie Submitted");
 				}
-				if(htmlOutput == null)
+				if(htmlOutput.isEmpty())
 				{
 					log.debug("Challenge Not Complete");
 					boolean hackDetected = false;
