@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle" %>
 <%
 // Broken Authentication and Session Management Challenge 7
 
@@ -24,6 +25,13 @@
 
 String levelName = "Session Management Challenge 7";
 String levelHash = "269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sessionManagement." + levelHash, locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("challenge.challengeName");
+
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
@@ -48,46 +56,48 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				To complete this challenge you must sign in as one of the users with an privileged user role. 
+				<%= bundle.getString("challenge.description") %>
 				<br />
 				<form id="leForm" action="javascript:;">
 					<div id="resultsDiv">
 						<table>
 							<tr><td>
-								User name:
+								<%= bundle.getString("challenge.form.userName") %>
 							</td><td>
 								<input type="text" id="subName" autocomplete="off"/>
 							</td></tr>
 							<tr><td>
-								Password:
+								<%= bundle.getString("challenge.form.password") %>
 							</td><td>
 								<input type="password" id="subPassword"/>
 							</td></tr>
 							<tr><td colspan="2">
-								<div id="submitButton"><input type="submit" value="Sign In"/></div>
+								<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.signIn") %>"/></div>
 							</td></tr>
 						</table>
 					</div>
-					<small><a id="forgottenPasswordLink" href="#">Have you forgotten your password?</a></small>
+					<small><a id="forgottenPasswordLink" href="#"><%= bundle.getString("challenge.form.forgotPassword") %></a></small>
 				</form>
-				<p style="display: none;" id="loadingSign">Loading...</p>
+				<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 				<br/>
 				<div id="forgottenPassDiv" style="display: none;">
 					<form id="leForm2" action="javascript:;">
-						<h2 class='title'>Log In with via Security Question</h2>
-						<p>Please enter your <a>email address</a>. to retrieve your Security Question;</p>
+						<h2 class='title'><%= bundle.getString("question.header") %></h2>
+						<p>
+							<%= bundle.getString("question.whatToDo") %>
+						</p>
 						<table>
 							<tr></td>
-								<div id="resetSubmit"><input id="resetEmail" type="text" width="300px" autocomplete="off"/><input type="submit" value="Get Security Question"/></div>
-								<p style="display: none;" id="resetLoadingSign">Loading...</p>
+								<div id="resetSubmit"><input id="resetEmail" type="text" width="300px" autocomplete="off"/><input type="submit" value="<%= bundle.getString("question.form.getQuestion") %>"/></div>
+								<p style="display: none;" id="resetLoadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 							</td></tr>
 						</table>
 					</form>
@@ -96,8 +106,8 @@ if (request.getSession() != null)
 					<form id="leForm3" action="javascript:;">
 						<table>
 							<tr></td>
-								<div id="answerQuestion"><input id="questionAnswer" type="text" width="300px" autocomplete="off"/><input type="submit" value="Submit Answer"/></div>
-								<p style="display: none;" id="answerLoadingSign">Loading...</p>
+								<div id="answerQuestion"><input id="questionAnswer" type="text" width="300px" autocomplete="off"/><input type="submit" value="<%= bundle.getString("question.form.giveAnswer") %>"/></div>
+								<p style="display: none;" id="answerLoadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 							</td></tr>
 						</table>
 					</form>
@@ -130,7 +140,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#loadingSign").hide("fast", function(){
 						$("#resultsDiv").show("slow");
@@ -157,7 +167,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv2").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv2").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv2").show("slow", function(){
 						$("#resetLoadingSign").hide("fast", function(){
@@ -189,7 +199,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv3").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv3").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv3").show("slow", function(){
 						$("#answerLoadingSign").hide("fast", function(){
@@ -207,7 +217,7 @@ if (request.getSession() != null)
 				});
 			});
 			
-			//Answer Controller
+			//<%= bundle.getString("clue.1") %>
 			document.cookie="ac=ZG9Ob3RSZXR1cm5BbnN3ZXJz";
 		</script>
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

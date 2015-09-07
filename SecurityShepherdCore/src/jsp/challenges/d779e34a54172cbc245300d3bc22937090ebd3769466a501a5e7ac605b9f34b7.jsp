@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle" %>
 <%
 // Broken Authentication and Session Management Challenge Two
 
@@ -22,7 +23,15 @@
  * @author Mark Denihan
  */
 
+String levelHash = "d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7";
 String levelName = "Session Management Challenge Two";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sessionManagement." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("challenge.challengeName");
+
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
@@ -47,46 +56,46 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Session Management Challenge Two</title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Broken Authentication and Session Management Challenge Two</h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
-				Only an <a>admin</a> of the following sub-application can retrieve the result key to this challenge.
+				<%= bundle.getString("challenge.description") %>
 				<br />
 				<form id="leForm" action="javascript:;">
 					<div id="resultsDiv">
 						<table>
 							<tr><td>
-								User name:
+								<%= bundle.getString("challenge.form.userName") %>
 							</td><td>
 								<input type="text" id="subName"/>
 							</td></tr>
 							<tr><td>
-								Password:
+								<%= bundle.getString("challenge.form.password") %>
 							</td><td>
 								<input type="password" id="subPassword"/>
 							</td></tr>
 							<tr><td colspan="2">
-								<div id="submitButton"><input type="submit" value="Sign In"/></div>
+								<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.signIn") %>"/></div>
 							</td></tr>
 						</table>
 					</div>
-					<small><a id="forgottenPasswordLink" href="#">Have you forgotten your password?</a></small>
+					<small><a id="forgottenPasswordLink" href="#"><%= bundle.getString("challenge.form.forgotPass") %></a></small>
 				</form>
-				<p style="display: none;" id="loadingSign">Loading...</p>
+				<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 				<br/>
 				<div id="forgottenPassDiv" style="display: none;">
 					<form id="leForm2" action="javascript:;">
-						<h2 class='title'>Reset Password</h2>
-						<p>Please enter your <a>email address</a>. You will be sent an email with a new temporary password</p>
+						<h2 class='title'><%= bundle.getString("reset.header") %></h2>
+						<p><%= bundle.getString("reset.whatToDo") %></p>
 						<table>
 							<tr></td>
-								<div id="resetSubmit"><input id="resetEmail" type="text"/><input type="submit" value="Reset Password"/></div>
-								<p style="display: none;" id="resetLoadingSign">Loading...</p>
+								<div id="resetSubmit"><input id="resetEmail" type="text"/><input type="submit" value="<%= bundle.getString("reset.header") %>"/></div>
+								<p style="display: none;" id="resetLoadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 							</td></tr>
 						</table>
 					</form>
@@ -106,7 +115,7 @@ if (request.getSession() != null)
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7",
+						url: "<%= levelHash %>",
 						data: {
 							subName: theSubName,
 							subPassword: theSubPassword
@@ -119,7 +128,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#loadingSign").hide("fast", function(){
 						$("#resultsDiv").show("slow");
@@ -142,11 +151,11 @@ if (request.getSession() != null)
 					});
 					if(ajaxCall.status == 200)
 					{
-						$("#resultsDiv2").html("<p>Password reset request sent.</p>");
+						$("#resultsDiv2").html("<p><%= bundle.getString("reset.requestSent") %></p>");
 					}
 					else
 					{
-						$("#resultsDiv2").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv2").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv2").show("slow", function(){
 						$("#resetLoadingSign").hide("fast", function(){

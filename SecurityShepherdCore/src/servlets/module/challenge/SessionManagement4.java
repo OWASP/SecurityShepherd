@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -55,6 +57,12 @@ public class SessionManagement4 extends HttpServlet
 	{
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement4", locale);
+		
 		try
 		{
 			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
@@ -88,9 +96,9 @@ public class SessionManagement4 extends HttpServlet
 						log.debug("Admin Session Detected: Challenge Complete");
 						// Get key and add it to the output
 						String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
-						htmlOutput = "<h2 class='title'>Admin Only Club</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("response.adminClub") + "</h2>" +
 								"<p>" +
-								"Welcome administrator. Your result key is as follows " +
+								bundle.getString("response.welcomeAdmin") + " " +
 								"<a>" + userKey + "</a>" +
 								"</p>";
 					}
@@ -117,16 +125,16 @@ public class SessionManagement4 extends HttpServlet
 					
 					if(!hackDetected)
 					{
-						htmlOutput = "<h2 class='title'>Your not an Admin!!!</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("response.notAdmin") + "</h2>" +
 								"<p>" +
-								"Stay away from the admin only section. The wolves have been released." +
+								bundle.getString("response.notAdminMessage") + 
 								"</p>";
 					}
 					else
 					{
-						htmlOutput = "<h2 class='title'>HACK DETECTED</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("response.hackDetected") + "</h2>" +
 								"<p>" +
-								"A possible attack has been detected. Functionality Stopped before any damage was done" +
+								bundle.getString("response.hackDetectedMessage") +
 								"</p>";
 					}
 				}
@@ -140,7 +148,7 @@ public class SessionManagement4 extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

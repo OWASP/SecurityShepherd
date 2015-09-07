@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * SQL Injection Challenge One
@@ -23,6 +24,12 @@
 
  String levelName = "SQL Injection Stored Procedure Challenge";
  String levelHash = "7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7";
+ 
+ //Translation Stuff
+ Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sqli." + levelHash, locale);
+ //Used more than once translations
+ String translatedLevelName = bundle.getString("challenge.challengeName");
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -43,22 +50,21 @@
  	{
  		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 %>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
-				To complete this challenge, you must exploit the SQL injection flaw in the following form to find the result key.
+				<%= bundle.getString("challenge.description") %>
 				<div id="hint" style="display: none;">
-					<h2 class="title">Challenge Hint</h2>
-					This is the query you are attempting to inject code into!
+					<h2 class="title"><%= bundle.getString("challenge.hint") %></h2>
+					<%= bundle.getString("challenge.hint.description") %>
 					<br />
 					<br />
 					<div>call findUser('<a id="userContent"></a>');</div>
@@ -69,15 +75,15 @@
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>Customer Email</a> of the user that you want to look up
+						<%= bundle.getString("challenge.form.pleaseEnter") %><a><%= bundle.getString("challenge.form.customerEmail") %></a><%= bundle.getString("challenge.form.userLookUp") %>
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="userIdentity" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Get user"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.getUser") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %>...</p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sign.hint") %>" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -108,7 +114,7 @@
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

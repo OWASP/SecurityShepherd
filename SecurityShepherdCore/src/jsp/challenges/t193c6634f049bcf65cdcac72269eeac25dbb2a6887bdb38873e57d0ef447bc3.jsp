@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle" %>
 <%
 /**
  * Broken Authentication and Session Management Challenge Three
@@ -22,6 +23,14 @@
  */
 
 String levelName = "Session Management Challenge Three";
+String levelHash = "t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sessionManagement." + levelHash, locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("challenge.challengeName");
+
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -45,58 +54,56 @@ String levelName = "Session Management Challenge Three";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Session Management Challenge Three</title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Broken Authentication and Session Management Challenge Three</h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				Only an <a>admin</a> of the following sub-application can retrieve the result key 
-				to this challenge. You have been granted user privileges because the admins need somebody 
-				to boss around.
+				<%= bundle.getString("challenge.description") %>
 				<br />
 				<form id="leForm" action="javascript:;">
 					<div id="resultsDiv">
 						<table>
 							<tr><td>
-								User name:
+								<%= bundle.getString("challenge.form.userName") %>
 							</td><td>
 								<input type="text" id="subUserName"/>
 							</td></tr>
 							<tr><td>
-								Password:
+								<%= bundle.getString("challenge.form.password") %>
 							</td><td>
 								<input type="password" id="subUserPassword"/>
 							</td></tr>
 							<tr><td colspan="2">
-								<div id="submitButton"><input type="submit" value="Sign In"/></div>
+								<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.signIn") %>"/></div>
 							</td></tr>
 						</table>
 					</div>
-					<input type="button" id="showUserControl" value="Toggle user functions"/>
+					<input type="button" id="showUserControl" value="<%= bundle.getString("challenge.form.userFunctions") %>"/>
 				</form>
-				<p style="display: none;" id="loadingSign">Loading...</p>
+				<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 				<br/>
 				<div id="userControl" style="display: none;">
 					<form id="leForm2" action="javascript:;">
-						<h2 class='title'>Change Password</h2>
-						<p>Please enter your new password for this sub application!</p>
+						<h2 class='title'><%= bundle.getString("reset.header") %></h2>
+						<p><%= bundle.getString("reset.whatToDo") %></p>
 						<table>
 							<tr><td>
-								New Password:
+								<%= bundle.getString("reset.form.new") %>
 							</td><td>
 								<input type="password" id="passOne"/>
 							</td></tr>
 							<tr><td>
-								Confirm Password:
+								<%= bundle.getString("reset.form.confirm") %>
 							</td><td>
 								<input type="password" id="passTwo"/>
 							</td></tr>
 							<tr><td colspan="2">
-								<div id="resetSubmit"><input type="submit" value="Change Password"/></div>
-								<p style="display: none;" id="resetLoadingSign">Loading...</p>
+								<div id="resetSubmit"><input type="submit" value="<%= bundle.getString("reset.form.changePass") %>"/></div>
+								<p style="display: none;" id="resetLoadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 							</td></tr>
 						</table>
 					</form>
@@ -115,7 +122,7 @@ String levelName = "Session Management Challenge Three";
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3",
+						url: "<%= levelHash %>",
 						data: {
 							subUserName: theSubName,
 							subUserPassword: theSubPassword
@@ -128,7 +135,7 @@ String levelName = "Session Management Challenge Three";
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#loadingSign").hide("fast", function(){
 						$("#resultsDiv").show("slow");
@@ -159,7 +166,7 @@ String levelName = "Session Management Challenge Three";
 						}
 						else
 						{
-							$("#resultsDiv2").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+							$("#resultsDiv2").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 						}
 						$("#resultsDiv2").show("slow", function(){
 							$("#resetLoadingSign").hide("fast", function(){
@@ -172,11 +179,11 @@ String levelName = "Session Management Challenge Three";
 				{
 					if(theNewPassword != theNewPasswordAgain)
 					{
-						alert("Passwords do not match");
+						alert("<%= bundle.getString("error.noMatch") %>");
 					}
 					else
 					{
-						alert("Password too short");
+						alert("<%= bundle.getString("error.tooShort") %>");
 					}
 				}
 			});

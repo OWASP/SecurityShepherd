@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,6 +62,12 @@ public class SessionManagement2 extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement2", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -107,9 +115,9 @@ public class SessionManagement2 extends HttpServlet
 					log.debug("Successful Login");
 					// Get key and add it to the output
 					String userKey = Hash.generateUserSolution(Getter.getModuleResultFromHash(ApplicationRoot, levelHash), (String)ses.getAttribute("userName"));
-					htmlOutput = "<h2 class='title'>Welcome " + encoder.encodeForHTML(resultSet.getString(1)) + "</h2>" +
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.welcome") + " " + encoder.encodeForHTML(resultSet.getString(1)) + "</h2>" +
 							"<p>" +
-							"The result key is <a>" + userKey + "</a>" +
+							bundle.getString("response.resultKey") + " <a>" + userKey + "</a>" +
 							"</p>";
 				}
 				else
@@ -122,13 +130,13 @@ public class SessionManagement2 extends HttpServlet
 					if(resultSet.next())
 					{
 						log.debug("User Found");
-						userAddress = "Incorrect password for <a>" + encoder.encodeForHTML(resultSet.getString(1)) + "</a><br/>";
+						userAddress = bundle.getString("response.badPass") + " <a>" + encoder.encodeForHTML(resultSet.getString(1)) + "</a><br/>";
 					}
 					else
 					{
-						userAddress = "User name not found.<br/>";
+						userAddress = bundle.getString("response.badUser") + "<br/>";
 					}
-					htmlOutput = htmlStart + userAddress + htmlEnd;
+					htmlOutput = makeTable(userAddress, bundle);
 				}
 				Database.closeConnection(conn);
 				log.debug("Outputting HTML");
@@ -136,7 +144,7 @@ public class SessionManagement2 extends HttpServlet
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}
@@ -146,10 +154,12 @@ public class SessionManagement2 extends HttpServlet
 		}
 	}
 	
-	private static String htmlStart = "<table>";
-	private static String htmlEnd = "<tr><td>Username:</td><td><input type='text' id='subName'/></td></tr>" +
-			"<tr><td>Password:</td><td><input type='password' id='subPassword'/></td></tr>" +
-			"<tr><td colspan='2'><div id='submitButton'><input type='submit' value='Sign In'/>" +
-			"</div></td></tr>" +
-			"</table>";
+	private static String makeTable (String userAddress, ResourceBundle bundle)
+	{
+		return "<table>" + userAddress + "<tr><td>" + bundle.getString("form.userName") + "</td><td><input type='text' id='subName'/></td></tr>" +
+				"<tr><td>" + bundle.getString("form.password") + "</td><td><input type='password' id='subPassword'/></td></tr>" +
+				"<tr><td colspan='2'><div id='submitButton'><input type='submit' value='" + bundle.getString("form.signIn") + "'/>" +
+				"</div></td></tr>" +
+				"</table>";
+	}
 }
