@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -19,7 +21,6 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import dbProcs.Database;
-import utils.Hash;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -53,7 +54,6 @@ public class UrlAccess3UserList extends HttpServlet
 	//Sql Challenge 4
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(UrlAccess3UserList.class);
-	private static String levelHash = "e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4";
 	private static String levelName = "URL Access 3 (UserList)";
 	
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -62,6 +62,11 @@ public class UrlAccess3UserList extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -110,7 +115,7 @@ public class UrlAccess3UserList extends HttpServlet
 			}
 			catch(Exception e)
 			{
-				htmlOutput = new String("An Error Occurred! You must be getting funky!");
+				htmlOutput = new String(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 			log.debug("Outputting HTML");

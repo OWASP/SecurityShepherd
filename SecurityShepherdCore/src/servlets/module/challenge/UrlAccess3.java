@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -45,7 +47,9 @@ public class UrlAccess3 extends HttpServlet
 	private static String levelName = "Failure to Restrict URL Access 3";
 	private static String levelHash = "e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4";
 	/**
-	 * Users must take advance of the broken session management in this application by modifying the tracking cookie "currentPerson" which is encoded in Base64. They must modify this cookie to be equal a super admin to access the result key.
+	 * Users must take advance of the broken session management in this application by 
+	 * modifying the tracking cookie "currentPerson" which is encoded in Base64. 
+	 * They must modify this cookie to be equal a super admin to access the result key.
 	 * @param userId Red herring that is pre set to d3d9446802a44259755d38e6d163e820
 	 * @param secure Red herring that is pre set to true 
 	 * @param adminDetected Red herring 
@@ -56,6 +60,12 @@ public class UrlAccess3 extends HttpServlet
 	{
 		String redherringOne = new String("userId");
 		String redherringTwo = new String("secure");
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.urlAccess.urlAccess3", locale);
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -88,9 +98,9 @@ public class UrlAccess3 extends HttpServlet
 						log.debug("Super Admin Cookie detected");
 						// Get key and add it to the output
 						String userKey = Hash.generateUserSolution(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash), (String)ses.getAttribute("userName"));
-						htmlOutput = "<h2 class='title'>Super User Only Club</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("admin.superAdminClub") + "</h2>" +
 								"<p>" +
-								"Welcome super admin! Your result key is as follows " +
+								bundle.getString("admin.superAdminClub.keyMessage") + " " +
 								"<a>" + userKey + "</a>" +
 								"</p>";
 					}
@@ -100,7 +110,7 @@ public class UrlAccess3 extends HttpServlet
 						byte[] decodedCookieBytes = Base64.decodeBase64(theCookie.getValue());
 						String decodedCookie = new String(decodedCookieBytes, "UTF-8");
 						log.debug("Decoded Cookie: " + decodedCookie);
-						htmlOutput = "<!-- Invalid User Detected -->";
+						htmlOutput = "<!-- " + bundle.getString("response.invalidUser") + " -->";
 					}
 					else
 					{
@@ -128,25 +138,25 @@ public class UrlAccess3 extends HttpServlet
 					}
 					if(!hackDetected)
 					{
-						htmlOutput = "<h2 class='title'>You're not a Super Admin!!!</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("response.notSuperAdmin") + "</h2>" +
 								"<p>" +
-								"Stay away from the super admin only section. The mighty dog beasts have been released." +
+								bundle.getString("response.notSuperAdmin.message") +
 								"</p>";
 					}
 					else
 					{
 						if(badUserId)
 						{
-							htmlOutput = "<h2 class='title'>Who are you?</h2>" +
+							htmlOutput = "<h2 class='title'>" + bundle.getString("response.whoAreYou") + "</h2>" +
 								"<p>" +
-								"System could not process user identifier submitted. The admin list has been notified of the event" +
+								bundle.getString("response.whoAreYou.message") + 
 								"</p>";
 						}
 						else
 						{
-							htmlOutput = "<h2 class='title'>HACK DETECTED</h2>" +
+							htmlOutput = "<h2 class='title'>" + bundle.getString("response.hackDetected") + "</h2>" +
 									"<p>" +
-									"A possible attack has been detected. Functionality Stopped before any damage was done" +
+									bundle.getString("response.hackDetected.message") +
 									"</p>";
 						}
 					}
@@ -161,7 +171,7 @@ public class UrlAccess3 extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}
