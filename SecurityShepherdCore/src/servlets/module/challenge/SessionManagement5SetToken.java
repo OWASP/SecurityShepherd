@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -53,7 +55,6 @@ public class SessionManagement5SetToken extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement5SetToken.class);
 	private static String levelName = "SessionManagement5SetToken";
 	public static String levelHash = SessionManagement5.levelHash;
-	private static String levelResult = ""; //This class does not return a result key
 	/**
 	 * Used to apparently send a message to a user with a token to reset their password.
 	 * 
@@ -65,6 +66,12 @@ public class SessionManagement5SetToken extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement5", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -104,12 +111,12 @@ public class SessionManagement5SetToken extends HttpServlet
 				if(resultSet.next())
 				{
 					log.debug("User found");
-					htmlOutput = "URL with embedded password reset token has been sent to '" + encoder.encodeForHTML(userName) + "' via email.";
+					htmlOutput = bundle.getString("setToken.sentTo.1") + " '" + encoder.encodeForHTML(userName) + "' " +  bundle.getString("setToken.sentTo.2");
 				}
 				else
 				{
 					log.debug("User not Found");
-					htmlOutput = "Could not find user" + encoder.encodeForHTML(userName);
+					htmlOutput = bundle.getString("response.badUser") + "" + encoder.encodeForHTML(userName);
 				}
 				Database.closeConnection(conn);
 				log.debug("Outputting HTML");
@@ -117,7 +124,7 @@ public class SessionManagement5SetToken extends HttpServlet
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}

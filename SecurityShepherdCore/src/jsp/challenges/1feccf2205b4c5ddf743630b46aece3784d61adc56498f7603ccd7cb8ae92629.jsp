@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -24,6 +25,12 @@
 String levelName = "SQL Injection 4";
 //Alphanumeric Only
 String levelHash = "1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sqli." + levelHash, locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("challenge.challengeName");
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
@@ -47,36 +54,36 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				To acquire the result key for this challenge you must successfully sign in as an administrator.
+				<%= bundle.getString("challenge.description") %>
 				<br />
 				<br />
-				<h2>Super Secure Payments</h2>
+				<h2><%= bundle.getString("challenge.superSecurePayments") %></h2>
 				<form id="leForm" action="javascript:;" autocomplete="off">
 					<table>
 					<tr><td colspan="2">
-						Please sign in to make your very secure payments.
+						<%= bundle.getString("challenge.form.instruction") %>
 					</td></tr>
 					<tr><td>
-						UserName: 
+						<%= bundle.getString("challenge.form.userName") %> 
 					</td><td>
 						<input style="width: 200px;" id="theUserName" type="text" />
 					</td></tr>
 					<tr><td>
-						Password: 
+						<%= bundle.getString("challenge.form.password") %> 
 					</td><td>
 						<input style="width: 200px;" id="thePassword" type="password" />
 					</td></tr>
 					<tr><td colspan="2">
 						<div id="submitButton"><input type="submit" value="Get user"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %>...</p>
 					</td></tr>
 					</table>
 				</form>
@@ -107,7 +114,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

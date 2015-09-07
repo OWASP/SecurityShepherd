@@ -86,7 +86,7 @@ if (request.getSession() != null)
 					</div>
 					<small><a id="forgottenPasswordLink" href="#"><%= bundle.getString("challenge.form.forgotPassword") %></a></small>
 				</form>
-				<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.form.loading") %><%= bundle.getString("challenge.form.loading") %></p>
+				<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 				<br/>
 				<div id="forgottenPassDiv" style="display: none;">
 					<form id="leForm2" action="javascript:;">

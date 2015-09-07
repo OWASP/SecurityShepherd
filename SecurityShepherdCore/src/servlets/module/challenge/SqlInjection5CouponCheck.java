@@ -48,7 +48,7 @@ public class SqlInjection5CouponCheck extends HttpServlet
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli5CouponCheck", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli5", locale);
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
