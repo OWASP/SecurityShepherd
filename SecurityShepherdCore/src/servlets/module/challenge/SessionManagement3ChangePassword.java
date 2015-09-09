@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -60,6 +62,12 @@ public class SessionManagement3ChangePassword extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement3", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -111,7 +119,6 @@ public class SessionManagement3ChangePassword extends HttpServlet
 				{
 					log.debug("Getting ApplicationRoot");
 					String ApplicationRoot = getServletContext().getRealPath("");
-					log.debug("Servlet root = " + ApplicationRoot );
 					
 					Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalThree");
 					log.debug("Changing password for user: " + subName);
@@ -129,19 +136,19 @@ public class SessionManagement3ChangePassword extends HttpServlet
 					callstmt.execute();
 					log.debug("Changes committed.");
 					
-					htmlOutput = "<p>Password change request success.</p>";
+					htmlOutput = "<p>" + bundle.getString("reset.password") + "</p>";
 				}
 				else
 				{
 					log.debug("invalid password submitted: " + subNewPass);
-					htmlOutput = "<p>Change Password Failed.</p>";
+					htmlOutput = "<p>" + bundle.getString("reset.failed") + "</p>";
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - Change Password - " + e.toString());
 			}
 		}

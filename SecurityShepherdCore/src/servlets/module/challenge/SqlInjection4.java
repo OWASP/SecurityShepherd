@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -62,6 +64,11 @@ public class SqlInjection4 extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli4", locale);
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -90,38 +97,38 @@ public class SqlInjection4 extends HttpServlet
 				ResultSet resultSet = stmt.executeQuery("SELECT userName FROM users WHERE userName = '" + theUserName + "' AND userPassword = '" + thePassword + "'");
 		
 				int i = 0;
-				htmlOutput = "<h2 class='title'>Login Result</h2>";
+				htmlOutput = "<h2 class='title'>" + bundle.getString("response.loginResults")+ "</h2>";
 				
 				log.debug("Opening Result Set from query");
 				if(resultSet.next())
 				{
 					log.debug("Signed in as " + resultSet.getString(1));
-					htmlOutput += "<p>Signed in as " + encoder.encodeForHTML(resultSet.getString(1)) + "</p>";
+					htmlOutput += "<p>" + bundle.getString("response.signedInAs")+ "" + encoder.encodeForHTML(resultSet.getString(1)) + "</p>";
 					if(resultSet.getString(1).equalsIgnoreCase("admin"))
 					{
-						htmlOutput += "<p>As you are the admin, here is the result key:"
+						htmlOutput += "<p>" + bundle.getString("response.adminResultKey")+ ""
 									+ "<a>"	+ encoder.encodeForHTML(levelResult) + "</a>";
 					}
 					else
 					{
-						htmlOutput += "<p>But admins have all the fun</p>";
+						htmlOutput += "<p>" + bundle.getString("response.adminsFun")+ "</p>";
 					}
 					i++;
 				}
 				if(i == 0)
 				{
-					htmlOutput = "<h2 class='title'>Login Result</h2><p>You didn't log in. This site is super secure so hax won't work!</p>";
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.loginResults")+ "</h2><p>" + bundle.getString("response.superSecure")+ "</p>";
 				}
 			}
 			catch (SQLException e)
 			{
 				log.debug("SQL Error caught - " + e.toString());
-				htmlOutput += "<p>An error was detected!</p>" +
+				htmlOutput += "<p>"+errors.getString("error.detected")+"</p>" +
 					"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 			log.debug("Outputting HTML");

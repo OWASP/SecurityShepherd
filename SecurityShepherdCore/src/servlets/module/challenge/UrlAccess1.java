@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,14 +46,10 @@ public class UrlAccess1 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(UrlAccess1.class);
-	private static String levelResult = "c776572b6a9d5b5c6e4aa672a4771213"; 
-	private static String levelHash = "4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99";
 	private static String levelName = "URL Access 1 (User)";
 	/**
-	 * Users have to defeat SQL injection that blocks single quotes.
-	 * The input they enter is also been filtered.
-	 * @param theUserName User name used in database look up.
-	 * @param thePassword User password used in database look up
+	 * This class is the User Level Function Call that works correctly from the level's view without manipulation
+	 * This is not the correct function to target to retrieve the Result Key
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -59,6 +57,12 @@ public class UrlAccess1 extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.urlAccess.urlAccess1", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -77,16 +81,16 @@ public class UrlAccess1 extends HttpServlet
 					log.debug("User Submitted - " + userData);
 				
 				if(!tamperedRequest)
-					htmlOutput = "<h2 class='title'>Server Status</h2>"
-						+ "<p>The server status is normal. Nothing to see here. Move along.</p>";
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.status") + "</h2>"
+						+ "<p>" + bundle.getString("response.status.message") + "</p>";
 				else
-					htmlOutput = "<h2 class='title'>Server Status Failure</h2>"
-							+ "<p>Could not retrieve server status. Invalid userData.</p>"
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.statusFail") + "</h2>"
+							+ "<p>" + bundle.getString("response.statusFail.message") + "</p>"
 							+ "<!-- " + encoder.encodeForHTML(userData) + " -->";
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 			log.debug("Outputting HTML");

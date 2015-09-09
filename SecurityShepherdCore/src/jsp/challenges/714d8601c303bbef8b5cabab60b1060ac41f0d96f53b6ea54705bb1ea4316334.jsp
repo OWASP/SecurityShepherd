@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle" %>
 <%
 /**
  * Broken Authentication and Session Management Challenge eight
@@ -23,6 +24,13 @@
 
 String levelName = "Session Management Challenge 8";
 String levelHash = new String("714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54705bb1ea4316334");
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sessionManagement." + levelHash, locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("challenge.challengeName");
+
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -46,21 +54,21 @@ String levelHash = new String("714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				Only highly privileged <!-- Sorry Player, No Hints on the specific name of the privileged role in this challenge -->users of the following sub-application can retrieve the result key.
+				<%= bundle.getString("challenge.description") %> <!-- <%= bundle.getString("challenge.comment") %> --><%= bundle.getString("challenge.description.2") %>
 				<br />
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Priviledged User Only Button"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.privilegedButton") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 					</td></tr>
 					</table>
 				</form>
@@ -92,7 +100,7 @@ String levelHash = new String("714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

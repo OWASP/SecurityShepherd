@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -65,6 +67,12 @@ public class SessionManagement3 extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement3", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -123,31 +131,29 @@ public class SessionManagement3 extends HttpServlet
 							// Get key and add it to the output
 							String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 							
-							htmlOutput = "<h2 class='title'>Welcome " + encoder.encodeForHTML(resultSet2.getString(1)) + "</h2>" +
+							htmlOutput = "<h2 class='title'>" + bundle.getString("response.welcome") + " " + encoder.encodeForHTML(resultSet2.getString(1)) + "</h2>" +
 									"<p>" +
-									"The result key is <a>" + userKey + "</a>" +
+									bundle.getString("response.resultKey") + " <a>" + userKey + "</a>" +
 									"</p>";
 						}
 						else
 						{
-							userAddress = "Incorrect password for <a>" + encoder.encodeForHTML(resultSet.getString(1)) + "</a><br/>";
-							htmlOutput = htmlStart + userAddress + htmlEnd;
+							userAddress = bundle.getString("response.badPass") + " <a>" + encoder.encodeForHTML(resultSet.getString(1)) + "</a><br/>";
+							htmlOutput = makeTable(userAddress, bundle);
 						}
 					}
 					else
 					{
 						log.debug("Successful Guest Login");
-						htmlOutput = htmlStart + htmlEnd +
-								"<h2 class='title'>Welcome Guest</h2>" +
-								"<p>No further information for Guest Users currently available. " +
-								"If your getting bored of the current functions available, " +
-								"you'll just have to upgrade yourself to an administrator somehow.</p><br/><br/>";	
+						htmlOutput = makeTable(bundle) +
+								"<h2 class='title'>" + bundle.getString("response.welcomeGuest") + "</h2>" +
+								"<p>" + bundle.getString("response.guestMessage") + "</p><br/><br/>";	
 					}
 				}
 				else
 				{
-					userAddress = "User name not found.<br/>";
-					htmlOutput = htmlStart + userAddress + htmlEnd;
+					userAddress = bundle.getString("response.badUser") + "<br/>";
+					htmlOutput = makeTable(userAddress, bundle);
 				}
 				Database.closeConnection(conn);
 				log.debug("Outputting HTML");
@@ -155,7 +161,7 @@ public class SessionManagement3 extends HttpServlet
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}
@@ -164,11 +170,20 @@ public class SessionManagement3 extends HttpServlet
 			log.error(levelName + " servlet accessed with no session");
 		}
 	}
-	
-	private static String htmlStart = "<table>";
-	private static String htmlEnd = "<tr><td>Username:</td><td><input type='text' id='subUserName'/></td></tr>" +
-			"<tr><td>Password:</td><td><input type='password' id='subUserPassword'/></td></tr>" +
-			"<tr><td colspan='2'><div id='submitButton'><input type='submit' value='Sign In'/>" +
-			"</div></td></tr>" +
-			"</table>";
+	private static String makeTable (String userAddress, ResourceBundle bundle)
+	{
+		return "<table>" + userAddress + "<tr><td>" + bundle.getString("form.userName") + "</td><td><input type='text' id='subUserName'/></td></tr>" +
+				"<tr><td>" + bundle.getString("form.password") + "</td><td><input type='password' id='subUserPassword'/></td></tr>" +
+				"<tr><td colspan='2'><div id='submitButton'><input type='submit' value='" + bundle.getString("form.signIn") + "'/>" +
+				"</div></td></tr>" +
+				"</table>";
+	}
+	private static String makeTable (ResourceBundle bundle)
+	{
+		return "<table><tr><td>" + bundle.getString("form.userName") + "</td><td><input type='text' id='subUserName'/></td></tr>" +
+				"<tr><td>" + bundle.getString("form.password") + "</td><td><input type='password' id='subUserPassword'/></td></tr>" +
+				"<tr><td colspan='2'><div id='submitButton'><input type='submit' value='" + bundle.getString("form.signIn") + "'/>" +
+				"</div></td></tr>" +
+				"</table>";
+	}
 }

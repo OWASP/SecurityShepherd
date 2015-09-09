@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -48,20 +50,20 @@ public class UrlAccess2Admin extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(UrlAccess2Admin.class);
 	private static String levelResult = "40b675e3d404c52b36abe31d05842b283975ec62e8"; 
-	private static String levelHash = "278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa";
 	private static String levelName = "URL Access 2 (Admin)";
-	/**
-	 * Users have to defeat SQL injection that blocks single quotes.
-	 * The input they enter is also been filtered.
-	 * @param theUserName User name used in database look up.
-	 * @param thePassword User password used in database look up
-	 */
+	
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.urlAccess.urlAccess2", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -82,19 +84,19 @@ public class UrlAccess2Admin extends HttpServlet
 				if(!tamperedRequest)
 				{
 					String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
-					htmlOutput = "<h2 class='title'>Admin Button Clicked</h2>"
-						+ "<p>Hey Admin, Here is that key you are looking for: <a>"
+					htmlOutput = "<h2 class='title'>" + bundle.getString("admin.clicked") + "</h2>"
+						+ "<p>" + bundle.getString("admin.keyMessage.1") + "<a>"
 						+ userKey
-						+ "</a>. Enjoy!</p>";
+						+ "</a>" + bundle.getString("admin.keyMessage.2") + "</p>";
 				}
 				else
-					htmlOutput = "<h2 class='title'>Server Status Failure</h2>"
-							+ "<p>Could not retrieve server status. Invalid userData.</p>"
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.failue") + "</h2>"
+							+ "<p>" + bundle.getString("response.failue.message") + "</p>"
 							+ "<!-- " + encoder.encodeForHTML(userData) + " -->";
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 			log.debug("Outputting HTML");
