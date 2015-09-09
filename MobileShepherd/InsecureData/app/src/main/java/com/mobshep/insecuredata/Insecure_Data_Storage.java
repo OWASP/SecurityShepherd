@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 
 /**
@@ -32,45 +35,39 @@ import android.os.Bundle;
 
 public class Insecure_Data_Storage extends Activity {
 
+    SQLiteDatabase Members = null;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ids);
+        createDatabase();
+        insertKey();
+    }
 
-        String destinationDir = this.getFilesDir().getParentFile().getPath() + "/databases/";
+    public void createDatabase() {
+        try {
+            Members = this.openOrCreateDatabase("Members", MODE_PRIVATE, null);
+            Members.execSQL("CREATE TABLE IF NOT EXISTS Members " +
+                            "(id integer primary key, name VARCHAR, password VARCHAR);"
+            );
 
-        String destinationPath = destinationDir + "Members";
+            File database = getApplication().getDatabasePath("Members.db");
 
-        File f = new File(destinationPath);
+            if (!database.exists()) {
+                Toast.makeText(this, "Database Created", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(this, "Database Missing", Toast.LENGTH_SHORT).show();
 
-        if (!f.exists()) {
-            File directory = new File(destinationDir);
-            directory.mkdirs();
-
-            try {
-                copyDatabase(getBaseContext().getAssets().open("Members"),
-                        new FileOutputStream(destinationPath));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+        } catch (Exception e) {
+            Log.e("DB ERROR", "Error Creating Database");
         }
     }
 
-	public void copyDatabase(InputStream iStream, OutputStream oStream)
-			throws IOException {
-		byte[] buffer = new byte[1024];
-		int i;
-		while ((i = iStream.read(buffer)) > 0) {
-			oStream.write(buffer, 0, i);
-		}
-		iStream.close();
-		oStream.close();
-	}
-
+    public void insertKey(){
+        Members.execSQL("DELETE FROM Members;");
+        Members.execSQL("INSERT INTO Members (name, password) VALUES ('Admin','Battery777');");
+    }
 
 }

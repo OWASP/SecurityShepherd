@@ -56,8 +56,15 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         referenceXML();
 
+
+        if (checkSession()) {
+            Intent intent = new Intent(MainActivity.this, LoggedIn.class);
+            startActivity(intent);
+        }
+
+
         //TODO
-        //Remove this.
+        //Remove this and replace with AsyncTask
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //end remove
@@ -191,6 +198,17 @@ public class MainActivity extends ActionBarActivity {
         tvResponse = (TextView) findViewById(R.id.tvResponse);
 
     }
+    public boolean checkSession(){
 
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String sesh = SP.getString("session", "NA");
 
+        if (sesh != null) {
+            return true;
+        }
+            else{
+                return false;
+            }
+
+    }
 }

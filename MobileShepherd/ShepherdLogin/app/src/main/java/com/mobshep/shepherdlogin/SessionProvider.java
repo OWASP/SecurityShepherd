@@ -51,7 +51,7 @@ public class SessionProvider extends ContentProvider {
     // Used to match uris with Content Providers
     static final UriMatcher uriMatcher;
 
-    private SQLiteDatabase sqlDB;
+    protected SQLiteDatabase sqlDB;
     static final String DATABASE_NAME = "session";
     static final String TABLE_NAME = "sessions";
     static final int DATABASE_VERSION = 1;
@@ -69,6 +69,7 @@ public class SessionProvider extends ContentProvider {
     public boolean onCreate() {
         DatabaseHelper dbHelper = new DatabaseHelper(getContext());
         sqlDB = dbHelper.getWritableDatabase();
+
         if (sqlDB != null) {
             return true;
         }
@@ -96,7 +97,7 @@ public class SessionProvider extends ContentProvider {
 
         // Cursor provides read and write access to the database
         Cursor cursor = queryBuilder.query(sqlDB, projection, selection, selectionArgs, null,
-                null, sortOrder);
+                null, "ROWID LIMIT 1");
 
         // Register to watch for URI changes
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -122,6 +123,14 @@ public class SessionProvider extends ContentProvider {
     // Receives the URI (Uniform Resource Identifier) for the Content Provider and a set of values
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+
+        String cleanRange = "-1";
+        //delete any previous sessions
+        sqlDB.delete(TABLE_NAME, "id !=? " , new String[]{cleanRange});
+
+        DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+        sqlDB = dbHelper.getWritableDatabase();
+
 
         // Gets the row id after inserting a map with the keys representing the the column
         // names and their values. The second attribute is used when you try to insert

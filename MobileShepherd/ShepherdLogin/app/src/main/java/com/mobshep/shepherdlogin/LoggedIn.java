@@ -39,8 +39,6 @@ public class LoggedIn extends Activity {
         checkNullSession();
     }
 
-
-
     public void getKeyClicked() {
             //return the key
     }
@@ -52,7 +50,8 @@ public class LoggedIn extends Activity {
 
         if (sessionId == null){
 
-            this.finishActivity(0);
+         //   Intent intent = new Intent(LoggedIn.this, MainActivity.class);
+         //   startActivity(intent);
         }
     }
 
@@ -64,7 +63,5 @@ public class LoggedIn extends Activity {
         toEdit.commit();
 
         checkNullSession();
-
     }
-
 }
