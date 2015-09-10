@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -31,6 +34,7 @@ import android.os.Bundle;
 
 public class Insecure_Data_Storage1 extends Activity {
 
+    SQLiteDatabase Users = null;
 
 
     @Override
@@ -38,41 +42,39 @@ public class Insecure_Data_Storage1 extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ids);
-
-        String destinationDir = "/data/data/" + getPackageName() + "/databases/";
-        String destinationPath = destinationDir + "Members";
-
-        File f = new File(destinationPath);
-
-        if (!f.exists()) {
-            File directory = new File(destinationDir);
-            directory.mkdirs();
-            //assets members.db -> /databases/
-
-            try {
-                copyDatabase(getBaseContext().getAssets().open("Members"), new FileOutputStream(destinationPath));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
+        createDatabase();
+        insertData();
     }
 
-    public void copyDatabase(InputStream iStream, OutputStream oStream)
-            throws IOException {
-        byte[] buffer = new byte[1024];
-        int i;
-        while ((i = iStream.read(buffer)) > 0) {
-            oStream.write(buffer, 0 , i);
-        }
-        iStream.close();
-        oStream.close();
+    public void createDatabase() {
+        try {
+            Users = this.openOrCreateDatabase("Users", MODE_PRIVATE, null);
+            Users.execSQL("CREATE TABLE IF NOT EXISTS Users " +
+                            "(id integer primary key, name VARCHAR, password VARCHAR);"
+            );
 
+            File database = getApplication().getDatabasePath("Users.db");
+
+            if (!database.exists()) {
+                Toast.makeText(this, "Database Created", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(this, "Database Missing", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Log.e("DB ERROR", "Error Creating Database");
+        }
     }
 
+    public void insertData(){
 
+        Users.execSQL("DELETE FROM Users;");
+
+        Users.execSQL("INSERT INTO Users (name, password) VALUES ('Tyrkyr','ZG9jaGRvY2hkb2No');");
+        Users.execSQL("INSERT INTO Users (name, password) VALUES ('ToothBrush','MmNvb2w0dWxvbD8=');");
+        Users.execSQL("INSERT INTO Users (name, password) VALUES ('TroolMann','QnJpZGdlcw==');");
+        Users.execSQL("INSERT INTO Users (name, password) VALUES ('Patrick','ZGlub3NhdXI=');");
+        Users.execSQL("INSERT INTO Users (name, password) VALUES ('bottles','cGFzc3dvcmQxMjM0');");
+        Users.execSQL("INSERT INTO Users (name, password) VALUES ('Root','V2Fyc2hpcHNBbmRXcmVuY2hlcw==');");
+    }
 
 }
