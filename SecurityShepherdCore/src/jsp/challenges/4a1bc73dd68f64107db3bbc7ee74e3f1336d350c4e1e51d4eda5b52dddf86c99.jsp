@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,6 +24,13 @@
 String levelName = "Failure To Restrict URL Access Challenge 1";
 //Alphanumeric Only
 String levelHash = "4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.urlAccess." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("challenge.challengeName");
+	
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 //Logs the IP, Forwarded IP that acceeded this level with the level name in the debug for convience. If you want to log more stuff in the JSP use this as an example
@@ -49,28 +57,27 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
-				To recover the result key for this challenge you need to obtain the current server 
-				status message from an administrator's point of view!
+				<%= bundle.getString("challenge.description") %>
 				<br/>
 				<br/>
-				Use this form to view the status of the server <!-- from the point of view of a peasant or guest  -->
+				<%= bundle.getString("challenge.form.instruction") %> <!-- <%= bundle.getString("challenge.form.instruction.comment") %>  -->
 				<br/>
 				<br/>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>			
 						<div id="submitButton">
-						<input type="submit" value="Get Server Status"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<input type="submit" value="<%= bundle.getString("challenge.form.getStatus") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %></p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sign.hint") %>" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -78,7 +85,6 @@ if (request.getSession() != null)
 				<div id="resultsDiv"></div>
 			</p>
 		</div>
-		<% /*If you need to call the Server Do it like this */ %>
 		<script>
 			$("#leForm").submit(function(){
 				$("#submitButton").hide("fast");
@@ -98,7 +104,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){
@@ -126,7 +132,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

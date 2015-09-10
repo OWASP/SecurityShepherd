@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 
 /**
@@ -25,8 +26,13 @@
 String levelName = "Failure to Restrict URL Access Challenge 2";
 //Alphanumeric Only
 String levelHash = "278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Download the file and play with it to extract the key for this level!";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.urlAccess." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("challenge.challengeName");
+
 //Logs the IP, Forwarded IP that acceeded this level with the level name in the debug for convience. If you want to log more stuff in the JSP use this as an example
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -51,24 +57,24 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 				
-				An administrator of the following sub application would have no issue finding the result key to this level. But considering that you are a mere guest, you will not be shown the simple button administrators can click.
+				<%= bundle.getString("challenge.description") %>
 				<br/>
 				<br/>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>			
 						<div id="submitButton">
-						<input type="submit" value="Get Guest Info"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<input type="submit" value="<%= bundle.getString("challenge.form.getInfo") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %></p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sign.hint") %>" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
