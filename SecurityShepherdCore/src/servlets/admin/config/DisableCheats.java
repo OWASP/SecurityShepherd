@@ -1,8 +1,7 @@
-package servlets.admin.cheatSheet;
+package servlets.admin.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -12,16 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
-import dbProcs.Getter;
 import utils.CheatSheetStatus;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
 /**
- * Control class responsible for returning a cheat sheet for a module
+ * Control class responsible for disabling cheat sheets
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -40,14 +36,13 @@ import utils.Validate;
  * @author Mark Denihan
  *
  */
-public class GetCheat extends HttpServlet 
+public class DisableCheats extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(GetCheat.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(DisableCheats.class);
 	
 	/**
-	 * This method will reject requests if cheat sheet availability is marked as unavailable by administration.
-	 * @param moduleId
+	 * If this functionality is validly called by an administrator, the cheat sheets will become or remain unavailable.
 	 * @param csrfToken
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -55,54 +50,28 @@ public class GetCheat extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("*** servlets.Admin.GetCheat ***");
-		String[] result = null;
+		log.debug("*** servlets.Admin.DisableCheats ***");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
 		HttpSession ses = request.getSession(true);
-		if(Validate.validateSession(ses))
+		Cookie tokenCookie = Validate.getToken(request.getCookies());
+		Object tokenParmeter = request.getParameter("csrfToken");
+		if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug("Current User: " + ses.getAttribute("userName").toString());
-			Cookie tokenCookie = Validate.getToken(request.getCookies());
-			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
-				if(CheatSheetStatus.showCheat(ses.getAttribute("userRole").toString()))
-				{
-					String ApplicationRoot = getServletContext().getRealPath("");
-					String moduleId = request.getParameter("moduleId");
-					Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-					log.debug(ses.getAttribute("userName") + " submitted the following moduleId: " + moduleId);
-					if(moduleId != null)
-					{
-						result = Getter.getModuleSolution(ApplicationRoot, moduleId, locale);
-						if(result != null)
-						{
-							out.write(
-									"<div id='theActualCheat' class='cheatBox'>" + 
-									"<big style='color:#A878EF;'>" + encoder.encodeForHTML(result[0]) + " Cheat</big>" +
-									"<p>" +
-									result[1] +
-									"</div></p><br>");
-						}
-					}
-				}
-			}
-			else
-			{
-				log.error("CSRF Attack Detected: Made Against" + ses.getAttribute("userName"));
+				CheatSheetStatus.disableForAll();
+				log.debug("Cheat Sheets Disabled");
+				out.write("<h2 class='title'>Cheat Sheets Disabled</h2>" +
+				"<p>Cheat Sheets have been disabled for all Security Shepherd Users</p>");
 			}
 		}
 		else
 		{
 			out.write("<img src='css/images/loggedOutSheep.jpg'/>");
 		}
-		if(result == null)
-		{
-			out.write("An error Occurred...");
-		}
-		log.debug("*** END servlets.Admin.GetCheat ***");
+		log.debug("*** END servlets.Admin.DisableCheats ***");
 	}
 }

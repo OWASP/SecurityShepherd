@@ -6,16 +6,8 @@ $("#adminList").click(function () {
 	$("#theCompletedList").hide("fast");
 });
 
-$("#cheatSheetManagementList").click(function () {
-	$("#theCheatSheetManagementList").toggle("slow");
-	$("#theModuleManagementList").hide("fast");
-	$("#theUserManagementList").hide("fast");
-	$("#theConfigurationList").hide("fast");
-});
-
 $("#moduleManagementList").click(function () {
 	$("#theModuleManagementList").toggle("slow");
-	$("#theCheatSheetManagementList").hide("fast");
 	$("#theUserManagementList").hide("fast");
 	$("#theConfigurationList").hide("fast");
 });
@@ -23,14 +15,12 @@ $("#moduleManagementList").click(function () {
 
 $("#userManagementList").click(function () {
 	$("#theUserManagementList").toggle("slow");
-	$("#theCheatSheetManagementList").hide("fast");
 	$("#theModuleManagementList").hide("fast");
 	$("#theConfigurationList").hide("fast");
 });
 
 $("#configurationList").click(function () {
 	$("#theConfigurationList").toggle("slow");
-	$("#theCheatSheetManagementList").hide("fast");
 	$("#theModuleManagementList").hide("fast");
 	$("#theUserManagementList").hide("fast");
 });

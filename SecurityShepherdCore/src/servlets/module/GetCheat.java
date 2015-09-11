@@ -1,7 +1,8 @@
-package servlets.admin.cheatSheet;
+package servlets.module;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -15,12 +16,12 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import dbProcs.Getter;
-import dbProcs.Setter;
+import utils.CheatSheetStatus;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
 /**
- * Control class for the Create Cheat sheet function.
+ * Control class responsible for returning a cheat sheet for a module
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -39,15 +40,14 @@ import utils.Validate;
  * @author Mark Denihan
  *
  */
-public class CreateCheat extends HttpServlet
+public class GetCheat extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(CreateCheat.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(GetCheat.class);
 	
 	/**
-	 * This method validates input and then attempts to update the cheat sheet for the specified module
-	 * @param newSolution The new solution to store as a cheat sheet
-	 * @param moduleId[] The identifier of the module to update.
+	 * This method will reject requests if cheat sheet availability is marked as unavailable by administration.
+	 * @param moduleId
 	 * @param csrfToken
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -55,60 +55,54 @@ public class CreateCheat extends HttpServlet
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("*** servlets.Admin.CreateCheat ***");
-		Encoder encoder = ESAPI.encoder();
+		log.debug("*** servlets.Admin.GetCheat ***");
+		String[] result = null;
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+		Encoder encoder = ESAPI.encoder();
 		HttpSession ses = request.getSession(true);
-		Cookie tokenCookie = Validate.getToken(request.getCookies());
-		Object tokenParmeter = request.getParameter("csrfToken");
-		if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
+		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug("Current User: " + ses.getAttribute("userName").toString());
+			Cookie tokenCookie = Validate.getToken(request.getCookies());
+			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
-				String errorMessage = null;
-				String newSolution = request.getParameter("newSolution");
-				log.debug("User submitted new solution - " + newSolution);
-				String moduleId = request.getParameter("moduleId[]");
-				log.debug("User submitted moduleId: " + moduleId);
-				if(newSolution != null && !newSolution.isEmpty())
+				if(CheatSheetStatus.showCheat(ses.getAttribute("userRole").toString()))
 				{
 					String ApplicationRoot = getServletContext().getRealPath("");
-					String moduleCheck = Getter.getModuleResult(ApplicationRoot, moduleId);
-					if(moduleCheck != null)
+					String moduleId = request.getParameter("moduleId");
+					Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+					log.debug(ses.getAttribute("userName") + " submitted the following moduleId: " + moduleId);
+					if(moduleId != null)
 					{
-						if(!Setter.updateCheatSheet(ApplicationRoot, moduleId, encoder.encodeForHTML(newSolution)))
-							errorMessage = "A database level error occurred. Please contact your administrator";
+						result = Getter.getModuleSolution(ApplicationRoot, moduleId, locale);
+						if(result != null)
+						{
+							out.write(
+									"<div id='theActualCheat' class='cheatBox'>" + 
+									"<big style='color:#A878EF;'>" + encoder.encodeForHTML(result[0]) + " Cheat</big>" +
+									"<p>" +
+									result[1] +
+									"</div></p><br>");
+						}
 					}
-					else
-					{
-						errorMessage = "Invalid Module submitted";
-					}
 				}
-				else
-				{
-					errorMessage = "Invalid Module submitted";
-				}
-				String output = new String();
-				if(errorMessage != null)
-				{
-					output = "<h2 class='title'>Create Cheat Sheet Failure</h2>" +
-							"<p>" + encoder.encodeForHTML(errorMessage) + "</p>";
-				}
-				else
-				{
-					output = "<h2 class='title'>Create Cheat Sheet Success</h2>" +
-					"<p>Cheat Sheet successfully created</p>";
-				}
-				out.write(output);
+			}
+			else
+			{
+				log.error("CSRF Attack Detected: Made Against" + ses.getAttribute("userName"));
 			}
 		}
 		else
 		{
 			out.write("<img src='css/images/loggedOutSheep.jpg'/>");
 		}
-		log.debug("*** END servlets.Admin.CreateCheat ***");
+		if(result == null)
+		{
+			out.write("An error Occurred...");
+		}
+		log.debug("*** END servlets.Admin.GetCheat ***");
 	}
 }

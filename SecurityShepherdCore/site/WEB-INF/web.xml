@@ -301,7 +301,7 @@
 	
 	<servlet>
 		<servlet-name>/enableCheats</servlet-name>
-		<servlet-class>servlets.admin.cheatSheet.EnableCheats</servlet-class>
+		<servlet-class>servlets.admin.config.EnableCheats</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/enableCheats</servlet-name>
@@ -310,7 +310,7 @@
 	
 	<servlet>
 		<servlet-name>/disableCheats</servlet-name>
-		<servlet-class>servlets.admin.cheatSheet.DisableCheats</servlet-class>
+		<servlet-class>servlets.admin.config.DisableCheats</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/disableCheats</servlet-name>
@@ -318,17 +318,8 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>/createCheat</servlet-name>
-		<servlet-class>servlets.admin.cheatSheet.CreateCheat</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>/createCheat</servlet-name>
-		<url-pattern>/createCheat</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
 		<servlet-name>/getCheat</servlet-name>
-		<servlet-class>servlets.admin.cheatSheet.GetCheat</servlet-class>
+		<servlet-class>servlets.module.GetCheat</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/getCheat</servlet-name>

@@ -1,4 +1,4 @@
-package servlets.admin.cheatSheet;
+package servlets.admin.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;
