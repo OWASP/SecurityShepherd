@@ -18,7 +18,7 @@ ENV keystorePwd=CowSaysMoo mysqlRootPwd=CowSaysMoo
 ENV homeDirectory="/home/shepherd/" keyStoreFileName="shepherdKeystore.jks"
 
 #Download locations
-ENV shepherdServerXmlLocation="https://github.com/OWASP/SecurityShepherd/SecurityShepherdCore/setupFiles/tomcatShepherdSampleServer.xml" shepherdWebXmlLocation="https://github.com/OWASP/SecurityShepherd/SecurityShepherdCore/setupFiles/tomcatShepherdSampleWeb.xml" shepherdManualPackLocation="http://sourceforge.net/projects/owaspshepherd/files/owaspSecurityShepherd_V2.3%20Manual%20Pack.zip/download"
+ENV shepherdServerXmlLocation="https://github.com/OWASP/SecurityShepherd/SecurityShepherdCore/setupFiles/tomcatShepherdSampleServer.xml" shepherdWebXmlLocation="https://github.com/OWASP/SecurityShepherd/SecurityShepherdCore/setupFiles/tomcatShepherdSampleWeb.xml" shepherdManualPackLocation="http://sourceforge.net/projects/owaspshepherd/files/owaspSecurityShepherd_V2.4%20Manual%20Pack.zip/download"
 
 # Install Pre-Requisite Stuff
 RUN apt-get update -y &&\
