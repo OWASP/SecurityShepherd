@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -51,6 +53,12 @@ public class CsrfChallengeTargetTwo extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Cross-SiteForegery Challenge Two Target Servlet");
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle csrfGenerics = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -86,21 +94,21 @@ public class CsrfChallengeTargetTwo extends HttpServlet
 				
 				if(result)
 				{
-					out.write("Increment Successful");
+					out.write(csrfGenerics.getString("target.incrementSuccess"));
 				}
 				else
 				{
-					out.write("Increment Failed");
+					out.write(csrfGenerics.getString("target.incrementFailed"));
 				}
 			}
 			else
 			{
-				out.write("No Session Detected");
+				out.write(csrfGenerics.getString("target.noSession"));
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal("Cross Site Request Forgery Target Challenge 2 - " + e.toString());
 		}
 	}

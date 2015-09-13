@@ -5,9 +5,10 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +21,6 @@ import org.owasp.esapi.Encoder;
 import utils.ShepherdLogManager;
 import utils.Validate;
 import dbProcs.Database;
-import dbProcs.Getter;
-import dbProcs.Setter;
 
 /**
  * Cross Site Request Forgery Challenge Six - Does not return result Key
@@ -59,6 +58,12 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("Cross-SiteForegery Challenge Get Token Six Servlet");
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle csrfGenerics = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -89,16 +94,15 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 				}
 				catch (Exception e)
 				{
-					log.debug("Could not retrieve Challenge CSRF Tokens");
-					htmlOutput = "Was unable to retrieve CSRF Token. Funky";
+					log.debug("Could not retrieve Challenge CSRF Tokens: " + e.toString());
+					htmlOutput = csrfGenerics.getString("error.noToken");
 				}
 				out.write(htmlOutput);
-					
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 		}
 	}
 

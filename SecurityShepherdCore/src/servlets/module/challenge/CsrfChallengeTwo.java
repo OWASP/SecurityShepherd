@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -54,6 +56,12 @@ public class CsrfChallengeTwo extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug(levelName + " Servlet Accessed");
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle csrfGenerics = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -81,7 +89,7 @@ public class CsrfChallengeTwo extends HttpServlet
 					String classId = null;
 					if(ses.getAttribute("userClass") != null)
 						classId = (String)ses.getAttribute("userClass");
-					String htmlOutput = Getter.getCsrfForumWithIframe(ApplicationRoot, classId, moduleId);
+					String htmlOutput = Getter.getCsrfForumWithIframe(ApplicationRoot, classId, moduleId, csrfGenerics);
 					
 					log.debug("Outputting HTML");
 					out.write(htmlOutput);
@@ -90,7 +98,7 @@ public class CsrfChallengeTwo extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}	

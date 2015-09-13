@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * Cross Site Request Forgery Challenge 3
@@ -23,6 +23,11 @@
  */
  String levelName = "CSRF Challenge 3";
  String levelHash = new String("z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c");
+
+ //Translation Stuff
+ Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.csrf.csrfStrings", locale);
+ 
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -58,53 +63,52 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Cross Site Request Forgery Challenge Three</title>
+	<title>Security Shepherd - <%= bundle.getString("title.csrf3") %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Cross Site Request Forgery Challenge Three</h2>
+			<h2 class="title"><%= bundle.getString("title.csrf3") %></h2>
 			<p> 
-				To complete this challenge, you must get your CSRF counter above 0. 
-				The request to increment your counter is as follows;
+				<%= bundle.getString("challenge.intro") %>
 				<br/>
 				<br/>
 				<a> POST /user/csrfchallengethree/plusplus</a>
 				<br/>
-				With the following parameters; <a>userid=exampleId & csrftoken=exampleToken</a>
+				<%= bundle.getString("challenge.withTheseParameters") %> <a>userid=<%= bundle.getString("challenge.userIdExample") %> & csrftoken=<%= bundle.getString("challenge.userTokenExample") %></a>
 				<br/>
 				<br/>
-				The csrfToken parameter is generated dynamically for easy user upon user interaction and the exampleId parameter is the identifier of the user who's CSRF counter is been incremented. Your identifier is <a><%= userId %></a>. . Any user than you may increment your counter for this challenge, except you. Exploit the CSRF vulnerability in the request described above against other users to complete this challenge. Once you have successfully CSRF'd another Security Shepherd user, the solution key will appear just below this message.
+				<%= bundle.getString("challenge.csrfTokenGenerated") %>&nbsp;<%= bundle.getString("challenge.userIdExample") %>&nbsp;<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.2") %>&nbsp;<%= bundle.getString("challenge.yourIdIs") %>&nbsp;<a><%= userId %></a><%= bundle.getString("challenge.yourIdIs.1") %>
 				<br/>
 				<br/>
-				You can use the CSRF forum below to post an iFrame pointing at a web site.
+				<%= bundle.getString("challenge.useForumForIframe") %>
 				<% 
 				String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);
 				if (Getter.isCsrfLevelComplete(ApplicationRoot, moduleId, userId)) 
 				{ %>
-					<h2 class='title'>This CSRF Challenge has been Completed</h2>
+					<h2 class='title'><%= bundle.getString("result.challengeCompleted") %></h2>
 					<p>
-					Congratulations, you have completed this CSRF challenge by successfully carrying out a CSRF attack on another user for this level's target. The result key is 
-					<b><a><%=encoder.encodeForHTML(Hash.generateUserSolution(Getter.getModuleResult(ApplicationRoot, moduleId), (String)ses.getAttribute("userName"))) %></a></b><br/><br/>
+					<%= bundle.getString("result.congratsTheKeyIs") %> 
+					<b> <a><%=encoder.encodeForHTML(Hash.generateUserSolution(Getter.getModuleResult(ApplicationRoot, moduleId), (String)ses.getAttribute("userName"))) %></a></b><br/><br/>
 				<% } %>		
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter your <a>Message</a> that you would like to share with your class
+						<%= bundle.getString("forum.iframe.whatToDo") %>
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="myMessage" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Post Message"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("forum.postMessage") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("forum.loading") %></p>
 					</td></tr>
 					</table>
 				</form>
 				
 				<div id="resultsDiv">
-					<%= Getter.getCsrfForumWithIframe(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, levelHash)) %>
+					<%= Getter.getCsrfForumWithIframe(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, levelHash), bundle) %>
 				</div>
 			</p>
 		</div>
@@ -130,7 +134,7 @@
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

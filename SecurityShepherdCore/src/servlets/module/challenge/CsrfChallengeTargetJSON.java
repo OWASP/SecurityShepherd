@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
@@ -54,6 +56,12 @@ public class CsrfChallengeTargetJSON extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug(levelName + " Servlet");
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle csrfGenerics = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		try
@@ -95,21 +103,21 @@ public class CsrfChallengeTargetJSON extends HttpServlet
 				
 				if(result)
 				{
-					out.write("Increment Successful");
+					out.write(csrfGenerics.getString("target.incrementSuccess"));
 				}
 				else
 				{
-					out.write("Increment Failed");
+					out.write(csrfGenerics.getString("target.incrementFailed"));
 				}
 			}
 			else
 			{
-				out.write("No Session Detected");
+				out.write(csrfGenerics.getString("target.noSession"));
 			}
 		}
 		catch(Exception e)
 		{
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}

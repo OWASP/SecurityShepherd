@@ -2,7 +2,9 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 import java.util.Random;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -56,6 +58,12 @@ public class CsrfChallengeTargetSix extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug(levelName + " Servlet");
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle csrfGenerics = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		String storedToken = new String();
@@ -75,7 +83,7 @@ public class CsrfChallengeTargetSix extends HttpServlet
 					Random random = new Random();
 					int newToken = random.nextInt(3);
 					storedToken = csrfArray[newToken];
-					out.write("No CSRF Token Detected for this Challenge. You're token is now " + storedToken + "<br><br>");
+					out.write(csrfGenerics.getString("noTokenNewToken") + " " + storedToken + "<br><br>");
 					ses.setAttribute(csrfTokenName, storedToken);
 				}
 				else
@@ -122,21 +130,21 @@ public class CsrfChallengeTargetSix extends HttpServlet
 				
 				if(result)
 				{
-					out.write("Increment Successful");
+					out.write(csrfGenerics.getString("target.incrementSuccess"));
 				}
 				else
 				{
-					out.write("Increment Failed");
+					out.write(csrfGenerics.getString("target.incrementFailed"));
 				}
 			}
 			else
 			{
-				out.write("No Session Detected");
+				out.write(csrfGenerics.getString("target.noSession"));
 			}
 		}
 		catch(Exception e)
 		{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 		}
 	}

@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -61,6 +63,12 @@ public class CsrfChallengeTargetFour extends HttpServlet
 		log.debug(levelName + " Servlet");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle csrfGenerics = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
+		
 		String storedToken = new String();
 		try
 		{
@@ -78,7 +86,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 				{
 					log.debug("No CSRF Token found in session");
 					storedToken = Setter.setCsrfChallengeFourCsrfToken(userId, Hash.randomString(), ApplicationRoot);
-					out.write("No CSRF Token Detected for this Challenge. You're token is now " + storedToken + "<br><br>");
+					out.write(csrfGenerics.getString("target.noTokenNewToken") + " " + storedToken + "<br><br>");
 					ses.setAttribute(csrfTokenName, storedToken);
 				}
 				else
@@ -124,21 +132,21 @@ public class CsrfChallengeTargetFour extends HttpServlet
 				
 				if(result)
 				{
-					out.write("Increment Successful");
+					out.write(csrfGenerics.getString("target.incrementSuccess"));
 				}
 				else
 				{
-					out.write("Increment Failed");
+					out.write(csrfGenerics.getString("target.incrementFailed"));
 				}
 			}
 			else
 			{
-				out.write("No Session Detected");
+				out.write(csrfGenerics.getString("target.noSession"));
 			}
 		}
 		catch(Exception e)
 		{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 		}
 	}

@@ -453,9 +453,10 @@ public class Getter
 	 * @param ApplicationRoot The current running context of the application
 	 * @param classId Identifier of the class to populate the forum with
 	 * @param moduleId The module in which to return the forum for
+	 * @param bundle Strings Package for the Language Local of the user making the request
 	 * @return A HTML table of a Class's CSRF Submissions for a specific module
 	 */
-	public static String getCsrfForumWithIframe (String ApplicationRoot, String classId, String moduleId)
+	public static String getCsrfForumWithIframe (String ApplicationRoot, String classId, String moduleId, ResourceBundle bundle)
 	{
 		log.debug("*** Getter.getCsrfForum ***");
 		log.debug("Getting stored messages from class: " + classId);
@@ -474,7 +475,7 @@ public class Getter
 				log.debug("resultMessageByClass executed");
 				
 				//Table Header
-				htmlOutput = "<table><tr><th>User Name</th><th>Message</th></tr>";
+				htmlOutput = "<table><tr><th>" + bundle.getString("forum.userName") + "</th><th>" + bundle.getString("forum.message") + "</th></tr>";
 				
 				log.debug("Opening Result Set from resultMessageByClass");
 				int counter = 0;
@@ -494,13 +495,17 @@ public class Getter
 			else
 			{
 				log.error("User with Null Class detected");
-				htmlOutput = "<p><font color='red'>You must be assigned to a class to use this function. Please contact your administrator.</font></p>";
+				htmlOutput = "<p><font color='red'>" + bundle.getString("error.noClass") + "</font></p>";
 			}
 		}
 		catch (SQLException e)
 		{
 			log.error("Could not execute query: " + e.toString());
-			htmlOutput = "<p>Sorry! An Error Occurred. Please contact administrator</p>";
+			htmlOutput = "<p>" + bundle.getString("error.occurred ") + "</p>";
+		}
+		catch (Exception e)
+		{
+			log.fatal("Could not return CSRF Forum: " + e.toString());
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END getCsrfForum ***");
@@ -512,9 +517,10 @@ public class Getter
 	 * @param ApplicationRoot The current running context of the application
 	 * @param classId Identifier of the class to populate the forum with
 	 * @param moduleId The module in which to return the forum for
+	 * @param bundle The strings package for the language of the user
 	 * @return A HTML table of a Class's CSRF Submissions for a specific module
 	 */
-	public static String getCsrfForumWithImg (String ApplicationRoot, String classId, String moduleId)
+	public static String getCsrfForumWithImg (String ApplicationRoot, String classId, String moduleId, ResourceBundle bundle)
 	{
 		log.debug("*** Getter.getCsrfForum ***");
 		log.debug("Getting stored messages from class: " + classId);
@@ -533,7 +539,7 @@ public class Getter
 				log.debug("resultMessageByClass executed");
 				
 				//Table Header
-				htmlOutput = "<table><tr><th>User Name</th><th>Image</th></tr>";
+				htmlOutput = "<table><tr><th>" + bundle.getString("forum.userName") + "</th><th>" + bundle.getString("forum.image") + "</th></tr>";
 				
 				log.debug("Opening Result Set from resultMessageByClass");
 				int counter = 0;
@@ -553,13 +559,17 @@ public class Getter
 			else
 			{
 				log.error("User with Null Class detected");
-				htmlOutput = "<p><font color='red'>You must be assigned to a class to use this function. Please contact your administrator.</font></p>";
+				htmlOutput = "<p><font color='red'>" + bundle.getString("error.noClass") + "</font></p>";
 			}
 		}
 		catch (SQLException e)
 		{
 			log.error("Could not execute query: " + e.toString());
-			htmlOutput = "<p>Sorry! An Error Occurred. Please contact administrator</p>";
+			htmlOutput = "<p>" + bundle.getString("error.occurred") + "</p>";
+		}
+		catch (Exception e)
+		{
+			log.fatal("Could not return CSRF Forum: " + e.toString());
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END getCsrfForum ***");
