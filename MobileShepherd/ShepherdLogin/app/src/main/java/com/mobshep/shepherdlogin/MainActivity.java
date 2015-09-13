@@ -8,11 +8,10 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.internal.widget.AppCompatPopupWindow;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,12 +49,16 @@ public class MainActivity extends ActionBarActivity {
 
     TextView tvResponse;
 
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         referenceXML();
 
+        logPrefSession();
+        logProviderSession();
 
         if (checkSession()) {
             Intent intent = new Intent(MainActivity.this, LoggedIn.class);
@@ -76,6 +79,8 @@ public class MainActivity extends ActionBarActivity {
         addressTest.show();
 
     }
+
+
 
     public void submitClicked(View v) {
 
@@ -201,14 +206,27 @@ public class MainActivity extends ActionBarActivity {
     public boolean checkSession(){
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String sesh = SP.getString("session", "NA");
+        String sesh = SP.getString("session", "null");
 
-        if (sesh != null) {
-            return true;
+        if (sesh.equals("null")) {
+            return false;
         }
             else{
-                return false;
+                return true;
             }
+    }
+
+
+    private void logPrefSession() {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String sesh = SP.getString("session", "NA");
+
+        Log.i(TAG, "Preference session is:" + sesh);
+    }
+
+    private void logProviderSession() {
+
+        Log.i(TAG, "Provider session is:");
 
     }
 }

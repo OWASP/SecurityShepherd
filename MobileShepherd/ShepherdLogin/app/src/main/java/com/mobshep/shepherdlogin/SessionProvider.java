@@ -97,7 +97,7 @@ public class SessionProvider extends ContentProvider {
 
         // Cursor provides read and write access to the database
         Cursor cursor = queryBuilder.query(sqlDB, projection, selection, selectionArgs, null,
-                null, "ROWID LIMIT 1");
+                null, null);
 
         // Register to watch for URI changes
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -123,11 +123,8 @@ public class SessionProvider extends ContentProvider {
     // Receives the URI (Uniform Resource Identifier) for the Content Provider and a set of values
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-
-        String cleanRange = "-1";
         //delete any previous sessions
-        sqlDB.delete(TABLE_NAME, "id !=? " , new String[]{cleanRange});
-
+        sqlDB.delete(TABLE_NAME, "id > ? " , new String[]{"0"});
         DatabaseHelper dbHelper = new DatabaseHelper(getContext());
         sqlDB = dbHelper.getWritableDatabase();
 
