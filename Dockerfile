@@ -18,7 +18,7 @@ ENV keystorePwd=CowSaysMoo mysqlRootPwd=CowSaysMoo
 ENV homeDirectory="/home/shepherd/" keyStoreFileName="shepherdKeystore.jks"
 
 #Download locations
-ENV shepherdServerXmlLocation="https://github.com/OWASP/SecurityShepherd/SecurityShepherdCore/setupFiles/tomcatShepherdSampleServer.xml" shepherdWebXmlLocation="https://github.com/OWASP/SecurityShepherd/SecurityShepherdCore/setupFiles/tomcatShepherdSampleWeb.xml" shepherdManualPackLocation="http://sourceforge.net/projects/owaspshepherd/files/owaspSecurityShepherd_V2.4%20Manual%20Pack.zip/download"
+ENV serverXml="https://raw.githubusercontent.com/OWASP/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleServer.xml" webXml="https://raw.githubusercontent.com/OWASP/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleWeb.xml" shepherdManualPackLocation="http://sourceforge.net/projects/owaspshepherd/files/owaspSecurityShepherd_V2.4%20Manual%20Pack.zip/download"
 
 # Install Pre-Requisite Stuff
 RUN apt-get update -y &&\
@@ -58,8 +58,8 @@ RUN echo "JAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/default/tomcat7 && \
 	cd /var/lib/tomcat7/conf/ && \
 	rm -f web.xml && \
 	rm -f server.xml &&\
-	wget --quiet $shepherdWebXmlLocation -O web.xml && \
-	wget --quiet $shepherdServerXmlLocation  -O server.xml && \
+	wget --quiet $webXml -O web.xml && \
+	wget --quiet $serverXml  -O server.xml && \
 	escapedFileName=$(echo "$homeDirectory$keyStoreFileName" | sed 's/\//\\\//g') && \
 	sed -i "s/____.*____/$escapedFileName/g" server.xml && \
 	sed -i "s/___.*___/$keystorePwd/g" server.xml && \
