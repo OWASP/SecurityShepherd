@@ -86,7 +86,7 @@ extends HttpServlet
 						String theHash = this.getClass().getSimpleName();
 						log.debug("XSS Lesson Completed!");
 						Encoder encoder = ESAPI.encoder();
-						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "/h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "</h2>" +
 								"<p>" + bundle.getString("result.youDidIt") + "<br />" +
 								"" + bundle.getString("result.resultKey") + " <a>" +
 								encoder.encodeForHTML(
