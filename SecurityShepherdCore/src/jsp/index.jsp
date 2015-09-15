@@ -129,7 +129,6 @@ if (request.getSession() != null)
 										<ul id="theConfigurationList" style="display: none;">
 											<li><a id="aboutShepherdLink" href="javascript:;"><fmt:message key="generic.text.aboutSecShep" /></a></li>
 											<li><a id="cheatSheetLink" href="javascript:;"><fmt:message key="index.link.admin.cheatSheet.manage" /></a></li>
-											<li><a id="levelLayoutLink" href="javascript:;"><fmt:message key="index.link.admin.config.change" /></a></li>
 											<li><a id="configureFeedbackLink" href="javascript:;"><fmt:message key="index.link.admin.config.feedback" /></a></li>
 											<li><a id="registrationLink" href="javascript:;"><fmt:message key="index.link.admin.config.openClose" /></a></li>
 											<li><a id="scoreboardLink" href="javascript:;"><fmt:message key="index.link.admin.config.scoreboard" /></a></li>
@@ -139,6 +138,7 @@ if (request.getSession() != null)
 									<li>
 										<a id="moduleManagementList" href="javascript:;"><fmt:message key="index.link.admin.moduleManage" /></a>
 										<ul id="theModuleManagementList" style="display: none;">
+											<li><a id="levelLayoutLink" href="javascript:;"><fmt:message key="index.link.admin.config.change" /></a></li>
 											<li><a id="moduleBlockLink" href="javascript:;"><fmt:message key="index.link.admin.moduleManage.block" /></a></li>
 											<li><a id="setModuleStatusLink" href="javascript:;"><fmt:message key="index.link.admin.moduleManage.openClose" /></a></li>
 											<li><a id="openCloseByCategory" href="javascript:;"><fmt:message key="index.link.admin.moduleManage.openCloseCategory" /></a></li>
@@ -557,7 +557,7 @@ if (request.getSession() != null)
 			$("#levelLayoutLink").click(function(){
 				$("#submitResult").slideUp("fast", function(){
 					$("#contentDiv").hide("fast", function(){
-						$("#contentDiv").load("admin/config/changeLevelLayout.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						$("#contentDiv").load("admin/moduleManagement/changeLevelLayout.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
 							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");

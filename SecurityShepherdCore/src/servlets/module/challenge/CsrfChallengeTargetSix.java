@@ -83,7 +83,7 @@ public class CsrfChallengeTargetSix extends HttpServlet
 					Random random = new Random();
 					int newToken = random.nextInt(3);
 					storedToken = csrfArray[newToken];
-					out.write(csrfGenerics.getString("noTokenNewToken") + " " + storedToken + "<br><br>");
+					out.write(csrfGenerics.getString("target.noTokenNewToken") + " " + storedToken + "<br><br>");
 					ses.setAttribute(csrfTokenName, storedToken);
 				}
 				else

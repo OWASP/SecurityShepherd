@@ -76,7 +76,7 @@
 				<br/>
 				<a> POST /user/csrfchallengethree/plusplus</a>
 				<br/>
-				<%= bundle.getString("challenge.withTheseParameters") %> <a>userid=<%= bundle.getString("challenge.userIdExample") %> & csrftoken=<%= bundle.getString("challenge.userTokenExample") %></a>
+				<%= bundle.getString("challenge.withTheseParameters") %> <a>userid=<%= bundle.getString("challenge.userIdExample") %> & csrfToken=<%= bundle.getString("challenge.userTokenExample") %></a>
 				<br/>
 				<br/>
 				<%= bundle.getString("challenge.csrfTokenGenerated") %>&nbsp;<%= bundle.getString("challenge.userIdExample") %>&nbsp;<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.2") %>&nbsp;<%= bundle.getString("challenge.yourIdIs") %>&nbsp;<a><%= userId %></a><%= bundle.getString("challenge.yourIdIs.1") %>

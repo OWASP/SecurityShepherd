@@ -76,7 +76,7 @@
 				<br/>
 				<a> POST /user/csrfchallengetwo/plusplus</a>
 				<br/>
-				<%= bundle.getString("challenge.withThisParameter") %> <a>userId = <%= bundle.getString("challenge.userIdExample") %>exampleId</a>
+				<%= bundle.getString("challenge.withThisParameter") %> <a>userId = <%= bundle.getString("challenge.userIdExample") %></a>
 				<br/>
 				<br/>
 				<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.1") %>&nbsp;<%= bundle.getString("challenge.userIdExample") %>&nbsp;<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.2") %>&nbsp;

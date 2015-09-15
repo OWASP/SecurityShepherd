@@ -81,7 +81,7 @@ if (request.getSession() != null)
 				<br/>
 				<a> POST /user/csrfchallengefour/plusplus</a>
 				<br/>
-				<%= bundle.getString("challenge.withTheseParameters") %> <a>userId = <%= bundle.getString("challenge.userIdExample") %></a> & <a>csrf = <%= bundle.getString("challenge.yourCsrfTokenCamelCase") %></a>
+				<%= bundle.getString("challenge.withTheseParameters") %> <a>userId = <%= bundle.getString("challenge.userIdExample") %></a> & <a>csrfToken = <%= bundle.getString("challenge.yourCsrfTokenCamelCase") %></a>
 				<br/>
 				<br/>
 				<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.1") %> <%= bundle.getString("challenge.userIdExample") %> <%= bundle.getString("challenge.whereIdIsUserBeenIncremented.2") %> <%=bundle.getString("challenge.yourIdIs") %> <%= userId %> <%=bundle.getString("challenge.yourCsrfTokenIs") %> <a><%= csrfChal4Token %></a><%= bundle.getString("challenge.yourIdIs.1") %>
