@@ -88,9 +88,9 @@ public class UrlAccess1Admin extends HttpServlet
 				{
 					String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 					htmlOutput = "<h2 class='title'>" + bundle.getString("response.status") + "</h2>"
-						+ "<p>" + bundle.getString("result.keyMessage.1") + " <a>"
-						+ userKey
-						+ "</a>" + bundle.getString("result.keyMessage.2") + "</p>";
+						+ "<p>" + bundle.getString("result.keyMessage.1") + "<br />"
+						+ "<a>" + userKey + "</a><br /> " 
+						+ bundle.getString("result.keyMessage.2") + "</p>";
 				}
 				else
 					htmlOutput = "<h2 class='title'>" + bundle.getString("response.statusFail") + "</h2>"
