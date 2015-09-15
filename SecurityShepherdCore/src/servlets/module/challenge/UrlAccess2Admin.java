@@ -85,9 +85,9 @@ public class UrlAccess2Admin extends HttpServlet
 				{
 					String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 					htmlOutput = "<h2 class='title'>" + bundle.getString("admin.clicked") + "</h2>"
-						+ "<p>" + bundle.getString("admin.keyMessage.1") + "<a>"
-						+ userKey
-						+ "</a>" + bundle.getString("admin.keyMessage.2") + "</p>";
+						+ "<p>" + bundle.getString("admin.keyMessage.1") + "<br /> "
+						+ "<a>" + userKey + "</a><br />" 
+						+ bundle.getString("admin.keyMessage.2") + "</p>";
 				}
 				else
 					htmlOutput = "<h2 class='title'>" + bundle.getString("response.failue") + "</h2>"
