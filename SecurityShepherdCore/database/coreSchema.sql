@@ -649,7 +649,7 @@ IF (theModuleType = 'lesson' OR theModuleType = 'challenge') THEN
         theId, theModuleName, theLangPointer, theModuleType, theModuleCategory, theCategoryLangPointer ,theModuleSolution, SHA2(CONCAT(theModuleName, theId), 256), isHardcodedKey
     );
     COMMIT;
-    SELECT moduleId, moduleHash FROM modules
+    SELECT moduleId, moduleHash, moduleNameLangPointer, moduleCategoryLangPointer FROM modules
         WHERE moduleId = theId;
 ELSE
     SELECT 'ERROR: Invalid module type submited' FROM DUAL;
@@ -1516,6 +1516,7 @@ CALL cheatSheetCreate('dc89383763c68cba0aaa1c6f3fd4c17e9d49a805', 'dc89383763c68
 CALL cheatSheetCreate('5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a', '5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a.solution');
 CALL cheatSheetCreate('c685f8102ae0128c2ab342df64699bb8209a0839', 'c685f8102ae0128c2ab342df64699bb8209a0839.solution');
 CALL cheatSheetCreate('d7eaeaa1cc4f218abd86d14eefa183a0f8eb6298', 'd7eaeaa1cc4f218abd86d14eefa183a0f8eb6298.solution');
+CALL cheatSheetCreate('5ca9115f3279b9b9f3308eb6a59a4fcd374846d6', '5ca9115f3279b9b9f3308eb6a59a4fcd374846d6.solution');
 
 COMMIT;
 
