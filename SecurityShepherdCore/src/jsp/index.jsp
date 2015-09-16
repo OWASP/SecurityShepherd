@@ -114,7 +114,7 @@ if (request.getSession() != null)
 			<div id="contentDiv">
 				<!-- Ajax Div -->
 			</div>
-			<div id="theSidebarWrapper" class="sidebarWrapper">
+			<div id="theSidebarWrapper" class="sidebarWrapper" onmouseover="resizeSidebar()">
 				<div class="menuIcon">
 					&#9776;
 				</div>
@@ -253,7 +253,14 @@ if (request.getSession() != null)
 		</div>
 		</div>
 		<script src="js/toggle.js"></script>
-		<script src="js/ajaxCalls.js"></script>
+		<script>
+		$("#contentDiv").load("getStarted.jsp", function(response, status, xhr) {
+			if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+		  }
+		});
+		</script>
 		
 		<% //Hide UI Scripts from Users (Blocked at session level anyway, just stops spiders finding the links)
 		if (userRole.compareTo("admin") == 0){ %>
@@ -621,6 +628,7 @@ if (request.getSession() != null)
 								});
 							<% } %>
 						}).appendTo('#contentDiv');
+						$("#theSidebarWrapper").height($("#contentDiv").height());
 					}
 					else
 					{
@@ -676,6 +684,7 @@ if (request.getSession() != null)
 							});
 						<% } %>
 						}).appendTo('#contentDiv');
+						$("#theSidebarWrapper").height($("#contentDiv").height());
 					}
 					else
 					{
@@ -828,10 +837,21 @@ if (request.getSession() != null)
 			}); 
 			
 		<% } %>
+		function resizeSidebar() {
+			//Make Sidebar as Long as Page
+			if($("#contentDiv").height() > 700) {
+				console.log("Updating Sidebar Length to " + $("#contentDiv").height());
+				$("#theSidebarWrapper").height($("#contentDiv").height());
+			} else{
+				console.log("Setting Sidebar to 130% because  " + $("#contentDiv").height() + "px is too short.");
+				$("#theSidebarWrapper").height("130%");
+			}
+		}
 		</script>
 		<script>
 			(function($){
 		        $(window).load(function(){
+		        	console.log("Initialising Custome Scrollbars (If Any)");
 		            $(".levelList").mCustomScrollbar({
 		            	theme:"dark-thin",
 		            	mouseWheel:{ scrollAmount: 120 }
