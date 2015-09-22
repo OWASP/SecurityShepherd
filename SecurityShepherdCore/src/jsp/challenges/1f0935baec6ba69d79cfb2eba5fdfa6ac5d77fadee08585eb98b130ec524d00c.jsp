@@ -1,5 +1,6 @@
 <%@page import="servlets.module.challenge.DirectObjectBankLogin"%>
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*, servlets.module.challenge.DirectObjectBankLogin" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,9 +24,13 @@
 //No Quotes In level Name
 String levelName = "Insecure Direct Object Reference Bank Challenge";
 //Alphanumeric Only
-String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Not used - See Below";
+String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c"; 
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.directObject." + levelHash, locale);
+//Used more than once translations
+String i18nChallengeName = bundle.getString("challenge.challengeName");
 
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -67,39 +72,39 @@ if (request.getSession() != null)
 		<div id="contentDiv">
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
-				To complete this challenge you must sign in to a bank account that has more than 5000000 euro in it. If you have more than this amount in your account, just sign out and back in again of the bank account to get the key, or open this level again.
+				<%= bundle.getString("challenge.whatToDo") %>
 				<br/>
 				<br/>
-				<h1 class='title'>InsecureDirectBank</h1>
-				<p>Hey new customers. We're up and coming in the banking sector and would like to give you a free account. Just create an account and sign in here:</p>
+				<h1 class='title'><%= bundle.getString("insecureBank.title") %></h1>
+				<p><%= bundle.getString("insecureBank.message") %></p>
 				<div id="unauthDiv" <% if(bankSessionDetected){ %> style="display: none;" <% } %>>
-					<h2 class="title">Sign in Now!</h2>
-					<p>Use this form to sign into your account now!</p>
+					<h2 class="title"><%= bundle.getString("insecureBank.signInNow") %></h2>
+					<p><%= bundle.getString("insecureBank.signInNow.message") %></p>
 					<div id="loginFormDiv">
 						<form id="loginForm" action="javascript:;">
 							<table>
-								<tr><td>Account Holder: </td><td><input type="text" id="loginAccountHolder"></td></tr>
-								<tr><td>Account Password: </td><td><input type="password" id="loginAccountPassword"></td></tr>
-								<tr><td colspan="2"><input type="submit" value="Sign Into Bank Account"></td></tr>
+								<tr><td><%= bundle.getString("loginForm.holder") %> </td><td><input type="text" id="loginAccountHolder"></td></tr>
+								<tr><td><%= bundle.getString("loginForm.password") %> </td><td><input type="password" id="loginAccountPassword"></td></tr>
+								<tr><td colspan="2"><input type="submit" value="<%= bundle.getString("loginForm.signIn") %>"></td></tr>
 							</table>
 						</form>
 					</div>
-					<p style="display: none;" id="loginLoadingSign">Loading...</p>
+					<p style="display: none;" id="loginLoadingSign"><%= bundle.getString("form.loading") %></p>
 					<div id="loginResultsDiv"></div>
 					<br>
 					<br>
-					<h2 class="title">Register An Account!</h2>
-					<p>Use this form to register an account now!</p>
+					<h2 class="title"><%= bundle.getString("register.makeAccount") %></h2>
+					<p><%= bundle.getString("register.makeAccount.message") %></p>
 					<div id="registrationFormDiv">
 						<form id="registrationForm" action="javascript:;">
 							<table>
-								<tr><td>Account Holder: </td><td><input type="text" id="registrationAccountHolder"></td></tr>
-								<tr><td>Account Password: </td><td><input type="password" id="registrationAccountPassword"></td></tr>
-								<tr><td colspan="2"><input type="submit" value="Create Bank Account"></td></tr>
+								<tr><td><%= bundle.getString("loginForm.holder") %> </td><td><input type="text" id="registrationAccountHolder"></td></tr>
+								<tr><td><%= bundle.getString("loginForm.password") %> </td><td><input type="password" id="registrationAccountPassword"></td></tr>
+								<tr><td colspan="2"><input type="submit" value="<%= bundle.getString("register.createAccount") %>"></td></tr>
 							</table>
 						</form>
 					</div>
-					<p style="display: none;" id="registrationLoadingSign">Loading...</p>
+					<p style="display: none;" id="registrationLoadingSign"><%= bundle.getString("form.loading") %></p>
 					<div id="registrationResultsDiv"></div>
 				</div>
 				<div id="authenticatedDiv" <% if(!bankSessionDetected){ %> style="display: none;"<% } %>>
@@ -137,7 +142,7 @@ if (request.getSession() != null)
 							if(ajaxCall.responseText.startsWith("ERROR"))
 								$("#loginResultsDiv").html(ajaxCall.responseText);
 							else
-								$("#loginResultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+								$("#loginResultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 							$("#loginResultsDiv").show("fast");
 							$("#loginFormDiv").slideDown("slow");
 						}
@@ -167,7 +172,7 @@ if (request.getSession() != null)
 						}
 						else
 						{
-							$("#registrationResultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + ".</p>");
+							$("#registrationResultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + ".</p>");
 						}
 						$("#registrationResultsDiv").show("fast");
 						$("#registrationFormDiv").slideDown("slow");
@@ -206,7 +211,7 @@ if (request.getSession() != null)
 							if(ajaxCall.responseText.startsWith("ERROR"))
 								$("#refreshResultsDiv").html("ajaxCall.responseText");
 							else
-								$("#refreshResultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+								$("#refreshResultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 						}
 						$("#refreshResultsDiv").show("fast");
 						$("#refreshFormDiv").slideDown("slow");
@@ -249,7 +254,7 @@ if (request.getSession() != null)
 						}
 						else
 						{
-							$("#transferResultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+							$("#transferResultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 						}
 						$("#transferResultsDiv").show("fast");
 						$("#transferFundsForm").slideDown("slow");
@@ -294,7 +299,7 @@ if (request.getSession() != null)
 							if(ajaxCall.responseText.startsWith("ERROR"))
 								$("#logoutResultsDiv").html(ajaxCall.responseText);
 							else
-								$("#logoutResultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+								$("#logoutResultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 							$("#logoutResultsDiv").show("fast");
 							$("#logoutFormDiv").slideDown("slow");
 						}

@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -46,7 +48,7 @@ public class DirectObjectBankTransfer extends HttpServlet
 	private static String levelName = "Insecure Direct Object Bank Challenge (Transfer)";
 	private static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
 	/**
-	 * This Servlet is used to register a new bank account
+	 * This Servlet is used to transfer funds from one bank account to another, insecurely, in the Direct Object Reference Bank challenge
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -54,6 +56,12 @@ public class DirectObjectBankTransfer extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.directObject.directObjectBank", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -84,10 +92,10 @@ public class DirectObjectBankTransfer extends HttpServlet
 						performTransfer = true;
 					}
 					else
-						errorMessage = "Your account does not have the necessary funds to transfer that amount.";
+						errorMessage = bundle.getString("transfer.error.notEnoughCash");
 				}
 				else
-					errorMessage = "The amount being transfered must be greater than zero.";
+					errorMessage = bundle.getString("transfer.error.moreThanZero");
 				
 				String htmlOutput = new String();
 				if(performTransfer)
@@ -100,25 +108,25 @@ public class DirectObjectBankTransfer extends HttpServlet
 					callstmt.setFloat(3, tranferAmount);
 					callstmt.execute();
 					log.debug("Sucessfully ran Transfer Funds procedure.");
-					htmlOutput = "Funds have been transfered sucessfully!";
+					htmlOutput = bundle.getString("transfer.success");
 					Database.closeConnection(conn);
 				}
 				else
 				{
 					log.debug("Invalid Data Detected: " + errorMessage);
-					htmlOutput = "An Error Occured: " + errorMessage;
+					htmlOutput = bundle.getString("transfer.error.occurred") + " " + errorMessage;
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
 			}
 			catch(SQLException e)
 			{
-				out.write("An Error Occurred! You must be getting funky! Could not get Transfer Funds!");
+				out.write(errors.getString("error.funky") + " " + bundle.getString("transfer.error.couldNotTransfer"));
 				log.fatal(levelName + " SQL Error - " + e.toString());
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * Insecure Direct Object References Challenge One
@@ -22,7 +22,15 @@
  * @author Mark Denihan
  */
 
-String levelName = "Insecure Direct Object References Challenge One";
+ String levelName = "Insecure Direct Object References Challenge One";
+ String levelHash = "o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c";
+ 
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.directObject." + levelHash, locale);
+//Used more than once translations
+String i18nChallengeName = bundle.getString("challenge.challengeName");
+	
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -48,15 +56,15 @@ String levelName = "Insecure Direct Object References Challenge One";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Insecure Direct Object References Challenge One</title>
+	<title>Security Shepherd - <%= i18nChallengeName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Insecure Direct Object Reference Challenge One</h2>
+			<h2 class="title"><%= i18nChallengeName %></h2>
 			<p> 
-				The result key for this challenge is stored in the private message for a user that is not listed below...
+				<%= bundle.getString("challenge.whatToDo") %>
 				<br />
 				<br />
 				<center>
@@ -72,8 +80,8 @@ String levelName = "Insecure Direct Object References Challenge One";
 						</select>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input style='width: 300px;' type="submit" value="Show this profile"/></div>
-						<p style="display: none; text-align: center;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input style='width: 300px;' type="submit" value="<%= bundle.getString("challenge.showProfile") %>"/></div>
+						<p style="display: none; text-align: center;" id="loadingSign"><%= bundle.getString("challenge.loading") %></p>
 					</td></tr>
 					</table>
 				</form>
@@ -89,7 +97,7 @@ String levelName = "Insecure Direct Object References Challenge One";
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c",
+						url: "<%= levelHash %>",
 						data: {
 							userId: optionValue
 						},

@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,7 +44,7 @@ public class DirectObjectBankLogout extends HttpServlet
 	private static String levelName = "Insecure Direct Object Bank Challenge (Logout)";
 	private static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
 	/**
-	 * This Servlet is used to Sign out of a Bank Account
+	 * This Servlet is used by a user to Sign out of a Bank Account Session in the Insecure Direct Bank Challenge
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -50,6 +52,11 @@ public class DirectObjectBankLogout extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.directObject.directObjectBank", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -57,7 +64,7 @@ public class DirectObjectBankLogout extends HttpServlet
 			PrintWriter out = response.getWriter();
 			out.print(getServletInfo());
 			ses.removeAttribute("directObjectBankAccount");
-			out.write("Logged Out");
+			out.write(bundle.getString("logout.loggedOut"));
 		}
 		else
 		{
