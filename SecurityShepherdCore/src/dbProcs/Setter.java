@@ -328,7 +328,8 @@ public class Setter
 			+ " OR moduleCategory = 'Mobile Insecure Data Storage'"
 			+ " OR moduleCategory = 'Mobile Reverse Engineering'"
 			+ " OR moduleCategory = 'Mobile Broken Crypto'"
-			+ " OR moduleCategory = 'Mobile Mobile Poor Authentication'");
+			+ " OR moduleCategory = 'Mobile Content Providers'"
+			+ " OR moduleCategory = 'Mobile Poor Authentication'");
 	
 	/**
 	 * This is used to only open Mobile category levels
