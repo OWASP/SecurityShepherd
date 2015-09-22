@@ -191,7 +191,7 @@ if (request.getSession() != null)
 							<% } else {
 								if(ModulePlan.isIncrementalFloor()){ %>
 									<div id="sideMenuWrapper">
-										<%= Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), ses.getAttribute("lang").toString() ,csrfToken) %>
+										<%= Getter.getIncrementalModulesWithoutScript(ApplicationRoot, (String)ses.getAttribute("userStamp"), ses.getAttribute("lang").toString() ,csrfToken) %>
 									</div>
 								<% } else {%>
 								<li>
@@ -200,6 +200,7 @@ if (request.getSession() != null)
 								<% }
 							} //End of Module List Output %>
 						</div>
+						<div id="menuRefreshLoadingDiv"></div>
 						<div>
 							<input id="searchModules" class="moduleSearchBox" type="search" placeholder="<fmt:message key="generic.text.searchModules" />...">
 						</div>
@@ -207,17 +208,22 @@ if (request.getSession() != null)
 							<!-- Results from module search go here -->
 						</div> 
 						<script>
-							//Make list for module search box
-							console.log("Making Search List...");
-							var availableModules = [];
-							$(".lesson").each(function(index){
-								availableModules.push($(this).text());
-							}); //Make array out of available modules listed
-							console.log(availableModules.length + " modules added to search list");
-							$("#searchModules").autocomplete({
-								source: availableModules,
-								appendTo: "#searchResults"
-							});
+							function makeSearchList() {
+								//Make list for module search box
+								console.log("Making Search List...");
+								var availableModules = [];
+								$(".lesson").each(function(index){
+									availableModules.push($(this).text());
+								}); //Make array out of available modules listed
+								console.log(availableModules.length + " modules added to search list");
+								$("#searchModules").autocomplete({
+									source: availableModules,
+									appendTo: "#searchResults"
+								});
+							}
+							
+							//Make Search List
+							makeSearchList();
 							
 							$("#searchModules").on("autocompleteselect", function( event, ui ) {
 								var toOpen = ui.item.value
@@ -693,7 +699,80 @@ if (request.getSession() != null)
 					}
 				});
 			});
+		<% } else { %>
+			function applyMenuButtonActions(theCsrfToken, theErrorMessage){
+				console.log("Applying JS Functions to Incremental Menu Buttons");
+				
+				$("#completedList").click(function () {
+					$("#theCompletedList").toggle("slow");
+					$("#theUncompletedList").hide("fast");
+					$("#theAdminList").hide("fast");
+				});
+		
+				$("#uncompletedList").click(function () {
+					$("#theUncompletedList").toggle("slow");
+					$("#theCompletedList").hide("fast");
+					$("#theAdminList").hide("fast");
+				});
+		
+				$(".lesson").click(function(){
+					var whatFile = $(this).attr('id');	
+					$("#currentModule").val(whatFile);	
+					var theActualFile = "";	
+					$("#solutionDiv").hide("fast");	
+					$("#contentDiv").slideUp("slow", function(){
+						var ajaxCall = $.ajax({
+							type: "POST",
+							url: "getModule",
+							data: {
+								moduleId: whatFile,
+								csrfToken: theCsrfToken
+							},
+						async: false
+						});
+						if(ajaxCall.status == 200) {
+							theActualFile = ajaxCall.responseText;
+							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");			
+							$("#theLesson").load(function(){
+								$("#submitResult").slideDown("fast", function(){
+									$("#contentDiv").slideDown("slow");
+								});
+							}).appendTo('#contentDiv');
+						} else {			
+							$('#contentDiv').html("<p> " + theErrorMessage + ": " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");			
+							$("#contentDiv").slideDown("slow");
+						}
+					});
+				});
+			}
+			applyMenuButtonActions('<%= encoder.encodeForHTML(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");
 		<% } //End of if(CTF Mode Enabled) %>
+		
+		//RefreshModuleFormScript
+		function refreshSideMenu(theCsrfToken, localErrorMessage){
+			$("#menuRefreshLoadingDiv").show("fast");
+			$("#sideMenuWrapper").slideUp("fast", function(){
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "refreshMenu",
+					data: {
+						csrfToken: theCsrfToken
+					},
+					async: false
+				});
+				$("#menuRefreshLoadingDiv").slideUp("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						$("#sideMenuWrapper").html(ajaxCall.responseText);
+					}
+					else
+					{
+						$("#sideMenuWrapper").append("<br/><font color='red'>" + localErrorMessage + ": " + ajaxCall.status + "</font>");
+					}
+					$('#sideMenuWrapper').slideDown('slow');
+				});
+			});
+		}
 
 		$("#resultForm").submit(function(){
 			var theKey = $("#moduleResult").val();

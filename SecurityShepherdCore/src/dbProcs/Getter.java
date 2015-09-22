@@ -733,53 +733,7 @@ public class Getter
 			}
 			
 			//This is the script for menu interaction
-			output += "<script>" +
-		"$(\"#completedList\").click(function () {" +
-			"$(\"#theCompletedList\").toggle(\"slow\");" +
-			"$(\"#theUncompletedList\").hide(\"fast\");" +
-			"$(\"#theAdminList\").hide(\"fast\");" +
-		"});" +
-		"" +
-		"$(\"#uncompletedList\").click(function () {" +
-			"$(\"#theUncompletedList\").toggle(\"slow\");" +
-			"$(\"#theCompletedList\").hide(\"fast\");" +
-			"$(\"#theAdminList\").hide(\"fast\");" +
-		"});" +
-		"$(\".lesson\").click(function(){" +
-		"	var whatFile = $(this).attr('id');" +
-		"	$(\"#currentModule\").val(whatFile);" +
-		"	var theActualFile = \"\";" +
-		"	$(\"#solutionDiv\").hide(\"fast\");" +
-		"	$(\"#contentDiv\").slideUp(\"slow\", function(){" +
-		"		var ajaxCall = $.ajax({" +
-		"			type: \"POST\"," +
-		"			url: \"getModule\"," +
-		"			data: {" +
-		"				moduleId: whatFile," +
-		"				csrfToken: \""
-		+ encoder.encodeForHTML(csrfToken) +
-		"\"" +
-		"			}," +
-		"			async: false" +
-		"		});" +
-		"		if(ajaxCall.status == 200)" +
-		"		{" +
-		"			theActualFile = ajaxCall.responseText;" +
-		"			$('#contentDiv').html(\"<iframe frameborder='no' class='levelIframe' id='theLesson' src='\" + theActualFile + \"'></iframe>\");" +
-		"			$(\"#theLesson\").load(function(){" +
-		"				$(\"#submitResult\").slideDown(\"fast\", function(){" +
-		"					$(\"#contentDiv\").slideDown(\"slow\");" +
-		"				});" +
-		"			}).appendTo('#contentDiv');" +
-		"		}" +
-		"		else" +
-		"		{" +
-		"			$('#contentDiv').html(\"<p> " + bundle.getString("generic.text.sorryError") + ": \" + ajaxCall.status + \" \" + ajaxCall.statusText + \"</p>\");" +
-		"			$(\"#contentDiv\").slideDown(\"slow\");" +
-		"		}" +
-		"	});" +
-		"});" +
-		"</script>";
+			output += "<script>applyMenuButtonActions('" + encoder.encodeForHTML(csrfToken) + "', \"" + encoder.encodeForHTML(bundle.getString("generic.text.sorryError")) + "\");</script>";
 		}
 		catch(Exception e)
 		{
@@ -787,6 +741,103 @@ public class Getter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END getIncrementalChallenges() ***");
+		return output;
+	}
+	
+	/**
+	 * This method prepares the incremental module menu. This is when Security Shepherd is in "Game Mode".
+	 * Users are presented with one uncompleted module at a time. This method does not return the JS script describing how the menu used should work
+	 * @param ApplicationRoot The running context of the application.
+	 * @param userId The user identifier of the user.
+	 * @param csrfToken The cross site request forgery token
+	 * @return A HTML menu of a users current module progress and a script for interaction with this menu
+	 */
+	public static String getIncrementalModulesWithoutScript (String ApplicationRoot, String userId, String lang, String csrfToken)
+	{
+		log.debug("*** Getter.getIncrementalChallengesWithoutScript ***");
+		String output = new String();
+		Encoder encoder = ESAPI.encoder();
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		
+		Locale.setDefault(new Locale("en"));
+		Locale locale = new Locale(lang);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
+		ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
+		
+		try
+		{
+			CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)");
+			callstmt.setString(1, userId);
+			log.debug("Gathering moduleIncrementalInfo ResultSet");
+			ResultSet modules = callstmt.executeQuery();
+			log.debug("Opening Result Set from moduleIncrementalInfo");
+			boolean lastRow = false;
+			boolean completedModules = false;
+			
+			
+			//Preparing first Category header; "Completed"
+			output = "<li><a id='completedList' href='javascript:;'><div class='menuButton'>" + bundle.getString("getter.button.completed") + "</div></a>\n" +
+				"<ul id='theCompletedList' style='display: none;' class='levelList'>";
+			
+			while(modules.next() && !lastRow)
+			{
+				//For each row, prepair the modules the users can select
+				if(modules.getString(4) != null) //If not Last Row
+				{
+					completedModules = true;
+					output += "<li>";
+					output += "<a class='lesson' id='" 
+						+ encoder.encodeForHTMLAttribute(modules.getString(3))
+						+ "' href='javascript:;'>" 
+						+ encoder.encodeForHTML(levelNames.getString(modules.getString(1))) 
+						+ "</a>";
+					output += "</li>";
+				}
+				else
+				{
+					lastRow = true;
+					//Last Row - Highlighed Next Challenge
+					if(completedModules)
+					{
+						output += "</ul></li><li>";
+					}
+					else
+					{
+						//NO completed modules, so dont show any...
+						output = new String();
+					}
+					
+					//Second category - Uncompleted
+					output += "<a class='lesson' id='" 
+						+ encoder.encodeForHTMLAttribute(modules.getString(3))
+						+ "' href='javascript:;'>" 
+						+ "<div class='menuButton'>" + bundle.getString("getter.button.nextChallenge")+ "</div>" 
+						+ "</a>";
+					output += "</li>";					
+				}
+			}
+			
+			if(!lastRow) //If true, then the user has completed all challenges
+			{
+				output += "<h2 id='uncompletedList'><a href='javascript:;'>" + bundle.getString("getter.button.finished") + "</a></h2>\n" +
+				"</li>";
+			}
+			if(output.isEmpty()) //If this method has gone so far without any output, create a error message
+			{
+				output = "<li><a href='javascript:;'>" + bundle.getString("getter.button.noModulesFound") + "</a></li>";
+			}
+			else //final tags to ensure valid HTML
+			{
+				log.debug("Appending End tags");
+				//output += "</ul></li>"; //Commented Out to prevent Search Box being pushed into Footer
+			}
+		}
+		catch(Exception e)
+		{
+			log.error("Challenge Retrieval: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END getIncrementalChallengesWithoutScript() ***");
 		return output;
 	}
 	

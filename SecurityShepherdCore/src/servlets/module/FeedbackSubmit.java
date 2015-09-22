@@ -139,7 +139,7 @@ public class FeedbackSubmit extends HttpServlet
 											encoder.encodeForHTML(result) + " completed! Congratulations.");
 									htmlOutput += "</p>";
 									if(ModulePlan.isIncrementalFloor())
-										htmlOutput += refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter));
+										htmlOutput += refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter), "Refresh Error");
 								}
 								else
 								{
@@ -221,31 +221,8 @@ public class FeedbackSubmit extends HttpServlet
 		log.debug("&&& END SolutionSubmit &&&");
 	}
 	
-	public static String refreshMenuScript(String csrfToken)
+	public static String refreshMenuScript(String csrfToken, String localError)
 	{
-		return refreshMenuScript1 + csrfToken + refreshMenuScript2;
+		return "<script>refreshSideMenu(\"" + csrfToken + "\", \"" + localError + "\")</script>";
 	}
-	
-	private static String refreshMenuScript1 = "<script>" +
-			"$(\"#sideMenuWrapper\").slideUp(\"fast\", function(){" +
-			"var ajaxCall = $.ajax({" +
-				"type: \"POST\"," +
-				"url: \"refreshMenu\"," +
-				"data: {" +
-					"csrfToken: \"";
-	private static String refreshMenuScript2 = "\"" +
-				"}," +
-				"async: false" +
-			"});" +
-			"if(ajaxCall.status == 200)" +
-			"{" +
-				"$(\"#sideMenuWrapper\").html(ajaxCall.responseText);" +
-			"}" +
-			"else" +
-			"{" +
-				"$(\"#sideMenuWrapper\").append(\"<br/><font color='red'>Refresh Failed: \" + ajaxCall.status + \"</font>\");" +
-			"}" +
-		"});" +
-		"$('#sideMenuWrapper').slideDown('slow');" +
-		"</script>";
 }
