@@ -109,18 +109,21 @@ public class EnableScoreboard extends HttpServlet
 					{
 						log.debug(scoreboardMessage);
 						String restrictedScoreboard = Validate.validateParameter(request.getParameter("restricted"), 5);
-						if(restrictedScoreboard.isEmpty()) //Public Scoreboard
+						if(restrictedScoreboard.isEmpty() && !classId.equalsIgnoreCase("classSpecific")) //Total Public Scoreboard
 						{
-							log.debug("Public Scoreboard Enabled");
+							log.debug("User Accessible Scoreboard Enabled");
 							htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
 								+ "<p>" + scoreboardMessage +"</p>";
 						}
 						else
 						{
-							ScoreboardStatus.setScoreboardAdminOnly();
-							log.debug("Admin Only Scoreboard Enabled");
-							htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
-								+ "<p>" + scoreboardMessage +" The scoreboard is only accessible by administrators</p>";
+							if(!classId.equalsIgnoreCase("classSpecific"))
+							{
+								ScoreboardStatus.setScoreboardAdminOnly();
+								log.debug("Admin Only Scoreboard Enabled");
+								htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
+									+ "<p>" + scoreboardMessage +" The scoreboard is only accessible by administrators</p>";
+							}
 						}
 					}
 					out.write(htmlOutput);
