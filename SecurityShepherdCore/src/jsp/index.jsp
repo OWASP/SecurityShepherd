@@ -175,6 +175,7 @@ if (request.getSession() != null)
 						</div>
 						<% } %>					
 						<div id="levelListDiv">
+							<div id="sideMenuWrapper">
 							<% if(ModulePlan.isOpenFloor()) { %>
 								<li>
 									<a id="lessonList" href="javascript:;"><div class="menuButton"><fmt:message key="generic.text.lessons" /></div></a>
@@ -190,15 +191,14 @@ if (request.getSession() != null)
 								</li>
 							<% } else {
 								if(ModulePlan.isIncrementalFloor()){ %>
-									<div id="sideMenuWrapper">
 										<%= Getter.getIncrementalModulesWithoutScript(ApplicationRoot, (String)ses.getAttribute("userStamp"), ses.getAttribute("lang").toString() ,csrfToken) %>
-									</div>
 								<% } else {%>
 								<li>
 									<%= Getter.getTournamentModules(ApplicationRoot, (String)ses.getAttribute("userStamp"), lang) %>
 								</li>
 								<% }
 							} //End of Module List Output %>
+							</div>
 						</div>
 						<div id="menuRefreshLoadingDiv"></div>
 						<div>
@@ -258,7 +258,6 @@ if (request.getSession() != null)
 			</div> <!-- End of Sidebar Wrapper -->
 		</div>
 		</div>
-		<script src="js/toggle.js"></script>
 		<script>
 		$("#contentDiv").load("getStarted.jsp", function(response, status, xhr) {
 			if (status == "error") {
@@ -584,30 +583,85 @@ if (request.getSession() != null)
 		<% } %>
 		
 		<script>
-		<% if (!ModulePlan.isIncrementalFloor()) { 
-			// If the Incremental Floor Plan is being used, a Specific Script is added by the Method 
-			// which generates the Menu. If these are still in the dom when that happens, 
-			// the browser will request each level twice %>
-			$(".challenge").click(function(){
-				var whatFile = $(this).attr('id');
-				$("#currentModule").val(whatFile);
-				var theActualFile = "";
-				$("#solutionDiv").hide("fast");
-				$("#contentDiv").slideUp("slow", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "getModule",
-						data: {
-							moduleId: whatFile,
-							csrfToken: "<%= csrfToken %>"
-						},
-						async: false
+			function applyMenuButtonActionsOpenOrTourney(theCsrfToken, theErrorMessage){
+				console.log("Applying Menu Actions For Open/Tourney");
+				
+				$(".challenge").click(function(){
+					var whatFile = $(this).attr('id');
+					$("#currentModule").val(whatFile);
+					var theActualFile = "";
+					$("#solutionDiv").hide("fast");
+					$("#contentDiv").slideUp("slow", function(){
+						var ajaxCall = $.ajax({
+							type: "POST",
+							url: "getModule",
+							data: {
+								moduleId: whatFile,
+								csrfToken: theCsrfToken
+							},
+							async: false
+						});
+						if(ajaxCall.status == 200)
+						{
+							theActualFile = ajaxCall.responseText;
+							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theChallenge' src='" + theActualFile + "'></iframe>");
+							$("#theChallenge").load(function(){
+								<% if(showCheatSheet) { %>
+									$("#submitResult").slideDown("fast", function(){
+										$("#cheatSheetButton").slideDown("fast", function(){
+											$("#contentDiv").slideDown("slow", function(){
+												var scrollTo = $("#moduleResult").offset().top;
+												scrollTo = scrollTo - 60;
+												console.log("Scroll Up to: " + scrollTo);
+												$('html, body').animate({
+													scrollTop: scrollTo
+												}, 1000);
+											});
+										});
+									});
+								<% } else { %>
+									$("#submitResult").slideDown("fast", function(){
+										$("#contentDiv").slideDown("slow", function(){
+											var scrollTo = $("#moduleResult").offset().top;
+											scrollTo = scrollTo - 60;
+											console.log("Scroll Up to: " + scrollTo);
+											$('html, body').animate({
+												scrollTop: scrollTo
+											}, 1000);
+										});
+									});
+								<% } %>
+							}).appendTo('#contentDiv');
+							$("#theSidebarWrapper").height($("#contentDiv").height());
+						}
+						else
+						{
+							$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+							$("#contentDiv").slideDown("slow");
+						}
 					});
-					if(ajaxCall.status == 200)
-					{
-						theActualFile = ajaxCall.responseText;
-						$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theChallenge' src='" + theActualFile + "'></iframe>");
-						$("#theChallenge").load(function(){
+				});	
+		
+				$(".lesson").click(function(){
+					var whatFile = $(this).attr('id');
+					$("#currentModule").val(whatFile);
+					var theActualFile = "";
+					$("#solutionDiv").hide("fast");
+					$("#contentDiv").slideUp("slow", function(){
+						var ajaxCall = $.ajax({
+							type: "POST",
+							url: "getModule",
+							data: {
+								moduleId: whatFile,
+								csrfToken: theCsrfToken
+							},
+							async: false
+						});
+						if(ajaxCall.status == 200)
+						{
+							theActualFile = ajaxCall.responseText;
+							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
+							$("#theLesson").load(function(){
 							<% if(showCheatSheet) { %>
 								$("#submitResult").slideDown("fast", function(){
 									$("#cheatSheetButton").slideDown("fast", function(){
@@ -633,74 +687,19 @@ if (request.getSession() != null)
 									});
 								});
 							<% } %>
-						}).appendTo('#contentDiv');
-						$("#theSidebarWrapper").height($("#contentDiv").height());
-					}
-					else
-					{
-						$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-						$("#contentDiv").slideDown("slow");
-					}
-				});
-			});	
-	
-			$(".lesson").click(function(){
-				var whatFile = $(this).attr('id');
-				$("#currentModule").val(whatFile);
-				var theActualFile = "";
-				$("#solutionDiv").hide("fast");
-				$("#contentDiv").slideUp("slow", function(){
-					var ajaxCall = $.ajax({
-						type: "POST",
-						url: "getModule",
-						data: {
-							moduleId: whatFile,
-							csrfToken: "<%= csrfToken %>"
-						},
-						async: false
+							}).appendTo('#contentDiv');
+							$("#theSidebarWrapper").height($("#contentDiv").height());
+						}
+						else
+						{
+							$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+							$("#contentDiv").slideDown("slow");
+						}
 					});
-					if(ajaxCall.status == 200)
-					{
-						theActualFile = ajaxCall.responseText;
-						$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
-						$("#theLesson").load(function(){
-						<% if(showCheatSheet) { %>
-							$("#submitResult").slideDown("fast", function(){
-								$("#cheatSheetButton").slideDown("fast", function(){
-									$("#contentDiv").slideDown("slow", function(){
-										var scrollTo = $("#moduleResult").offset().top;
-										scrollTo = scrollTo - 60;
-										console.log("Scroll Up to: " + scrollTo);
-										$('html, body').animate({
-											scrollTop: scrollTo
-										}, 1000);
-									});
-								});
-							});
-						<% } else { %>
-							$("#submitResult").slideDown("fast", function(){
-								$("#contentDiv").slideDown("slow", function(){
-									var scrollTo = $("#moduleResult").offset().top;
-									scrollTo = scrollTo - 60;
-									console.log("Scroll Up to: " + scrollTo);
-									$('html, body').animate({
-										scrollTop: scrollTo
-									}, 1000);
-								});
-							});
-						<% } %>
-						}).appendTo('#contentDiv');
-						$("#theSidebarWrapper").height($("#contentDiv").height());
-					}
-					else
-					{
-						$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
-						$("#contentDiv").slideDown("slow");
-					}
 				});
-			});
-		<% } else { %>
-			function applyMenuButtonActions(theCsrfToken, theErrorMessage){
+			}
+			
+			function applyMenuButtonActionsCtfMode(theCsrfToken, theErrorMessage){
 				console.log("Applying JS Functions to Incremental Menu Buttons");
 				
 				$("#completedList").click(function () {
@@ -745,9 +744,12 @@ if (request.getSession() != null)
 					});
 				});
 			}
+		<% if(ModulePlan.isIncrementalFloor()) { %>
 			applyMenuButtonActions('<%= encoder.encodeForHTML(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");
 		<% } //End of if(CTF Mode Enabled) %>
-		
+		<% if (!ModulePlan.isIncrementalFloor()) {%>
+			applyMenuButtonActionsOpenOrTourney('<%= encoder.encodeForHTML(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");
+		<% } // End of Not CTF Mode If%>
 		//RefreshModuleFormScript
 		function refreshSideMenu(theCsrfToken, localErrorMessage){
 			$("#menuRefreshLoadingDiv").show("fast");
@@ -844,7 +846,40 @@ if (request.getSession() != null)
 		});
 		<% } %>
 		
-		<% if(ModulePlan.tornyFloor){%>
+		$(".successAlert").click(function(){
+			alert("successAlert click");
+			$(this).hide("slide", { direction: "left" }, 1000);
+		});
+
+		$(".errorAlert").click(function(){
+			$(this).hide("slide", { direction: "left" }, 1000);
+		});
+
+		function openFloorToggleFunctions() {
+			console.log("Enabling Open Floor Toggle Funtions");
+			
+			$("#lessonList").click(function () {
+				$("#theLessonList").toggle("slow");
+				$("#theChallengeList").hide("fast");
+				$("#theAdminList").hide("fast");
+			});   
+
+			$("#challengeList").click(function () {
+				$("#theChallengeList").toggle("slow");
+				$("#theLessonList").hide("fast");
+				$("#theAdminList").hide("fast");
+			});
+
+			$(".challengeHeader").click(function(){
+				$(".challengeList").hide("fast");
+				$(this).parent().find(".challengeList").show("slow");
+			});
+		}
+		openFloorToggleFunctions();
+		
+		function tournamentToggleFunctions() {
+			console.log("Enablig Tournament Toggle Functions");
+			
 			$("#fieldTrainingList").click(function () {
 				$("#theFieldTrainingList").toggle("slow");
 				$("#theCorporalList").hide("fast");
@@ -913,9 +948,13 @@ if (request.getSession() != null)
 				$("#theMajorList").hide("fast");
 				$("#thePrivateList").hide("fast");
 				$("#theLieutenantList").hide("fast");
-			}); 
-			
+			}); 	
+		}
+		
+		<% if(ModulePlan.tornyFloor) { %>
+			tournamentToggleFunctions();
 		<% } %>
+		
 		function resizeSidebar() {
 			//Make Sidebar as Long as Page
 			if($("#contentDiv").height() > 700) {
@@ -930,13 +969,21 @@ if (request.getSession() != null)
 		<script>
 			(function($){
 		        $(window).load(function(){
-		        	console.log("Initialising Custome Scrollbars (If Any)");
+		        	console.log("Initialising Custom Scrollbars (If Any)");
 		            $(".levelList").mCustomScrollbar({
 		            	theme:"dark-thin",
 		            	mouseWheel:{ scrollAmount: 120 }
 		            });
 		        });
 		    })(jQuery);
+			
+			function startScrollsBars(){
+				console.log("Initialising Custom Scrollbars Again (If Any)");
+				$(".levelList").mCustomScrollbar({
+	            	theme:"dark-thin",
+	            	mouseWheel:{ scrollAmount: 120 }
+	            });
+			}
 		</script>
 		<!-- <fmt:message key="generic.text.commentMessage.1" /> 
 		<fmt:message key="generic.text.commentMessage.2" /> 

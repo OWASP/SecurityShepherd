@@ -114,6 +114,9 @@ String ApplicationRoot = getServletContext().getRealPath("");
 			    }, 1000);
 			});
 		});
+		var theRefreshError = "Could not Refresh Menu";
+		//Refresh the Side Menu
+		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	</script>
 	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

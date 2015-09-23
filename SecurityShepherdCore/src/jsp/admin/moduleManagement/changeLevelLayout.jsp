@@ -99,6 +99,7 @@ if (request.getSession() != null) //Session If
 					<br>
 					<script>
 					var theCsrfToken = "<%= csrfToken %>";
+					var theRefreshError = "Could not Refresh Menu";
 					
 					$("#enableCtfMode").click(function(){
 						$("#ctfLoadingDiv").show("fast");
@@ -143,6 +144,8 @@ if (request.getSession() != null) //Session If
 							    }, 1000);
 							});
 						});
+						//Refresh the Side Menu
+						refreshSideMenu(theCsrfToken, theRefreshError);
 					});
 					
 					$("#enableOpenFloorMode").click(function(){
@@ -187,6 +190,8 @@ if (request.getSession() != null) //Session If
 							    }, 1000);
 							});
 						});
+						//Refresh the Side Menu
+						refreshSideMenu(theCsrfToken, theRefreshError);
 					});
 					
 					$("#enableTournamentMode").click(function(){
@@ -231,6 +236,8 @@ if (request.getSession() != null) //Session If
 							    }, 1000);
 							});
 						});
+						//Refresh the Side Menu
+						refreshSideMenu(theCsrfToken, theRefreshError);
 					});
 					</script>
 					<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

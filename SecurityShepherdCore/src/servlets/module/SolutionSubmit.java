@@ -150,8 +150,8 @@ public class SolutionSubmit extends HttpServlet
 												"<p>" +
 												encoder.encodeForHTML(result) + " completed! Congratulations.");
 										htmlOutput += "</p>";
-										if(ModulePlan.isIncrementalFloor())
-											htmlOutput += FeedbackSubmit.refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter), "Refresh Error");
+										//Refresh Side Menu
+										htmlOutput += FeedbackSubmit.refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter), "Refresh Error");
 										log.debug("Resetting user's Bad Submisison count to 0");
 										Setter.resetBadSubmission(ApplicationRoot, userId);
 										out.write(htmlOutput);

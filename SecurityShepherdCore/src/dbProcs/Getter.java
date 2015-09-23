@@ -733,7 +733,7 @@ public class Getter
 			}
 			
 			//This is the script for menu interaction
-			output += "<script>applyMenuButtonActions('" + encoder.encodeForHTML(csrfToken) + "', \"" + encoder.encodeForHTML(bundle.getString("generic.text.sorryError")) + "\");</script>";
+			output += "<script>applyMenuButtonActionsCtfMode('" + encoder.encodeForHTML(csrfToken) + "', \"" + encoder.encodeForHTML(bundle.getString("generic.text.sorryError")) + "\");</script>";
 		}
 		catch(Exception e)
 		{

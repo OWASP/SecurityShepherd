@@ -138,8 +138,8 @@ public class FeedbackSubmit extends HttpServlet
 											"<p>" +
 											encoder.encodeForHTML(result) + " completed! Congratulations.");
 									htmlOutput += "</p>";
-									if(ModulePlan.isIncrementalFloor())
-										htmlOutput += refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter), "Refresh Error");
+									//Refresh Side Menu
+									htmlOutput += refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter), "Refresh Error");
 								}
 								else
 								{
