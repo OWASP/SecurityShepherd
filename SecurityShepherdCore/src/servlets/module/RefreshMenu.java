@@ -115,7 +115,7 @@ public class RefreshMenu extends HttpServlet
 		else
 		{
 			log.error("Invalid Session Detected");
-			out.write("<img src='css/images/loggedOutSheep.jpg'/>");
+			out.write("Your are logged out! Please sign back in!");
 		}
 		log.debug("&&& END RefreshMenu &&&");
 	}
