@@ -21,7 +21,7 @@
  * @author Your Name
  */
 
-//No Quotes In level Name
+//MUST be in English and no Quotes In level Name
 String levelName = "Level Name";
 //Alphanumeric Only
 String levelHash = "Level Hash";
