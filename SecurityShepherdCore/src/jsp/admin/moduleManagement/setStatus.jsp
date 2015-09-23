@@ -109,14 +109,13 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					$("#badData").show("slow");
 				}
 				$("#formDiv").slideDown("slow");
+				//Refresh the Side Menu
+				refreshSideMenu(theCsrfToken, theRefreshError);
 				$('html, body').animate({
 			        scrollTop: $("#resultDiv").offset().top
 			    }, 1000);
 			});
 		});
-		var theRefreshError = "Could not Refresh Menu";
-		//Refresh the Side Menu
-		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	</script>
 	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

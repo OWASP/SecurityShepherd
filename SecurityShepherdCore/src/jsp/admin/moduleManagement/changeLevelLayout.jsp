@@ -132,6 +132,8 @@ if (request.getSession() != null) //Session If
 									//Show Results
 									$("#resultDiv").html(ajaxCall.responseText);
 									$("#resultDiv").show("fast");
+									//Refresh the Side Menu
+									refreshSideMenu(theCsrfToken, theRefreshError);
 								}
 								else
 								{
@@ -144,8 +146,6 @@ if (request.getSession() != null) //Session If
 							    }, 1000);
 							});
 						});
-						//Refresh the Side Menu
-						refreshSideMenu(theCsrfToken, theRefreshError);
 					});
 					
 					$("#enableOpenFloorMode").click(function(){
@@ -178,6 +178,8 @@ if (request.getSession() != null) //Session If
 									//Show Results
 									$("#resultDiv").html(ajaxCall.responseText);
 									$("#resultDiv").show("fast");
+									//Refresh the Side Menu
+									refreshSideMenu(theCsrfToken, theRefreshError);
 								}
 								else
 								{
@@ -190,8 +192,6 @@ if (request.getSession() != null) //Session If
 							    }, 1000);
 							});
 						});
-						//Refresh the Side Menu
-						refreshSideMenu(theCsrfToken, theRefreshError);
 					});
 					
 					$("#enableTournamentMode").click(function(){
@@ -224,6 +224,8 @@ if (request.getSession() != null) //Session If
 									//Show Results
 									$("#resultDiv").html(ajaxCall.responseText);
 									$("#resultDiv").show("fast");
+									//Refresh the Side Menu
+									refreshSideMenu(theCsrfToken, theRefreshError);
 								}
 								else
 								{
@@ -236,8 +238,6 @@ if (request.getSession() != null) //Session If
 							    }, 1000);
 							});
 						});
-						//Refresh the Side Menu
-						refreshSideMenu(theCsrfToken, theRefreshError);
 					});
 					</script>
 					<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

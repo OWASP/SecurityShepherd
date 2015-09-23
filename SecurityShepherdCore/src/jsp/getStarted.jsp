@@ -136,12 +136,12 @@ if(!changePassword)
 			$("#scopeLoadingDiv").hide("fast", function(){
 				$("#setScopeDiv").slideDown("slow", function(){
 					$("#scopeResultsDiv").show ("fast");
+					//Refresh the Side Menu
+					refreshSideMenu(theCsrfToken, theRefreshError);
 				});
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
 		});
-		//Refresh the Side Menu
-		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	
 	$("#onlyWebApplication").click(function(){
@@ -167,12 +167,12 @@ if(!changePassword)
 			$("#scopeLoadingDiv").hide("fast", function(){
 				$("#setScopeDiv").slideDown("slow", function(){
 					$("#scopeResultsDiv").show ("fast");
+					//Refresh the Side Menu
+					refreshSideMenu(theCsrfToken, theRefreshError);
 				});
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
 		});
-		//Refresh the Side Menu
-		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	
 	$("#onlyMobileApplication").click(function(){
@@ -198,12 +198,12 @@ if(!changePassword)
 			$("#scopeLoadingDiv").hide("fast", function(){
 				$("#setScopeDiv").slideDown("slow", function(){
 					$("#scopeResultsDiv").show ("fast");
+					//Refresh the Side Menu
+					refreshSideMenu(theCsrfToken, theRefreshError);
 				});
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
 		});
-		//Refresh the Side Menu
-		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	
 	$("#noApplication").click(function(){
@@ -229,12 +229,12 @@ if(!changePassword)
 			$("#scopeLoadingDiv").hide("fast", function(){
 				$("#setScopeDiv").slideDown("slow", function(){
 					$("#scopeResultsDiv").show ("fast");
+					//Refresh the Side Menu
+					refreshSideMenu(theCsrfToken, theRefreshError);
 				});
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
 		});
-		//Refresh the Side Menu
-		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	<% } // End of Admin Only Script%>
 	</script>

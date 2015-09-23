@@ -146,6 +146,8 @@ String ApplicationRoot = getServletContext().getRealPath("");
 							//Now output Result Div and Show
 							$("#resultDiv").html(ajaxCall.responseText);
 							$("#resultDiv").show("fast");
+							//Refresh the Side Menu
+							refreshSideMenu(theCsrfToken, theRefreshError);
 						}
 						else
 						{
@@ -160,8 +162,6 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					});
 				});
 				var theRefreshError = "Could not Refresh Menu";
-				//Refresh the Side Menu
-				refreshSideMenu(theCsrfToken, theRefreshError);
 			});
 			</script>
 			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
