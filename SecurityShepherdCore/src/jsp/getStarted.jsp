@@ -102,6 +102,9 @@ if(!changePassword)
 	</div>
 	</div>
 	<script>
+	var theCsrfToken = "<%= csrfToken %>";
+	var theRefreshError = "Could not Refresh Menu";
+	
 	$('#getStarted').slideDown("slow");
 	$('#cantSee').html("<iframe class='levelIframe' frameborder='no' id='theStart' src='readyToPlay.jsp?ThreadSequenceId=<%=encoder.encodeForHTMLAttribute(encoder.encodeForURL(threadId))%>'></iframe>");
 	$('#cantSee').html(function(){
@@ -137,6 +140,8 @@ if(!changePassword)
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
 		});
+		//Refresh the Side Menu
+		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	
 	$("#onlyWebApplication").click(function(){
@@ -166,6 +171,8 @@ if(!changePassword)
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
 		});
+		//Refresh the Side Menu
+		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	
 	$("#onlyMobileApplication").click(function(){
@@ -195,6 +202,8 @@ if(!changePassword)
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
 		});
+		//Refresh the Side Menu
+		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	
 	$("#noApplication").click(function(){
@@ -224,6 +233,8 @@ if(!changePassword)
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
 		});
+		//Refresh the Side Menu
+		refreshSideMenu(theCsrfToken, theRefreshError);
 	});
 	<% } // End of Admin Only Script%>
 	</script>
