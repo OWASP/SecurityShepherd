@@ -138,6 +138,7 @@ public class Getter
 		catch (SQLException e) 
 		{
 			log.error("Login Failure: " + e.toString());
+			result = null;
 			//Lagging Response
 		}
 		Database.closeConnection(conn);
@@ -150,17 +151,17 @@ public class Getter
 	 * @param ApplicationRoot The current running context of an application
 	 * @param moduleId The module identifier 
 	 * @param userId The user identifier
-	 * @return The result key of the module if the user has not completed the level. 
+	 * @return The module name of the module IF the user has not completed AND the user has previously opened the challenge. 
 	 */
 	public static String checkPlayerResult(String ApplicationRoot, String moduleId, String userId)
 	{
-		log.debug("*** Setter.checkPlayerResult ***");
+		log.debug("*** Getter.checkPlayerResult ***");
 		
 		String result = null;
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
-			log.debug("Preparing userUpdateResult call");
+			log.debug("Preparing userCheckResult call");
 			CallableStatement callstmnt = conn.prepareCall("call userCheckResult(?, ?)");
 			callstmnt.setString(1, moduleId);
 			callstmnt.setString(2, userId);
@@ -1819,6 +1820,36 @@ public class Getter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END getUserName ***");
+		return result;
+	}
+	
+	/**
+	 * @param ApplicationRoot The current running context of the application
+	 * @param userName The username of the user
+	 * @return The user id of the submitted user name
+	 */
+	public static String getUserIdFromName (String ApplicationRoot, String userName)
+	{
+		log.debug("*** Getter.getUserIdFromName ***");
+		String result = new String();
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			CallableStatement callstmt = conn.prepareCall("call userGetIdByName(?)");
+			log.debug("Gathering userGetIdByName ResultSet");
+			callstmt.setString(1, userName);
+			ResultSet resultSet = callstmt.executeQuery();
+			log.debug("Opening Result Set from userGetIdByName");
+			resultSet.next();
+			result = resultSet.getString(1);
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not execute query: " + e.toString());
+			result = null;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END getUserIdFromName ***");
 		return result;
 	}
 	

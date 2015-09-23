@@ -962,6 +962,22 @@ $$
 DELIMITER ;
 
 -- -----------------------------------------------------
+-- procedure userGetIdByName
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`userGetIdByName` (IN theUserName VARCHAR(64))
+BEGIN
+COMMIT;
+SELECT userId FROM users
+    WHERE userName = theUserName;
+END
+$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
 -- procedure userBadSubmission
 -- -----------------------------------------------------
 

@@ -1078,9 +1078,8 @@ public class Setter
 			callstmnt.setInt(5, difficulty);
 			callstmnt.setString(6, extra);
 			log.debug("Executing userUpdateResult");
-			ResultSet resultSet = callstmnt.executeQuery();
-			resultSet.next();
-			result = resultSet.getString(1);
+			callstmnt.execute();
+			result = "Success";
 		}
 		catch(SQLException e)
 		{
