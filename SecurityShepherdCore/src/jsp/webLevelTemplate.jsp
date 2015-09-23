@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage=""%>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -24,8 +25,11 @@
 String levelName = "Level Name";
 //Alphanumeric Only
 String levelHash = "Level Hash";
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Tell the player what to do here";
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n." + levelHash, locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("title.");
 
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -51,17 +55,15 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%=i18nLevelName%></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
-				
-				<%= levelBlurb %>
+				<%= bundle.getString("paragraph.info.1") %>
 				<br/>
 				<br/>
 				<a href="<%=levelHash%>/DownloadMe.zip">Download Me</a>
