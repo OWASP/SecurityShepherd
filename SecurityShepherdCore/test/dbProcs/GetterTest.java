@@ -11,7 +11,8 @@ public class GetterTest
 	private static String propertiesFileDirectory = new String("/site");
 	private static String moduleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
 	@Test
-	public void testAuthUserCorrectCredentials() {
+	public void testAuthUserCorrectCredentials() 
+	{
 		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin", "password") == null)
 			fail("Could not Authenticate Default admin");
 		else
@@ -19,7 +20,8 @@ public class GetterTest
 	}
 	
 	@Test
-	public void testAuthUserIncorrectCredentials() {
+	public void testAuthUserIncorrectCredentials() 
+	{
 		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin", "wrongPassword") == null)
 			return; //Pass
 		else
@@ -27,7 +29,8 @@ public class GetterTest
 	}
 	
 	@Test
-	public void testAuthUserSqlInjection() {
+	public void testAuthUserSqlInjection() 
+	{
 		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin", "wrongPassword'or'1'='1") == null)
 			return; //Pass
 		else
@@ -35,7 +38,8 @@ public class GetterTest
 	}
 	
 	@Test
-	public void testAuthUserSqlInjectionUserName() {
+	public void testAuthUserSqlInjectionUserName() 
+	{
 		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin'or'1'='1", "wrongPassword") == null)
 			return; //Pass
 		else
@@ -55,7 +59,8 @@ public class GetterTest
 	}
 	
 	@Test
-	public void testCheckPlayerResultWhenModuleNotComplete() {
+	public void testCheckPlayerResultWhenModuleNotComplete() 
+	{
 		String contentProviderLeakage = new String("5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a");
 		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
 		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
@@ -75,7 +80,8 @@ public class GetterTest
 	}
 	
 	@Test
-	public void testCheckPlayerResultWhenModuleComplete() {
+	public void testCheckPlayerResultWhenModuleComplete() 
+	{
 		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
 		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
 		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
@@ -101,12 +107,64 @@ public class GetterTest
 			fail("Could not Mark Data Storage Lesson as Opened by Default admin");
 	}
 	
-	/*
+	
 	@Test
-	public void testIsCsrfLevelComplete() {
-		fail("Not yet implemented");
+	public void testIsCsrfLevelCompleteIncrementedCounter() 
+	{
+		String csrfChallengeOne = new String("20e755179a5840be5503d42bb3711716235005ea"); //CSRF Challenge 1 (Should have CSRF Counter of 0 for Default Admin User
+		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
+		//Simulate user Opening Level
+		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeOne, userId).isEmpty())
+		{
+			//Increment Challenge CSRF Counter
+			if(Setter.updateCsrfCounter(applicationRoot, csrfChallengeOne, userId))
+			{
+				if(Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeOne, userId))
+				{
+					return; //Pass, because CSRF level is completed after the admin CSRF counter was incremented
+				}
+				else
+				{
+					fail("CSRF 1 not completed after successful increment");
+				}
+			}
+			else
+			{
+				fail("Could not Increment default Admin Counter for CSRF 1");
+			}
+		}
+		else
+		{
+			fail("Could not Mark CSRF 1 as opened by default Admin");
+		}
 	}
-
+	
+	@Test
+	public void testIsCsrfLevelCompleteWithoutIncrementedCounter() 
+	{
+		String csrfChallengeTwo = new String("94cd2de560d89ef59fc450ecc647ff4d4a55c15d"); //CSRF Challenge 2 (Should have CSRF Counter of 0 for Default Admin User
+		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
+		//Simulate user Opening Level
+		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeTwo, userId).isEmpty())
+		{
+			if(!Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeTwo, userId))
+			{
+				return; //Pass, because CSRF level is not completed because the CSRF Counter for the default admin is 0
+			}
+			else
+			{
+				fail("CSRF 2 marked completed without increment"); // CSRF 2 Challenge should have a counter of 0 and should not return true. 
+			}
+		}
+		else
+		{
+			fail("Could not Mark CSRF 2 as opened by default Admin");
+		}
+	}
+	
+	/*
 	@Test
 	public void testFindPlayerById() {
 		fail("Not yet implemented");

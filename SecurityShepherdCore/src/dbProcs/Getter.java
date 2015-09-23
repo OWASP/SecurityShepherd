@@ -181,7 +181,9 @@ public class Getter
 	}
 	
 	/**
-	 * This method is used to determine if a CSRF level has been completed. A call is made to the DB that returns the CSRF counter for a level. If this counter is greater than 0, the level has been completed
+	 * This method is used to determine if a CSRF level has been completed. 
+	 * A call is made to the DB that returns the CSRF counter for a level. 
+	 * If this counter is greater than 0, the level has been completed
 	 * @param applicationRoot Running context of the application
 	 * @param moduleHash Hash ID of the CSRF module you wish to check if a user has completed
 	 * @param userId the ID of the user to check
