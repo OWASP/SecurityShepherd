@@ -185,7 +185,7 @@ public class Hash
 			catch (Exception e) 
 			{ 
 				log.error("Encryption Failure: " + e.toString());
-				toReturn = "Key Should be here! Please refresh the home page and try again!";
+				toReturn = "Key Should be here! Please refresh the home page and try again! If that doesn't work, sign in and out again!";
 			}
 		}
 		return "<b style='word-wrap: break-word;'>" + toReturn + "</b>";
