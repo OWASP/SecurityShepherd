@@ -59,6 +59,26 @@ public class GetterTest
 	}
 	
 	@Test
+	public void testCheckPlayerResultWhenModuleWhenOpened() {
+		String csrfChallengeThree = new String("5ca9115f3279b9b9f3308eb6a59a4fcd374846d6");
+		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
+		//Simulate user Opening Level
+		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeThree, userId).isEmpty())
+		{
+			String test = Getter.checkPlayerResult(applicationRoot, csrfChallengeThree, userId);
+			if(test == null)
+			{
+				fail("Function says Admin has not opened module"); // Admin Should have opened and not completed CSRF Three. Ensure DB is clean
+			}
+			else
+				return; //Pass
+		}
+		else
+			fail("Could not Mark CSRF 3 as Opened by Default admin");
+	}
+	
+	@Test
 	public void testCheckPlayerResultWhenModuleNotComplete() 
 	{
 		String contentProviderLeakage = new String("5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a");
@@ -93,11 +113,12 @@ public class GetterTest
 			if (markLevelCompleteTest != null)
 			{
 				String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, dataStorageLessonId, userId);
+				log.debug("checkPlayerResultTest" + checkPlayerResultTest);
 				if(checkPlayerResultTest == null)
 					return; //Pass
 				else
 				{
-					fail("Function says Admin has completed module before");
+					fail("Function says Admin has not completed module"); //Even though this test just marked it as Completed
 				}
 			}
 			else
@@ -164,12 +185,63 @@ public class GetterTest
 		}
 	}
 	
-	/*
 	@Test
-	public void testFindPlayerById() {
-		fail("Not yet implemented");
+	public void testFindPlayerById() 
+	{ 
+		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+		String userName = "UserForPlayerIdSearch";
+		try
+		{
+			//Create player with Null Class Id, and userName for name and password
+			Setter.userCreate(applicationRoot, null, userName, userName, "player", userName+"@test.com", false);
+			String userId = Getter.getUserIdFromName(applicationRoot, userName);
+			if(Getter.findPlayerById(applicationRoot, userId))
+			{
+				return;
+			}
+			else
+			{
+				fail("Could Not Find Player in Player Search");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not create player: " + e.toString());
+			fail("Could Not Create Player");
+		}
+	}
+	
+	@Test
+	public void testFindPlayerByIdWithAdminId() 
+	{ 
+		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
+		if(!Getter.findPlayerById(applicationRoot, userId))
+		{
+			return;
+		}
+		else
+		{
+			fail("Found Admin in Player Search");
+		}
+	}
+	
+	@Test
+	public void testFindPlayerByIdWithBadUserId() 
+	{
+		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+		String userId = new String("DOES NOT EXIST");
+		if(!Getter.findPlayerById(applicationRoot, userId))
+		{
+			return;
+		}
+		else
+		{
+			fail("Found Player That Does Not Exist");
+		}
 	}
 
+	/*
 	@Test
 	public void testGetAllModuleInfo() {
 		fail("Not yet implemented");

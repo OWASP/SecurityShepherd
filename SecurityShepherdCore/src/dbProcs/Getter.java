@@ -240,7 +240,7 @@ public class Getter
 			ResultSet userFind = callstmt.executeQuery();
 			log.debug("Opening Result Set from playerFindById");
 			userFind.next(); //This will throw an exception if player not found
-			log.debug("Player Found"); //This line will not execute if player not found
+			log.debug("Player Found: " + userFind.getString(1)); //This line will not execute if player not found
 			userFound = true;
 		}
 		catch(Exception e)
