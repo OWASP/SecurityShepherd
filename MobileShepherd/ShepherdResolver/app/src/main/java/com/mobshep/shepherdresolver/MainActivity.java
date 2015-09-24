@@ -1,8 +1,12 @@
 package com.mobshep.shepherdresolver;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +19,9 @@ public class MainActivity extends Activity {
 
 
     TextView session;
+    SharedPreferences storedSession;
+    SharedPreferences.Editor toEdit;
+
 
     // The URL used to target the content provider
     static final Uri CONTENT_URL =
@@ -56,12 +63,36 @@ public class MainActivity extends Activity {
                 String id = cursor.getString(cursor.getColumnIndex("id"));
                 String sessionValue = cursor.getString(cursor.getColumnIndex("sessionValue"));
 
-                sessionList = sessionList + id + " : " + sessionValue + "\n";
+                sessionList = sessionList + sessionValue + "\n";
 
             }while (cursor.moveToNext());
         }
 
         session.setText(sessionList);
+
+        if (sessionList.equals("")){
+            new AlertDialog.Builder(this)
+                    .setTitle("Login")
+                    .setMessage("You need to login to complete this challenge")
+                    .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.mobshep.shepherdlogin");
+                            startActivity(launchIntent);
+                        }
+                    })
+                    .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        MainActivity.this.finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+
+        storedSession = getSharedPreferences("session", MODE_PRIVATE);
+        toEdit = storedSession.edit();
+        toEdit.putString("session", sessionList);
+        toEdit.commit();
 
     }
 

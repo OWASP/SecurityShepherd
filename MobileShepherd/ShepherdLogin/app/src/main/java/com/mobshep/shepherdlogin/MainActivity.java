@@ -183,6 +183,17 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(goToSettings);
                 return true;
 
+            case R.id.action_clearSession:
+
+                storedPref = getSharedPreferences("Sessions", MODE_PRIVATE);
+                toEdit = storedPref.edit();
+                toEdit.clear();
+                toEdit.commit();
+
+                Toast valid = Toast.makeText(MainActivity.this,
+                        "Sessions cleared!", Toast.LENGTH_SHORT);
+                valid.show();
+
             case R.id.action_exit:
 
                 this.finish();

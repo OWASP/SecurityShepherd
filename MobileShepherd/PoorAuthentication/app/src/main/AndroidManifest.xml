@@ -49,6 +49,7 @@
         <activity
             android:name="com.mobshep.PoorAuthentication.Forgotton"
             android:label="@string/app_name"
+            android:permission="com.mobshep.PA.START_ACTIVITY"
             android:persistent="true"
             android:theme="@style/ShepherdTheme" >
             <intent-filter>
@@ -61,6 +62,7 @@
         <activity
             android:name="com.mobshep.PoorAuthentication.Main"
             android:label="@string/app_name"
+            android:permission="com.mobshep.PA.START_ACTIVITY"
             android:persistent="true"
             android:theme="@style/ShepherdTheme" >
             <intent-filter>

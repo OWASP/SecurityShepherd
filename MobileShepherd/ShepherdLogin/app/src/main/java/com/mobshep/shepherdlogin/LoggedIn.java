@@ -64,6 +64,8 @@ public class LoggedIn extends Activity {
 
         //delete * from sessions table
 
+
+
         checkNullSession();
 
 

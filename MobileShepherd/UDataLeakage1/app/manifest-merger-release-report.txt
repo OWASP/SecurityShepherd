@@ -41,7 +41,7 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 		ADDED from AndroidManifest.xml:14:9
 	android:theme
 		ADDED from AndroidManifest.xml:16:9
-activity#com.mobshep.UDataLeakage2.UDataLeakage2
+activity#com.mobshep.UDataLeakage1.UDataLeakage1
 ADDED from AndroidManifest.xml:17:9
 	android:label
 		ADDED from AndroidManifest.xml:19:13
