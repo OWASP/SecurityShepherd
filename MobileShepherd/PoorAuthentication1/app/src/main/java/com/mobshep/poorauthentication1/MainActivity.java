@@ -102,7 +102,6 @@ public class MainActivity extends Activity {
 
         int codeEntered = Integer.parseInt(codeString);
 
-
         //rule 1: auth code must be an odd number
         //rule 2: auth code must contain a 2
         //rule 3: auth code must contain a 4
