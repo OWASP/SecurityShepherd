@@ -2,6 +2,9 @@ package dbProcs;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -9,11 +12,22 @@ public class GetterTest
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(GetterTest.class);
 	private static String propertiesFileDirectory = new String("/site");
-	private static String moduleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
+	private static String unOpenedModuleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
+	private static Locale lang = new Locale("en");
+	private static String applicationRoot = new String();
+	private static String adminUserName = new String("admin");
+	private static String adminUserId = new String();
+	
+	public GetterTest()
+	{
+		applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+		adminUserId = Getter.getUserIdFromName(applicationRoot, adminUserName);
+	}
+	
 	@Test
 	public void testAuthUserCorrectCredentials() 
 	{
-		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin", "password") == null)
+		if(Getter.authUser(applicationRoot, adminUserName, "password") == null)
 			fail("Could not Authenticate Default admin");
 		else
 			return; //Pass
@@ -22,7 +36,7 @@ public class GetterTest
 	@Test
 	public void testAuthUserIncorrectCredentials() 
 	{
-		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin", "wrongPassword") == null)
+		if(Getter.authUser(applicationRoot, adminUserName, "wrongPassword") == null)
 			return; //Pass
 		else
 			fail("Could authenticate as Default admin with incorrect Password");
@@ -31,7 +45,7 @@ public class GetterTest
 	@Test
 	public void testAuthUserSqlInjection() 
 	{
-		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin", "wrongPassword'or'1'='1") == null)
+		if(Getter.authUser(applicationRoot, adminUserName, "wrongPassword'or'1'='1") == null)
 			return; //Pass
 		else
 			fail("Could authenticate as Default admin with SQL Injection");
@@ -40,7 +54,7 @@ public class GetterTest
 	@Test
 	public void testAuthUserSqlInjectionUserName() 
 	{
-		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin'or'1'='1", "wrongPassword") == null)
+		if(Getter.authUser(applicationRoot, adminUserName + "'or'1'='1", "wrongPassword") == null)
 			return; //Pass
 		else
 			fail("Could authenticate as Default admin with SQL Injection (UserName)");
@@ -48,7 +62,7 @@ public class GetterTest
 
 	@Test
 	public void testCheckPlayerResultWhenModuleNotOpened() {
-		String test = Getter.checkPlayerResult(System.getProperty("user.dir")+propertiesFileDirectory, moduleId, Getter.getUserIdFromName(System.getProperty("user.dir")+propertiesFileDirectory, "admin"));
+		String test = Getter.checkPlayerResult(applicationRoot, unOpenedModuleId, adminUserId);
 		if(test != null)
 		{
 			log.fatal("result should be null but it was: " + test);
@@ -61,12 +75,11 @@ public class GetterTest
 	@Test
 	public void testCheckPlayerResultWhenModuleWhenOpened() {
 		String csrfChallengeThree = new String("5ca9115f3279b9b9f3308eb6a59a4fcd374846d6");
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
+		
 		//Simulate user Opening Level
-		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeThree, userId).isEmpty())
+		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeThree, adminUserId).isEmpty())
 		{
-			String test = Getter.checkPlayerResult(applicationRoot, csrfChallengeThree, userId);
+			String test = Getter.checkPlayerResult(applicationRoot, csrfChallengeThree, adminUserId);
 			if(test == null)
 			{
 				fail("Function says Admin has not opened module"); // Admin Should have opened and not completed CSRF Three. Ensure DB is clean
@@ -82,12 +95,11 @@ public class GetterTest
 	public void testCheckPlayerResultWhenModuleNotComplete() 
 	{
 		String contentProviderLeakage = new String("5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a");
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
+		
 		//Simulate user Opening Level
-		if(!Getter.getModuleAddress(applicationRoot, contentProviderLeakage, userId).isEmpty())
+		if(!Getter.getModuleAddress(applicationRoot, contentProviderLeakage, adminUserId).isEmpty())
 		{
-				String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, contentProviderLeakage, userId);
+				String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, contentProviderLeakage, adminUserId);
 				if(checkPlayerResultTest != null)
 					return; //Pass
 				else
@@ -103,16 +115,15 @@ public class GetterTest
 	public void testCheckPlayerResultWhenModuleComplete() 
 	{
 		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
+		
 		//Simulate user Opening Level
-		if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
+		if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, adminUserId).isEmpty())
 		{
 			//Then, Mark the Challenge Complete for Default Admin (Insecure Data Storage Lesson)
-			String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, dataStorageLessonId, userId, "Feedback is Disabled", 1, 1, 1);
+			String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, dataStorageLessonId, adminUserId, "Feedback is Disabled", 1, 1, 1);
 			if (markLevelCompleteTest != null)
 			{
-				String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, dataStorageLessonId, userId);
+				String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, dataStorageLessonId, adminUserId);
 				log.debug("checkPlayerResultTest" + checkPlayerResultTest);
 				if(checkPlayerResultTest == null)
 					return; //Pass
@@ -133,15 +144,14 @@ public class GetterTest
 	public void testIsCsrfLevelCompleteIncrementedCounter() 
 	{
 		String csrfChallengeOne = new String("20e755179a5840be5503d42bb3711716235005ea"); //CSRF Challenge 1 (Should have CSRF Counter of 0 for Default Admin User
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
+		
 		//Simulate user Opening Level
-		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeOne, userId).isEmpty())
+		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeOne, adminUserId).isEmpty())
 		{
 			//Increment Challenge CSRF Counter
-			if(Setter.updateCsrfCounter(applicationRoot, csrfChallengeOne, userId))
+			if(Setter.updateCsrfCounter(applicationRoot, csrfChallengeOne, adminUserId))
 			{
-				if(Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeOne, userId))
+				if(Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeOne, adminUserId))
 				{
 					return; //Pass, because CSRF level is completed after the admin CSRF counter was incremented
 				}
@@ -165,12 +175,10 @@ public class GetterTest
 	public void testIsCsrfLevelCompleteWithoutIncrementedCounter() 
 	{
 		String csrfChallengeTwo = new String("94cd2de560d89ef59fc450ecc647ff4d4a55c15d"); //CSRF Challenge 2 (Should have CSRF Counter of 0 for Default Admin User
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
 		//Simulate user Opening Level
-		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeTwo, userId).isEmpty())
+		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeTwo, adminUserId).isEmpty())
 		{
-			if(!Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeTwo, userId))
+			if(!Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeTwo, adminUserId))
 			{
 				return; //Pass, because CSRF level is not completed because the CSRF Counter for the default admin is 0
 			}
@@ -188,7 +196,6 @@ public class GetterTest
 	@Test
 	public void testFindPlayerById() 
 	{ 
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
 		String userName = "UserForPlayerIdSearch";
 		try
 		{
@@ -214,9 +221,7 @@ public class GetterTest
 	@Test
 	public void testFindPlayerByIdWithAdminId() 
 	{ 
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
-		if(!Getter.findPlayerById(applicationRoot, userId))
+		if(!Getter.findPlayerById(applicationRoot, adminUserId))
 		{
 			return;
 		}
@@ -229,7 +234,6 @@ public class GetterTest
 	@Test
 	public void testFindPlayerByIdWithBadUserId() 
 	{
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
 		String userId = new String("DOES NOT EXIST");
 		if(!Getter.findPlayerById(applicationRoot, userId))
 		{
@@ -241,17 +245,90 @@ public class GetterTest
 		}
 	}
 
-	/*
+	
 	@Test
-	public void testGetAllModuleInfo() {
-		fail("Not yet implemented");
+	public void testGetAllModuleInfoWhenModulesOpen() {
+		ArrayList<String[]> modules = Getter.getAllModuleInfo(applicationRoot);
+		if(modules.size() > 75) //Shepherd v3.0 has 76 Modules. If less than All are Returned, then there is a problem with the Open Modules Function or the Retrieve data function
+		{
+			log.debug("PASS: Found " + modules.size() + " modules");
+			return;
+		}
+		else
+		{
+			log.fatal("Too Few Modules Returned to Pass Test: " + modules.size());
+			fail("Only " + modules.size() + "/~76 modules returned from function");
+		}
 	}
-
+	
+	
 	@Test
 	public void testGetChallenges() {
-		fail("Not yet implemented");
+		//Open all Modules First so that the GetAllModuleInfo method will return data
+		if(Setter.openAllModules(applicationRoot))
+		{
+			String modules = Getter.getChallenges(applicationRoot, adminUserId, lang);
+			if(!modules.isEmpty()) //Some Modules were included in response
+			{
+				//Get number of Challenges returned by getChallenges method
+				int numberofChallengesReturned = (modules.length() - modules.replace("class='lesson'", "").length()) / "class='lesson'".length();
+				if(numberofChallengesReturned > 58)
+				{
+					log.debug("PASS: Found " + numberofChallengesReturned + " modules");
+					return;
+				}
+				else
+				{
+					log.debug("Too Few Challenges Returned to pass: " + numberofChallengesReturned + " returned");
+					fail("Too Few Challenges Returned to Pass");
+				}
+			}
+			else
+			{
+				log.fatal("No Modules Found. Returned empty String");
+				fail("No Modules Found");
+			}
+		}
+		else
+		{
+			fail("Could Not Mark Modules as Open Before Test");
+		}
 	}
-
+	
+	@Test
+	public void testGetChallengesWhenModulesClosed() {
+		//Open all Modules First so that the GetAllModuleInfo method will return data
+		if(Setter.closeAllModules(applicationRoot))
+		{
+			String modules = Getter.getChallenges(applicationRoot, adminUserId, lang);
+			if(!modules.isEmpty()) //Some Modules were included in response
+			{
+				//Get number of Challenges returned by getChallenges method
+				int numberofChallengesReturned = (modules.length() - modules.replace("class='lesson'", "").length()) / "class='lesson'".length();
+				if(!(numberofChallengesReturned > 0))
+				{
+					log.debug("PASS: Found " + numberofChallengesReturned + " modules");
+					return;
+				}
+				else
+				{
+					log.debug("Too Many Challenges Returned to pass: " + numberofChallengesReturned + " returned");
+					fail("Challenges Returned when all modules were closed");
+				}
+			}
+			else
+			{
+				log.fatal("No Modules Found. Returned empty String");
+				fail("No Modules Found");
+			}
+		}
+		else
+		{
+			fail("Could Not Mark Modules as Open Before Test");
+		}
+	}
+	
+	/*
 	@Test
 	public void testGetClassCount() {
 		fail("Not yet implemented");
