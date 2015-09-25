@@ -247,7 +247,8 @@ public class GetterTest
 
 	
 	@Test
-	public void testGetAllModuleInfoWhenModulesOpen() {
+	public void testGetAllModuleInfoWhenModulesOpen() 
+	{
 		ArrayList<String[]> modules = Getter.getAllModuleInfo(applicationRoot);
 		if(modules.size() > 75) //Shepherd v3.0 has 76 Modules. If less than All are Returned, then there is a problem with the Open Modules Function or the Retrieve data function
 		{
@@ -263,7 +264,8 @@ public class GetterTest
 	
 	
 	@Test
-	public void testGetChallenges() {
+	public void testGetChallenges() 
+	{
 		//Open all Modules First so that the GetAllModuleInfo method will return data
 		if(Setter.openAllModules(applicationRoot))
 		{
@@ -328,12 +330,28 @@ public class GetterTest
 		}
 	}
 	
-	/*
 	@Test
 	public void testGetClassCount() {
-		fail("Not yet implemented");
+		if(Setter.classCreate(applicationRoot, "NewClassForGetCount", "2015"))
+		{
+			int classCount = Getter.getClassCount(applicationRoot);
+			if(classCount < 1)
+			{
+				fail("Class Count Too Low to Pass");
+			}
+			else
+			{
+				log.debug("PASS: Atleast One Class Returned");
+				return;
+			}
+		}
+		else
+		{
+			fail("Could not Create Class");
+		}
 	}
-
+	
+	/*
 	@Test
 	public void testGetClassInfoString() {
 		fail("Not yet implemented");
