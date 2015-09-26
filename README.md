@@ -3,7 +3,7 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
   
 # Where can I download Security Shepherd?
 
-### Virtual Machine
+### Virtual Machine or Manual Setup
 You can download Security Shepherd VM's or Manual Installation Packs from [SourceForge](http://bit.ly/1JbtQtP)
 
 ### Docker
