@@ -4,6 +4,28 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 # Where can I download Security Shepherd?
 You can download Security Shepherd VM's or Manual Installation Packs from [SourceForge](http://bit.ly/1JbtQtP)
 
+There is also a docker image available from [Dockerhub](https://hub.docker.com/r/ismisepaul/securityshepherd/) you can pull it down with  
+`docker pull ismisepaul/securityshepherd` 
+
+Note: You'll need to get a shell on your docker container and run mysql and tomcat manually;  
+```BASH 
+docker run -i -p 80:80 -p 443:443 -t ismisepaul/securityshepherd /bin/bash
+```
+```BASH 
+/usr/bin/mysqld_safe &
+service tomcat7 start
+```  
+If you don't have authbind install and configured e.g. on Ubuntu do the following;  
+```BASH
+sudo apt-get install authbind && \
+touch /etc/authbind/byport/80 && \  
+touch /etc/authbind/byport/443 && \  
+chmod 550 /etc/authbind/byport/80 && \  
+chmod 550 /etc/authbind/byport/443 && \  
+chown tomcat7 /etc/authbind/byport/80 && \  
+chown tomcat7 /etc/authbind/byport/443 
+```
+
 # How do I setup Security Shepherd?
 We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.
   
