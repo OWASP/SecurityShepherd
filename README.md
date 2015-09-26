@@ -2,8 +2,11 @@
 The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skill set to security expert status.
   
 # Where can I download Security Shepherd?
+
+### Virtual Machine
 You can download Security Shepherd VM's or Manual Installation Packs from [SourceForge](http://bit.ly/1JbtQtP)
 
+### Docker
 There is also a docker image available from [Dockerhub](https://hub.docker.com/r/ismisepaul/securityshepherd/) you can pull it down with  
 `docker pull ismisepaul/securityshepherd` 
 
