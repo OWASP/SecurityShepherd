@@ -22,8 +22,8 @@ package utils;
  */
 public class ModulePlan
 {
-	public static boolean openFloor = false;
-	public static boolean incrementalFloor = true;
+	public static boolean openFloor = true;
+	public static boolean incrementalFloor = false;
 	public static boolean tornyFloor = false;
 	
 	public static boolean isIncrementalFloor() 
