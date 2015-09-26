@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * SQL Injection Challenge Two
@@ -22,7 +23,16 @@
  */
 
 String levelName = "SQL Injection Challenge Two";
- ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+
+ String levelHash= "ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b";
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sqli." + levelHash, locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("challenge.challengeName");
+
+
+ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
  	HttpSession ses = request.getSession();
@@ -46,18 +56,18 @@ String levelName = "SQL Injection Challenge Two";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				To complete this challenge, you must exploit the SQL injection flaw in the following form to find the result key.
+				<%= bundle.getString("challenge.description") %>
 				<div id="hint" style="display: none;">
-					<h2 class="title">Challenge Hint</h2>
-					This is the query you are attempting to inject code into... But your input is been validated by the server before being sent to the interpreter!
+					<h2 class="title"><%= bundle.getString("challenge.hint") %></h2>
+					<%= bundle.getString("challenge.hint.description") %>
 					<br />
 					<br />
 					<div>SELECT * FROM customers WHERE customerAddress ='<a id="userContent"></a>';</div>
@@ -68,15 +78,15 @@ String levelName = "SQL Injection Challenge Two";
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Please enter the <a>Customer Email</a> of the user that you want to look up
+						<%= bundle.getString("challenge.form.pleaseEnter") %>
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="userIdentity" type="text"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Get user"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.button.value") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %>...</p>
+						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sign.hint") %>" id="theHintButton"/></div>
 					</td></tr>
 					</table>
 				</form>
@@ -107,7 +117,7 @@ String levelName = "SQL Injection Challenge Two";
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * SQL Injection Challenge 7
@@ -23,6 +24,13 @@
 
  String levelName = "SQL Injection Challenge 7";
  String levelHash = "8c2dd7e9818e5c6a9f8562feefa002dc0e455f0e92c8a46ab0cf519b1547eced";
+ 
+ //Translation Stuff
+ Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sqli." + levelHash, locale);
+ //Used more than once translations
+ String i18nLevelName = bundle.getString("challenge.challengeName");
+ 
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -48,34 +56,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				To complete this challenge, you must exploit a SQL injection flaw so you can sign in and receive the result key.
+				<%= bundle.getString("challenge.description") %>
 				
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td colspan="2">
-						Please enter your email and password to sign in.
+						<%= bundle.getString("challenge.form.pleaseEnterCredentials") %>
 					</td></tr>
 					<tr><td>
-						Email: 
+						<%= bundle.getString("challenge.form.email") %> 
 					</td><td>
 						<input style="width: 400px;" id="subEmail" type="text" autocomplete="off"/>
 					</td></tr>
 					<tr><td>
-						Password: 
+						<%= bundle.getString("challenge.form.password") %> 
 					</td><td>
 						<input style="width: 400px;" id="subPass" type="password" autocomplete="off"/>
 					</td></tr>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Sign In"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.button.value") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %>...</p>
 					</td></tr>
 					</table>
 				</form>
@@ -106,7 +114,7 @@
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

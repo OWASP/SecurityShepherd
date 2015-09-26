@@ -359,17 +359,17 @@ public class Validate
 		try
 		{
 			lang = ses.getAttribute("lang").toString();
-			log.debug("lang submitted: " + lang);
+			//log.debug("lang submitted: " + lang);
 			if(lang != null)
 			{
 				if (!lang.isEmpty())
 					result = lang;
 			}
-			log.debug("lang set to: " + result);
+			//log.debug("lang set to: " + result);
 		}
 		catch(Exception e)
 		{
-			log.debug("Could not Retrieve User Lang Setting");
+			log.error("Could not Retrieve User Lang Setting");
 		}
 		return result;
 	}
