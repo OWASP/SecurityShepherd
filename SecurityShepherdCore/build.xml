@@ -1,7 +1,7 @@
 <project default="build.deploy.war">
-	
+
 	<!-- Server Base is the location of the "/Servers" directory that the server package deploys. It is the loction of your tomcat server -->
-	<property name="serverBase" value="/home/aidan/tomcat" />
+	<property name="serverBase" value="C:/tomcat" />
 	<property name="tomcat" value="${serverBase}/webapps" />
 	<property name="lib.dir" value="lib" />
 	<property name="projectName" value="ROOT" />
@@ -11,7 +11,7 @@
 
 	<property environment="env"/>
 
-	
+
     <target name="clean">
     	<delete file="${tomcat}/${projectName}.war"/>
     	<delete dir="${tomcat}/${projectName}"/>
@@ -20,18 +20,18 @@
 	<path id="classpath">
 	  	<fileset dir="${lib.dir}" includes="**/*.jar"/>
 	</path>
-	
+
     <target name="compile">
        	<javac debug="true" srcdir="src" destdir="bin"  classpathref="classpath"/>
     </target>
-    
+
 
     <target name="webapp" depends="clean, compile">
     	<mkdir dir="${build.dir}"/>
     	<mkdir dir="${build.dir}\WEB-INF"/>
     	<mkdir dir="${build.dir}\WEB-INF\lib"/>
     	<mkdir dir="${build.dir}\WEB-INF\classes"/>
-    	
+
     	<copy todir="${build.dir}">
     	    <fileset dir="site"/>
     	</copy>
@@ -44,32 +44,32 @@
     	<copy todir="${build.dir}">
     		<fileset dir="${jsp.dir}"/>
     	</copy>
-    	
+
     	<delete includeemptydirs="true">
     	    <fileset dir="${build.dir}" defaultexcludes="false">
     	       <include name="**/*svn*/**" />
     	    </fileset>
     	</delete>
-    	
+
     </target>
-	
-	
-	
+
+
+
 	<target name="build.deploy.war" depends="webapp">
 			<jar jarfile="war/${projectName}.war" basedir="${build.dir}" />
 			<copy file="war/${projectName}.war" todir="${tomcat}"/>
 			<delete file="war/${projectName}.war"/>
 			<delete dir="${build.dir}" />
 	</target>
-	
-	
+
+
 	<target name="hudson.build" depends="GetBuildId, build.deploy.war" >
-		
+
 	</target>
-	
+
 	<target name="GetBuildId">
 		<delete file="src/jsp/buildVersion.txt" />
 		<echo message="${env.BUILD_NUMBER}"  file="src/jsp/buildVersion.txt" />
 	</target>
-	
+
 </project>
