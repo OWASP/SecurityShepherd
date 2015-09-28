@@ -18,15 +18,15 @@ docker run -i -p 80:80 -p 443:443 -t ismisepaul/securityshepherd /bin/bash
 /usr/bin/mysqld_safe &
 service tomcat7 start
 ```  
-If you don't have authbind install and configured e.g. on Ubuntu do the following;  
+If you don't have ```authbind``` installed and configured on your host machine e.g. on Ubuntu you'll need to do the following;  
 ```BASH
-sudo apt-get install authbind && \
-touch /etc/authbind/byport/80 && \  
-touch /etc/authbind/byport/443 && \  
-chmod 550 /etc/authbind/byport/80 && \  
-chmod 550 /etc/authbind/byport/443 && \  
-chown tomcat7 /etc/authbind/byport/80 && \  
-chown tomcat7 /etc/authbind/byport/443 
+sudo apt-get install authbind   
+touch /etc/authbind/byport/80  
+touch /etc/authbind/byport/443  
+chmod 550 /etc/authbind/byport/80  
+chmod 550 /etc/authbind/byport/443  
+chown tomcat7 /etc/authbind/byport/80  
+chown tomcat7 /etc/authbind/byport/443  
 ```
 
 # How do I setup Security Shepherd?
