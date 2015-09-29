@@ -37,5 +37,6 @@ public class Analytics
 	public static String getMobileLevelBlurb (String appName)
 	{
 		return mobileVmLinkBlurb1 + appName + mobileVmLinkBlurb2;
+		//TODO Extract strings for translation
 	}
 }
