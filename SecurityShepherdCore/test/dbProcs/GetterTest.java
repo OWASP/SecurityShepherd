@@ -485,7 +485,8 @@ public class GetterTest
 	}
 
 	@Test
-	public void testGetCsrfForumWithIframe() {
+	public void testGetCsrfForumWithIframe() 
+	{
 		String classId = new String();
 		String moduleId = new String("0a37cb9296ff3763f7f3a45ff313bce47afa9384"); //CSRF Challenge 5
 		Locale locale = new Locale("en_GB");
@@ -562,14 +563,87 @@ public class GetterTest
 		}
 		log.debug("End of CSRF Iframe Forum Test");
 	}
-
-	/*
 	 
 	@Test
-	public void testGetCsrfForumWithImg() {
-		fail("Not yet implemented");
+	public void testGetCsrfForumWithImg() 
+	{
+		String classId = new String();
+		String moduleId = new String("0a37cb9296ff3763f7f3a45ff313bce47afa9384"); //CSRF Challenge 5
+		Locale locale = new Locale("en_GB");
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
+		if(Setter.classCreate(applicationRoot, "NewClassForCsrfImgFourm", "2015"))
+		{
+			//Get Class Id
+			try
+			{
+				ResultSet rs = Getter.getClassInfo(applicationRoot);
+				while(rs.next())
+				{
+					if(rs.getString(2).equalsIgnoreCase("NewClassForCsrfImgFourm"))
+					{
+						classId = rs.getString(1);
+						break;
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Retreieve Class Id from Created Class : " + e.toString());
+			}
+			if(classId.isEmpty())
+			{
+				fail("Could not get ClassId");
+			}
+			else 
+			{
+				try
+				{
+					String userName = new String("userforimgclass");
+					if(Setter.userCreate(applicationRoot, classId, userName, "password1726", "player", "imgclass@gmail.com", false))
+					{
+						//Open all Modules First so that the Module Can Be Opened by the user
+						if(Setter.openAllModules(applicationRoot))
+						{
+							//Simulate user Opening Level
+							if(!Getter.getModuleAddress(applicationRoot, moduleId, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
+							{
+								String csrfFourm = Getter.getCsrfForumWithImg(applicationRoot, classId, moduleId, bundle);
+								if(csrfFourm.indexOf(userName) > -1)
+								{
+									log.debug("PASS: User was found in the fourm");
+									return;
+								}
+								else
+								{
+									log.error("Could not find user name '" + userName + "' in this: " + csrfFourm);
+									fail("User was not contained in the CSRF Img Forum");
+								}
+							}
+							else
+							{
+								fail("Could not open CSRF 5 as Created User");
+							}
+						}
+						else
+						{
+							fail("Could not Mark All Modules as Open");
+						}
+					}
+				}
+				catch(Exception e)
+				{
+					log.fatal("Could not Create User: " + e.toString());
+					fail("Could not create user in class");
+				}
+			}
+		}
+		else
+		{
+			fail("Could not Create Class");
+		}
 	}
-
+	
+	/*
 	@Test
 	public void testGetFeedback() {
 		fail("Not yet implemented");
