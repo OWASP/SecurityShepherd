@@ -28,7 +28,7 @@ String levelHash = "072a9e4fc888562563adf8a89fa55050e3e1cfbbbe1d597b0537513ac866
 
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.reverseEng.reverseEngText", locale);
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.reverseEngineer.reverseEngineer", locale);
 //Used more than once translations
 String i18nLevelName = bundle.getString("challenge1.challengeName");
 String paragraph1 = bundle.getString("challenge1.para1");
@@ -70,7 +70,7 @@ if (request.getSession() != null)
 				<%= paragraph1 %>
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("ReverseEngineer2.apk") %>
+				<%= Analytics.getMobileLevelBlurb("ReverseEngineer1.apk") %>
 				
 			</p>
 		</div>

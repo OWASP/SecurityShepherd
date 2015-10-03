@@ -24,6 +24,15 @@
 String levelName = "Mobile Insecure Data Storage 1";
 //Alphanumeric Only
 String levelHash = "362f84cf26bf96aeae358d5d0bbee31e9291aaa5367594c29b3af542a7572c01";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insecureData.insecureDataStrings", locale);
+//Used more than once translations
+String LevelName = bundle.getString("challenge1.challengeName");
+String paragraph1 = bundle.getString("challenge1.para1");
+
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -60,11 +69,10 @@ if (request.getSession() != null)
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
 				<br/>
-				The App for this challenge stores user credentials within a database, the data has not been stored in plain text but it also has not been encrypted. Make the credentials readable to get the key. The key is the Admin's password.
-
+				<%= paragraph1 %>
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("InsecureData2.apk") %>
+				<%= Analytics.getMobileLevelBlurb("InsecureData1.apk") %>
 				
 			</p>
 		</div>
