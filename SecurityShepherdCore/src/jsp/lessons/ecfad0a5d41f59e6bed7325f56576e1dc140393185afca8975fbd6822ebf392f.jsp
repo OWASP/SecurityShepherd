@@ -9,6 +9,7 @@
 	//Translation Stuff
 	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_insecure_data_storage." + levelHash, locale);
+	ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 	//Used more than once translations
 	String translatedLevelName = bundle.getString("title.question.m_insecure_data_storeage");
 	
@@ -92,7 +93,7 @@
 		
 		<br/>
 		<br/>
-		<%= Analytics.getMobileLevelBlurb("InsecureData.apk") %>
+		<%= mobile.getString("mobileBlurb.vmLink.1") + " InsecureData.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 		
 		<script>
 			

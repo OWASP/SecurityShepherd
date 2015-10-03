@@ -9,6 +9,7 @@
 	//Translation Stuff
 	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_unintended_data_leakage." + levelHash, locale);
+	ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 	//Used more than once translations
 	String translatedLevelName = bundle.getString("title.question.m_uninteded_data_leakage");
 	
@@ -98,7 +99,7 @@ if (request.getSession() != null)
 				<%= bundle.getString("challenge.description") %>
 				<br>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("UDataLeakage.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " UDataLeakage.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 			
 				<script>	
 					$('#hideLesson').click(function(){

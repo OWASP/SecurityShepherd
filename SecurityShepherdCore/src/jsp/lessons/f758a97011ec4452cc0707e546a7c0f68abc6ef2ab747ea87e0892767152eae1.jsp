@@ -10,6 +10,7 @@
 	//Translation Stuff
 	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_client_side_injection." + levelHash, locale);
+	ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 	//Used more than once translations
 	String translatedLevelName = bundle.getString("title.question.csi");
 	
@@ -89,7 +90,7 @@
 		 <%= bundle.getString("challenge.description") %>
 		<br/>
 		<br>
-		<%= Analytics.getMobileLevelBlurb("CSInjection.apk") %>
+		<%= mobile.getString("mobileBlurb.vmLink.1") + " CSInjection.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 		
 		<script>
 				
