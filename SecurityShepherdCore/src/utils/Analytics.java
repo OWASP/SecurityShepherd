@@ -1,5 +1,8 @@
 package utils;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
  * Manages What Google Analytics is used by the Shepherd instance. If Any
  * @author Mark Denihan
@@ -20,15 +23,20 @@ public class Analytics
 		"</script>";
 	public static String sourceForgeMobileVmLinkBlurb = new String(""
 			+ "To complete this challenge you'll need to use the <a href='http://bit.ly/mobileShepherdVm'>Security Shepherd Android Virtual Machine</a> that contains the app. ");
-	public static String sponsorshipMessage = new String("<h2 class=\"title\">Project Sponsors</h2>" +
+	public static String sponsorshipMessage(Locale locale)
+	{
+		//Get Language Bundle
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
+		return new String("<h2 class=\"title\">" + bundle.getString("sponsorship.title") + "</h2>" +
 			"<p>" +
-			"The OWASP Security Shepherd project would like to acknowledge and thank the generous support of our sponsors. Please check out their web pages and follow them on twitter." +
+			bundle.getString("sponsorship.message.1") +
 			"<br/><br/>" +
 			"<a href=\"http://bit.ly/BccRiskAdvisorySite\"><img src=\"css/images/bccRiskAdvisorySmallLogo.jpg\" alt=\"BCC Risk Advisory\"/></a>" +
 			"<a href=\"http://bit.ly/EdgeScan\"><img src=\"css/images/edgescanSmallLogo.jpg\" alt=\"EdgeScan\" /></a>" +
 			"<br/>" +
 			"<a href=\"http://bit.ly/manicode\"><img src=\"css/images/manicode-logo.png\" style=\"margin-top: 5px;\"></a>" +
 			"<br/><br/>" +
-			"The OWASP Security Shepherd Project would also like to thank Dr. Anthony Keane and the ITB Security Research Lab for hosting the public https://owasp.securityShepherd.eu!" +  
+			bundle.getString("sponsorship.message.2") +  
 			"<br/><a href=\"http://securityresearch.ie/\"><img src=\"https://www.owasp.org/images/thumb/2/24/Fontlogo.png/300px-Fontlogo.png\"/></a></p>");
+	}
 }
