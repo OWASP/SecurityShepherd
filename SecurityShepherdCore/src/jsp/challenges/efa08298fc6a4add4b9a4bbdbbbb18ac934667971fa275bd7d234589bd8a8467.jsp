@@ -25,15 +25,21 @@ String levelName = "Mobile Poor Authentication 1";
 //Alphanumeric Only
 String levelHash = "efa08298fc6a4add4b9a4bbdbbbb18ac934667971fa275bd7d234589bd8a8467";
 
-
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-//ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.example." + levelHash, locale);
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insecureData.insecureDataStrings", locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
-
 
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
+
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insecureData.insecureDataStrings", locale);
+//Used more than once translations
+String LevelName = bundle.getString("challenge1.challengeName");
+String paragraph1 = bundle.getString("challenge1.para1");
 
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
