@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,8 +24,13 @@
 String levelName = "Insecure Crypto Storage Challenge 4";
 //Alphanumeric Only
 String levelHash = "b927fc4d8c9f70a78f8b6fc46a0cc18533a88b2363054a1f391fe855954d12f9";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Not used - See Below";
+
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.insecureCryptoStorage.insecureCryptoStorage", locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("insecureCryptoStorage.4.challengename");
 
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -49,30 +55,29 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				If you can buy trolls for free you'll receive the key for this level!
+				<%= bundle.getString("insecureCyrptoStorage.4.whatToDo") %>
 				<br/>
 				<br/>
-				<h3>Super Meme Shopping</h3>
-				Hey customers: Due to a shipping mistake we are completely over stocked in rage Memes. 
-				Use the coupon code <a>PleaseTakeARage</a> or <a>RageMemeForFree</a> to get yours for free!!!.
+				<h3 class="title"><%= bundle.getString("insecureCyrptoStorage.4.shop") %></h3>
+				<p><%= bundle.getString("insecureCyrptoStorage.4.shop.message.1") %> <a>PleaseTakeARage</a> <%= bundle.getString("insecureCyrptoStorage.4.shop.message.2") %> <a>RageMemeForFree</a> <%= bundle.getString("insecureCyrptoStorage.4.shop.message.3") %></p>
 				<br />
 				<br />
 				<form id="leForm" action="javascript:;">
 					<table>
 					<!-- Header -->
 					<tr>
-						<th>Picture</th>
-						<th>Cost</th>
-						<th>Quantity</th>
+						<th><%= bundle.getString("insecureCyrptoStorage.4.shop.picture") %></th>
+						<th><%= bundle.getString("insecureCyrptoStorage.4.shop.cost") %></th>
+						<th><%= bundle.getString("insecureCyrptoStorage.4.shop.quantity") %></th>
 					</tr>
 					<!-- Rage Row -->
 					<tr>
@@ -99,13 +104,13 @@ if (request.getSession() != null)
 						<td><input type="text" style="width: 20px" value="0" id="numberOfMegusta" autocomplete="off"/>
 					</tr>
 					</table>
-					Please select how many things you would like to buy and click submit
+					<p><%= bundle.getString("insecureCyrptoStorage.4.shop.howToShop") %></p>
 					<table>
-					<tr><td>Coupon Code:</td><td><input type="text" id="couponCode" autocomplete="off"/></td></tr>
+					<tr><td><%= bundle.getString("insecureCyrptoStorage.4.shop.couponCode") %></td><td><input type="text" id="couponCode" autocomplete="off"/></td></tr>
 					<tr><td colspons = 2>			
 						<div id="submitButton">
-						<input type="submit" value="Place Order"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<input type="submit" value="<%= bundle.getString("insecureCyrptoStorage.4.shop.submit") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("insecureCyrptoStorage.loading") %></p>
 					</td></tr>
 					</table>
 				</form>
@@ -141,7 +146,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("insecureCyrptoStorage.errorOccurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){
