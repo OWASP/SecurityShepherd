@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -25,6 +26,16 @@ String levelName = "Mobile Poor Authentication 1";
 String levelHash = "efa08298fc6a4add4b9a4bbdbbbb18ac934667971fa275bd7d234589bd8a8467";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
+
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insecureData.insecureDataStrings", locale);
+//Used more than once translations
+String LevelName = bundle.getString("challenge1.challengeName");
+String paragraph1 = bundle.getString("challenge1.para1");
+
+
 
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -60,11 +71,11 @@ if (request.getSession() != null)
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
 				<br/>
-				You must log into the App  <a>PoorAuthentication2.apk</a> to get the key. The Username and Password have been saved but this App uses a specially generated <a>Authentication Code</a>. 
+				<%= paragraph1 %>
 				<br/>
 				<br/>
 				
-				<%= Analytics.getMobileLevelBlurb("PoorAuthentication2.apk") %>
+				<%= Analytics.getMobileLevelBlurb("PoorAuthentication1.apk") %>
 				
 			</p>
 		</div>
