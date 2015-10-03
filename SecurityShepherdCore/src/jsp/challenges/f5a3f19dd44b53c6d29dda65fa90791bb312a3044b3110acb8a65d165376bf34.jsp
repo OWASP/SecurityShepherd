@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,6 +24,14 @@
 String levelName = "Mobile Broken Crypto 3";
 //Alphanumeric Only
 String levelHash = "fb5c9ce0f5539b737e534fd317befff7427f6610ed626dfd43abf35295f106bc";
+
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+//ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.example." + levelHash, locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -65,7 +74,7 @@ if (request.getSession() != null)
 				The key for this challenge can be found in the client side database. Get the key to pass this challenge.  			
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("BrokenCrypto4.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " BrokenCrypto4.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 				
 			</p>
 		</div>

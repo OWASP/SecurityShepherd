@@ -28,6 +28,8 @@ String levelHash = "362f84cf26bf96aeae358d5d0bbee31e9291aaa5367594c29b3af542a757
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insecureData.insecureDataStrings", locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
 //Used more than once translations
 String LevelName = bundle.getString("challenge1.challengeName");
 String paragraph1 = bundle.getString("challenge1.para1");
@@ -72,7 +74,7 @@ if (request.getSession() != null)
 				<%= paragraph1 %>
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("InsecureData1.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " InsecureData1.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 				
 			</p>
 		</div>

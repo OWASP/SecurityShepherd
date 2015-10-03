@@ -24,6 +24,12 @@
 String levelName = "Mobile Unintended Data Leakage 1";
 //Alphanumeric Only
 String levelHash = "517622a535ff89f7d90674862740b48f53aad7b41390fe46c6f324fee748d136";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+// ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.example." + levelHash, locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
@@ -70,7 +76,7 @@ if (request.getSession() != null)
 			challenge. <a>Some data</a> has been logged but it is up to the
 			attacker to know what to do with this data. <br /> <br />
 
-			<%=Analytics.getMobileLevelBlurb("UDataLeakage2.apk")%>
+			<%=mobile.getString("mobileBlurb.vmLink.1") + " UDataLeakage2.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 		</p>
 	</div>
 	<%

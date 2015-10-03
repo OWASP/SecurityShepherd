@@ -20,8 +20,6 @@ public class Analytics
 		"</script>";
 	public static String sourceForgeMobileVmLinkBlurb = new String(""
 			+ "To complete this challenge you'll need to use the <a href='http://bit.ly/mobileShepherdVm'>Security Shepherd Android Virtual Machine</a> that contains the app. ");
-	private static String mobileVmLinkBlurb1 = new String("To complete this challenge you'll need to use the ");
-	private static String mobileVmLinkBlurb2 = new String(" app found in the <a href='http://bit.ly/mobileShepherdVm' target='_blank'>Security Shepherd Android Virtual Machine</a>.");
 	public static String sponsorshipMessage = new String("<h2 class=\"title\">Project Sponsors</h2>" +
 			"<p>" +
 			"The OWASP Security Shepherd project would like to acknowledge and thank the generous support of our sponsors. Please check out their web pages and follow them on twitter." +
@@ -32,11 +30,5 @@ public class Analytics
 			"<a href=\"http://bit.ly/manicode\"><img src=\"css/images/manicode-logo.png\" style=\"margin-top: 5px;\"></a>" +
 			"<br/><br/>" +
 			"The OWASP Security Shepherd Project would also like to thank Dr. Anthony Keane and the ITB Security Research Lab for hosting the public https://owasp.securityShepherd.eu!" +  
-			"<br/><a href=\"http://securityresearch.ie/\"><img src=\"https://www.owasp.org/images/thumb/2/24/Fontlogo.png/300px-Fontlogo.png\"/></a></p>");	
-	
-	public static String getMobileLevelBlurb (String appName)
-	{
-		return mobileVmLinkBlurb1 + appName + mobileVmLinkBlurb2;
-		//TODO Extract strings for translation
-	}
+			"<br/><a href=\"http://securityresearch.ie/\"><img src=\"https://www.owasp.org/images/thumb/2/24/Fontlogo.png/300px-Fontlogo.png\"/></a></p>");
 }

@@ -24,6 +24,12 @@
 String levelName = "Mobile Unintended Data Leakage 2";
 //Alphanumeric Only
 String levelHash = "85ceae7ec397c8f4448be51c33a634194bf5da440282227c15954bbdfb54f0c7";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+//ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.example." + levelHash, locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -65,7 +71,7 @@ if (request.getSession() != null)
 				<br/>
 This App is leaking logs. The Key is the winning lotto number! <br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("UDataLeakage3.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " UDataLeakage3.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 				
 			</p>
 		</div>

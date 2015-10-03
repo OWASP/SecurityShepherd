@@ -24,6 +24,13 @@
 String levelName = "Mobile Client Side Injection 1";
 //Alphanumeric Only
 String levelHash = "8855c8bb9df4446a546414562eda550520e29f7a82400a317c579eb3a5a0a8ef";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+//ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.example." + levelHash, locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -67,7 +74,7 @@ if (request.getSession() != null)
 				The App for this challenge uses sloppy filters in an attempt to thwart attackers. These filters can be easily bypassed. Login to get the key. 
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("CSInjection2.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " CSInjection2.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 				
 			</p>
 		</div>

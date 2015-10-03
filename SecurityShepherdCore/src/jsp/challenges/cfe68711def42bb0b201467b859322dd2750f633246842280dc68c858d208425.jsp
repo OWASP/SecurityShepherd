@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,6 +24,12 @@
 String levelName = "Mobile Client Side Injection 2";
 //Alphanumeric Only
 String levelHash = "cfe68711def42bb0b201467b859322dd2750f633246842280dc68c858d208425";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+//ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.example." + levelHash, locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -66,7 +73,7 @@ if (request.getSession() != null)
 				
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("CSInjection3.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " CSInjection3.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 				
 				<% /* IF you need a form - Present it like this */ %>
 				<%

@@ -30,6 +30,7 @@ String levelBlurb = "";
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insecureData.insecureDataStrings", locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 //Used more than once translations
 String LevelName = bundle.getString("challenge3.challengeName");
 String paragraph1 = bundle.getString("challenge3.para1");
@@ -74,7 +75,7 @@ if (request.getSession() != null)
 				<br/>
 				<br/>
 				
-				<%= Analytics.getMobileLevelBlurb("InsecureData4.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " InsecureData4.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 				
 			</p>
 		</div>

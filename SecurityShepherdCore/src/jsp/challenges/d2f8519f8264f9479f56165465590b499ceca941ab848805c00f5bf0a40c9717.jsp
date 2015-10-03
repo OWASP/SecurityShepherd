@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,6 +24,14 @@
 String levelName = "Mobile Broken Crypto 1";
 //Alphanumeric Only
 String levelHash = "d2f8519f8264f9479f56165465590b499ceca941ab848805c00f5bf0a40c9717";
+
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+//ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.example." + levelHash, locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -65,7 +74,7 @@ if (request.getSession() != null)
 				This App uses a deprecated encryption algorithm (DES) and breaks a vital rule of key management. The key is in the conversation. Decrypt the chat to get the key.  			
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("BrokenCrypto2.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " BrokenCrypto2.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 				
 			</p>
 		</div>

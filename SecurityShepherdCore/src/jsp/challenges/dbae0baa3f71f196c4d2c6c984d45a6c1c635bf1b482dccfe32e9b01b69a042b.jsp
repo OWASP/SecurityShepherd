@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,6 +24,12 @@
 String levelName = "Mobile Reverse Engineering 3";
 //Alphanumeric Only
 String levelHash = "dbae0baa3f71f196c4d2c6c984d45a6c1c635bf1b482dccfe32e9b01b69a042b.jsp";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+//ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.example." + levelHash, locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -64,7 +71,7 @@ if (request.getSession() != null)
 			<br /> The developers of this App, <a>ReverseEngineer4</a>, have decided to use an algorithm to confirm or deny the authenticity of the key. You must Reverse Engineer ReverseEngineer3.APK to find this algorithm. If you are unsure whether or not the key is correct, there is a key validity checker in the App. <br />
 			<br>
 			<br/>
-			<%= Analytics.getMobileLevelBlurb("ReverseEngineer4.apk") %>
+			<%= mobile.getString("mobileBlurb.vmLink.1") + " ReverseEngineer4.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 		</p>
 	</div>
 	<% if (Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
