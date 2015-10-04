@@ -27,8 +27,12 @@ String levelHash = "dbae0baa3f71f196c4d2c6c984d45a6c1c635bf1b482dccfe32e9b01b69a
 
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-//ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.example." + levelHash, locale);
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.reverseEngineer.reverseEngineer", locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+//Used more than once translations
+String LevelName = bundle.getString("challenge3.challengeName");
+String paragraph1 = bundle.getString("challenge3.para1");
 
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
@@ -55,7 +59,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%=levelName%></title>
+<title>Security Shepherd - <%=LevelName%></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
 	media="screen" />
 
@@ -64,14 +68,14 @@ if (request.getSession() != null)
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%=levelName%></h2>
+		<h2 class="title"><%=LevelName%></h2>
 		<p>
 
 			<%=levelBlurb%>
-			<br /> The developers of this App, <a>ReverseEngineer4</a>, have decided to use an algorithm to confirm or deny the authenticity of the key. You must Reverse Engineer ReverseEngineer3.APK to find this algorithm. If you are unsure whether or not the key is correct, there is a key validity checker in the App. <br />
+			<br /> <%= paragraph1 %><br />
 			<br>
 			<br/>
-			<%= mobile.getString("mobileBlurb.vmLink.1") + " ReverseEngineer4.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
+			<%= mobile.getString("mobileBlurb.vmLink.1") + " ReverseEngineer3.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 		</p>
 	</div>
 	<% if (Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
