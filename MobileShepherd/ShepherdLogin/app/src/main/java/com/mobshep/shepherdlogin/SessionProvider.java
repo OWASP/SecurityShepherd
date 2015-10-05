@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.SyncStateContract;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -67,6 +69,7 @@ public class SessionProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
+
         DatabaseHelper dbHelper = new DatabaseHelper(getContext());
         sqlDB = dbHelper.getWritableDatabase();
 
@@ -124,10 +127,13 @@ public class SessionProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         //delete any previous sessions
-        sqlDB.delete(TABLE_NAME, "id > ? " , new String[]{"0"});
+        try{
+       sqlDB.delete(TABLE_NAME, "id > ? ", new String[]{"0"});
         DatabaseHelper dbHelper = new DatabaseHelper(getContext());
         sqlDB = dbHelper.getWritableDatabase();
+        }catch(SQLiteException e) {
 
+        }
 
         // Gets the row id after inserting a map with the keys representing the the column
         // names and their values. The second attribute is used when you try to insert
@@ -193,9 +199,12 @@ public class SessionProvider extends ContentProvider {
         // notifyChange notifies all observers that a row was updated
         getContext().getContentResolver().notifyChange(uri, null);
         return rowsUpdated;
+
     }
 
-    private static class DatabaseHelper extends SQLiteOpenHelper {
+
+
+    public static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
@@ -212,9 +221,13 @@ public class SessionProvider extends ContentProvider {
             onCreate(sqlDB);
         }
 
+        public void deleteData(){
+            SQLiteDatabase sqlDB = getWritableDatabase();
+            sqlDB.execSQL("DELETE FROM " + TABLE_NAME);
+            sqlDB.close();
+        }
+
     }
-
-
 }
 
 

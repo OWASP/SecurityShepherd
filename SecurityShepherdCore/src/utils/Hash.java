@@ -201,11 +201,21 @@ public class Hash
 	{
 		log.debug("Generating key for " + userSalt);
 		String toReturn = "Key Should be here! Please refresh the home page and try again!";
+		String zeroClipboard = "<script type='text/javascript' src='../js/zeroclipboard/ZeroClipboard.js' />"
+				+ "<script>"
+				+ "var client = new ZeroClipboard( document.getElementById('copy-button') );"
+				+ "</script>";
 			try 
 			{
 				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
-				toReturn = Hash.encrypt(key, baseKey + getCurrentSalt());
-				log.debug("Returning: " + toReturn);
+				String forLog = Hash.encrypt(key, baseKey + getCurrentSalt());
+				toReturn = "<link rel='stylesheet' href='../css/octicons/octicons.css'>"
+						+ "<textarea id='clipboard_textarea' rows=1 style='display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea><br />"
+						+ "<button data-clipboard-target='clipboard_textarea' data-copied-hint='Copied!' id='copy-button' name='copy-button' value='Copy to Clipboard'>"
+						+ "<span class='octicon octicon-clippy'></span>" 
+						+ "</button>" 
+						+ zeroClipboard;
+				log.debug("Returning: " + forLog);
 			} 
 			catch (Exception e) 
 			{ 

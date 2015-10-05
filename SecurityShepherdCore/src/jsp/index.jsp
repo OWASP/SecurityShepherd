@@ -745,7 +745,7 @@ if (request.getSession() != null)
 				});
 			}
 		<% if(ModulePlan.isIncrementalFloor()) { %>
-			applyMenuButtonActions('<%= encoder.encodeForHTML(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");
+			applyMenuButtonActionsCtfMode('<%= encoder.encodeForHTML(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");
 		<% } //End of if(CTF Mode Enabled) %>
 		<% if (!ModulePlan.isIncrementalFloor()) {%>
 			applyMenuButtonActionsOpenOrTourney('<%= encoder.encodeForHTML(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");

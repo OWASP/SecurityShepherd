@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * This level uses XOR's user input with a key. the vulnerability in the cipher is if the attacker submits spaces, the key will be revealed after the XOR.
@@ -24,8 +25,15 @@
 String levelName = "Insecure Cyrpto Challenge 3";
 //Alphanumeric Only
 String levelHash = "2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.insecureCryptoStorage.insecureCryptoStorage", locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("insecureCryptoStorage.3.challengename");
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "The result key to this level is the same as the encryption key used in the following sub application. Break the cipher and recover the encryption key! The result key is in all caps.";
+String levelBlurb = bundle.getString("insecureCyrptoStorage.3.whatToDo");
+
 //Logs the IP, Forwarded IP that acceeded this level with the level name in the debug for convience. If you want to log more stuff in the JSP use this as an example
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -51,35 +59,36 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
 				<%= levelBlurb %>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						Cipher text to decrypt: 
+						<%= bundle.getString("insecureCyrptoStorage.3.ciphertextToDecrypt") %>
 					</td><td>
 						<input type="text" width="130px" id="userInput" autocomplete="off">
 					</td></tr>
 					<tr><td colspan="2">			
 						<div id="submitButton">
-						<input type="submit" value="Decrypt"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
-						<div style="display: none;" id="hintButton"><input type="button" value="Would you like a hint?" id="theHintButton"/></div>
+						<input type="submit" value="<%= bundle.getString("insecureCyrptoStorage.decrypt") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("insecureCyrptoStorage.loading") %></p>
 					</td></tr>
 					</table>
 				</form>
 				
-				<div id="resultsDiv"><h2>Cipher text Example</h2><p>Try to decrypt this: IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==</p></div>
+				<div id="resultsDiv">
+					<h2 class="title"><%= bundle.getString("insecureCyrptoStorage.3.ciphertextExample") %></h2>
+					<p><%= bundle.getString("insecureCyrptoStorage.3.tryDecryptThis") %> IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==</p>
+				</div>
 			</p>
 		</div>
-		<% /*If you need to call the Server Do it like this */ %>
 		<script>
 			$("#leForm").submit(function(){
 				var theUserInput = $("#userInput").val();
@@ -100,7 +109,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("insecureCyrptoStorage.errorOccurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

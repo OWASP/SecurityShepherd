@@ -177,7 +177,7 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				},
 				async: false
 			});
-			$("#loadingSign").hide("fast", function(){
+			$("#loadingDiv").hide("fast", function(){
 				if(ajaxCall.status == 200)
 				{
 					if(ajaxCall.responseText == '')

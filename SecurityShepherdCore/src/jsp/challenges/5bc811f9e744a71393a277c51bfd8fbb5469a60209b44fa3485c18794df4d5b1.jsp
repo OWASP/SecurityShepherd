@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,6 +24,17 @@
 String levelName = "Mobile Reverse Engineering 2";
 //Alphanumeric Only
 String levelHash = "5bc811f9e744a71393a277c51bfd8fbb5469a60209b44fa3485c18794df4d5b1";
+
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.reverseEngineer.reverseEngineer", locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+//Used more than once translations
+String LevelName = bundle.getString("challenge2.challengeName");
+String paragraph1 = bundle.getString("challenge2.para1");
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -49,7 +61,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%=levelName%></title>
+<title>Security Shepherd - <%=LevelName%></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
 	media="screen" />
 
@@ -58,17 +70,14 @@ if (request.getSession() != null)
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%=levelName%></h2>
+		<h2 class="title"><%=LevelName%></h2>
 		<p>
 			<%=levelBlurb%>
-			<br /> When an attacker reverse engineers an APK, they usually find
-			multiple <a>packages</a> containing multiple <a>activities</a>, 
-			containing multiple <a>methods</a> which have all been obfuscated to
-			crawl through. The key for this challenge has been hard coded into the APK for this challenge. To get to
-			the key reverse engineer the APK and find the correct Activity which
-			performs a conditional statement to check the validity of the key. <br />
+			<br /> 
+			<%= paragraph1 %>
+			<br />
 			<br/>
-			<%= Analytics.getMobileLevelBlurb("ReverseEngineer3.apk") %>
+			<%= mobile.getString("mobileBlurb.vmLink.1") + " ReverseEngineer2.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 		</p>
 	</div>
 	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>

@@ -5,8 +5,8 @@ body {
 	color: #090212;
 }
 
-body, th, td, input, textarea, select, option {
-	font-family: "Trebuchet MS", "Times New Roman", Arial, Times, serif;
+body, th, td, input, textarea, select, option, p, div {
+	font-family: "Helvetica Neue", Helvetica Arial, "Lucida Grande", sans-serif;
 }
 
 h1, h2, h3 {

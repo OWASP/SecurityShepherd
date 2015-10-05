@@ -2,6 +2,11 @@ package dbProcs;
 
 import static org.junit.Assert.*;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -9,212 +14,1281 @@ public class GetterTest
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(GetterTest.class);
 	private static String propertiesFileDirectory = new String("/site");
-	private static String moduleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
+	private static String lang = new String("en_GB");
+	private static Locale locale = new Locale(lang);
+	private static String applicationRoot = new String();
+	
+	public GetterTest()
+	{
+		applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+	}
+	
+	/**
+	 * This method will sign in as a User, or create the user and sign in as them. If this fails it will throw an Exception
+	 * @param applicationRoot Context of running application
+	 * @param userName The user name of the user you want to create or sign in as
+	 * @param password The password of the user you want to create or sign in as
+	 * @return Boolean value depicting if the user exists and can be authenticated
+	 * @throws Exception If User Create function fails, an exception will be passed up
+	 */
+	private static boolean verifyTestUser(String applicationRoot, String userName, String password) throws Exception
+	{
+		boolean result = false;
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, userName);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug(userName + " could authenticate. returning true");
+				result = true;
+			}
+			else
+			{
+				log.error("Couldnt verify that " + userName + " could authenticate at all. Throwing Exception");
+				throw new Exception("Could not Verify User " + userName + " could authenticate at all.");
+			}
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Could not Create User " + userName + ": " + e.toString());
+		}
+		return result;
+	}
+	
+	/**
+	 * This method will sign in as a User, or create the user and sign in as them. If this fails it will throw an Exception. 
+	 * They will be added to the submitted class
+	 * @param applicationRoot Context of running application
+	 * @param userName The user name of the user you want to create or sign in as
+	 * @param password The password of the user you want to create or sign in as
+	 * @return Boolean value depicting if the user exists and can be authenticated
+	 * @throws Exception If User Create function fails, an exception will be passed up
+	 */
+	private static boolean verifyTestUser(String applicationRoot, String userName, String password, String theClass) throws Exception
+	{
+		boolean result = false;
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, theClass, userName, userName, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, userName);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug(userName + " could authenticate. checking class");
+				if(!user[4].equalsIgnoreCase(theClass))
+				{
+					log.debug("Need to update user's class");
+					Setter.updatePlayerClass(applicationRoot, theClass, user[0]);
+				}
+				else
+					log.debug("User in class submitted already");
+				result = true;
+			}
+			else
+			{
+				log.error("Couldnt verify that " + userName + " could authenticate at all. Throwing Exception");
+				throw new Exception("Could not Verify User " + userName + " could authenticate at all.");
+			}
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Could not Create User " + userName + ": " + e.toString());
+		}
+		return result;
+	}
+	
+	/**
+	 * This method will sign in as an admin, or create the admin and sign in as them. If this fails it will throw an Exception.
+	 * This function will pass if correct user credentials are passed as well
+	 * @param applicationRoot Context of running application
+	 * @param userName The user name of the admin you want to create or sign in as
+	 * @param password The password of the admin you want to create or sign in as
+	 * @return Boolean value depicting if the user exists and can be authenticated
+	 * @throws Exception If admin Create function fails, an exception will be passed up
+	 */
+	private static boolean verifyTestAdmin(String applicationRoot, String userName, String password) throws Exception
+	{
+		boolean result = false;
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, userName, "admin", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, userName);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug(userName + " could authenticate. returning true");
+				result = true;
+			}
+			else
+			{
+				log.error("Couldnt verify that " + userName + " could authenticate at all. Throwing Exception");
+				throw new Exception("Could not Verify User " + userName + " could authenticate at all.");
+			}
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Could not Create User " + userName + ": " + e.toString());
+		}
+		return result;
+	}
+	
 	@Test
 	public void testAuthUserCorrectCredentials() 
 	{
-		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin", "password") == null)
-			fail("Could not Authenticate Default admin");
-		else
-			return; //Pass
+		String userName = new String("authWithGoodCreds");
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, userName);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("PASS: Successfully signed in as " + userName);
+				return;
+			}
+			else
+			{
+				fail("Could not Authenticate as " + userName);
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
 	}
 	
 	@Test
 	public void testAuthUserIncorrectCredentials() 
 	{
-		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin", "wrongPassword") == null)
-			return; //Pass
-		else
-			fail("Could authenticate as Default admin with incorrect Password");
+		String userName = new String("authWithBadCreds");
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, userName);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("User " + userName + " exists. Checking if Auth Works with bad pass");
+				if(Getter.authUser(applicationRoot, userName, userName+"wrongPassword") == null)
+				{
+					log.debug("PASS: Could not authenticate with bad pass for user " + userName);
+					return;
+				}
+				else
+				{
+					fail("Could Authenticate With Bad Pass for User " + userName);
+				}
+			}
+			else
+			{
+				fail("Couldnt verify " + userName + " could authenticate at all");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
 	}
 	
 	@Test
 	public void testAuthUserSqlInjection() 
 	{
-		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin", "wrongPassword'or'1'='1") == null)
-			return; //Pass
-		else
-			fail("Could authenticate as Default admin with SQL Injection");
+		String userName = new String("authWithSqliCreds");
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, userName);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("User " + userName + " exists. Checking if Auth Works with bad pass");
+				if(Getter.authUser(applicationRoot, userName, "'or'='1'='1") == null)
+				{
+					log.debug("PASS: Could not authenticate with SQL Injection for user " + userName);
+					return;
+				}
+				else
+				{
+					fail("Could Authenticate With SQL Injection for User " + userName);
+				}
+			}
+			else
+			{
+				fail("Couldnt verify " + userName + " could authenticate at all");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
 	}
 	
 	@Test
 	public void testAuthUserSqlInjectionUserName() 
 	{
-		if(Getter.authUser(System.getProperty("user.dir")+propertiesFileDirectory, "admin'or'1'='1", "wrongPassword") == null)
-			return; //Pass
-		else
-			fail("Could authenticate as Default admin with SQL Injection (UserName)");
+		String userName = new String("authWithSqli+BadPassCreds");
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, userName);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("User " + userName + " exists. Checking if Auth Works with bad pass");
+				if(Getter.authUser(applicationRoot, "'or'='1'='1' -- ", "wrongPassword") == null)
+				{
+					log.debug("PASS: Could not authenticate with SQL Injection for user " + userName);
+					return;
+				}
+				else
+				{
+					fail("Could Authenticate With SQL Injection for User Name");
+				}
+			}
+			else
+			{
+				fail("Couldnt verify " + userName + " could authenticate at all");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
 	}
 
 	@Test
-	public void testCheckPlayerResultWhenModuleNotOpened() {
-		String test = Getter.checkPlayerResult(System.getProperty("user.dir")+propertiesFileDirectory, moduleId, Getter.getUserIdFromName(System.getProperty("user.dir")+propertiesFileDirectory, "admin"));
-		if(test != null)
+	public void testCheckPlayerResultWhenModuleNotOpened() 
+	{
+		String userName = new String("noModulesOpened");
+		String unOpenedModuleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
+		try
 		{
-			log.fatal("result should be null but it was: " + test);
-			fail("Function says Admin has opened module they should not have opened by default"); // Admin Should not have completed this module by default after running a fresh DB. ensure you have a fresh DB if this fails
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String test = Getter.checkPlayerResult(applicationRoot, unOpenedModuleId, userName);
+				if(test != null)
+				{
+					log.fatal("result should be null but it was: " + test);
+					fail("Function says User has opened module they should not have opened by default"); // User Should not have completed this module by default after running a fresh DB. ensure you have a fresh DB if this fails
+				}
+				else
+				{
+					log.debug("PASS: Function says user has not opened module");
+					return; //Pass
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
 		}
-		else
-			return; //Pass
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testCheckPlayerResultWhenModuleWhenOpened() 
+	{
+		String userName = new String("userHasModulesOpened");
+		String csrfChallengeThree = new String("5ca9115f3279b9b9f3308eb6a59a4fcd374846d6");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeThree, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
+					{
+						String test = Getter.checkPlayerResult(applicationRoot, csrfChallengeThree, Getter.getUserIdFromName(applicationRoot, userName));
+						if(test == null)
+						{
+							fail("Function says " + userName + " has not opened module"); // User Should have opened and not completed CSRF Three
+						}
+						else
+							return; //Pass
+					}
+					else
+						fail("Could not Mark CSRF 3 as Opened by " + userName);
+				}
+				else
+				{
+					fail("Could not Mark Modules As Opened");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
 	}
 	
 	@Test
 	public void testCheckPlayerResultWhenModuleNotComplete() 
 	{
+		String userName = new String("userHasModulesOpened");
 		String contentProviderLeakage = new String("5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a");
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
-		//Simulate user Opening Level
-		if(!Getter.getModuleAddress(applicationRoot, contentProviderLeakage, userId).isEmpty())
+		try
 		{
-				String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, contentProviderLeakage, userId);
-				if(checkPlayerResultTest != null)
-					return; //Pass
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, contentProviderLeakage, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
+					{
+						String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, contentProviderLeakage, Getter.getUserIdFromName(applicationRoot, userName));
+						if(checkPlayerResultTest != null)
+							return; //Pass
+						else
+						{
+							fail("Function says user has not opened challenge or has completed challenge before");
+						}
+					}
+					else
+					{
+						fail("Could not Content Provider Leakage Lesson as Opened by user");
+					}
+				}
 				else
 				{
-					fail("Function says Admin has not opened challenge or has completed challenge before");
+					fail("Could not Mark Modules As Opened");
 				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
 		}
-		else
-			fail("Could not Mark Data Storage Lesson as Opened by Default admin");
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
 	}
 	
 	@Test
 	public void testCheckPlayerResultWhenModuleComplete() 
 	{
+		String userName = new String("userResultWhenComplete");
 		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
-		//Simulate user Opening Level
-		if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
+		try
 		{
-			//Then, Mark the Challenge Complete for Default Admin (Insecure Data Storage Lesson)
-			String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, dataStorageLessonId, userId, "Feedback is Disabled", 1, 1, 1);
-			if (markLevelCompleteTest != null)
+			if(verifyTestUser(applicationRoot, userName, userName))
 			{
-				String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, dataStorageLessonId, userId);
-				if(checkPlayerResultTest == null)
-					return; //Pass
-				else
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
 				{
-					fail("Function says Admin has completed module before");
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
+					{
+						//Then, Mark the Challenge Complete for user (Insecure Data Storage Lesson)
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, dataStorageLessonId, userId, "Feedback is Disabled", 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{
+							String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, dataStorageLessonId, userId);
+							log.debug("checkPlayerResultTest" + checkPlayerResultTest);
+							if(checkPlayerResultTest == null)
+								return; //Pass
+							else
+							{
+								fail("Function says user has not completed module"); //Even though this test just marked it as Completed
+							}
+						}
+						else
+							fail("Could not mark data storage lesson as complete for user");
+					}
+					else
+						fail("Could not Mark Data Storage Lesson as Opened by Default admin");
 				}
+				else
+					fail("Could not Open All Modules");
 			}
 			else
-				fail("Could not mark data storage lesson as complete Default admin");
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
 		}
-		else
-			fail("Could not Mark Data Storage Lesson as Opened by Default admin");
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
 	}
 	
 	
 	@Test
 	public void testIsCsrfLevelCompleteIncrementedCounter() 
 	{
-		String csrfChallengeOne = new String("20e755179a5840be5503d42bb3711716235005ea"); //CSRF Challenge 1 (Should have CSRF Counter of 0 for Default Admin User
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
-		//Simulate user Opening Level
-		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeOne, userId).isEmpty())
+		String userName = new String("csrfCounterIncremented");
+		String csrfChallengeOne = new String("20e755179a5840be5503d42bb3711716235005ea"); //CSRF Challenge 1 (Should have CSRF Counter of 0 for new user)
+		try
 		{
-			//Increment Challenge CSRF Counter
-			if(Setter.updateCsrfCounter(applicationRoot, csrfChallengeOne, userId))
+			if(verifyTestUser(applicationRoot, userName, userName))
 			{
-				if(Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeOne, userId))
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
 				{
-					return; //Pass, because CSRF level is completed after the admin CSRF counter was incremented
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeOne, userId).isEmpty())
+					{
+						//Increment Challenge CSRF Counter
+						if(Setter.updateCsrfCounter(applicationRoot, csrfChallengeOne, userId))
+						{
+							if(Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeOne, userId))
+							{
+								return; //Pass, because CSRF level is completed after the user CSRF counter was incremented
+							}
+							else
+							{
+								fail("CSRF 1 not completed after successful increment");
+							}
+						}
+						else
+						{
+							fail("Could not Increment user Counter for CSRF 1");
+						}
+					}
+					else
+					{
+						fail("Could not Mark CSRF 1 as opened by user");
+					}
 				}
 				else
 				{
-					fail("CSRF 1 not completed after successful increment");
+					fail("Could not Mark Modules as Opened");
 				}
 			}
 			else
 			{
-				fail("Could not Increment default Admin Counter for CSRF 1");
+				fail("Could not verify user (No Exception Failure)");
 			}
 		}
-		else
+		catch(Exception e)
 		{
-			fail("Could not Mark CSRF 1 as opened by default Admin");
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
 		}
 	}
 	
 	@Test
 	public void testIsCsrfLevelCompleteWithoutIncrementedCounter() 
 	{
-		String csrfChallengeTwo = new String("94cd2de560d89ef59fc450ecc647ff4d4a55c15d"); //CSRF Challenge 2 (Should have CSRF Counter of 0 for Default Admin User
-		String applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-		String userId = Getter.getUserIdFromName(applicationRoot, "admin");
-		//Simulate user Opening Level
-		if(!Getter.getModuleAddress(applicationRoot, csrfChallengeTwo, userId).isEmpty())
+		String userName = new String("csrfCounterWithoutInc");
+		String csrfChallengeTwo = new String("94cd2de560d89ef59fc450ecc647ff4d4a55c15d"); //CSRF Challenge 2 (Should have CSRF Counter of 0 for new user
+		try
 		{
-			if(!Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeTwo, userId))
+			if(verifyTestUser(applicationRoot, userName, userName))
 			{
-				return; //Pass, because CSRF level is not completed because the CSRF Counter for the default admin is 0
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeTwo, userId).isEmpty())
+					{
+						if(!Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeTwo, userId))
+						{
+							return; //Pass, because CSRF level is not completed because the CSRF Counter for the user is 0
+						}
+						else
+						{
+							fail("CSRF 2 marked completed without increment"); // CSRF 2 Challenge should have a counter of 0 and should not return true. 
+						}
+					}
+					else
+					{
+						fail("Could not Mark CSRF 2 as opened by user");
+					}
+				}
+				else
+				{
+					fail("Could not mark All Modules as Opened");
+				}
 			}
 			else
 			{
-				fail("CSRF 2 marked completed without increment"); // CSRF 2 Challenge should have a counter of 0 and should not return true. 
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testFindPlayerById() 
+	{ 
+		String userName = new String("UserForPlayerIdSearch");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				if(Getter.findPlayerById(applicationRoot, userId))
+				{
+					log.debug("PASS: Found user");
+					return;
+				}
+				else
+				{
+					fail("Could Not Find Player in Player Search");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testFindPlayerByIdWithAdminId() 
+	{ 
+		
+		String userName = new String("playerSearchWithAdmin");
+		try
+		{
+			if(verifyTestAdmin(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				if(!Getter.findPlayerById(applicationRoot, userId))
+				{
+					return;
+				}
+				else
+				{
+					fail("Found Admin in Player Search");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testFindPlayerByIdWithBadUserId() 
+	{
+		String userId = new String("DOES NOT EXIST");
+		if(!Getter.findPlayerById(applicationRoot, userId))
+		{
+			return;
+		}
+		else
+		{
+			fail("Found Player That Does Not Exist");
+		}
+	}
+
+	
+	@Test
+	public void testGetAllModuleInfo() 
+	{
+		ArrayList<String[]> modules = Getter.getAllModuleInfo(applicationRoot);
+		if(modules.size() > 75) //Shepherd v3.0 has 76 Modules. If less than All are Returned, then there is a problem with the Open Modules Function or the Retrieve data function
+		{
+			log.debug("PASS: Found " + modules.size() + " modules");
+			return;
+		}
+		else
+		{
+			log.fatal("Too Few Modules Returned to Pass Test: " + modules.size());
+			fail("Only " + modules.size() + "/~76 modules returned from function");
+		}
+	}
+	
+	
+	@Test
+	public void testGetChallenges() 
+	{
+		String userName = new String("testGetChallengesUser");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the GetAllModuleInfo method will return data
+				if(Setter.openAllModules(applicationRoot))
+				{
+					String modules = Getter.getChallenges(applicationRoot, userId, locale);
+					if(!modules.isEmpty()) //Some Modules were included in response
+					{
+						//Get number of Challenges returned by getChallenges method
+						int numberofChallengesReturned = (modules.length() - modules.replace("class='lesson'", "").length()) / "class='lesson'".length();
+						if(numberofChallengesReturned > 58)
+						{
+							log.debug("PASS: Found " + numberofChallengesReturned + " modules");
+							return;
+						}
+						else
+						{
+							log.debug("Too Few Challenges Returned to pass: " + numberofChallengesReturned + " returned");
+							fail("Too Few Challenges Returned to Pass");
+						}
+					}
+					else
+					{
+						log.fatal("No Modules Found. Returned empty String");
+						fail("No Modules Found");
+					}
+				}
+				else
+				{
+					fail("Could Not Mark Modules as Open Before Test");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetChallengesWhenModulesClosed() 
+	{
+		String userName = new String("getChallengesCLosedUser");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the GetAllModuleInfo method will return data
+				if(Setter.closeAllModules(applicationRoot))
+				{
+					String modules = Getter.getChallenges(applicationRoot, userId, locale);
+					if(!modules.isEmpty()) //Some Modules were included in response
+					{
+						//Get number of Challenges returned by getChallenges method
+						int numberofChallengesReturned = (modules.length() - modules.replace("class='lesson'", "").length()) / "class='lesson'".length();
+						if(!(numberofChallengesReturned > 0))
+						{
+							log.debug("PASS: Found " + numberofChallengesReturned + " modules");
+							return;
+						}
+						else
+						{
+							log.debug("Too Many Challenges Returned to pass: " + numberofChallengesReturned + " returned");
+							fail("Challenges Returned when all modules were closed");
+						}
+					}
+					else
+					{
+						log.fatal("No Modules Found. Returned empty String");
+						fail("No Modules Found");
+					}
+				}
+				else
+				{
+					fail("Could Not Mark Modules as Open Before Test");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetClassCount() {
+		if(Setter.classCreate(applicationRoot, "NewClassForGetCount", "2015"))
+		{
+			int classCount = Getter.getClassCount(applicationRoot);
+			if(classCount < 1)
+			{
+				fail("Class Count Too Low to Pass");
+			}
+			else
+			{
+				log.debug("PASS: Atleast One Class Returned");
+				return;
 			}
 		}
 		else
 		{
-			fail("Could not Mark CSRF 2 as opened by default Admin");
+			fail("Could not Create Class");
+		}
+	}
+	
+	
+	@Test
+	public void testGetClassInfoString() {
+		if(Setter.classCreate(applicationRoot, "NewClassForGetInfo", "2015"))
+		{
+			try
+			{
+				ResultSet rs = Getter.getClassInfo(applicationRoot);
+				if(rs.next())
+				{
+					if(!rs.getString(1).isEmpty())
+					{
+						log.debug("PASS: Class Information was returned");
+					}
+					else
+					{
+						fail("Data in Class Info Result Set was Blank");
+					}
+				}
+				else
+				{
+					fail("No Rows In Class Info Result Set");
+				}
+				rs.close();
+			}
+			catch(Exception e)
+			{
+				log.fatal("ClassInfo Failure: " + e.toString());
+				fail("Could not open ClassInfo Result Set");
+			}
+		}
+		else
+		{
+			fail("Could not Create Class");
+		}
+	}
+	
+	@Test
+	public void testGetClassInfoStringString() 
+	{
+		String classId = new String();
+		if(Setter.classCreate(applicationRoot, "NewClassForGetInfo2", "2015"))
+		{
+			try
+			{
+				ResultSet rs = Getter.getClassInfo(applicationRoot);
+				while(rs.next())
+				{
+					if(rs.getString(2).equalsIgnoreCase("NewClassForGetInfo2"))
+					{
+						classId = rs.getString(1);
+						break;
+					}
+				}
+				rs.close();
+				if(classId.isEmpty())
+				{
+					fail("Could not Find Class ID in Get Info Result");
+				}
+				else
+				{
+					String[] classInfo = Getter.getClassInfo(applicationRoot, classId);
+					if(classInfo[0].equalsIgnoreCase("NewClassForGetInfo2") && classInfo[1].equalsIgnoreCase("2015"))
+					{
+						log.debug("PASS: Expected Data Returned from getClassInfo");
+					}
+					else
+					{
+						if(!classInfo[0].equalsIgnoreCase("NewClassForGetInfo2"))
+						{
+							fail("Incorrect Class Name returned from getClassInfo");
+						}
+						else if(!classInfo[1].equalsIgnoreCase("2015"))
+						{
+							fail("Incorrect Class Year returned from getClassInfo");
+						}
+						else
+						{
+							fail("Unexpected Failure");
+						}
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.fatal("ClassInfo Failure: " + e.toString());
+				fail("Could not open ClassInfo Result Set");
+			}
+		}
+		else
+		{
+			fail("Could not Create Class");
+		}
+	}
+
+	@Test
+	public void testGetCsrfForumWithIframe() 
+	{
+		String classId = new String();
+		String moduleId = new String("0a37cb9296ff3763f7f3a45ff313bce47afa9384"); //CSRF Challenge 5
+		Locale locale = new Locale("en_GB");
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
+		if(Setter.classCreate(applicationRoot, "NewClassForCsrfIframeFourm", "2015"))
+		{
+			//Get Class Id
+			try
+			{
+				ResultSet rs = Getter.getClassInfo(applicationRoot);
+				while(rs.next())
+				{
+					if(rs.getString(2).equalsIgnoreCase("NewClassForCsrfIframeFourm"))
+					{
+						classId = rs.getString(1);
+						break;
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Retreieve Class Id from Created Class : " + e.toString());
+			}
+			if(classId.isEmpty())
+			{
+				fail("Could not get ClassId");
+			}
+			else 
+			{
+				String userName = new String("userforiframeclass");
+				try
+				{
+					if(verifyTestUser(applicationRoot, userName, userName, classId))
+					{
+						//Open all Modules First so that the Module Can Be Opened by the user
+						if(Setter.openAllModules(applicationRoot))
+						{
+							//Simulate user Opening Level
+							if(!Getter.getModuleAddress(applicationRoot, moduleId, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
+							{
+								String csrfFourm = Getter.getCsrfForumWithIframe(applicationRoot, classId, moduleId, bundle);
+								if(csrfFourm.indexOf(userName) > -1)
+								{
+									log.debug("PASS: User was found in the fourm");
+									return;
+								}
+								else
+								{
+									log.error("Could not find user name '" + userName + "' in this: " + csrfFourm);
+									fail("User was not contained in the CSRF iFrame Forum");
+								}
+							}
+							else
+							{
+								fail("Could not open CSRF 5 as Created User");
+							}
+						}
+						else
+						{
+							fail("Could not Mark All Modules as Open");
+						}
+					}
+					else
+					{
+						fail("Could not verify user (No Exception Failure)");
+					}
+				}
+				catch(Exception e)
+				{
+					log.fatal("Could not Verify User: " + e.toString());
+					fail("Could not Verify User " + userName);
+				}
+			}
+		}
+		else
+		{
+			fail("Could not Create Class");
+		}
+		log.debug("End of CSRF Iframe Forum Test");
+	}
+	 
+	@Test
+	public void testGetCsrfForumWithImg() 
+	{
+		String classId = new String();
+		String moduleId = new String("0a37cb9296ff3763f7f3a45ff313bce47afa9384"); //CSRF Challenge 5
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
+		if(Setter.classCreate(applicationRoot, "NewClassForCsrfImgFourm", "2015"))
+		{
+			//Get Class Id
+			try
+			{
+				ResultSet rs = Getter.getClassInfo(applicationRoot);
+				while(rs.next())
+				{
+					if(rs.getString(2).equalsIgnoreCase("NewClassForCsrfImgFourm"))
+					{
+						classId = rs.getString(1);
+						break;
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Retreieve Class Id from Created Class : " + e.toString());
+			}
+			if(classId.isEmpty())
+			{
+				fail("Could not get ClassId");
+			}
+			else 
+			{
+				String userName = new String("userforimgclass");
+				try
+				{
+					if(verifyTestUser(applicationRoot, userName, userName, classId))
+					{
+						//Open all Modules First so that the Module Can Be Opened by the user
+						if(Setter.openAllModules(applicationRoot))
+						{
+							//Simulate user Opening Level
+							if(!Getter.getModuleAddress(applicationRoot, moduleId, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
+							{
+								String csrfFourm = Getter.getCsrfForumWithImg(applicationRoot, classId, moduleId, bundle);
+								if(csrfFourm.indexOf(userName) > -1)
+								{
+									log.debug("PASS: User was found in the fourm");
+									return;
+								}
+								else
+								{
+									log.error("Could not find user name '" + userName + "' in this: " + csrfFourm);
+									fail("User was not contained in the CSRF Img Forum");
+								}
+							}
+							else
+							{
+								fail("Could not open CSRF 5 as Created User");
+							}
+						}
+						else
+						{
+							fail("Could not Mark All Modules as Open");
+						}
+					}
+					else
+					{
+						fail("Could not verify user (No Exception Failure)");
+					}
+				}
+				catch(Exception e)
+				{
+					log.fatal("Could not Verify User: " + e.toString());
+					fail("Could not Verify User " + userName);
+				}
+			}
+		}
+		else
+		{
+			fail("Could not Create Class");
+		}
+	}
+	
+	@Test
+	public void testGetFeedback() 
+	{
+		String userName = new String("userGetFeedback");
+		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
+					{
+						//Then, Mark the Challenge Complete for user (Insecure Data Storage Lesson)
+						String feedbackSearchCode = "RwarUNiqueFeedbackCodeToSEARCHFor1182371723";
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, dataStorageLessonId, userId, feedbackSearchCode, 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{
+							String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, dataStorageLessonId, userId);
+							log.debug("checkPlayerResultTest" + checkPlayerResultTest);
+							if(checkPlayerResultTest == null)
+							{
+								log.debug("Checking to see if the feedback is included in the getFeeback response for the module");
+								String feedback = Getter.getFeedback(applicationRoot, dataStorageLessonId);
+								if(feedback.indexOf(feedbackSearchCode) > -1)
+								{
+									log.debug("PASS: Detected the user's feedback");
+									return;
+								}
+								else
+								{
+									log.fatal("User's Feedback '" + feedbackSearchCode + "' was not found in: " + feedback);
+									fail("Could not find user's feedback");
+								}
+							}
+							else
+							{
+								fail("Function says user has not completed module"); //Even though this test just marked it as Completed
+							}
+						}
+						else
+							fail("Could not mark data storage lesson as complete for user");
+					}
+					else
+						fail("Could not Mark Data Storage Lesson as Opened by Default admin");
+				}
+				else
+					fail("Could not Open All Modules");
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetIncrementalModulesWithNoneComplete() 
+	{
+		String userName = new String("testIncModuleMenu1");
+		String lowestRankModuleId = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //This should be changed if an easier module is made
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					String incrementalModules = Getter.getIncrementalModules(applicationRoot, userId, lang, "testingCSRFtoken");
+					if(incrementalModules.indexOf("Completed") == -1) //User should not have completed any modules. The Completed Button should not be present
+					{
+						if(incrementalModules.indexOf(lowestRankModuleId) > -1) //The only module Id to be returned should be this one as it is the first presented (Lowest Incremental Rank)
+						{
+							if(incrementalModules.indexOf("Get Next Challenge") > -1) //This is the English string that should be included with the lang submitted in this unit test
+							{
+								log.debug("PASS: Incremental Menu Appears to have Rendered correctly with the Preconditions of this test");
+								return;
+							}
+							else
+							{
+								fail("Could not Detect i18n English Values in Menu");
+							}
+						}
+						else
+						{
+							fail("The Module Id Returned was not the Known First Level. Ie not: " + lowestRankModuleId);
+						}
+					}
+					else
+					{
+						fail("CTF Menu Appears as if User Has Completed Modules When They Have Not");
+					}
+					//Wont Log unless unit doesnt pass
+					log.debug(incrementalModules);
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetIncrementalModulesWithModulesClosed() 
+	{
+		String userName = new String("testIncModuleMenu2");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Close all Modules First
+				if(Setter.closeAllModules(applicationRoot))
+				{
+					String incrementalModules = Getter.getIncrementalModules(applicationRoot, userId, lang, "testingCSRFtoken");
+					if(incrementalModules.indexOf("You've Finished!") > -1) //IF no modules are open, this is the expected leading string
+					{
+						log.debug("PASS: Menu appears to have compiled correctly");
+					}
+					else
+					{
+						log.debug("incrementalModules returned: " + incrementalModules);
+						fail("Could not Detect Finished Message");
+					}
+				}
+				else
+				{
+					fail("Could not Close All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetIncrementalModulesWithOneModuleComplete() 
+	{
+		String userName = new String("testIncModuleMenu3");
+		String lowestRankModuleId = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //This should be changed if an easier module is made
+		String secondLowestRankModuleId = "b9d82aa7b46ddaddb6acfe470452a8362136a31e"; //This should be changed if an easier module is made or is orded before this
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, lowestRankModuleId, userId).isEmpty())
+					{
+						//Then, Mark the Challenge Complete for user (Insecure Data Storage Lesson)
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, lowestRankModuleId, userId, "Feedback is Not Enabled", 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{
+							String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, lowestRankModuleId, userId);
+							log.debug("checkPlayerResultTest" + checkPlayerResultTest);
+							if(checkPlayerResultTest == null)
+							{
+								String incrementalModules = Getter.getIncrementalModules(applicationRoot, userId, lang, "testingCSRFtoken");
+								if(incrementalModules.indexOf("Completed") > -1) //User should  have completed one module. The Completed Button should be present
+								{
+									if(incrementalModules.indexOf(lowestRankModuleId) > -1) //The only completed module Id to be returned should be this one
+									{
+										if(incrementalModules.indexOf(secondLowestRankModuleId) > -1)
+										{
+											if(incrementalModules.indexOf("Get Next Challenge") > -1) //This is the English string that should be included with the lang submitted in this unit test
+											{
+												log.debug("PASS: Incremental Menu Appears to have Rendered correctly with the Preconditions of this test");
+												return;
+											}
+											else
+											{
+												fail("Could not Detect i18n English Values in Menu");
+											}
+										}
+										else
+										{
+											fail("The Module Id Returned to be Completed Next was not the Known 2nd Level. Ie not: " + secondLowestRankModuleId);
+										}
+									}
+									else
+									{
+										fail("The Module Id Returned was not the Known First Level. Ie not: " + lowestRankModuleId);
+									}
+								}
+								else
+								{
+									fail("CTF Menu Appears as if User Has Completed Modules When They Have Not");
+								}
+								//Wont Log unless unit doesnt pass
+								log.debug(incrementalModules);
+							}
+							else
+							{
+								fail("checkPlayerResultTest says user has not completed module"); //Even though this test just marked it as Completed
+							}
+						}
+						else
+							fail("Could not mark data storage lesson as complete for user");
+					}
+					else
+						fail("Could not Lowest Rank Lesson as Opened by User");
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
 		}
 	}
 	
 	/*
-	@Test
-	public void testFindPlayerById() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetAllModuleInfo() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetChallenges() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetClassCount() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetClassInfoString() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetClassInfoStringString() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetCsrfForumWithIframe() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetCsrfForumWithImg() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetFeedback() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetIncrementalModules() {
-		fail("Not yet implemented");
-	}
-
 	@Test
 	public void testGetIncrementalModulesWithoutScript() {
 		fail("Not yet implemented");
@@ -229,32 +1303,153 @@ public class GetterTest
 	public void testGetLessons() {
 		fail("Not yet implemented");
 	}
-
+	*/
 	@Test
-	public void testGetModuleAddress() {
-		fail("Not yet implemented");
+	public void testGetModuleAddress() 
+	{
+		String userName = new String("userGetModuleAddress");
+		String insecureCryptoLesson = new String("201ae6f8c55ba3f3b5881806387fbf34b15c30c2");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, insecureCryptoLesson, userId).isEmpty())
+					{
+						log.debug("PASS: Could mark level open when level was marked as open");
+						return;
+					}
+					else
+						fail("Could not Insecure Crypto Lesson as Opened by user");
+				}
+				else
+					fail("Could not Open All Modules");
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetModuleAddressWhenClosed() 
+	{
+		String userName = new String("userGetModuleAddressTwo");
+		String insecureCryptoLesson = new String("201ae6f8c55ba3f3b5881806387fbf34b15c30c2");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Close all modules first
+				if(Setter.closeAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(Getter.getModuleAddress(applicationRoot, insecureCryptoLesson, userId).isEmpty())
+					{
+						log.debug("PASS: Could not get Module URL when Module Closed");
+					}
+					else
+						fail("Could Get Module Address when marked as closed");
+				}
+				else
+					fail("Could not Close All Modules");
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetModuleCategory() 
+	{
+		String insecureCryptoLesson = new String("201ae6f8c55ba3f3b5881806387fbf34b15c30c2");
+		if(Getter.getModuleCategory(applicationRoot, insecureCryptoLesson).compareTo("Insecure Cryptographic Storage") != 0)
+		{
+			fail("Incorrect Category Returned for Insecure Crypto Lesson");
+		}
+		else
+		{
+			log.debug("PASS: Expected Category Returned");
+		}
+	}
+	
+	@Test
+	public void testGetModuleHash() 
+	{
+		String insecureCryptoLesson = new String("201ae6f8c55ba3f3b5881806387fbf34b15c30c2");
+		if(Getter.getModuleHash(applicationRoot, insecureCryptoLesson).compareTo("if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c29ef2") != 0)
+		{
+			fail("Incorrect Hash Returned for Insecure Crypto Lesson");
+		}
+		else
+		{
+			log.debug("PASS: Expected Hash Returned");
+		}
+	}
+	
+	@Test
+	public void testGetModuleIdFromHash() 
+	{
+		String insecureCryptoLesson = new String("201ae6f8c55ba3f3b5881806387fbf34b15c30c2");
+		if(Getter.getModuleIdFromHash(applicationRoot, Getter.getModuleHash(applicationRoot, insecureCryptoLesson)).compareTo(insecureCryptoLesson) != 0)
+		{
+			fail("Incorrect moduleId Returned for Insecure Crypto Lesson Hash Search");
+		}
+		else
+		{
+			log.debug("PASS: Expected Id Returned");
+		}
+	}
+	
+	@Test
+	public void testGetModuleKeyTypeHardcodedKey() 
+	{
+		String insecureCryptoLesson = new String("201ae6f8c55ba3f3b5881806387fbf34b15c30c2");
+		if(Getter.getModuleKeyType(applicationRoot, insecureCryptoLesson))
+		{
+			log.debug("PASS: Hardcoded Key Detected on Hardcoded Level");
+		}
+		else
+		{
+			log.fatal("Encrypted Key Detected On Hardcoded Key Module");
+			fail("Encrypted Key Detected On Hardcoded Key Module");
+		}
+	}
+	
+	@Test
+	public void testGetModuleKeyTypeEncryptedKey() 
+	{
+		String csrfChallengeThree = new String("5ca9115f3279b9b9f3308eb6a59a4fcd374846d6");
+		if(!Getter.getModuleKeyType(applicationRoot, csrfChallengeThree))
+		{
+			log.debug("PASS: Encrypted Key Detected on Encrypted Level");
+		}
+		else
+		{
+			log.fatal("Hardcoded Key Detected On Encrypted Key Module");
+			fail("Hardcoded Key Detected On Encrypted Key Module");
+		}
 	}
 
-	@Test
-	public void testGetModuleCategory() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetModuleHash() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetModuleIdFromHash() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetModuleKeyType() {
-		fail("Not yet implemented");
-	}
-
+	/*
 	@Test
 	public void testGetModuleResult() {
 		fail("Not yet implemented");
