@@ -109,7 +109,7 @@ public class EnableScoreboard extends HttpServlet
 					{
 						log.debug(scoreboardMessage);
 						String restrictedScoreboard = Validate.validateParameter(request.getParameter("restricted"), 5);
-						if(restrictedScoreboard.isEmpty() && !classId.equalsIgnoreCase("classSpecific")) //Total Public Scoreboard
+						if(restrictedScoreboard.isEmpty() && classId.equalsIgnoreCase("classSpecific")) //Total Public Scoreboard
 						{
 							log.debug("User Accessible Scoreboard Enabled");
 							htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"

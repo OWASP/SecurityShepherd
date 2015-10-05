@@ -1,5 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="servlets.module.challenge.SecurityMisconfigStealTokens, java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="servlets.module.challenge.SecurityMisconfigStealTokens, java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle" %>
 <%
 /**
  * Security Misconfiguration Cookie Challenge
@@ -23,6 +23,13 @@
  */
  String levelName = new String("Security Misconfiguration Cookie Flag Challenge");
  String levelHash = new String("c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4");
+ 
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.securityMisconfig." + levelHash, locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("securityMisconfig.stealTokens.challengeName");
+ 
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -72,31 +79,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				To complete this challenge, you must steal the <a>securityMisconfigLesson</a> cookie of another user. The administrators of the sub application have misconfigured the mechanism which enforces cookie security flags. The cookie set in this lesson has not been given the "secure" flag. This means that in any HTTP requests to the lesson will include this cookie. 
-				Even though the application (If Shepherd has been correctly configured) redirects to a HTTPs service upon access, the will have been sent across the network in plain text. When players open this lesson, they automatically send a HTTP request thanks to the following &lt;IMG&gt; element. 
-				Image elements do not follow the mixed content policy and will send HTTP requests even when loaded inside a HTTPs context. This will not work with an iFrame.
+				<%= bundle.getString("securityMisconfig.stealTokens.description") %>
 				<br/>
 				<br/>
-				<img alt="This Image has sent your securityMisconfigLesson across the network in plain text" title="This Image has sent your securityMisconfigLesson across the network in plain text" src="<%= encoder.encodeForHTMLAttribute(challengeUrl) %>">
+				<img height="25px" width="25px" style="display: block;" alt="<%= bundle.getString("securityMisconfig.stealTokens.whyThisImageIsHere") %>" title="<%= bundle.getString("securityMisconfig.stealTokens.whyThisImageIsHere") %>" src="<%= encoder.encodeForHTMLAttribute(challengeUrl) %>">
 				<br/>
 				<br/>
-				If there are no users on your local network, this lesson is <B>very difficult</B> to complete. Please ask your Shepherd Administrator to disable it.
+				<%= bundle.getString("securityMisconfig.stealTokens.haveSomebodyOnYourNetwork") %>
 				<br/>
 				<br/>
-				Once you have stolen another user's <a>securityMisconfigLesson</a> token, click the following button and sub in the other user's token where your own exists.
+				<%= bundle.getString("securityMisconfig.stealTokens.stealTokenThenDoThis") %>
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						<div id="submitButton"><input type="submit" value="Get Result Key"/></div>
-						<p style="display: none;" id="loadingSign">Loading...</p>
+						<div id="submitButton"><input type="submit" value="<%= bundle.getString("form.securityMisconfig.stealTokens.submit") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("form.challenge.loading") %></p>
 					</td></tr>
 					</table>
 				</form>
@@ -123,7 +128,7 @@
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> An Error Occurred: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

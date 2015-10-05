@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.util.Locale, java.util.ResourceBundle, java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: aboutShepherd.jsp *************************");
@@ -52,14 +52,14 @@ String ApplicationRoot = getServletContext().getRealPath("");
 %>
 	<h1 class="title">The OWASP Security Shepherd Project</h1>
 	<p>
-		You are currently using Security Shepherd Version 2.4
+		You are currently using Security Shepherd Version 3.0
 		<br><br>
 		The OWASP Security Shepherd project is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skill set to security expert status. 
 		For More information, please visit the <a href="http://bit.ly/owaspSecurityShepherd">OWASP Security Shepherd Wiki Page</a>.
 		<br><br>
 		Please report any bugs or any feature requests on the <a href="http://bit.ly/securityShepherdGithub">OWASP Security Shepherd Git Repository</a>.
 	</p>
-	<%= Analytics.sponsorshipMessage %>
+	<%= Analytics.sponsorshipMessage(new Locale(Validate.validateLanguage(request.getSession()))) %>
 	<br/>
 	<br/>
 	<div id="badData" style="display: none;"></div>

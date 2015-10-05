@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,6 +24,18 @@
 String levelName = "Mobile Unintended Data Leakage 1";
 //Alphanumeric Only
 String levelHash = "517622a535ff89f7d90674862740b48f53aad7b41390fe46c6f324fee748d136";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.unintendedDataLeakage.dataLeakage", locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+
+//Used more than once translations
+String LevelName = bundle.getString("challenge1.challengeName");
+String paragraph1 = bundle.getString("challenge1.para1");
+
+
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 
@@ -50,7 +63,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%=levelName%></title>
+<title>Security Shepherd - <%=LevelName%></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
 	media="screen" />
 </script>
@@ -58,18 +71,18 @@ if (request.getSession() != null)
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%=levelName%></h2>
+		<h2 class="title"><%=LevelName%></h2>
 		<p>
 			<%
 				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
 			%>
 
 			<%=levelBlurb%>
-			<br /> Log in as the user of this App to get the key for this
-			challenge. <a>Some data</a> has been logged but it is up to the
-			attacker to know what to do with this data. <br /> <br />
+			<br /> 
+			<%= paragraph1 %>
+			 <br /> <br />
 
-			<%=Analytics.getMobileLevelBlurb("UDataLeakage2.apk")%>
+			<%=mobile.getString("mobileBlurb.vmLink.1") + " UDataLeakage1.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 		</p>
 	</div>
 	<%

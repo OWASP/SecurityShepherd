@@ -104,30 +104,34 @@ ADDED from AndroidManifest.xml:49:9
 	android:label
 		ADDED from AndroidManifest.xml:51:13
 	android:theme
-		ADDED from AndroidManifest.xml:53:13
+		ADDED from AndroidManifest.xml:54:13
 	android:persistent
+		ADDED from AndroidManifest.xml:53:13
+	android:permission
 		ADDED from AndroidManifest.xml:52:13
 	android:name
 		ADDED from AndroidManifest.xml:50:13
 intent-filter#android.intent.category.DEFAULT+com.mobshep.PoorAuthentication.Forgotton
-ADDED from AndroidManifest.xml:54:13
+ADDED from AndroidManifest.xml:55:13
 action#com.mobshep.PoorAuthentication.Forgotton
-ADDED from AndroidManifest.xml:55:17
+ADDED from AndroidManifest.xml:56:17
 	android:name
-		ADDED from AndroidManifest.xml:55:25
+		ADDED from AndroidManifest.xml:56:25
 activity#com.mobshep.PoorAuthentication.Main
-ADDED from AndroidManifest.xml:61:9
+ADDED from AndroidManifest.xml:62:9
 	android:label
-		ADDED from AndroidManifest.xml:63:13
-	android:theme
-		ADDED from AndroidManifest.xml:65:13
-	android:persistent
 		ADDED from AndroidManifest.xml:64:13
+	android:theme
+		ADDED from AndroidManifest.xml:67:13
+	android:persistent
+		ADDED from AndroidManifest.xml:66:13
+	android:permission
+		ADDED from AndroidManifest.xml:65:13
 	android:name
-		ADDED from AndroidManifest.xml:62:13
+		ADDED from AndroidManifest.xml:63:13
 intent-filter#android.intent.category.DEFAULT+com.mobshep.PoorAuthentication.Main
-ADDED from AndroidManifest.xml:66:13
+ADDED from AndroidManifest.xml:68:13
 action#com.mobshep.PoorAuthentication.Main
-ADDED from AndroidManifest.xml:67:17
+ADDED from AndroidManifest.xml:69:17
 	android:name
-		ADDED from AndroidManifest.xml:67:25
+		ADDED from AndroidManifest.xml:69:25

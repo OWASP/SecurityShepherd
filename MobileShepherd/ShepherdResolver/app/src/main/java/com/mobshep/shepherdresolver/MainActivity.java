@@ -1,11 +1,16 @@
 package com.mobshep.shepherdresolver;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.CursorLoader;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -15,12 +20,13 @@ public class MainActivity extends Activity {
 
 
     TextView session;
+    SharedPreferences storedSession;
+    SharedPreferences.Editor toEdit;
+
 
     // The URL used to target the content provider
     static final Uri CONTENT_URL =
             Uri.parse("content://com.mobshep.shepherdlogin.SessionProvider/data");
-
-    CursorLoader cursorLoader;
 
     // Provides access to other applications Content Providers
     ContentResolver resolver;
@@ -34,17 +40,22 @@ public class MainActivity extends Activity {
 
         resolver = getContentResolver();
 
+        try{
         getSession();
+        }catch(SQLiteException e) {
+            Log.d("ShepherdResolver", "No Table Found!");
+        }
+        }
 
-    }
 
     public void getSession(){
 
         // Projection contains the columns we want
         String[] projection = new String[]{"id", "sessionValue"};
 
-        // Pass the URL, projection
-        Cursor cursor = resolver.query(CONTENT_URL, projection, "1", null, null);
+
+            // Pass the URL, projection
+            Cursor cursor = resolver.query(CONTENT_URL, projection, "1", null, null);
 
         String sessionList = "";
 
@@ -56,12 +67,26 @@ public class MainActivity extends Activity {
                 String id = cursor.getString(cursor.getColumnIndex("id"));
                 String sessionValue = cursor.getString(cursor.getColumnIndex("sessionValue"));
 
-                sessionList = sessionList + id + " : " + sessionValue + "\n";
+                sessionList = sessionList + sessionValue + "\n";
 
             }while (cursor.moveToNext());
         }
 
         session.setText(sessionList);
+
+        if (sessionList.equals("")){
+
+            Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.mobshep.shepherdlogin");
+            startActivity(launchIntent);
+
+            this.finish();
+
+        }
+
+        storedSession = getSharedPreferences("session", MODE_PRIVATE);
+        toEdit = storedSession.edit();
+        toEdit.putString("session", sessionList);
+        toEdit.commit();
 
     }
 

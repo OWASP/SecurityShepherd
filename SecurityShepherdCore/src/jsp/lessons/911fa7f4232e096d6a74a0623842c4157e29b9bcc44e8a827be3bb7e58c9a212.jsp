@@ -9,6 +9,7 @@
 	//Translation Stuff
 	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_broken_crypto." + levelHash, locale);
+	ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 	//Used more than once translations
 	String translatedLevelName = bundle.getString("title.question.mobile_broken_crypto");
 	
@@ -84,7 +85,7 @@
 				<%= bundle.getString("challenge.description") %>
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("BrokenCrypto.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " BrokenCrypto.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 			</p>
 			<script>
 				$('#hideLesson').click(function(){

@@ -1,5 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * Insecure Cryptographic Storage Challenge 1
@@ -22,7 +22,14 @@
  * @author Mark Denihan
  */
 
-String levelName =  "Insecure Cryptographic Storage Challenge 1";
+ String levelName =  "Insecure Cryptographic Storage Challenge 1";
+ 
+ //Translation Stuff
+ Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.insecureCryptoStorage.insecureCryptoStorage", locale);
+ //Used more than once translations
+ String i18nLevelName = bundle.getString("insecureCryptoStorage.1.challengename");
+ 
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
  if (request.getSession() != null)
  {
@@ -47,15 +54,15 @@ String levelName =  "Insecure Cryptographic Storage Challenge 1";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - Insecure Cryptographic Storage Challenge One</title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title">Insecure Cryptographic Storage Challenge One</h2>
+			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				The result key has been encrypted to ensure that nobody can finish the challenge without knowing the secret key to decrypt it. However, the result key has been encrypted with a famous, but easily broken, Roman cipher.
+				<%= bundle.getString("insecureCryptoStorage.1.whatToDo") %>
 				<br/>
 				<br/>
 				<a>Ymj wjxzqy pjd ktw ymnx qjxxts nx ymj ktqqtbnsl xywnsl; rdqtajqdmtwxjwzssnslymwtzlmymjknjqibmjwjfwjdtzltnslbnymdtzwgnlf</a>

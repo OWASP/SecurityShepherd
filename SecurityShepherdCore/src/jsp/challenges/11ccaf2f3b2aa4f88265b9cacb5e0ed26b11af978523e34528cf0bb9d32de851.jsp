@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"  language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -25,6 +26,14 @@ String levelName = "Mobile Insecure Data Storage 3";
 String levelHash = "11ccaf2f3b2aa4f88265b9cacb5e0ed26b11af978523e34528cf0bb9d32de851";
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insecureData.insecureDataStrings", locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+//Used more than once translations
+String LevelName = bundle.getString("challenge3.challengeName");
+String paragraph1 = bundle.getString("challenge3.para1");
 
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -61,12 +70,12 @@ if (request.getSession() != null)
 			<p> 
 				<br/>
 				
-				Not all Apps will use <a>sqlite</a> to store user data, in some cases <a>SharedPreferences</a> is used. The key to this level can be gained once you log in as a legitimate user. 
+				<%= paragraph1 %>
 				
 				<br/>
 				<br/>
 				
-				<%= Analytics.getMobileLevelBlurb("InsecureData4.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " InsecureData4.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 				
 			</p>
 		</div>

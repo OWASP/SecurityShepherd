@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,6 +24,17 @@
 String levelName = "Mobile Client Side Injection 2";
 //Alphanumeric Only
 String levelHash = "cfe68711def42bb0b201467b859322dd2750f633246842280dc68c858d208425";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.clientSideInjection.clientSideInjection", locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+//Used more than once translations
+String LevelName = bundle.getString("challenge2.challengeName");
+String paragraph1 = bundle.getString("challenge2.para1");
+
+
 //Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -56,17 +68,16 @@ if (request.getSession() != null)
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
+			<h2 class="title"><%= LevelName %></h2>
 			<p> 
 				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				
 				<%= levelBlurb %>
 				<br/>
-				This App has an upgraded form of filtering. Bypass the filtering, and perform SQL Injection to sign in as a legitimate user. 
-				
+				<%= paragraph1 %>				
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("CSInjection3.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " CSInjection2.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 				
 				<% /* IF you need a form - Present it like this */ %>
 				<%

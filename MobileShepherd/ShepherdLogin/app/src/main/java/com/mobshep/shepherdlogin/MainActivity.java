@@ -65,7 +65,6 @@ public class MainActivity extends ActionBarActivity {
             startActivity(intent);
         }
 
-
         //TODO
         //Remove this and replace with AsyncTask
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -80,11 +79,9 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-
-
     public void submitClicked(View v) {
 
-        if (username.getText().toString() == "" || password.getText().toString() == ""){
+        if (username.getText().toString().equals("") || password.getText().toString().equals("")){
             Toast blank = Toast.makeText(MainActivity.this, "Blank Fields Detected!", Toast.LENGTH_SHORT);
             blank.show();
             return;
@@ -114,13 +111,12 @@ public class MainActivity extends ActionBarActivity {
                     response, Toast.LENGTH_SHORT);
             responseError.show();
 
+            Log.i(TAG, "Server Response:" + response);
 
-            if (response.contains("Value ERROR")==true){
+            if (response.contains(" ERROR ")){
                 tvResponse.setText("Invalid username or password");
             }
-            else{
-                tvResponse.setText(response);
-            }
+
 
             if (res!=null) {
                 Toast valid = Toast.makeText(MainActivity.this,
@@ -139,23 +135,26 @@ public class MainActivity extends ActionBarActivity {
                 // Provides access to other applications Content Providers
                 Uri uri = getContentResolver().insert(SessionProvider.CONTENT_URL, values);
 
-                Toast.makeText(getBaseContext(), "New Session Stored", Toast.LENGTH_LONG).show();
-
                 Intent intent = new Intent(MainActivity.this, LoggedIn.class);
                 startActivity(intent);
 
             } else {
-
                 Toast.makeText(getBaseContext(), "Invalid Credentials!", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
 
-            Toast responseError = Toast.makeText(MainActivity.this,
-                    e.toString(), Toast.LENGTH_LONG);
-            responseError.show();
+            if (e.toString().contains("ERROR")){
+                tvResponse.setText("Invalid Credentials");
+            }
 
-            tvResponse.setText(e.toString());
+            else {
 
+                Toast responseError = Toast.makeText(MainActivity.this,
+                        e.toString(), Toast.LENGTH_LONG);
+                responseError.show();
+
+                tvResponse.setText(e.toString());
+            }
         }
 
     }
@@ -182,6 +181,24 @@ public class MainActivity extends ActionBarActivity {
                 Intent goToSettings = new Intent(this, Preferences.class);
                 startActivity(goToSettings);
                 return true;
+
+            case R.id.action_clearSession:
+
+                storedPref = getSharedPreferences("Sessions", MODE_PRIVATE);
+                toEdit = storedPref.edit();
+                toEdit.clear();
+                toEdit.commit();
+
+                //delete * from sessions table
+               SessionProvider.DatabaseHelper providerInstance;
+               providerInstance = new SessionProvider.DatabaseHelper(this);
+               providerInstance.deleteData();
+
+                Toast valid = Toast.makeText(MainActivity.this,
+                        "Sessions cleared!", Toast.LENGTH_SHORT);
+                valid.show();
+
+
 
             case R.id.action_exit:
 

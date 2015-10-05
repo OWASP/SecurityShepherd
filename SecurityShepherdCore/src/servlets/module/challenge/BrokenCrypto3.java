@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,7 +44,7 @@ public class BrokenCrypto3 extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(BrokenCrypto3.class);
 	private static String levelName = "Broken Crypto Challenge 3";
-	private static String levelHash = "2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1";
+	public static String levelHash = "2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1";
 	public static String levelResult = "thisisthesecurityshepherdabcencryptionkey"; //Is used as encryption key in this level
 
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -53,13 +55,18 @@ public class BrokenCrypto3 extends HttpServlet
 		
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
-		{	
+		{			
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-		
+			String htmlOutput = new String();
+			
 			PrintWriter out = response.getWriter();
 			out.print(getServletInfo());
-			String htmlOutput = new String();
+			
+			//Translation Stuff
+			Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+			ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+			ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.insecureCryptoStorage.insecureCryptoStorage", locale);
 			try
 			{
 				String userData = request.getParameter("userData");
@@ -70,14 +77,14 @@ public class BrokenCrypto3 extends HttpServlet
 				String decryptedUserData = decrypt(userData, levelResult);
 				log.debug("Decrypted to: " + decryptedUserData);
 				Encoder encoder = ESAPI.encoder();
-				htmlOutput = "<h2>Plain text Result:</h2><p>Your cipher text was decrypted to the following:<br/><br/><em>"
+				htmlOutput = "<h2 class='title'>" + bundle.getString("insecureCyrptoStorage.3.plaintextResult") + "</h2><p>" + bundle.getString("insecureCyrptoStorage.3.plaintextResult.message") + "<br/><br/><em>"
 						+ encoder.encodeForHTML(decryptedUserData)
 						+ "</em></p>";
 			}
 			catch(Exception e)
 			{
-				htmlOutput = "An Error Occurred! You must be getting funky!";
 				log.fatal(levelName + " - " + e.toString());
+				htmlOutput = errors.getString("error.funky");
 			}
 			out.write(htmlOutput);
 		}
