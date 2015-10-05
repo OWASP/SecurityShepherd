@@ -398,7 +398,7 @@ public class Getter
 	
 	/**
 	 * @param ApplicationRoot The current running context of the application
-	 * @return Result set containing class information
+	 * @return Result set containing class info in the order classId, className and then classYear
 	 */
 	public static ResultSet getClassInfo(String ApplicationRoot)
 	{
@@ -424,7 +424,7 @@ public class Getter
 	/**
 	 * @param ApplicationRoot The current running context of the application
 	 * @param classId The identifier of the class
-	 * @return Class information based on the classId parameter
+	 * @return String Array with Class information with the format of {name, year}
 	 */
 	public static String[] getClassInfo(String ApplicationRoot, String classId)
 	{
@@ -848,11 +848,13 @@ public class Getter
 	 * Use to return the current progress of a class in JSON format with information like userid, user name and score
 	 * @param applicationRoot The current running context of the application
 	 * @param classId The identifier of the class to use in lookup
-	 * @return A JSON representation of a class's progress in the application
+	 * @return A JSON representation of a class's score in the order {id, username, userTitle, score, scale, place, order, 
+	 * goldmedalcount, goldDisplay, silverMedalCount, silverDisplay, bronzeDisplay, bronzeMedalCount}
 	 */
 	@SuppressWarnings("unchecked")
 	public static String getJsonScore(String applicationRoot, String classId) 
 	{
+		log.debug("classId: " + classId);
 		String result = new String();
 		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(applicationRoot);
@@ -860,7 +862,7 @@ public class Getter
 		{
 			//Returns User's: Name, # of Completed modules and Score
 			CallableStatement callstmnt = null;
-			if(ScoreboardStatus.getScoreboardClass().isEmpty())
+			if(ScoreboardStatus.getScoreboardClass().isEmpty() && !ScoreboardStatus.isClassSpecificScoreboard())
 				callstmnt = conn.prepareCall("call totalScoreboard()"); //Open Scoreboard not based on a class
 			else
 			{
@@ -1390,7 +1392,7 @@ public class Getter
 			ResultSet resultSet = callstmt.executeQuery();
 			log.debug("Opening Result Set from cheatSheetGetSolution");
 			resultSet.next();
-			result[0] = resultSet.getString(1);//TODO investigate translation
+			result[0] = resultSet.getString(1);
 			result[1] = bundle.getString(resultSet.getString(2));
 			
 		}
@@ -1854,6 +1856,37 @@ public class Getter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END getUserIdFromName ***");
+		return result;
+	}
+	
+	/**
+	 * @param ApplicationRoot The current running context of the application
+	 * @param userName The username of the user
+	 * @return The class id of the submitted user name
+	 */
+	public static String getUserClassFromName (String ApplicationRoot, String userName)
+	{
+		log.debug("*** Getter.getUserClass ***");
+		String result = new String();
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			CallableStatement callstmt = conn.prepareCall("call userClassId(?)");
+			log.debug("Gathering userClassId ResultSet");
+			callstmt.setString(1, userName);
+			ResultSet resultSet = callstmt.executeQuery();
+			log.debug("Opening Result Set from userClassId");
+			resultSet.next();
+			result = resultSet.getString(0);
+			log.debug("Found " + result);
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not execute userClassId: " + e.toString());
+			result = new String();
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END getUserClass ***");
 		return result;
 	}
 	

@@ -8,7 +8,12 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.junit.Test;
+
+import utils.ScoreboardStatus;
 
 public class GetterTest 
 {
@@ -21,6 +26,41 @@ public class GetterTest
 	public GetterTest()
 	{
 		applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+	}
+	
+	/**
+	 * Searches for class based on class name. If nothing is found, the class is created and the new class Id is returned
+	 * @param className Name of the class you wish to search / create
+	 * @return The Identifier of the class owning the name submitted
+	 * @throws Exception If the class cannot be created or found
+	 */
+	private static String findCreateClassId(String className) throws Exception
+	{
+		String classId = new String();
+		ResultSet rs = Getter.getClassInfo(applicationRoot);
+		while(rs.next())
+		{
+			if(rs.getString(2).compareTo(className) == 0)
+			{
+				classId = rs.getString(1);
+				break;
+			}
+		}
+		rs.close();
+		if(classId.isEmpty())
+		{
+			log.debug("Could not find class. Creating it");
+			if(Setter.classCreate(applicationRoot, className, "2015"))
+			{
+				log.debug("Class Created. Getting ID");
+				classId = findCreateClassId(className);
+			}
+			else
+			{
+				throw new Exception("Could not Create Class " + className);
+			}
+		}
+		return classId;
 	}
 	
 	/**
@@ -67,6 +107,7 @@ public class GetterTest
 	 * @param applicationRoot Context of running application
 	 * @param userName The user name of the user you want to create or sign in as
 	 * @param password The password of the user you want to create or sign in as
+	 * @param theClass The identifier of the class
 	 * @return Boolean value depicting if the user exists and can be authenticated
 	 * @throws Exception If User Create function fails, an exception will be passed up
 	 */
@@ -75,29 +116,39 @@ public class GetterTest
 		boolean result = false;
 		try
 		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
-			if(user == null || user[0].isEmpty())
+			String className = new String();
+			className = Getter.getClassInfo(applicationRoot, theClass)[0];
+			if(className.isEmpty())
 			{
-				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
-				Setter.userCreate(applicationRoot, theClass, userName, userName, "player", userName+"@test.com", false);
-				user = Getter.authUser(applicationRoot, userName, userName);
-			}
-			if(user != null && !user[0].isEmpty())
-			{
-				log.debug(userName + " could authenticate. checking class");
-				if(!user[4].equalsIgnoreCase(theClass))
-				{
-					log.debug("Need to update user's class");
-					Setter.updatePlayerClass(applicationRoot, theClass, user[0]);
-				}
-				else
-					log.debug("User in class submitted already");
-				result = true;
+				log.error("Class does not exist.");
+				throw new Exception("Canot not verify test user with Invalid Class");
 			}
 			else
 			{
-				log.error("Couldnt verify that " + userName + " could authenticate at all. Throwing Exception");
-				throw new Exception("Could not Verify User " + userName + " could authenticate at all.");
+				String user[] = Getter.authUser(applicationRoot, userName, userName);
+				if(user == null || user[0].isEmpty())
+				{
+					log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+					Setter.userCreate(applicationRoot, theClass, userName, userName, "player", userName+"@test.com", false);
+					user = Getter.authUser(applicationRoot, userName, userName);
+				}
+				if(user != null && !user[0].isEmpty())
+				{
+					log.debug(userName + " could authenticate. checking class");
+					if(!user[4].equalsIgnoreCase(theClass))
+					{
+						log.debug("Need to update user's class");
+						Setter.updatePlayerClass(applicationRoot, theClass, user[0]);
+					}
+					else
+						log.debug("User in class submitted already");
+					result = true;
+				}
+				else
+				{
+					log.error("Couldnt verify that " + userName + " could authenticate at all. Throwing Exception");
+					throw new Exception("Could not Verify User " + userName + " could authenticate at all.");
+				}
 			}
 		}
 		catch(Exception e)
@@ -759,60 +810,58 @@ public class GetterTest
 	}
 	
 	@Test
-	public void testGetClassCount() {
-		if(Setter.classCreate(applicationRoot, "NewClassForGetCount", "2015"))
+	public void testGetClassCount() 
+	{
+		String className = new String("NewClassForGetCount");
+		try
 		{
-			int classCount = Getter.getClassCount(applicationRoot);
-			if(classCount < 1)
-			{
-				fail("Class Count Too Low to Pass");
-			}
-			else
-			{
-				log.debug("PASS: Atleast One Class Returned");
-				return;
-			}
+			findCreateClassId(className);
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Find or Create Class : " + e.toString());
+			fail("Could not Create/Find Class");
+		}
+		int classCount = Getter.getClassCount(applicationRoot);
+		if(classCount < 1)
+		{
+			fail("Class Count Too Low to Pass");
 		}
 		else
 		{
-			fail("Could not Create Class");
+			log.debug("PASS: Atleast One Class Returned");
+			return;
 		}
 	}
 	
 	
 	@Test
 	public void testGetClassInfoString() {
-		if(Setter.classCreate(applicationRoot, "NewClassForGetInfo", "2015"))
+		try
 		{
-			try
+			findCreateClassId("NewClassForGetInfo"); //Throws Exception if Fails
+			ResultSet rs = Getter.getClassInfo(applicationRoot);
+			if(rs.next())
 			{
-				ResultSet rs = Getter.getClassInfo(applicationRoot);
-				if(rs.next())
+				if(!rs.getString(1).isEmpty())
 				{
-					if(!rs.getString(1).isEmpty())
-					{
-						log.debug("PASS: Class Information was returned");
-					}
-					else
-					{
-						fail("Data in Class Info Result Set was Blank");
-					}
+					log.debug("PASS: Class Information was returned");
 				}
 				else
 				{
-					fail("No Rows In Class Info Result Set");
+					fail("Data in Class Info Result Set was Blank");
 				}
-				rs.close();
 			}
-			catch(Exception e)
+			else
 			{
-				log.fatal("ClassInfo Failure: " + e.toString());
-				fail("Could not open ClassInfo Result Set");
+				fail("No Rows In Class Info Result Set");
 			}
+			rs.close();
 		}
-		else
+		catch(Exception e)
 		{
-			fail("Could not Create Class");
+			log.fatal("ClassInfo Failure: " + e.toString());
+			fail("Could not open ClassInfo Result Set");
 		}
 	}
 	
@@ -820,57 +869,60 @@ public class GetterTest
 	public void testGetClassInfoStringString() 
 	{
 		String classId = new String();
-		if(Setter.classCreate(applicationRoot, "NewClassForGetInfo2", "2015"))
+		String className = new String("NewClassForGetInfo2");
+		try
 		{
-			try
+			findCreateClassId(className);
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Find or Create Class : " + e.toString());
+			fail("Could not Create/Find Class");
+		}
+		try
+		{
+			ResultSet rs = Getter.getClassInfo(applicationRoot);
+			while(rs.next())
 			{
-				ResultSet rs = Getter.getClassInfo(applicationRoot);
-				while(rs.next())
+				if(rs.getString(2).equalsIgnoreCase("NewClassForGetInfo2"))
 				{
-					if(rs.getString(2).equalsIgnoreCase("NewClassForGetInfo2"))
-					{
-						classId = rs.getString(1);
-						break;
-					}
+					classId = rs.getString(1);
+					break;
 				}
-				rs.close();
-				if(classId.isEmpty())
+			}
+			rs.close();
+			if(classId.isEmpty())
+			{
+				fail("Could not Find Class ID in Get Info Result");
+			}
+			else
+			{
+				String[] classInfo = Getter.getClassInfo(applicationRoot, classId);
+				if(classInfo[0].equalsIgnoreCase("NewClassForGetInfo2") && classInfo[1].equalsIgnoreCase("2015"))
 				{
-					fail("Could not Find Class ID in Get Info Result");
+					log.debug("PASS: Expected Data Returned from getClassInfo");
 				}
 				else
 				{
-					String[] classInfo = Getter.getClassInfo(applicationRoot, classId);
-					if(classInfo[0].equalsIgnoreCase("NewClassForGetInfo2") && classInfo[1].equalsIgnoreCase("2015"))
+					if(!classInfo[0].equalsIgnoreCase("NewClassForGetInfo2"))
 					{
-						log.debug("PASS: Expected Data Returned from getClassInfo");
+						fail("Incorrect Class Name returned from getClassInfo");
+					}
+					else if(!classInfo[1].equalsIgnoreCase("2015"))
+					{
+						fail("Incorrect Class Year returned from getClassInfo");
 					}
 					else
 					{
-						if(!classInfo[0].equalsIgnoreCase("NewClassForGetInfo2"))
-						{
-							fail("Incorrect Class Name returned from getClassInfo");
-						}
-						else if(!classInfo[1].equalsIgnoreCase("2015"))
-						{
-							fail("Incorrect Class Year returned from getClassInfo");
-						}
-						else
-						{
-							fail("Unexpected Failure");
-						}
+						fail("Unexpected Failure");
 					}
 				}
 			}
-			catch(Exception e)
-			{
-				log.fatal("ClassInfo Failure: " + e.toString());
-				fail("Could not open ClassInfo Result Set");
-			}
 		}
-		else
+		catch(Exception e)
 		{
-			fail("Could not Create Class");
+			log.fatal("ClassInfo Failure: " + e.toString());
+			fail("Could not open ClassInfo Result Set");
 		}
 	}
 
@@ -881,79 +933,49 @@ public class GetterTest
 		String moduleId = new String("0a37cb9296ff3763f7f3a45ff313bce47afa9384"); //CSRF Challenge 5
 		Locale locale = new Locale("en_GB");
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
-		if(Setter.classCreate(applicationRoot, "NewClassForCsrfIframeFourm", "2015"))
+		try
 		{
-			//Get Class Id
-			try
+			classId = findCreateClassId("NewClassForCsrfIframeFourm");
+			String userName = new String("userforiframeclass");
+			if(verifyTestUser(applicationRoot, userName, userName, classId))
 			{
-				ResultSet rs = Getter.getClassInfo(applicationRoot);
-				while(rs.next())
+				//Open all Modules First so that the Module Can Be Opened by the user
+				if(Setter.openAllModules(applicationRoot))
 				{
-					if(rs.getString(2).equalsIgnoreCase("NewClassForCsrfIframeFourm"))
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, moduleId, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
 					{
-						classId = rs.getString(1);
-						break;
-					}
-				}
-			}
-			catch(Exception e)
-			{
-				log.fatal("Could not Retreieve Class Id from Created Class : " + e.toString());
-			}
-			if(classId.isEmpty())
-			{
-				fail("Could not get ClassId");
-			}
-			else 
-			{
-				String userName = new String("userforiframeclass");
-				try
-				{
-					if(verifyTestUser(applicationRoot, userName, userName, classId))
-					{
-						//Open all Modules First so that the Module Can Be Opened by the user
-						if(Setter.openAllModules(applicationRoot))
+						String csrfFourm = Getter.getCsrfForumWithIframe(applicationRoot, classId, moduleId, bundle);
+						if(csrfFourm.indexOf(userName) > -1)
 						{
-							//Simulate user Opening Level
-							if(!Getter.getModuleAddress(applicationRoot, moduleId, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
-							{
-								String csrfFourm = Getter.getCsrfForumWithIframe(applicationRoot, classId, moduleId, bundle);
-								if(csrfFourm.indexOf(userName) > -1)
-								{
-									log.debug("PASS: User was found in the fourm");
-									return;
-								}
-								else
-								{
-									log.error("Could not find user name '" + userName + "' in this: " + csrfFourm);
-									fail("User was not contained in the CSRF iFrame Forum");
-								}
-							}
-							else
-							{
-								fail("Could not open CSRF 5 as Created User");
-							}
+							log.debug("PASS: User was found in the fourm");
+							return;
 						}
 						else
 						{
-							fail("Could not Mark All Modules as Open");
+							log.error("Could not find user name '" + userName + "' in this: " + csrfFourm);
+							fail("User was not contained in the CSRF iFrame Forum");
 						}
 					}
 					else
 					{
-						fail("Could not verify user (No Exception Failure)");
+						fail("Could not open CSRF 5 as Created User");
 					}
 				}
-				catch(Exception e)
+				else
 				{
-					log.fatal("Could not Verify User: " + e.toString());
-					fail("Could not Verify User " + userName);
+					fail("Could not Mark All Modules as Open");
 				}
 			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
 		}
-		else
+		catch(Exception e)
 		{
-			fail("Could not Create Class");
+			log.fatal("User/Class Error: " + e.toString());
+			fail("Could not Create User or Class");
 		}
 		log.debug("End of CSRF Iframe Forum Test");
 	}
@@ -964,79 +986,64 @@ public class GetterTest
 		String classId = new String();
 		String moduleId = new String("0a37cb9296ff3763f7f3a45ff313bce47afa9384"); //CSRF Challenge 5
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
-		if(Setter.classCreate(applicationRoot, "NewClassForCsrfImgFourm", "2015"))
+		String className = new String("NewClassForGetInfo");
+		try
 		{
-			//Get Class Id
+			classId = findCreateClassId(className);
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Find or Create Class : " + e.toString());
+		}
+		if(classId.isEmpty())
+		{
+			fail("Could not get ClassId");
+		}
+		else 
+		{
+			String userName = new String("userforimgclass");
 			try
 			{
-				ResultSet rs = Getter.getClassInfo(applicationRoot);
-				while(rs.next())
+				if(verifyTestUser(applicationRoot, userName, userName, classId))
 				{
-					if(rs.getString(2).equalsIgnoreCase("NewClassForCsrfImgFourm"))
+					//Open all Modules First so that the Module Can Be Opened by the user
+					if(Setter.openAllModules(applicationRoot))
 					{
-						classId = rs.getString(1);
-						break;
-					}
-				}
-			}
-			catch(Exception e)
-			{
-				log.fatal("Could not Retreieve Class Id from Created Class : " + e.toString());
-			}
-			if(classId.isEmpty())
-			{
-				fail("Could not get ClassId");
-			}
-			else 
-			{
-				String userName = new String("userforimgclass");
-				try
-				{
-					if(verifyTestUser(applicationRoot, userName, userName, classId))
-					{
-						//Open all Modules First so that the Module Can Be Opened by the user
-						if(Setter.openAllModules(applicationRoot))
+						//Simulate user Opening Level
+						if(!Getter.getModuleAddress(applicationRoot, moduleId, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
 						{
-							//Simulate user Opening Level
-							if(!Getter.getModuleAddress(applicationRoot, moduleId, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
+							String csrfFourm = Getter.getCsrfForumWithImg(applicationRoot, classId, moduleId, bundle);
+							if(csrfFourm.indexOf(userName) > -1)
 							{
-								String csrfFourm = Getter.getCsrfForumWithImg(applicationRoot, classId, moduleId, bundle);
-								if(csrfFourm.indexOf(userName) > -1)
-								{
-									log.debug("PASS: User was found in the fourm");
-									return;
-								}
-								else
-								{
-									log.error("Could not find user name '" + userName + "' in this: " + csrfFourm);
-									fail("User was not contained in the CSRF Img Forum");
-								}
+								log.debug("PASS: User was found in the fourm");
+								return;
 							}
 							else
 							{
-								fail("Could not open CSRF 5 as Created User");
+								log.error("Could not find user name '" + userName + "' in this: " + csrfFourm);
+								fail("User was not contained in the CSRF Img Forum");
 							}
 						}
 						else
 						{
-							fail("Could not Mark All Modules as Open");
+							fail("Could not open CSRF 5 as Created User");
 						}
 					}
 					else
 					{
-						fail("Could not verify user (No Exception Failure)");
+						fail("Could not Mark All Modules as Open");
 					}
 				}
-				catch(Exception e)
+				else
 				{
-					log.fatal("Could not Verify User: " + e.toString());
-					fail("Could not Verify User " + userName);
+					fail("Could not verify user (No Exception Failure)");
 				}
 			}
-		}
-		else
-		{
-			fail("Could not Create Class");
+			catch(Exception e)
+			{
+				log.fatal("Could not Verify User: " + e.toString());
+				fail("Could not Verify User " + userName);
+			}
 		}
 	}
 	
@@ -1288,17 +1295,424 @@ public class GetterTest
 		}
 	}
 	
+	@Test
+	public void testGetIncrementalModulesWithoutScriptWithNoneComplete() 
+	{
+		String userName = new String("testIncModuleMenuScript1");
+		String lowestRankModuleId = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //This should be changed if an easier module is made
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					String incrementalModules = Getter.getIncrementalModulesWithoutScript(applicationRoot, userId, lang, "testingCSRFtoken");
+					if(incrementalModules.indexOf("Completed") == -1) //User should not have completed any modules. The Completed Button should not be present
+					{
+						if(incrementalModules.indexOf(lowestRankModuleId) > -1) //The only module Id to be returned should be this one as it is the first presented (Lowest Incremental Rank)
+						{
+							if(incrementalModules.indexOf("Get Next Challenge") > -1) //This is the English string that should be included with the lang submitted in this unit test
+							{
+								if(!incrementalModules.endsWith(";</script>"))
+								{
+									log.debug("PASS: Incremental Menu Appears to have Rendered correctly with the Preconditions of this test without ending in the button script");
+									return;
+								}
+								else
+								{
+									log.debug("incrementalModules returned: " + incrementalModules);
+									fail("Function Ended in Unexpected Script");
+								}
+							}
+							else
+							{
+								log.debug("incrementalModules returned: " + incrementalModules);
+								fail("Could not Detect i18n English Values in Menu");
+							}
+						}
+						else
+						{
+							log.debug("incrementalModules returned: " + incrementalModules);
+							fail("The Module Id Returned was not the Known First Level. Ie not: " + lowestRankModuleId);
+						}
+					}
+					else
+					{
+						log.debug("incrementalModules returned: " + incrementalModules);
+						fail("CTF Menu Appears as if User Has Completed Modules When They Have Not");
+					}
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetIncrementalModulesWithoutScriptWithModulesClosed() 
+	{
+		String userName = new String("testIncModuleMenuScript2");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Close all Modules First
+				if(Setter.closeAllModules(applicationRoot))
+				{
+					String incrementalModules = Getter.getIncrementalModulesWithoutScript(applicationRoot, userId, lang, "testingCSRFtoken");
+					if(incrementalModules.indexOf("You've Finished!") > -1) //IF no modules are open, this is the expected leading string
+					{
+						if(!incrementalModules.endsWith(";</script>"))
+						{
+							log.debug("PASS: Incremental Menu Appears to have Rendered correctly with the Preconditions of this test without ending in the button script");
+							return;
+						}
+						else
+						{
+							log.debug("incrementalModules returned: " + incrementalModules);
+							fail("Function Ended in Unexpected Script");
+						}
+					}
+					else
+					{
+						log.debug("incrementalModules returned: " + incrementalModules);
+						fail("Could not Detect Finished Message");
+					}
+				}
+				else
+				{
+					fail("Could not Close All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetIncrementalModulesWithoutScriptWithOneModuleComplete() 
+	{
+		String userName = new String("testIncModuleMenuScript3");
+		String lowestRankModuleId = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //This should be changed if an easier module is made
+		String secondLowestRankModuleId = "b9d82aa7b46ddaddb6acfe470452a8362136a31e"; //This should be changed if an easier module is made or is orded before this
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, lowestRankModuleId, userId).isEmpty())
+					{
+						//Then, Mark the Challenge Complete for user (Insecure Data Storage Lesson)
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, lowestRankModuleId, userId, "Feedback is Not Enabled", 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{
+							String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, lowestRankModuleId, userId);
+							log.debug("checkPlayerResultTest" + checkPlayerResultTest);
+							if(checkPlayerResultTest == null)
+							{
+								String incrementalModules = Getter.getIncrementalModulesWithoutScript(applicationRoot, userId, lang, "testingCSRFtoken");
+								if(incrementalModules.indexOf("Completed") > -1) //User should  have completed one module. The Completed Button should be present
+								{
+									if(incrementalModules.indexOf(lowestRankModuleId) > -1) //The only completed module Id to be returned should be this one
+									{
+										if(incrementalModules.indexOf(secondLowestRankModuleId) > -1)
+										{
+											if(incrementalModules.indexOf("Get Next Challenge") > -1) //This is the English string that should be included with the lang submitted in this unit test
+											{
+												if(!incrementalModules.endsWith(";</script>"))
+												{
+													log.debug("PASS: Incremental Menu Appears to have Rendered correctly with the Preconditions of this test without ending in the button script");
+													return;
+												}
+												else
+												{
+													log.debug("incrementalModules returned: " + incrementalModules);
+													fail("Function Ended in Unexpected Script");
+												}
+											}
+											else
+											{
+												log.debug("incrementalModules returned: " + incrementalModules);
+												fail("Could not Detect i18n English Values in Menu");
+											}
+										}
+										else
+										{
+											log.debug("incrementalModules returned: " + incrementalModules);
+											fail("The Module Id Returned to be Completed Next was not the Known 2nd Level. Ie not: " + secondLowestRankModuleId);
+										}
+									}
+									else
+									{
+										log.debug("incrementalModules returned: " + incrementalModules);
+										fail("The Module Id Returned was not the Known First Level. Ie not: " + lowestRankModuleId);
+									}
+								}
+								else
+								{
+									log.debug("incrementalModules returned: " + incrementalModules);
+									fail("CTF Menu Appears as if User Has Completed Modules When They Have Not");
+								}
+							}
+							else
+							{
+								fail("checkPlayerResultTest says user has not completed module"); //Even though this test just marked it as Completed
+							}
+						}
+						else
+							fail("Could not mark data storage lesson as complete for user");
+					}
+					else
+						fail("Could not Lowest Rank Lesson as Opened by User");
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	/**
+	 * Test to see if Score board returns score for entire user base regardless of class
+	 */
+	@Test
+	public void testGetJsonScoreTotalOpen() 
+	{
+		String userName = new String("scoreUserTotalScore");
+		String className = new String("ScoreTotalScore");
+		String otherUserName = new String("scoreUserTotalScoreb2");
+		String otherClassName = new String("ScoreTotalScoreb2");
+		String classId = new String();
+		String classId2 = new String();
+		String insecureDirectObjectRefLesson = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //Direct Object Reference Module
+		try
+		{
+			try
+			{
+				classId = findCreateClassId(className);
+				classId2 = findCreateClassId(otherClassName);
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Find or Create Class : " + e.toString());
+				fail("Could not Create or Find Classes");
+			}
+			if(verifyTestUser(applicationRoot, userName, userName, classId) && verifyTestUser(applicationRoot, otherUserName, otherUserName, classId2))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
+					if(markLevelCompleteTest != null)
+						markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, otherUserId, "Feedback is Disabled", 1, 1, 1);
+					else 
+						fail("Could Not Mark Level as complete by User 1");
+					if (markLevelCompleteTest != null)
+					{
+						boolean pass = false;
+						boolean user2 = false;
+						//Configure Score board for class Specific
+						ScoreboardStatus.setScoreboeardOpen();
+						//Get Score board Data
+						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
+						//Take the JSON String and make it Java JSON friendly
+						JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
+						//Loop through array to find Our user
+						for(int i = 0; i < scoreboardJson.size(); i++)
+						{
+							JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
+							if(scoreRowJson.get("username").toString().compareTo(userName) == 0)
+							{
+								pass = true;
+								log.debug("Found " + userName + " in scoreboard");
+							}
+							if(scoreRowJson.get("username").toString().compareTo(otherUserName) == 0)
+							{
+								user2 = true;
+								log.debug("Found " + otherUserName + " in scoreboard");
+							}
+						}
+						if(!(pass && user2))
+						{
+							if(!pass)
+							{
+								log.error("Could not find " + userName + " in JSON Data: " + scoreboardData);
+								fail("Could not find user in scoreboard");
+							}
+							else
+							{
+								log.error("Could not see users from other class in total scoreboard data");
+								log.error("Could not find " + otherUserName + " in " + scoreboardData);
+								fail("Could not see users from other class in total scoreboard data");
+							}
+						}
+						else
+						{
+							return; //PASS
+						}
+					}
+					else
+					{
+						fail("Failed to Mark Direct Object Level as Complete for 2nd User");
+					}
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify users (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify Users: " + e.toString());
+			fail("Could not Verify Users " + userName);
+		}
+	}
+	
+	/**
+	 * Tests to ensure that user can only see their data in the scoreboard, and cannot see the data from users in other classes in the scoreboard
+	 */
+	@Test
+	public void testGetJsonScoreClassSpecific() 
+	{
+		String userName = new String("scoreUserClassSpecific");
+		String className = new String("ScoreClassSpec");
+		String otherUserName = new String("scoreUserClassSpecific2");
+		String otherClassName = new String("ScoreClassSpec2");
+		String classId = new String();
+		String classId2 = new String();
+		String insecureDirectObjectRefLesson = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //Direct Object Reference Module
+		try
+		{
+			try
+			{
+				classId = findCreateClassId(className);
+				classId2 = findCreateClassId(otherClassName);
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Find or Create Class : " + e.toString());
+				fail("Could not Create or Find Classes");
+			}
+			if(verifyTestUser(applicationRoot, userName, userName, classId) && verifyTestUser(applicationRoot, otherUserName, otherUserName, classId2))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
+					if(markLevelCompleteTest != null)
+						markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, otherUserId, "Feedback is Disabled", 1, 1, 1);
+					else 
+						fail("Could Not Mark Level as complete by User 1");
+					if (markLevelCompleteTest != null)
+					{
+						boolean pass = false;
+						//Configure Score board for class Specific
+						ScoreboardStatus.setScoreboardClassSpecific();
+						//Get Score board Data
+						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
+						//Take the JSON String and make it Java JSON friendly
+						JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
+						//Loop through array to find Our user
+						for(int i = 0; i < scoreboardJson.size(); i++)
+						{
+							JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
+							if(scoreRowJson.get("username").toString().compareTo(userName) == 0)
+							{
+								pass = true;
+								log.debug("Found " + userName + " in scoreboard");
+							}
+							if(scoreRowJson.get("username").toString().compareTo(otherUserName) == 0)
+							{
+								log.fatal("Found Class User that shouldn't be included in the output");
+								log.debug("Found " + otherUserName + " in: " + scoreboardData);
+								fail("Found Class User that shouldn't be included in the Scoreboard Data");
+							}
+						}
+						if(!pass)
+						{
+							log.error("Could not find " + userName + " in JSON Data: " + scoreboardData);
+							fail("Could not find user in scoreboard");
+						}
+						else
+						{
+							return; //PASS
+						}
+					}
+					else
+					{
+						fail("Failed to Mark Direct Object Level as Complete for 2nd User");
+					}
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify users (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify Users: " + e.toString());
+			fail("Could not Verify Users " + userName);
+		}
+	}
+	
+	//TODO - Test score response with disabled scoreboard
+	//TODO - Test score response with admin enabled class specific as user
+	//TODO - Test score response with admin enabled class specific as admin
+	//TODO - test score response with admin enabled total as user
+	//TODO - test score response with admin enabled total as admin
+	//TODO - test score response with closed scoreboard 
+	//TODO - Make test to verify HTML Encoding is occuring on User Data in Scoreboard
+	
 	/*
-	@Test
-	public void testGetIncrementalModulesWithoutScript() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetJsonScore() {
-		fail("Not yet implemented");
-	}
-
 	@Test
 	public void testGetLessons() {
 		fail("Not yet implemented");
