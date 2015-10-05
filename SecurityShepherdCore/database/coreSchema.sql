@@ -15,7 +15,7 @@ SELECT "Creating Tables" FROM DUAL;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `core`.`class` (
   `classId` VARCHAR(64) NOT NULL ,
-  `className` VARCHAR(32) NOT NULL ,
+  `className` VARCHAR(32) NOT NULL UNIQUE,
   `classYear` VARCHAR(5) NOT NULL ,
   PRIMARY KEY (`classId`) )
 ENGINE = InnoDB;
@@ -319,8 +319,10 @@ CREATE PROCEDURE `core`.`userCreate` (IN theClassId VARCHAR(64), IN theUserName 
 BEGIN
     DECLARE theId VARCHAR(64);
     DECLARE theClassCount INT;    
-    
+    DECLARE theDate DATETIME;
+
     COMMIT;
+    SELECT NOW() FROM DUAL INTO theDate;
     -- If (Valid User Type) AND (classId = null or (Valid Class Id)) Then create user
     IF (theUserRole = 'player' OR theUserRole = 'admin') THEN
         IF (theClassId != null) THEN
@@ -337,7 +339,7 @@ BEGIN
             currVal = currVal + 1
             WHERE tableName = 'users';
         COMMIT;
-        SELECT SHA(CONCAT(currVal, tableName)) FROM sequence
+        SELECT SHA(CONCAT(currVal, tableName, theDate)) FROM sequence
             WHERE tableName = 'users'
             INTO theId;
         
@@ -448,7 +450,6 @@ BEGIN
     SELECT SHA(CONCAT(currVal, tableName)) FROM sequence
         WHERE tableName = 'users'
         INTO theId;
-    
     INSERT INTO class VALUES (theId, theClassName, theClassYear);
 END
 
@@ -971,6 +972,22 @@ CREATE PROCEDURE `core`.`userGetIdByName` (IN theUserName VARCHAR(64))
 BEGIN
 COMMIT;
 SELECT userId FROM users
+    WHERE userName = theUserName;
+END
+$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure userClassId
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`userClassId` (IN theUserName VARCHAR(64))
+BEGIN
+COMMIT;
+SELECT classId FROM users
     WHERE userName = theUserName;
 END
 $$
