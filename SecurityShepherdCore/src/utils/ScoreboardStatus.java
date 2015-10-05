@@ -91,6 +91,15 @@ public class ScoreboardStatus
 	}
 	
 	/**
+	 * Method to know if user is running a class specific scoreboard or not
+	 * @return True if class specific scoreboard is enabled. Otherwise False
+	 */
+	public static boolean isClassSpecificScoreboard ()
+	{
+		return classSpecificScoreboard;
+	}
+	
+	/**
 	 * Sets scoreboard to list all players regardless of class
 	 */
 	public static void setScoreboeardOpen()

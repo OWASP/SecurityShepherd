@@ -117,12 +117,17 @@ public class EnableScoreboard extends HttpServlet
 						}
 						else
 						{
-							if(!classId.equalsIgnoreCase("classSpecific"))
+							if(!classId.equalsIgnoreCase("classSpecific") && !restrictedScoreboard.isEmpty())
 							{
 								ScoreboardStatus.setScoreboardAdminOnly();
 								log.debug("Admin Only Scoreboard Enabled");
 								htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
 									+ "<p>" + scoreboardMessage +" The scoreboard is only accessible by administrators</p>";
+							}
+							else //Not an Admin Only Board. Give response
+							{
+								htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>"
+										+ "<p>" + scoreboardMessage + "</p>";
 							}
 						}
 					}
