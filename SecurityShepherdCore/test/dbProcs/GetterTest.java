@@ -1704,13 +1704,162 @@ public class GetterTest
 		}
 	}
 	
-	//TODO - Test score response with disabled scoreboard
-	//TODO - Test score response with admin enabled class specific as user
-	//TODO - Test score response with admin enabled class specific as admin
-	//TODO - test score response with admin enabled total as user
-	//TODO - test score response with admin enabled total as admin
-	//TODO - test score response with closed scoreboard 
-	//TODO - Make test to verify HTML Encoding is occuring on User Data in Scoreboard
+	/**
+	 * Ensuring HTML is encoded from untrusted user inputs in scoreboard
+	 */
+	@Test
+	public void testGetJsonScoreTotalOpenHtmlChars() 
+	{
+		String userName = new String("<script>alert('Name');</sciprt>");
+		String className = new String("Scorl<script>alert(1)</script>");
+		String otherUserName = new String("\"onerror=\"alert('Name');//");
+		String otherClassName = new String("\"onerror=\"alert('C');//");
+		String classId = new String();
+		String classId2 = new String();
+		String insecureDirectObjectRefLesson = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //Direct Object Reference Module
+		try
+		{
+			try
+			{
+				classId = findCreateClassId(className);
+				classId2 = findCreateClassId(otherClassName);
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Find or Create Class : " + e.toString());
+				fail("Could not Create or Find Classes");
+			}
+			if(verifyTestUser(applicationRoot, userName, userName, classId) && verifyTestUser(applicationRoot, otherUserName, otherUserName, classId2))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
+					if(markLevelCompleteTest != null)
+						markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, otherUserId, "Feedback is Disabled", 1, 1, 1);
+					else 
+						fail("Could Not Mark Level as complete by User 1");
+					if (markLevelCompleteTest != null)
+					{
+						//Configure Score board for total open
+						ScoreboardStatus.setScoreboeardOpen();
+						//Get Score board Data
+						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
+						//Take the JSON String and make it Java JSON friendly
+						JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
+						//Loop through array to find Our user
+						for(int i = 0; i < scoreboardJson.size(); i++)
+						{
+							JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
+							if(scoreRowJson.get("username").toString().compareTo(userName) == 0) //Therefore not encoded for HTML
+							{
+								fail("Found " + userName + " in scoreboard"); 
+							}
+							if(scoreRowJson.get("username").toString().compareTo(otherUserName) == 0) //Therefore not encoded for HTML
+							{
+								fail("Found " + otherUserName + " in scoreboard"); 
+							}
+						}
+						log.debug("PASS: Did not find HTML Strings in Scoreboard Response. Therefore they are encoded");
+						return; //PASS
+					}
+					else
+					{
+						fail("Failed to Mark Direct Object Level as Complete for 2nd User");
+					}
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify users (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify Users: " + e.toString());
+			fail("Could not Verify Users " + userName);
+		}
+	}
+	
+	/**
+	 * Test to ensure users that have not scored any points, or are on negative points are not shown in the scoreboard
+	 */
+	@Test
+	public void testGetJsonScoreTotalNoneOrNegPoints() 
+	{
+		String userName = new String("userZero");
+		String className = new String("LowScoreTeam");
+		String otherUserName = new String("userMinusFive");
+		String classId = new String();
+		try
+		{
+			try
+			{
+				classId = findCreateClassId(className);
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Find or Create Class : " + e.toString());
+				fail("Could not Create or Find Class");
+			}
+			if(verifyTestUser(applicationRoot, userName, userName, classId) && verifyTestUser(applicationRoot, otherUserName, otherUserName, classId))
+			{
+				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Not Touching User Zero, But dropping five points from other user
+					if (Setter.updateUserPoints(applicationRoot, otherUserId, -5))
+					{
+						//Configure Score board for total open
+						ScoreboardStatus.setScoreboeardOpen();
+						//Get Score board Data
+						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
+						//Take the JSON String and make it Java JSON friendly
+						JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
+						//Loop through array to find Our user
+						for(int i = 0; i < scoreboardJson.size(); i++)
+						{
+							JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
+							if(scoreRowJson.get("username").toString().compareTo(userName) == 0)
+							{
+								fail("Found " + userName + " in scoreboard"); 
+							}
+							if(scoreRowJson.get("username").toString().compareTo(otherUserName) == 0)
+							{
+								fail("Found " + otherUserName + " in scoreboard"); 
+							}
+						}
+						log.debug("PASS: Did not ether user's in the response, therefore they were not included");
+						return; //PASS
+					}
+					else
+					{
+						fail("Failed to Subtract points from " + otherUserName);
+					}
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify users (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify Users: " + e.toString());
+			fail("Could not Verify Users " + userName);
+		}
+	}
 	
 	/*
 	@Test
