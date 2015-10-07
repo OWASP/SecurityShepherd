@@ -311,7 +311,7 @@ public class Setter
 		return result;
 	}
 	
-	final static String webModuleCategoryHardcodedWhereClause = new String(""
+	final public static String webModuleCategoryHardcodedWhereClause = new String(""
 			+ "moduleCategory = 'CSRF'"
 			+ " OR moduleCategory = 'Failure to Restrict URL Access'"
 			+ " OR moduleCategory = 'Injection'"
@@ -322,7 +322,7 @@ public class Setter
 			+ " OR moduleCategory = 'XSS'"
 			+ " OR moduleCategory = 'Poor Data Validation'"
 			+ " OR moduleCategory = 'Security Misconfigurations'");
-	final static String mobileModuleCategoryHardcodedWhereClause = new String(""
+	final public static String mobileModuleCategoryHardcodedWhereClause = new String(""
 			+ "moduleCategory = 'Mobile Data Leakage'"
 			+ " OR moduleCategory = 'Mobile Injection'"
 			+ " OR moduleCategory = 'Mobile Insecure Data Storage'"

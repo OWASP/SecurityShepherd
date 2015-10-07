@@ -856,10 +856,10 @@ public class Getter
 	{
 		log.debug("classId: " + classId);
 		String result = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
+			Encoder encoder = ESAPI.encoder();
 			//Returns User's: Name, # of Completed modules and Score
 			CallableStatement callstmnt = null;
 			if(ScoreboardStatus.getScoreboardClass().isEmpty() && !ScoreboardStatus.isClassSpecificScoreboard())
@@ -1010,7 +1010,7 @@ public class Getter
 	 * Used to gather a menu of lessons for a user, including markers for each lesson they have completed or not completed
 	 * @param ApplicationRoot The current running context of the application
 	 * @param userId Identifier of the user
-	 * @return HTML lesson menu.
+	 * @return HTML lesson menu for Open Floor Plan.
 	 */
 	public static String getLessons (String ApplicationRoot, String userId, Locale lang)
 	{
@@ -1242,7 +1242,7 @@ public class Getter
 	/**
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId Identifier of module
-	 * @return The solution key for a module
+	 * @return The db stored solution key value for the moduleId submitted
 	 */
 	public static String getModuleResult (String ApplicationRoot, String moduleId)
 	{
@@ -1274,7 +1274,7 @@ public class Getter
 	 * Returns the result key for a module using the module's hash for the lookup procedure.
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleHash The hash to use for module look up
-	 * @return
+	 * @return The db stored solution key value for the moduleHash submited
 	 */
 	public static String getModuleResultFromHash (String ApplicationRoot, String moduleHash)
 	{
@@ -1341,7 +1341,7 @@ public class Getter
 	 * Used in creating functionality that requires a user to select a module. 
 	 * This method only prepares the option tags for this type of input. It must still be wrapped in select tags.
 	 * @param ApplicationRoot The current running context of the application
-	 * @return All modules in HTML option tags
+	 * @return All modules in HTML option tags ordered by incrementalRank
 	 */
 	public static String getModulesInOptionTagsCTF (String ApplicationRoot)
 	{
@@ -1375,7 +1375,8 @@ public class Getter
 	 * Used to return a module cheat sheet
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId The identifier of the module to return the cheat sheet for
-	 * @return Module cheat sheet
+	 * @param lang The Locale the user has enabled
+	 * @return String[] containing {ModuleName, CheatSheetSolution}
 	 */
 	public static String[] getModuleSolution (String ApplicationRoot, String moduleId, Locale lang)
 	{
@@ -1407,11 +1408,10 @@ public class Getter
 	}
 	
 	/**
-	 * This method returns the modules with open and closed in different &lt;select&gt; elements for administration manipulation
-	 * @param ApplicationRoot
-	 * @param userId
-	 * @param csrfToken
-	 * @return
+	 * This method returns modules in option tags in different &lt;select&gt; elements depending on their current open/closed status. 
+	 * The output assumes it is contained in a table context
+	 * @param ApplicationRoot The Running Context of the Application
+	 * @return Tr/td elements containing a moduleStatusMenu that has lists of the current open and closed modules
 	 */
 	public static String getModuleStatusMenu (String ApplicationRoot)
 	{
@@ -1459,11 +1459,9 @@ public class Getter
 	}
 	
 	/**
-	 * This method returns the module categories to open or closed in a &lt;select&gt; element for administration manipulation
+	 * This method returns the module categories in option tags that are to be open or closed in a &lt;select&gt; element for administration manipulation
 	 * @param ApplicationRoot
-	 * @param userId
-	 * @param csrfToken
-	 * @return
+	 * @return Module Category List for Html (&lt;SELECT&gt; element)
 	 */
 	public static String getOpenCloseCategoryMenu (String ApplicationRoot)
 	{
@@ -1501,7 +1499,7 @@ public class Getter
 	 * So there are two procedures this method calls. One that handles null classes, one that does not
 	 * @param ClassId Identifier of class
 	 * @param ApplicationRoot The current running context of the application
-	 * @return ResultSet that contains users for the selected class
+	 * @return ResultSet that contains users for the selected class in the formate {userId, userName, userAddress}
 	 */
 	public static ResultSet getPlayersByClass(String ApplicationRoot, String classId)
 	{

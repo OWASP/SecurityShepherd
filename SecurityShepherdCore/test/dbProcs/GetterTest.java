@@ -2,7 +2,10 @@ package dbProcs;
 
 import static org.junit.Assert.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -11,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.junit.Before;
 import org.junit.Test;
 
 import utils.ScoreboardStatus;
@@ -23,7 +27,8 @@ public class GetterTest
 	private static Locale locale = new Locale(lang);
 	private static String applicationRoot = new String();
 	
-	public GetterTest()
+	@Before
+	public void setUp()
 	{
 		applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
 	}
@@ -1802,6 +1807,7 @@ public class GetterTest
 			try
 			{
 				classId = findCreateClassId(className);
+				log.debug("Class Found");
 			}
 			catch(Exception e)
 			{
@@ -1810,22 +1816,37 @@ public class GetterTest
 			}
 			if(verifyTestUser(applicationRoot, userName, userName, classId) && verifyTestUser(applicationRoot, otherUserName, otherUserName, classId))
 			{
+				log.debug("User's Verified");
 				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				log.debug("UserId retrieved");
 				//Open all Modules First
 				if(Setter.openAllModules(applicationRoot))
 				{
+					log.debug("Opened All Modules");
 					//Not Touching User Zero, But dropping five points from other user
 					if (Setter.updateUserPoints(applicationRoot, otherUserId, -5))
 					{
+						log.debug("Updated Points of user Minus 5");
 						//Configure Score board for total open
 						ScoreboardStatus.setScoreboeardOpen();
+						log.debug("Scoreboard Set to Open");
 						//Get Score board Data
 						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
+						if(scoreboardData.isEmpty())
+						{
+							log.debug("PASS: The Scoreboard response was empty. Therefore the users are not valid to be returned");
+							return; //PASS
+						}
+						log.debug("Got Scoreboard Data");
 						//Take the JSON String and make it Java JSON friendly
 						JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
+						log.debug("Parsed Scoreboard Data");
+						if(scoreboardJson == null)
+							log.debug("scoreboardJson is Null. json was: " + scoreboardData);
 						//Loop through array to find Our user
 						for(int i = 0; i < scoreboardJson.size(); i++)
 						{
+							log.debug("Looping through Array " + i);
 							JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
 							if(scoreRowJson.get("username").toString().compareTo(userName) == 0)
 							{
@@ -1861,12 +1882,143 @@ public class GetterTest
 		}
 	}
 	
-	/*
 	@Test
-	public void testGetLessons() {
-		fail("Not yet implemented");
+	public void testGetLessons() 
+	{
+		String userName = new String("getLessonsUser");
+		String inscureDirectObjectLesson = "0dbea4cb5811fff0527184f99bd5034ca9286f11";
+		String poorDataValidationLesson = "b9d82aa7b46ddaddb6acfe470452a8362136a31e";
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, inscureDirectObjectLesson, userId).isEmpty())
+					{
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, inscureDirectObjectLesson, userId, "Feedback is Disabled", 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{
+							String lessonsMenu = Getter.getLessons(applicationRoot, userId, locale);
+							if(lessonsMenu.indexOf("class='lesson'") > -1) //Menu Should include this at least once
+							{
+								if(lessonsMenu.indexOf(inscureDirectObjectLesson) > -1) //This module should be in the response
+								{
+									if(lessonsMenu.indexOf("<img src='css/images/completed.png'/><a class='lesson' id='"+inscureDirectObjectLesson) > -1) //This module should be returned as completed
+									{
+										if(lessonsMenu.indexOf("<img src='css/images/uncompleted.png'/><a class='lesson' id='"+poorDataValidationLesson) > -1)
+										{
+											if(lessonsMenu.indexOf("Insecure Direct Object References") > -1) //English string should exist in output based on the submitted locale
+											{
+												log.debug("PASS: GetLessons Menu Appears to have Rendered correctly with the Preconditions of this test");
+												return;
+											}
+											else
+											{
+												log.fatal("Could not find i18n English String in lessons Menu: " + lessonsMenu);
+												fail("Could not Detect i18n Locale Strings In Lessons Menu");
+											}
+										}
+										else
+										{
+											log.fatal("Could not detect Uncompleted Icon beside Poor Data Validation Lesson: " + lessonsMenu);
+											fail("Uncompleted Module did not have Uncopmleted Symbol");
+										}
+									}
+									else
+									{
+										log.fatal("Could not detect completed Icon beside Insecure Direct Object Reference Lesson");
+										log.error("Could not find : <img src='css/images/completed.png'/><a class='lesson' id='"+inscureDirectObjectLesson + " in " + lessonsMenu);
+										fail("Completed Module Did not Have Completed Symbol");
+									}
+								}
+								else
+								{
+									log.fatal("Could not find Insecure Direct Object References ModuleID in: " + lessonsMenu);
+									fail("Could not find Insecure Direct Object References ModuleID in Response");
+								}
+							}
+							else
+							{
+								log.fatal("Could not find lesson list items in repsonse" + lessonsMenu);
+								fail("Could not find Lesson List Items in Response");
+							}
+						}
+						else
+							fail("Could not mark module as complete");
+					}
+					else
+					{
+						fail("Could not simulate opening module");
+					}
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
 	}
-	*/
+	
+	/**
+	 * Test to see if correct meny is returned from getLessons when modules are closed
+	 */
+	@Test
+	public void testGetLessonsWhenClosed() 
+	{
+		String userName = new String("getLessonsClosedUser");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First
+				if(Setter.closeAllModules(applicationRoot))
+				{
+					String lessonsMenu = Getter.getLessons(applicationRoot, userId, locale);
+					if(lessonsMenu.indexOf("class='lesson'") == -1) //Menu Should not include this when modules closed
+					{
+						if(lessonsMenu.indexOf("No lessons found") > -1) //English string should exist in output based on the submitted locale
+						{
+							log.debug("PASS: GetLessons Menu Appears to have Rendered correctly with the Preconditions of this test");
+							return;
+						}
+						else
+						{
+							log.fatal("Could not find i18n English String in lessons Menu: " + lessonsMenu);
+							fail("Could not Detect i18n Locale Strings In Lessons Menu");
+						}
+					}
+				}
+				else
+				{
+					fail("Could not close All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+
 	@Test
 	public void testGetModuleAddress() 
 	{
@@ -2012,47 +2164,399 @@ public class GetterTest
 		}
 	}
 
+	/**
+	 * Test to return stored result key from DB via getModuleResult Function
+	 */
+	@Test
+	public void testGetModuleResult()
+	{
+		String insecureCryptoLesson = new String("201ae6f8c55ba3f3b5881806387fbf34b15c30c2");
+		String knownStoredResult = new String("base64isNotEncryptionBase64isEncodingBase64HidesNothingFromYou");
+		String methodReturnResult = Getter.getModuleResult(applicationRoot, insecureCryptoLesson);
+		if(knownStoredResult.compareTo(methodReturnResult) != 0)
+		{
+			log.fatal("Known Result (" + knownStoredResult + ") did not match returned result (" + methodReturnResult + ")");
+			fail("Stored and Known Results Differed");
+		}
+	}
+	
+	/**
+	 * Test to return stored result key from DB via getModuleResultFromHash Function
+	 */
+	@Test
+	public void testGetModuleResultFromHash() 
+	{
+		String insecureCryptoLessonHash = new String("if38ebb58ea2d245fa792709370c00ca655fded295c90ef36f3a6c5146c29ef2");
+		String knownStoredResult = new String("base64isNotEncryptionBase64isEncodingBase64HidesNothingFromYou");
+		String methodReturnResult = Getter.getModuleResultFromHash(applicationRoot, insecureCryptoLessonHash);
+		if(knownStoredResult.compareTo(methodReturnResult) != 0)
+		{
+			log.fatal("Known Result (" + knownStoredResult + ") did not match returned result (" + methodReturnResult + ")");
+			fail("Stored and Known Results Differed");
+		}
+	}
+
+	/**
+	 * Function should return the entire list of modules regardless of status in options tags
+	 */
+	@Test
+	public void testGetModulesInOptionTags() 
+	{
+		String insecureCryptoLesson = new String("201ae6f8c55ba3f3b5881806387fbf34b15c30c2");
+		String modules = Getter.getModulesInOptionTags(applicationRoot);
+		if(modules.indexOf(insecureCryptoLesson) == -1)
+		{
+			log.fatal("Insecure Crypto Lesson ID Ommited from list: " + modules);
+			fail("Entire List of Modules not returned");
+		}
+		else if(modules.indexOf("option") == -1)
+		{
+			log.fatal("No Options Tags Detected in List: " + modules);
+			fail("No Options Tags Detected in List");
+		}
+	}
+	
+	@Test
+	public void testGetModulesInOptionTagsCTF() 
+	{
+		String lowestRankLevel = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11");
+		String modules = Getter.getModulesInOptionTagsCTF(applicationRoot);
+		if(modules.indexOf(lowestRankLevel) == -1)
+		{
+			log.fatal("Insecure Crypto Lesson ID Ommited from list: " + modules);
+			fail("Entire List of Modules not returned");
+		}
+		else if(modules.indexOf("option") == -1)
+		{
+			log.fatal("No Options Tags Detected in List: " + modules);
+			fail("No Options Tags Detected in List");
+		}
+		else if(!modules.startsWith("<option value='" + lowestRankLevel))
+		{
+			log.fatal("Wrong Module Listed First. Should be module with lowest incremental Rank: " + modules);
+			fail("First option tag was not the lowest ranking level");
+		}
+	}
+	
+	@Test
+	public void testGetModuleSolution() 
+	{
+		String insecureDirectObjectReferenceLesson = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11");
+		String[] moduleSolution = Getter.getModuleSolution(applicationRoot, insecureDirectObjectReferenceLesson, locale);
+		if(moduleSolution == null)
+		{
+			fail("Could not retrieve module solution");
+		}
+		else if(moduleSolution[1].indexOf("Stop the request") == -1)
+		{
+			log.fatal("Could not find 'Stop the request' in the following solution: " + moduleSolution[1]);
+			fail("Could not find english string in solution");
+		}
+	}
+	
+	/**
+	 * Test to see if the module status menu is correct when all modules are open
+	 */
+	@Test
+	public void testGetModuleStatusMenu() 
+	{
+		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
+		String insecureDirectObjectReferenceLesson = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11");
+		if(Setter.openAllModules(applicationRoot))
+		{
+			String moduleStatusMenu = Getter.getModuleStatusMenu(applicationRoot);
+			if(moduleStatusMenu.indexOf("<tr><th>To Open</th><th>To Close</th></tr><tr>") == -1)
+			{
+				log.fatal("No Menu Header in ModuleStatusMenu: " + moduleStatusMenu);
+				fail("No Menu Header in moduleStatusMenu");
+			}
+			else if(moduleStatusMenu.indexOf("id='toOpen'") == -1)
+			{
+				log.fatal("No Open Menu Detected in Output: " + moduleStatusMenu);
+				fail("No Open Meny Detected in Output");
+			}
+			else if(moduleStatusMenu.indexOf("id='toClose'") == -1)
+			{
+				log.fatal("No Close Menu Detected in Output: " + moduleStatusMenu);
+				fail("No Close Meny Detected in Output");
+			}
+			else if(moduleStatusMenu.indexOf("id='toOpen'></select></td>") < 0) //Should be empty as all modules should be open
+			{
+				log.fatal("Modules are in the 'toOpen' list when all modules should already be open: " + moduleStatusMenu);
+				fail("Modules are in the 'toOpen' list when all modules should already be open");
+			}
+			else
+			{
+				//Make Sub String for the toClose List
+				int endOfToCloseMenu = moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toClose'>")).indexOf("</select>")+(moduleStatusMenu.length() - moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toClose'>")).length());
+				String toCloseList = moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toClose'>"), endOfToCloseMenu);
+				log.debug("Close List: " + toCloseList);
+				if(toCloseList.indexOf(insecureDirectObjectReferenceLesson) == -1)
+				{
+					log.fatal("Could not Find Insecure Direct Object Reference in toClose List");
+					fail("Could not Find Insecure Direct Object Reference in toClose List");
+				}
+				else if (toCloseList.indexOf(dataStorageLessonId) == -1)
+				{
+					log.fatal("Could not Find Insecure Data Storage in toClose List");
+					fail("Could not Find Insecure Data Storage in toClose List");
+				}
+				else
+				{
+					return; //PASS
+				}
+			}
+		}
+		else
+		{
+			fail("Could not open all modules");
+		}
+	}
+	
+	/**
+	 * Test to see if the module status menu is correct when all modules are open
+	 */
+	@Test
+	public void testGetModuleStatusMenuWhenClosed() 
+	{
+		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
+		String insecureDirectObjectReferenceLesson = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11");
+		if(Setter.closeAllModules(applicationRoot))
+		{
+			String moduleStatusMenu = Getter.getModuleStatusMenu(applicationRoot);
+			if(moduleStatusMenu.indexOf("<tr><th>To Open</th><th>To Close</th></tr><tr>") == -1)
+			{
+				log.fatal("No Menu Header in ModuleStatusMenu: " + moduleStatusMenu);
+				fail("No Menu Header in moduleStatusMenu");
+			}
+			else if(moduleStatusMenu.indexOf("id='toOpen'") == -1)
+			{
+				log.fatal("No Open Menu Detected in Output: " + moduleStatusMenu);
+				fail("No Open Meny Detected in Output");
+			}
+			else if(moduleStatusMenu.indexOf("id='toClose'") == -1)
+			{
+				log.fatal("No Close Menu Detected in Output: " + moduleStatusMenu);
+				fail("No Close Meny Detected in Output");
+			}
+			else if(moduleStatusMenu.indexOf("id='toClose'></select></td>") < 0) //Should be empty as all modules should be closed
+			{
+				log.fatal("Modules are in the 'toClose' list when all modules should already be closed: " + moduleStatusMenu);
+				fail("Modules are in the 'toClose' list when all modules should already be closed");
+			}
+			else
+			{
+				//Make Sub String for the toOpen List
+				int endOfToOpenMenu = moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toOpen'>")).indexOf("</select>")+(moduleStatusMenu.length() - moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toOpen'>")).length());
+				String toOpenList = moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toOpen'>"), endOfToOpenMenu);
+				log.debug("Open List: " + toOpenList);
+				if(toOpenList.indexOf(insecureDirectObjectReferenceLesson) == -1)
+				{
+					log.fatal("Could not Find Insecure Direct Object Reference in toOpen List");
+					fail("Could not Find Insecure Direct Object Reference in toOpen List");
+				}
+				else if (toOpenList.indexOf(dataStorageLessonId) == -1)
+				{
+					log.fatal("Found Insecure Data Storage in toOpen List when it should already be open");
+					fail("Found Insecure Data Storage in toOpen List when it should already be open");
+				}
+				else
+				{
+					return; //PASS
+				}
+			}
+		}
+		else
+		{
+			fail("Could not close all modules");
+		}
+	}
+	
+	/**
+	 * Test to see if the module status menu is correct when all modules are open
+	 */
+	@Test
+	public void testGetModuleStatusMenuWhenMobileOnlyOpen() 
+	{
+		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
+		String insecureDirectObjectReferenceLesson = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11");
+		if(Setter.openOnlyMobileCategories(applicationRoot))
+		{
+			String moduleStatusMenu = Getter.getModuleStatusMenu(applicationRoot);
+			if(moduleStatusMenu.indexOf("<tr><th>To Open</th><th>To Close</th></tr><tr>") == -1)
+			{
+				log.fatal("No Menu Header in ModuleStatusMenu: " + moduleStatusMenu);
+				fail("No Menu Header in moduleStatusMenu");
+			}
+			else if(moduleStatusMenu.indexOf("id='toOpen'") == -1)
+			{
+				log.fatal("No Open Menu Detected in Output: " + moduleStatusMenu);
+				fail("No Open Meny Detected in Output");
+			}
+			else if(moduleStatusMenu.indexOf("id='toClose'") == -1)
+			{
+				log.fatal("No Close Menu Detected in Output: " + moduleStatusMenu);
+				fail("No Close Meny Detected in Output");
+			}
+			else if(moduleStatusMenu.indexOf("id='toClose'></select></td>") > 0) //Should not be empty as Web Levels should be closed
+			{
+				log.fatal("Modules are in the 'toClose' list when web modules should already be closed: " + moduleStatusMenu);
+				fail("Modules are in the 'toClose' list when web modules should already be closed");
+			}
+			else if(moduleStatusMenu.indexOf("id='toOpen'></select></td>") > 0) //Should not be empty as Mobile Levels should be open
+			{
+				log.fatal("Modules are in the 'toOpen' list when mobile modules should already be closed: " + moduleStatusMenu);
+				fail("Modules are in the 'toOpen' list when mobile modules should already be closed");
+			}
+			else
+			{
+				//Make Sub String for the toOpen List
+				int endOfToOpenMenu = moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toOpen'>")).indexOf("</select>")+(moduleStatusMenu.length() - moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toOpen'>")).length());
+				String toOpenList = moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toOpen'>"), endOfToOpenMenu);
+				//Make Sub String for the toClose List
+				int endOfToCloseMenu = moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toClose'>")).indexOf("</select>")+(moduleStatusMenu.length() - moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toClose'>")).length());
+				String toCloseList = moduleStatusMenu.substring(moduleStatusMenu.indexOf("id='toClose'>"), endOfToCloseMenu);
+				log.debug("Open List: " + toOpenList);
+				log.debug("Close List: " + toCloseList);
+				if(toCloseList.indexOf(dataStorageLessonId) == -1)
+				{
+					log.fatal("Could not Find Insecure Data Storage in toOpen List");
+					fail("Could not Find Insecure Data Storage in toOpen List");
+				}
+				else if (toOpenList.indexOf(insecureDirectObjectReferenceLesson) == -1)
+				{
+					log.fatal("Could not Find Insecure Direct Object Reference in toOpen List");
+					fail("Could not Find Insecure Direct Object Reference in toOpen List");
+				}
+				else
+				{
+					//Verify the correct number of modules are open/closed (At this point the Menu is fine. This is really now testing the mobile/web setter filters)
+					int numberOfMobileLevelsOpen = (toCloseList.length() - toCloseList.replace("<option", "").length()) / "<option".length();
+					log.debug(numberOfMobileLevelsOpen + " mobile levels detected");
+					int numberOfWebLevelsClosed =(toOpenList.length() - toOpenList.replace("<option", "").length()) / "<option".length();
+					log.debug(numberOfWebLevelsClosed + " web levels detected");
+					int mobileDbModuleCount = 0;
+					int webDbModuleCount = 0;
+					Connection conn = Database.getCoreConnection(applicationRoot);
+					try
+					{
+						log.debug("Getting Number of Mobile Levels From DB");
+						PreparedStatement prepStatement = conn.prepareStatement("SELECT COUNT(*) FROM MODULES WHERE " + Setter.mobileModuleCategoryHardcodedWhereClause);
+						log.debug("Executing Query");
+						ResultSet resultSet = prepStatement.executeQuery();
+						resultSet.next();
+						mobileDbModuleCount = resultSet.getInt(1);
+						resultSet.close();
+						log.debug("Getting Number of Web Levels from DB");
+						prepStatement = conn.prepareStatement("SELECT COUNT(*) FROM MODULES WHERE " + Setter.webModuleCategoryHardcodedWhereClause);
+						resultSet = prepStatement.executeQuery();
+						resultSet.next();
+						webDbModuleCount = resultSet.getInt(1);
+						resultSet.close();
+					}
+					catch(SQLException e)
+					{
+						log.debug("Could not query DB Failure: " + e.toString());
+						fail("Failed to Query DB For Module Count");
+					}
+					Database.closeConnection(conn);
+					if(mobileDbModuleCount != numberOfMobileLevelsOpen)
+					{
+						fail("There are " + numberOfMobileLevelsOpen + " mobile levels in open list, but there are " + mobileDbModuleCount + " in the DB");
+					}
+					else if(webDbModuleCount != numberOfWebLevelsClosed)
+					{
+						fail("There are " + numberOfWebLevelsClosed + " web levels in open list, but there are " + webDbModuleCount + " in the DB");
+					}
+					else if((mobileDbModuleCount+webDbModuleCount) != (numberOfMobileLevelsOpen+numberOfWebLevelsClosed))
+					{
+						fail("There are module categories missing from the Setter hardcoded module filters.");
+					}
+					else
+					{
+						return; //Pass
+					}
+				}
+			}
+		}
+		else
+		{
+			fail("Could not close all modules");
+		}
+	}
+	
+	@Test
+	public void testGetOpenCloseCategoryMenu() 
+	{
+		String moduleCategory = "Injection"; //This will need to be updated to a locale key when this method is enhansed to support localisation
+		String categoryMenu = Getter.getOpenCloseCategoryMenu(applicationRoot);
+		if(categoryMenu.indexOf("option") == -1)
+		{
+			fail("Category Menu does not have any option tags");
+		}
+		else if(categoryMenu.indexOf(moduleCategory) == -1)
+		{
+			fail("Category Menu does not have the " + categoryMenu + " category");
+		}
+	}
+	
+	@Test
+	public void testGetPlayersByClass() 
+	{
+		try
+		{
+			String classId = findCreateClassId("playersByClass");
+			String userName = new String("playersByClass");
+			for(int i = 0; i <= 9; i++)
+			{
+				if(verifyTestUser(applicationRoot, userName+i, userName+i, classId))
+				{
+					log.debug("Created User " + userName+i);
+				}
+				else
+				{
+					fail("Could not create user " + userName+i);
+				}
+			}
+			ResultSet playersByClass = Getter.getPlayersByClass(applicationRoot, classId);
+			try
+			{
+				int i = 0;
+				while(playersByClass.next())
+				{
+					i++; //Count the players returned
+					if(!playersByClass.getString(2).startsWith(userName))
+					{
+						log.fatal("Found Unexpected User: " + playersByClass.getString(2));
+						fail("Incorrect User from Different Class Returned");
+					}
+				}
+				if(i != 9)
+				{
+					if(i < 9)
+						fail("Too Few Users Returned");
+					else if (i > 9)
+						fail("Too Many Users Returned");
+					else
+					{
+						log.fatal("Then surely the number WAS 9? How did this happen");
+						fail("Incorrect Amount of Users Returned");
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.fatal("Failed to itterate through playersByClass: " + e.toString());
+				fail("Players By Class Result Set Issue");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not create Class/Users: " + e.toString());
+			fail("Could not create Class/Users");
+		}
+	}
 	/*
-	@Test
-	public void testGetModuleResult() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetModuleResultFromHash() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetModulesInOptionTags() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetModulesInOptionTagsCTF() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetModuleSolution() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetModuleStatusMenu() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetOpenCloseCategoryMenu() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetPlayersByClass() {
-		fail("Not yet implemented");
-	}
-
 	@Test
 	public void testGetProgress() {
 		fail("Not yet implemented");
