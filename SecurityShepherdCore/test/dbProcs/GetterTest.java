@@ -2556,12 +2556,111 @@ public class GetterTest
 			fail("Could not create Class/Users");
 		}
 	}
-	/*
+	
 	@Test
-	public void testGetProgress() {
-		fail("Not yet implemented");
+	public void testGetProgress() 
+	{
+		String userName = new String("progressUser1");
+		String className = new String("progressClass1");
+		String otherUserName = new String("progressUser2");
+		String otherClassName = new String("progressClass2");
+		String anotherUserName = new String("progressClass3");
+		String classId = new String();
+		String classId2 = new String();
+		String insecureDirectObjectRefLesson = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //Direct Object Reference Module
+		try
+		{
+			try
+			{
+				classId = findCreateClassId(className);
+				classId2 = findCreateClassId(otherClassName);
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Find or Create Class : " + e.toString());
+				fail("Could not Create or Find Classes");
+			}
+			if(verifyTestUser(applicationRoot, userName, userName, classId) &&
+				verifyTestUser(applicationRoot, anotherUserName, anotherUserName, classId) &&
+				verifyTestUser(applicationRoot, otherUserName, otherUserName, classId2))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(Getter.getModuleAddress(applicationRoot, insecureDirectObjectRefLesson, userId).isEmpty())
+					{
+						fail("Could not Simulate Opening Level for User 1");
+					} 
+					else if(Getter.getModuleAddress(applicationRoot, insecureDirectObjectRefLesson, otherUserId).isEmpty())
+					{
+						fail("Could not Simulate Opening Level for User 1");
+					}
+					else
+					{
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
+						if(markLevelCompleteTest != null)
+							markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, otherUserId, "Feedback is Disabled", 1, 1, 1);
+						else 
+							fail("Could Not Mark Level as complete by User 1");
+						if (markLevelCompleteTest != null)
+						{
+							String classProgress = Getter.getProgress(applicationRoot, classId);
+							if(classProgress.indexOf(otherClassName) > 0)
+							{
+								fail("User from wrong class is listed in getProgress response");
+							}
+							else if(classProgress.indexOf(userName) == -1)
+							{
+								fail("Could not find user from class in getProgress response");
+							} 
+							else if(classProgress.indexOf(anotherUserName) == -1)
+							{
+								fail("Could not find user who has made no progress in getProgress response");
+							}
+							else 
+							{
+								String userRowStart = new String(userName + "</td><td><div style='background-color: #A878EF; heigth: 25px; width: ");
+								int startOfProgressWidth = classProgress.indexOf(userRowStart)+userRowStart.length();
+								String firstCharacterOfLength = classProgress.substring(startOfProgressWidth, startOfProgressWidth+1);
+								int lengthOfProgress = Integer.parseInt(firstCharacterOfLength); //We dont care what number it is. As Long as it's not 0
+								if(lengthOfProgress == 0)
+								{
+									log.debug("Found int value: " + lengthOfProgress);
+									log.debug("Was working with this string: " + firstCharacterOfLength);
+									fail("Detected 0 Length for User when they have competed a level");
+								}
+								else
+								{
+									return; //PASS
+								}
+							}
+						}
+						else
+						{
+							fail("Could not Mark level as Complete by user 2");
+						}
+					}
+				}
+				else
+				{
+					fail("Could not Mark All Modules as Open");
+				}
+			}
+			else
+			{
+				fail("Could not Verify Users");
+			}
+		}
+		catch (Exception e)
+		{
+			log.fatal("Could not complete getProgress use case: " + e.toString());
+			fail("Could not Complete getProgress use case");
+		}
 	}
-
+	/*
 	@Test
 	public void testGetProgressJSON() {
 		fail("Not yet implemented");
