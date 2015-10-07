@@ -27,7 +27,7 @@ String levelHash = "e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc841851371
 
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sqli." + levelHash, locale);
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.injection." + levelHash, locale);
 //Used more than once translations
 String i18nLevelName = bundle.getString("challenge.challengeName");
 

@@ -33,7 +33,7 @@ String levelBlurb = "Download the file and play with it to extract the key for t
 
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sqli." + levelHash, locale);
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.injection." + levelHash, locale);
 //Used more than once translations
 String i18nLevelName = bundle.getString("challenge.challengeName");
 

@@ -26,7 +26,7 @@
  String levelHash = "8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4";
  //Translation Stuff
  Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
- ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sqli." + levelHash, locale);
+ ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.injection." + levelHash, locale);
  //Used more than once translations
  String i18nLevelName = bundle.getString("challenge.challengeName");
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
