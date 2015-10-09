@@ -152,25 +152,7 @@ END
 $$
 
 DELIMITER ;
--- -----------------------------------------------------
--- procedure userLocked
--- -----------------------------------------------------
 
-DELIMITER $$
-USE `core`$$
-CREATE PROCEDURE `core`.`userLocked` (IN theName VARCHAR(32))
-BEGIN
-DECLARE theDate DATETIME;
-COMMIT;
-SELECT NOW() FROM DUAL INTO theDate;
-SELECT userName FROM `users` 
-    WHERE userName = theName
-    AND theDate > suspendedUntil;
-END
-
-$$
-
-DELIMITER ;
 -- -----------------------------------------------------
 -- procedure userLock
 -- -----------------------------------------------------

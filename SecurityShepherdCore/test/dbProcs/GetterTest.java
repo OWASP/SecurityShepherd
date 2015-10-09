@@ -19,6 +19,11 @@ import org.junit.Test;
 
 import utils.ScoreboardStatus;
 
+/**
+ * Class is targeted to test all of the methods found in the src/dbprocs/Getter.java class, but does include some coverage of other classes, such as Setter.java and Database.java
+ * @author mark
+ *
+ */
 public class GetterTest 
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(GetterTest.class);
@@ -26,12 +31,7 @@ public class GetterTest
 	private static String lang = new String("en_GB");
 	private static Locale locale = new Locale(lang);
 	private static String applicationRoot = new String();
-	
-	@Before
-	public void setUp()
-	{
-		applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
-	}
+	private static final int totalNumberOfModulesInShepherd = 58;
 	
 	/**
 	 * Searches for class based on class name. If nothing is found, the class is created and the new class Id is returned
@@ -66,6 +66,45 @@ public class GetterTest
 			}
 		}
 		return classId;
+	}
+	
+	/**
+	 * This method will sign in as an admin, or create the admin and sign in as them. If this fails it will throw an Exception.
+	 * This function will pass if correct user credentials are passed as well
+	 * @param applicationRoot Context of running application
+	 * @param userName The user name of the admin you want to create or sign in as
+	 * @param password The password of the admin you want to create or sign in as
+	 * @return Boolean value depicting if the user exists and can be authenticated
+	 * @throws Exception If admin Create function fails, an exception will be passed up
+	 */
+	private static boolean verifyTestAdmin(String applicationRoot, String userName, String password) throws Exception
+	{
+		boolean result = false;
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, userName, "admin", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, userName);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug(userName + " could authenticate. returning true");
+				result = true;
+			}
+			else
+			{
+				log.error("Couldnt verify that " + userName + " could authenticate at all. Throwing Exception");
+				throw new Exception("Could not Verify User " + userName + " could authenticate at all.");
+			}
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Could not Create User " + userName + ": " + e.toString());
+		}
+		return result;
 	}
 	
 	/**
@@ -163,43 +202,10 @@ public class GetterTest
 		return result;
 	}
 	
-	/**
-	 * This method will sign in as an admin, or create the admin and sign in as them. If this fails it will throw an Exception.
-	 * This function will pass if correct user credentials are passed as well
-	 * @param applicationRoot Context of running application
-	 * @param userName The user name of the admin you want to create or sign in as
-	 * @param password The password of the admin you want to create or sign in as
-	 * @return Boolean value depicting if the user exists and can be authenticated
-	 * @throws Exception If admin Create function fails, an exception will be passed up
-	 */
-	private static boolean verifyTestAdmin(String applicationRoot, String userName, String password) throws Exception
+	@Before
+	public void setUp()
 	{
-		boolean result = false;
-		try
-		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
-			if(user == null || user[0].isEmpty())
-			{
-				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
-				Setter.userCreate(applicationRoot, null, userName, userName, "admin", userName+"@test.com", false);
-				user = Getter.authUser(applicationRoot, userName, userName);
-			}
-			if(user != null && !user[0].isEmpty())
-			{
-				log.debug(userName + " could authenticate. returning true");
-				result = true;
-			}
-			else
-			{
-				log.error("Couldnt verify that " + userName + " could authenticate at all. Throwing Exception");
-				throw new Exception("Could not Verify User " + userName + " could authenticate at all.");
-			}
-		}
-		catch(Exception e)
-		{
-			throw new Exception("Could not Create User " + userName + ": " + e.toString());
-		}
-		return result;
+		applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
 	}
 	
 	@Test
@@ -347,6 +353,100 @@ public class GetterTest
 	}
 
 	@Test
+	public void testCheckPlayerResultWhenModuleComplete() 
+	{
+		String userName = new String("userResultWhenComplete");
+		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
+					{
+						//Then, Mark the Challenge Complete for user (Insecure Data Storage Lesson)
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, dataStorageLessonId, userId, "Feedback is Disabled", 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{
+							String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, dataStorageLessonId, userId);
+							log.debug("checkPlayerResultTest" + checkPlayerResultTest);
+							if(checkPlayerResultTest == null)
+								return; //Pass
+							else
+							{
+								fail("Function says user has not completed module"); //Even though this test just marked it as Completed
+							}
+						}
+						else
+							fail("Could not mark data storage lesson as complete for user");
+					}
+					else
+						fail("Could not Mark Data Storage Lesson as Opened by Default admin");
+				}
+				else
+					fail("Could not Open All Modules");
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testCheckPlayerResultWhenModuleNotComplete() 
+	{
+		String userName = new String("userHasModulesOpened");
+		String contentProviderLeakage = new String("5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, contentProviderLeakage, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
+					{
+						String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, contentProviderLeakage, Getter.getUserIdFromName(applicationRoot, userName));
+						if(checkPlayerResultTest != null)
+							return; //Pass
+						else
+						{
+							fail("Function says user has not opened challenge or has completed challenge before");
+						}
+					}
+					else
+					{
+						fail("Could not Content Provider Leakage Lesson as Opened by user");
+					}
+				}
+				else
+				{
+					fail("Could not Mark Modules As Opened");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
 	public void testCheckPlayerResultWhenModuleNotOpened() 
 	{
 		String userName = new String("noModulesOpened");
@@ -421,202 +521,6 @@ public class GetterTest
 		}
 	}
 	
-	@Test
-	public void testCheckPlayerResultWhenModuleNotComplete() 
-	{
-		String userName = new String("userHasModulesOpened");
-		String contentProviderLeakage = new String("5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a");
-		try
-		{
-			if(verifyTestUser(applicationRoot, userName, userName))
-			{
-				if(Setter.openAllModules(applicationRoot))
-				{
-					//Simulate user Opening Level
-					if(!Getter.getModuleAddress(applicationRoot, contentProviderLeakage, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
-					{
-						String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, contentProviderLeakage, Getter.getUserIdFromName(applicationRoot, userName));
-						if(checkPlayerResultTest != null)
-							return; //Pass
-						else
-						{
-							fail("Function says user has not opened challenge or has completed challenge before");
-						}
-					}
-					else
-					{
-						fail("Could not Content Provider Leakage Lesson as Opened by user");
-					}
-				}
-				else
-				{
-					fail("Could not Mark Modules As Opened");
-				}
-			}
-			else
-			{
-				fail("Could not verify user (No Exception Failure)");
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Verify User: " + e.toString());
-			fail("Could not Verify User " + userName);
-		}
-	}
-	
-	@Test
-	public void testCheckPlayerResultWhenModuleComplete() 
-	{
-		String userName = new String("userResultWhenComplete");
-		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
-		try
-		{
-			if(verifyTestUser(applicationRoot, userName, userName))
-			{
-				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot))
-				{
-					//Simulate user Opening Level
-					if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
-					{
-						//Then, Mark the Challenge Complete for user (Insecure Data Storage Lesson)
-						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, dataStorageLessonId, userId, "Feedback is Disabled", 1, 1, 1);
-						if (markLevelCompleteTest != null)
-						{
-							String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, dataStorageLessonId, userId);
-							log.debug("checkPlayerResultTest" + checkPlayerResultTest);
-							if(checkPlayerResultTest == null)
-								return; //Pass
-							else
-							{
-								fail("Function says user has not completed module"); //Even though this test just marked it as Completed
-							}
-						}
-						else
-							fail("Could not mark data storage lesson as complete for user");
-					}
-					else
-						fail("Could not Mark Data Storage Lesson as Opened by Default admin");
-				}
-				else
-					fail("Could not Open All Modules");
-			}
-			else
-			{
-				fail("Could not verify user (No Exception Failure)");
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Verify User: " + e.toString());
-			fail("Could not Verify User " + userName);
-		}
-	}
-	
-	
-	@Test
-	public void testIsCsrfLevelCompleteIncrementedCounter() 
-	{
-		String userName = new String("csrfCounterIncremented");
-		String csrfChallengeOne = new String("20e755179a5840be5503d42bb3711716235005ea"); //CSRF Challenge 1 (Should have CSRF Counter of 0 for new user)
-		try
-		{
-			if(verifyTestUser(applicationRoot, userName, userName))
-			{
-				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot))
-				{
-					//Simulate user Opening Level
-					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeOne, userId).isEmpty())
-					{
-						//Increment Challenge CSRF Counter
-						if(Setter.updateCsrfCounter(applicationRoot, csrfChallengeOne, userId))
-						{
-							if(Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeOne, userId))
-							{
-								return; //Pass, because CSRF level is completed after the user CSRF counter was incremented
-							}
-							else
-							{
-								fail("CSRF 1 not completed after successful increment");
-							}
-						}
-						else
-						{
-							fail("Could not Increment user Counter for CSRF 1");
-						}
-					}
-					else
-					{
-						fail("Could not Mark CSRF 1 as opened by user");
-					}
-				}
-				else
-				{
-					fail("Could not Mark Modules as Opened");
-				}
-			}
-			else
-			{
-				fail("Could not verify user (No Exception Failure)");
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Verify User: " + e.toString());
-			fail("Could not Verify User " + userName);
-		}
-	}
-	
-	@Test
-	public void testIsCsrfLevelCompleteWithoutIncrementedCounter() 
-	{
-		String userName = new String("csrfCounterWithoutInc");
-		String csrfChallengeTwo = new String("94cd2de560d89ef59fc450ecc647ff4d4a55c15d"); //CSRF Challenge 2 (Should have CSRF Counter of 0 for new user
-		try
-		{
-			if(verifyTestUser(applicationRoot, userName, userName))
-			{
-				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot))
-				{
-					//Simulate user Opening Level
-					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeTwo, userId).isEmpty())
-					{
-						if(!Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeTwo, userId))
-						{
-							return; //Pass, because CSRF level is not completed because the CSRF Counter for the user is 0
-						}
-						else
-						{
-							fail("CSRF 2 marked completed without increment"); // CSRF 2 Challenge should have a counter of 0 and should not return true. 
-						}
-					}
-					else
-					{
-						fail("Could not Mark CSRF 2 as opened by user");
-					}
-				}
-				else
-				{
-					fail("Could not mark All Modules as Opened");
-				}
-			}
-			else
-			{
-				fail("Could not verify user (No Exception Failure)");
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Verify User: " + e.toString());
-			fail("Could not Verify User " + userName);
-		}
-	}
 	
 	@Test
 	public void testFindPlayerById() 
@@ -693,7 +597,6 @@ public class GetterTest
 			fail("Found Player That Does Not Exist");
 		}
 	}
-
 	
 	@Test
 	public void testGetAllModuleInfo() 
@@ -710,7 +613,6 @@ public class GetterTest
 			fail("Only " + modules.size() + "/~76 modules returned from function");
 		}
 	}
-	
 	
 	@Test
 	public void testGetChallenges() 
@@ -729,7 +631,7 @@ public class GetterTest
 					{
 						//Get number of Challenges returned by getChallenges method
 						int numberofChallengesReturned = (modules.length() - modules.replace("class='lesson'", "").length()) / "class='lesson'".length();
-						if(numberofChallengesReturned > 58)
+						if(numberofChallengesReturned > totalNumberOfModulesInShepherd)
 						{
 							log.debug("PASS: Found " + numberofChallengesReturned + " modules");
 							return;
@@ -762,6 +664,7 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
+
 	
 	@Test
 	public void testGetChallengesWhenModulesClosed() 
@@ -814,6 +717,7 @@ public class GetterTest
 		}
 	}
 	
+	
 	@Test
 	public void testGetClassCount() 
 	{
@@ -838,7 +742,6 @@ public class GetterTest
 			return;
 		}
 	}
-	
 	
 	@Test
 	public void testGetClassInfoString() {
@@ -930,7 +833,8 @@ public class GetterTest
 			fail("Could not open ClassInfo Result Set");
 		}
 	}
-
+	
+	
 	@Test
 	public void testGetCsrfForumWithIframe() 
 	{
@@ -984,7 +888,7 @@ public class GetterTest
 		}
 		log.debug("End of CSRF Iframe Forum Test");
 	}
-	 
+	
 	@Test
 	public void testGetCsrfForumWithImg() 
 	{
@@ -1051,7 +955,7 @@ public class GetterTest
 			}
 		}
 	}
-	
+
 	@Test
 	public void testGetFeedback() 
 	{
@@ -1115,6 +1019,46 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
+	 
+	@Test
+	public void testGetIncrementalModulesWithModulesClosed() 
+	{
+		String userName = new String("testIncModuleMenu2");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Close all Modules First
+				if(Setter.closeAllModules(applicationRoot))
+				{
+					String incrementalModules = Getter.getIncrementalModules(applicationRoot, userId, lang, "testingCSRFtoken");
+					if(incrementalModules.indexOf("You've Finished!") > -1) //IF no modules are open, this is the expected leading string
+					{
+						log.debug("PASS: Menu appears to have compiled correctly");
+					}
+					else
+					{
+						log.debug("incrementalModules returned: " + incrementalModules);
+						fail("Could not Detect Finished Message");
+					}
+				}
+				else
+				{
+					fail("Could not Close All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
 	
 	@Test
 	public void testGetIncrementalModulesWithNoneComplete() 
@@ -1159,46 +1103,6 @@ public class GetterTest
 				else
 				{
 					fail("Could not open All Modules");
-				}
-			}
-			else
-			{
-				fail("Could not verify user (No Exception Failure)");
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Verify User: " + e.toString());
-			fail("Could not Verify User " + userName);
-		}
-	}
-	
-	@Test
-	public void testGetIncrementalModulesWithModulesClosed() 
-	{
-		String userName = new String("testIncModuleMenu2");
-		try
-		{
-			if(verifyTestUser(applicationRoot, userName, userName))
-			{
-				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				//Close all Modules First
-				if(Setter.closeAllModules(applicationRoot))
-				{
-					String incrementalModules = Getter.getIncrementalModules(applicationRoot, userId, lang, "testingCSRFtoken");
-					if(incrementalModules.indexOf("You've Finished!") > -1) //IF no modules are open, this is the expected leading string
-					{
-						log.debug("PASS: Menu appears to have compiled correctly");
-					}
-					else
-					{
-						log.debug("incrementalModules returned: " + incrementalModules);
-						fail("Could not Detect Finished Message");
-					}
-				}
-				else
-				{
-					fail("Could not Close All Modules");
 				}
 			}
 			else
@@ -1301,6 +1205,55 @@ public class GetterTest
 	}
 	
 	@Test
+	public void testGetIncrementalModulesWithoutScriptWithModulesClosed() 
+	{
+		String userName = new String("testIncModuleMenuScript2");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Close all Modules First
+				if(Setter.closeAllModules(applicationRoot))
+				{
+					String incrementalModules = Getter.getIncrementalModulesWithoutScript(applicationRoot, userId, lang, "testingCSRFtoken");
+					if(incrementalModules.indexOf("You've Finished!") > -1) //IF no modules are open, this is the expected leading string
+					{
+						if(!incrementalModules.endsWith(";</script>"))
+						{
+							log.debug("PASS: Incremental Menu Appears to have Rendered correctly with the Preconditions of this test without ending in the button script");
+							return;
+						}
+						else
+						{
+							log.debug("incrementalModules returned: " + incrementalModules);
+							fail("Function Ended in Unexpected Script");
+						}
+					}
+					else
+					{
+						log.debug("incrementalModules returned: " + incrementalModules);
+						fail("Could not Detect Finished Message");
+					}
+				}
+				else
+				{
+					fail("Could not Close All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
 	public void testGetIncrementalModulesWithoutScriptWithNoneComplete() 
 	{
 		String userName = new String("testIncModuleMenuScript1");
@@ -1352,55 +1305,6 @@ public class GetterTest
 				else
 				{
 					fail("Could not open All Modules");
-				}
-			}
-			else
-			{
-				fail("Could not verify user (No Exception Failure)");
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Verify User: " + e.toString());
-			fail("Could not Verify User " + userName);
-		}
-	}
-	
-	@Test
-	public void testGetIncrementalModulesWithoutScriptWithModulesClosed() 
-	{
-		String userName = new String("testIncModuleMenuScript2");
-		try
-		{
-			if(verifyTestUser(applicationRoot, userName, userName))
-			{
-				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				//Close all Modules First
-				if(Setter.closeAllModules(applicationRoot))
-				{
-					String incrementalModules = Getter.getIncrementalModulesWithoutScript(applicationRoot, userId, lang, "testingCSRFtoken");
-					if(incrementalModules.indexOf("You've Finished!") > -1) //IF no modules are open, this is the expected leading string
-					{
-						if(!incrementalModules.endsWith(";</script>"))
-						{
-							log.debug("PASS: Incremental Menu Appears to have Rendered correctly with the Preconditions of this test without ending in the button script");
-							return;
-						}
-						else
-						{
-							log.debug("incrementalModules returned: " + incrementalModules);
-							fail("Function Ended in Unexpected Script");
-						}
-					}
-					else
-					{
-						log.debug("incrementalModules returned: " + incrementalModules);
-						fail("Could not Detect Finished Message");
-					}
-				}
-				else
-				{
-					fail("Could not Close All Modules");
 				}
 			}
 			else
@@ -1513,6 +1417,190 @@ public class GetterTest
 	}
 	
 	/**
+	 * Tests to ensure that user can only see their data in the scoreboard, and cannot see the data from users in other classes in the scoreboard
+	 */
+	@Test
+	public void testGetJsonScoreClassSpecific() 
+	{
+		String userName = new String("scoreUserClassSpecific");
+		String className = new String("ScoreClassSpec");
+		String otherUserName = new String("scoreUserClassSpecific2");
+		String otherClassName = new String("ScoreClassSpec2");
+		String classId = new String();
+		String classId2 = new String();
+		String insecureDirectObjectRefLesson = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //Direct Object Reference Module
+		try
+		{
+			try
+			{
+				classId = findCreateClassId(className);
+				classId2 = findCreateClassId(otherClassName);
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Find or Create Class : " + e.toString());
+				fail("Could not Create or Find Classes");
+			}
+			if(verifyTestUser(applicationRoot, userName, userName, classId) && verifyTestUser(applicationRoot, otherUserName, otherUserName, classId2))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
+					if(markLevelCompleteTest != null)
+						markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, otherUserId, "Feedback is Disabled", 1, 1, 1);
+					else 
+						fail("Could Not Mark Level as complete by User 1");
+					if (markLevelCompleteTest != null)
+					{
+						boolean pass = false;
+						//Configure Score board for class Specific
+						ScoreboardStatus.setScoreboardClassSpecific();
+						//Get Score board Data
+						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
+						//Take the JSON String and make it Java JSON friendly
+						JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
+						//Loop through array to find Our user
+						for(int i = 0; i < scoreboardJson.size(); i++)
+						{
+							JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
+							if(scoreRowJson.get("username").toString().compareTo(userName) == 0)
+							{
+								pass = true;
+								log.debug("Found " + userName + " in scoreboard");
+							}
+							if(scoreRowJson.get("username").toString().compareTo(otherUserName) == 0)
+							{
+								log.fatal("Found Class User that shouldn't be included in the output");
+								log.debug("Found " + otherUserName + " in: " + scoreboardData);
+								fail("Found Class User that shouldn't be included in the Scoreboard Data");
+							}
+						}
+						if(!pass)
+						{
+							log.error("Could not find " + userName + " in JSON Data: " + scoreboardData);
+							fail("Could not find user in scoreboard");
+						}
+						else
+						{
+							return; //PASS
+						}
+					}
+					else
+					{
+						fail("Failed to Mark Direct Object Level as Complete for 2nd User");
+					}
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify users (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify Users: " + e.toString());
+			fail("Could not Verify Users " + userName);
+		}
+	}
+	
+	/**
+	 * Test to ensure users that have not scored any points, or are on negative points are not shown in the scoreboard
+	 */
+	@Test
+	public void testGetJsonScoreTotalNoneOrNegPoints() 
+	{
+		String userName = new String("userZero");
+		String className = new String("LowScoreTeam");
+		String otherUserName = new String("userMinusFive");
+		String classId = new String();
+		try
+		{
+			try
+			{
+				classId = findCreateClassId(className);
+				log.debug("Class Found");
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Find or Create Class : " + e.toString());
+				fail("Could not Create or Find Class");
+			}
+			if(verifyTestUser(applicationRoot, userName, userName, classId) && verifyTestUser(applicationRoot, otherUserName, otherUserName, classId))
+			{
+				log.debug("User's Verified");
+				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				log.debug("UserId retrieved");
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					log.debug("Opened All Modules");
+					//Not Touching User Zero, But dropping five points from other user
+					if (Setter.updateUserPoints(applicationRoot, otherUserId, -5))
+					{
+						log.debug("Updated Points of user Minus 5");
+						//Configure Score board for total open
+						ScoreboardStatus.setScoreboeardOpen();
+						log.debug("Scoreboard Set to Open");
+						//Get Score board Data
+						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
+						if(scoreboardData.isEmpty())
+						{
+							log.debug("PASS: The Scoreboard response was empty. Therefore the users are not valid to be returned");
+							return; //PASS
+						}
+						log.debug("Got Scoreboard Data");
+						//Take the JSON String and make it Java JSON friendly
+						JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
+						log.debug("Parsed Scoreboard Data");
+						if(scoreboardJson == null)
+							log.debug("scoreboardJson is Null. json was: " + scoreboardData);
+						//Loop through array to find Our user
+						for(int i = 0; i < scoreboardJson.size(); i++)
+						{
+							log.debug("Looping through Array " + i);
+							JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
+							if(scoreRowJson.get("username").toString().compareTo(userName) == 0)
+							{
+								fail("Found " + userName + " in scoreboard"); 
+							}
+							if(scoreRowJson.get("username").toString().compareTo(otherUserName) == 0)
+							{
+								fail("Found " + otherUserName + " in scoreboard"); 
+							}
+						}
+						log.debug("PASS: Did not ether user's in the response, therefore they were not included");
+						return; //PASS
+					}
+					else
+					{
+						fail("Failed to Subtract points from " + otherUserName);
+					}
+				}
+				else
+				{
+					fail("Could not open All Modules");
+				}
+			}
+			else
+			{
+				fail("Could not verify users (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify Users: " + e.toString());
+			fail("Could not Verify Users " + userName);
+		}
+	}
+	
+	/**
 	 * Test to see if Score board returns score for entire user base regardless of class
 	 */
 	@Test
@@ -1616,100 +1704,6 @@ public class GetterTest
 	}
 	
 	/**
-	 * Tests to ensure that user can only see their data in the scoreboard, and cannot see the data from users in other classes in the scoreboard
-	 */
-	@Test
-	public void testGetJsonScoreClassSpecific() 
-	{
-		String userName = new String("scoreUserClassSpecific");
-		String className = new String("ScoreClassSpec");
-		String otherUserName = new String("scoreUserClassSpecific2");
-		String otherClassName = new String("ScoreClassSpec2");
-		String classId = new String();
-		String classId2 = new String();
-		String insecureDirectObjectRefLesson = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //Direct Object Reference Module
-		try
-		{
-			try
-			{
-				classId = findCreateClassId(className);
-				classId2 = findCreateClassId(otherClassName);
-			}
-			catch(Exception e)
-			{
-				log.fatal("Could not Find or Create Class : " + e.toString());
-				fail("Could not Create or Find Classes");
-			}
-			if(verifyTestUser(applicationRoot, userName, userName, classId) && verifyTestUser(applicationRoot, otherUserName, otherUserName, classId2))
-			{
-				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
-				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot))
-				{
-					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
-					if(markLevelCompleteTest != null)
-						markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, otherUserId, "Feedback is Disabled", 1, 1, 1);
-					else 
-						fail("Could Not Mark Level as complete by User 1");
-					if (markLevelCompleteTest != null)
-					{
-						boolean pass = false;
-						//Configure Score board for class Specific
-						ScoreboardStatus.setScoreboardClassSpecific();
-						//Get Score board Data
-						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
-						//Take the JSON String and make it Java JSON friendly
-						JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
-						//Loop through array to find Our user
-						for(int i = 0; i < scoreboardJson.size(); i++)
-						{
-							JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
-							if(scoreRowJson.get("username").toString().compareTo(userName) == 0)
-							{
-								pass = true;
-								log.debug("Found " + userName + " in scoreboard");
-							}
-							if(scoreRowJson.get("username").toString().compareTo(otherUserName) == 0)
-							{
-								log.fatal("Found Class User that shouldn't be included in the output");
-								log.debug("Found " + otherUserName + " in: " + scoreboardData);
-								fail("Found Class User that shouldn't be included in the Scoreboard Data");
-							}
-						}
-						if(!pass)
-						{
-							log.error("Could not find " + userName + " in JSON Data: " + scoreboardData);
-							fail("Could not find user in scoreboard");
-						}
-						else
-						{
-							return; //PASS
-						}
-					}
-					else
-					{
-						fail("Failed to Mark Direct Object Level as Complete for 2nd User");
-					}
-				}
-				else
-				{
-					fail("Could not open All Modules");
-				}
-			}
-			else
-			{
-				fail("Could not verify users (No Exception Failure)");
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Verify Users: " + e.toString());
-			fail("Could not Verify Users " + userName);
-		}
-	}
-	
-	/**
 	 * Ensuring HTML is encoded from untrusted user inputs in scoreboard
 	 */
 	@Test
@@ -1773,96 +1767,6 @@ public class GetterTest
 					else
 					{
 						fail("Failed to Mark Direct Object Level as Complete for 2nd User");
-					}
-				}
-				else
-				{
-					fail("Could not open All Modules");
-				}
-			}
-			else
-			{
-				fail("Could not verify users (No Exception Failure)");
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Verify Users: " + e.toString());
-			fail("Could not Verify Users " + userName);
-		}
-	}
-	
-	/**
-	 * Test to ensure users that have not scored any points, or are on negative points are not shown in the scoreboard
-	 */
-	@Test
-	public void testGetJsonScoreTotalNoneOrNegPoints() 
-	{
-		String userName = new String("userZero");
-		String className = new String("LowScoreTeam");
-		String otherUserName = new String("userMinusFive");
-		String classId = new String();
-		try
-		{
-			try
-			{
-				classId = findCreateClassId(className);
-				log.debug("Class Found");
-			}
-			catch(Exception e)
-			{
-				log.fatal("Could not Find or Create Class : " + e.toString());
-				fail("Could not Create or Find Class");
-			}
-			if(verifyTestUser(applicationRoot, userName, userName, classId) && verifyTestUser(applicationRoot, otherUserName, otherUserName, classId))
-			{
-				log.debug("User's Verified");
-				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
-				log.debug("UserId retrieved");
-				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot))
-				{
-					log.debug("Opened All Modules");
-					//Not Touching User Zero, But dropping five points from other user
-					if (Setter.updateUserPoints(applicationRoot, otherUserId, -5))
-					{
-						log.debug("Updated Points of user Minus 5");
-						//Configure Score board for total open
-						ScoreboardStatus.setScoreboeardOpen();
-						log.debug("Scoreboard Set to Open");
-						//Get Score board Data
-						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
-						if(scoreboardData.isEmpty())
-						{
-							log.debug("PASS: The Scoreboard response was empty. Therefore the users are not valid to be returned");
-							return; //PASS
-						}
-						log.debug("Got Scoreboard Data");
-						//Take the JSON String and make it Java JSON friendly
-						JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
-						log.debug("Parsed Scoreboard Data");
-						if(scoreboardJson == null)
-							log.debug("scoreboardJson is Null. json was: " + scoreboardData);
-						//Loop through array to find Our user
-						for(int i = 0; i < scoreboardJson.size(); i++)
-						{
-							log.debug("Looping through Array " + i);
-							JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
-							if(scoreRowJson.get("username").toString().compareTo(userName) == 0)
-							{
-								fail("Found " + userName + " in scoreboard"); 
-							}
-							if(scoreRowJson.get("username").toString().compareTo(otherUserName) == 0)
-							{
-								fail("Found " + otherUserName + " in scoreboard"); 
-							}
-						}
-						log.debug("PASS: Did not ether user's in the response, therefore they were not included");
-						return; //PASS
-					}
-					else
-					{
-						fail("Failed to Subtract points from " + otherUserName);
 					}
 				}
 				else
@@ -2018,7 +1922,7 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
-
+	
 	@Test
 	public void testGetModuleAddress() 
 	{
@@ -2091,7 +1995,7 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
-	
+
 	@Test
 	public void testGetModuleCategory() 
 	{
@@ -2135,6 +2039,21 @@ public class GetterTest
 	}
 	
 	@Test
+	public void testGetModuleKeyTypeEncryptedKey() 
+	{
+		String csrfChallengeThree = new String("5ca9115f3279b9b9f3308eb6a59a4fcd374846d6");
+		if(!Getter.getModuleKeyType(applicationRoot, csrfChallengeThree))
+		{
+			log.debug("PASS: Encrypted Key Detected on Encrypted Level");
+		}
+		else
+		{
+			log.fatal("Hardcoded Key Detected On Encrypted Key Module");
+			fail("Hardcoded Key Detected On Encrypted Key Module");
+		}
+	}
+	
+	@Test
 	public void testGetModuleKeyTypeHardcodedKey() 
 	{
 		String insecureCryptoLesson = new String("201ae6f8c55ba3f3b5881806387fbf34b15c30c2");
@@ -2149,21 +2068,6 @@ public class GetterTest
 		}
 	}
 	
-	@Test
-	public void testGetModuleKeyTypeEncryptedKey() 
-	{
-		String csrfChallengeThree = new String("5ca9115f3279b9b9f3308eb6a59a4fcd374846d6");
-		if(!Getter.getModuleKeyType(applicationRoot, csrfChallengeThree))
-		{
-			log.debug("PASS: Encrypted Key Detected on Encrypted Level");
-		}
-		else
-		{
-			log.fatal("Hardcoded Key Detected On Encrypted Key Module");
-			fail("Hardcoded Key Detected On Encrypted Key Module");
-		}
-	}
-
 	/**
 	 * Test to return stored result key from DB via getModuleResult Function
 	 */
@@ -2237,7 +2141,7 @@ public class GetterTest
 			fail("First option tag was not the lowest ranking level");
 		}
 	}
-	
+
 	@Test
 	public void testGetModuleSolution() 
 	{
@@ -2660,26 +2564,444 @@ public class GetterTest
 			fail("Could not Complete getProgress use case");
 		}
 	}
-	/*
+	
 	@Test
-	public void testGetProgressJSON() {
-		fail("Not yet implemented");
+	public void testGetProgressJSON() 
+	{
+		String userName = new String("jsonProgress1");
+		String className = new String("jsonProgressC");
+		String otherUserName = new String("jsonProgress2");
+		String otherClassName = new String("jsonProgressC2");
+		String anotherUserName = new String("jsonProgress3");
+		String classId = new String();
+		String classId2 = new String();
+		String insecureDirectObjectRefLesson = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; //Direct Object Reference Module
+		try
+		{
+			try
+			{
+				classId = findCreateClassId(className);
+				classId2 = findCreateClassId(otherClassName);
+			}
+			catch(Exception e)
+			{
+				log.fatal("Could not Find or Create Class : " + e.toString());
+				fail("Could not Create or Find Classes");
+			}
+			if(verifyTestUser(applicationRoot, userName, userName, classId) &&
+				verifyTestUser(applicationRoot, anotherUserName, anotherUserName, classId) &&
+				verifyTestUser(applicationRoot, otherUserName, otherUserName, classId2))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				//Open all Modules First
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(Getter.getModuleAddress(applicationRoot, insecureDirectObjectRefLesson, userId).isEmpty())
+					{
+						fail("Could not Simulate Opening Level for User 1");
+					} 
+					else if(Getter.getModuleAddress(applicationRoot, insecureDirectObjectRefLesson, otherUserId).isEmpty())
+					{
+						fail("Could not Simulate Opening Level for User 1");
+					}
+					else
+					{
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
+						if(markLevelCompleteTest != null)
+							markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, otherUserId, "Feedback is Disabled", 1, 1, 1);
+						else 
+							fail("Could Not Mark Level as complete by User 1");
+						if (markLevelCompleteTest != null)
+						{
+							String jsonProgressString = Getter.getProgressJSON(applicationRoot, classId);
+							if(jsonProgressString.indexOf(otherClassName) > 0)
+							{
+								fail("User from wrong class is listed in getJsonProgress response");
+							}
+							else if(jsonProgressString.indexOf(userName) == -1)
+							{
+								fail("Could not find user from class in getJsonProgress response");
+							} 
+							else if(jsonProgressString.indexOf(anotherUserName) == -1)
+							{
+								fail("Could not find user who has made no progress in getJsonProgress response");
+							}
+							else 
+							{
+								log.debug("Going through JsonArray");
+								//Take the JSON String and make it Java JSON friendly
+								JSONArray jsonProgress = (JSONArray)JSONValue.parse(jsonProgressString);
+								//Loop through array to find Our user
+								for(int i = 0; i < jsonProgress.size(); i++)
+								{
+									JSONObject userProgress = (JSONObject)jsonProgress.get(i);
+									if(userProgress.get("userName").toString().compareTo(userName) == 0)
+									{
+										int progressBar = Integer.parseInt(userProgress.get("progressBar").toString());
+										if(progressBar <= 0)
+										{
+											fail("User has no progress according to response when they have completed a level");
+										}
+									}
+									else if(userProgress.get("userName").toString().compareTo(anotherUserName) == 0)
+									{
+										int progressBar = Integer.parseInt(userProgress.get("progressBar").toString());
+										if(progressBar != 0)
+										{
+											fail("User that has done nothing has progress != 0");
+										}
+									}
+								}
+							}
+						}
+						else
+						{
+							fail("Could not Mark level as Complete by user 2");
+						}
+					}
+				}
+				else
+				{
+					fail("Could not Mark All Modules as Open");
+				}
+			}
+			else
+			{
+				fail("Could not Verify Users");
+			}
+		}
+		catch (Exception e)
+		{
+			log.fatal("Could not complete getJsonProgress use case: " + e.toString());
+			fail("Could not Complete getJsonProgress use case");
+		}
 	}
-
+	
+	/**
+	 * Tests the Tournament Floor Plan when all modules are opened
+	 */
 	@Test
-	public void testGetTournamentModules() {
-		fail("Not yet implemented");
+	public void testGetTournamentModules() 
+	{
+		String userName = new String("allOpenTournUser");
+		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
+		String insecureDirectObjectReferenceLesson = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the GetAllModuleInfo method will return data
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
+					{
+						//Then, Mark the Challenge Complete for user (Insecure Data Storage Lesson)
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, dataStorageLessonId, userId, "Feedback is Disabled", 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{
+							String tournamentModules = Getter.getTournamentModules(applicationRoot, userId, locale);
+							if(!tournamentModules.isEmpty()) //Some Modules were included in response
+							{
+								//Get number of Challenges returned by getChallenges method
+								int numberofChallengesReturned = (tournamentModules.length() - tournamentModules.replace("class='lesson'", "").length()) / "class='lesson'".length();
+								if(numberofChallengesReturned > totalNumberOfModulesInShepherd)
+								{
+									log.debug("Found " + numberofChallengesReturned + " modules");
+									if(!tournamentModules.contains("Corporal")) //English String Expected to be in the response when submitted with the locale for this unit test
+									{
+										fail("Could not detect i18n English String in Tournament Output");
+									}
+									else if(tournamentModules.indexOf("<img src='css/images/completed.png'/><a class='lesson' id='"+dataStorageLessonId) == -1)
+									{
+										fail("Data Storage Lesson was not marked as complete in Tournament Menu");
+									}
+									else if(tournamentModules.indexOf("<img src='css/images/uncompleted.png'/><a class='lesson' id='"+insecureDirectObjectReferenceLesson) == -1)
+									{
+										fail("Could not Detect Direct Object Ref Lesson Uncomplete Image");
+									}
+								}
+								else
+								{
+									log.debug("Too Few Challenges Returned to pass: " + numberofChallengesReturned + " returned");
+									fail("Too Few Challenges Returned to Pass");
+								}
+							}
+							else
+							{
+								log.fatal("No Modules Returned. Empty String");
+								fail("No Modules Returned");
+							}
+						}
+						else
+						{
+							fail("Could not mark Module as Complete");
+						}
+					}
+					else
+					{
+						fail("Could not simulate user opening module");
+					}
+				}
+				else
+				{
+					fail("Could Not Mark Modules as Open Before Test");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
 	}
-
+	
+	/**
+	 * Tests the Tournament Floor Plan when modules are closed
+	 */
 	@Test
-	public void testGetUserName() {
-		fail("Not yet implemented");
+	public void testGetTournamentModulesClosed() 
+	{
+		String userName = new String("closedTournUser");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the GetAllModuleInfo method will return data
+				if(Setter.closeAllModules(applicationRoot))
+				{
+					String tournamentModules = Getter.getTournamentModules(applicationRoot, userId, locale);
+					if(!tournamentModules.contains("No Modules Found"))
+					{
+						fail("Could not detect 'No Modules Found' i18n String");
+					}
+				}
+				else
+				{
+					fail("Could Not Mark Modules as Closed Before Test");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
 	}
-
+	
+	/**
+	 * Tests the Tournament Floor Plan when only one module is opened
+	 */
 	@Test
-	public void testIsUserLocked() {
-		fail("Not yet implemented");
+	public void testGetTournamentModulesOnlyOneOpen() 
+	{
+		String userName = new String("allOpenTournUserNone");
+		String sessionManagement8 = new String("7153290d128cfdef5f40742dbaeb129a36ac2340");
+		String insecureDirectObjectReferenceLesson = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11");
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the GetAllModuleInfo method will return data
+				if(Setter.closeAllModules(applicationRoot))
+				{
+					if(!Setter.setModuleStatusOpen(applicationRoot, sessionManagement8))
+					{
+						fail("Could not open Session management Challenge 8");
+					}
+					else
+					{
+						String tournamentModules = Getter.getTournamentModules(applicationRoot, userId, locale);
+						if(!tournamentModules.isEmpty()) //Some Modules were included in response
+						{
+							//Get number of Challenges returned by getChallenges method
+							int numberofChallengesReturned = (tournamentModules.length() - tournamentModules.replace("class='lesson'", "").length()) / "class='lesson'".length();
+							if(numberofChallengesReturned == 1)
+							{
+								log.debug("Found " + numberofChallengesReturned + " module");
+								if(!tournamentModules.contains("Admiral")) //English String Expected to be in the response when submitted with the locale for this unit test
+								{
+									fail("Could not detect i18n English String Admiral in Tournament Output");
+								}
+								else if(tournamentModules.indexOf("<img src='css/images/uncompleted.png'/><a class='lesson' id='"+sessionManagement8) == -1)
+								{
+									fail("Could not Detect Session Management Challenge 8 Uncomplete Image");
+								}
+								else if(tournamentModules.contains(insecureDirectObjectReferenceLesson))
+								{
+									fail("Detected closed module returned in Tournament Response");
+								}
+								else if(tournamentModules.contains("Private"))
+								{
+									fail("Detected Private Header Even with no levels from that Band Open");
+								}
+							}
+							else
+							{
+								log.debug("More than one module returned: " + tournamentModules);
+								fail("More than one module returned in Single Tournament Test");
+							}
+						}
+						else
+						{
+							log.fatal("No Modules Returned. Empty String");
+							fail("No Modules Returned in Tournament Mode");
+						}
+					}
+				}
+				else
+				{
+					fail("Could Not Mark Modules as Closed Before Test");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
 	}
-	*/
-
+	
+	@Test
+	public void testGetUserName()
+	{
+		String userName = new String("getUserNameUser");
+		try 
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String testUserName = Getter.getUserName(applicationRoot, userId);
+				if(testUserName.compareTo(userName) != 0)
+				{
+					fail("Known user name and Retrieved user names are different");
+				}
+			}
+		} 
+		catch (Exception e) 
+		{
+			log.fatal("Could not Verify Test User: " + e.toString());
+			fail("Could not Create/Verify Test User");
+		}
+		
+	}
+	
+	@Test
+	public void testIsCsrfLevelCompleteIncrementedCounter() 
+	{
+		String userName = new String("csrfCounterIncremented");
+		String csrfChallengeOne = new String("20e755179a5840be5503d42bb3711716235005ea"); //CSRF Challenge 1 (Should have CSRF Counter of 0 for new user)
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeOne, userId).isEmpty())
+					{
+						//Increment Challenge CSRF Counter
+						if(Setter.updateCsrfCounter(applicationRoot, csrfChallengeOne, userId))
+						{
+							if(Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeOne, userId))
+							{
+								return; //Pass, because CSRF level is completed after the user CSRF counter was incremented
+							}
+							else
+							{
+								fail("CSRF 1 not completed after successful increment");
+							}
+						}
+						else
+						{
+							fail("Could not Increment user Counter for CSRF 1");
+						}
+					}
+					else
+					{
+						fail("Could not Mark CSRF 1 as opened by user");
+					}
+				}
+				else
+				{
+					fail("Could not Mark Modules as Opened");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
+	
+	@Test
+	public void testIsCsrfLevelCompleteWithoutIncrementedCounter() 
+	{
+		String userName = new String("csrfCounterWithoutInc");
+		String csrfChallengeTwo = new String("94cd2de560d89ef59fc450ecc647ff4d4a55c15d"); //CSRF Challenge 2 (Should have CSRF Counter of 0 for new user
+		try
+		{
+			if(verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeTwo, userId).isEmpty())
+					{
+						if(!Getter.isCsrfLevelComplete(applicationRoot, csrfChallengeTwo, userId))
+						{
+							return; //Pass, because CSRF level is not completed because the CSRF Counter for the user is 0
+						}
+						else
+						{
+							fail("CSRF 2 marked completed without increment"); // CSRF 2 Challenge should have a counter of 0 and should not return true. 
+						}
+					}
+					else
+					{
+						fail("Could not Mark CSRF 2 as opened by user");
+					}
+				}
+				else
+				{
+					fail("Could not mark All Modules as Opened");
+				}
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+	}
 }

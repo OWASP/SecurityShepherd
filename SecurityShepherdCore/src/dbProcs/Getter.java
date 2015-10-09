@@ -43,6 +43,20 @@ public class Getter
 	 * Used for scoreboards / progress bars
 	 */
 	private static int widthOfUnitBar = 11; //px
+	private static int fieldTrainingCap = 45;
+	
+	private static int privateCap = 80;
+	
+	private static int corporalCap = 105;
+	
+	private static int sergeantCap = 130;
+	
+	private static int lieutenantCap = 145;
+	
+	private static int majorCap = 175;
+	
+	private static int admiralCap = 999; //everything above Major is Admiral
+	
 	/**
 	 * This method hashes the user submitted password and sends it to the database.
 	 * The database does the rest of the work, including Brute Force prevention.
@@ -177,47 +191,6 @@ public class Getter
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END checkPlayerResult ***");
-		return result;
-	}
-	
-	/**
-	 * This method is used to determine if a CSRF level has been completed. 
-	 * A call is made to the DB that returns the CSRF counter for a level. 
-	 * If this counter is greater than 0, the level has been completed
-	 * @param applicationRoot Running context of the application
-	 * @param moduleHash Hash ID of the CSRF module you wish to check if a user has completed
-	 * @param userId the ID of the user to check
-	 * @return True or False value depicting if the user has completed the module
-	 */
-	public static boolean isCsrfLevelComplete (String applicationRoot, String moduleId, String userId)
-	{
-		log.debug("*** Setter.isCsrfLevelComplete ***");
-		
-		boolean result = false;
-		
-		Connection conn = Database.getCoreConnection(applicationRoot);
-		try
-		{
-			log.debug("Preparing csrfLevelComplete call");
-			CallableStatement callstmnt = conn.prepareCall("call csrfLevelComplete(?, ?)");
-			callstmnt.setString(1, moduleId);
-			callstmnt.setString(2, userId);
-			log.debug("moduleId: " + moduleId);
-			log.debug("userId: " + userId);
-			log.debug("Executing csrfLevelComplete");
-			ResultSet resultSet = callstmnt.executeQuery();
-			resultSet.next();
-			result = resultSet.getInt(1) > 0; // If Result is > 0, then the CSRF level is complete
-			if(result)
-				log.debug("CSRF Level is complete");
-		}
-		catch(SQLException e)
-		{
-			log.error("csrfLevelComplete Failure: " + e.toString());
-			result = false;
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END isCsrfLevelComplete ***");
 		return result;
 	}
 	
@@ -1457,7 +1430,6 @@ public class Getter
 		Database.closeConnection(conn);
 		return output;
 	}
-	
 	/**
 	 * This method returns the module categories in option tags that are to be open or closed in a &lt;select&gt; element for administration manipulation
 	 * @param ApplicationRoot
@@ -1492,7 +1464,6 @@ public class Getter
 		Database.closeConnection(conn);
 		return output;
 	}
-	
 	/**
 	 * This method is used to gather users according by class. Thanks to MySQL syntax, where class = null will return nothing, is null must be used.
 	 *  <br/>is 'validClass' will Error, = 'validclass' must be used.<br/>
@@ -1535,7 +1506,6 @@ public class Getter
 		log.debug("*** END getPlayersByClass");
 		return result;
 	}
-	
 	/**
 	 * Used to present the progress of a class in a series of loading bars
 	 * @param applicationRoot The current running context of the application
@@ -1586,7 +1556,6 @@ public class Getter
 		log.debug("*** END getProgress ***");
 		return result;
 	}
-	
 	/**
 	 * Use to return the current progress of a class in JSON format with information like user name, score and completed modules
 	 * @param applicationRoot The current running context of the application
@@ -1644,7 +1613,25 @@ public class Getter
 		log.debug("*** END getProgressJSON ***");
 		return result;
 	}
-	
+	private static int getTounnamentSectionFromRankNumber (int rankNumber)
+	{
+		if(rankNumber < fieldTrainingCap)
+			return 1;
+		else if (rankNumber < privateCap)
+			return 2;
+		else if (rankNumber < corporalCap)
+			return 3;
+		else if (rankNumber < sergeantCap)
+			return 4;
+		else if (rankNumber < lieutenantCap)
+			return 5;
+		else if (rankNumber < majorCap)
+			return 6;
+		else if (rankNumber < admiralCap)
+			return 7;
+		else
+			return 7; //Max level is 7.
+	}
 	/**
 	 * This method prepares the Tournament module menu. This is when Security Shepherd is in "Tournament Mode".
 	 * Users are presented with a list of that are specified as open. 
@@ -1769,61 +1756,34 @@ public class Getter
 		Database.closeConnection(conn);
 		return levelMasterList;
 	}
-	
-	private static int fieldTrainingCap = 45;
-	private static int privateCap = 80;
-	private static int corporalCap = 105;
-	private static int sergeantCap = 130;
-	private static int lieutenantCap = 145;
-	private static int majorCap = 175;
-	private static int admiralCap = 999; //everything above Major is Admiral
-	private static int getTounnamentSectionFromRankNumber (int rankNumber)
-	{
-		if(rankNumber < fieldTrainingCap)
-			return 1;
-		else if (rankNumber < privateCap)
-			return 2;
-		else if (rankNumber < corporalCap)
-			return 3;
-		else if (rankNumber < sergeantCap)
-			return 4;
-		else if (rankNumber < lieutenantCap)
-			return 5;
-		else if (rankNumber < majorCap)
-			return 6;
-		else if (rankNumber < admiralCap)
-			return 7;
-		else
-			return 7; //Max level is 7.
-	}
-	
 	/**
 	 * @param ApplicationRoot The current running context of the application
-	 * @param userId The identifier of a user
-	 * @return The user name of the submitted user identifier
+	 * @param userName The username of the user
+	 * @return The class id of the submitted user name
 	 */
-	public static String getUserName (String ApplicationRoot, String userId)
+	public static String getUserClassFromName (String ApplicationRoot, String userName)
 	{
-		log.debug("*** Getter.getUserName ***");
+		log.debug("*** Getter.getUserClass ***");
 		String result = new String();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
-			CallableStatement callstmt = conn.prepareCall("call userGetNameById(?)");
-			log.debug("Gathering userGetNameById ResultSet");
-			callstmt.setString(1, userId);
+			CallableStatement callstmt = conn.prepareCall("call userClassId(?)");
+			log.debug("Gathering userClassId ResultSet");
+			callstmt.setString(1, userName);
 			ResultSet resultSet = callstmt.executeQuery();
-			log.debug("Opening Result Set from userGetNameById");
+			log.debug("Opening Result Set from userClassId");
 			resultSet.next();
-			result = resultSet.getString(1);
+			result = resultSet.getString(0);
+			log.debug("Found " + result);
 		}
 		catch (SQLException e)
 		{
-			log.error("Could not execute query: " + e.toString());
-			result = null;
+			log.error("Could not execute userClassId: " + e.toString());
+			result = new String();
 		}
 		Database.closeConnection(conn);
-		log.debug("*** END getUserName ***");
+		log.debug("*** END getUserClass ***");
 		return result;
 	}
 	
@@ -1859,62 +1819,72 @@ public class Getter
 	
 	/**
 	 * @param ApplicationRoot The current running context of the application
-	 * @param userName The username of the user
-	 * @return The class id of the submitted user name
+	 * @param userId The identifier of a user
+	 * @return The user name of the submitted user identifier
 	 */
-	public static String getUserClassFromName (String ApplicationRoot, String userName)
+	public static String getUserName (String ApplicationRoot, String userId)
 	{
-		log.debug("*** Getter.getUserClass ***");
+		log.debug("*** Getter.getUserName ***");
 		String result = new String();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
-			CallableStatement callstmt = conn.prepareCall("call userClassId(?)");
-			log.debug("Gathering userClassId ResultSet");
-			callstmt.setString(1, userName);
+			CallableStatement callstmt = conn.prepareCall("call userGetNameById(?)");
+			log.debug("Gathering userGetNameById ResultSet");
+			callstmt.setString(1, userId);
 			ResultSet resultSet = callstmt.executeQuery();
-			log.debug("Opening Result Set from userClassId");
+			log.debug("Opening Result Set from userGetNameById");
 			resultSet.next();
-			result = resultSet.getString(0);
-			log.debug("Found " + result);
-		}
-		catch (SQLException e)
-		{
-			log.error("Could not execute userClassId: " + e.toString());
-			result = new String();
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END getUserClass ***");
-		return result;
-	}
-	
-	/**
-	 * Used by authentication to check if account is locked before continuing with authentication process.
-	 * @param ApplicationRoot The current running context of the application
-	 * @param userName The userName to use for check
-	 * @return A boolean value of if the user account is locked
-	 */
-	public static boolean isUserLocked (String ApplicationRoot, String userName)
-	{
-		log.debug("*** Getter.isUserLocked ***");
-		boolean result = true;
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			CallableStatement callstmt = conn.prepareCall("call userLocked(?)");
-			log.debug("Gathering userLocked ResultSet");
-			callstmt.setString(1, userName);
-			ResultSet userLocked = callstmt.executeQuery();
-			log.debug("Opening Result Set from userLocked");
-			userLocked.next();
-			result = !userLocked.getString(1).equalsIgnoreCase(userName);
+			result = resultSet.getString(1);
 		}
 		catch (SQLException e)
 		{
 			log.error("Could not execute query: " + e.toString());
+			result = null;
 		}
 		Database.closeConnection(conn);
-		log.debug("*** END isUserLocked ***");
+		log.debug("*** END getUserName ***");
+		return result;
+	}
+	
+	/**
+	 * This method is used to determine if a CSRF level has been completed. 
+	 * A call is made to the DB that returns the CSRF counter for a level. 
+	 * If this counter is greater than 0, the level has been completed
+	 * @param applicationRoot Running context of the application
+	 * @param moduleHash Hash ID of the CSRF module you wish to check if a user has completed
+	 * @param userId the ID of the user to check
+	 * @return True or False value depicting if the user has completed the module
+	 */
+	public static boolean isCsrfLevelComplete (String applicationRoot, String moduleId, String userId)
+	{
+		log.debug("*** Setter.isCsrfLevelComplete ***");
+		
+		boolean result = false;
+		
+		Connection conn = Database.getCoreConnection(applicationRoot);
+		try
+		{
+			log.debug("Preparing csrfLevelComplete call");
+			CallableStatement callstmnt = conn.prepareCall("call csrfLevelComplete(?, ?)");
+			callstmnt.setString(1, moduleId);
+			callstmnt.setString(2, userId);
+			log.debug("moduleId: " + moduleId);
+			log.debug("userId: " + userId);
+			log.debug("Executing csrfLevelComplete");
+			ResultSet resultSet = callstmnt.executeQuery();
+			resultSet.next();
+			result = resultSet.getInt(1) > 0; // If Result is > 0, then the CSRF level is complete
+			if(result)
+				log.debug("CSRF Level is complete");
+		}
+		catch(SQLException e)
+		{
+			log.error("csrfLevelComplete Failure: " + e.toString());
+			result = false;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END isCsrfLevelComplete ***");
 		return result;
 	}
 }
