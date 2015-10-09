@@ -72,7 +72,6 @@ public class ChangePassword extends HttpServlet
 					String passwordConfirm = (String) request.getParameter("passwordConfirmation");
 					String ApplicationRoot = getServletContext().getRealPath("");
 					
-					log.debug("Validating Parameters");
 					boolean validData = false;
 					boolean passwordChange = false;
 					boolean validPassword = false;
