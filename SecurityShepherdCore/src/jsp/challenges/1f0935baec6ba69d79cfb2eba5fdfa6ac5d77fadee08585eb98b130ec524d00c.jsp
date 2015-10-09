@@ -66,7 +66,6 @@ if (request.getSession() != null)
 	<title>Security Shepherd - <%= levelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	<link rel='stylesheet' href='../css/octicons/octicons.css'>
-	
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>

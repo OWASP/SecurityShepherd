@@ -7,8 +7,6 @@
 	String levelName = "Content Provider Leakage Lesson";
 	//Alphanumeric Only
 	String levelHash = "4d41997b5b81c88f7eb761c1975481c4ce397b80291d99307cfad69662277d39";
-	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-	String levelBlurb = "";
 	
 	//Translation Stuff
 	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
@@ -59,12 +57,10 @@
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= translatedLevelName %></title>
-<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-<link rel='stylesheet' href='../css/octicons/octicons.css'>
-
-</script>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Security Shepherd - <%= translatedLevelName %></title>
+	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link rel='stylesheet' href='../css/octicons/octicons.css'>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>

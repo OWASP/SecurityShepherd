@@ -35,8 +35,6 @@ ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGene
 String LevelName = bundle.getString("challenge2.challengeName");
 String paragraph1 = bundle.getString("challenge2.para1");
 
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
@@ -60,20 +58,16 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%=LevelName%></title>
-<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Security Shepherd - <%=LevelName%></title>
+	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	<link rel='stylesheet' href='../css/octicons/octicons.css'>
-
-</script>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
 		<h2 class="title"><%=LevelName%></h2>
 		<p>
-			<%=levelBlurb%>
-			<br /> 
 			<%= paragraph1 %>
 			<br />
 			<br/>

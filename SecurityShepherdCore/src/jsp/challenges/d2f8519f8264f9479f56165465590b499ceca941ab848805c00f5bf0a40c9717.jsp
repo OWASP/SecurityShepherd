@@ -36,8 +36,6 @@ String LevelName = bundle.getString("challenge1.challengeName");
 String paragraph1 = bundle.getString("challenge1.para1");
 
 
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "";
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
@@ -64,18 +62,12 @@ if (request.getSession() != null)
 	<title>Security Shepherd - <%= LevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	<link rel='stylesheet' href='../css/octicons/octicons.css'>
-	
-	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= LevelName %></h2>
-			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
-				
-				<%= levelBlurb %>
-				<br/>
+			<p> 				
 				<%= paragraph1 %>
 				<br/>
 				<br/>

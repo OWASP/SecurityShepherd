@@ -24,7 +24,6 @@
 String levelName = "Mobile Reverse Engineer 1";
 //Alphanumeric Only
 String levelHash = "072a9e4fc888562563adf8a89fa55050e3e1cfbbbe1d597b0537513ac8665295.jsp";
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
 
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
@@ -61,8 +60,6 @@ if (request.getSession() != null)
 	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	<link rel='stylesheet' href='../css/octicons/octicons.css'>
-	
-	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>

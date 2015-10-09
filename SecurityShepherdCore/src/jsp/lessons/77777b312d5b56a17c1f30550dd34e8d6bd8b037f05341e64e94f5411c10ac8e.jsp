@@ -56,21 +56,15 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= translatedLevelName %></title>
-<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Security Shepherd - <%= translatedLevelName %></title>
+	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	<link rel='stylesheet' href='../css/octicons/octicons.css'>
-
-</script>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<div id="contentDiv">
 		<p>
-			<%
-				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
-			%>
-			
 			<h2 class="title"><%= translatedLevelName  %></h2>
 			<p> 
 				<div id="lessonIntro">

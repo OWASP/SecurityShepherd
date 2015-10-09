@@ -24,8 +24,6 @@
 String levelName = "Mobile Poor Authentication 1";
 //Alphanumeric Only
 String levelHash = "efa08298fc6a4add4b9a4bbdbbbb18ac934667971fa275bd7d234589bd8a8467";
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "";
 
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
@@ -62,8 +60,6 @@ if (request.getSession() != null)
 	<title>Security Shepherd - <%= levelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	<link rel='stylesheet' href='../css/octicons/octicons.css'>
-	
-	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>

@@ -24,8 +24,6 @@
 String levelName = "SQL Injection Challenge 5";
 //Alphanumeric Only
 String levelHash = "8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Not used - See Below";
 
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
@@ -59,7 +57,6 @@ if (request.getSession() != null)
 	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	<link rel='stylesheet' href='../css/octicons/octicons.css'>
-	
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
