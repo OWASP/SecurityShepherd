@@ -209,8 +209,7 @@ public class Hash
 			{
 				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
 				String forLog = Hash.encrypt(key, baseKey + getCurrentSalt());
-				toReturn = "<link rel='stylesheet' href='../css/octicons/octicons.css'>"
-						+ "<textarea id='clipboard_textarea' rows=1 style='display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea><br />"
+				toReturn = "<textarea id='clipboard_textarea' rows=1 style='display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea><br />"
 						+ "<button data-clipboard-target='clipboard_textarea' data-copied-hint='Copied!' id='copy-button' name='copy-button' value='Copy to Clipboard'>"
 						+ "<span class='octicon octicon-clippy'></span>" 
 						+ "</button>" 

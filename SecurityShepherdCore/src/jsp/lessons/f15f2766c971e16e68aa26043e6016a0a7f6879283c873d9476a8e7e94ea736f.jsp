@@ -60,6 +60,7 @@ String levelHash = new String("f15f2766c971e16e68aa26043e6016a0a7f6879283c873d94
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link rel='stylesheet' href='../css/octicons/octicons.css'>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>

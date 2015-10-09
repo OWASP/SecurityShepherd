@@ -30,7 +30,7 @@ if (request.getSession() != null)
 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 
 %>
-<html><body>
+<html><head><link rel='stylesheet' href='../../css/octicons/octicons.css'></head><body>
 <% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 <br/>
 <br/>

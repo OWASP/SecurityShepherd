@@ -58,6 +58,7 @@ String translatedLevelName = bundle.getString("title.question.fail_restrict_url_
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link rel='stylesheet' href='../css/octicons/octicons.css'>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
