@@ -2,6 +2,7 @@ package dbProcs;
 
 import static org.junit.Assert.*;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -506,12 +507,77 @@ public class SetterTest
 			}
 		}
 	}
-	/*
+	
 	@Test
-	public void testSetStoredMessage() {
-		fail("Not yet implemented");
+	public void testSetStoredMessage() 
+	{
+		log.debug("Testing Set Stored message");
+		String userName = new String("storedMessageUser");
+		String className = new String("sMessageClass");
+		String moduleId = new String("853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5"); //CSRF 7
+		String message = new String("TestStoredMessage");
+		try
+		{
+			log.debug("Getting class id");
+			String classId = GetterTest.findCreateClassId(className, applicationRoot);
+			log.debug("Checking User Name in DB");
+			if(GetterTest.verifyTestUser(applicationRoot, userName, userName, classId))
+			{
+				//Open all Modules First so that the Module Can Be Opened
+				if(!Setter.openAllModules(applicationRoot))
+				{
+					fail("Could not open all modules");
+				}
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Simulate user Opening Level
+				if(Getter.getModuleAddress(applicationRoot, moduleId, userId).isEmpty())
+				{
+					fail("Could not Simulate Opening First Level for User");
+				} 
+				else
+				{
+					Setter.setStoredMessage(applicationRoot, message, userId, moduleId);
+					Connection conn = Database.getCoreConnection(applicationRoot);
+					try
+					{
+						CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)");
+						log.debug("Gathering resultMessageByClass ResultSet");
+						callstmt.setString(1, classId);
+						callstmt.setString(2, moduleId);
+						ResultSet resultSet = callstmt.executeQuery();
+						log.debug("resultMessageByClass executed");
+						while(resultSet.next())
+						{
+							if(resultSet.getString(1).compareTo(userName) == 0)
+							{
+								if(resultSet.getString(2).compareTo(message) != 0)
+									fail("Stored Message does not equal the one set");
+								else
+									return; //Pass
+							}
+						}
+						fail("Could not find user stored message");
+					}
+					catch(SQLException e)
+					{
+						log.fatal("Could not Query DB: " + e.toString());
+						fail("Could not Query DB For Stored Message");
+					}
+				}
+			}
+			else
+			{
+				fail("Could not verify test User");
+			}
+		}
+		catch(Exception e)
+		{
+			String error = "Could not complete testSetStoredMessage";
+			log.fatal(error + ": " + e.toString());
+			fail(error);
+		}
 	}
-
+/*
 	@Test
 	public void testSuspendUser() {
 		fail("Not yet implemented");

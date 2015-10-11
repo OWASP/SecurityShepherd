@@ -69,6 +69,41 @@ public class GetterTest
 	}
 	
 	/**
+	 * Searches for class based on class name. If nothing is found, the class is created and the new class Id is returned
+	 * @param className Name of the class you wish to search / create
+	 * @return The Identifier of the class owning the name submitted
+	 * @throws Exception If the class cannot be created or found
+	 */
+	public static String findCreateClassId(String className, String applicationRoot) throws Exception
+	{
+		String classId = new String();
+		ResultSet rs = Getter.getClassInfo(applicationRoot);
+		while(rs.next())
+		{
+			if(rs.getString(2).compareTo(className) == 0)
+			{
+				classId = rs.getString(1);
+				break;
+			}
+		}
+		rs.close();
+		if(classId.isEmpty())
+		{
+			log.debug("Could not find class. Creating it");
+			if(Setter.classCreate(applicationRoot, className, "2015"))
+			{
+				log.debug("Class Created. Getting ID");
+				classId = findCreateClassId(className, applicationRoot);
+			}
+			else
+			{
+				throw new Exception("Could not Create Class " + className);
+			}
+		}
+		return classId;
+	}
+	
+	/**
 	 * This method will sign in as an admin, or create the admin and sign in as them. If this fails it will throw an Exception.
 	 * This function will pass if correct user credentials are passed as well
 	 * @param applicationRoot Context of running application
@@ -155,7 +190,7 @@ public class GetterTest
 	 * @return Boolean value depicting if the user exists and can be authenticated
 	 * @throws Exception If User Create function fails, an exception will be passed up
 	 */
-	private static boolean verifyTestUser(String applicationRoot, String userName, String password, String theClass) throws Exception
+	public static boolean verifyTestUser(String applicationRoot, String userName, String password, String theClass) throws Exception
 	{
 		boolean result = false;
 		try
