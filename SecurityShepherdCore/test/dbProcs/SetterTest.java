@@ -2,7 +2,10 @@ package dbProcs;
 
 import static org.junit.Assert.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -318,42 +321,192 @@ public class SetterTest
 			fail("Could not complete badSubmission Test");
 		}
 	}
+
+	@Test
+	public void testSetCsrfChallengeFourCsrfToken() 
+	{
+		String userName = new String("csrfFourUser");
+		try
+		{
+			if(GetterTest.verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String csrfTokenValue = new String("CsrfTokenTest");
+				String csrfToken = Setter.setCsrfChallengeFourCsrfToken(userId, csrfTokenValue, applicationRoot);
+				if(csrfToken.compareTo(csrfTokenValue) != 0)
+					fail("Retrieved CSRF token did not Match the Set Value");
+			}
+			else
+			{
+				fail("Could not Verify User");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not complete setCsrfChallengeFourCsrfToken test: " + e.toString());
+			fail("Could not complete setCsrfChallengeFourCsrfToken test");
+		}
+	}
+	
+	@Test
+	public void testSetCsrfChallengeSevenCsrfToken() 
+	{
+		String userName = new String("csrfSevenUser");
+		try
+		{
+			if(GetterTest.verifyTestUser(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String csrfToken = new String("CsrfTokenTest");
+				if(!Setter.setCsrfChallengeSevenCsrfToken(userId, csrfToken, applicationRoot))
+					fail("Could not Set CSRF Chalenge 7 Token");
+			}
+			else
+			{
+				fail("Could not Verify User");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not complete setCsrfChallengeSevenCsrfToken test: " + e.toString());
+			fail("Could not complete setCsrfChallengeSevenCsrfToken test");
+		}
+	}
+	
+	@Test
+	public void testSetModuleCategoryStatusOpen()
+	{
+		String moduleCategory = new String("Injection");
+		if(!Setter.closeAllModules(applicationRoot))
+			fail("Could not Mark all modules as closed");
+		else if (!Setter.setModuleCategoryStatusOpen(applicationRoot, moduleCategory, "open"))
+			fail("Could not Open module Category");
+		else
+		{
+			Connection conn = Database.getCoreConnection(applicationRoot);
+			try
+			{
+				log.debug("Getting Number of Mobile Levels From DB");
+				PreparedStatement prepStatement = conn.prepareStatement("SELECT DISTINCT moduleCategory FROM modules WHERE moduleStatus = 'open';");
+				ResultSet rs = prepStatement.executeQuery();
+				while(rs.next())
+				{
+					if(rs.getString(1).compareTo(moduleCategory) != 0)
+					{
+						log.debug("Found Category that wa snot injection: " + rs.getString(1));
+						fail("Detected Category that was not Injection Open");
+					}
+				}
+			}
+			catch(SQLException e)
+			{
+				log.fatal("Could not Query DB: " + e.toString());
+				fail("Could not Query DB for Module Status");
+			}
+		}
+	}
+	
+	@Test
+	public void testSetModuleCategoryStatusClosed()
+	{
+		String moduleCategory = new String("Injection");
+		if(!Setter.openAllModules(applicationRoot))
+			fail("Could not Mark all modules as open");
+		else if (!Setter.setModuleCategoryStatusOpen(applicationRoot, moduleCategory, "closed"))
+			fail("Could not close module Category");
+		else
+		{
+			Connection conn = Database.getCoreConnection(applicationRoot);
+			try
+			{
+				log.debug("Getting Number of Mobile Levels From DB");
+				PreparedStatement prepStatement = conn.prepareStatement("SELECT DISTINCT moduleCategory FROM modules WHERE moduleStatus = 'closed';");
+				ResultSet rs = prepStatement.executeQuery();
+				while(rs.next())
+				{
+					if(rs.getString(1).compareTo(moduleCategory) != 0)
+					{
+						log.debug("Found Category that wa snot injection: " + rs.getString(1));
+						fail("Detected Category that was not Injection Closed");
+					}
+				}
+			}
+			catch(SQLException e)
+			{
+				log.fatal("Could not Query DB: " + e.toString());
+				fail("Could not Query DB for Module Status");
+			}
+		}
+	}
+	
+	@Test
+	public void testSetModuleStatusClosed()
+	{
+		String moduleId = new String("853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5"); //CSRF 7
+		if(!Setter.openAllModules(applicationRoot))
+			fail("Could not Mark all modules as open");
+		else if (!Setter.setModuleStatusClosed(applicationRoot, moduleId))
+			fail("Could not close CSRF 7 Module");
+		else
+		{
+			Connection conn = Database.getCoreConnection(applicationRoot);
+			try
+			{
+				log.debug("Getting Number of Mobile Levels From DB");
+				PreparedStatement prepStatement = conn.prepareStatement("SELECT moduleStatus FROM modules WHERE moduleId = ?");
+				prepStatement.setString(1, moduleId);
+				ResultSet rs = prepStatement.executeQuery();
+				if(rs.next())
+				{
+					if(rs.getString(1).compareTo("closed") != 0)
+					{
+						log.debug("Module was not closed by method");
+						fail("Module was not closed by method");
+					}
+				}
+			}
+			catch(SQLException e)
+			{
+				log.fatal("Could not Query DB: " + e.toString());
+				fail("Could not Query DB for Module Status");
+			}
+		}
+	}
+	
+	@Test
+	public void testSetModuleStatusOpen()
+	{
+		String moduleId = new String("853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5"); //CSRF 7
+		if(!Setter.closeAllModules(applicationRoot))
+			fail("Could not Mark all modules as closed");
+		else if (!Setter.setModuleStatusOpen(applicationRoot, moduleId))
+			fail("Could not close CSRF 7 Module");
+		else
+		{
+			Connection conn = Database.getCoreConnection(applicationRoot);
+			try
+			{
+				log.debug("Getting Number of Mobile Levels From DB");
+				PreparedStatement prepStatement = conn.prepareStatement("SELECT moduleStatus FROM modules WHERE moduleId = ?");
+				prepStatement.setString(1, moduleId);
+				ResultSet rs = prepStatement.executeQuery();
+				if(rs.next())
+				{
+					if(rs.getString(1).compareTo("open") != 0)
+					{
+						log.debug("Module was not opened by method");
+						fail("Module was not opened by method");
+					}
+				}
+			}
+			catch(SQLException e)
+			{
+				log.fatal("Could not Query DB: " + e.toString());
+				fail("Could not Query DB for Module Status");
+			}
+		}
+	}
 	/*
-	@Test
-	public void testSetCoreDatabaseInfo() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetCsrfChallengeFourCsrfToken() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetCsrfChallengeSevenCsrfToken() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetExposedDatabaseInfo() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetModuleCategoryStatusOpen() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetModuleStatusClosed() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetModuleStatusOpen() {
-		fail("Not yet implemented");
-	}
-
 	@Test
 	public void testSetStoredMessage() {
 		fail("Not yet implemented");

@@ -299,7 +299,7 @@ public class Setter
 	/**
 	 * This method is used to store a CSRF Token for a specific user in the csrfChallengeSeven DB Schema. May not necessarily be a new CSRF token after running
 	 * @param userId User Identifier
-	 * @param csrfToken CSRF Token to add to the csrfChallengeSix DB Schema
+	 * @param csrfToken CSRF Token to add to the csrfChallengeFour DB Schema
 	 * @param ApplicationRoot Running context of the application
 	 * @return Returns current CSRF token for user for CSRF Ch4 
 	 */
@@ -431,7 +431,7 @@ public class Setter
 	 * @param ApplicationRoot Used to locate database properties file
 	 * @param moduleCategory The module category to open or closed
 	 * @param openOrClosed What to set the module status to. Can only be "open" or "closed"
-	 * @return
+	 * @return True if method executes without failure
 	 */
 	public static boolean setModuleCategoryStatusOpen (String ApplicationRoot, String moduleCategory, String openOrClosed)
 	{
