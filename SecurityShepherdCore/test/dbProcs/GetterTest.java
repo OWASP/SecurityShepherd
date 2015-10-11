@@ -39,7 +39,7 @@ public class GetterTest
 	 * @return The Identifier of the class owning the name submitted
 	 * @throws Exception If the class cannot be created or found
 	 */
-	private static String findCreateClassId(String className) throws Exception
+	public static String findCreateClassId(String className) throws Exception
 	{
 		String classId = new String();
 		ResultSet rs = Getter.getClassInfo(applicationRoot);
@@ -115,7 +115,7 @@ public class GetterTest
 	 * @return Boolean value depicting if the user exists and can be authenticated
 	 * @throws Exception If User Create function fails, an exception will be passed up
 	 */
-	private static boolean verifyTestUser(String applicationRoot, String userName, String password) throws Exception
+	public static boolean verifyTestUser(String applicationRoot, String userName, String password) throws Exception
 	{
 		boolean result = false;
 		try
