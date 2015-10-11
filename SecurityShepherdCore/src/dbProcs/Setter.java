@@ -614,36 +614,6 @@ public class Setter
 	}
 	
 	/**
-	 * Used to update a module's cheat sheet
-	 * @param applicationRoot The current running context of the application
-	 * @param moduleId The identifier of the module to update
-	 * @param newSolution The new cheat sheet content
-	 * @return A boolean value reflecting the success of the operation
-	 */
-	public static boolean updateCheatSheet(String applicationRoot, String moduleId, String newSolution) 
-	{
-		log.debug("*** Getter.updateCheatSheet ***");
-		boolean result = false;
-		Connection conn = Database.getCoreConnection(applicationRoot);
-		try
-		{
-			CallableStatement callstmt = conn.prepareCall("call cheatSheetCreate(?, ?)");
-			log.debug("Preparing cheatSheetCreate procedure");
-			callstmt.setString(1, moduleId);
-			callstmt.setString(2, newSolution);
-			callstmt.execute();
-			result = true;
-		}
-		catch (SQLException e)
-		{
-			log.error("Could not execute cheatSheetCreate: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END updateCheatSheet ***");
-		return result;
-	}
-	
-	/**
 	 * Used to increment a users CSRF counter for CSRF levels.
 	 * @param ApplicationRoot The current running context of the application.
 	 * @param moduleId The identifier of the module to increment the counter of
@@ -709,7 +679,7 @@ public class Setter
 	/**
 	 * Updates a player's password without needing the current password
 	 * @param ApplicationRoot Running context of the applicaiton
-	 * @param userName The username of the user to update
+	 * @param userId The user id of the user to update
 	 * @param newPassword The new password to assign to the user
 	 * @return
 	 */

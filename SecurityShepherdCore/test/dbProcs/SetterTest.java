@@ -577,64 +577,342 @@ public class SetterTest
 			fail(error);
 		}
 	}
+
+	@Test
+	public void testSuspendUser() 
+	{
+		String userName = new String("suspendedUser");
+		try
+		{
+			log.debug("Checking User Name in DB");
+			boolean loggedIn = false;
+			try
+			{
+				log.debug("Trying to Verify User");
+				loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, userName);
+			}
+			catch(Exception e)
+			{
+				log.debug("Could not verify. May be suspended. Unsuspending");
+				//Might need to unsuspend player
+				Setter.unSuspendUser(applicationRoot, Getter.getUserIdFromName(applicationRoot, userName));
+				//Gotta Sleep for a sec otherwise the time setting for suspension will fail test. Must be 1 sec after unsuspend function ran
+				Thread.sleep(1000);
+				loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, userName);
+			}
+			if(!loggedIn)
+			{
+				fail("Could not Verify User");
+			}
+			else
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				if(!Setter.suspendUser(applicationRoot, userId, 10))
+				{
+					fail("Could not suspend User");
+				}
+				else
+				{
+					String user[] = Getter.authUser(applicationRoot, userName, userName);
+					if(user == null || user[0].isEmpty())
+					{
+						return;// PASS: User Could not Authenticate after suspension
+					}
+					else
+					{
+						fail("Could still authenticate as user after suspension");
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not complete testSuspendUser: " + e.toString());
+			fail("Could not complete testSuspendUser");
+		}
+	}
+	
+	@Test
+	public void testUnSuspendUser() 
+	{
+		String userName = new String("UnsuspendedUser");
+		try
+		{
+			log.debug("Checking User Name in DB");
+			if(!GetterTest.verifyTestUser(applicationRoot, userName, userName))
+			{
+				fail("Could not Verify User");
+			}
+			else
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				if(!Setter.suspendUser(applicationRoot, userId, 10))
+				{
+					fail("Could not suspend User");
+				}
+				else
+				{
+					if(!Setter.unSuspendUser(applicationRoot, userId))
+					{
+						fail("Could not unsusepend user");
+					}
+					else
+					{
+						//Gotta Sleep for a sec, otherwise the time compair will round down and user auth will fail. User is unsuspended 1 second after unsuspend funciton
+						Thread.sleep(1000);
+						String user[] = Getter.authUser(applicationRoot, userName, userName);
+						if(user == null || user[0].isEmpty())
+						{
+							fail("Could not Authenticate after unsuspension");
+						}
+						else
+						{
+							return;// PASS: User Could not Authenticate after unsuspension
+						}
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not complete testUnSuspendUser: " + e.toString());
+			fail("Could not complete testUnSuspendUser");
+		}
+	}
+	
+	@Test
+	public void testUpdatePassword() 
+	{
+		log.debug("Testing update Password");
+		String userName = new String("updatePassword");
+		String currentPass = new String();
+		String newPass = new String();
+		boolean loggedIn = false;
+		try
+		{
+			try
+			{
+				currentPass = userName;
+				newPass = userName+userName;
+				log.debug("Logging in with default Pass");
+				loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, currentPass);
+			}
+			catch(Exception e)
+			{
+				newPass = userName;
+				currentPass = userName+userName;
+				log.debug("Could not log in with default pass: " + e.toString());
+				log.debug("Logging in with alternative pass: " + currentPass);
+				String[] auth = Getter.authUser(applicationRoot, userName, currentPass);
+				loggedIn = auth != null;
+			}
+			if(!loggedIn)
+			{
+				log.debug("Could not sign in with any pass.");
+				fail("Could not Verify User");
+			}
+			else
+			{
+				log.debug("Logged in! Updating Password now");
+				if(!Setter.updatePassword(applicationRoot, userName, currentPass, newPass))
+				{
+					log.debug("Could not update password");
+					fail("Could not update password");
+				}
+				else
+				{
+					log.debug("Password Updated. Authenticating with new pass: " + newPass);
+					String[] auth = Getter.authUser(applicationRoot, userName, newPass);
+					if(auth == null)
+					{
+						fail("Could Not Auth With New Pass");
+					}
+					else
+					{
+						return; //PASS: Authenticated With New Pass
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not complete testUpdatePassword: " + e.toString());
+			fail("Could not complete testUpdatePassword");
+		}
+	}
+
+	@Test
+	public void testUpdatePasswordAdmin() 
+	{
+		log.debug("Testing update Password");
+		String userName = new String("adminPassUp");
+		String currentPass = new String();
+		String newPass = new String();
+		boolean loggedIn = false;
+		try
+		{
+			try
+			{
+				currentPass = userName;
+				newPass = userName+userName;
+				log.debug("Logging in with default Pass");
+				loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, currentPass);
+			}
+			catch(Exception e)
+			{
+				newPass = userName;
+				currentPass = userName+userName;
+				log.debug("Could not log in with default pass: " + e.toString());
+				log.debug("Logging in with alternative pass: " + currentPass);
+				String[] auth = Getter.authUser(applicationRoot, userName, currentPass);
+				loggedIn = auth != null;
+			}
+			if(!loggedIn)
+			{
+				log.debug("Could not sign in with any pass.");
+				fail("Could not Verify User");
+			}
+			else
+			{
+				log.debug("Logged in! Updating Password now");
+				if(!Setter.updatePasswordAdmin(applicationRoot, Getter.getUserIdFromName(applicationRoot, userName), newPass))
+				{
+					log.debug("Could not update password");
+					fail("Could not update password");
+				}
+				else
+				{
+					log.debug("Password Updated. Authenticating with new pass: " + newPass);
+					String[] auth = Getter.authUser(applicationRoot, userName, newPass);
+					if(auth == null)
+					{
+						fail("Could Not Auth With New Pass");
+					}
+					else
+					{
+						return; //PASS: Authenticated With New Pass
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not complete testUpdatePasswordAdmin: " + e.toString());
+			fail("Could not complete testUpdatePasswordAdmin");
+		}
+	}
+
+	@Test
+	public void testUpdatePlayerClass() 
+	{
+		String userName = new String("UpdateClassUser");
+		String className = new String("Old Class");
+		String otherClassName = new String("Other Class");
+		String classId = new String();
+		String otherClassId = new String();
+		String newClass = new String();
+		try
+		{
+			log.debug("Getting class ids");
+			classId = GetterTest.findCreateClassId(className, applicationRoot);
+			otherClassId = GetterTest.findCreateClassId(otherClassName, applicationRoot);
+			log.debug("Verifying User");
+			if(!GetterTest.verifyTestUser(applicationRoot, userName, userName, classId))
+			{
+				fail("Could not verify user");
+			}
+			else
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String currentClass = Getter.getUserClassFromName(applicationRoot, userName);
+				newClass = otherClassId;
+
+				log.debug("Current Class: " + currentClass);
+				log.debug("New Class: " + newClass);
+				if(!Setter.updatePlayerClass(applicationRoot, newClass, userId).equalsIgnoreCase(userName))
+				{
+					fail("Could not update player class");
+				}
+				else
+				{
+					String latestClass = Getter.getUserClassFromName(applicationRoot, userName);
+					if(latestClass.compareTo(newClass) != 0)
+					{
+						log.debug("Latest Class: " + latestClass);
+						log.debug("New Class: " + newClass);
+						fail("Retrieved Class is not the Set Class");
+					}
+					else
+					{
+						return; // PASS
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not complete testUpdatePlayerClass: " + e.toString());
+			fail("Could not complete testUpdatePlayerClass");
+		}
+	}
+
+	@Test
+	public void testUpdatePlayerClassToNull()
+	{
+		String userName = new String("UpdateClassUserFromNull");
+		String className = new String("WutClass");
+		String classId = new String();
+		try
+		{
+			log.debug("Getting class ids");
+			classId = GetterTest.findCreateClassId(className, applicationRoot);
+			if(!GetterTest.verifyTestUser(applicationRoot, userName, userName, classId))
+			{
+				fail("Could not verify user");
+			}
+			else
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String currentClass = Getter.getUserClassFromName(applicationRoot, userName);
+				log.debug("Current Class: " + currentClass);
+				if(!Setter.updatePlayerClassToNull(applicationRoot, userId).equalsIgnoreCase(userName))
+				{
+					fail("Could not update player class to null");
+				}
+				else
+				{
+					String latestClass = Getter.getUserClassFromName(applicationRoot, userName);
+					if(latestClass == null || latestClass.isEmpty())
+					{
+						return;// PASS
+					}
+					else
+					{
+						log.debug("Latest Class: " + latestClass);
+						fail("Retrieved Class is not null");
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not complete testUpdatePlayerClass: " + e.toString());
+			fail("Could not complete testUpdatePlayerClass");
+		}
+	}
 /*
-	@Test
-	public void testSuspendUser() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUnSuspendUser() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUpdateCheatSheet() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUpdateCsrfCounter() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUpdatePassword() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUpdatePasswordAdmin() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUpdatePlayerClass() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUpdatePlayerClassToNull() {
-		fail("Not yet implemented");
-	}
-
 	@Test
 	public void testUpdatePlayerResult() {
 		fail("Not yet implemented");
 	}
-
+/*
 	@Test
 	public void testUpdateUserPoints() {
 		fail("Not yet implemented");
 	}
-
+/*
 	@Test
 	public void testUpdateUserRole() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUserCreate() {
 		fail("Not yet implemented");
 	}
 	*/
