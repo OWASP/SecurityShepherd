@@ -16,6 +16,8 @@ INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleT
 UPDATE modules SET incrementalRank = '87' WHERE moduleId = '335440fef02d19259254ed88293b62f31cccdd41';
 UPDATE modules SET moduleName = 'SQL Injection Old Challenge 1', moduleStatus = 'closed' WHERE moduleId = 'f771a10efb42a79a9dba262fd2be2e44bf40b66d';
 UPDATE modules SET moduleId = 'f771a10efb42a79a9dba262fd2be2e44bf40b66d', moduleName = 'SQL Injection 2', moduleNameLangPointer = 'sql.injection.2', moduleResult = 'f62abebf5658a6a44c5c9babc7865110c62f5ecd9d0a7052db48c4dbee0200e3', moduleHash = 'ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b', incrementalRank = '88', scoreValue = '45' WHERE moduleName = 'SQL Injection 1';
+UPDATE modules SET moduleCategory = 'Poor Data Validation' WHERE moduleId = '6be5de81223cc1b38b6e427cc44f8b6a28d2bc96';
+UPDATE modules SET moduleCategory = 'Poor Data Validation' WHERE moduleId = '3b14ca3c8f9b90c9b2c8cd1fba9fa67add1272a3';
 
 COMMIT;
 
@@ -72,6 +74,53 @@ END IF;
 
 END
 
+$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure moduleIncrementalInfo
+-- -----------------------------------------------------
+DROP PROCEDURE `core`.`moduleIncrementalInfo`;
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`moduleIncrementalInfo` (IN theUserId VARCHAR(64))
+BEGIN
+(SELECT moduleNameLangPointer, moduleCategory, moduleId, finishTime, incrementalRank FROM modules LEFT JOIN results USING (moduleId) WHERE userId = theUserId AND moduleStatus = 'open') UNION (SELECT moduleNameLangPointer, moduleCategory, moduleId, null, incrementalRank FROM modules WHERE moduleStatus = 'open' AND moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId)) ORDER BY incrementalRank;
+END
+
+$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure userGetIdByName
+-- -----------------------------------------------------
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`userGetIdByName` (IN theUserName VARCHAR(64))
+BEGIN
+COMMIT;
+SELECT userId FROM users
+    WHERE userName = theUserName;
+END
+$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure userClassId
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`userClassId` (IN theUserName VARCHAR(64))
+BEGIN
+COMMIT;
+SELECT classId FROM users
+    WHERE userName = theUserName;
+END
 $$
 
 DELIMITER ;
@@ -175,19 +224,19 @@ CALL cheatSheetCreate('c7ac1e05faa2d4b1016cfcc726e0689419662784', 'c7ac1e05faa2d
 CALL cheatSheetCreate('b3cfd5890649e6815a1c7107cc41d17c82826cfa', 'b3cfd5890649e6815a1c7107cc41d17c82826cfa.solution');
 CALL cheatSheetCreate('ced925f8357a17cfe3225c6236df0f681b2447c4', 'ced925f8357a17cfe3225c6236df0f681b2447c4.solution');
 CALL cheatSheetCreate('c6841bcc326c4bad3a23cd4fa6391eb9bdb146ed', 'c6841bcc326c4bad3a23cd4fa6391eb9bdb146ed.solution');
-CALL cheatsheetCreate('53a53a66cb3bf3e4c665c442425ca90e29536edd', '53a53a66cb3bf3e4c665c442425ca90e29536edd.solution');
-CALL cheatsheetCreate('307f78f18fd6a87e50ed6705231a9f24cd582574', '307f78f18fd6a87e50ed6705231a9f24cd582574.solution');
-CALL cheatsheetCreate('da3de2e556494a9c2fb7308a98454cf55f3a4911', 'da3de2e556494a9c2fb7308a98454cf55f3a4911.solution');
-CALL cheatsheetCreate('335440fef02d19259254ed88293b62f31cccdd41', '335440fef02d19259254ed88293b62f31cccdd41.solution');
-CALL cheatsheetCreate('a3f7ffd0f9c3d15564428d4df0b91bd927e4e5e4', 'a3f7ffd0f9c3d15564428d4df0b91bd927e4e5e4.solution');
-CALL cheatsheetCreate('e635fce334aa61fdaa459c21c286d6332eddcdd3', 'e635fce334aa61fdaa459c21c286d6332eddcdd3.solution');
-CALL cheatsheetCreate('ef6496892b8e48ac2f349cdd7c8ecb889fc982af', 'ef6496892b8e48ac2f349cdd7c8ecb889fc982af.solution');
-CALL cheatsheetCreate('3f010a976bcbd6a37fba4a10e4a057acc80bdc09', '3f010a976bcbd6a37fba4a10e4a057acc80bdc09.solution');
-CALL cheatsheetCreate('63bc4811a2e72a7c833962e5d47a41251cd90de3', '63bc4811a2e72a7c833962e5d47a41251cd90de3.solution');
-CALL cheatsheetCreate('2ab09c0c18470ae5f87d219d019a1f603e66f944', '2ab09c0c18470ae5f87d219d019a1f603e66f944.solution');
-CALL cheatsheetCreate('f16bf2ab1c1bf400d36330f91e9ac6045edcd003', 'f16bf2ab1c1bf400d36330f91e9ac6045edcd003.solution');
-CALL cheatsheetCreate('9e46e3c8bde42dc16b9131c0547eedbf265e8f16', '9e46e3c8bde42dc16b9131c0547eedbf265e8f16.solution');
-CALL cheatsheetCreate('1506f22cd73d14d8a73e0ee32006f35d4f234799', '1506f22cd73d14d8a73e0ee32006f35d4f234799.solution');
+CALL cheatSheetCreate('53a53a66cb3bf3e4c665c442425ca90e29536edd', '53a53a66cb3bf3e4c665c442425ca90e29536edd.solution');
+CALL cheatSheetCreate('307f78f18fd6a87e50ed6705231a9f24cd582574', '307f78f18fd6a87e50ed6705231a9f24cd582574.solution');
+CALL cheatSheetCreate('da3de2e556494a9c2fb7308a98454cf55f3a4911', 'da3de2e556494a9c2fb7308a98454cf55f3a4911.solution');
+CALL cheatSheetCreate('335440fef02d19259254ed88293b62f31cccdd41', '335440fef02d19259254ed88293b62f31cccdd41.solution');
+CALL cheatSheetCreate('a3f7ffd0f9c3d15564428d4df0b91bd927e4e5e4', 'a3f7ffd0f9c3d15564428d4df0b91bd927e4e5e4.solution');
+CALL cheatSheetCreate('e635fce334aa61fdaa459c21c286d6332eddcdd3', 'e635fce334aa61fdaa459c21c286d6332eddcdd3.solution');
+CALL cheatSheetCreate('ef6496892b8e48ac2f349cdd7c8ecb889fc982af', 'ef6496892b8e48ac2f349cdd7c8ecb889fc982af.solution');
+CALL cheatSheetCreate('3f010a976bcbd6a37fba4a10e4a057acc80bdc09', '3f010a976bcbd6a37fba4a10e4a057acc80bdc09.solution');
+CALL cheatSheetCreate('63bc4811a2e72a7c833962e5d47a41251cd90de3', '63bc4811a2e72a7c833962e5d47a41251cd90de3.solution');
+CALL cheatSheetCreate('2ab09c0c18470ae5f87d219d019a1f603e66f944', '2ab09c0c18470ae5f87d219d019a1f603e66f944.solution');
+CALL cheatSheetCreate('f16bf2ab1c1bf400d36330f91e9ac6045edcd003', 'f16bf2ab1c1bf400d36330f91e9ac6045edcd003.solution');
+CALL cheatSheetCreate('9e46e3c8bde42dc16b9131c0547eedbf265e8f16', '9e46e3c8bde42dc16b9131c0547eedbf265e8f16.solution');
+CALL cheatSheetCreate('1506f22cd73d14d8a73e0ee32006f35d4f234799', '1506f22cd73d14d8a73e0ee32006f35d4f234799.solution');
 CALL cheatSheetCreate('ed732e695b85baca21d80966306a9ab5ec37477f', 'ed732e695b85baca21d80966306a9ab5ec37477f.solution');
 CALL cheatSheetCreate('cfbf7b915ee56508ad46ab79878f37fd9afe0d27', 'cfbf7b915ee56508ad46ab79878f37fd9afe0d27.solution');
 CALL cheatSheetCreate('9294ba32bdbd680e3260a0315cd98bf6ce8b69bd', '9294ba32bdbd680e3260a0315cd98bf6ce8b69bd.solution');

@@ -75,7 +75,7 @@
 			<h2 class="title"><fmt:message key="readyToPlay.title.enteredGame" /></h2>
 			<p> <fmt:message key="readyToPlay.text.info.enteredGame" /> </p>
 			<% } %>
-			<%= Analytics.sponsorshipMessage %>
+			<%= Analytics.sponsorshipMessage(new Locale(Validate.validateLanguage(request.getSession()))) %>
 			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		</div>
 </body>

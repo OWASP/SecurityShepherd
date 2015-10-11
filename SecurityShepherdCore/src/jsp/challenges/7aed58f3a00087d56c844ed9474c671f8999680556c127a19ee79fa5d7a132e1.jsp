@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
 <%@ page import="java.util.Locale, java.util.ResourceBundle" %>
 <%
 // Broken Authentication and Session Management Challenge Five
@@ -57,6 +57,7 @@ if (request.getSession() != null)
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link rel='stylesheet' href='../css/octicons/octicons.css'>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>

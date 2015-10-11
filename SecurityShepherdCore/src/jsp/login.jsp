@@ -124,7 +124,7 @@ if(ses.getAttribute("loginFailed") != null)
 			<div id="aboutDiv" style="display: none;">
 			<h2 class="title"><fmt:message key="generic.text.aboutSecShep" /></h2>
 			<p id="about_shepherd_blurb"><fmt:message key="login.text.about_blurb" /></p>
-			<%= Analytics.sponsorshipMessage %>
+			<%= Analytics.sponsorshipMessage(new Locale(Validate.validateLanguage(request.getSession()))) %>
 			</div>
 		</div>
 		<!-- end content -->

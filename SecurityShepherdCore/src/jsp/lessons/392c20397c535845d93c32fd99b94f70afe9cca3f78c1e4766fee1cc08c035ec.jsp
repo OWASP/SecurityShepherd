@@ -9,6 +9,7 @@
 	//Translation Stuff
 	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_unintended_data_leakage." + levelHash, locale);
+	ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 	//Used more than once translations
 	String translatedLevelName = bundle.getString("title.question.m_uninteded_data_leakage");
 	
@@ -55,12 +56,10 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= translatedLevelName %></title>
-<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
-	media="screen" />
-
-</script>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Security Shepherd - <%= translatedLevelName %></title>
+	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link rel='stylesheet' href='../css/octicons/octicons.css'>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
@@ -98,7 +97,7 @@ if (request.getSession() != null)
 				<%= bundle.getString("challenge.description") %>
 				<br>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("UDataLeakage.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " UDataLeakage.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 			
 				<script>	
 					$('#hideLesson').click(function(){

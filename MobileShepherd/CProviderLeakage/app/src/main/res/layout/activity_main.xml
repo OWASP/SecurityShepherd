@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/keyEditText"
         android:textColorHint="#FFFFFF"
+        android:textColor='#FFFFFF'
         android:background="@xml/edittext"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

@@ -6,10 +6,10 @@
 String levelName = new String("Unvalidated Redirects and Forwards Lesson");
 String levelHash = new String("f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f");
 //Translation Stuff
-	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.unvalidated_redirects_forwards." + levelHash, locale);
-	//Used more than once translations
-	String translatedLevelName = bundle.getString("title.question.unvalidated_redirects_forwards");
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.unvalidated_redirects_forwards." + levelHash, locale);
+//Used more than once translations
+String translatedLevelName = bundle.getString("title.question.unvalidated_redirects_forwards");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -50,9 +50,9 @@ String levelHash = new String("f15f2766c971e16e68aa26043e6016a0a7f6879283c873d94
  		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
  		Encoder encoder = ESAPI.encoder();
  		String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
-	String hex = (String) ses.getAttribute("userName");
-	String tempId = new Integer(hex.getBytes().hashCode() + hex.substring(0, hex.length() / 2).hashCode()).toString();
-	ses.setAttribute("tempId", tempId);
+		String hex = (String) ses.getAttribute("userName");
+		String tempId = new Integer(hex.getBytes().hashCode() + hex.substring(0, hex.length() / 2).hashCode()).toString();
+		ses.setAttribute("tempId", tempId);
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -60,6 +60,7 @@ String levelHash = new String("f15f2766c971e16e68aa26043e6016a0a7f6879283c873d94
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Security Shepherd - <%= translatedLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link rel='stylesheet' href='../css/octicons/octicons.css'>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
