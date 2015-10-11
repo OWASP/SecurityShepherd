@@ -214,7 +214,12 @@ public class GetterTest
 				if(user != null && !user[0].isEmpty())
 				{
 					log.debug(userName + " could authenticate. checking class");
-					if(!user[4].equalsIgnoreCase(theClass))
+					if((user[4] == null || user[4].isEmpty()) && !theClass.isEmpty())
+					{
+						log.debug("Need to update user's class");
+						Setter.updatePlayerClass(applicationRoot, theClass, user[0]);
+					} 
+					else if(!user[4].equalsIgnoreCase(theClass))
 					{
 						log.debug("Need to update user's class");
 						Setter.updatePlayerClass(applicationRoot, theClass, user[0]);

@@ -1774,7 +1774,7 @@ public class Getter
 			ResultSet resultSet = callstmt.executeQuery();
 			log.debug("Opening Result Set from userClassId");
 			resultSet.next();
-			result = resultSet.getString(0);
+			result = resultSet.getString(1);
 			log.debug("Found " + result);
 		}
 		catch (SQLException e)
