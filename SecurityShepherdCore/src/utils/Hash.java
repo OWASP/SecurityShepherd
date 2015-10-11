@@ -201,19 +201,21 @@ public class Hash
 	{
 		log.debug("Generating key for " + userSalt);
 		String toReturn = "Key Should be here! Please refresh the home page and try again!";
-		String zeroClipboard = "<script type='text/javascript' src='../js/zeroclipboard/ZeroClipboard.js' />"
-				+ "<script>"
-				+ "var client = new ZeroClipboard( document.getElementById('copy-button') );"
-				+ "</script>";
+
 			try 
 			{
 				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
 				String forLog = Hash.encrypt(key, baseKey + getCurrentSalt());
-				toReturn = "<textarea id='clipboard_textarea' rows=1 style='display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea><br />"
-						+ "<button data-clipboard-target='clipboard_textarea' data-copied-hint='Copied!' id='copy-button' name='copy-button' value='Copy to Clipboard'>"
-						+ "<span class='octicon octicon-clippy'></span>" 
-						+ "</button>" 
-						+ zeroClipboard;
+				toReturn = "<script src='../js/clipboard-js/clipboard.min.js'></script>" +
+							"<script>var clipboard = new Clipboard('.btn'); clipboard.on('success', function(e) {console.info('Action:', e.action);console.info('Text:', e.text);console.info('Trigger:', e.trigger);e.clearSelection();});clipboard.on('error', function(e) {console.error('Action:', e.action);console.error('Trigger:', e.trigger);});</script>" +
+							"<div class='input-group'>" +
+								"<textarea id='theKey' rows=1 style='display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea>" +
+								"<span class='input-group-button'>" +
+									"<button class='btn' data-clipboard-target='#theKey'>" +
+										"<img src='../js/clipboard-js/clippy.svg' width='14' alt='Copy to clipboard'>" +
+									"</button>" +
+								"</span>";
+
 				log.debug("Returning: " + forLog);
 			} 
 			catch (Exception e) 
