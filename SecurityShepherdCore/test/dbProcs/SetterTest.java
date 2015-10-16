@@ -900,20 +900,87 @@ public class SetterTest
 			fail("Could not complete testUpdatePlayerClass");
 		}
 	}
-/*
+
 	@Test
-	public void testUpdatePlayerResult() {
-		fail("Not yet implemented");
+	public void testUpdateUserRole() 
+	{
+		String userName = new String("WasUserNowAdmin");
+		String currentRole = new String();
+		String newRole = new String();
+		try
+		{
+			if(GetterTest.verifyTestUser(applicationRoot, userName, userName))
+			{
+				Connection conn = Database.getCoreConnection(applicationRoot);
+				PreparedStatement ps = conn.prepareStatement("SELECT userRole FROM users WHERE userName = ?");
+				ps.setString(1, userName);
+				ResultSet rs = ps.executeQuery();
+				if(rs.next())
+				{
+					currentRole = rs.getString(1);
+					if(currentRole.equalsIgnoreCase("admin"))
+					{
+						log.debug("User is currently an admin. Changing to player");
+						newRole = new String("player");
+					}
+					else
+					{
+						log.debug("User is currently a player. Changing to admin");
+						newRole = new String("admin");
+					}
+				}
+				else
+				{
+					fail("User not found in DB after it was created");
+				}
+				rs.close();
+				conn.close();
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				if(!Setter.updateUserRole(applicationRoot, userId, newRole).equalsIgnoreCase(userName))
+				{
+					fail("Could not update user role from " + currentRole + " to " + newRole);
+				}
+				else
+				{
+					log.debug("Checking if change occurred");
+					conn = Database.getCoreConnection(applicationRoot);
+					ps = conn.prepareStatement("SELECT userRole FROM users WHERE userName = ?");
+					ps.setString(1, userName);
+					rs = ps.executeQuery();
+					if(rs.next())
+					{
+						if(!newRole.equalsIgnoreCase(rs.getString(1)))
+						{
+							fail("User Role was not updated in DB");
+						}
+						else
+						{
+							//Pass
+						}
+					}
+					else
+					{
+						fail("Could not find user after creating and updating");
+					}
+					rs.close();
+					conn.close();
+				}
+			}
+			else
+			{
+				fail("Could not Create User");
+			}
+			
+		}
+		catch(SQLException e)
+		{
+			log.fatal("DB Error: " + e.toString());
+			fail("Could not Complete testUpdateUserRole because DB Error");
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Complete testUpdateUserRole");
+		}
 	}
-/*
-	@Test
-	public void testUpdateUserPoints() {
-		fail("Not yet implemented");
-	}
-/*
-	@Test
-	public void testUpdateUserRole() {
-		fail("Not yet implemented");
-	}
-	*/
 }
