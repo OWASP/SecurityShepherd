@@ -54,6 +54,9 @@
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title">Insecure Direct Object Reference Challenge One</h2>
 			<p> 

@@ -62,6 +62,9 @@ if (request.getSession() != null)
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
@@ -73,12 +76,12 @@ if (request.getSession() != null)
 							<tr><td>
 								<%= bundle.getString("challenge.form.userName") %>
 							</td><td>
-								<input type="text" id="subName"/>
+								<input type="text" id="subName" autocomplete="off"/>
 							</td></tr>
 							<tr><td>
 								<%= bundle.getString("challenge.form.password") %>
 							</td><td>
-								<input type="password" id="subPassword"/>
+								<input type="password" id="subPassword" autocomplete="off"/>
 							</td></tr>
 							<tr><td colspan="2">
 								<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.signIn") %>"/></div>
@@ -95,7 +98,7 @@ if (request.getSession() != null)
 						<p><%= bundle.getString("reset.whatToDo") %></p>
 						<table>
 							<tr></td>
-								<div id="resetSubmit"><input id="resetEmail" type="text"/><input type="submit" value="<%= bundle.getString("reset.header") %>"/></div>
+								<div id="resetSubmit"><input id="resetEmail" type="text" autocomplete="off"/><input type="submit" value="<%= bundle.getString("reset.header") %>"/></div>
 								<p style="display: none;" id="resetLoadingSign"><%= bundle.getString("challenge.form.loading") %></p>
 							</td></tr>
 						</table>

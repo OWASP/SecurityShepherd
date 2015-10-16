@@ -59,6 +59,9 @@ String levelName = "Insecure Cryptographic Storage Challenge 2";
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 

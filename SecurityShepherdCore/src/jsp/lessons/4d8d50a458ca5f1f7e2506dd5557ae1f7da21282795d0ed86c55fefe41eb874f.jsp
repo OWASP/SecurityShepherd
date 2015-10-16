@@ -62,6 +62,9 @@ String translatedLevelName = bundle.getString("title.question.poor_data_validati
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 

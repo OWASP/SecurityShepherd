@@ -69,6 +69,9 @@
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= bundle.getString("title.csrf2") %></h2>
 			<p> 
@@ -99,7 +102,7 @@
 						<%= bundle.getString("forum.iframe.whatToDo") %>
 					</td></tr>
 					<tr><td>
-						<input style="width: 400px;" id="myMessageAris" type="text"/>
+						<input style="width: 400px;" id="myMessageAris" type="text" autocomplete="off"/>
 					</td></tr>
 					<tr><td>
 						<div id="submitButton"><input type="submit" value="<%= bundle.getString("forum.postMessage") %>"/></div>

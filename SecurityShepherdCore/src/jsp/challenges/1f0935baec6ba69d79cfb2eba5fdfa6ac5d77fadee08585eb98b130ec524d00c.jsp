@@ -69,6 +69,9 @@ if (request.getSession() != null)
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
@@ -83,8 +86,8 @@ if (request.getSession() != null)
 					<div id="loginFormDiv">
 						<form id="loginForm" action="javascript:;">
 							<table>
-								<tr><td><%= bundle.getString("loginForm.holder") %> </td><td><input type="text" id="loginAccountHolder"></td></tr>
-								<tr><td><%= bundle.getString("loginForm.password") %> </td><td><input type="password" id="loginAccountPassword"></td></tr>
+								<tr><td><%= bundle.getString("loginForm.holder") %> </td><td><input type="text" id="loginAccountHolder" autocomplete="off"></td></tr>
+								<tr><td><%= bundle.getString("loginForm.password") %> </td><td><input type="password" id="loginAccountPassword" autocomplete="off"></td></tr>
 								<tr><td colspan="2"><input type="submit" value="<%= bundle.getString("loginForm.signIn") %>"></td></tr>
 							</table>
 						</form>
@@ -98,8 +101,8 @@ if (request.getSession() != null)
 					<div id="registrationFormDiv">
 						<form id="registrationForm" action="javascript:;">
 							<table>
-								<tr><td><%= bundle.getString("loginForm.holder") %> </td><td><input type="text" id="registrationAccountHolder"></td></tr>
-								<tr><td><%= bundle.getString("loginForm.password") %> </td><td><input type="password" id="registrationAccountPassword"></td></tr>
+								<tr><td><%= bundle.getString("loginForm.holder") %> </td><td><input type="text" id="registrationAccountHolder" autocomplete="off"></td></tr>
+								<tr><td><%= bundle.getString("loginForm.password") %> </td><td><input type="password" id="registrationAccountPassword" autocomplete="off"></td></tr>
 								<tr><td colspan="2"><input type="submit" value="<%= bundle.getString("register.createAccount") %>"></td></tr>
 							</table>
 						</form>

@@ -1,10 +1,13 @@
-var btns = document.querySelectorAll('.btn');
+var btns;
 
-for (var i = 0; i < btns.length; i++) {
-    btns[i].addEventListener('mouseleave', function(e) {
-        e.currentTarget.setAttribute('class', 'btn');
-        e.currentTarget.removeAttribute('aria-label');
-    });
+function prepTooltips(){
+	btns = document.querySelectorAll('.btn');
+	for (var i = 0; i < btns.length; i++) {
+	    btns[i].addEventListener('mouseleave', function(e) {
+	        e.currentTarget.setAttribute('class', 'btn');
+	        e.currentTarget.removeAttribute('aria-label');
+	    });
+	}
 }
 
 function showTooltip(elem, msg) {
@@ -30,4 +33,4 @@ function fallbackMessage(action) {
     return actionMsg;
 }
 
-hljs.initHighlightingOnLoad();
+//hljs.initHighlightingOnLoad();

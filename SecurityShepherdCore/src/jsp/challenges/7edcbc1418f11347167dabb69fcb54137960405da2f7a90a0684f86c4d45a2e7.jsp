@@ -2,7 +2,7 @@
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
- * SQL Injection Challenge One
+ * SQL Injection Challenge Stored Proc
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * 
@@ -59,6 +59,9 @@
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
@@ -79,7 +82,7 @@
 						<%= bundle.getString("challenge.form.pleaseEnter") %><a><%= bundle.getString("challenge.form.customerEmail") %></a><%= bundle.getString("challenge.form.userLookUp") %>
 					</td></tr>
 					<tr><td>
-						<input style="width: 400px;" id="userIdentity" type="text"/>
+						<input style="width: 400px;" id="userIdentity" type="text" autocomplete="off"/>
 					</td></tr>
 					<tr><td>
 						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.getUser") %>"/></div>

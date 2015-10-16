@@ -206,10 +206,7 @@ public class Hash
 			{
 				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
 				String forLog = Hash.encrypt(key, baseKey + getCurrentSalt());
-				toReturn = "<script src='../js/clipboard-js/clipboard.min.js' />" +
-							"<script src='../js/clipboard-js/tooltips.js' />" +
-							"<script src='../js/clipboard-js/clipboard-events.js' />" +
-							"<div class='input-group'>" +
+				toReturn = "<script>prepTooltips();prepClipboardEvents();</script><div class='input-group'>" +
 								"<textarea id='theKey' rows=2 style='display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea>" +
 								"<span class='input-group-button'>" +
 									"<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey'>" +

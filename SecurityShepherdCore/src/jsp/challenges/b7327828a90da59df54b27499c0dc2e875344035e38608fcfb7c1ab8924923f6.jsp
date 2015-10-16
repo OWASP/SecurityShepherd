@@ -62,6 +62,9 @@ if (request.getSession() != null)
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title">
 			<%= i18nLevelName %>
@@ -75,7 +78,7 @@ if (request.getSession() != null)
 						<%= bundle.getString("challenge.form.pleaseEnter") %>
 					</td></tr>
 					<tr><td>
-						<input style="width: 400px;" id="theUserName" type="text"/>
+						<input style="width: 400px;" id="theUserName" type="text" autocomplete="off"/>
 					</td></tr>
 					<tr><td>
 						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.button.value") %>"/></div>
