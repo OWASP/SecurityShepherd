@@ -19,6 +19,10 @@
 	<classpathentry kind="lib" path="lib/jsoup-1.8.2.jar"/>
 	<classpathentry kind="lib" path="lib/mongo-java-driver-2.13.2.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.18-bin.jar"/>
+	<classpathentry kind="lib" path="test/testLib/spring-test-4.2.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="test/testLib/spring-core-4.2.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="test/testLib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="test/testLib/spring-web-4.2.2.RELEASE.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

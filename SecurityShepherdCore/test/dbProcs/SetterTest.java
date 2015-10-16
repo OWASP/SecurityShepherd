@@ -23,6 +23,7 @@ public class SetterTest
 	private static org.apache.log4j.Logger log = Logger.getLogger(SetterTest.class);
 	private static String propertiesFileDirectory = new String("/site");
 	private static String applicationRoot = new String();
+
 	@Before
 	public void setUp()
 	{

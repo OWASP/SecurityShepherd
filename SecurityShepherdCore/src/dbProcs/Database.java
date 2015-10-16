@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
  * 
  * You should have received a copy of the GNU General Public License
  * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- *  @author Mark		
+ *  @author Mark Denihan	
  */
 public class Database 
 {
