@@ -61,7 +61,7 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 		ADDED from AndroidManifest.xml:25:9
 	android:theme
 		ADDED from AndroidManifest.xml:27:9
-activity#com.mobshep.insecuredata3.Insecure_Data_Storage3
+activity#com.mobshep.insecuredata2.Insecure_Data_Storage2
 ADDED from AndroidManifest.xml:28:9
 	android:label
 		ADDED from AndroidManifest.xml:30:13
@@ -71,9 +71,9 @@ ADDED from AndroidManifest.xml:28:9
 		ADDED from AndroidManifest.xml:31:13
 	android:name
 		ADDED from AndroidManifest.xml:29:13
-intent-filter#android.intent.category.DEFAULT+com.mobshep.InsecureData3.Insecure_Data_Storage3
+intent-filter#android.intent.category.DEFAULT+com.mobshep.InsecureData2.Insecure_Data_Storage2
 ADDED from AndroidManifest.xml:33:13
-action#com.mobshep.InsecureData3.Insecure_Data_Storage3
+action#com.mobshep.InsecureData2.Insecure_Data_Storage2
 ADDED from AndroidManifest.xml:34:17
 	android:name
 		ADDED from AndroidManifest.xml:34:25
@@ -81,7 +81,7 @@ category#android.intent.category.DEFAULT
 ADDED from AndroidManifest.xml:36:17
 	android:name
 		ADDED from AndroidManifest.xml:36:27
-activity#com.mobshep.insecuredata3.Splash
+activity#com.mobshep.insecuredata2.Splash
 ADDED from AndroidManifest.xml:39:9
 	android:label
 		ADDED from AndroidManifest.xml:41:13
