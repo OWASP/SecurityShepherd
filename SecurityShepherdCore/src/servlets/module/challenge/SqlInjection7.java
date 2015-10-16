@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.omg.CORBA.UserException;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
@@ -61,7 +60,6 @@ public class SqlInjection7 extends HttpServlet
 		
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli7", locale);
 		if(Validate.validateSession(ses))
 		{

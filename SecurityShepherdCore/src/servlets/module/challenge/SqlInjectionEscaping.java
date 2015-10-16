@@ -20,7 +20,6 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 
 import utils.ShepherdLogManager;
-import utils.SqlFilter;
 import utils.Validate;
 import dbProcs.Database;
 
@@ -50,11 +49,10 @@ public class SqlInjectionEscaping extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjectionEscaping.class);
 	private static String levelName = "SQL Injection Escaping Challenge";
-	private static String levelHash = "8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4";
-	private static String levelResult = ""; //Stored in vulnerable DB. Not user Specific
+	public static String levelHash = "8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4";
+	//private static String levelResult = ""; //Stored in vulnerable DB. Not user Specific
 	/**
-	 * TODO: JavaDoc
-	 * @param aUserId Used to filter database results
+	 * This SQL Injection Module Class uses a poor escaping method to sanitise user data being sent to a MySQL interpreter
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException

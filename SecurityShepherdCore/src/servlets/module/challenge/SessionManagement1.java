@@ -43,7 +43,7 @@ public class SessionManagement1 extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement1.class);
 	private static String levelName = "Session Management Challenge One";
-	private static String levelHash = "dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a";
+	public static String levelHash = "dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a";
 	private static String levelResult = "db7b1da5d7a43c7100a6f01bb0c";
 	/**
 	 * Users must take advance of the broken session management in this application by modifying the tracking cookie "checksum" which is encoded in base 64. They must modify this cookie to be equal to administrator to access the result key.

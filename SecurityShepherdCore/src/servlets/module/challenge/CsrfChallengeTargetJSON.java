@@ -122,6 +122,7 @@ public class CsrfChallengeTargetJSON extends HttpServlet
 		}
 	}
 	
+	@SuppressWarnings("resource")
 	static String extractPostRequestBody(HttpServletRequest request) throws IOException {
 	    if ("POST".equalsIgnoreCase(request.getMethod())) {
 	        Scanner s = new Scanner(request.getInputStream(), "UTF-8").useDelimiter("\\A");

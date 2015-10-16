@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
 import dbProcs.Getter;
 import utils.FindXSS;
@@ -83,9 +81,7 @@ extends HttpServlet
 					String htmlOutput = new String();
 					if(FindXSS.search(searchTerm))
 					{
-						String theHash = this.getClass().getSimpleName();
 						log.debug("XSS Lesson Completed!");
-						Encoder encoder = ESAPI.encoder();
 						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "</h2>" +
 								"<p>" + bundle.getString("result.youDidIt") + "<br />" +
 								"" + bundle.getString("result.resultKey") +

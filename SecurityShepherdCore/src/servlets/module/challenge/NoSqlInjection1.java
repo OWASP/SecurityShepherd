@@ -51,8 +51,8 @@ public class NoSqlInjection1 extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(NoSqlInjection1.class);
 	private static String levelName = "NoSQL Injection Challenge One";
-	private static String levelHash = "d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66";
-	private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific
+	public static String levelHash = "d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66";
+	// private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific
 	/**
 	 * Users have to use NoSQL injection to get a specific user (Marlo) gamer ID. The query they are injecting into by default only outputs usernames.
 	 * The input they enter is also been filtered.
@@ -79,6 +79,7 @@ public class NoSqlInjection1 extends HttpServlet
 			// To directly connect to a single MongoDB server (note that this will not auto-discover the primary even
 			// if it's a member of a replica set:
 			MongoClient mongoClient;
+			@SuppressWarnings("unused")
 			MongoCredential credential;
 			DB mongoDb;
 			//BasicDBObject whereQuery = new BasicDBObject();

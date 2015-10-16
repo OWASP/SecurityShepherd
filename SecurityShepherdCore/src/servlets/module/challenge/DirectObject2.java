@@ -48,7 +48,7 @@ public class DirectObject2 extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(DirectObject2.class);
 	private static String levelName = "Insecure Direct Object Reference Challenge Two";
-	private static String levelHash = "vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4";
+	public static String levelHash = "vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4";
 	/**
 	 * The user must abuse this functionality to reveal a hidden user. The result key is hidden in this users profile.
 	 * @param userId To be used in generating the HTML output

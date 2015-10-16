@@ -142,7 +142,7 @@ public class DirectObjectBankLogin extends HttpServlet
 		{
 			//Level Complete As the user has more than 5000000 in account. Return Key
 			bankForm += "<h2 class='title'>" + bundle.getString("result.complete") + "</h2><p>" + bundle.getString("result.wellDone") + "<br><br>"
-					+ "" + bundle.getString("result.theKeyIs") + " <a>" + encoder.encodeForHTML(Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"))) + "</a>";
+					+ "" + bundle.getString("result.theKeyIs") + " <a>" + Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName")) + "</a>";
 		}
 		bankForm += ""
 				+ "<input type='hidden' value='" + encoder.encodeForHTMLAttribute(accountNumber) + "' id='currentAccountNumber'>"

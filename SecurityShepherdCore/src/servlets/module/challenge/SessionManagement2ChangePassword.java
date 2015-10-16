@@ -49,7 +49,7 @@ public class SessionManagement2ChangePassword extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement2ChangePassword.class);
 	private static String levelName = "Session Management Challenge Two (Change Pass)";
-	private static String levelHash = "f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959";
+	public static String levelHash = "f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959";
 	/**
 	 * A user with the submitted email address is set a new random password, the password is also returned from the database procedure and is forwards through to the HTTP response.
 	 * This response is not consumed by the client interface by default, and the user will have to discover it.

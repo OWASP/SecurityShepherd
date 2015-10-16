@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -48,7 +50,7 @@ extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(ModuleServletTemplate.class);
 	private static String levelName = "Level Name Here";
-	private static String levelHash = "Level Hash Here";
+	public static String levelHash = "Level Hash Here";
 	private static String levelResult = ""; // Put the Level Result Key here only if the level is not hardcoded in the database or mobile application
 	/**
 	 * Describe level here, and how a user is supposed to beat it
@@ -61,6 +63,10 @@ extends HttpServlet
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.folder.fileNameWithoutExtention", locale);
 		try
 		{
 			//Get the session from the request
@@ -70,6 +76,7 @@ extends HttpServlet
 				//Valid Session, time to log who it is
 				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
+				
 				boolean returnKey = false;
 				
 				//Template Users: Edit from here
@@ -79,17 +86,17 @@ extends HttpServlet
 				//If you want to call a database function, this section if for you. All the way up until if(returnKey)
 				//Get Running Context of Application to make Database Call with
 				String applicationRoot = getServletContext().getRealPath("");
-				String output = doLevelSqlStuff(applicationRoot, aUserName);
-				log.debug("output returned is " + output);
-				String htmlOutput = "<h2 class='title'>Search Results</h2>";
+				String output = doLevelSqlStuff(applicationRoot, aUserName, bundle);
+				log.debug("Logging in English. Going to Output " + output);
+				String htmlOutput = "<h2 class='title'>" + bundle.getString("module.example.header") + "</h2>";
 				if (output == null)
 				{
-					htmlOutput += "<p>No rows returned from that query!";
+					htmlOutput += "<p>" + bundle.getString("module.example.outputWasNull") + "/p>";
 				}
-				else if(output.startsWith("Error"))
+				else if(output.startsWith("123"))
 				{
 					log.debug("Setting Error Message");
-					htmlOutput += "<p>An error was detected!</p>" +
+					htmlOutput += "<p>" + bundle.getString("example.error.123") + "</p>" +
 							"<p>" + output + "</p>";
 				}
 				else
@@ -104,9 +111,9 @@ extends HttpServlet
 					String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 					log.debug("User has compelted level");
 					//Otherwise just set userKey to "resultKey" and use the rest of this snip (If key is hardcoded, make sure you set it that way in your database level entry)
-					htmlOutput = "<h2 class='title'>Level Completed</h2>" +
+					htmlOutput = "<h2 class='title'>" + bundle.getString("module.example.completedHeader") + "</h2>" +
 							"<p>" +
-							"Welcome administrator. Your result key is as follows " +
+							bundle.getString("module.example.theKeyIs") + " " +
 							"<a>" + userKey + "</a>" +
 							"</p>";
 					
@@ -123,12 +130,12 @@ extends HttpServlet
 		catch(Exception e)
 		{
 			//Dont change this error
-			out.write("An Error Occurred! You must be getting funky!");
+			out.write(errors.getString("error.funky"));
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}
 	
-	public static String doLevelSqlStuff (String applicationRoot, String username)
+	public static String doLevelSqlStuff (String applicationRoot, String username, ResourceBundle bundle)
 	{
 		Encoder encoder = ESAPI.encoder();
 		String result = new String();
@@ -152,11 +159,11 @@ extends HttpServlet
 		catch (SQLException e)
 		{
 			log.debug("SQL Error caught - " + e.toString());
-			result = "Error: " + encoder.encodeForHTML(e.toString()); //Html Encode Error to prevent XSS
+			result = bundle.getString("example.error") + ": " + encoder.encodeForHTML(e.toString()); //Html Encode Error to prevent XSS
 		}
 		catch (Exception e)
 		{
-			log.fatal("Error: " + encoder.encodeForHTML(e.toString())); //Html Encode Error to prevent XSS
+			log.fatal(bundle.getString("example.error") + ": " + encoder.encodeForHTML(e.toString())); //Html Encode Error to prevent XSS
 		}
 		return result;
 	}

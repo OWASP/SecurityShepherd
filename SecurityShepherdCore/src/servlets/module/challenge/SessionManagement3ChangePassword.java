@@ -49,8 +49,8 @@ public class SessionManagement3ChangePassword extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement3ChangePassword.class);
 	private static String levelName = "Session Management Challenge Three (Change Password)";
-	private static String levelHash = "b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a";
-	private static String levelResult = ""; //This Servlet does not return a result
+	public static String levelHash = "b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a";
+	// private static String levelResult = ""; //This Servlet does not return a result
 	/**
 	 * Function used by Session Management Challenge Three to change the password of the submitted user name specified in the "Current" cookie
 	 * @param current User cookie used to store the current user (encoded twice with base64)
@@ -73,7 +73,6 @@ public class SessionManagement3ChangePassword extends HttpServlet
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();
-			Base64 base64 = new Base64();
 			out.print(getServletInfo());
 			String htmlOutput = new String();
 			log.debug(levelName + " - Change Password - Servlet");

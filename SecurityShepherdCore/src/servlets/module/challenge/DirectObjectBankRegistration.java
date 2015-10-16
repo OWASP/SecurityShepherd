@@ -46,7 +46,7 @@ public class DirectObjectBankRegistration extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(DirectObjectBankRegistration.class);
 	private static String levelName = "Insecure Direct Object Bank Challenge (Register)";
-	private static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
+	public static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
 	/**
 	 * This Servlet is used to register a new bank account
 	 */

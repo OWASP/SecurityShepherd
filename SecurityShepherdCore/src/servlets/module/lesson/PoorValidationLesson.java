@@ -42,7 +42,7 @@ public class PoorValidationLesson extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(PoorValidationLesson.class);
 	private static String levelName = "Poor Validation Lesson";
-	private static String levelhash = "4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f";
+	public static String levelhash = "4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f";
 	private static String levelResult = "6680b08b175c9f3d521764b41349fcbd3c0ad0a76655a10d42372ebccdfdb4bb";
 	/**
 	 * Data is only validated on the client side. No Server Side Validation is Performed

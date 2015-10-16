@@ -46,7 +46,7 @@ public class CsrfChallengeSevenGetToken extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeSevenGetToken.class);
-	private static final String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
+	public static final String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
 	private static String levelName = "CSRF Challenge 7 Get Token";
 	/**
 	 * Allows users to retrieve their CSRF token for the CSRF Challenge 6 module

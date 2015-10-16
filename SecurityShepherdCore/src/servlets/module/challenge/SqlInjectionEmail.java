@@ -49,8 +49,8 @@ public class SqlInjectionEmail extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjectionEmail.class);
 	private static String levelName = "SQL Injection Challenge Two";
-	private static String levelHash = "ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b";
-	private static String levelResult = ""; // Stored in Vulnerable DB. Not user Specific
+	public static String levelHash = "ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b";
+	// private static String levelResult = ""; // Stored in Vulnerable DB. Not user Specific
 	/**
 	 * This function is used to make a call to a database and process its results. The call made to the database is secured using an insufficient privilege. 
 	 * Players must overcome this filter to complete the module

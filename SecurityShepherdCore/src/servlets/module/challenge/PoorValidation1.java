@@ -41,7 +41,7 @@ public class PoorValidation1 extends HttpServlet
 {
 	private static final String levelName = "Poor Validation 2";
 	private static String levelSolution = "d30475881612685092e5ec469317dcc5ccc1f548a97bfdb041236b5bba7627bf";
-	private static String levelHash = "ca0e89caf3c50dbf9239a0b3c6f6c17869b2a1e2edc3aa6f029fd30925d66c7e";
+	public static String levelHash = "ca0e89caf3c50dbf9239a0b3c6f6c17869b2a1e2edc3aa6f029fd30925d66c7e";
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(PoorValidation1.class);
 	/**

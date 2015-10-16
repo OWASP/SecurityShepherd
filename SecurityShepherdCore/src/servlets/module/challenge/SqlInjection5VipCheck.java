@@ -48,9 +48,7 @@ public class SqlInjection5VipCheck extends HttpServlet
 	private static final String levelName = "SQLi C5 VIPCouponCheck";
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection5VipCheck.class);
-	/**
-	 * //TODO - JavaDoc
-	 */
+	
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
@@ -60,7 +58,6 @@ public class SqlInjection5VipCheck extends HttpServlet
 		
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli5", locale);
 		if(Validate.validateSession(ses))
 		{
