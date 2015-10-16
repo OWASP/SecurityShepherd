@@ -206,15 +206,16 @@ public class Hash
 			{
 				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
 				String forLog = Hash.encrypt(key, baseKey + getCurrentSalt());
-				toReturn = "<script src='../js/clipboard-js/clipboard.min.js'></script>" +
-							"<script>var clipboard = new Clipboard('.btn'); clipboard.on('success', function(e) {console.info('Action:', e.action);console.info('Text:', e.text);console.info('Trigger:', e.trigger);e.clearSelection();});clipboard.on('error', function(e) {console.error('Action:', e.action);console.error('Trigger:', e.trigger);});</script>" +
+				toReturn = "<script src='../js/clipboard-js/clipboard.min.js' />" +
+							"<script src='../js/clipboard-js/tooltips.js' />" +
+							"<script src='../js/clipboard-js/clipboard-events.js' />" +
 							"<div class='input-group'>" +
-								"<textarea id='theKey' rows=1 style='display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea>" +
+								"<textarea id='theKey' rows=2 style='display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea>" +
 								"<span class='input-group-button'>" +
-									"<button class='btn' data-clipboard-target='#theKey'>" +
+									"<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey'>" +
 										"<img src='../js/clipboard-js/clippy.svg' width='14' alt='Copy to clipboard'>" +
 									"</button>" +
-								"</span>";
+								"</span><p>&nbsp;</p>";
 
 				log.debug("Returning: " + forLog);
 			} 
