@@ -147,7 +147,7 @@ public class SolutionSubmit extends HttpServlet
 										log.debug("Solution Submission for module " + result + " succeeded");
 										htmlOutput = new String("<h2 class=\"title\">Solution Submission Success</h2><br>" +
 												"<p>" +
-												encoder.encodeForHTML(result) + " completed! Congratulations.");
+												"Module completed! Congratulations.");
 										htmlOutput += "</p>";
 										//Refresh Side Menu
 										htmlOutput += FeedbackSubmit.refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter), "Refresh Error");
