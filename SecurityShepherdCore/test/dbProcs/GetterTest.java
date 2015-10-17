@@ -112,7 +112,7 @@ public class GetterTest
 	 * @return Boolean value depicting if the user exists and can be authenticated
 	 * @throws Exception If admin Create function fails, an exception will be passed up
 	 */
-	private static boolean verifyTestAdmin(String applicationRoot, String userName, String password) throws Exception
+	public static boolean verifyTestAdmin(String applicationRoot, String userName, String password) throws Exception
 	{
 		boolean result = false;
 		try

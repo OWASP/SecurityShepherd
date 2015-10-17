@@ -528,11 +528,27 @@ public class Validate
 	
 	public static boolean validHostUrl(String hostUrl)
 	{
-		//TODO - Pull other validation steps into this
+		//TODO - Check if this is used by any servlets any more
 		boolean result;
 		result = hostUrl.endsWith("/");
 		if (!result)
 			log.error("URL Doesn't end with a forward slash. Very likely wrong");
 		return result; 
+	}
+	
+	/**
+	 * This method validates that the servlet context is valid. In JUnit test Servlet Scenarios, this may point at the Eclipse Bin directory. 
+	 * In that case, this method will return the relative site directory found in the Security Shepherd Eclipse
+	 * @param applicationRoot Running Context of the Application
+	 * @return Valid Shepherd Running Context
+	 */
+	public static String validateApplicationRoot(String applicationRoot)
+	{
+		if(applicationRoot.endsWith("SecurityShepherdCore\\bin"))
+		{
+			log.debug("Eclipse Bin Context Detected. Pointing at Site directory");
+			applicationRoot += "\\..\\site";
+		}
+		return applicationRoot;
 	}
 }
