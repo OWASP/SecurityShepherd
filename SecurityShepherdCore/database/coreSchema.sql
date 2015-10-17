@@ -407,7 +407,7 @@ COMMIT;
 SELECT NOW() FROM DUAL INTO theDate;
 UPDATE users SET
     userPass = SHA2(newPassword, 512),
-    tempPassword = FALSE
+    tempPassword = TRUE
     WHERE userId = theUserId;
 COMMIT;
 END
