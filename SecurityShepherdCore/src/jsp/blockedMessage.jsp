@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" import="dbProcs.Getter, utils.*" errorPage="" %>
+<%@ include file="translation.jsp" %>
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: scoreboard.jsp *************************");
 
@@ -49,7 +50,7 @@
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="generic.label.pleaseWait" /></h2>
+			<h2 class="title"><fmt:message key="generic.text.pleaseWait" /></h2>
 			<p> 
 				<fmt:message key="blockedMessage.text.info.levelBlocked" />
 				<br/><br/>
