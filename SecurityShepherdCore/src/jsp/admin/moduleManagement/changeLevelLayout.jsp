@@ -132,8 +132,6 @@ if (request.getSession() != null) //Session If
 									//Show Results
 									$("#resultDiv").html(ajaxCall.responseText);
 									$("#resultDiv").show("fast");
-									//Refresh the Side Menu
-									refreshSideMenu(theCsrfToken, theRefreshError);
 								}
 								else
 								{
@@ -141,10 +139,14 @@ if (request.getSession() != null) //Session If
 									$("#badData").show("slow");
 									$("#ctfDiv").slideDown("slow");
 								}
+								var scrollTo = $("#currentModeTitle").offset().top;
+								scrollTo = scrollTo - 60;
 								$('html, body').animate({
-							        scrollTop: $("#currentModeTitle").offset().top
+							        scrollTop: scrollTo
 							    }, 1000);
 							});
+							//Refresh the Side Menu
+							refreshSideMenu(theCsrfToken, theRefreshError);
 						});
 					});
 					
@@ -178,8 +180,6 @@ if (request.getSession() != null) //Session If
 									//Show Results
 									$("#resultDiv").html(ajaxCall.responseText);
 									$("#resultDiv").show("fast");
-									//Refresh the Side Menu
-									refreshSideMenu(theCsrfToken, theRefreshError);
 								}
 								else
 								{
@@ -187,10 +187,14 @@ if (request.getSession() != null) //Session If
 									$("#badData").show("slow");
 									$("#openFloor").slideDown("slow");
 								}
+								var scrollTo = $("#currentModeTitle").offset().top;
+								scrollTo = scrollTo - 60;
 								$('html, body').animate({
-							        scrollTop: $("#currentModeTitle").offset().top
+							        scrollTop: scrollTo
 							    }, 1000);
 							});
+							//Refresh the Side Menu
+							refreshSideMenu(theCsrfToken, theRefreshError);
 						});
 					});
 					
@@ -224,8 +228,6 @@ if (request.getSession() != null) //Session If
 									//Show Results
 									$("#resultDiv").html(ajaxCall.responseText);
 									$("#resultDiv").show("fast");
-									//Refresh the Side Menu
-									refreshSideMenu(theCsrfToken, theRefreshError);
 								}
 								else
 								{
@@ -233,10 +235,14 @@ if (request.getSession() != null) //Session If
 									$("#badData").show("slow");
 									$("#tournament").slideDown("slow");
 								}	
+								var scrollTo = $("#currentModeTitle").offset().top;
+								scrollTo = scrollTo - 60;
 								$('html, body').animate({
-							        scrollTop: $("#currentModeTitle").offset().top
+							        scrollTop: scrollTo
 							    }, 1000);
 							});
+							//Refresh the Side Menu
+							refreshSideMenu(theCsrfToken, theRefreshError);
 						});
 					});
 					</script>
