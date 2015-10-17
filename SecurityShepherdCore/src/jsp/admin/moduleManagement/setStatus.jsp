@@ -111,9 +111,6 @@ String ApplicationRoot = getServletContext().getRealPath("");
 				$("#formDiv").slideDown("slow");
 				//Refresh the Side Menu
 				refreshSideMenu(theCsrfToken, theRefreshError);
-				$('html, body').animate({
-			        scrollTop: $("#resultDiv").offset().top
-			    }, 1000);
 			});
 		});
 	});

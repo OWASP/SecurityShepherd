@@ -111,9 +111,6 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						}
 						console.log('Showing Form');
 						$("#submitButton").slideDown("slow");
-						$('html, body').animate({
-					        scrollTop: $("#resultDiv").offset().top
-					    }, 1000);
 					});
 				});
 				var theRefreshError = "Could not Refresh Menu";
