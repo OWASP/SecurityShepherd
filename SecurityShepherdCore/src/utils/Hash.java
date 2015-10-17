@@ -206,13 +206,15 @@ public class Hash
 			{
 				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
 				String forLog = Hash.encrypt(key, baseKey + getCurrentSalt());
-				toReturn = "<script>prepTooltips();prepClipboardEvents();</script><div class='input-group'>" +
-								"<textarea id='theKey' rows=2 style='display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea>" +
+				toReturn = "<script>prepTooltips();prepClipboardEvents();</script>"
+						+ "<div class='input-group'>" +
+								"<textarea id='theKey' rows=2 style='height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea>" +
 								"<span class='input-group-button'>" +
-									"<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey'>" +
+									"<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey' style='height: 30px;'>" +
 										"<img src='../js/clipboard-js/clippy.svg' width='14' alt='Copy to clipboard'>" +
 									"</button>" +
-								"</span><p>&nbsp;</p>";
+								"</span><p>&nbsp;</p>"
+						+ "</div>";
 
 				log.debug("Returning: " + forLog);
 			} 
