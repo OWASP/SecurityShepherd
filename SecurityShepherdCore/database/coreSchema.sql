@@ -694,6 +694,22 @@ $$
 DELIMITER ;
 
 -- -----------------------------------------------------
+-- procedure moduleGetNameLocale
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `core`$$
+CREATE PROCEDURE `core`.`moduleGetNameLocale` (IN theModuleId VARCHAR(64))
+BEGIN
+COMMIT;
+SELECT moduleNameLangPointer, moduleName FROM modules
+    WHERE moduleId = theModuleId;
+END
+
+$$
+
+DELIMITER ;
+-- -----------------------------------------------------
 -- procedure userUpdateResult
 -- -----------------------------------------------------
 
