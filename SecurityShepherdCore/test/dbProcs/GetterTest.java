@@ -391,7 +391,7 @@ public class GetterTest
 			fail("Could not create user " + userName);
 		}
 	}
-
+	
 	@Test
 	public void testCheckPlayerResultWhenModuleComplete() 
 	{
@@ -441,7 +441,7 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
-	
+
 	@Test
 	public void testCheckPlayerResultWhenModuleNotComplete() 
 	{
@@ -561,7 +561,6 @@ public class GetterTest
 		}
 	}
 	
-	
 	@Test
 	public void testFindPlayerById() 
 	{ 
@@ -592,6 +591,7 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
+	
 	
 	@Test
 	public void testFindPlayerByIdWithAdminId() 
@@ -704,7 +704,6 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
-
 	
 	@Test
 	public void testGetChallengesWhenModulesClosed() 
@@ -756,7 +755,7 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
-	
+
 	
 	@Test
 	public void testGetClassCount() 
@@ -782,6 +781,7 @@ public class GetterTest
 			return;
 		}
 	}
+	
 	
 	@Test
 	public void testGetClassInfoString() {
@@ -874,7 +874,6 @@ public class GetterTest
 		}
 	}
 	
-	
 	@Test
 	public void testGetCsrfForumWithIframe() 
 	{
@@ -928,6 +927,7 @@ public class GetterTest
 		}
 		log.debug("End of CSRF Iframe Forum Test");
 	}
+	
 	
 	@Test
 	public void testGetCsrfForumWithImg() 
@@ -995,7 +995,7 @@ public class GetterTest
 			}
 		}
 	}
-
+	
 	@Test
 	public void testGetFeedback() 
 	{
@@ -1059,7 +1059,7 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
-	 
+
 	@Test
 	public void testGetIncrementalModulesWithModulesClosed() 
 	{
@@ -1099,7 +1099,7 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
-	
+	 
 	@Test
 	public void testGetIncrementalModulesWithNoneComplete() 
 	{
@@ -2035,7 +2035,7 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
-
+	
 	@Test
 	public void testGetModuleCategory() 
 	{
@@ -2049,7 +2049,7 @@ public class GetterTest
 			log.debug("PASS: Expected Category Returned");
 		}
 	}
-	
+
 	@Test
 	public void testGetModuleHash() 
 	{
@@ -2105,6 +2105,29 @@ public class GetterTest
 		{
 			log.fatal("Encrypted Key Detected On Hardcoded Key Module");
 			fail("Encrypted Key Detected On Hardcoded Key Module");
+		}
+	}
+	
+	@Test
+	public void testGetModuleNameLocaleKey()
+	{
+		try
+		{
+			String moduleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
+			String moduleName = new String("Insecure Direct Object References");
+			String moduleLocalNameKey = Getter.getModuleNameLocaleKey(applicationRoot, moduleId);
+			ResourceBundle bundle = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
+			String localName = bundle.getString(moduleLocalNameKey);
+			if(localName.compareTo(moduleName) != 0)
+			{
+				log.error(localName + " != " + moduleName);
+				fail("Name Retrieved != expected result");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not complete testGetModuleNameLocaleKey: " + e.toString());
+			fail("Could not complete testGetModuleNameLocaleKey");
 		}
 	}
 	

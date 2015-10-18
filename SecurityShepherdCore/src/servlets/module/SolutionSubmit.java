@@ -2,6 +2,8 @@ package servlets.module;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -119,7 +121,6 @@ public class SolutionSubmit extends HttpServlet
 							validKey = storedResult.compareTo(decryptedKey) == 0;
 							log.debug("Decrypted Submitted Key: " + decryptedKey);
 							log.debug("Stored Expected Key    : " + storedResult);
-							
 						}
 						if(validKey)
 						{
@@ -144,10 +145,12 @@ public class SolutionSubmit extends HttpServlet
 									result = Setter.updatePlayerResult(ApplicationRoot, moduleId, userId, "Feedback is Disabled", 1, 1, 1);
 									if(result != null)
 									{
-										log.debug("Solution Submission for module " + result + " succeeded");
+										ResourceBundle bundle = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", new Locale(Validate.validateLanguage(request.getSession())));
+										String compltedModuleLocalName = bundle.getString(result);
+										log.debug("Solution Submission for module " + compltedModuleLocalName + " succeeded");
 										htmlOutput = new String("<h2 class=\"title\">Solution Submission Success</h2><br>" +
 												"<p>" +
-												"Module completed! Congratulations.");
+												compltedModuleLocalName + " completed! Congratulations.");
 										htmlOutput += "</p>";
 										//Refresh Side Menu
 										htmlOutput += FeedbackSubmit.refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter), "Refresh Error");

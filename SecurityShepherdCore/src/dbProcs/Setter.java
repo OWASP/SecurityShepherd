@@ -803,7 +803,8 @@ public class Setter
 			callstmnt.setString(6, extra);
 			log.debug("Executing userUpdateResult");
 			callstmnt.execute();
-			result = "Success";
+			//User Executed. Now Get the Level Name Langauge Key
+			result = Getter.getModuleNameLocaleKey(ApplicationRoot, moduleId);
 		}
 		catch(SQLException e)
 		{

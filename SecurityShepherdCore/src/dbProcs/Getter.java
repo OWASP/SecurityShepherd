@@ -1146,7 +1146,6 @@ public class Getter
 		log.debug("*** END getModuleHash ***");
 		return result;
 	}
-	
 	/**
 	 * Convert module hash to ID
 	 * @param ApplicationRoot The current running context of the application
@@ -1210,6 +1209,37 @@ public class Getter
 		Database.closeConnection(conn);
 		log.debug("*** END getModuleKeyType ***");
 		return theKeyType;
+	}
+	
+	/**
+	 * This method retrieves the i18n local key for a module's name.
+	 * @param applicationRoot Application Running Context
+	 * @param moduleId ID of the module to lookup
+	 * @return Locale key for the Module's Name.
+	 */
+	public static String getModuleNameLocaleKey(String applicationRoot, String moduleId) 
+	{
+		log.debug("*** Getter.getModuleNameLocaleKey ***");
+		String result = new String();
+		Connection conn = Database.getCoreConnection(applicationRoot);
+		try
+		{
+			CallableStatement callstmt = conn.prepareCall("call moduleGetNameLocale(?)");
+			log.debug("Gathering moduleGetNameLocale ResultSet");
+			callstmt.setString(1, moduleId);
+			ResultSet resultSet = callstmt.executeQuery();
+			log.debug("Opening Result Set from moduleGetNameLocale");
+			resultSet.next();
+			result = resultSet.getString(1);
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not execute moduleGetNameLocale: " + e.toString());
+			result = null;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END getModuleNameLocaleKey ***");
+		return result;
 	}
 	
 	/**
