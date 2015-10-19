@@ -89,7 +89,7 @@ public class SqlInjection7 extends HttpServlet
 						if(users.next())
 						{
 							htmlOutput = "<h3>" + bundle.getString("response.welcome")+ " " + encoder.encodeForHTML(users.getString(1)) + "</h3>"
-									+ "<p>" + bundle.getString("response.resultKey")+ "" + encoder.encodeForHTML(Hash.generateUserSolution(Getter.getModuleResultFromHash(applicationRoot, levelHash), (String)ses.getAttribute("userName"))) + "</p>";
+									+ "<p>" + bundle.getString("response.resultKey")+ "" + Hash.generateUserSolution(Getter.getModuleResultFromHash(applicationRoot, levelHash), (String)ses.getAttribute("userName")) + "</p>";
 						}
 						else
 						{
