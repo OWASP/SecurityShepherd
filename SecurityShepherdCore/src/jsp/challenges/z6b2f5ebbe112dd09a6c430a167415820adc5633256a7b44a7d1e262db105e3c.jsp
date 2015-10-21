@@ -94,7 +94,7 @@
 					<h2 class='title'><%= bundle.getString("result.challengeCompleted") %></h2>
 					<p>
 					<%= bundle.getString("result.congratsTheKeyIs") %> 
-					<b> <a><%=encoder.encodeForHTML(Hash.generateUserSolution(Getter.getModuleResult(ApplicationRoot, moduleId), (String)ses.getAttribute("userName"))) %></a></b><br/><br/>
+					<b> <a><%=Hash.generateUserSolution(Getter.getModuleResult(ApplicationRoot, moduleId), (String)ses.getAttribute("userName")) %></a></b><br/><br/>
 				<% } %>		
 				<form id="leForm" action="javascript:;">
 					<table>

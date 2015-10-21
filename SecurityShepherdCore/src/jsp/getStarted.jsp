@@ -92,7 +92,6 @@ if(!changePassword)
 			<div id="scopeLoadingDiv" style="display: none;"><fmt:message key="generic.text.loading" /></div>
 			</p>
 			<% } %>
-			<br/><br/>
 			<fmt:message key="getStarted.text.checkShepConfigMsg" /></a>.
 		</div>
 		<br/>

@@ -109,9 +109,6 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				}
 				//Show Disable Dialog
 				$("#disableCheats").slideDown("slow");
-				$('html, body').animate({
-			        scrollTop: $("#resultDiv").offset().top
-			    }, 1000);
 			});
 		});
 	});
@@ -144,9 +141,6 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				}
 				//Show Disable Dialog
 				$("#disableCheats").slideDown("slow");
-				$('html, body').animate({
-			        scrollTop: $("#resultDiv").offset().top
-			    }, 1000);
 			});
 		});
 	});
@@ -178,9 +172,6 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				}
 				//Show Enable Dialog
 				$("#enableCheats").slideDown("slow");
-				$('html, body').animate({
-			        scrollTop: $("#resultDiv").offset().top
-			    }, 1000);
 			});
 		});
 	});

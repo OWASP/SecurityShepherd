@@ -78,7 +78,10 @@ public class GetJsonScore extends HttpServlet
 					else
 					{
 						//User should get their class scoreboard
-						scoreboardClass = ses.getAttribute("userClass").toString();
+						if(ses.getAttribute("userClass") != null)
+							scoreboardClass = ses.getAttribute("userClass").toString();
+						else
+							scoreboardClass = new String();
 					}
 				}
 				else

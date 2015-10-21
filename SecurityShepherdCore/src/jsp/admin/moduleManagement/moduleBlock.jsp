@@ -127,9 +127,6 @@ String ApplicationRoot = getServletContext().getRealPath("");
 									$("#badData").show("slow");
 								}
 								$("#enableBlockForm").slideDown("slow");
-								$('html, body').animate({
-							        scrollTop: $("#resultDiv").offset().top
-							    }, 1000);
 							});
 						});
 					});
@@ -161,9 +158,6 @@ String ApplicationRoot = getServletContext().getRealPath("");
 										$("#badData").show("slow");
 									}
 									$("#removeModuleBlockDiv").slideDown("slow");
-									$('html, body').animate({
-								        scrollTop: $("#resultDiv").offset().top
-								    }, 1000);
 								});
 							});
 						});

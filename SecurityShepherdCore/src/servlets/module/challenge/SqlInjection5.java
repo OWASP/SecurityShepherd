@@ -142,8 +142,8 @@ public class SqlInjection5 extends HttpServlet
 				
 				//Output Order
 				htmlOutput = "<h3>" + bundle.getString("response.orderComplete")+ "</h3>"
-						+ "" + bundle.getString("response.response.orderComplete.p1")+ "<br/><br/>"
-						+ "" + bundle.getString("response.response.orderComplete.p2")+ "<a><strong>$" + finalCost + "</strong></a>";
+						+ "" + bundle.getString("response.orderComplete.p1")+ "<br/><br/>"
+						+ "" + bundle.getString("response.orderComplete.p2")+ "<a><strong>$" + finalCost + "</strong></a>";
 				if (trollAmount > 0 && trollCost == 0)
 				{
 					htmlOutput += "<br><br>" + bundle.getString("response.trollsFreeSolution")+ "<a><b>" + encoder.encodeForHTML(levelSolution) + "</b></a>";
@@ -152,7 +152,7 @@ public class SqlInjection5 extends HttpServlet
 			catch(Exception e)
 			{
 				log.debug("Didn't complete order: " + e.toString());
-				htmlOutput += "<p>" + bundle.getString("response.response.orderFailed")+ "</p>";
+				htmlOutput += "<p>" + bundle.getString("response.orderFailed")+ "</p>";
 			}
 			try
 			{

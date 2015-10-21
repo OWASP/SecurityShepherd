@@ -79,7 +79,7 @@
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						<%= bundle.getString("challenge.form.pleaseEnter") %><a><%= bundle.getString("challenge.form.customerEmail") %></a><%= bundle.getString("challenge.form.userLookUp") %>
+						<%= bundle.getString("challenge.form.pleaseEnter") %><a><%= bundle.getString("challenge.form.customerName") %></a> <%= bundle.getString("challenge.form.userLookUp") %>
 					</td></tr>
 					<tr><td>
 						<input style="width: 400px;" id="userIdentity" type="text" autocomplete="off"/>
