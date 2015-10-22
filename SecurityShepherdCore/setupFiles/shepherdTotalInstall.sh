@@ -29,10 +29,16 @@ else
 	echo "Configuring MySQL"
 	echo "MySQL Password Please:"
 	mysql -u root -e "source coreSchema.sql" --force -p
-	echo "Ignore Error about Core.CheatSheet."
 	echo "MySQL Password Please:"
 	mysql -u root -e "source moduleSchemas.sql" --force -p
-	echo "Ignore DROP USER failures"
+	
+	#Install and Config MongoDB
+	echo "Installing MongoDB"
+	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+	echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+	sudo apt-get update
+	sudo apt-get install -y mongodb-org=2.6.9 mongodb-org-server=2.6.9 mongodb-org-shell=2.6.9 mongodb-org-mongos=2.6.9 mongodb-org-tools=2.6.9
+	mongo /home/*/manualPack/mongoSchema.js
 	
 	#Configuring Tomcat to Run the way we want (Oracle Java, HTTPs, Port 80 redirect to 443
 	echo "Configuring Tomcat"
@@ -68,6 +74,6 @@ else
 	chown tomcat7 /etc/authbind/byport/443
 	
 	#Restart Tomcat
-	sudo service tomcat7 restart
+	sudo service tomcat7 restart	
 	echo "Shepherd is Ready to Rock!"
 fi
