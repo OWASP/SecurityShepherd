@@ -2,24 +2,33 @@ use core;
 -- --------------------------------------
 -- Class Table Update
 -- --------------------------------------
-ALTER TABLE class ADD UNIQUE (className)
+SELECT "Updating Class Table Structure" FROM DUAL;
+ALTER TABLE class ADD UNIQUE (className);
 
 -- --------------------------------------
 -- Module Table Stuff
 -- --------------------------------------
-
+SELECT "Updating Module Table Structure" FROM DUAL;
 ALTER TABLE modules ADD moduleNameLangPointer VARCHAR(64);
 ALTER TABLE modules ADD moduleCategoryLangPointer VARCHAR(64);
-UPDATE modules SET moduleNameLangPointer = REPLACE(LOWER(moduleName), ' ', '.');
-UPDATE modules SET moduleCategoryLangPointer = REPLACE(LOWER(moduleCategory), ' ', '.');
+COMMIT;
+UPDATE modules SET moduleNameLangPointer = REPLACE(LOWER(moduleName), " ", "."), moduleCategoryLangPointer = REPLACE(LOWER(moduleCategory), " ", ".");
+COMMIT;
+UPDATE modules SET moduleCategoryLangPointer = 'poor.data.validation', moduleCategory = 'Poor Data Validation' WHERE moduleCategoryLangPointer = 'bad.data.validation';
+UPDATE modules SET moduleNameLangPointer = 'failure.to.restrict.url.access.1', moduleName = 'Failure to Restrict URL Access 1' WHERE moduleId = '3d5b46abc6865ba09aaff98a8278a5f5e339abff';
+UPDATE modules SET moduleNameLangPointer = 'failure.to.restrict.url.access.2', moduleName = 'Failure to Restrict URL Access 2' WHERE moduleId = 'c7ac1e05faa2d4b1016cfcc726e0689419662784';
+COMMIT;
+
+SELECT "Adding New Modules" FROM DUAL;
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a', 'Content Provider Leakage', 'content.provider.leakage', 'lesson', 'Mobile Content Providers', 'mobile.content.providers', 'LazerLizardsFlamingWizards', '4d41997b5b81c88f7eb761c1975481c4ce397b80291d99307cfad69662277d39', 'open', '79', '50', '5', 1);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('d7eaeaa1cc4f218abd86d14eefa183a0f8eb6298', 'NoSQL Injection One', 'nosql.injection.one', 'challenge', 'Injection', 'injection', 'c09f32d4c3dd5b75f04108e5ffc9226cd8840288a62bdaf9dc65828ab6eaf86a', 'd63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66', 'open', '89', '45', '5', 1);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `scoreBonus`, `hardcodedKey`) VALUES ('c685f8102ae0128c2ab342df64699bb8209a0839', 'SQL Injection Escaping', 'sql.injection.escaping', 'challenge', 'Injection', 'injection', '0dcf9078ba5d878f9e23809ac8f013d1a08fdc8f12c5036f1a4746dbe86c0aac', '8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4', 'open', '99', '50', '5', 1);
-UPDATE modules SET incrementalRank = '87' WHERE moduleId = '335440fef02d19259254ed88293b62f31cccdd41';
 UPDATE modules SET moduleName = 'SQL Injection Old Challenge 1', moduleStatus = 'closed' WHERE moduleId = 'f771a10efb42a79a9dba262fd2be2e44bf40b66d';
 UPDATE modules SET moduleId = 'f771a10efb42a79a9dba262fd2be2e44bf40b66d', moduleName = 'SQL Injection 2', moduleNameLangPointer = 'sql.injection.2', moduleResult = 'f62abebf5658a6a44c5c9babc7865110c62f5ecd9d0a7052db48c4dbee0200e3', moduleHash = 'ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b', incrementalRank = '88', scoreValue = '45' WHERE moduleName = 'SQL Injection 1';
 
 COMMIT;
+
+SELECT "Updating Module Entries to Match v3.0" FROM DUAL;
 
 UPDATE modules SET moduleName ='CSRF 6', moduleCategory = 'CSRF', moduleCategoryLangPointer = 'csrf', moduleResult = 'df611f54325786d42e6deae8bbd0b9d21cf2c9282ec6de4e04166abe2792ac00', incrementalRank = 176, scoreValue = 90, scoreBonus = 5, hardcodedKey = 0 WHERE moduleId = '04a5bd8656fdeceac26e21ef6b04b90eaafbd7d5';
 UPDATE modules SET moduleName ='Insecure Cryptographic Storage Challenge 2', moduleCategory = 'Insecure Cryptographic Storage', moduleCategoryLangPointer = 'insecure.cryptographic.storage', moduleResult = 'TheVigenereCipherIsAmethodOfEncryptingAlphabeticTextByUsingPoly', incrementalRank = 126, scoreValue = 65, scoreBonus = 5, hardcodedKey = 1 WHERE moduleId = '0709410108f91314fb6f7721df9b891351eb2fcc';
@@ -103,7 +112,7 @@ COMMIT;
 -- -----------------------------------------------------
 -- Cheat Sheets
 -- -----------------------------------------------------
-
+SELECT "Updating Module Cheat Sheets to v3.0" FROM DUAL;
 use core;
 DELETE FROM cheatsheet;
 COMMIT;
@@ -186,7 +195,7 @@ CALL cheatSheetCreate('d7eaeaa1cc4f218abd86d14eefa183a0f8eb6298', 'd7eaeaa1cc4f2
 -- -----------------------------------------------------
 -- procedure moduleCreate
 -- -----------------------------------------------------
-
+SELECT "Updating Procedures to V3.0" FROM DUAL;
 DROP PROCEDURE `core`.`moduleCreate`;
 
 DELIMITER $$
