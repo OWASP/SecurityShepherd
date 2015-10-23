@@ -9,6 +9,7 @@ String levelHash = "77777b312d5b56a17c1f30550dd34e8d6bd8b037f05341e64e94f5411c10
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_poor_authentication." + levelHash, locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 //Used more than once translations
 String translatedLevelName = bundle.getString("title.question.m_poor_authentication");
 
@@ -55,21 +56,18 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= translatedLevelName %></title>
-<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
-	media="screen" />
-
-</script>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Security Shepherd - <%= translatedLevelName %></title>
+	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 	<div id="contentDiv">
 		<p>
-			<%
-				/* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/
-			%>
-			
 			<h2 class="title"><%= translatedLevelName  %></h2>
 			<p> 
 				<div id="lessonIntro">
@@ -83,7 +81,7 @@ if (request.getSession() != null)
 				<br/>
 				<br>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("PoorAuthentication.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " PoorAuthentication.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 			</p>
 			<script>
 				$('#hideLesson').click(function(){

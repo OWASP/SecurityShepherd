@@ -1191,7 +1191,7 @@ USE `SqlPoorEscape` ;
 CREATE  TABLE IF NOT EXISTS `SqlPoorEscape`.`customers` (
   `customerId` VARCHAR(64) NOT NULL ,
   `customerName` VARCHAR(32) NOT NULL ,
-  `customerAddress` VARCHAR(32) NOT NULL ,
+  `customerAddress` VARCHAR(35) NOT NULL ,
   `comment` LONGTEXT NULL ,
   PRIMARY KEY (`customerId`) )
 ENGINE = InnoDB;
@@ -1226,104 +1226,124 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 commit;
 
+GRANT USAGE ON *.* TO 'userLookUuuup'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'userLookUuuup'@'localhost';
 CREATE USER 'userLookUuuup'@'localhost' IDENTIFIED BY 'youMomaSoTh1n';
 GRANT SELECT ON `SqlChalSix`.`users`  TO 'userLookUuuup'@'localhost';
 
+GRANT USAGE ON *.* TO 'DnTPubUser'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'DnTPubUser'@'localhost';
 CREATE USER 'DnTPubUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
 GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPubUser'@'localhost';
 GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPubUser'@'localhost';
 
+GRANT USAGE ON *.* TO 'DnTVipUser'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'DnTVipUser'@'localhost';
 CREATE USER 'DnTVipUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
 GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTVipUser'@'localhost';
 GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTVipUser'@'localhost';
 
+GRANT USAGE ON *.* TO 'DnTPurUser'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'DnTPurUser'@'localhost';
 CREATE USER 'DnTPurUser'@'localhost' IDENTIFIED BY 'ch3fBrownSa4useIsS00000Go0d';
 GRANT SELECT ON `SQLiC5Shop`.`items` TO 'DnTPurUser'@'localhost';
 GRANT SELECT ON `SQLiC5Shop`.`coupons` TO 'DnTPurUser'@'localhost';
 GRANT SELECT ON `SQLiC5Shop`.`vipCoupons` TO 'DnTPurUser'@'localhost';
 
-
+GRANT USAGE ON *.* TO 'firstBloodyMessL'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'firstBloodyMessL'@'localhost';
 CREATE USER 'firstBloodyMessL'@'localhost' IDENTIFIED BY 'firstBlooded';
 GRANT SELECT ON `SqlInjLesson`.`tb_users` TO 'firstBloodyMessL'@'localhost';
 
+GRANT USAGE ON *.* TO 'CharlieSeabrook'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'CharlieSeabrook'@'localhost';
 CREATE USER 'CharlieSeabrook'@'localhost' IDENTIFIED BY 'shallowHal';
 GRANT SELECT ON `SqlChalEmail`.`customers` TO 'CharlieSeabrook'@'localhost';
 
+GRANT USAGE ON *.* TO 'RightGuard3d'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'RightGuard3d'@'localhost';
 CREATE USER 'RightGuard3d'@'localhost' IDENTIFIED BY 'logic3Speaker';
 GRANT SELECT ON `SqlChalOne`.`customers` TO 'RightGuard3d'@'localhost';
 
+GRANT USAGE ON *.* TO 'HdmiNoSignal'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'HdmiNoSignal'@'localhost';
 CREATE USER 'HdmiNoSignal'@'localhost' IDENTIFIED BY '1nforma1ion';
 GRANT SELECT ON `SqlChalThree`.`customers` TO 'HdmiNoSignal'@'localhost';
 
+GRANT USAGE ON *.* TO 'randomUserName'@'localhost' IDENTIFIED BY 'password';
 DROP USER  'randomUserName'@'localhost';
 CREATE USER 'randomUserName'@'localhost' IDENTIFIED BY 'c4utionHoT';
 GRANT SELECT ON `BrokenAuthAndSessMangChalTwo`.`users` TO 'randomUserName'@'localhost';
 GRANT UPDATE ON `BrokenAuthAndSessMangChalTwo`.`users` TO 'randomUserName'@'localhost';
 
-
+GRANT USAGE ON *.* TO 'doveM3nCare'@'localhost' IDENTIFIED BY 'password';
 DROP USER  'doveM3nCare'@'localhost';
 CREATE USER 'doveM3nCare'@'localhost' IDENTIFIED BY 'plusm0r3';
 GRANT SELECT ON `BrokenAuthAndSessMangChalThree`.`users` TO 'doveM3nCare'@'localhost';
 GRANT UPDATE ON `BrokenAuthAndSessMangChalThree`.`users` TO 'doveM3nCare'@'localhost';
 
+GRANT USAGE ON *.* TO 'murr4yFe1ld'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'murr4yFe1ld'@'localhost';
 CREATE USER  'murr4yFe1ld'@'localhost' IDENTIFIED BY '4gainst3ngl4nd';
 GRANT SELECT ON `directObjectRefChalOne`.`users` TO 'murr4yFe1ld'@'localhost';
 
+GRANT USAGE ON *.* TO 'd3nn1sM4nely'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'd3nn1sM4nely'@'localhost';
 CREATE USER  'd3nn1sM4nely'@'localhost' IDENTIFIED BY 'Pr0ductM4rket1ngIssu3s';
 GRANT SELECT ON `directObjectRefChalTwo`.`users` TO 'd3nn1sM4nely'@'localhost';
 
+GRANT USAGE ON *.* TO 'secureDood'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'secureDood'@'localhost';
 CREATE USER  'secureDood'@'localhost' IDENTIFIED BY 'iCantEv3n';
 GRANT SELECT ON `SqlChalFourSuperSecure`.`users` TO 'secureDood'@'localhost';
 
+GRANT USAGE ON *.* TO 'csrfChalEnuer'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'csrfChalEnuer'@'localhost';
 CREATE USER  'csrfChalEnuer'@'localhost' IDENTIFIED BY 'c4n1bUplZ';
 GRANT SELECT ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'localhost';
 GRANT INSERT ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'localhost';
 GRANT UPDATE ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'localhost';
 
+GRANT USAGE ON *.* TO 'l3tsg0cra'@'localhost' IDENTIFIED BY 'password';
 DROP USER  'l3tsg0cra'@'localhost';
 CREATE USER 'l3tsg0cra'@'localhost' IDENTIFIED BY '83ururMa';
 GRANT SELECT ON `BrokenAuthAndSessMangChalFive`.`users` TO 'l3tsg0cra'@'localhost';
 GRANT UPDATE ON `BrokenAuthAndSessMangChalFive`.`users` TO 'l3tsg0cra'@'localhost';
 
+GRANT USAGE ON *.* TO 'csrfChalFour'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'csrfChalFour'@'localhost';
 CREATE USER  'csrfChalFour'@'localhost' IDENTIFIED BY 'R1n13U2pv';
 GRANT SELECT ON `csrfChallengeFour`.`csrfTokens` TO 'csrfChalFour'@'localhost';
 GRANT INSERT ON `csrfChallengeFour`.`csrfTokens` TO 'csrfChalFour'@'localhost';
 GRANT UPDATE ON `csrfChallengeFour`.`csrfTokens` TO 'csrfChalFour'@'localhost';
 
+GRANT USAGE ON *.* TO 'randomMoFoName'@'localhost' IDENTIFIED BY 'password';
 DROP USER  'randomMoFoName'@'localhost';
 CREATE USER 'randomMoFoName'@'localhost' IDENTIFIED BY 'c2zXlq_ZoT';
 GRANT SELECT ON `BrokenAuthAndSessMangChalSix`.`users` TO 'randomMoFoName'@'localhost';
 
+GRANT USAGE ON *.* TO 'randomFlower'@'localhost' IDENTIFIED BY 'password';
 DROP USER  'randomFlower'@'localhost';
 CREATE USER 'randomFlower'@'localhost' IDENTIFIED BY 'c21-le_6oT';
 GRANT SELECT ON `BrokenAuthAndSessMangChalSeven`.`users` TO 'randomFlower'@'localhost';
 
+GRANT USAGE ON *.* TO 'tSwsfUSer'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'tSwsfUSer'@'localhost';
 CREATE USER 'tSwsfUSer'@'localhost' IDENTIFIED BY '9s31iusd-n';
 GRANT SELECT ON `CryptShop`.`items` TO 'tSwsfUSer'@'localhost';
 GRANT SELECT ON `CryptShop`.`coupons` TO 'tSwsfUSer'@'localhost';
 
+GRANT USAGE ON *.* TO 'yourOrEll'@'localhost' IDENTIFIED BY 'password';
 DROP USER  'yourOrEll'@'localhost';
 CREATE USER 'yourOrEll'@'localhost' IDENTIFIED BY '91dj3:766f';
 GRANT SELECT ON `UrlAccessThree`.`users` TO 'yourOrEll'@'localhost';
 
+GRANT USAGE ON *.* TO 'r1ndomFlower'@'localhost' IDENTIFIED BY 'password';
 DROP USER  'r1ndomFlower'@'localhost';
 CREATE USER 'r1ndomFlower'@'localhost' IDENTIFIED BY 'c41-l2_6oT';
 GRANT SELECT ON `sqlInjectSeven`.`users` TO 'r1ndomFlower'@'localhost';
 
+GRANT USAGE ON *.* TO 'al1th3Tokens'@'localhost' IDENTIFIED BY 'password';
 DROP USER  'al1th3Tokens'@'localhost';
 CREATE USER 'al1th3Tokens'@'localhost' IDENTIFIED BY '87SDO63yUN.';
 GRANT SELECT ON `securityMisconfigStealToken`.`tokens` TO 'al1th3Tokens'@'localhost';
@@ -1331,6 +1351,7 @@ GRANT INSERT ON `securityMisconfigStealToken`.`tokens` TO 'al1th3Tokens'@'localh
 GRANT EXECUTE ON PROCEDURE `securityMisconfigStealToken`.`getToken` TO 'al1th3Tokens'@'localhost';
 GRANT EXECUTE ON PROCEDURE `securityMisconfigStealToken`.`validToken`  TO 'al1th3Tokens'@'localhost';
 
+GRANT USAGE ON *.* TO 'theBankMan'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'theBankMan'@'localhost';
 CREATE USER 'theBankMan'@'localhost' IDENTIFIED BY 'B4ndkm.M98n';
 GRANT SELECT ON `directObjectBank`.`bankAccounts` TO 'theBankMan'@'localhost';
@@ -1341,11 +1362,13 @@ GRANT EXECUTE ON PROCEDURE `directObjectBank`.`currentFunds` TO 'theBankMan'@'lo
 GRANT EXECUTE ON PROCEDURE `directObjectBank`.`transferFunds` TO 'theBankMan'@'localhost';
 GRANT EXECUTE ON PROCEDURE `directObjectBank`.`createAccount` TO 'theBankMan'@'localhost';
 
+GRANT USAGE ON *.* TO 'procChalUser'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'procChalUser'@'localhost';
 CREATE USER 'procChalUser'@'localhost' IDENTIFIED BY 'k61dSmsM*8n';
 GRANT SELECT ON `SqlChalStoredProc`.`customers` TO 'procChalUser'@'localhost';
 GRANT EXECUTE ON PROCEDURE `SqlChalStoredProc`.`findUser` TO 'procChalUser'@'localhost';
 
+GRANT USAGE ON *.* TO 'imVideoingThis'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'imVideoingThis'@'localhost';
 CREATE USER 'imVideoingThis'@'localhost' IDENTIFIED BY 'auoi@7723dj';
 GRANT SELECT ON `SqlPoorEscape`.`customers` TO 'imVideoingThis'@'localhost';

@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,8 +24,15 @@
 String levelName = "Mobile Insecure Data Storage 2";
 //Alphanumeric Only
 String levelHash = "ec09515a304d2de1f552e961ab769967bdc75740ad2363803168b7907c794cd4";
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "";
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insecureData.insecureDataStrings", locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+//Used more than once translations
+String LevelName = bundle.getString("challenge2.challengeName");
+String paragraph1 = bundle.getString("challenge2.para1");
 
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -52,20 +60,21 @@ if (request.getSession() != null)
 	<title>Security Shepherd - <%= levelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
-	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= levelName %></h2>
 			<p> 
 				<br/>
-				The App for this challenge, <a>InsecureData3</a> uses a hashing algorithm on stored user credentials. However, there are two issues here, firstly the user is using a <a>bad password</a>. Secondly, the App does <a>not use a salt</a> when hashing the data. The result key to this challenge is the user's password.
-
+				<%= paragraph1 %>
 				<br/>
 				<br/>
 				
-				<%= Analytics.getMobileLevelBlurb("InsecureData3.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " InsecureData2.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 				
 			</p>
 		</div>

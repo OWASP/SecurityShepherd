@@ -1,13 +1,16 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage=""%>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 
-//No Quotes or HTML In level Name
-String levelName = "levelName";
+//MUST be in English and no Quotes In level Name
+String levelName = "Level Name";
 //Alphanumeric Only
-String levelHash = "levelHash";
-//Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "Download the file and play with it to extract the key for this level!";
-
+String levelHash = "Level Hash";
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n." + levelHash, locale);
+//Used more than once translations
+String i18nLevelName = bundle.getString("title.");
 try
 {
 	if (request.getSession() != null)
@@ -45,7 +48,7 @@ catch (Exception e)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= i18nLevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 	</script> 
@@ -53,13 +56,10 @@ catch (Exception e)
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %>template</h2>
+			<h2 class="title"><%= i18nLevelName %>template</h2>
 			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
 				
-				<%= levelBlurb %>
-				
-				<%= Analytics.sourceForgeMobileVmLinkBlurb %>
+				<%= bundle.getString("paragraph.info.1") %>
 				<br/>
 					
 				<br/>

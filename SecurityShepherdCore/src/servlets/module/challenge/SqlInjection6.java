@@ -46,12 +46,14 @@ import dbProcs.Database;
 public class SqlInjection6 extends HttpServlet
 {
 	private static final String levelName = "SQLi C6";
-	private static String levelSolution = "17f999a8b3fbfde54124d6e94b256a264652e5087b14622e1644c884f8a33f82";
-	private static String levelHash = "d0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2";
+	// private static String levelSolution = "17f999a8b3fbfde54124d6e94b256a264652e5087b14622e1644c884f8a33f82";
+	public static String levelHash = "d0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2";
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection6.class);
 	/**
-	 * //TODO - JavaDoc
+	 * This controller makes an insecure call to a MySQL interpreter. 
+	 * User Input is first filtered for UTF-8 attacks and afterwards is decoded from \xHEX format to UTF-8 before sent to the interpreter
+	 * 
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -62,7 +64,6 @@ public class SqlInjection6 extends HttpServlet
 		
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli6", locale);
 		if(Validate.validateSession(ses))
 		{

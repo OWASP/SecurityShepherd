@@ -109,9 +109,8 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					$("#badData").show("slow");
 				}
 				$("#formDiv").slideDown("slow");
-				$('html, body').animate({
-			        scrollTop: $("#resultDiv").offset().top
-			    }, 1000);
+				//Refresh the Side Menu
+				refreshSideMenu(theCsrfToken, theRefreshError);
 			});
 		});
 	});

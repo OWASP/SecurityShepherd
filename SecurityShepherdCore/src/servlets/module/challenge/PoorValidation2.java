@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -41,7 +41,7 @@ public class PoorValidation2 extends HttpServlet
 {
 	private static final String levelName = "Poor Validation 2";
 	private static String levelSolution = "05adf1e4afeb5550faf7edbec99170b40e79168ecb3a5da19943f05a3fe08c8e";
-	private static String levelHash = "20e8c4bb50180fed9c1c8d1bf6af5eac154e97d3ce97e43257c76e73e3bbe5d5";
+	public static String levelHash = "20e8c4bb50180fed9c1c8d1bf6af5eac154e97d3ce97e43257c76e73e3bbe5d5";
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(PoorValidation2.class);
 	/**
@@ -55,13 +55,16 @@ public class PoorValidation2 extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
+			//Translation Stuff
+			Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+			ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.poorValidation.poorValidationStrings", locale);
+			
 			String currentUser = ses.getAttribute("userName").toString();
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), currentUser);
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
 			String htmlOutput = new String();
-			Encoder encoder = ESAPI.encoder();
 			try
 			{
 				int megustaAmount = validateAmount(Integer.parseInt(request.getParameter("megustaAmount")));
@@ -85,18 +88,18 @@ public class PoorValidation2 extends HttpServlet
 				int finalCost = megustaCost + rageCost + notBadCost + trollCost;
 				
 				//Output Order
-				htmlOutput = "<h3>Order Complete</h3>"
-						+ "Your order has been made and has been sent to our magic shipping department that knows where you want this to be delivered via brain wave sniffing techniques.<br/><br/>"
-						+ "Your order comes to a total of <a><strong>$" + finalCost + "</strong></a>";
+				htmlOutput = "<h3 class='title'>" + bundle.getString("poorValidation.orderComplete") + "</h3>"
+						+ "<p>" + bundle.getString("poorValidation.orderComplete.message") + "</p><br/>"
+						+ "<p>" + bundle.getString("poorValidation.orderTotal") + " <a><strong>$" + finalCost + "</strong></a></p>";
 				if (finalCost <= 0 && trollAmount > 0)
 				{
-					htmlOutput += "<br><br>Trolls were free, Well Done - <a><b>" + encoder.encodeForHTML(Hash.generateUserSolution(levelSolution, currentUser)) + "</b></a>";
+					htmlOutput += "<br><p>" + bundle.getString("poorValidation.freeTrolls") + " - " + Hash.generateUserSolution(levelSolution, currentUser) + "</p>";
 				}
 			}
 			catch(Exception e)
 			{
 				log.debug("Didn't complete order: " + e.toString());
-				htmlOutput += "<p> Order Failed - Please try again later</p>";
+				htmlOutput += "<p>" + bundle.getString("poorValidation.badOrder") + "</p>";
 			}
 			try
 			{

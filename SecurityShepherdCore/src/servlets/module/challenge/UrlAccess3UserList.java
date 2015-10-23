@@ -51,7 +51,6 @@ import utils.Validate;
  */
 public class UrlAccess3UserList extends HttpServlet
 {
-	//Sql Challenge 4
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(UrlAccess3UserList.class);
 	private static String levelName = "URL Access 3 (UserList)";

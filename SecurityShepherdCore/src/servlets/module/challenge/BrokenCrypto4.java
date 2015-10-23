@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,8 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -22,7 +22,7 @@ import utils.Validate;
 import dbProcs.Database;
 import dbProcs.Getter;
 /**
- * Level : Broken Crypto NEW
+ * Level : Broken Crypto 4
  * <br><br>
  * 
  * This file is part of the Security Shepherd Project.
@@ -57,13 +57,16 @@ public class BrokenCrypto4 extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
+			//Translation Stuff
+			Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+			ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.insecureCryptoStorage.insecureCryptoStorage", locale);
+			
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
 			String htmlOutput = new String();
 			String applicationRoot = getServletContext().getRealPath("");
-			Encoder encoder = ESAPI.encoder();
 			try
 			{
 				//Get and validate cart amounts
@@ -138,18 +141,18 @@ public class BrokenCrypto4 extends HttpServlet
 				int finalCost = megustaCost + rageCost + notBadAmount + trollCost;
 				
 				//Output Order
-				htmlOutput = "<h3>Order Complete</h3>"
-						+ "Your order has been made and has been sent to our magic shipping department that knows where you want this to be delivered via brain wave sniffing techniques.<br/><br/>"
-						+ "Your order comes to a total of <a><strong>$" + finalCost + "</strong></a>";
+				htmlOutput = "<h3>" + bundle.getString("insecureCyrptoStorage.4.orderComplete") + "</h3>"
+						+ "<p>" + bundle.getString("insecureCyrptoStorage.4.orderShipped") + "<br/></p>"
+						+ "<p>" + bundle.getString("insecureCyrptoStorage.4.totalCost") + " <a><strong>$" + finalCost + "</strong></a></p>";
 				if (trollAmount > 0 && trollCost == 0)
 				{
-					htmlOutput += "<br><br>Trolls were free, Well Done - <a><b>" + encoder.encodeForHTML(Hash.generateUserSolution(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash), (String)ses.getAttribute("userName"))) + "</b></a>";
+					htmlOutput += "<p>" + bundle.getString("insecureCyrptoStorage.4.freeTrolls") + " - " + Hash.generateUserSolution(Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash), (String)ses.getAttribute("userName")) + "</p>";
 				}
 			}
 			catch(Exception e)
 			{
 				log.debug("Didn't complete order: " + e.toString());
-				htmlOutput += "<p> Order Failed - Please try again later</p>";
+				htmlOutput += "<p>" + bundle.getString("insecureCyrptoStorage.4.orderFailed") + "</p>";
 			}
 			try
 			{

@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * <br/><br/>
@@ -23,8 +24,18 @@
 String levelName = "Mobile Broken Crypto 1";
 //Alphanumeric Only
 String levelHash = "d2f8519f8264f9479f56165465590b499ceca941ab848805c00f5bf0a40c9717";
-//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = "";
+
+
+//Translation Stuff
+Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.brokenCrypto.brokenCrypto", locale);
+ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+//Used more than once translations
+String LevelName = bundle.getString("challenge1.challengeName");
+String paragraph1 = bundle.getString("challenge1.para1");
+
+
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
 {
@@ -48,24 +59,22 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
+	<title>Security Shepherd - <%= LevelName %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
-	</script> 
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
-			<p> 
-				<% /* Put Your Blurb Here Instead of the following scriptlet. Not this comment Bren. Jeesh*/ %>
-				
-				<%= levelBlurb %>
-				<br/>
-				This App uses a deprecated encryption algorithm (DES) and breaks a vital rule of key management. The key is in the conversation. Decrypt the chat to get the key.  			
+			<h2 class="title"><%= LevelName %></h2>
+			<p> 				
+				<%= paragraph1 %>
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("BrokenCrypto2.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " BrokenCrypto1.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
 				
 			</p>
 		</div>

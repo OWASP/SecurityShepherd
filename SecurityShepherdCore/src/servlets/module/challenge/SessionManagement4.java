@@ -43,7 +43,7 @@ public class SessionManagement4 extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement4.class);
 	private static String levelName = "Session Management Challenge Four";
-	private static String levelHash = "ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6";
+	public static String levelHash = "ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6";
 	private static String levelResult = "238a43b12dde07f39d14599a780ae90f87a23e";
 	/**
 	 * Users must discover the session id for this sub application is very weak. The default session ID for a guest will be 00000001 base64'd. The admin's session will be 00000021

@@ -11,10 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
-import org.owasp.esapi.codecs.Codec;
-import org.owasp.esapi.codecs.MySQLCodec;
 
 /**
  * Used to add information to the Database
@@ -98,162 +94,6 @@ public class Setter
 	}
 	
 	/**
-	 * Used to create a new module entry in the core database. The database will handle creating the new module identifier and module hash.
-	 * The module has will be returned form the database, and if it does not start will a letter, the application will update the database to reflect a hash starting with a letter, without sacrificing the uniqueness of the hash
-	 * @param applicationRoot The current running context of the application
-	 * @param challengeName The name of the module to create
-	 * @param challengeType The type of module to create
-	 * @param challengeCategory The category of the new challenge
-	 * @param challengeSolution The solution of the new challenge
-	 * @param isUserSpecificKey Is the Key for this level a user specific key or is it hard coded
-	 * @return The new module identifier
-	 */
-	public static String createModule(String applicationRoot, String challengeName, String challengeType, String challengeCategory, String challengeSolution, boolean isUserSpecificKey) 
-	{
-		log.debug("*** Setter.createModule ***");
-		String moduleId = null;
-		Connection conn = Database.getCoreConnection(applicationRoot);
-		try
-		{
-			CallableStatement callstmt = conn.prepareCall("call moduleCreate(?, ?, ?, ?, ?)");
-			log.debug("Preparing moduleCreate procedure");
-			callstmt.setString(1, challengeName);
-			callstmt.setString(2, challengeType);
-			callstmt.setString(3, challengeCategory);
-			callstmt.setString(4, challengeSolution);
-			callstmt.setBoolean(5, isUserSpecificKey);
-			ResultSet resultSet = callstmt.executeQuery();
-			log.debug("Retrieving new moduleId");
-			//moduleCreate should return the new modules ID
-			resultSet.next();
-			moduleId = resultSet.getString(1);
-			log.debug("Returning: " + moduleId);
-			
-			//Ensuring module hash is Java friendly (starts with letter... For expanding framework in future work!
-			String theHash = resultSet.getString(2);
-			String firstChar = theHash.substring(0, 1);
-			try
-			{
-				//Cast char to int, if it works then if must be changed to a letter!
-				Integer theFirst = Integer.parseInt(firstChar);
-				//First char must be changed to a letter, but it canot be in the hash range a - f, to ensure that the hashes remain unique
-				switch(theFirst)
-				{
-				case 1:
-					firstChar = "o";
-					break;
-				case 2:
-					firstChar = "w";
-					break;
-				case 3:
-					firstChar = "r";
-					break;
-				case 4:
-					firstChar = "u";
-					break;
-				case 5:
-					firstChar = "i";
-					break;
-				case 6:
-					firstChar = "x";
-					break;
-				case 7:
-					firstChar = "v";
-					break;
-				case 8:
-					firstChar = "q";
-					break;
-				case 9:
-					firstChar = "y";
-					break;	
-				case 0:
-					firstChar = "z";
-					break;
-				}
-				theHash = firstChar + theHash.substring(1);
-				log.debug("hash Change suggestion: " + theHash);
-				PreparedStatement prepStat = conn.prepareStatement("UPDATE modules SET moduleHash = ? WHERE moduleId = ?");
-				prepStat.setString(1, theHash);
-				prepStat.setString(2, moduleId);
-				log.debug("Updating moduleHash to class friendly Name");
-				prepStat.execute();
-			}
-			catch(Exception e)
-			{
-				log.debug("Error Occurred: " + e.toString());
-			}
-			log.debug("moduleHash: " + theHash);
-		}
-		catch (SQLException e)
-		{
-			log.error("Could not execute cheatSheetCreate: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END createModule ***");
-		return moduleId;
-	}
-	
-	/**
-	 * Used by the challenge builder to create a new schema on the vulnerable database server.
-	 * @param conn Connection to the vulnerable database server
-	 * @param challengeName The name of the challenge been created by the builder
-	 * @param tableName The name of the table to create in the vulnerable schema
-	 * @param attrib An array of attributes to use when creating the schema's table 
-	 * @param attribAmount The amount of attributes been created in the table
-	 * @return The new schema's name if successful
-	 * @throws SQLException Throws this exception if there is an error creating the vulnerable schema
-	 */
-	@SuppressWarnings("deprecation")
-	public static String createVulnerableSchema(Connection conn, String challengeName, String tableName, String[] attrib, int attribAmount) 
-	throws SQLException
-	{
-		String schemaName = new String();
-		log.debug("*** Setter.createVulnerableSchema ***");
-		Encoder encoder = ESAPI.encoder();
-		Codec mySql = new MySQLCodec(MySQLCodec.MYSQL_MODE);
-		try
-		{
-			//Preparing schema, table and attribute names
-			schemaName = "schema_" + encoder.encodeForSQL(mySql, challengeName.trim().toLowerCase().replaceAll(" ", ""));
-			String theTable = "tb_" + encoder.encodeForSQL(mySql, tableName);
-			for(int i = 0; i < 5; i++)
-			{
-				attrib[i] = "at_" + encoder.encodeForSQL(mySql, attrib[i]);
-				log.debug("attrib[" + i + "] = " + attrib[i]);
-			}
-			log.debug("Creating Challenge Schema: " + schemaName);
-			
-			//Not Parametrising, because parametrising sticks ' around the parameter. Which is invalid syntax for CREATE SCHEMA. So Encoding for Mysql should also prevent SQL injection
-			PreparedStatement prepStat = conn.prepareStatement("CREATE SCHEMA IF NOT EXISTS " + schemaName);
-			log.debug("Preparing Statement... CREATE SCHEMA IF NOT EXISTS " + schemaName);
-			prepStat.execute();
-			
-			log.debug("Creating Schema Table");
-			//Preparing sql String
-			String sql = "CREATE TABLE IF NOT EXISTS " + schemaName + "." + theTable + " (id INT NOT NULL AUTO_INCREMENT, ";
-			for(int i = 0; i < 5; i++)
-				sql += attrib[i] + " VARCHAR(64) NOT NULL, ";
-			sql += "PRIMARY KEY (id))ENGINE = InnoDB; ";
-			log.debug("Preparing Execution");
-			prepStat = conn.prepareStatement(sql);
-			prepStat.execute();
-			log.debug("Table Created");
-			
-			log.debug("Committing Changes");
-			prepStat = conn.prepareStatement("COMMIT;");
-			prepStat.execute();
-		}
-		catch (SQLException e)
-		{
-			schemaName = null;
-			log.error("Could not create schema: " + e.toString());
-			throw e;
-		}
-		log.debug("*** END Setter.createVulnerableSchema ***");
-		return schemaName;
-	}
-	
-	/**
 	 * Used to increment bad submission counter in DB. DB will handle point deductions once the counter hits 40
 	 * @param ApplicationRoot application running context
 	 * @param userId user identifier to increment 
@@ -311,7 +151,7 @@ public class Setter
 		return result;
 	}
 	
-	final static String webModuleCategoryHardcodedWhereClause = new String(""
+	final public static String webModuleCategoryHardcodedWhereClause = new String(""
 			+ "moduleCategory = 'CSRF'"
 			+ " OR moduleCategory = 'Failure to Restrict URL Access'"
 			+ " OR moduleCategory = 'Injection'"
@@ -322,13 +162,14 @@ public class Setter
 			+ " OR moduleCategory = 'XSS'"
 			+ " OR moduleCategory = 'Poor Data Validation'"
 			+ " OR moduleCategory = 'Security Misconfigurations'");
-	final static String mobileModuleCategoryHardcodedWhereClause = new String(""
+	final public static String mobileModuleCategoryHardcodedWhereClause = new String(""
 			+ "moduleCategory = 'Mobile Data Leakage'"
 			+ " OR moduleCategory = 'Mobile Injection'"
 			+ " OR moduleCategory = 'Mobile Insecure Data Storage'"
 			+ " OR moduleCategory = 'Mobile Reverse Engineering'"
 			+ " OR moduleCategory = 'Mobile Broken Crypto'"
-			+ " OR moduleCategory = 'Mobile Mobile Poor Authentication'");
+			+ " OR moduleCategory = 'Mobile Content Providers'"
+			+ " OR moduleCategory = 'Mobile Poor Authentication'");
 	
 	/**
 	 * This is used to only open Mobile category levels
@@ -386,92 +227,6 @@ public class Setter
 		Database.closeConnection(conn);
 		log.debug("*** END openOnlyWebCategories ***");
 		return result;
-	}
-	
-	/**
-	 * Used to populate the vulnerable schemas table with an array of attributes. This method adds ONE row to a table
-	 * @param conn Connection to the vulnerable database server
-	 * @param schemaName The name of the schema in the vulnerable database server
-	 * @param theTable The name of the table to populate
-	 * @param data The data to use for population
-	 * @param attrib The list of attributes to be populated
-	 * @param attribAmount The amount of attributes been populated
-	 * @throws SQLException Thrown if there is a population error
-	 */
-	public static void populateVulnerableSchema(Connection conn, String schemaName, String theTable, String[] data, String[] attrib, int attribAmount)
-	throws SQLException
-	{
-		log.debug("In-putted Parameters;");
-		log.debug("conn: " + conn.toString());
-		log.debug("schemaName: " + schemaName);
-		log.debug("data: " + data.toString());
-		log.debug("attrib: " + attrib.toString());
-		log.debug("attribAmount: " + attribAmount);
-		
-		//Preparing population script
-		String sql = new String();
-		log.debug("Adding data to table");
-		// Creating: INSERT INTO schema.tb_table (
-		sql = "INSERT INTO " + schemaName + ".tb_" + theTable + " (";
-		// Creating: attrib1, attrib2, attrib3, attrib4, attrib5
-		for(int i = 0; i < attribAmount; i++)
-		{
-			sql += attrib[i];
-			if(i < attribAmount - 1)
-				sql += ", ";
-		}
-		// Creating: ) VALUES (val1, val2, val3, val4, val5);
-		sql += ") VALUES (";
-		for(int i = 0; i < attribAmount; i++)
-		{
-			sql += "?";
-			if(i < attribAmount - 1)
-				sql += ", ";
-		}
-		sql += ");";
-		
-		try
-		{
-			log.debug("Prepared Statement: " + sql);
-			PreparedStatement prepStat1;
-			if(conn.isClosed())
-			{
-				log.error("Connection is closed");
-			}
-			
-			log.debug("Adding Row");
-			prepStat1 = conn.prepareStatement(sql);
-			
-			//debug statements and prepare statements
-			log.debug("prepStat.setString(1, " + data[0] + ")");
-			prepStat1.setString(1, data[0]);
-			log.debug("prepStat.setString(2, " + data[1] + ")");
-			prepStat1.setString(2, data[1]);
-			log.debug("prepStat.setString(3, " + data[2] + ")");
-			prepStat1.setString(3, data[2]);
-			log.debug("prepStat.setString(4, " + data[3] + ")");
-			prepStat1.setString(4, data[3]);
-			log.debug("prepStat.setString(5, " + data[4] + ")");
-			prepStat1.setString(5, data[4]);
-			
-			log.debug("Executing Statement for row");
-			log.debug(prepStat1.toString());
-			prepStat1.execute();
-			log.debug("Tables Populated");
-			log.debug("Committing Changes");
-			prepStat1 = conn.prepareStatement("COMMIT;");
-			prepStat1.execute();
-		}
-		catch(SQLException e1)
-		{
-			log.error("Could not populate table: " + e1.toString());
-			throw e1;
-		}
-		catch(Exception e1)
-		{
-			log.error("Could not populate table, None Database Error: " + e1.toString());
-			throw new SQLException("Could not execute Population");
-		}
 	}
 	
 	/**
@@ -544,7 +299,7 @@ public class Setter
 	/**
 	 * This method is used to store a CSRF Token for a specific user in the csrfChallengeSeven DB Schema. May not necessarily be a new CSRF token after running
 	 * @param userId User Identifier
-	 * @param csrfToken CSRF Token to add to the csrfChallengeSix DB Schema
+	 * @param csrfToken CSRF Token to add to the csrfChallengeFour DB Schema
 	 * @param ApplicationRoot Running context of the application
 	 * @return Returns current CSRF token for user for CSRF Ch4 
 	 */
@@ -676,7 +431,7 @@ public class Setter
 	 * @param ApplicationRoot Used to locate database properties file
 	 * @param moduleCategory The module category to open or closed
 	 * @param openOrClosed What to set the module status to. Can only be "open" or "closed"
-	 * @return
+	 * @return True if method executes without failure
 	 */
 	public static boolean setModuleCategoryStatusOpen (String ApplicationRoot, String moduleCategory, String openOrClosed)
 	{
@@ -859,36 +614,6 @@ public class Setter
 	}
 	
 	/**
-	 * Used to update a module's cheat sheet
-	 * @param applicationRoot The current running context of the application
-	 * @param moduleId The identifier of the module to update
-	 * @param newSolution The new cheat sheet content
-	 * @return A boolean value reflecting the success of the operation
-	 */
-	public static boolean updateCheatSheet(String applicationRoot, String moduleId, String newSolution) 
-	{
-		log.debug("*** Getter.updateCheatSheet ***");
-		boolean result = false;
-		Connection conn = Database.getCoreConnection(applicationRoot);
-		try
-		{
-			CallableStatement callstmt = conn.prepareCall("call cheatSheetCreate(?, ?)");
-			log.debug("Preparing cheatSheetCreate procedure");
-			callstmt.setString(1, moduleId);
-			callstmt.setString(2, newSolution);
-			callstmt.execute();
-			result = true;
-		}
-		catch (SQLException e)
-		{
-			log.error("Could not execute cheatSheetCreate: " + e.toString());
-		}
-		Database.closeConnection(conn);
-		log.debug("*** END updateCheatSheet ***");
-		return result;
-	}
-	
-	/**
 	 * Used to increment a users CSRF counter for CSRF levels.
 	 * @param ApplicationRoot The current running context of the application.
 	 * @param moduleId The identifier of the module to increment the counter of
@@ -954,7 +679,7 @@ public class Setter
 	/**
 	 * Updates a player's password without needing the current password
 	 * @param ApplicationRoot Running context of the applicaiton
-	 * @param userName The username of the user to update
+	 * @param userId The user id of the user to update
 	 * @param newPassword The new password to assign to the user
 	 * @return
 	 */
@@ -1077,9 +802,9 @@ public class Setter
 			callstmnt.setInt(5, difficulty);
 			callstmnt.setString(6, extra);
 			log.debug("Executing userUpdateResult");
-			ResultSet resultSet = callstmnt.executeQuery();
-			resultSet.next();
-			result = resultSet.getString(1);
+			callstmnt.execute();
+			//User Executed. Now Get the Level Name Langauge Key
+			result = Getter.getModuleNameLocaleKey(ApplicationRoot, moduleId);
 		}
 		catch(SQLException e)
 		{
@@ -1220,6 +945,7 @@ public class Setter
 		catch(SQLException e)
 		{
 			log.fatal("userCreate Failure: " + e.toString());
+			throw new SQLException(e);
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END userCreate ***");	

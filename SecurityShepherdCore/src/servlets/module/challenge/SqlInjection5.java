@@ -45,13 +45,11 @@ import dbProcs.Database;
 public class SqlInjection5 extends HttpServlet
 {
 	private static final String levelName = "SQLi C5 Shop";
-	private static String levelHash = "8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62";
+	public static String levelHash = "8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62";
 	private static String levelSolution = "343f2e424d5d7a2eff7f9ee5a5a72fd97d5a19ef7bff3ef2953e033ea32dd7ee";
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection5.class);
-	/**
-	 * //TODO - JavaDoc
-	 */
+	
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
@@ -61,7 +59,6 @@ public class SqlInjection5 extends HttpServlet
 		
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli5", locale);
 		if(Validate.validateSession(ses))
 		{
@@ -145,8 +142,8 @@ public class SqlInjection5 extends HttpServlet
 				
 				//Output Order
 				htmlOutput = "<h3>" + bundle.getString("response.orderComplete")+ "</h3>"
-						+ "" + bundle.getString("response.response.orderComplete.p1")+ "<br/><br/>"
-						+ "" + bundle.getString("response.response.orderComplete.p2")+ "<a><strong>$" + finalCost + "</strong></a>";
+						+ "" + bundle.getString("response.orderComplete.p1")+ "<br/><br/>"
+						+ "" + bundle.getString("response.orderComplete.p2")+ "<a><strong>$" + finalCost + "</strong></a>";
 				if (trollAmount > 0 && trollCost == 0)
 				{
 					htmlOutput += "<br><br>" + bundle.getString("response.trollsFreeSolution")+ "<a><b>" + encoder.encodeForHTML(levelSolution) + "</b></a>";
@@ -155,7 +152,7 @@ public class SqlInjection5 extends HttpServlet
 			catch(Exception e)
 			{
 				log.debug("Didn't complete order: " + e.toString());
-				htmlOutput += "<p>" + bundle.getString("response.response.orderFailed")+ "</p>";
+				htmlOutput += "<p>" + bundle.getString("response.orderFailed")+ "</p>";
 			}
 			try
 			{

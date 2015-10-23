@@ -385,12 +385,19 @@ public class Validate
 		String result = new String();
 		try
 		{
-			result = (String) input;
-			if(result.length() > maxLength)
+			if(input == null)
 			{
-				log.debug("Parameter Too Long: " + result.length() + " characters");
-				log.debug("Parmaeter Was: " + result);
 				result = new String();
+			}
+			else
+			{
+				result = (String) input;
+				if(result.length() > maxLength)
+				{
+					log.debug("Parameter Too Long: " + result.length() + " characters");
+					log.debug("Parmaeter Was: " + result);
+					result = new String();
+				}
 			}
 		}
 		catch(Exception e)

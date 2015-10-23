@@ -93,12 +93,11 @@ public class CsrfLesson extends HttpServlet
 						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "</h2>" +
 								bundle.getString("result.youDidIt") + "<br />" +
 								bundle.getString("result.theKeyIs") + " <a>" + 
-								encoder.encodeForHTML(
-										Hash.generateUserSolution(
-												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
-												), (String)ses.getAttribute("userName")
-										)
-								) +
+									Hash.generateUserSolution(
+											Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash
+											), (String)ses.getAttribute("userName")
+									)
+								+
 								"</a>";
 					}
 					log.debug("Adding searchTerm to Html: " + messageForAdmin);

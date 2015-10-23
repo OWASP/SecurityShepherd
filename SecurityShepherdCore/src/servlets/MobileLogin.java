@@ -48,6 +48,7 @@ public class MobileLogin extends HttpServlet
 	 * @param login User's User Name
 	 * @param pwd User's Password		
 	 */
+	@SuppressWarnings("unchecked")
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
     throws ServletException, IOException
     {

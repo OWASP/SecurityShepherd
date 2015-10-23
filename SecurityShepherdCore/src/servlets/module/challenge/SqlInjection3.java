@@ -50,8 +50,8 @@ public class SqlInjection3 extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection3.class);
 	private static String levelName = "SQL Injection Challenge Three";
-	private static String levelHash = "b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6";
-	private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific
+	public static String levelHash = "b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6";
+	// private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific
 	/**
 	 * Users have to use SQL injection to get a specific users credit card number. The query they are injecting into by default only outputs usernames.
 	 * The input they enter is also been filtered.

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
@@ -26,7 +26,7 @@
  String levelHash = "8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4";
  //Translation Stuff
  Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
- ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.sqli." + levelHash, locale);
+ ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.injection." + levelHash, locale);
  //Used more than once translations
  String i18nLevelName = bundle.getString("challenge.challengeName");
  ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -59,6 +59,9 @@
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
@@ -79,7 +82,7 @@
 						<%= bundle.getString("challenge.form.pleaseEnter") %>
 					</td></tr>
 					<tr><td>
-						<input style="width: 400px;" id="aUserId" type="text"/>
+						<input style="width: 400px;" id="aUserId" type="text" autocomplete="off"/>
 					</td></tr>
 					<tr><td>
 						<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.button.value") %>"/></div>

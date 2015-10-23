@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
 import dbProcs.Getter;
 import utils.FindXSS;
@@ -88,16 +86,14 @@ public class XssChallengeFive extends HttpServlet
 					boolean xssDetected = FindXSS.search(userPost);
 					if(xssDetected)
 					{
-						Encoder encoder = ESAPI.encoder();
 						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "</h2>" +
 								"<p>" + bundle.getString("result.youDidIt") + "<br />" +
 								bundle.getString("result.resultKey") + " <a>" +
-								encoder.encodeForHTML(
-										Hash.generateUserSolution(
-												Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash),
-											(String)ses.getAttribute("userName")
-										)
-								) + "</a>";
+									Hash.generateUserSolution(
+											Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash),
+										(String)ses.getAttribute("userName")
+									)
+								+ "</a>";
 					}
 					log.debug("Adding searchTerm to Html: " + searchTerm);
 					htmlOutput += "<h2 class='title'>" + bundle.getString("response.yourPost") + "</h2>" +

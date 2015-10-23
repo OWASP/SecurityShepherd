@@ -105,9 +105,6 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				}
 				//Show Disable Dialog
 				$("#disableFeedback").slideDown("slow");
-				$('html, body').animate({
-			        scrollTop: $("#resultDiv").offset().top
-			    }, 1000);
 			});
 		});
 	});
@@ -139,9 +136,6 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 				}
 				//Show Enable Dialog
 				$("#enableFeedback").slideDown("slow");
-				$('html, body').animate({
-			        scrollTop: $("#resultDiv").offset().top
-			    }, 1000);
 			});
 		});
 	});

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CProviderLeakage1</string>
+
+    <string name="action_settings">Settings</string>
+</resources>

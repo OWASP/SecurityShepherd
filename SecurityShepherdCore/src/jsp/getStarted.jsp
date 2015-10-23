@@ -92,7 +92,6 @@ if(!changePassword)
 			<div id="scopeLoadingDiv" style="display: none;"><fmt:message key="generic.text.loading" /></div>
 			</p>
 			<% } %>
-			<br/><br/>
 			<fmt:message key="getStarted.text.checkShepConfigMsg" /></a>.
 		</div>
 		<br/>
@@ -102,6 +101,9 @@ if(!changePassword)
 	</div>
 	</div>
 	<script>
+	var theCsrfToken = "<%= csrfToken %>";
+	var theRefreshError = "Could not Refresh Menu";
+	
 	$('#getStarted').slideDown("slow");
 	$('#cantSee').html("<iframe class='levelIframe' frameborder='no' id='theStart' src='readyToPlay.jsp?ThreadSequenceId=<%=encoder.encodeForHTMLAttribute(encoder.encodeForURL(threadId))%>'></iframe>");
 	$('#cantSee').html(function(){
@@ -133,6 +135,8 @@ if(!changePassword)
 			$("#scopeLoadingDiv").hide("fast", function(){
 				$("#setScopeDiv").slideDown("slow", function(){
 					$("#scopeResultsDiv").show ("fast");
+					//Refresh the Side Menu
+					refreshSideMenu(theCsrfToken, theRefreshError);
 				});
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
@@ -162,6 +166,8 @@ if(!changePassword)
 			$("#scopeLoadingDiv").hide("fast", function(){
 				$("#setScopeDiv").slideDown("slow", function(){
 					$("#scopeResultsDiv").show ("fast");
+					//Refresh the Side Menu
+					refreshSideMenu(theCsrfToken, theRefreshError);
 				});
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
@@ -191,6 +197,8 @@ if(!changePassword)
 			$("#scopeLoadingDiv").hide("fast", function(){
 				$("#setScopeDiv").slideDown("slow", function(){
 					$("#scopeResultsDiv").show ("fast");
+					//Refresh the Side Menu
+					refreshSideMenu(theCsrfToken, theRefreshError);
 				});
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");
@@ -220,6 +228,8 @@ if(!changePassword)
 			$("#scopeLoadingDiv").hide("fast", function(){
 				$("#setScopeDiv").slideDown("slow", function(){
 					$("#scopeResultsDiv").show ("fast");
+					//Refresh the Side Menu
+					refreshSideMenu(theCsrfToken, theRefreshError);
 				});
 			});
 			$("html, body").animate({ scrollTop: 0 }, "fast");

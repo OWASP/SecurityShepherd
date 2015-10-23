@@ -2,9 +2,9 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 
 import utils.ShepherdLogManager;
 import utils.Validate;
-import dbProcs.Database;
 
 /**
  * Insecure Direct Object Reference Bank Challenge Get Balance Function
@@ -44,9 +43,9 @@ public class DirectObjectBankCurrentBalance extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(DirectObjectBankCurrentBalance.class);
 	private static String levelName = "Insecure Direct Object Bank Challenge (Refresh Balance)";
-	private static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
+	public static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
 	/**
-	 * This Servlet is used to register a new bank account
+	 * This Servlet is used by users to register a new bank account in the Insecure Direct Object Bank Challenge. 
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -54,6 +53,12 @@ public class DirectObjectBankCurrentBalance extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.directObject.directObjectBank", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -73,12 +78,12 @@ public class DirectObjectBankCurrentBalance extends HttpServlet
 			}
 			catch(SQLException e)
 			{
-				out.write("An Error Occurred! You must be getting funky! Could not get Balance!");
+				out.write(errors.getString("error.funky") + " " + bundle.getString("login.error.couldNotGetBalance"));
 				log.fatal(levelName + " SQL Error - " + e.toString());
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}

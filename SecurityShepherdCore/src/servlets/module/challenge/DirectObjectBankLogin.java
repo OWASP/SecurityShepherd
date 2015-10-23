@@ -6,6 +6,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,10 +49,12 @@ public class DirectObjectBankLogin extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(DirectObjectBankLogin.class);
 	private static String levelName = "Insecure Direct Object Bank Challenge";
-	private static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
+	public static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
 	private static String levelResult = "4a1df02af317270f844b56edc0c29a09f3dd39faad3e2a23393606769b2dfa35";
 	/**
-	 * TODO - This Servlet is used to Sign In as Bank Account
+	 * This Servlet is used in the Insecure Direct Object Bank to sign in to a specific bank account. 
+	 * It does this by checking the user DB credentials and then returns the bank form the user needs 
+	 * to call Bank Functions.
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -58,6 +62,12 @@ public class DirectObjectBankLogin extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.directObject.directObjectBank", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -83,13 +93,13 @@ public class DirectObjectBankLogin extends HttpServlet
 					String accountNumber = resultSet.getString(1);
 					log.debug("Found Account Number: " + accountNumber);
 					ses.setAttribute("directObjectBankAccount", accountNumber);
-					htmlOutput += bankForm(accountNumber, applicationRoot, ses);
+					htmlOutput += bankForm(accountNumber, applicationRoot, ses, bundle, errors);
 				}
 				else
 				{
 					log.debug("Authentication Failed");
 					Encoder encoder = ESAPI.encoder();
-					htmlOutput = "ERROR: User '" + encoder.encodeForHTML(accountHolder) + "' could not be logged in";
+					htmlOutput = bundle.getString("login.authFailedMessage.1") + " '" + encoder.encodeForHTML(accountHolder) + "' " + bundle.getString("login.authFailedMessage.2");
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
@@ -97,12 +107,12 @@ public class DirectObjectBankLogin extends HttpServlet
 			}
 			catch(SQLException e)
 			{
-				out.write("An Error Occurred! You must be getting funky! Could not get Balance!");
+				out.write(errors.getString("error.funky") + " " + bundle.getString("login.error.couldNotGetBalance"));
 				log.fatal(levelName + " SQL Error - " + e.toString());
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}
@@ -112,36 +122,92 @@ public class DirectObjectBankLogin extends HttpServlet
 		}
 	}
 	
-	public static String bankForm(String accountNumber, String applicationRoot, HttpSession ses) throws SQLException 
+	/**
+	 * Method used to return the bank interaction view for the user that is signed into the Direct Object Bank challenge
+	 * @param accountNumber
+	 * @param applicationRoot
+	 * @param ses
+	 * @param bundle
+	 * @param errors
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String bankForm(String accountNumber, String applicationRoot, HttpSession ses, ResourceBundle bundle, ResourceBundle errors) throws SQLException 
 	{
 		Encoder encoder = ESAPI.encoder();
 		float currentBalance = getAccountBalance(accountNumber, applicationRoot);
-		String bankForm = "<h2 class='title'>Your Account</h2>" +
-				"<p>Your account balance is currently: <div id='currentAccountBalanceDiv'><b>" + currentBalance + "</b></div></p>";
+		String bankForm = "<h2 class='title'>" + bundle.getString("bankForm.yourAccount") + "</h2>" +
+				"<p>" + bundle.getString("bankForm.yourAccount.balance") + " <div id='currentAccountBalanceDiv'><b>" + currentBalance + "</b></div></p>";
 		if(currentBalance > 5000000)
 		{
 			//Level Complete As the user has more than 5000000 in account. Return Key
-			bankForm += "<h2 class='title'>Challenge Complete</h2><p>Congradulations, you have sucessfully completed this challenge. Use the following result key at the top of the page to mark this level as complete in the sytem.<br><br>"
-					+ "The result key for this challenge is <a>" + encoder.encodeForHTML(Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"))) + "</a>";
+			bankForm += "<h2 class='title'>" + bundle.getString("result.complete") + "</h2><p>" + bundle.getString("result.wellDone") + "<br><br>"
+					+ "" + bundle.getString("result.theKeyIs") + " <a>" + Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName")) + "</a>";
 		}
 		bankForm += ""
 				+ "<input type='hidden' value='" + encoder.encodeForHTMLAttribute(accountNumber) + "' id='currentAccountNumber'>"
-				+ "<h2 class='title'>Transfer Funds</h2><p>Use this form to send money to other accounts in this bank. All you need to do is enter their account number and the ammount you want to send!</p>"
+				+ "<h2 class='title'>" + bundle.getString("bankForm.transferFunds") + "</h2><p>" + bundle.getString("bankForm.transferFunds.whatToDo") + "</p>"
 				+ "<div id='transferFundsForm'><form id='transferFunds' action='javascript:transferFunds();'>"
-				+ "<table><tr><td>Reciever Account Number: </td><td><input type='text' id='recieverAccountNumber'></td></tr>"
-				+ "<tr><td>Amount to Send: </td><td><input type='text' id='transferAmount'></td></tr>"
-				+ "<tr><td colspan='2'><input type='submit' value='Transfer Funds'></td></tr>"
-				+ "</table></form></div><div id='transferLoadingDiv' style='display: none;'>Loading...</div>"
+				+ "<table><tr><td>" + bundle.getString("bankForm.recieverNumber") + " </td><td><input type='text' id='recieverAccountNumber'></td></tr>"
+				+ "<tr><td>" + bundle.getString("bankForm.amountToSend") + " </td><td><input type='text' id='transferAmount'></td></tr>"
+				+ "<tr><td colspan='2'><input type='submit' value='" + bundle.getString("bankForm.transferFunds") + "'></td></tr>"
+				+ "</table></form></div><div id='transferLoadingDiv' style='display: none;'>" + bundle.getString("bankForm.loading") + "</div>"
 				+ "<div id='transferResultsDiv'></div>"
-				+ "<h2 class='title'>Refresh Balance</h2><p>Use this form to refresh your balance above. That way you can see if any money came in recently!</p>"
+				+ "<h2 class='title'>" + bundle.getString("bankForm.refreshBalance") + "</h2><p>" + bundle.getString("bankForm.refreshBalance.whatToDo") + "</p>"
 				+ "<div id='refreshFormDiv'>"
-				+ "<table><tr><td><input type='button' id='refreshFunds' onclick='refreshFunds();' value='Refresh Balance'></td></tr></table>"
-				+ "</div><div id='refreshLoadingSign' style='display: none;'>Loading...</div>"
+				+ "<table><tr><td><input type='button' id='refreshFunds' onclick='refreshFunds();' value='" + bundle.getString("bankForm.refreshBalance") + "'></td></tr></table>"
+				+ "</div><div id='refreshLoadingSign' style='display: none;'>" + bundle.getString("bankForm.loading") + "</div>"
 				+ "<div id='refreshResultsDiv'></div>"
-				+ "<h2 class='title'>Logout of Account</h2><p>Use this form to sign out of your bank account when your done giving your money away.</p>"
+				+ "<h2 class='title'>" + bundle.getString("bankForm.logoutOfAccount") + "</h2><p>" + bundle.getString("bankForm.logoutOfAccount.whatToDo") + "</p>"
 				+ "<div id='logoutFormDiv'>"
-				+ "<table><tr><td><input type='button' id='logoutButton' onclick='logout();' value='Log Out Of Bank Account'></td></tr></table>"
-				+ "</div><div id='logoutLoadingSign' style='display: none;'>Loading...</div>"
+				+ "<table><tr><td><input type='button' id='logoutButton' onclick='logout();' value='" + bundle.getString("bankForm.logoutFromBankAccount") + "'></td></tr></table>"
+				+ "</div><div id='logoutLoadingSign' style='display: none;'>" + bundle.getString("bankForm.loading") + "</div>"
+				+ "<div id='logoutResultsDiv'></div>";
+		return bankForm;
+	}
+	
+	/**
+	 * Method used to return the bank interaction view for the user that is signed into the Direct Object Bank challenge. This method pulls the local level translation from the session submitted
+	 * @param accountNumber
+	 * @param applicationRoot
+	 * @param ses
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String bankForm(String accountNumber, String applicationRoot, HttpSession ses) throws SQLException 
+	{
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(ses));
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.directObject.directObjectBank", locale);
+				
+		Encoder encoder = ESAPI.encoder();
+		float currentBalance = getAccountBalance(accountNumber, applicationRoot);
+		String bankForm = "<h2 class='title'>" + bundle.getString("bankForm.yourAccount") + "</h2>" +
+				"<p>" + bundle.getString("bankForm.yourAccount.balance") + " <div id='currentAccountBalanceDiv'><b>" + currentBalance + "</b></div></p>";
+		if(currentBalance > 5000000)
+		{
+			//Level Complete As the user has more than 5000000 in account. Return Key
+			bankForm += "<h2 class='title'>" + bundle.getString("result.complete") + "</h2><p>" + bundle.getString("result.wellDone") + "<br><br>"
+					+ "" + bundle.getString("result.theKeyIs") + " <a>" + encoder.encodeForHTML(Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"))) + "</a>";
+		}
+		bankForm += ""
+				+ "<input type='hidden' value='" + encoder.encodeForHTMLAttribute(accountNumber) + "' id='currentAccountNumber'>"
+				+ "<h2 class='title'>" + bundle.getString("bankForm.transferFunds") + "</h2><p>" + bundle.getString("bankForm.transferFunds.whatToDo") + "</p>"
+				+ "<div id='transferFundsForm'><form id='transferFunds' action='javascript:transferFunds();'>"
+				+ "<table><tr><td>" + bundle.getString("bankForm.recieverNumber") + " </td><td><input type='text' id='recieverAccountNumber'></td></tr>"
+				+ "<tr><td>" + bundle.getString("bankForm.amountToSend") + " </td><td><input type='text' id='transferAmount'></td></tr>"
+				+ "<tr><td colspan='2'><input type='submit' value='" + bundle.getString("bankForm.transferFunds") + "'></td></tr>"
+				+ "</table></form></div><div id='transferLoadingDiv' style='display: none;'>" + bundle.getString("bankForm.loading") + "</div>"
+				+ "<div id='transferResultsDiv'></div>"
+				+ "<h2 class='title'>" + bundle.getString("bankForm.refreshBalance") + "</h2><p>" + bundle.getString("bankForm.refreshBalance.whatToDo") + "</p>"
+				+ "<div id='refreshFormDiv'>"
+				+ "<table><tr><td><input type='button' id='refreshFunds' onclick='refreshFunds();' value='" + bundle.getString("bankForm.refreshBalance") + "'></td></tr></table>"
+				+ "</div><div id='refreshLoadingSign' style='display: none;'>" + bundle.getString("bankForm.loading") + "</div>"
+				+ "<div id='refreshResultsDiv'></div>"
+				+ "<h2 class='title'>" + bundle.getString("bankForm.logoutOfAccount") + "</h2><p>" + bundle.getString("bankForm.logoutOfAccount.whatToDo") + "</p>"
+				+ "<div id='logoutFormDiv'>"
+				+ "<table><tr><td><input type='button' id='logoutButton' onclick='logout();' value='" + bundle.getString("bankForm.logoutFromBankAccount") + "'></td></tr></table>"
+				+ "</div><div id='logoutLoadingSign' style='display: none;'>" + bundle.getString("bankForm.loading") + "</div>"
 				+ "<div id='logoutResultsDiv'></div>";
 		return bankForm;
 	}

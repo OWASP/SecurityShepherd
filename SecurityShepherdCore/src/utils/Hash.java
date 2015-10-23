@@ -185,7 +185,7 @@ public class Hash
 			catch (Exception e) 
 			{ 
 				log.error("Encryption Failure: " + e.toString());
-				toReturn = "Key Should be here! Please refresh the home page and try again!";
+				toReturn = "Key Should be here! Please refresh the home page and try again! If that doesn't work, sign in and out again!";
 			}
 		}
 		return "<b style='word-wrap: break-word;'>" + toReturn + "</b>";
@@ -201,11 +201,22 @@ public class Hash
 	{
 		log.debug("Generating key for " + userSalt);
 		String toReturn = "Key Should be here! Please refresh the home page and try again!";
+
 			try 
 			{
 				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
-				toReturn = Hash.encrypt(key, baseKey + getCurrentSalt());
-				log.debug("Returning: " + toReturn);
+				String forLog = Hash.encrypt(key, baseKey + getCurrentSalt());
+				toReturn = "<script>prepTooltips();prepClipboardEvents();</script>"
+						+ "<div class='input-group'>" +
+								"<textarea id='theKey' rows=2 style='height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:85%'>"+forLog+"</textarea>" +
+								"<span class='input-group-button'>" +
+									"<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey' style='height: 30px;'>" +
+										"<img src='../js/clipboard-js/clippy.svg' width='14' alt='Copy to clipboard'>" +
+									"</button>" +
+								"</span><p>&nbsp;</p>"
+						+ "</div>";
+
+				log.debug("Returning: " + forLog);
 			} 
 			catch (Exception e) 
 			{ 

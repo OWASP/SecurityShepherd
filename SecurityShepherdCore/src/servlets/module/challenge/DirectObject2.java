@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -46,8 +48,7 @@ public class DirectObject2 extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(DirectObject2.class);
 	private static String levelName = "Insecure Direct Object Reference Challenge Two";
-	private static String levelHash = "vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4";
-	private static String levelResult = ""; //Stored in DB. Not user Specific
+	public static String levelHash = "vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4";
 	/**
 	 * The user must abuse this functionality to reveal a hidden user. The result key is hidden in this users profile.
 	 * @param userId To be used in generating the HTML output
@@ -58,6 +59,12 @@ public class DirectObject2 extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
+		
+		//Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.directObject.directObjectRef2", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -81,14 +88,14 @@ public class DirectObject2 extends HttpServlet
 					log.debug("Found user: " + resultSet.getString(1));
 					String userName = resultSet.getString(1);
 					String privateMessage = resultSet.getString(2);
-					htmlOutput = "<h2 class='title'>" + userName + "'s Message</h2>" +
+					htmlOutput = "<h2 class='title'>" + userName + "'s " + bundle.getString("response.message") + "</h2>" +
 							"<p>" + privateMessage + "</p>";
 				}
 				else
 				{
 					log.debug("No Profile Found");
 					Encoder encoder = ESAPI.encoder();
-					htmlOutput = "<h2 class='title'>User: 404 - User Not Found</h2><p>User '" + encoder.encodeForHTML(userId) + "' could not be found or does not exist.</p>";
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.notFound") + "</h2><p>" + bundle.getString("response.notFoundMessage.1") + " '" + encoder.encodeForHTML(userId) + "' " + bundle.getString("response.notFoundMessage.2") + "</p>";
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
@@ -96,7 +103,7 @@ public class DirectObject2 extends HttpServlet
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("error.funky"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 		}

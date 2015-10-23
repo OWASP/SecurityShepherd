@@ -94,19 +94,24 @@ public class Database
 	   Connection conn = null;
 	   try
 	   {
+		   //log.debug("Getting Prop File");
 		   //Pull Driver and DB URL out of database.properties
 		   String props = ApplicationRoot+"/WEB-INF/database.properties";
+		   //log.debug("Getting Driver");
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
+		   //log.debug("Getting Driver Instance");
 		   Class.forName(DriverType).newInstance();
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
 		   //Pull Schema, User name and Password from SqlInjLesson.properties
 		   props = ApplicationRoot+"/WEB-INF/coreDatabase.properties";
 		   
+		   //log.debug("Reading Prop File");
 		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
 		   String username=FileInputProperties.readfile(props, "databaseUsername");
 		   String password=FileInputProperties.readfile(props, "databasePassword");
 		   
+		   //log.debug("Creating Connection to DB");
 		   conn = DriverManager.getConnection(connectionURL,username,password);
 	   }
 	   catch(Exception e)

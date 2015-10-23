@@ -7,5 +7,6 @@
 					<option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>					
 					<option value="ga" ${lang == 'ga' ? 'selected' : ''}>Gaeilge</option>
 					<option value="zh" ${lang == 'zh' ? 'selected' : ''}>中文</option>
+					<option value="hi" ${lang == 'hi' ? 'selected' : ''}>Hindi(Hinglish)</option>
 				</select>
 			</form>

@@ -6,8 +6,8 @@ body {
 	color: #090212;
 }
 
-body, th, td, input, textarea, select, option {
-	font-family: "Trebuchet MS", "Times New Roman", Arial, Times, serif;
+body, th, td, input, textarea, select, option, p, div {
+	font-family: "Helvetica Neue", Helvetica Arial, "Lucida Grande", sans-serif;
 }
 
 h1, h2, h3 {
@@ -388,4 +388,41 @@ a:hover {
 
 .levelList{
 	max-height: 230px; 
+}
+
+.tooltipped {
+	position:relative;
+}
+
+.tooltipped::before{
+	position:absolute;
+	z-index:1000001;
+	display:none;
+	width:0;
+	height:0;
+	color:rgba(0,0,0,0.8);
+	pointer-events:none;
+	content:"";
+	border:5px solid;
+}
+
+.tooltipped::after{
+	background: rgba(212, 212, 212, 0.8);
+    border: 2px solid rgba(168, 120, 239, 0.8);
+    border-radius: 3px;
+    content: attr(aria-label);
+    display: inline-block;
+    font:normal normal 11px/1.5 Helvetica,arial,nimbussansl,liberationsans,freesans,clean,sans-serif";
+    letter-spacing: 0.5px;
+    padding: 5px 8px;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    white-space: pre;
+    word-wrap: break-word;
+    z-index: 1000000;
+	-webkit-font-smoothing:subpixel-antialiased;
 }

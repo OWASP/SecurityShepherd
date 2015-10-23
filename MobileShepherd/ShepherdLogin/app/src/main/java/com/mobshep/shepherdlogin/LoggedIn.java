@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
+import com.mobshep.shepherdlogin.SessionProvider.*;
 /**
  * This file is part of the Security Shepherd Project.
  *
@@ -63,11 +63,10 @@ public class LoggedIn extends Activity {
         toEdit.commit();
 
         //delete * from sessions table
-
-
-
+        SessionProvider.DatabaseHelper providerInstance;
+        providerInstance = new DatabaseHelper(this);
+        providerInstance.deleteData();
         checkNullSession();
-
 
     }
 }

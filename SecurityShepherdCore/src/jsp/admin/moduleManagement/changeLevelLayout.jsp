@@ -99,6 +99,7 @@ if (request.getSession() != null) //Session If
 					<br>
 					<script>
 					var theCsrfToken = "<%= csrfToken %>";
+					var theRefreshError = "Could not Refresh Menu";
 					
 					$("#enableCtfMode").click(function(){
 						$("#ctfLoadingDiv").show("fast");
@@ -138,10 +139,14 @@ if (request.getSession() != null) //Session If
 									$("#badData").show("slow");
 									$("#ctfDiv").slideDown("slow");
 								}
+								var scrollTo = $("#currentModeTitle").offset().top;
+								scrollTo = scrollTo - 60;
 								$('html, body').animate({
-							        scrollTop: $("#currentModeTitle").offset().top
+							        scrollTop: scrollTo
 							    }, 1000);
 							});
+							//Refresh the Side Menu
+							refreshSideMenu(theCsrfToken, theRefreshError);
 						});
 					});
 					
@@ -182,10 +187,14 @@ if (request.getSession() != null) //Session If
 									$("#badData").show("slow");
 									$("#openFloor").slideDown("slow");
 								}
+								var scrollTo = $("#currentModeTitle").offset().top;
+								scrollTo = scrollTo - 60;
 								$('html, body').animate({
-							        scrollTop: $("#currentModeTitle").offset().top
+							        scrollTop: scrollTo
 							    }, 1000);
 							});
+							//Refresh the Side Menu
+							refreshSideMenu(theCsrfToken, theRefreshError);
 						});
 					});
 					
@@ -226,10 +235,14 @@ if (request.getSession() != null) //Session If
 									$("#badData").show("slow");
 									$("#tournament").slideDown("slow");
 								}	
+								var scrollTo = $("#currentModeTitle").offset().top;
+								scrollTo = scrollTo - 60;
 								$('html, body').animate({
-							        scrollTop: $("#currentModeTitle").offset().top
+							        scrollTop: scrollTo
 							    }, 1000);
 							});
+							//Refresh the Side Menu
+							refreshSideMenu(theCsrfToken, theRefreshError);
 						});
 					});
 					</script>

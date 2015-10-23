@@ -62,6 +62,9 @@ if (request.getSession() != null)
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
@@ -93,7 +96,7 @@ if (request.getSession() != null)
 						<%= bundle.getString("paragraph.info.searchTerm") %>
 					</td></tr>
 					<tr><td>
-						<input style="width: 400px;" id="searchTerm" type="text"/>
+						<input style="width: 400px;" id="searchTerm" type="text" autocomplete="off"/>
 					</td></tr>
 					<tr><td>
 						<div id="submitButton"><input type="submit" value="<%= bundle.getString("button.getUser") %>"/></div>

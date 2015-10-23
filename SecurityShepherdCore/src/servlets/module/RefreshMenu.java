@@ -2,6 +2,8 @@ package servlets.module;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -11,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Encoder;
 
 import utils.ModulePlan;
 import utils.ShepherdLogManager;
@@ -42,7 +46,7 @@ public class RefreshMenu extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(GetModule.class);
 	/**
-	 * This method refreshes the user's menu after they complete a level incremental mode. This ensures that the process of continuing challenges is a fluid one.
+	 * This servlet returns a fresh version of the module menu bar. This is used when completing levels, changing the floor plan or when opening/closing challenges.
 	 * @param csrfToken
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -54,6 +58,11 @@ public class RefreshMenu extends HttpServlet
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
+		
+		// Translation Stuff
+		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
+		
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -62,25 +71,40 @@ public class RefreshMenu extends HttpServlet
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
-				if(ModulePlan.isIncrementalFloor())
+				try 
 				{
-					try
+					Encoder encoder = ESAPI.encoder();
+					String ApplicationRoot = getServletContext().getRealPath("");
+					String userId = (String)ses.getAttribute("userStamp");
+					if(ModulePlan.isIncrementalFloor())
 					{
-						log.debug("Getting ApplicationRoot");
-						String ApplicationRoot = getServletContext().getRealPath("");
-						log.debug("Servlet root = " + ApplicationRoot );
-						
-						out.write(Getter.getIncrementalModules(ApplicationRoot, (String)ses.getAttribute("userStamp"),  ses.getAttribute("lang").toString(), (String)tokenParmeter));
+						log.debug("Returning CTF Menu");
+						out.write(Getter.getIncrementalModules(ApplicationRoot, userId,  ses.getAttribute("lang").toString(), (String)tokenParmeter)
+								+ "<script>startScrollsBars();makeSearchList();</script>");
 					}
-					catch (Exception e)
+					else if (ModulePlan.isOpenFloor())
 					{
-						log.error("Refresh Menu Error: " + e.toString());
+						log.debug("Returning Open Floor Menu");
+						out.write("<li><a id=\"lessonList\" href=\"javascript:;\"><div class=\"menuButton\">" + bundle.getString("generic.text.lessons") + 
+						"</div></a><ul id=\"theLessonList\" style=\"display: none;\">" +
+						Getter.getLessons(ApplicationRoot, userId, locale) +	"</ul></li><li>" +
+						"<a id=\"challengeList\" href=\"javascript:;\"><div class=\"menuButton\">" + 
+						bundle.getString("generic.text.challenges") + "</div></a><ul id=\"theChallengeList\" style=\"display: none;\">" + 
+						Getter.getChallenges(ApplicationRoot, userId, locale) + "</ul></li>"
+						+ "<script>applyMenuButtonActionsOpenOrTourney('" + encoder.encodeForHTML(tokenParmeter.toString()) + "', \"" + encoder.encodeForHTML(bundle.getString("generic.text.sorryError")) + "\");openFloorToggleFunctions();makeSearchList();</script>");
+					}
+					else
+					{
+						if (ModulePlan.isTournyFloor())
+							log.fatal("Could not Pick ModulePlan to use (All False). Using Tournament Instead");
+						log.debug("Returning Tournament Floor Menu");
+						out.write(Getter.getTournamentModules(ApplicationRoot, userId, locale)
+								+ "<script>applyMenuButtonActionsOpenOrTourney('" + encoder.encodeForHTML(tokenParmeter.toString()) + "', \"" + encoder.encodeForHTML(bundle.getString("generic.text.sorryError")) + "\");tournamentToggleFunctions();startScrollsBars();makeSearchList();</script>");
 					}
 				}
-				else
+				catch (Exception e)
 				{
-					//Incremental Mode is not enabled, so No
-					out.write("No");
+					log.error("Refresh Menu Error: " + e.toString());
 				}
 			}
 			else
@@ -91,7 +115,7 @@ public class RefreshMenu extends HttpServlet
 		else
 		{
 			log.error("Invalid Session Detected");
-			out.write("<img src='css/images/loggedOutSheep.jpg'/>");
+			out.write("Your are logged out! Please sign back in!");
 		}
 		log.debug("&&& END RefreshMenu &&&");
 	}

@@ -9,6 +9,7 @@
 	//Translation Stuff
 	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_broken_crypto." + levelHash, locale);
+	ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 	//Used more than once translations
 	String translatedLevelName = bundle.getString("title.question.mobile_broken_crypto");
 	
@@ -55,15 +56,16 @@
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= translatedLevelName %></title>
-<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
-	media="screen" />
-
-</script>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Security Shepherd - <%= translatedLevelName %></title>
+	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 	<div id="contentDiv">
 		<h2 class="title"><%= translatedLevelName %></h2>
 			<p> 
@@ -84,7 +86,7 @@
 				<%= bundle.getString("challenge.description") %>
 				<br/>
 				<br/>
-				<%= Analytics.getMobileLevelBlurb("BrokenCrypto.apk") %>
+				<%= mobile.getString("mobileBlurb.vmLink.1") + " BrokenCrypto.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 			</p>
 			<script>
 				$('#hideLesson').click(function(){

@@ -6,6 +6,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -15,8 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -45,14 +45,14 @@ import dbProcs.Database;
  */
 public class SecurityMisconfigStealTokens extends HttpServlet
 {
-	//SQL Challenge One
+	//Security Misconfiguration Challenge
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SecurityMisconfigStealTokens.class);
 	private static String levelName = "Security Misconfig Cookie Flags Servlet";
-	private static String levelHash = "c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4";
-	private static String levelResult = "92755de2ebb012e689caf8bfec629b1e237d23438427499b6bf0d7933f1b8215"; // Stored in Vulnerable DB. Not user Specific
+	public static String levelHash = "c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4";
+	private static String levelResult = "92755de2ebb012e689caf8bfec629b1e237d23438427499b6bf0d7933f1b8215"; // Base Key. User is given user specific key
 	/**
-	 * TODO - Java Doc
+	 * This servlet will return the key to complete as long as the cookie submitted is valid and does not belong to the user making the request
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -62,12 +62,16 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
+			//Translation Stuff
+			Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+			ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+			ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.securityMisconfig.stealTokens", locale);
+			
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
 			String htmlOutput = new String();
-			Encoder encoder = ESAPI.encoder();
 			try
 			{
 				String applicationRoot = getServletContext().getRealPath("");
@@ -94,8 +98,8 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 				if(cookieValue.compareTo(userActualCookie) == 0)
 				{
 					//User is using their own Cookie: Not Complete
-					htmlOutput = new String("<h2 class='title'>Challenge NOT Complete</h2>"
-							+ "<p>You cannot complete this challenge with your cookie value. You must get the cookie from another user.<p>");					
+					htmlOutput = new String("<h2 class='title'>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete") + "</h2>"
+							+ "<p>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete.message") + "<p>");					
 				}
 				else
 				{
@@ -106,22 +110,22 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 						log.debug("Valid Cookie of another User Dectected");
 						// Get key and add it to the output
 						String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
-						htmlOutput = "<h2 class='title'>Challenge Complete</h2>" +
+						htmlOutput = "<h2 class='title'>" + bundle.getString("securityMisconfig.servlet.stealTokens.complete") + "</h2>" +
 								"<p>" +
-								"Congradulations! Your result key is as follows " +
+								bundle.getString("securityMisconfig.servlet.stealTokens.youDidIt") + " " +
 								"<a>" + userKey + "</a>" +
 								"</p>";
 					}
 					else
 					{
-						htmlOutput = new String("<h2 class='title'>Challenge NOT Complete</h2>"
-								+ "<p>You muse submit a valid token of another user.<p>");					
+						htmlOutput = new String("<h2 class='title'>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete") + "</h2>"
+								+ "<p>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete.yourToken") + "<p>");					
 					}
 				}
 			}
 			catch(Exception e)
 			{
-				out.write("An Error Occurred! You must be getting funky!");
+				out.write(errors.getString("securityMisconfig.servlet.stealTokens.notComplete.yourToken"));
 				log.fatal(levelName + " - " + e.toString());
 			}
 			log.debug("Outputting HTML");

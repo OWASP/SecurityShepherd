@@ -51,8 +51,7 @@ public class SessionManagement5ChangePassword extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement5ChangePassword.class);
 	private static String levelName = "Session Management Challenge Five (Change Password)";
-	private static String levelHash = SessionManagement5.levelHash;
-	private static String levelResult = ""; //This Servlet does not return a result
+	// private static String levelResult = ""; //This Servlet does not return a result
 	/**
 	 * Function used by Session Management Challenge Five to change the password of the submitted user name. The function requires a valid token which is a base64'd timestamp. If the current time is within 10 minutes of the token, the function will execute 
 	 * @param userName User cookie used to store the user password to be reset
@@ -76,7 +75,6 @@ public class SessionManagement5ChangePassword extends HttpServlet
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();
-			Base64 base64 = new Base64();
 			out.print(getServletInfo());
 			String htmlOutput = new String();
 			String errorMessage = new String();

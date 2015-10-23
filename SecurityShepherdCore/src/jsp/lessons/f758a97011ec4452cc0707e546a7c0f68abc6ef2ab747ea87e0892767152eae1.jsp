@@ -10,11 +10,9 @@
 	//Translation Stuff
 	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_client_side_injection." + levelHash, locale);
+	ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 	//Used more than once translations
 	String translatedLevelName = bundle.getString("title.question.csi");
-	
-	//Level blurb can be written here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-	String levelBlurb = "";
 
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 	if (request.getSession() != null)
@@ -58,14 +56,16 @@
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= translatedLevelName %></title>
-<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css"	media="screen" />
-
-</script>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Security Shepherd - <%= translatedLevelName %></title>
+	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 	<div id="contentDiv">
 		<h2 class="title"><%= translatedLevelName %></h2>
 		<p>
@@ -89,7 +89,7 @@
 		 <%= bundle.getString("challenge.description") %>
 		<br/>
 		<br>
-		<%= Analytics.getMobileLevelBlurb("CSInjection.apk") %>
+		<%= mobile.getString("mobileBlurb.vmLink.1") + " CSInjection.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
 		
 		<script>
 				

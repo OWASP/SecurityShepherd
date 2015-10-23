@@ -44,9 +44,7 @@ import android.widget.ListView;
  * @author Sean Duggan
  */
 
-public class UDataLeakage extends ActionBarActivity {
-
-
+public class UDataLeakage extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

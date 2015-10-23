@@ -66,7 +66,6 @@ public class Redirect extends HttpServlet
 				log.debug("Current User: " + ses.getAttribute("userName").toString());
 				try
 				{
-					String redirectString = request.getParameter("to");
 					out.write(bundle.getString("target.example") + "...");
 					//No actual redirecting
 				}
