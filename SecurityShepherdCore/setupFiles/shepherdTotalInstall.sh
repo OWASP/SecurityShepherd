@@ -1,6 +1,6 @@
-shepherdServerXmlLocation=https://raw.githubusercontent.com/markdenihan/owaspSecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleServer.xml
-shepherdWebXmlLocation=https://raw.githubusercontent.com/markdenihan/owaspSecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleWeb.xml
-shepherdManualPackLocation=http://sourceforge.net/projects/owaspshepherd/files/owaspSecurityShepherd_V2.4%20Manual%20Pack.zip/download
+shepherdServerXmlLocation=https://raw.githubusercontent.com/owasp/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleServer.xml
+shepherdWebXmlLocation=https://raw.githubusercontent.com/owasp/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleWeb.xml
+shepherdManualPackLocation=http://sourceforge.net/projects/owaspshepherd/files/owaspSecurityShepherd_V3.0%20Manual%20Pack.zip/download
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 1>&2
    exit 1
@@ -21,6 +21,7 @@ else
 	cd /home/*
 	sudo apt-get install -y dos2unix
 	sudo dos2unix manualPack/*.sql
+	sudo dos2unix manualPack/*.js
 	sudo chmod 775 manualPack/*.war
 	cd /var/lib/tomcat7/webapps/
 	sudo rm -rf *
@@ -29,10 +30,17 @@ else
 	echo "Configuring MySQL"
 	echo "MySQL Password Please:"
 	mysql -u root -e "source coreSchema.sql" --force -p
-	echo "Ignore Error about Core.CheatSheet."
 	echo "MySQL Password Please:"
 	mysql -u root -e "source moduleSchemas.sql" --force -p
-	echo "Ignore DROP USER failures"
+	
+	#Install and Config MongoDB
+	echo "Installing MongoDB"
+	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+	echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+	sudo apt-get update
+	sudo apt-get install -y mongodb-org=2.6.9 mongodb-org-server=2.6.9 mongodb-org-shell=2.6.9 mongodb-org-mongos=2.6.9 mongodb-org-tools=2.6.9
+	sleep 10
+	mongo /home/*/manualPack/mongoSchema.js
 	
 	#Configuring Tomcat to Run the way we want (Oracle Java, HTTPs, Port 80 redirect to 443
 	echo "Configuring Tomcat"
@@ -68,6 +76,6 @@ else
 	chown tomcat7 /etc/authbind/byport/443
 	
 	#Restart Tomcat
-	sudo service tomcat7 restart
+	sudo service tomcat7 restart	
 	echo "Shepherd is Ready to Rock!"
 fi
