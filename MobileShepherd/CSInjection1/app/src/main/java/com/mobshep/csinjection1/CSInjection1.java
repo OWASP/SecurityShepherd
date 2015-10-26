@@ -158,7 +158,6 @@ try{
 			if (cursor != null) {
 				if (cursor.getCount() <= 0) {
 					return false;
-
 				}
 			}
 			

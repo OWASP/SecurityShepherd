@@ -1,12 +1,9 @@
 package com.mobshep.poorauthentication2;
 
 import android.app.Activity;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -27,47 +24,40 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
-public class Register extends MainActivity {
+public class Authenticated extends Activity {
+    EditText Key;
+    Button getKey;
+    Button insertKey;
 
-    EditText Username, Password;
-    Button Register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_layout);
+        setContentView(R.layout.authenticated_layout);
         referenceXML();
     }
 
-    public void Register(View v){
-    String usernameInput = Username.getText().toString();
-    String passwordInput = Password.getText().toString();
 
-    try {
-
+    public void insertKey(){
         DBHelper dbInstance;
         dbInstance = new DBHelper();
-        dbInstance.insertData(this, usernameInput, passwordInput);
 
-        Toast insert = Toast.makeText(Register.this, "Registered!", Toast.LENGTH_SHORT);
-        insert.show();
-    }catch(SQLiteException s){
-        Toast insert = Toast.makeText(Register.this, "Error:" + s.toString(), Toast.LENGTH_SHORT);
-        insert.show();
-    }
+        String userInput = Key.getText().toString();
+
+        dbInstance.insertKey(this, userInput);
     }
 
+    public void getKey(){
+        DBHelper dbInstance;
+        dbInstance = new DBHelper();
 
-
-    public void returnToLogin(View v){
-        this.finish();
     }
 
     private void referenceXML(){
-        Username = (EditText)findViewById(R.id.etUsername);
-        Password = (EditText)findViewById(R.id.etPassword);
-        Register = (Button)findViewById(R.id.bRegister);
+        Key = (EditText)findViewById(R.id.etKey);
+        getKey = (Button)findViewById(R.id.bGetKey);
+        insertKey = (Button)findViewById(R.id.bInsertKey);
+
 
     }
-
 }
