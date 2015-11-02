@@ -2,6 +2,7 @@ package com.mobshep.poorauthentication2;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -38,7 +39,7 @@ public class Authenticated extends Activity {
     }
 
 
-    public void insertKey(){
+    public void insertKey(View v){
         DBHelper dbInstance;
         dbInstance = new DBHelper();
 
@@ -47,9 +48,11 @@ public class Authenticated extends Activity {
         dbInstance.insertKey(this, userInput);
     }
 
-    public void getKey(){
+    public void retrieveKey(View v){
         DBHelper dbInstance;
         dbInstance = new DBHelper();
+
+        Key.setText(dbInstance.outputKey(this));
 
     }
 
@@ -57,7 +60,5 @@ public class Authenticated extends Activity {
         Key = (EditText)findViewById(R.id.etKey);
         getKey = (Button)findViewById(R.id.bGetKey);
         insertKey = (Button)findViewById(R.id.bInsertKey);
-
-
     }
 }

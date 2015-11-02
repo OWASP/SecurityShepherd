@@ -42,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
         DBHelper dbInstance;
         dbInstance = new DBHelper();
         dbInstance.populateTable(this,"");
+        dbInstance.populateAnotherTable(this);
 
         referenceXML();
     }
@@ -94,6 +95,9 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            Intent goToSettings = new Intent(this, Preferences.class);
+            startActivity(goToSettings);
             return true;
         }
 

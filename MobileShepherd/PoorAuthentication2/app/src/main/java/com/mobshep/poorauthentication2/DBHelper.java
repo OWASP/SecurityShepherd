@@ -54,19 +54,20 @@ public class DBHelper {
         stmt.bindString(2, Password);
         stmt.execute();
 
+        //
+        db.execSQL("INSERT INTO Users (username,password,verified) VALUES('admin','pass','True')");
         db.close();
 
     }
-
 
     public void insertKey(Context context, String key) {
         SQLiteDatabase.loadLibs(context);
 
         String dbPath = context.getDatabasePath("Key.db").getPath();
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-                "AHardCodedPassword", null);
+                "", null);
 
-        SQLiteStatement stmt = db.compileStatement("INSERT INTO Key (key) VALUES(?)");
+        SQLiteStatement stmt = db.compileStatement("INSERT INTO Key (entries) VALUES(?)");
         stmt.bindString(1, key);
         stmt.execute();
 
@@ -87,18 +88,15 @@ public class DBHelper {
         // query.bindString(2, Password);
         // query.execute();
 
-        String query = ("SELECT * FROM Users WHERE username=? AND password=? AND verified != 'False'");
+        String query = ("SELECT * FROM Users WHERE username=? AND password=? AND verified != ?");
 
-        Cursor cursor = db.rawQuery(query, new String[]{Username, Password});
+        Cursor cursor = db.rawQuery(query, new String[]{Username, Password, "false"});
 
         if (cursor != null) {
             if (cursor.getCount() <= 0) {
                 return false;
             }
         }
-
-        db.close();
-
         return true;
 
     }
@@ -133,7 +131,7 @@ public class DBHelper {
         }
     }
 
-    public void populateAnotherTable(Context context, String password) {
+    public void populateAnotherTable(Context context) {
         try {
             try {
                 SQLiteDatabase.loadLibs(context);
@@ -148,7 +146,7 @@ public class DBHelper {
                         "", null);
 
                 db.execSQL("DROP TABLE IF EXISTS Key");
-                db.execSQL("CREATE TABLE Key( VARCHAR Key)");
+                db.execSQL("CREATE TABLE Key( entries TEXT)");
 
 
             } catch (Exception e) {
@@ -162,15 +160,15 @@ public class DBHelper {
         }
     }
 
-    public String outputKey(Context context, String password) {
+    public String outputKey(Context context) {
         SQLiteDatabase.loadLibs(context);
 
-        String dbPath = context.getDatabasePath("key.db").getPath();
+        String dbPath = context.getDatabasePath("Key.db").getPath();
 
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, password,
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, "",
                 null);
 
-        String query = ("SELECT * FROM key;");
+        String query = ("SELECT * FROM Key;");
 
         Cursor cursor = db.rawQuery(query, null);
 
