@@ -93,14 +93,6 @@ public class MainActivity extends ActionBarActivity {
 
         //turn into switch
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
-            Intent goToSettings = new Intent(this, Preferences.class);
-            startActivity(goToSettings);
-            return true;
-        }
-
         if (id == R.id.action_license){
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     this);

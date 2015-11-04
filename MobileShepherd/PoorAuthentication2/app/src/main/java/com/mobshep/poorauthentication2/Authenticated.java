@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -46,11 +47,17 @@ public class Authenticated extends Activity {
         String userInput = Key.getText().toString();
 
         dbInstance.insertKey(this, userInput);
+
+        Toast insert = Toast.makeText(Authenticated.this, "Data Inserted!", Toast.LENGTH_SHORT);
+        insert.show();
     }
 
     public void retrieveKey(View v){
         DBHelper dbInstance;
         dbInstance = new DBHelper();
+
+        Toast get = Toast.makeText(Authenticated.this, "Getting Data...", Toast.LENGTH_SHORT);
+        get.show();
 
         Key.setText(dbInstance.outputKey(this));
 

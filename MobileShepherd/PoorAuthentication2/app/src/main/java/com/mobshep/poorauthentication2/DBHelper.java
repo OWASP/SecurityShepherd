@@ -56,7 +56,10 @@ public class DBHelper {
 
         //
         db.execSQL("INSERT INTO Users (username,password,verified) VALUES('admin','pass','True')");
-        db.close();
+
+        if (db != null) {
+            db.close();
+        }
 
     }
 
@@ -65,13 +68,15 @@ public class DBHelper {
 
         String dbPath = context.getDatabasePath("Key.db").getPath();
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-                "", null);
+                "AHardCodedPassword", null);
 
         SQLiteStatement stmt = db.compileStatement("INSERT INTO Key (entries) VALUES(?)");
         stmt.bindString(1, key);
         stmt.execute();
 
-        db.close();
+        if (db != null) {
+            db.close();
+        }
     }
 
     public boolean queryData(Context context, String Username, String Password) {
@@ -82,18 +87,14 @@ public class DBHelper {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
                 "", null);
 
-
-        // SQLiteStatement query = db.compileStatement("SELECT * FROM Users WHERE username = ? AND password = ?");
-        // query.bindString(1, Username);
-        // query.bindString(2, Password);
-        // query.execute();
-
         String query = ("SELECT * FROM Users WHERE username=? AND password=? AND verified != ?");
 
         Cursor cursor = db.rawQuery(query, new String[]{Username, Password, "false"});
 
         if (cursor != null) {
             if (cursor.getCount() <= 0) {
+
+                cursor.close();
                 return false;
             }
         }
@@ -119,6 +120,9 @@ public class DBHelper {
                 db.execSQL("DROP TABLE IF EXISTS Users");
                 db.execSQL("CREATE TABLE Users(memID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password VARCHAR, verified Text)");
 
+                if (db != null) {
+                    db.close();
+                }
 
             } catch (Exception e) {
                 // TODO Auto-generated catch block
@@ -143,11 +147,14 @@ public class DBHelper {
                     dbPathFile.getParentFile().mkdirs();
 
                 SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-                        "", null);
+                        "AHardCodedPassword", null);
 
                 db.execSQL("DROP TABLE IF EXISTS Key");
                 db.execSQL("CREATE TABLE Key( entries TEXT)");
 
+                if (db != null) {
+                    db.close();
+                }
 
             } catch (Exception e) {
                 // TODO Auto-generated catch block
@@ -158,6 +165,9 @@ public class DBHelper {
         } catch (SQLiteException e) {
             Log.i ("", "An database error occurred.");
         }
+
+
+
     }
 
     public String outputKey(Context context) {
@@ -165,7 +175,7 @@ public class DBHelper {
 
         String dbPath = context.getDatabasePath("Key.db").getPath();
 
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, "",
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, "AHardCodedPassword",
                 null);
 
         String query = ("SELECT * FROM Key;");
@@ -183,6 +193,7 @@ public class DBHelper {
         }
         return dbPath;
     }
+
 
 
 }

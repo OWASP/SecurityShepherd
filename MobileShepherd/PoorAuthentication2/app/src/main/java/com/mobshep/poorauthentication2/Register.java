@@ -43,6 +43,19 @@ public class Register extends MainActivity {
     String usernameInput = Username.getText().toString();
     String passwordInput = Password.getText().toString();
 
+
+    if (usernameInput.length() < 6){
+        Toast length = Toast.makeText(Register.this, "Username must be at least 6 characters.", Toast.LENGTH_SHORT);
+        length.show();
+        return;
+    }
+
+    if (passwordInput.length() < 6){
+        Toast length = Toast.makeText(Register.this, "Password must be at least 6 characters.", Toast.LENGTH_SHORT);
+        length.show();
+        return;
+    }
+
     try {
 
         DBHelper dbInstance;
@@ -69,5 +82,7 @@ public class Register extends MainActivity {
         Register = (Button)findViewById(R.id.bRegister);
 
     }
+
+
 
 }
