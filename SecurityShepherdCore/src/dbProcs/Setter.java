@@ -168,7 +168,7 @@ public class Setter
 			+ " OR moduleCategory = 'Mobile Insecure Data Storage'"
 			+ " OR moduleCategory = 'Mobile Reverse Engineering'"
 			+ " OR moduleCategory = 'Mobile Broken Crypto'"
-			+ " OR moduleCategory = 'Mobile Content Providers'"
+			+ " OR moduleCategory = 'Mobile Content Provider'"
 			+ " OR moduleCategory = 'Mobile Poor Authentication'");
 	
 	/**

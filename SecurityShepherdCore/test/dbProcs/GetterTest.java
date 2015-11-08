@@ -678,7 +678,7 @@ public class GetterTest
 						}
 						else
 						{
-							log.debug("Too Few Challenges Returned to pass: " + numberofChallengesReturned + " returned");
+							log.debug("Too Few Challenges Returned to pass: " + numberofChallengesReturned + " returned. Expected at least:" + totalNumberOfModulesInShepherd);
 							fail("Too Few Challenges Returned to Pass");
 						}
 					}
