@@ -49,8 +49,17 @@ public class LoginTest
 			}
 			else
 			{
-				log.debug("Unit Test Passed");
-			}
+				//Check CSRF Token Exists
+				log.debug("Getting CSRF Token");
+				String csrfToken = response.getCookie("token").getValue();
+				if(csrfToken.isEmpty())
+					log.debug("Csrf Token Value Empty: " + csrfToken);
+				else
+				{
+					log.debug("Csrf Token Value: " + csrfToken);
+					log.debug("Unit Test Passed");
+				}
+			}	
 		}
 		catch(Exception e)
 		{

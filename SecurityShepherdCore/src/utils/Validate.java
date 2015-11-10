@@ -63,6 +63,7 @@ public class Validate
 		Cookie theToken = null;
 		for(i = 0; i < userCookies.length; i++)
 		{
+			//log.debug("looking at cookie: " + userCookies[i].getName());
 			if(userCookies[i].getName().compareTo("token") == 0)
 			{
 				theToken = userCookies[i];
@@ -89,6 +90,10 @@ public class Validate
 				log.error("CSRF Cookie Token was modified in some manor: " + e.toString());
 				theToken = null;
 			}
+		}
+		else
+		{
+			log.error("No CSRF Token Detected");
 		}
 		return theToken;
 	}
