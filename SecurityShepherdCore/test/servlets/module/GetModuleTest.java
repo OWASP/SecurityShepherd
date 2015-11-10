@@ -22,7 +22,7 @@ public class GetModuleTest
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
 	
-	@Before
+    @Before
 	public void setup() 
 	{
 		applicationRoot = System.getProperty("user.dir") + "/site";
@@ -33,61 +33,102 @@ public class GetModuleTest
         if(!Setter.openAllModules(applicationRoot))
         	fail("Could not Mark All Modules As Open");
 	}
-	
-	@Test
-	public void testGetModule()
+    
+	/**
+	 * Method to Simulate the interaction with the getModule servlet.
+	 * @param moduleId The ID of the Module to Search For
+	 * @param csrfToken The CSRF Token of the User
+	 * @return The Content of the Response (Which is supposed to be the location of the module)
+	 * @throws Exception
+	 */
+	public String getModuleDoPost(String moduleId, String csrfToken) throws Exception
 	{
-		String moduleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
-		String levelHash = new String("fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100");
-		String userName = "getModule1";
 		try
 		{
-			//Verify User Exists in DB
-			GetterTest.verifyTestUser(applicationRoot, userName, userName);
-			//Sign in as Normal User
-			log.debug("Signing in as User Through LoginServlet");
-			loginDoPost(userName, userName, null);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
-			if(response.getCookie("token") == null)
-				fail("No CSRF Token Was Returned from Login Servlet");
-			String csrfToken = response.getCookie("token").getValue();
-			if(csrfToken.isEmpty())
-			{
-				String message = new String("No CSRF token returned from Login Servlet");
-				log.fatal(message);
-				fail(message);
-			}
+			int expectedResponseCode = 302;
+			
+			log.debug("Creating GetModule Servlet Instance");
+			GetModule servlet = new GetModule();
+			servlet.init(new MockServletConfig("GetModule"));
+			
+			//Setup Servlet Parameters and Attributes
+			log.debug("Setting Up Params and Atrributes");
+			request.addParameter("moduleId", moduleId);
+			//Adding Correct CSRF Token (Token Submitted)
+			request.addParameter("csrfToken", csrfToken);
+			
+			log.debug("Running doPost");
+			servlet.doPost(request, response);
+			
+			if(response.getStatus() != expectedResponseCode)
+				fail("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
 			else
 			{
-				//Add Cookies from Response to outgoing request
-				request.setCookies(response.getCookies());
-				String moduleAddress = getModuleDoPost(moduleId, csrfToken);
-				if(moduleAddress.endsWith("lessons&#x2f;" + levelHash + ".jsp"))
+				log.debug("302 OK Detected");
+				log.debug("Servlet Successful, returning location retrieved: " + response.getContentAsString());
+				return(response.getContentAsString());
+			}
+		}
+		catch(Exception e)
+		{
+			throw e;
+		}
+		return null;
+	}
+	
+	/**
+	 * Method to simulate login servlet interaction. Can't seem to recyle the method in LoginTest with the MockRequests
+	 * @param userName User to Sign in
+	 * @param password User Password to use to Sign in
+	 * @param theClass Class of the User
+	 * @throws Exception If the process fails, an exception will be thrown
+	 */
+	public void loginDoPost(String userName, String password, String theClass) throws Exception
+	{
+		try
+		{
+			int expectedResponseCode = 302;
+			
+			log.debug("Creating Login Servlet Instance");
+			Login servlet = new Login();
+			servlet.init(new MockServletConfig("Login"));
+			
+			//Setup Servlet Parameters and Attributes
+			log.debug("Setting Up Params and Atrributes");
+			request.addParameter("login", userName);
+			request.addParameter("pwd", password);
+			request.getSession().setAttribute("lang", lang);
+			
+			log.debug("Running doPost");
+			servlet.doPost(request, response);
+			
+			if(response.getStatus() != expectedResponseCode)
+				fail("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
+			else
+			{
+				log.debug("302 OK Detected");
+				String location = response.getHeader("Location");
+				log.debug("302 pointing at: " + location);
+				if(!location.endsWith("index.jsp"))
 				{
-					log.debug("Correct Location Returned");
-				}
-				else
-				{
-					String message = "The Incorrect Location was Returned for the Insecure Director Object Reference Lesson.";
-					log.fatal(message);
-					log.debug("location returned: " + moduleAddress);
-					fail(message);
+					throw new Exception("Login not Redirecting to index.jsp. Login Proceedure Failed");
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			log.fatal("Could not Complete testGetModule: " + e.toString());
-			fail("Could not Complete testGetModule");
+			throw e;
 		}
 	}
 	
+	/**
+	 * This test checks the module address returned when the requested module is currently blocked
+	 */
 	@Test
-	public void testGetModuleWhenClosed()
+	public void testGetBlockedModule()
 	{
-		String moduleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
-		String levelHash = new String("fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100");
-		String userName = "getModule1";
+		String moduleId = new String("20e755179a5840be5503d42bb3711716235005ea"); //CSRF 1
+		String userName = "getModule5";
 		try
 		{
 			//Verify User Exists in DB
@@ -107,28 +148,29 @@ public class GetModuleTest
 			}
 			else
 			{
-				if(!Setter.closeAllModules(applicationRoot))
-					fail("Could not Mark All Modules As Closed");
+				//Blocking Module
+				ModuleBlock.blockerId = moduleId;
+				ModuleBlock.blockerEnabled = true;
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
 				String moduleAddress = getModuleDoPost(moduleId, csrfToken);
-				if(moduleAddress.endsWith("lessons&#x2f;" + levelHash + ".jsp"))
-				{
-					String message = "Insecure Director Object Reference Lesson Address Returned when module was closed";
-					log.fatal(message);
-					log.debug("location returned: " + moduleAddress);
-					fail(message);
-				}
+				log.debug(moduleAddress);
+				//Resetting Module Block
+				ModuleBlock.reset();
+				if(moduleAddress.equalsIgnoreCase("../blockedMessage.jsp"))
+					log.debug("Blocked Module Address Returned: PASS");
 				else
 				{
-					log.debug("Address not returned! Pass!");
-				}
+					String message = "Module Address Returned was not the Blocked Message Page";
+					log.fatal(message + ". Should be ../blockedMessage.jsp");
+					log.debug("Returned: " + moduleAddress);
+					fail(message);				}
 			}
 		}
 		catch(Exception e)
 		{
-			log.fatal("Could not Complete testGetModuleWhenClosed: " + e.toString());
-			fail("Could not Complete testGetModuleWhenClosed");
+			log.fatal("Could not Complete testGetBlockedModule: " + e.toString());
+			fail("Could not Complete testGetBlockedModule");
 		}
 	}
 	
@@ -183,14 +225,12 @@ public class GetModuleTest
 		}
 	}
 	
-	/**
-	 * This test attempts to retrieve a module with a non existant identifier
-	 */
 	@Test
-	public void testGetModuleBadId()
+	public void testGetModule()
 	{
-		String moduleId = new String("ThisModuleDoesNotExist"); 
-		String userName = "getModule3";
+		String moduleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
+		String levelHash = new String("fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100");
+		String userName = "getModule1";
 		try
 		{
 			//Verify User Exists in DB
@@ -213,67 +253,23 @@ public class GetModuleTest
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
 				String moduleAddress = getModuleDoPost(moduleId, csrfToken);
-				if(moduleAddress.isEmpty())
-					log.debug("No Module Address Returned: PASS");
+				if(moduleAddress.endsWith("lessons&#x2f;" + levelHash + ".jsp"))
+				{
+					log.debug("Correct Location Returned");
+				}
 				else
 				{
-					String message = "Module Address Returned When Bad ID Was Submitted";
-					log.fatal(message + ". Nothing should be returned");
-					log.debug("Returned: " + moduleAddress);
+					String message = "The Incorrect Location was Returned for the Insecure Director Object Reference Lesson.";
+					log.fatal(message);
+					log.debug("location returned: " + moduleAddress);
+					fail(message);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			log.fatal("Could not Complete testGetChallenge: " + e.toString());
-			fail("Could not Complete testGetChallenge");
-		}
-	}
-	
-	/**
-	 * This test submits a null value to the getModule Servlet
-	 */
-	@Test
-	public void testGetModuleNullId()
-	{
-		String moduleId = null;
-		String userName = "getModule4";
-		try
-		{
-			//Verify User Exists in DB
-			GetterTest.verifyTestUser(applicationRoot, userName, userName);
-			//Sign in as Normal User
-			log.debug("Signing in as User Through LoginServlet");
-			loginDoPost(userName, userName, null);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
-			if(response.getCookie("token") == null)
-				fail("No CSRF Token Was Returned from Login Servlet");
-			String csrfToken = response.getCookie("token").getValue();
-			if(csrfToken.isEmpty())
-			{
-				String message = new String("No CSRF token returned from Login Servlet");
-				log.fatal(message);
-				fail(message);
-			}
-			else
-			{
-				//Add Cookies from Response to outgoing request
-				request.setCookies(response.getCookies());
-				String moduleAddress = getModuleDoPost(moduleId, csrfToken);
-				if(moduleAddress.isEmpty())
-					log.debug("No Module Address Returned: PASS");
-				else
-				{
-					String message = "Module Address Returned When Bad ID Was Submitted";
-					log.fatal(message + ". Nothing should be returned");
-					log.debug("Returned: " + moduleAddress);
-				}
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Complete testGetChallenge: " + e.toString());
-			fail("Could not Complete testGetChallenge");
+			log.fatal("Could not Complete testGetModule: " + e.toString());
+			fail("Could not Complete testGetModule");
 		}
 	}
 	
@@ -320,19 +316,19 @@ public class GetModuleTest
 		}
 		catch(Exception e)
 		{
-			log.fatal("Could not Complete testGetChallenge: " + e.toString());
-			fail("Could not Complete testGetChallenge");
+			log.fatal("Could not Complete testGetModuleBadCsrfToken: " + e.toString());
+			fail("Could not Complete testGetModuleBadCsrfToken");
 		}
 	}
 	
 	/**
-	 * This test checks the module address returned when the requested module is currently blocked
+	 * This test attempts to retrieve a module with a non existant identifier
 	 */
 	@Test
-	public void testGetBlockedModule()
+	public void testGetModuleBadId()
 	{
-		String moduleId = new String("20e755179a5840be5503d42bb3711716235005ea"); //CSRF 1
-		String userName = "getModule5";
+		String moduleId = new String("ThisModuleDoesNotExist"); 
+		String userName = "getModule3";
 		try
 		{
 			//Verify User Exists in DB
@@ -352,115 +348,120 @@ public class GetModuleTest
 			}
 			else
 			{
-				//Blocking Module
-				ModuleBlock.blockerId = moduleId;
-				ModuleBlock.blockerEnabled = true;
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
 				String moduleAddress = getModuleDoPost(moduleId, csrfToken);
-				log.debug(moduleAddress);
-				//Resetting Module Block
-				ModuleBlock.reset();
-				if(moduleAddress.equalsIgnoreCase("../blockedMessage.jsp"))
-					log.debug("Blocked Module Address Returned: PASS");
+				if(moduleAddress.isEmpty())
+					log.debug("No Module Address Returned: PASS");
 				else
 				{
-					String message = "Module Address Returned was not the Blocked Message Page";
-					log.fatal(message + ". Should be ../blockedMessage.jsp");
+					String message = "Module Address Returned When Bad ID Was Submitted";
+					log.fatal(message + ". Nothing should be returned");
 					log.debug("Returned: " + moduleAddress);
-					fail(message);				}
-			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Complete testGetChallenge: " + e.toString());
-			fail("Could not Complete testGetChallenge");
-		}
-	}
-	
-	/**
-	 * Method to Simulate the interaction with the getModule servlet.
-	 * @param moduleId The ID of the Module to Search For
-	 * @param csrfToken The CSRF Token of the User
-	 * @return The Content of the Response (Which is supposed to be the location of the module)
-	 * @throws Exception
-	 */
-	public String getModuleDoPost(String moduleId, String csrfToken) throws Exception
-	{
-		try
-		{
-			int expectedResponseCode = 302;
-			
-			log.debug("Creating GetModule Servlet Instance");
-			GetModule servlet = new GetModule();
-			servlet.init(new MockServletConfig("GetModule"));
-			
-			//Setup Servlet Parameters and Attributes
-			log.debug("Setting Up Params and Atrributes");
-			request.addParameter("moduleId", moduleId);
-			//Adding Correct CSRF Token (Token Submitted)
-			request.addParameter("csrfToken", csrfToken);
-			
-			log.debug("Running doPost");
-			servlet.doPost(request, response);
-			
-			if(response.getStatus() != expectedResponseCode)
-				fail("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
-			else
-			{
-				log.debug("302 OK Detected");
-				log.debug("Servlet Successful, returning location retrieved: " + response.getContentAsString());
-				return(response.getContentAsString());
-			}
-		}
-		catch(Exception e)
-		{
-			throw e;
-		}
-		return null;
-	}
-	/**
-	 * Method to simulate login servlet interaction. Can't seem to recyle the method in LoginTest with the MockRequests
-	 * @param userName User to Sign in
-	 * @param password User Password to use to Sign in
-	 * @param theClass Class of the User
-	 * @throws Exception If the process fails, an exception will be thrown
-	 */
-	public void loginDoPost(String userName, String password, String theClass) throws Exception
-	{
-		try
-		{
-			int expectedResponseCode = 302;
-			
-			log.debug("Creating Login Servlet Instance");
-			Login servlet = new Login();
-			servlet.init(new MockServletConfig("Login"));
-			
-			//Setup Servlet Parameters and Attributes
-			log.debug("Setting Up Params and Atrributes");
-			request.addParameter("login", userName);
-			request.addParameter("pwd", password);
-			request.getSession().setAttribute("lang", lang);
-			
-			log.debug("Running doPost");
-			servlet.doPost(request, response);
-			
-			if(response.getStatus() != expectedResponseCode)
-				fail("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
-			else
-			{
-				log.debug("302 OK Detected");
-				String location = response.getHeader("Location");
-				log.debug("302 pointing at: " + location);
-				if(!location.endsWith("index.jsp"))
-				{
-					throw new Exception("Login not Redirecting to index.jsp. Login Proceedure Failed");
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			throw e;
+			log.fatal("Could not Complete testGetModuleBadId: " + e.toString());
+			fail("Could not Complete testGetModuleBadId");
+		}
+	}
+	
+	/**
+	 * This test submits a null value to the getModule Servlet
+	 */
+	@Test
+	public void testGetModuleNullId()
+	{
+		String moduleId = null;
+		String userName = "getModule4";
+		try
+		{
+			//Verify User Exists in DB
+			GetterTest.verifyTestUser(applicationRoot, userName, userName);
+			//Sign in as Normal User
+			log.debug("Signing in as User Through LoginServlet");
+			loginDoPost(userName, userName, null);
+			log.debug("Login Servlet Complete, Getting CSRF Token");
+			if(response.getCookie("token") == null)
+				fail("No CSRF Token Was Returned from Login Servlet");
+			String csrfToken = response.getCookie("token").getValue();
+			if(csrfToken.isEmpty())
+			{
+				String message = new String("No CSRF token returned from Login Servlet");
+				log.fatal(message);
+				fail(message);
+			}
+			else
+			{
+				//Add Cookies from Response to outgoing request
+				request.setCookies(response.getCookies());
+				String moduleAddress = getModuleDoPost(moduleId, csrfToken);
+				if(moduleAddress.isEmpty())
+					log.debug("No Module Address Returned: PASS");
+				else
+				{
+					String message = "Module Address Returned When Bad ID Was Submitted";
+					log.fatal(message + ". Nothing should be returned");
+					log.debug("Returned: " + moduleAddress);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Complete testGetModuleNullId: " + e.toString());
+			fail("Could not Complete testGetModuleNullId");
+		}
+	}
+	
+	@Test
+	public void testGetModuleWhenClosed()
+	{
+		String moduleId = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11"); //Insecure Direct Object References Module Id
+		String levelHash = new String("fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100");
+		String userName = "getModule1";
+		try
+		{
+			//Verify User Exists in DB
+			GetterTest.verifyTestUser(applicationRoot, userName, userName);
+			//Sign in as Normal User
+			log.debug("Signing in as User Through LoginServlet");
+			loginDoPost(userName, userName, null);
+			log.debug("Login Servlet Complete, Getting CSRF Token");
+			if(response.getCookie("token") == null)
+				fail("No CSRF Token Was Returned from Login Servlet");
+			String csrfToken = response.getCookie("token").getValue();
+			if(csrfToken.isEmpty())
+			{
+				String message = new String("No CSRF token returned from Login Servlet");
+				log.fatal(message);
+				fail(message);
+			}
+			else
+			{
+				if(!Setter.closeAllModules(applicationRoot))
+					fail("Could not Mark All Modules As Closed");
+				//Add Cookies from Response to outgoing request
+				request.setCookies(response.getCookies());
+				String moduleAddress = getModuleDoPost(moduleId, csrfToken);
+				if(moduleAddress.endsWith("lessons&#x2f;" + levelHash + ".jsp"))
+				{
+					String message = "Insecure Director Object Reference Lesson Address Returned when module was closed";
+					log.fatal(message);
+					log.debug("location returned: " + moduleAddress);
+					fail(message);
+				}
+				else
+				{
+					log.debug("Address not returned! Pass!");
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Complete testGetModuleWhenClosed: " + e.toString());
+			fail("Could not Complete testGetModuleWhenClosed");
 		}
 	}
 }
