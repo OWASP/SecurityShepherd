@@ -2,7 +2,7 @@
 # Dockerfile to build Security Sherpherd
 #
 # Based on Ubuntu
-# Version 0.8
+# Version 3.0
 ###################################################################
 
 
@@ -18,13 +18,16 @@ ENV keystorePwd=CowSaysMoo mysqlRootPwd=CowSaysMoo
 ENV homeDirectory="/home/shepherd/" keyStoreFileName="shepherdKeystore.jks"
 
 #Download locations
-ENV serverXml="https://raw.githubusercontent.com/OWASP/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleServer.xml" webXml="https://raw.githubusercontent.com/OWASP/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleWeb.xml" shepherdManualPackLocation="http://sourceforge.net/projects/owaspshepherd/files/owaspSecurityShepherd_V2.4%20Manual%20Pack.zip/download"
+ENV serverXml="https://raw.githubusercontent.com/OWASP/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleServer.xml" webXml="https://raw.githubusercontent.com/OWASP/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleWeb.xml" shepherdManualPackLocation="https://sourceforge.net/projects/owaspshepherd/files/owaspSecurityShepherd_V3.0%20Manual%20Pack.zip/download"
 
 # Install Pre-Requisite Stuff
 RUN apt-get update -y &&\
 	apt-get install -y software-properties-common python-software-properties &&\
 	add-apt-repository -y ppa:webupd8team/java &&\ 
+	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 &&\
+	echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list &&\
 	apt-get update -y &&\ 
+	apt-get install -y mongodb-org=2.6.9 mongodb-org-server=2.6.9 mongodb-org-shell=2.6.9 mongodb-org-mongos=2.6.9 mongodb-org-tools=2.6.9 &&\
 	echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections &&\
 	apt-get install -y oracle-java7-installer --force-yes &&\
 	echo "mysql-server mysql-server/root_password password $mysqlRootPwd" | debconf-set-selections &&\
@@ -43,12 +46,18 @@ RUN wget --quiet $shepherdManualPackLocation -O manualPack.zip &&\
 	mv manualPack/ROOT.war /var/lib/tomcat7/webapps/ &&\
 	chown -R mysql /var/lib/mysql
 
-#Configuring MySQL
+#Configuring MySQL & Mongodb
 WORKDIR /home/shepherd/manualPack
-RUN /bin/bash -c "/usr/bin/mysqld_safe &" && \
+RUN /bin/bash -c "/usr/bin/mysqld_safe &" &&\
 	sleep 5 &&\
 	mysql -u root -e "source coreSchema.sql" --force -p$mysqlRootPwd &&\
 	mysql -u root -e "source moduleSchemas.sql" --force -p$mysqlRootPwd
+
+#Configuring Mongodb
+	RUN mkdir -p /data/db/; \
+	chown `id -u` /data/db; \
+	/bin/bash -c "/usr/bin/mongod &" &&\
+	mongo /home/shepherd/manualPack/mongoSchema.js
 
 #Configuring Tomcat
 WORKDIR /home/shepherd
@@ -70,10 +79,8 @@ RUN echo "JAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/default/tomcat7 && \
 	chown tomcat7 /etc/authbind/byport/80 && \
 	chown tomcat7 /etc/authbind/byport/443
 
-EXPOSE 80 443 3306
+EXPOSE 80 443 3306 27017
 
-#service mysql start not working...
-
-CMD /usr/bin/mysqld_safe & && \
-	service tomcat7 start && tail -f /var/lib/tomcat7/logs/catalina.out
-
+CMD /usr/bin/mysqld_safe & \
+	/usr/bin/mongod & \
+	service tomcat7 start;
