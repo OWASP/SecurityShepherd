@@ -8,11 +8,11 @@ You can download Security Shepherd VM's or Manual Installation Packs from [GitHu
 
 ### Docker
 There is also a docker image available from [Dockerhub](https://hub.docker.com/r/ismisepaul/securityshepherd/) you can pull it down with  
-`docker pull owasp/security-shepherd` 
+`docker pull ismisepaul/securityshepherd` 
 
 Note: You'll need to get a shell on your docker container and run mysql and tomcat manually;  
 ```BASH 
-docker run -i -p 80:80 -p 443:443 -t owasp/security-shepherd /bin/bash
+docker run -i -p 80:80 -p 443:443 -t ismisepaul/securityshepherd /bin/bash
 ```
 ```BASH 
 /usr/bin/mysqld_safe &
