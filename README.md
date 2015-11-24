@@ -4,15 +4,15 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 # Where can I download Security Shepherd?
 
 ### Virtual Machine or Manual Setup
-You can download Security Shepherd VM's or Manual Installation Packs from [SourceForge](http://bit.ly/1JbtQtP)
+You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases/tag/v3.0)
 
 ### Docker
-There is also a docker image available from [Dockerhub](https://hub.docker.com/r/owasp/security-shepherd/) you can pull it down with  
-`docker pull owasp/security-shepherd` 
+There is also a docker image available from [Dockerhub](https://hub.docker.com/r/ismisepaul/securityshepherd/) you can pull it down with  
+`docker pull ismisepaul/securityshepherd` 
 
 Note: You'll need to get a shell on your docker container and run mysql and tomcat manually;  
 ```BASH 
-docker run -i -p 80:80 -p 443:443 -t owasp/security-shepherd /bin/bash
+docker run -i -p 80:80 -p 443:443 -t ismisepaul/securityshepherd /bin/bash
 ```
 ```BASH 
 /usr/bin/mysqld_safe &
