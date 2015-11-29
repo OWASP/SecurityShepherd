@@ -12,9 +12,10 @@ There is also a docker image available from [Dockerhub](https://hub.docker.com/r
 
 Note: You'll need to get a shell on your docker container and run mysql and tomcat manually;  
 ```BASH 
-docker run -i -p 80:80 -p 443:443 -t ismisepaul/securityshepherd /bin/bash
+docker run -i -p 80:80 -p 443:443 -p 27017:27017 -t ismisepaul/securityshepherd /bin/bash
 ```
 ```BASH 
+/usr/bin/mongod &
 /usr/bin/mysqld_safe &
 service tomcat7 start
 ```  
