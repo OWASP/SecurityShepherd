@@ -54,12 +54,12 @@ RUN /bin/bash -c "/usr/bin/mysqld_safe &" &&\
 	mysql -u root -e "source moduleSchemas.sql" --force -p$mysqlRootPwd
 
 #Configuring Mongodb
-	RUN mkdir -p /data/db/; \
-	chown `id -u` /data/db; \
+	RUN mkdir -p /data/db/ &&\
+	chown `id -u` /data/db &&\
 	/bin/bash -c "/usr/bin/mongod &" &&\
 	sleep 10 &&\
-	mongo /home/shepherd/manualPack/mongoSchema.js &&\
-	sleep 10
+	mongo shepherdGames mongoSchema.js &&\ 
+	sleep 15
 
 #Configuring Tomcat
 WORKDIR /home/shepherd
