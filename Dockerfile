@@ -58,7 +58,8 @@ RUN /bin/bash -c "/usr/bin/mysqld_safe &" &&\
 	chown `id -u` /data/db; \
 	/bin/bash -c "/usr/bin/mongod &" &&\
 	sleep 10 &&\
-	mongo /home/shepherd/manualPack/mongoSchema.js
+	mongo /home/shepherd/manualPack/mongoSchema.js &&\
+	sleep 10
 
 #Configuring Tomcat
 WORKDIR /home/shepherd
