@@ -15,11 +15,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 /**
@@ -198,8 +196,6 @@ public class MainActivity extends ActionBarActivity {
                         "Sessions cleared!", Toast.LENGTH_SHORT);
                 valid.show();
 
-
-
             case R.id.action_exit:
 
                 this.finish();
@@ -210,7 +206,6 @@ public class MainActivity extends ActionBarActivity {
 
         }
         return super.onOptionsItemSelected(item);
-
     }
 
     private void referenceXML() {
@@ -220,6 +215,7 @@ public class MainActivity extends ActionBarActivity {
         tvResponse = (TextView) findViewById(R.id.tvResponse);
 
     }
+
     public boolean checkSession(){
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -233,17 +229,13 @@ public class MainActivity extends ActionBarActivity {
             }
     }
 
-
     private void logPrefSession() {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String sesh = SP.getString("session", "NA");
-
         Log.i(TAG, "Preference session is:" + sesh);
     }
 
     private void logProviderSession() {
-
         Log.i(TAG, "Provider session is:");
-
     }
 }

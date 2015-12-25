@@ -45,6 +45,14 @@
 		<url-pattern>/mobileLogin</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>/vulMobileAPI</servlet-name>
+		<servlet-class>servlets.VulMobileAPI</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/vulMobileAPI</servlet-name>
+		<url-pattern>/vulMobileAPI</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>/register</servlet-name>

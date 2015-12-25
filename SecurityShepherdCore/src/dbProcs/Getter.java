@@ -1917,4 +1917,15 @@ public class Getter
 		log.debug("*** END isCsrfLevelComplete ***");
 		return result;
 	}
+
+	public static String returnMobileKey(String applicationRoot, String p_apiKey) {
+		// TODO Auto-generated method stub
+		
+		if (p_apiKey == "thisIsTheAPIKey")
+		{
+			return "TESTKEY";
+		}
+		else
+			return "Invalid API Key";
+	}
 }

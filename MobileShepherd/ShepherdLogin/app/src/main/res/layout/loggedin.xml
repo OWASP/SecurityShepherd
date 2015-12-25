@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Get Key"
-                android:onClick=""
+                android:onClick="submitClicked"
                 android:id="@+id/bGetKey"
                 android:layout_below="@+id/textView"
                 android:layout_alignParentLeft="true"
