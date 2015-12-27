@@ -79,10 +79,6 @@ public class LoggedIn extends Activity {
                 responseError.show();
 
                 if (res!=null) {
-                    Toast valid = Toast.makeText(LoggedIn.this,
-                            "Something Worked!", Toast.LENGTH_SHORT);
-                    valid.show();
-
                     storedPref = getSharedPreferences("Sessions", MODE_PRIVATE);
                     toEdit = storedPref.edit();
                     toEdit.putString("LEVELKEY", response);
