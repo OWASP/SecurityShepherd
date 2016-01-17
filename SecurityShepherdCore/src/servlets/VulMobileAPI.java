@@ -89,7 +89,7 @@ public class VulMobileAPI extends HttpServlet
 		   {
 			  //returning key
 			   JSONObject jsonObj = new JSONObject();
-			   jsonObj.put("LEVELKEY", "ThisIsTheLevelKey");
+			   jsonObj.put("LEVELKEY", "This Key is: RetroMagicFuturePunch");
 			   jsonObj.put("token", csrfToken);
 			   out.write(jsonObj.toString());
 			   return;

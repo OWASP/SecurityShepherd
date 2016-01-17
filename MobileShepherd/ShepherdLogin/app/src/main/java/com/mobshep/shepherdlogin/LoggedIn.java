@@ -58,43 +58,43 @@ public class LoggedIn extends Activity {
 
         String apiKey= "thisIsTheAPIKey";
 
-            ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-            postParameters.add(new BasicNameValuePair("mobileKey", apiKey));
+        ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+        postParameters.add(new BasicNameValuePair("mobileKey", apiKey));
 
-            try {
+        try {
 
-                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                String address = SP.getString("server_preference", "NA");
+            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            String address = SP.getString("server_preference", "NA");
 
-                String res = CustomHttpClient.executeHttpPost(address + "/vulMobileAPI", postParameters);
+            String res = CustomHttpClient.executeHttpPost(address + "/vulMobileAPI", postParameters);
 
-                JSONObject jObject = new JSONObject(res.toString());
+            JSONObject jObject = new JSONObject(res.toString());
 
-                String response = jObject.getString("LEVELKEY");
+            String response = jObject.getString("LEVELKEY");
 
-                response = response.replaceAll("\\s+", "");
+            response = response.replaceAll("\\s+", "");
 
-                Toast responseError = Toast.makeText(LoggedIn.this,
-                        response.toString(), Toast.LENGTH_SHORT);
-                responseError.show();
+            Toast responseError = Toast.makeText(LoggedIn.this,
+                    response.toString(), Toast.LENGTH_SHORT);
+            responseError.show();
 
-                if (res!=null) {
-                    storedPref = getSharedPreferences("Sessions", MODE_PRIVATE);
-                    toEdit = storedPref.edit();
-                    toEdit.putString("LEVELKEY", response);
-                    toEdit.commit();
+            if (res!=null) {
+                storedPref = getSharedPreferences("Sessions", MODE_PRIVATE);
+                toEdit = storedPref.edit();
+                toEdit.putString("LEVELKEY", response);
+                toEdit.commit();
 
-                } else {
-                    Toast.makeText(getBaseContext(), "Invalid API Key!", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-
-                    Toast responseError = Toast.makeText(LoggedIn.this,
-                            e.toString(), Toast.LENGTH_LONG);
-                    responseError.show();
+            } else {
+                Toast.makeText(getBaseContext(), "Invalid API Key!", Toast.LENGTH_SHORT).show();
             }
+        } catch (Exception e) {
 
+            Toast responseError = Toast.makeText(LoggedIn.this,
+                    e.toString(), Toast.LENGTH_LONG);
+            responseError.show();
         }
+
+    }
 
     private void checkNullSession() {
 

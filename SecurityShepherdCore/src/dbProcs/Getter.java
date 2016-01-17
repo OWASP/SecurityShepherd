@@ -1921,7 +1921,7 @@ public class Getter
 	public static String returnMobileKey(String applicationRoot, String p_apiKey) {
 		// TODO Auto-generated method stub
 		
-		if (p_apiKey == "thisIsTheAPIKey")
+		if (p_apiKey == "d73959d5dd1dda7ccf675f7f883d6acb6737d5fb")
 		{
 			return "TESTKEY";
 		}

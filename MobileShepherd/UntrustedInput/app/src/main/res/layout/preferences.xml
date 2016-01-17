@@ -13,12 +13,6 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Objective">
-    <PreferenceScreen android:summary="@string/summary_objective">/>
-    </PreferenceScreen>
-    </PreferenceCategory>
-
-
     <PreferenceCategory android:title="License">
         <PreferenceScreen android:summary="@string/summary_license" >/>
         </PreferenceScreen>
