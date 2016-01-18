@@ -90,7 +90,7 @@ if (request.getSession() != null)
 					</ul>
 					
 					<br>
-					<%= bundle.getString("paragraph.info.1") %>
+					<%= bundle.getString("paragraph.info.2") %>
 					<br>
 					
 					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
