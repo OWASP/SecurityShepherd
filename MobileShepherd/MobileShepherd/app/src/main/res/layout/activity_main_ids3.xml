@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="@drawable/background"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+    <RelativeLayout android:id="@+id/Spacer"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="1000dp"
+        android:layout_weight="0.08">
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="400dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="0.31">
+
+        <RelativeLayout android:id="@+id/innerBox"
+            android:background="@xml/box"
+            android:layout_width="500dip"
+            android:layout_height="fill_parent"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="The Key is: c4ptainBrunch"
+                android:id="@+id/textView"
+                android:textColor="#DA70D6"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
