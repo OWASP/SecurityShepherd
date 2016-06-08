@@ -83,6 +83,4 @@ public class Register extends MainActivity {
 
     }
 
-
-
 }

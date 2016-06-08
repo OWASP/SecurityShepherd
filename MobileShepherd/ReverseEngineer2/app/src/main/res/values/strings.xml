@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ReverseEngineer3</string>
+    <string name="app_name">ReverseEngineer2</string>
     <string name="action_settings">Settings</string>
-	
-	<!-- Defind Strings for challenge 9, RE -->
-	<string name="titleIntro9">Reverse Engineering 3</string>
-	<string name="RIntro">In an attempt to prevent a malicious user from reverse engineering an APK and reading it\'s contents a developer may obsfucate the code. Obsfucation involves making the code unreadable. This adds another layer of defense to hard coded values but the issue of hard coded values is still present. If an attacker can undo the obsfucation or detect patterns, the attacker could gain an understanding of the code and therefore find any hard coded passwords. </string>
-	
+
 	<!-- Generic Application wide Strings -->
 	<string name="pword">Password</string>
 	<string name="uname">Username</string>

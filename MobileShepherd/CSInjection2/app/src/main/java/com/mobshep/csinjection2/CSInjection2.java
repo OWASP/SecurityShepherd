@@ -150,7 +150,7 @@ public class CSInjection2 extends Activity implements OnClickListener {
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 Toast error = Toast.makeText(CSInjection2.this,
-                        "An error occurred.", Toast.LENGTH_LONG);
+                        "An error occurred." + e.toString(), Toast.LENGTH_LONG);
                 error.show();
                 key.getText().clear();
                 key.setHint("The key is only shown to authenticated users.");
@@ -159,7 +159,7 @@ public class CSInjection2 extends Activity implements OnClickListener {
 
         } catch (SQLiteException e) {
             Toast error = Toast.makeText(CSInjection2.this,
-                    "An database error occurred.", Toast.LENGTH_LONG);
+                    "An database error occurred." + e.toString(), Toast.LENGTH_LONG);
             error.show();
         }
 
@@ -189,14 +189,14 @@ public class CSInjection2 extends Activity implements OnClickListener {
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 Toast error = Toast.makeText(CSInjection2.this,
-                        "An error occurred, table not initialized.", Toast.LENGTH_LONG);
+                        "An error occurred, table not initialized." + e.toString(), Toast.LENGTH_LONG);
                 error.show();
 
             }
 
         } catch (SQLiteException e) {
             Toast error = Toast.makeText(CSInjection2.this,
-                    "An database error occurred.", Toast.LENGTH_LONG);
+                    "An database error occurred." + e.toString(), Toast.LENGTH_LONG);
             error.show();
         }
     }
@@ -247,14 +247,14 @@ public class CSInjection2 extends Activity implements OnClickListener {
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 Toast error = Toast.makeText(CSInjection2.this,
-                        "An error occurred, key was not generated", Toast.LENGTH_LONG);
+                        "An error occurred, key was not generated" + e.toString(), Toast.LENGTH_LONG);
                 error.show();
 
             }
 
         } catch (SQLiteException e) {
             Toast error = Toast.makeText(CSInjection2.this,
-                    "An database error occurred.", Toast.LENGTH_LONG);
+                    "An database error occurred. + e.toString()", Toast.LENGTH_LONG);
             error.show();
         }
     }
@@ -277,9 +277,6 @@ public class CSInjection2 extends Activity implements OnClickListener {
         input = input.replace("8", "");
         input = input.replace("9", "");
         input = input.replace ("--", "");
-
-        input = input + " '" ;
-
 
         return input;
     }

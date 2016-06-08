@@ -31,7 +31,6 @@ public class Authenticated extends Activity {
     Button getKey;
     Button insertKey;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,5 +66,13 @@ public class Authenticated extends Activity {
         Key = (EditText)findViewById(R.id.etKey);
         getKey = (Button)findViewById(R.id.bGetKey);
         insertKey = (Button)findViewById(R.id.bInsertKey);
+    }
+
+    @Override
+    protected void onDestroy(){
+    super.onDestroy();
+
+       //close db
+
     }
 }

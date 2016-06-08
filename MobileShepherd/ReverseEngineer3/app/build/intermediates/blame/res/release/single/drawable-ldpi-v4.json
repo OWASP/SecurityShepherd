@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\res\\merged\\release\\drawable-ldpi-v4\\edittext.xml",
+        "source": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\src\\main\\res\\drawable-ldpi\\edittext.xml"
+    },
+    {
+        "merged": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\res\\merged\\release\\drawable-ldpi-v4\\button.xml",
+        "source": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\src\\main\\res\\drawable-ldpi\\button.xml"
+    },
+    {
+        "merged": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\res\\merged\\release\\drawable-ldpi-v4\\background.png",
+        "source": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\src\\main\\res\\drawable-ldpi\\background.png"
+    },
+    {
+        "merged": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\res\\merged\\release\\drawable-ldpi-v4\\splash.png",
+        "source": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\src\\main\\res\\drawable-ldpi\\splash.png"
+    },
+    {
+        "merged": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\res\\merged\\release\\drawable-ldpi-v4\\ic_launcher.png",
+        "source": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\src\\main\\res\\drawable-ldpi\\ic_launcher.png"
+    }
+]

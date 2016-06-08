@@ -49,13 +49,12 @@ public class DBHelper {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
                 "", null);
 
-        SQLiteStatement stmt = db.compileStatement("INSERT INTO Users (username,password,verified) VALUES(?,?,'False')");
+        SQLiteStatement stmt = db.compileStatement("INSERT INTO Users (username,password,verified) VALUES(?,?,0)");
         stmt.bindString(1, Username);
         stmt.bindString(2, Password);
         stmt.execute();
 
-        //
-        db.execSQL("INSERT INTO Users (username,password,verified) VALUES('admin','pass','True')");
+        db.execSQL("INSERT INTO Users (username,password,verified) VALUES('admin','pass',1)");
 
         if (db != null) {
             db.close();
@@ -87,9 +86,11 @@ public class DBHelper {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
                 "", null);
 
-        String query = ("SELECT * FROM Users WHERE username=? AND password=? AND verified != ?");
+        String query = ("SELECT * FROM Users WHERE username='" + Username + "' AND password='" + Password +  "' AND verified!=0" );
 
-        Cursor cursor = db.rawQuery(query, new String[]{Username, Password, "false"});
+        Cursor cursor = db.rawQuery(query, null);
+
+        Log.i("DBHelper", "DB output:" + cursor.toString() );
 
         if (cursor != null) {
             if (cursor.getCount() <= 0) {

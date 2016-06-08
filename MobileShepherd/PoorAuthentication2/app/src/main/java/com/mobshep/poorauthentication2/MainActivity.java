@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
         DBHelper dbInstance;
         dbInstance = new DBHelper();
 
-        if(dbInstance.queryData(this, usernameInput, passwordInput)){
+        if(dbInstance.queryData(this, usernameInput, passwordInput) == true){
             //authenticate user
             Intent authenticated = new Intent(this, Authenticated.class);
             startActivity(authenticated);
@@ -71,8 +71,6 @@ public class MainActivity extends ActionBarActivity {
         else{
             Toast invalid = Toast.makeText(MainActivity.this, "Invalid Credentials!", Toast.LENGTH_SHORT);
             invalid.show();
-
-            //set a textfield to leak info on "verified" db field for user to manipulate
         }
     }
 
