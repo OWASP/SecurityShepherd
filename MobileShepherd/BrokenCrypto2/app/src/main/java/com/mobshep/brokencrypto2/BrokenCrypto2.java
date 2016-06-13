@@ -20,11 +20,7 @@ import android.widget.Toast;
 public class BrokenCrypto2 extends Activity {
 
 	Button messageOne, messageTwo, messageThree;
-	
-	/*
-	Toast copied = Toast.makeText(BrokenCrypto3.this,
-			"Message Copied to Clipboard!", Toast.LENGTH_SHORT);
-*/
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -32,21 +28,18 @@ public class BrokenCrypto2 extends Activity {
 		setContentView(R.layout.broken);
 		
 		referenceXML();
-		startTimerOne();
-		startTimerTwo();
-		startTimerThree();
-		
+
 		String destinationDir = "/data/data/" +getPackageName() + "/encrypt/";
-		
+
 		String destinationPath1 = destinationDir + "key1";
-		
+
 		File f = new File(destinationPath1);
-		
+
 		if (!f.exists()){
 			File directory = new File(destinationDir);
 			directory.mkdirs();
 			//assets members.db -> /databases/
-			
+
 			try{
 				copyKey(getBaseContext().getAssets().open("key1"), new FileOutputStream(destinationPath1));
 			}catch(FileNotFoundException e){
@@ -55,16 +48,16 @@ public class BrokenCrypto2 extends Activity {
 				e.printStackTrace();
 			}
 		}
-						
+
 			String destinationPath2 = destinationDir + "key2";
-			
+
 			File g = new File(destinationPath2);
-			
+
 			if (!g.exists()){
 				File directory2 = new File(destinationDir);
 				directory2.mkdirs();
 				//assets members.db -> /databases/
-				
+
 				try{
 					copyKey(getBaseContext().getAssets().open("key2"), new FileOutputStream(destinationPath2));
 				}catch(FileNotFoundException e){
@@ -73,16 +66,16 @@ public class BrokenCrypto2 extends Activity {
 					e.printStackTrace();
 				}
 			}
-				
+
 				String destinationPath3 = destinationDir + "key3";
-				
+
 				File e = new File(destinationPath3);
-				
+
 				if (!e.exists()){
 					File directory3 = new File(destinationDir);
 					directory3.mkdirs();
 					//assets members.db -> /databases/
-					
+
 					try{
 						copyKey(getBaseContext().getAssets().open("key3"), new FileOutputStream(destinationPath3));
 					}catch(FileNotFoundException e1){
@@ -91,10 +84,15 @@ public class BrokenCrypto2 extends Activity {
 						e1.printStackTrace();
 					}
 				}
-			
-		
-		
+
+        startTimerOne();
+        startTimerTwo();
+        startTimerThree();
+
+
 	}
+
+
 
 	private void referenceXML() {
 		// TODO Auto-generated method stub

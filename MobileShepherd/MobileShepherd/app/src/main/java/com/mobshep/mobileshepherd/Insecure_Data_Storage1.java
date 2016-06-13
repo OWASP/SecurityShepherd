@@ -37,7 +37,6 @@ public class Insecure_Data_Storage1 extends MainActivity {
 
     SQLiteDatabase Users = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub

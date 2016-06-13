@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.UUID;
 
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.util.Log;
@@ -50,7 +51,7 @@ import java.io.IOException;
  * @author Sean Duggan
  */
 
-public class UDataLeakage1 extends ActionBarActivity implements View.OnClickListener {
+public class UDataLeakage1 extends MainActivity implements View.OnClickListener {
 
     Button submit;
     CheckBox checkbox;
@@ -63,6 +64,9 @@ public class UDataLeakage1 extends ActionBarActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.udl1_activity_main);
         referenceXML();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         try {
             saveStaticImage();

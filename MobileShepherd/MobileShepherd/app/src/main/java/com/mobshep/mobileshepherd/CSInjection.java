@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +44,7 @@ import net.sqlcipher.database.SQLiteDatabase;
  * @author Sean Duggan
  */
 
-public class CSInjection extends Activity implements OnClickListener {
+public class CSInjection extends MainActivity implements OnClickListener {
 
 	TabHost th;
 	Button Login;
@@ -60,6 +61,10 @@ public class CSInjection extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.csi);
 		th = (TabHost) findViewById(R.id.tabhost);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
 		populateTable(this, "dbPass");
 		generateKey(this, "dbPass");
 		referenceXML();

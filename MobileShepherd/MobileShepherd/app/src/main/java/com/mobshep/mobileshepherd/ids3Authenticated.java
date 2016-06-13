@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +30,7 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
-public class ids3Authenticated extends Activity{
+public class ids3Authenticated extends MainActivity{
 
     Button bSubmit;
     String username, password;
@@ -42,6 +43,9 @@ public class ids3Authenticated extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ids3login);
         //referenceXML();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         sharedPrefernces();
     }

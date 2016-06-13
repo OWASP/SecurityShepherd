@@ -18,6 +18,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,13 +45,16 @@ import android.widget.ListView;
  * @author Sean Duggan
  */
 
-public class UDataLeakage extends Activity {
+public class UDataLeakage extends MainActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.udl);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 		
 		
 String destinationDir = "/data/data/" +getPackageName() + "/files/";

@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +35,7 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
-public class Insecure_Data_Storage2 extends Activity {
+public class Insecure_Data_Storage2 extends MainActivity {
 
 	SQLiteDatabase passwordDB = null;
 
@@ -45,6 +46,9 @@ public class Insecure_Data_Storage2 extends Activity {
 		setContentView(R.layout.ids);
 		createDatabase();
         insertKey();
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 
 	}
 

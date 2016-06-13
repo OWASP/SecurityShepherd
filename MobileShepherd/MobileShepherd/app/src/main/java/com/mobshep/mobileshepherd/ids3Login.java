@@ -3,6 +3,7 @@ package com.mobshep.mobileshepherd;
 import com.mobshep.*;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 
 /**
@@ -23,12 +24,15 @@ import android.os.Bundle;
  *
  * @author Sean Duggan
  */
-public class ids3Login extends Activity {
+public class ids3Login extends MainActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ids3login);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
 }

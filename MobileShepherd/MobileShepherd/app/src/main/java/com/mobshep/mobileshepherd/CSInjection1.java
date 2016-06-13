@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -36,7 +37,7 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
-public class CSInjection1 extends Activity implements OnClickListener {
+public class CSInjection1 extends MainActivity implements OnClickListener {
 
 	TabHost th;
 	Button Login;
@@ -53,6 +54,10 @@ public class CSInjection1 extends Activity implements OnClickListener {
 		th = (TabHost) findViewById(R.id.tabhost);
 		populateTable(this, dbPassword);
 		referenceXML();
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
 		th.setup();
 		generateKey(this, dbPassword);
 

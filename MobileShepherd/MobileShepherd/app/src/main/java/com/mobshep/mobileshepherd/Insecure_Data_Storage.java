@@ -1,16 +1,9 @@
 package com.mobshep.mobileshepherd;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -44,6 +37,9 @@ public class Insecure_Data_Storage extends MainActivity {
         super.onCreate(savedInstanceState);
         createDatabase();
         insertKey();
+        setContentView(R.layout.ids);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     public void createDatabase() {
