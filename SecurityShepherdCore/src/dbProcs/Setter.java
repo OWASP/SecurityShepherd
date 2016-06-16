@@ -69,7 +69,7 @@ public class Setter
 	/**
 	 * This method sets every module status to Closed.
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifier of the module that is been set to open status
+	 * @param moduleId The identifier of the module that is being set to open status
 	 * @return Boolean result depicting success of statement
 	 */
 	public static boolean closeAllModules (String ApplicationRoot)
@@ -127,7 +127,7 @@ public class Setter
 	/**
 	 * This method sets every module status to Open.
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifier of the module that is been set to open status
+	 * @param moduleId The identifier of the module that is being set to open status
 	 * @return Boolean result depicting success of statement
 	 */
 	public static boolean openAllModules (String ApplicationRoot)
@@ -459,7 +459,7 @@ public class Setter
 	/**
 	 * This method sets the module status to Closed. This information is absorbed by the Tournament Floor Plan
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifier of the module that is been set to closed status
+	 * @param moduleId The identifier of the module that is being set to closed status
 	 * @return Boolean result depicting success of statement
 	 */
 	public static boolean setModuleStatusClosed (String ApplicationRoot, String moduleId)
@@ -489,7 +489,7 @@ public class Setter
 	/**
 	 * This method sets the module status to Open. This information is absorbed by the Tournament Floor Plan
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifier of the module that is been set to open status
+	 * @param moduleId The identifier of the module that is being set to open status
 	 * @return Boolean result depicting success of statement
 	 */
 	public static boolean setModuleStatusOpen (String ApplicationRoot, String moduleId)

@@ -49,7 +49,7 @@ public class FeedbackSubmit extends HttpServlet
 	 * this method checks the existence of the submitted module identifier before ensuring that the submission is correct.
 	 * If the module solution submission is found to be valid then the feedback submitted is stored, marking the module as completed for the user
 	 * If the submission is found to be valid then the user is returned with a feedback form.
-	 * @param mouleId The identifier of the module that the solution is been submitted for
+	 * @param mouleId The identifier of the module that the solution is being submitted for
 	 * @param solutionKey The solution key for the proposed module
 	 * @param before The knowledge the user had before completing the module
 	 * @param after The knowledge the user had after completing the module
