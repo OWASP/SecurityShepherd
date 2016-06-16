@@ -106,7 +106,7 @@ public class CsrfChallengeTargetSeven extends HttpServlet
 						String attackerName = Getter.getUserName(ApplicationRoot, plusId);
 						if(attackerName != null)
 						{
-							log.debug(userName + " is been CSRF'd by " + attackerName);
+							log.debug(userName + " is being CSRF'd by " + attackerName);
 							
 							log.debug("Attempting to Increment ");
 							String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, moduleHash);
