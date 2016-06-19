@@ -7,16 +7,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -39,7 +42,7 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
-public class BrokenCrypto1 extends MainActivity {
+public class BrokenCrypto1 extends MainActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     Button messageOne, messageTwo, messageThree;
@@ -48,12 +51,19 @@ public class BrokenCrypto1 extends MainActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.broken1);
+		setContentView(R.layout.broken_layout1);
 		referenceXML();
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		drawer.setDrawerListener(toggle);
+		toggle.syncState();
 
+		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
 
         String destinationDir = "/data/data/" + getPackageName() + "/encrypt/";
 
@@ -84,6 +94,71 @@ public class BrokenCrypto1 extends MainActivity {
 	}
 
 
+	@Override
+	public void onBackPressed() {
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(MenuItem item) {
+		// Handle navigation view item clicks here.
+		int id = item.getItemId();
+
+		if (id == R.id.nav_ids) {
+			Intent gotoIDS = new Intent(BrokenCrypto1.this, Insecure_Data_Storage.class);
+			startActivity(gotoIDS);
+		} else if (id == R.id.nav_ids1) {
+			Intent gotoIDS1 = new Intent(BrokenCrypto1.this, Insecure_Data_Storage1.class);
+			startActivity(gotoIDS1);
+		} else if (id == R.id.nav_ids2) {
+			Intent gotoIDS2 = new Intent(BrokenCrypto1.this, Insecure_Data_Storage2.class);
+			startActivity(gotoIDS2);
+		} else if (id == R.id.nav_ids3) {
+			Intent gotoIDS3 = new Intent(BrokenCrypto1.this, ids3Authenticated.class);
+			startActivity(gotoIDS3);
+		}else if (id == R.id.nav_bc) {
+			Intent gotoBC = new Intent(BrokenCrypto1.this, BrokenCrypto.class);
+			startActivity(gotoBC);
+		}else if (id == R.id.nav_bc1) {
+			Intent gotoBC1 = new Intent(BrokenCrypto1.this, BrokenCrypto1.class);
+			startActivity(gotoBC1);
+		}else if (id == R.id.nav_bc2) {
+			Intent gotoBC2 = new Intent(BrokenCrypto1.this, BrokenCrypto2.class);
+			startActivity(gotoBC2);
+		}else if (id == R.id.nav_bc3) {
+			Intent gotoBC3 = new Intent(BrokenCrypto1.this, BrokenCrypto3.class);
+			startActivity(gotoBC3);
+		}else if (id == R.id.nav_csi) {
+			Intent gotoCSI = new Intent(BrokenCrypto1.this, CSInjection.class);
+			startActivity(gotoCSI);
+		}else if (id == R.id.nav_csi1) {
+			Intent gotoCSI1 = new Intent(BrokenCrypto1.this, CSInjection.class);
+			startActivity(gotoCSI1);
+		}else if (id == R.id.nav_csi2) {
+			Intent gotoCSI2 = new Intent(BrokenCrypto1.this, CSInjection.class);
+			startActivity(gotoCSI2);
+		} if (id == R.id.nav_csi2) {
+			Intent gotoCSI2 = new Intent(BrokenCrypto1.this, CSInjection.class);
+			startActivity(gotoCSI2);
+		}if (id == R.id.nav_udl) {
+			Intent gotoUDL = new Intent(BrokenCrypto1.this, UDataLeakage.class);
+			startActivity(gotoUDL);
+		}if (id == R.id.nav_udl1) {
+			Intent gotoUDL1 = new Intent(BrokenCrypto1.this, UDataLeakage1.class);
+			startActivity(gotoUDL1);
+		}else if (id == R.id.nav_scoreboard) {
+			//link to shepherd or webview?
+		}
+
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawer.closeDrawer(GravityCompat.START);
+		return true;
+	}
 
 	private void startTimerOne() {
 		final Handler handler = new Handler();
@@ -200,7 +275,7 @@ public class BrokenCrypto1 extends MainActivity {
     private void showToast() {
 
         Toast copied = Toast.makeText(BrokenCrypto1.this,
-                "Message copied to clipboard.", Toast.LENGTH_LONG);
+				"Message copied to clipboard.", Toast.LENGTH_LONG);
         copied.show();
 
     }
@@ -216,5 +291,7 @@ public class BrokenCrypto1 extends MainActivity {
 
 
     }
+
+
 
 }

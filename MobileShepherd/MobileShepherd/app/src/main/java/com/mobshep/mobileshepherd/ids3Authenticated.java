@@ -102,6 +102,13 @@ public class ids3Authenticated extends MainActivity{
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+
+
     //public void referenceXML() {
     //    bSubmit = (Button) findViewById(R.id.submit);
     //    etUsername = (EditText) findViewById(R.id.etUsername);

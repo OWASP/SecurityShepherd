@@ -288,4 +288,11 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
 
         return input;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+
 }

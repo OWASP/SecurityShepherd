@@ -119,13 +119,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_exit) {
-            return true;
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -189,6 +188,8 @@ public class MainActivity extends AppCompatActivity
         return netInfo != null && netInfo.isConnectedOrConnecting();
 
     }
+
+
 
     public boolean checkSession(){
 

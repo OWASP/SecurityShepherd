@@ -188,4 +188,11 @@ public class BrokenCrypto3 extends MainActivity {
         iStream.close();
         oStream.close();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+
 }

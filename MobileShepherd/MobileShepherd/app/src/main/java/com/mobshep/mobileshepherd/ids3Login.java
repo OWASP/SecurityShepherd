@@ -35,4 +35,11 @@ public class ids3Login extends MainActivity {
         setSupportActionBar(toolbar);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+
+
 }

@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +36,7 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
-public class BrokenCrypto extends MainActivity {
+public class BrokenCrypto extends MainActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 	Button messageOne, messageTwo, messageThree, messageFour, messageFive;
 
@@ -40,17 +44,103 @@ public class BrokenCrypto extends MainActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.broken);
+		setContentView(R.layout.broken_layout);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		referenceXML();
-		startTimerOne();
-		startTimerTwo();
-		startTimerThree();
-		startTimerFour();
-		startTimerFive();
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		drawer.setDrawerListener(toggle);
+		toggle.syncState();
 
+		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
+
+        referenceXML();
+        startTimerOne();
+        startTimerTwo();
+        startTimerThree();
+        startTimerFour();
+        startTimerFive();
+
+    }
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+
+
+	@Override
+	public void onBackPressed() {
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(MenuItem item) {
+		// Handle navigation view item clicks here.
+		int id = item.getItemId();
+
+		String appname = "BrokenCrypto";
+
+		if (id == R.id.nav_ids) {
+			Intent gotoIDS = new Intent(BrokenCrypto.this, Insecure_Data_Storage.class);
+			startActivity(gotoIDS);
+		} else if (id == R.id.nav_ids1) {
+			Intent gotoIDS1 = new Intent(BrokenCrypto.this, Insecure_Data_Storage1.class);
+			startActivity(gotoIDS1);
+		} else if (id == R.id.nav_ids2) {
+			Intent gotoIDS2 = new Intent(BrokenCrypto.this, Insecure_Data_Storage2.class);
+			startActivity(gotoIDS2);
+		} else if (id == R.id.nav_ids3) {
+			Intent gotoIDS3 = new Intent(BrokenCrypto.this, ids3Authenticated.class);
+			startActivity(gotoIDS3);
+		}else if (id == R.id.nav_bc) {
+			Intent gotoBC = new Intent(BrokenCrypto.this, BrokenCrypto.class);
+			startActivity(gotoBC);
+		}else if (id == R.id.nav_bc1) {
+			Intent gotoBC1 = new Intent(BrokenCrypto.this, BrokenCrypto1.class);
+			startActivity(gotoBC1);
+		}else if (id == R.id.nav_bc2) {
+			Intent gotoBC2 = new Intent(BrokenCrypto.this, BrokenCrypto2.class);
+			startActivity(gotoBC2);
+		}else if (id == R.id.nav_bc3) {
+			Intent gotoBC3 = new Intent(BrokenCrypto.this, BrokenCrypto3.class);
+			startActivity(gotoBC3);
+		}else if (id == R.id.nav_csi) {
+			Intent gotoCSI = new Intent(BrokenCrypto.this, CSInjection.class);
+			startActivity(gotoCSI);
+		}else if (id == R.id.nav_csi1) {
+			Intent gotoCSI1 = new Intent(BrokenCrypto.this, CSInjection.class);
+			startActivity(gotoCSI1);
+		}else if (id == R.id.nav_csi2) {
+			Intent gotoCSI2 = new Intent(BrokenCrypto.this, CSInjection.class);
+			startActivity(gotoCSI2);
+		} if (id == R.id.nav_csi2) {
+			Intent gotoCSI2 = new Intent(BrokenCrypto.this, CSInjection.class);
+			startActivity(gotoCSI2);
+		}if (id == R.id.nav_udl) {
+			Intent gotoUDL = new Intent(BrokenCrypto.this, UDataLeakage.class);
+			startActivity(gotoUDL);
+		}if (id == R.id.nav_udl1) {
+			Intent gotoUDL1 = new Intent(BrokenCrypto.this, UDataLeakage1.class);
+			startActivity(gotoUDL1);
+		}else if (id == R.id.nav_scoreboard) {
+			//link to shepherd or webview?
+		}
+
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawer.closeDrawer(GravityCompat.START);
+		return true;
 	}
 
 	private void referenceXML() {
@@ -249,32 +339,6 @@ public class BrokenCrypto extends MainActivity {
 
     }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			Intent goToSettings = new Intent(this, Preferences.class);
-			startActivity(goToSettings);
-			return true;
-		}
-
-		if (id == R.id.action_exit) {
-			return true;
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
 
 }

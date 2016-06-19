@@ -269,5 +269,11 @@ try{
 		}
 	}
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		this.finish();
+	}
+
 
 }
