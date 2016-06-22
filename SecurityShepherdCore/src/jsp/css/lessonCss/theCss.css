@@ -7,7 +7,6 @@ body {
 
 body, th, td, input, textarea, select, option, p, div {
 	font-family: "Helvetica Neue", Helvetica Arial, "Lucida Grande", sans-serif;
-	word-break: break-all;
 }
 
 h1, h2, h3 {
