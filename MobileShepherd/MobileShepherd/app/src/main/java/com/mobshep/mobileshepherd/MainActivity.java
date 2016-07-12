@@ -29,8 +29,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        final String address = SP.getString("server_preference", "NA");
+       checkAddress();
 
 
         if (internetStatus() == false){
@@ -38,14 +37,7 @@ public class MainActivity extends AppCompatActivity
                     .setAction("Action", null).show();
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Server Address : " + address, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -56,6 +48,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    private void checkAddress() {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String address = SP.getString("server_preference", "NA");
+
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Server Address:" + address, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
+
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -140,7 +143,7 @@ public class MainActivity extends AppCompatActivity
             Intent gotoIDS2 = new Intent(MainActivity.this, Insecure_Data_Storage2.class);
             startActivity(gotoIDS2);
         } else if (id == R.id.nav_ids3) {
-           Intent gotoIDS3 = new Intent(MainActivity.this, ids3Authenticated.class);
+           Intent gotoIDS3 = new Intent(MainActivity.this, ids3Login.class);
            startActivity(gotoIDS3);
         }else if (id == R.id.nav_bc) {
             Intent gotoBC = new Intent(MainActivity.this, BrokenCrypto.class);
@@ -158,13 +161,10 @@ public class MainActivity extends AppCompatActivity
             Intent gotoCSI = new Intent(MainActivity.this, CSInjection.class);
             startActivity(gotoCSI);
         }else if (id == R.id.nav_csi1) {
-            Intent gotoCSI1 = new Intent(MainActivity.this, CSInjection.class);
+            Intent gotoCSI1 = new Intent(MainActivity.this, CSInjection1.class);
             startActivity(gotoCSI1);
         }else if (id == R.id.nav_csi2) {
-            Intent gotoCSI2 = new Intent(MainActivity.this, CSInjection.class);
-            startActivity(gotoCSI2);
-        } if (id == R.id.nav_csi2) {
-            Intent gotoCSI2 = new Intent(MainActivity.this, CSInjection.class);
+            Intent gotoCSI2 = new Intent(MainActivity.this, CSInjection2.class);
             startActivity(gotoCSI2);
         }if (id == R.id.nav_udl) {
             Intent gotoUDL = new Intent(MainActivity.this, UDataLeakage.class);
@@ -172,6 +172,12 @@ public class MainActivity extends AppCompatActivity
         }if (id == R.id.nav_udl1) {
             Intent gotoUDL1 = new Intent(MainActivity.this, UDataLeakage1.class);
             startActivity(gotoUDL1);
+        }if (id == R.id.nav_pa) {
+            Intent gotoPA = new Intent(MainActivity.this, poorAuth.class);
+            startActivity(gotoPA);
+        }if (id == R.id.nav_ui) {
+            Intent gotoUI = new Intent(MainActivity.this, untrustedInput.class);
+            startActivity(gotoUI);
         }else if (id == R.id.nav_scoreboard) {
         //link to shepherd or webview?
         }

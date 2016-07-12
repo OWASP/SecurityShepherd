@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.mobshep.mobileshepherd"
         minSdkVersion 15
@@ -13,7 +13,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -26,4 +26,5 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile files('libs/sqlcipher-javadoc.jar')
     compile files('libs/sqlcipher.jar')
+
 }

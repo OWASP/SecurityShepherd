@@ -7,6 +7,10 @@
     android:background="@drawable/background"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
+    <include
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout android:id="@+id/Spacer"
         android:layout_width="fill_parent"

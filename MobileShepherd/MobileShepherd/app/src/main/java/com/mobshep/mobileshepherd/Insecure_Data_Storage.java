@@ -47,6 +47,7 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         createDatabase();
         insertKey();
+        setTitle(R.string.ids);
         setContentView(R.layout.ids_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,14 +68,14 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
             Members.execSQL("CREATE TABLE IF NOT EXISTS Members " +
                             "(id integer primary key, name VARCHAR, password VARCHAR);"
             );
-
+        /*
             File database = getApplication().getDatabasePath("Members.db");
 
             if (!database.exists()) {
                 Toast.makeText(this, "Database Created", Toast.LENGTH_SHORT).show();
             } else
                 Toast.makeText(this, "Database Missing", Toast.LENGTH_SHORT).show();
-
+        */
         } catch (Exception e) {
             Log.e("DB ERROR", "Error Creating Database");
         }

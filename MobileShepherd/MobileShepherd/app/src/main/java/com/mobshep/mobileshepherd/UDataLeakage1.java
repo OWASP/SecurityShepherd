@@ -8,6 +8,9 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.UUID;
 
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
@@ -17,7 +20,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +53,7 @@ import java.io.IOException;
  * @author Sean Duggan
  */
 
-public class UDataLeakage1 extends MainActivity implements View.OnClickListener {
+public class UDataLeakage1 extends MainActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     Button submit;
     CheckBox checkbox;
@@ -62,11 +64,21 @@ public class UDataLeakage1 extends MainActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.udl1_activity_main);
+        setContentView(R.layout.udl1_layout);
         referenceXML();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         try {
             saveStaticImage();

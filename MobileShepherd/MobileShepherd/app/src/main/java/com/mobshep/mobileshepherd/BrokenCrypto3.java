@@ -3,8 +3,10 @@ package com.mobshep.mobileshepherd;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,15 +22,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 
-public class BrokenCrypto3 extends MainActivity {
+public class BrokenCrypto3 extends MainActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_broken_crypto3);
+        setContentView(R.layout.broken_layout3);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         generateKey();
         generateDB(this);
@@ -130,7 +140,7 @@ public class BrokenCrypto3 extends MainActivity {
         try {
             SQLiteDatabase.loadLibs(context);
 
-            String dbPath = context.getDatabasePath("key.db").getPath();
+            String dbPath = context.getDatabasePath("key4.db").getPath();
 
             File dbPathFile = new File(dbPath);
             if (!dbPathFile.exists())
@@ -139,10 +149,10 @@ public class BrokenCrypto3 extends MainActivity {
             SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
                     "Pa88w0rd1234", null);
 
-            db.execSQL("DROP TABLE IF EXISTS key");
-            db.execSQL("CREATE TABLE key(key VARCHAR)");
+            db.execSQL("DROP TABLE IF EXISTS key4");
+            db.execSQL("CREATE TABLE key4(key VARCHAR)");
 
-            db.execSQL("INSERT INTO key VALUES('The Key is ShaveTheSkies.')");
+            db.execSQL("INSERT INTO key4 VALUES('The Key is ShaveTheSkies.')");
 
         } catch (Exception e) {
             // TODO Auto-generated catch block

@@ -86,14 +86,53 @@
 
         <item android:title="Poor Authentication">
             <menu>
+                <item
+                    android:id="@+id/nav_pa"
+                    android:icon="@mipmap/ic_action_image_timer_auto"
+                    android:title="Poor Authentication"
+                />
+                <item
+                    android:id="@+id/nav_pa1"
+                    android:icon="@mipmap/ic_action_image_timer_auto"
+                    android:title="Poor Authentication 1"
+                />
+            </menu>
+        </item>
 
+        <item android:title="Provider Leakage">
+            <menu>
+                <item
+                    android:id="@+id/nav_cpl"
+                    android:icon="@mipmap/ic_action_notification_adb"
+                    android:title="Provider Leakage"
+                    />
+                <item
+                    android:id="@+id/nav_cpl1"
+                    android:icon="@mipmap/ic_action_notification_adb"
+                    android:title="Provider Leakage 1"
+                    />
+            </menu>
+        </item>
+
+
+        <item android:title="Insufficient Transport Layer Security">
+            <menu>
+                <item
+                    android:id="@+id/nav_itls"
+                    android:icon="@mipmap/ic_action_notification_adb"
+                    android:title="Insufficient TLS"
+                    />
             </menu>
 
         </item>
 
-        <item android:title="Insufficient Transport Layer Security">
+        <item android:title="Security Decisions Via Untrusted Input">
             <menu>
-
+                <item
+                    android:id="@+id/nav_ui"
+                    android:icon="@mipmap/ic_action_notification_adb"
+                    android:title="Untrusted Input"
+                    />
             </menu>
 
         </item>

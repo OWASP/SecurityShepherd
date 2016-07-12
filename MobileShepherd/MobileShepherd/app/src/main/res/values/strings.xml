@@ -1,6 +1,32 @@
 <resources>
     <string name="app_name">Mobile Shepherd</string>
 
+    <string name="ids">Insecure Data</string>
+    <string name="ids1">Insecure Data 1</string>
+    <string name="ids2">Insecure Data 2</string>
+    <string name="ids3">Insecure Data 3</string>
+    <string name="csi">Injection</string>
+    <string name="csi1">Injection 1</string>
+    <string name="csi2">Injection 2</string>
+    <string name="bc">Broken Crypto</string>
+    <string name="bc1">Broken Crypto 1</string>
+    <string name="bc2">Broken Crypto 2</string>
+    <string name="bc3">Broken Crypto 3</string>
+    <string name="udl">Data Leakage</string>
+    <string name="udl1">Data Leakage 1</string>
+    <string name="udl2">Data Leakage 2</string>
+    <string name="pa">Poor Auth</string>
+    <string name="itls">Insufficient TLS</string>
+    <string name="cpl">Provider Leakage</string>
+    <string name="cpl1">Provider Leakage 1</string>
+    <string name="sdui">Untrusted Input</string>
+    <string name="re">Reverse Engineer</string>
+    <string name="re1">Reverse Engineer 1</string>
+    <string name="re2">Reverse Engineer 2</string>
+    <string name="re3">Reverse Engineer 3</string>
+
+
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>

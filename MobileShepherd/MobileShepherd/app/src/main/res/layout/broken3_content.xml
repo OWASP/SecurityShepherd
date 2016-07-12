@@ -5,6 +5,11 @@
     android:orientation="vertical"
     android:background="@drawable/background"
     android:weightSum="1">
+    <include
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <RelativeLayout android:id="@+id/Spacer"
         android:layout_width="fill_parent"
         android:orientation="horizontal"

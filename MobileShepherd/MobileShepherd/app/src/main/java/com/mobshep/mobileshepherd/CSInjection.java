@@ -12,6 +12,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,7 +45,7 @@ import net.sqlcipher.database.SQLiteDatabase;
  * @author Sean Duggan
  */
 
-public class CSInjection extends MainActivity implements OnClickListener {
+public class CSInjection extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
 	TabHost th;
 	Button Login;
@@ -134,13 +135,10 @@ public class CSInjection extends MainActivity implements OnClickListener {
 			Intent gotoCSI = new Intent(CSInjection.this, CSInjection.class);
 			startActivity(gotoCSI);
 		}else if (id == R.id.nav_csi1) {
-			Intent gotoCSI1 = new Intent(CSInjection.this, CSInjection.class);
+			Intent gotoCSI1 = new Intent(CSInjection.this, CSInjection1.class);
 			startActivity(gotoCSI1);
 		}else if (id == R.id.nav_csi2) {
-			Intent gotoCSI2 = new Intent(CSInjection.this, CSInjection.class);
-			startActivity(gotoCSI2);
-		} if (id == R.id.nav_csi2) {
-			Intent gotoCSI2 = new Intent(CSInjection.this, CSInjection.class);
+			Intent gotoCSI2 = new Intent(CSInjection.this, CSInjection2.class);
 			startActivity(gotoCSI2);
 		}if (id == R.id.nav_udl) {
 			Intent gotoUDL = new Intent(CSInjection.this, UDataLeakage.class);
@@ -217,12 +215,12 @@ public class CSInjection extends MainActivity implements OnClickListener {
 	private boolean login(String username, String password) throws IOException {
 try{
 		try {
-			String dbPath = this.getDatabasePath("Members.db").getPath();
+			String dbPath = this.getDatabasePath("encrypted.db").getPath();
 
 			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
 					dbPass, null);
 
-			String query = ("SELECT * FROM MEMBERS WHERE memName='" + username
+			String query = ("SELECT * FROM ENCRYPTED WHERE memName='" + username
 					+ "' AND memPass = '" + password + "';");
 
 			Cursor cursor = db.rawQuery(query, null);
@@ -258,7 +256,7 @@ try{
 			try {
 				SQLiteDatabase.loadLibs(context);
 
-				String dbPath = context.getDatabasePath("Members.db").getPath();
+				String dbPath = context.getDatabasePath("encrypted.db").getPath();
 
 				File dbPathFile = new File(dbPath);
 				if (!dbPathFile.exists())
@@ -267,10 +265,10 @@ try{
 				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
 						dbPass, null);
 
-				db.execSQL("DROP TABLE IF EXISTS Members");
-				db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
+				db.execSQL("DROP TABLE IF EXISTS encrypted");
+				db.execSQL("CREATE TABLE encrypted(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
 
-				db.execSQL("INSERT INTO Members VALUES( 1,'Admin',20,'A3B922DF010PQSI827')");
+				db.execSQL("INSERT INTO encrypted VALUES( 1,'Admin',20,'A3B922DF010PQSI827')");
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -290,12 +288,12 @@ try{
 	public void outputKey(Context context, String password) {
 		SQLiteDatabase.loadLibs(context);
 
-		String dbPath = context.getDatabasePath("key.db").getPath();
+		String dbPath = context.getDatabasePath("key0.db").getPath();
 
 		SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPass,
 				null);
 
-		String query = ("SELECT * FROM key;");
+		String query = ("SELECT * FROM key0;");
 
 		Cursor cursor = db.rawQuery(query, null);
 
@@ -316,7 +314,7 @@ try{
 			try {
 				SQLiteDatabase.loadLibs(context);
 
-				String dbPath = context.getDatabasePath("key.db").getPath();
+				String dbPath = context.getDatabasePath("key0.db").getPath();
 
 				File dbPathFile = new File(dbPath);
 				if (!dbPathFile.exists())
@@ -325,10 +323,10 @@ try{
 				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
 						dbPass, null);
 
-				db.execSQL("DROP TABLE IF EXISTS key");
-				db.execSQL("CREATE TABLE key(key VARCHAR)");
+				db.execSQL("DROP TABLE IF EXISTS key0");
+				db.execSQL("CREATE TABLE key0(key VARCHAR)");
 
-				db.execSQL("INSERT INTO key VALUES('The Key is VolcanicEruptionsAbruptInterruptions.')");
+				db.execSQL("INSERT INTO key0 VALUES('The Key is VolcanicEruptionsAbruptInterruptions.')");
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

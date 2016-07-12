@@ -296,7 +296,7 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPassword,
                 null);
 
-        String query = ("SELECT * FROM key;");
+        String query = ("SELECT * FROM key3;");
 
         Cursor cursor = db.rawQuery(query, null);
 
@@ -317,7 +317,7 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
             try {
                 SQLiteDatabase.loadLibs(context);
 
-                String dbPath = context.getDatabasePath("key.db").getPath();
+                String dbPath = context.getDatabasePath("key3.db").getPath();
 
                 File dbPathFile = new File(dbPath);
                 if (!dbPathFile.exists())
@@ -326,10 +326,10 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
                 SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
                         dbPassword, null);
 
-                db.execSQL("DROP TABLE IF EXISTS key");
-                db.execSQL("CREATE TABLE key(key VARCHAR)");
+                db.execSQL("DROP TABLE IF EXISTS key3");
+                db.execSQL("CREATE TABLE key3(key VARCHAR)");
 
-                db.execSQL("INSERT INTO key VALUES('The Key is BurpingChimneys.')");
+                db.execSQL("INSERT INTO key3 VALUES('The Key is BurpingChimneys.')");
 
             } catch (Exception e) {
                 // TODO Auto-generated catch block

@@ -1,6 +1,5 @@
 package com.mobshep.mobileshepherd;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -41,7 +40,8 @@ public class ids3Authenticated extends MainActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ids3login);
+        setTitle(R.string.ids3);
+        setContentView(R.layout.ids3_login_content);
         //referenceXML();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

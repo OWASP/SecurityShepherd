@@ -42,6 +42,7 @@ public class Insecure_Data_Storage1 extends MainActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setTitle(R.string.ids1);
         setContentView(R.layout.ids_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

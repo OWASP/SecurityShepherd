@@ -11,13 +11,14 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -45,16 +46,26 @@ import android.widget.ListView;
  * @author Sean Duggan
  */
 
-public class UDataLeakage extends MainActivity {
+public class UDataLeakage extends MainActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.udl);
+		setContentView(R.layout.udl_layout);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		drawer.setDrawerListener(toggle);
+		toggle.syncState();
+
+		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
+
 		
 		
 String destinationDir = "/data/data/" +getPackageName() + "/files/";

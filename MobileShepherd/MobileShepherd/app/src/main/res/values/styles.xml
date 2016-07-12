@@ -34,7 +34,7 @@
         <item name="android:textStyle">italic</item>
     </style>
 
-    <style name="ShepherdTheme" parent="@android:style/Theme">
+    <style name="ShepherdTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:tabWidgetStyle">@style/ShepherdTabWidget</item>
     </style>
 

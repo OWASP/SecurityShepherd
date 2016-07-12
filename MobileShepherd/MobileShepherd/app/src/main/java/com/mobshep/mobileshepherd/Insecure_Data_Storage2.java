@@ -42,6 +42,7 @@ public class Insecure_Data_Storage2 extends MainActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		setTitle(R.string.ids2);
 		setContentView(R.layout.ids_layout);
 		createDatabase();
         insertKey();

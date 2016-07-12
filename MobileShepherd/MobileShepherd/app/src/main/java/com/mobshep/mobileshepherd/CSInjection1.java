@@ -305,12 +305,12 @@ try{
 	public void outputKey(Context context, String password) {
 		SQLiteDatabase.loadLibs(context);
 
-		String dbPath = context.getDatabasePath("key.db").getPath();
+		String dbPath = context.getDatabasePath("key1.db").getPath();
 
 		SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPassword,
 				null);
 
-		String query = ("SELECT * FROM key;");
+		String query = ("SELECT * FROM key1;");
 
 		Cursor cursor = db.rawQuery(query, null);
 
@@ -331,7 +331,7 @@ try{
 			try {
 				SQLiteDatabase.loadLibs(context);
 
-				String dbPath = context.getDatabasePath("key.db").getPath();
+				String dbPath = context.getDatabasePath("key1.db").getPath();
 
 				File dbPathFile = new File(dbPath);
 				if (!dbPathFile.exists())
@@ -340,10 +340,10 @@ try{
 				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
 						dbPassword, null);
 
-				db.execSQL("DROP TABLE IF EXISTS key");
-				db.execSQL("CREATE TABLE key(key VARCHAR)");
+				db.execSQL("DROP TABLE IF EXISTS key1");
+				db.execSQL("CREATE TABLE key1(key VARCHAR)");
 
-				db.execSQL("INSERT INTO key VALUES('The Key is SourHatsAndAngryCats.')");
+				db.execSQL("INSERT INTO key1 VALUES('The Key is SourHatsAndAngryCats.')");
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
