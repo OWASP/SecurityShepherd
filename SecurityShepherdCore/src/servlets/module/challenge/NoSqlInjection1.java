@@ -9,8 +9,10 @@ import com.mongodb.DBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.MongoCredential;
 import com.mongodb.MongoException;
+import dbProcs.FileInputProperties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -95,7 +97,9 @@ public class NoSqlInjection1 extends HttpServlet
 				log.debug("Getting Connection to Mongo Database");
 				// To directly connect to a single MongoDB server (note that this will not auto-discover the primary even
 				// if it's a member of a replica set:
-				mongoClient = new MongoClient();
+                                String mongoProperties = getServletContext().getRealPath("") + "/WEB-INF/mongo.properties";
+                                String mongoConnectionString = FileInputProperties.readfile(mongoProperties, "mongoConnectionString");
+				mongoClient = new MongoClient(new MongoClientURI(mongoConnectionString));
 				
 				user = "gamer1";
 				database = "shepherdGames";
