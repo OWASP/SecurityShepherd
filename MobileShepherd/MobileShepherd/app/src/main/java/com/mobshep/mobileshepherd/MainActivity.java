@@ -5,10 +5,12 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -37,8 +39,6 @@ public class MainActivity extends AppCompatActivity
                     .setAction("Action", null).show();
         }
 
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -54,11 +54,9 @@ public class MainActivity extends AppCompatActivity
         String address = SP.getString("server_preference", "NA");
 
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Server Address:" + address, Snackbar.LENGTH_LONG);
-
         snackbar.show();
 
     }
-
 
     @Override
     public void onBackPressed() {
@@ -128,6 +126,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -179,7 +178,7 @@ public class MainActivity extends AppCompatActivity
             Intent gotoUI = new Intent(MainActivity.this, untrustedInput.class);
             startActivity(gotoUI);
         }else if (id == R.id.nav_scoreboard) {
-        //link to shepherd or webview?
+           // openScoreBoard();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -195,12 +194,42 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void openScoreBoard(View v){
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String address = SP.getString("server_preference", "NA");
 
+        if (address == null){
+            Snackbar.make(null, "You need to add the server address in settings.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+        else if (address != null) {
 
+            Uri uri = Uri.parse(address);
+            Intent intentURI = new Intent(Intent.ACTION_VIEW, uri);
+
+            if (intentURI.resolveActivity(getPackageManager()) != null) {
+
+                try {
+                    startActivity(intentURI);
+                }catch (IllegalStateException e) {
+                    e.printStackTrace();
+                    Snackbar.make(null, "Invalid URL entered.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            } else {
+                Snackbar.make(null, "Play Store required to open links", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        }
+    }
+
+//TODO Implement Sessions
+/*
     public boolean checkSession(){
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String sesh = SP.getString("session", "null");
+
 
         if (sesh.equals("null")) {
             return false;
@@ -209,4 +238,5 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
     }
+*/
 }

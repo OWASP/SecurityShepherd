@@ -1,7 +1,5 @@
 package com.mobshep.mobileshepherd;
 
-import java.io.File;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+
 
 
 /**
@@ -39,7 +37,11 @@ import android.widget.Toast;
 
 public class Insecure_Data_Storage extends MainActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+
+    private static String DB_PATH = "/data/data/com.mobshep.mobileshepherd/databases/InsecureDataStorage/";
+    private static String DB_NAME = "Members";
     SQLiteDatabase Members = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,22 +66,16 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
 
     public void createDatabase() {
         try {
-            Members = this.openOrCreateDatabase("Members", MODE_PRIVATE, null);
+
+            String path = DB_PATH + DB_NAME;
+            Members = this.openOrCreateDatabase(path, MODE_PRIVATE, null);
             Members.execSQL("CREATE TABLE IF NOT EXISTS Members " +
                             "(id integer primary key, name VARCHAR, password VARCHAR);"
             );
-        /*
-            File database = getApplication().getDatabasePath("Members.db");
 
-            if (!database.exists()) {
-                Toast.makeText(this, "Database Created", Toast.LENGTH_SHORT).show();
-            } else
-                Toast.makeText(this, "Database Missing", Toast.LENGTH_SHORT).show();
-        */
         } catch (Exception e) {
             Log.e("DB ERROR", "Error Creating Database");
         }
-
 
     }
 
@@ -166,7 +162,7 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
             Intent gotoIDS2 = new Intent(Insecure_Data_Storage.this, Insecure_Data_Storage2.class);
             startActivity(gotoIDS2);
         } else if (id == R.id.nav_ids3) {
-            Intent gotoIDS3 = new Intent(Insecure_Data_Storage.this, ids3Authenticated.class);
+            Intent gotoIDS3 = new Intent(Insecure_Data_Storage.this, ids3Login.class);
             startActivity(gotoIDS3);
         }else if (id == R.id.nav_bc) {
             Intent gotoBC = new Intent(Insecure_Data_Storage.this, BrokenCrypto.class);
@@ -184,13 +180,10 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
             Intent gotoCSI = new Intent(Insecure_Data_Storage.this, CSInjection.class);
             startActivity(gotoCSI);
         }else if (id == R.id.nav_csi1) {
-            Intent gotoCSI1 = new Intent(Insecure_Data_Storage.this, CSInjection.class);
+            Intent gotoCSI1 = new Intent(Insecure_Data_Storage.this, CSInjection1.class);
             startActivity(gotoCSI1);
         }else if (id == R.id.nav_csi2) {
-            Intent gotoCSI2 = new Intent(Insecure_Data_Storage.this, CSInjection.class);
-            startActivity(gotoCSI2);
-        } if (id == R.id.nav_csi2) {
-            Intent gotoCSI2 = new Intent(Insecure_Data_Storage.this, CSInjection.class);
+            Intent gotoCSI2 = new Intent(Insecure_Data_Storage.this, CSInjection2.class);
             startActivity(gotoCSI2);
         }if (id == R.id.nav_udl) {
             Intent gotoUDL = new Intent(Insecure_Data_Storage.this, UDataLeakage.class);

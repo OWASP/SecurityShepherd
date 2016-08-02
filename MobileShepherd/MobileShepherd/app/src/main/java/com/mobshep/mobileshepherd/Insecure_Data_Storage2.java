@@ -36,6 +36,8 @@ import android.widget.Toast;
 
 public class Insecure_Data_Storage2 extends MainActivity {
 
+	private static String DB_PATH = "/data/data/com.mobshep.mobileshepherd/databases/InsecureDataStorage2/";
+	private static String DB_NAME = "PasswordDB";
 	SQLiteDatabase passwordDB = null;
 
 	@Override
@@ -112,13 +114,10 @@ public class Insecure_Data_Storage2 extends MainActivity {
 			Intent gotoCSI = new Intent(Insecure_Data_Storage2.this, CSInjection.class);
 			startActivity(gotoCSI);
 		}else if (id == R.id.nav_csi1) {
-			Intent gotoCSI1 = new Intent(Insecure_Data_Storage2.this, CSInjection.class);
+			Intent gotoCSI1 = new Intent(Insecure_Data_Storage2.this, CSInjection1.class);
 			startActivity(gotoCSI1);
 		}else if (id == R.id.nav_csi2) {
-			Intent gotoCSI2 = new Intent(Insecure_Data_Storage2.this, CSInjection.class);
-			startActivity(gotoCSI2);
-		} if (id == R.id.nav_csi2) {
-			Intent gotoCSI2 = new Intent(Insecure_Data_Storage2.this, CSInjection.class);
+			Intent gotoCSI2 = new Intent(Insecure_Data_Storage2.this, CSInjection2.class);
 			startActivity(gotoCSI2);
 		}if (id == R.id.nav_udl) {
 			Intent gotoUDL = new Intent(Insecure_Data_Storage2.this, UDataLeakage.class);
@@ -137,7 +136,8 @@ public class Insecure_Data_Storage2 extends MainActivity {
 
 	public void createDatabase() {
 		try {
-			passwordDB = this.openOrCreateDatabase("passwordDB", MODE_PRIVATE, null);
+			String path = DB_PATH + DB_NAME;
+			passwordDB = this.openOrCreateDatabase(path, MODE_PRIVATE, null);
 			passwordDB.execSQL("CREATE TABLE IF NOT EXISTS passwordDB " +
 							"(id integer primary key, name VARCHAR, password VARCHAR);"
 			);

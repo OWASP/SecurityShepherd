@@ -31,87 +31,9 @@ import android.widget.Toast;
 
 public class ids3Authenticated extends MainActivity{
 
-    Button bSubmit;
-    String username, password;
-    EditText etUsername, etPassword;
-    SharedPreferences storedPref;
-    Editor toEdit;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.ids3);
-        setContentView(R.layout.ids3_login_content);
-        //referenceXML();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        sharedPrefernces();
+        setContentView(R.layout.activity_main_ids3);
     }
-
-
-    public void sharedPrefernces() {
-
-        storedPref = getSharedPreferences("AppData", MODE_WORLD_READABLE);
-        toEdit = storedPref.edit();
-        toEdit.putString("Origin", "Europe");
-        toEdit.putString("DOB", "12/12/1980" );
-        toEdit.putString("Root","True" );
-        toEdit.commit();
-
-
-        storedPref = getSharedPreferences("Saved Data", MODE_WORLD_READABLE);
-        toEdit = storedPref.edit();
-        toEdit.putString("Username", "Tony");
-        toEdit.putString("Password", "qazwsx4562");
-        toEdit.commit();
-
-    }
-
-
-    public void onDestroy(){
-
-        super.onDestroy();
-    }
-
-
-    public void loginClicked(View v){
-        username = etUsername.getText().toString();
-        password = etPassword.getText().toString();
-
-
-        SharedPreferences prefs = this.getSharedPreferences("Saved Data", MODE_PRIVATE);
-        String username = prefs.getString("Username", null);
-        String password = prefs.getString("Password", null);
-
-        if ((etUsername.getText().toString().equals(username) == true) && (etPassword.getText().toString().equals(password) == true)){
-            Toast loggedIn = Toast.makeText(ids3Authenticated.this,
-                    "Logged in!", Toast.LENGTH_LONG);
-            loggedIn.show();
-
-            Intent goToLogin = new Intent(this, ids3Login.class);
-            startActivity(goToLogin);
-            finish();
-
-        }else{
-            Toast error = Toast.makeText(ids3Authenticated.this,
-                    "Invalid Credentials!", Toast.LENGTH_LONG);
-            error.show();
-        }
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
-    }
-
-
-    //public void referenceXML() {
-    //    bSubmit = (Button) findViewById(R.id.submit);
-    //    etUsername = (EditText) findViewById(R.id.etUsername);
-    //    etPassword = (EditText) findViewById(R.id.etPassword);
-    //}
 }

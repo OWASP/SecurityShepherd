@@ -36,6 +36,9 @@ import android.widget.Toast;
 
 public class Insecure_Data_Storage1 extends MainActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+    private static String DB_PATH = "/data/data/com.mobshep.mobileshepherd/databases/InsecureDataStorage1/";
+    private static String DB_NAME = "Users";
+
     SQLiteDatabase Users = null;
 
     @Override
@@ -137,7 +140,8 @@ public class Insecure_Data_Storage1 extends MainActivity implements NavigationVi
 
     public void createDatabase() {
         try {
-            Users = this.openOrCreateDatabase("Users", MODE_PRIVATE, null);
+            String path = DB_PATH + DB_NAME;
+            Users = this.openOrCreateDatabase(path, MODE_PRIVATE, null);
             Users.execSQL("CREATE TABLE IF NOT EXISTS Users " +
                             "(id integer primary key, name VARCHAR, password VARCHAR);"
             );
