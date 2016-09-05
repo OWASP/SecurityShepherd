@@ -89,35 +89,7 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
-        if (id == R.id.action_disclaimer) {
 
-
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    this);
-
-            // set title
-            alertDialogBuilder.setTitle("Disclaimer");
-
-            // set dialog message
-            alertDialogBuilder
-                    .setMessage("This App may collect logs via various methods. By using this App you agree to this.")
-                    .setCancelable(false)
-                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,int id) {
-                            // if this button is clicked, close
-                            // current activity
-                            dialog.cancel();
-                        }
-                    });
-
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-
-            // show it
-            alertDialog.show();
-
-            return true;
-        }
 
         if (id == R.id.action_exit) {
             finish();
@@ -174,11 +146,17 @@ public class MainActivity extends AppCompatActivity
         }if (id == R.id.nav_pa) {
             Intent gotoPA = new Intent(MainActivity.this, poorAuth.class);
             startActivity(gotoPA);
+        }if (id == R.id.nav_pa1) {
+            Intent gotoPA1 = new Intent(MainActivity.this, poorAuth.class);
+            startActivity(gotoPA1);
+        }if (id == R.id.nav_pa2) {
+            Intent gotoPA2 = new Intent(MainActivity.this, poorAuth2_Main.class);
+            startActivity(gotoPA2);
         }if (id == R.id.nav_ui) {
             Intent gotoUI = new Intent(MainActivity.this, untrustedInput.class);
             startActivity(gotoUI);
         }else if (id == R.id.nav_scoreboard) {
-           // openScoreBoard();
+            openScoreBoardNavBar();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -195,6 +173,35 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void openScoreBoard(View v){
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String address = SP.getString("server_preference", "NA");
+
+        if (address == null){
+            Snackbar.make(null, "You need to add the server address in settings.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+        else if (address != null) {
+
+            Uri uri = Uri.parse(address);
+            Intent intentURI = new Intent(Intent.ACTION_VIEW, uri);
+
+            if (intentURI.resolveActivity(getPackageManager()) != null) {
+
+                try {
+                    startActivity(intentURI);
+                }catch (IllegalStateException e) {
+                    e.printStackTrace();
+                    Snackbar.make(null, "Invalid URL entered.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            } else {
+                Snackbar.make(null, "Play Store required to open links", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        }
+    }
+
+    public void openScoreBoardNavBar(){
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String address = SP.getString("server_preference", "NA");
 

@@ -113,7 +113,7 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
             Intent gotoIDS2 = new Intent(CSInjection2.this, Insecure_Data_Storage2.class);
             startActivity(gotoIDS2);
         } else if (id == R.id.nav_ids3) {
-            Intent gotoIDS3 = new Intent(CSInjection2.this, ids3Authenticated.class);
+            Intent gotoIDS3 = new Intent(CSInjection2.this, ids3Login.class);
             startActivity(gotoIDS3);
         }else if (id == R.id.nav_bc) {
             Intent gotoBC = new Intent(CSInjection2.this, BrokenCrypto.class);

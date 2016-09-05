@@ -102,7 +102,7 @@ public class BrokenCrypto extends MainActivity implements NavigationView.OnNavig
 			Intent gotoIDS2 = new Intent(BrokenCrypto.this, Insecure_Data_Storage2.class);
 			startActivity(gotoIDS2);
 		} else if (id == R.id.nav_ids3) {
-			Intent gotoIDS3 = new Intent(BrokenCrypto.this, ids3Authenticated.class);
+			Intent gotoIDS3 = new Intent(BrokenCrypto.this, ids3Login.class);
 			startActivity(gotoIDS3);
 		}else if (id == R.id.nav_bc) {
 			Intent gotoBC = new Intent(BrokenCrypto.this, BrokenCrypto.class);

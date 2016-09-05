@@ -1,4 +1,4 @@
-package com.mobshep.poorauthentication1;
+package com.mobshep.mobileshepherd;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -25,12 +25,11 @@ import android.os.Bundle;
  *
  * @author Sean Duggan
  */
-public class LoggedIn extends Activity {
+public class poorAuth2_LoggedIn extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_key);
+        setContentView(R.layout.pa2_content_activity_key);
 
     }
-
 
 }

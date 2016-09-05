@@ -110,35 +110,7 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
             return true;
         }
 
-        if (id == R.id.action_disclaimer) {
 
-
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    this);
-
-            // set title
-            alertDialogBuilder.setTitle("Disclaimer");
-
-            // set dialog message
-            alertDialogBuilder
-                    .setMessage("This App may collect logs via various methods. By using this App you agree to this.")
-                    .setCancelable(false)
-                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,int id) {
-                            // if this button is clicked, close
-                            // current activity
-                            dialog.cancel();
-                        }
-                    });
-
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-
-            // show it
-            alertDialog.show();
-
-            return true;
-        }
 
         if (id == R.id.action_exit) {
             finish();

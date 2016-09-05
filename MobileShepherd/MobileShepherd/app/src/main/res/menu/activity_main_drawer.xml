@@ -96,6 +96,13 @@
                     android:icon="@mipmap/ic_action_image_timer_auto"
                     android:title="Poor Authentication 1"
                 />
+
+                <item
+                    android:id="@+id/nav_pa2"
+                    android:icon="@mipmap/ic_action_image_timer_auto"
+                    android:title="Poor Authentication 1"
+                    />
+
             </menu>
         </item>
 

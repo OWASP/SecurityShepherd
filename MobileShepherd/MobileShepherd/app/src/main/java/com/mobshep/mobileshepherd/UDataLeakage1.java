@@ -1,5 +1,6 @@
 package com.mobshep.mobileshepherd;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 
 import java.io.FileNotFoundException;
@@ -125,33 +126,9 @@ public class UDataLeakage1 extends MainActivity implements View.OnClickListener,
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_disclaimer) {
-
-
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    this);
-
-            // set title
-            alertDialogBuilder.setTitle("Disclaimer");
-
-            // set dialog message
-            alertDialogBuilder
-                    .setMessage("This App may collect logs via various methods. By using this App you agree to this.")
-                    .setCancelable(false)
-                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,int id) {
-                            // if this button is clicked, close
-                            // current activity
-                            dialog.cancel();
-                        }
-                    });
-
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-
-            // show it
-            alertDialog.show();
-
+        if (id == R.id.action_settings) {
+            Intent goToSettings = new Intent(this, Preferences.class);
+            startActivity(goToSettings);
             return true;
         }
 

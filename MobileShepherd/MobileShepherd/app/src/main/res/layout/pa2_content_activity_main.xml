@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@mipmap/background"
+    android:background="@drawable/background"
     android:weightSum="1">
     <RelativeLayout android:id="@+id/Spacer"
         android:layout_width="fill_parent"
