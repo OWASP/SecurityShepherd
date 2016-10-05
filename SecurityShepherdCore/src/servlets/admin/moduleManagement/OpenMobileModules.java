@@ -22,7 +22,7 @@ public class OpenMobileModules extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(OpenMobileModules.class);
 	/**
 	 * Control class used to open all modules when called by an administrator
-	 * @param csrfToken The csrf protection token for this funciton
+	 * @param csrfToken The CSRF protection token for this function
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
