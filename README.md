@@ -54,7 +54,7 @@ The security risks in Shepherd are real vulnerabilities that have had their expl
 * **Scalability**  
 Shepherd can be used locally by a single user or easily as a server for a high amount of users.
 * **Highly Customisable**  
-Shepherd enables admins to set what levels are available to their users and in what way they are presentended (Open, CTF and Tournament Layouts)
+Shepherd enables admins to set what levels are available to their users and in what way they are presented (Open, CTF and Tournament Layouts)
 * **Perfect for Classrooms**  
 Shepherd gives its players user specific solution keys to prevent students from sharing keys, rather than going through the steps required to complete a level.
 * **Scoreboard**  
