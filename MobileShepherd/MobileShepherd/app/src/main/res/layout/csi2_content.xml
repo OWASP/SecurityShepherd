@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-     >
+    >
 
     <TabHost
         android:id="@+id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textColor="#DA70D6" >
+        android:textColor="#000000" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,7 +26,8 @@
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@xml/button">
+                android:background="@xml/tab"
+                >
             </TabWidget>
 
             <FrameLayout
@@ -34,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-            
+
 
                 <RelativeLayout
                     android:id="@+id/tab1"
@@ -42,60 +43,79 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:textColor="#DA70D6" >
+                    <RelativeLayout android:id="@+id/RelativeLayout01"
+                        android:layout_width="fill_parent"
+                        android:layout_height="800dp"
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_weight="0.31">
 
-                    <EditText
-                        android:id="@+id/etName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etPass"
-                        android:layout_alignRight="@+id/etPass"
-                        android:layout_below="@+id/tvTitle"
-                        android:layout_marginTop="25dp"
-                        android:ems="10"
-                        android:background="@xml/edittext"
-                        android:hint="Username"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
+                        <RelativeLayout android:id="@+id/innerBox"
+                            android:layout_width="500dip"
+                            android:background="@xml/box"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true">
+                            <requestFocus />
 
-                    <EditText
-                        android:id="@+id/etPass"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/etName"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="35dp"
-                        android:ems="10"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:background="@xml/edittext"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" >
+                            <EditText
+                                android:id="@+id/etName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignLeft="@+id/etPass"
+                                android:layout_alignRight="@+id/etPass"
+                                android:layout_below="@+id/tvTitle"
+                                android:layout_marginTop="25dp"
+                                android:ems="10"
+                                android:background="@xml/edittext"
+                                android:hint="Username"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="#DA70D6" />
 
-                        <requestFocus />
-                    </EditText>
+                            <EditText
+                                android:id="@+id/etPass"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/etName"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="35dp"
+                                android:ems="10"
+                                android:hint="Password"
+                                android:inputType="textPassword"
+                                android:background="@xml/edittext"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="#DA70D6" >
 
-                    <Button
-                        android:id="@+id/bLogin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etPass"
-                        android:layout_alignRight="@+id/etPass"
-                        android:layout_below="@+id/etPass"
-                        android:layout_marginTop="42dp"
-                        android:background="@xml/button"
-                        android:filterTouchesWhenObscured="true"
-                        android:text="Login" />
+                                <requestFocus />
+                            </EditText>
 
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/etName"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="32dp"
-                        android:text="Login"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#DA70D6" />
+                            <Button
+                                android:id="@+id/bLogin"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignLeft="@+id/etPass"
+                                android:layout_alignRight="@+id/etPass"
+                                android:layout_below="@+id/etPass"
+                                android:layout_marginTop="42dp"
+                                android:background="@xml/button"
+                                android:filterTouchesWhenObscured="true"
+                                android:text="Login" />
+
+                            <TextView
+                                android:id="@+id/tvTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignLeft="@+id/etName"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginTop="32dp"
+                                android:text="Login"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="#DA70D6" />
+
+                        </RelativeLayout>
+
+
+
+                    </RelativeLayout>
+
 
                 </RelativeLayout>
 
@@ -104,6 +124,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="#DA70D6" >
+
+                    <TextView
+                        android:id="@+id/tvWarning"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="32dp"
+                        android:text="The key will only be shown to authenticated users!"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#000000" />
+
 
                     <EditText
                         android:id="@+id/etKey"

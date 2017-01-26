@@ -66,7 +66,7 @@ public class ids3Login extends MainActivity{
 
     public void sharedPrefernces() {
 
-        storedPref = getSharedPreferences("AppData", MODE_WORLD_READABLE);
+        storedPref = getSharedPreferences("AppData", MODE_PRIVATE);
         toEdit = storedPref.edit();
         toEdit.putString("Origin", "Europe");
         toEdit.putString("DOB", "12/12/1980" );
@@ -74,7 +74,7 @@ public class ids3Login extends MainActivity{
         toEdit.commit();
 
 
-        storedPref = getSharedPreferences("Saved Data", MODE_WORLD_READABLE);
+        storedPref = getSharedPreferences("Saved Data", MODE_PRIVATE);
         toEdit = storedPref.edit();
         toEdit.putString("Username", "Tony");
         toEdit.putString("Password", "qazwsx4562");

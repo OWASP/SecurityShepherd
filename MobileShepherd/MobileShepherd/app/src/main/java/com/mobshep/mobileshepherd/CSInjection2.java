@@ -43,7 +43,7 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
-public class CSInjection2 extends MainActivity implements OnClickListener {
+public class CSInjection2 extends MainActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener  {
 
     TabHost th;
     Button Login;
@@ -260,7 +260,7 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
             try {
                 SQLiteDatabase.loadLibs(context);
 
-                String dbPath = context.getDatabasePath("Users.db").getPath();
+                String dbPath = context.getDatabasePath("Players.db").getPath();
 
                 File dbPathFile = new File(dbPath);
                 if (!dbPathFile.exists())
@@ -269,10 +269,10 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
                 SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
                         dbPassword, null);
 
-                db.execSQL("DROP TABLE IF EXISTS Users");
-                db.execSQL("CREATE TABLE Users(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
+                db.execSQL("DROP TABLE IF EXISTS Players");
+                db.execSQL("CREATE TABLE Players(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
 
-                db.execSQL("INSERT INTO Users VALUES( 1,'Admin',20,'49c3a17ad8d8ccd93885e6a28661480d')");
+                db.execSQL("INSERT INTO Players VALUES( 1,'Admin',20,'49c3a17ad8d8ccd93885e6a28661480d')");
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 Toast error = Toast.makeText(CSInjection2.this,
@@ -296,7 +296,7 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPassword,
                 null);
 
-        String query = ("SELECT * FROM key3;");
+        String query = ("SELECT * FROM key;");
 
         Cursor cursor = db.rawQuery(query, null);
 
@@ -317,7 +317,7 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
             try {
                 SQLiteDatabase.loadLibs(context);
 
-                String dbPath = context.getDatabasePath("key3.db").getPath();
+                String dbPath = context.getDatabasePath("key.db").getPath();
 
                 File dbPathFile = new File(dbPath);
                 if (!dbPathFile.exists())
@@ -326,10 +326,10 @@ public class CSInjection2 extends MainActivity implements OnClickListener {
                 SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
                         dbPassword, null);
 
-                db.execSQL("DROP TABLE IF EXISTS key3");
-                db.execSQL("CREATE TABLE key3(key VARCHAR)");
+                db.execSQL("DROP TABLE IF EXISTS key");
+                db.execSQL("CREATE TABLE key(key VARCHAR)");
 
-                db.execSQL("INSERT INTO key3 VALUES('The Key is BurpingChimneys.')");
+                db.execSQL("INSERT INTO key VALUES('The Key is BurpingChimneys.')");
 
             } catch (Exception e) {
                 // TODO Auto-generated catch block

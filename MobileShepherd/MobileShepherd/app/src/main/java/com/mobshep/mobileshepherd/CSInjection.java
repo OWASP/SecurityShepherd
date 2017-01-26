@@ -45,7 +45,7 @@ import net.sqlcipher.database.SQLiteDatabase;
  * @author Sean Duggan
  */
 
-public class CSInjection extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class CSInjection extends MainActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
 	TabHost th;
 	Button Login;
@@ -81,12 +81,12 @@ public class CSInjection extends AppCompatActivity implements OnClickListener, N
 		th.setup();
 
 		TabSpec specs = th.newTabSpec("tag1");
-		specs.setContent(R.id.tab2);
+		specs.setContent(R.id.tab1);
 		specs.setIndicator("Login");
 		th.addTab(specs);
 
 		specs = th.newTabSpec("tag2");
-		specs.setContent(R.id.tab3);
+		specs.setContent(R.id.tab2);
 		specs.setIndicator("Key");
 		th.addTab(specs);
 	}

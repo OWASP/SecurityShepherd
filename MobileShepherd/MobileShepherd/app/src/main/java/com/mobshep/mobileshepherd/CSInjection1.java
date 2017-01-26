@@ -1,9 +1,8 @@
 package com.mobshep.mobileshepherd;
 
+
 import java.io.File;
 import java.io.IOException;
-
-import net.sqlcipher.database.SQLiteDatabase;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +22,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import net.sqlcipher.database.SQLiteDatabase;
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -43,7 +46,7 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
-public class CSInjection1 extends MainActivity implements OnClickListener {
+public class CSInjection1 extends MainActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
 	TabHost th;
 	Button Login;

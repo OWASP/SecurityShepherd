@@ -173,6 +173,10 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
     }
 
 
+    public void insertUserData(){
+
+    }
+
     public void insertKey(){
         Members.execSQL("DELETE FROM Members;");
         Members.execSQL("INSERT INTO Members (name, password) VALUES ('Admin','Battery777');");

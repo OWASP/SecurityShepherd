@@ -21,31 +21,46 @@
     </RelativeLayout>
     <RelativeLayout android:id="@+id/RelativeLayout01"
         android:layout_width="fill_parent"
+        android:background="@xml/box2"
         android:layout_height="100dp"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_weight="0.31">
-
-        <RelativeLayout android:id="@+id/innerBox"
-            android:layout_width="500dip"
-            android:background="@xml/box"
-            android:layout_height="fill_parent"
-            android:layout_centerHorizontal="true">
-            <requestFocus />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="The Key is not here."
-                android:textColor="#DA70D6"
-                android:id="@+id/textView"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-
-        </RelativeLayout>
+        android:layout_weight="0.70">
 
 
+        <Button
+            android:text="Submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@xml/button"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="131dp"
+            android:id="@+id/button2" />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Name"
+            android:ems="10"
+            android:background="@xml/edittext2"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="156dp"
+            android:id="@+id/etName" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Password"
+            android:ems="10"
+            android:background="@xml/edittext2"
+            android:layout_below="@+id/etName"
+            android:layout_alignLeft="@+id/etName"
+            android:layout_alignStart="@+id/etName"
+            android:layout_marginTop="46dp"
+            android:id="@+id/etPass" />
     </RelativeLayout>
 
 </LinearLayout>
