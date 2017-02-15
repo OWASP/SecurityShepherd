@@ -146,6 +146,9 @@ public class CSInjection extends MainActivity implements OnClickListener, Naviga
 		}if (id == R.id.nav_udl1) {
 			Intent gotoUDL1 = new Intent(CSInjection.this, UDataLeakage1.class);
 			startActivity(gotoUDL1);
+		}if (id == R.id.nav_pl) {
+			Intent gotoPL = new Intent(CSInjection.this, providerLeakage.class);
+			startActivity(gotoPL);
 		}else if (id == R.id.nav_scoreboard) {
 			//link to shepherd or webview?
 		}

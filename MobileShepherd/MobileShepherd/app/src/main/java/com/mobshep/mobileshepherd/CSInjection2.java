@@ -145,6 +145,9 @@ public class CSInjection2 extends MainActivity implements OnClickListener, Navig
         }if (id == R.id.nav_udl1) {
             Intent gotoUDL1 = new Intent(CSInjection2.this, UDataLeakage1.class);
             startActivity(gotoUDL1);
+        }if (id == R.id.nav_pl) {
+            Intent gotoPL = new Intent(CSInjection2.this, providerLeakage.class);
+            startActivity(gotoPL);
         }else if (id == R.id.nav_scoreboard) {
             //link to shepherd or webview?
         }
@@ -218,13 +221,13 @@ public class CSInjection2 extends MainActivity implements OnClickListener, Navig
     private boolean login(String username, String password) throws IOException {
         try{
             try {
-                String dbPath = this.getDatabasePath("Users.db").getPath();
+                String dbPath = this.getDatabasePath("Players.db").getPath();
 
                 SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
                         dbPassword, null);
 
-                String query = ("SELECT * FROM Users WHERE memName='" + username
-                        + "' AND memPass = '" + password + "';");
+                String query = ("SELECT * FROM Players WHERE memName='" + username
+                        + " AND memPass = '" + password + ";");
 
                 Cursor cursor = db.rawQuery(query, null);
                 if (cursor != null) {
@@ -365,7 +368,7 @@ public class CSInjection2 extends MainActivity implements OnClickListener, Navig
         input = input.replace("9", "");
         input = input.replace ("--", "");
 
-        input = input + " '" ;
+        input = input + "'" ;
 
 
         return input;

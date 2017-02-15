@@ -134,7 +134,11 @@ public class BrokenCrypto extends MainActivity implements NavigationView.OnNavig
 		}if (id == R.id.nav_udl1) {
 			Intent gotoUDL1 = new Intent(BrokenCrypto.this, UDataLeakage1.class);
 			startActivity(gotoUDL1);
-		}else if (id == R.id.nav_scoreboard) {
+		}if (id == R.id.nav_pl) {
+			Intent gotoPL = new Intent(BrokenCrypto.this, providerLeakage.class);
+			startActivity(gotoPL);
+		}
+		else if (id == R.id.nav_scoreboard) {
 			//link to shepherd or webview?
 		}
 

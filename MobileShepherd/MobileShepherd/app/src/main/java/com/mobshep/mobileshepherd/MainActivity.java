@@ -155,6 +155,9 @@ public class MainActivity extends AppCompatActivity
         }if (id == R.id.nav_ui) {
             Intent gotoUI = new Intent(MainActivity.this, untrustedInput.class);
             startActivity(gotoUI);
+        }if (id == R.id.nav_pl) {
+            Intent gotoPL = new Intent(MainActivity.this, providerLeakage.class);
+            startActivity(gotoPL);
         }else if (id == R.id.nav_scoreboard) {
             openScoreBoardNavBar();
         }

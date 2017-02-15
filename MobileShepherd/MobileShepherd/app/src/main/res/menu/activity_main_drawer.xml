@@ -109,12 +109,12 @@
         <item android:title="Provider Leakage">
             <menu>
                 <item
-                    android:id="@+id/nav_cpl"
+                    android:id="@+id/nav_pl"
                     android:icon="@mipmap/ic_action_notification_adb"
                     android:title="Provider Leakage"
                     />
                 <item
-                    android:id="@+id/nav_cpl1"
+                    android:id="@+id/nav_pl1"
                     android:icon="@mipmap/ic_action_notification_adb"
                     android:title="Provider Leakage 1"
                     />

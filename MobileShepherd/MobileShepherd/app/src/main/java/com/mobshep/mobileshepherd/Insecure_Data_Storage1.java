@@ -1,11 +1,13 @@
 package com.mobshep.mobileshepherd;
 
 import java.io.File;
-
+import java.io.IOException;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 /**
@@ -50,7 +54,7 @@ public class Insecure_Data_Storage1 extends MainActivity implements NavigationVi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         createDatabase();
-        insertData();
+        initialiseTable();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -128,6 +132,9 @@ public class Insecure_Data_Storage1 extends MainActivity implements NavigationVi
         }if (id == R.id.nav_udl1) {
             Intent gotoUDL1 = new Intent(Insecure_Data_Storage1.this, UDataLeakage1.class);
             startActivity(gotoUDL1);
+        }if (id == R.id.nav_pl) {
+            Intent gotoPL = new Intent(Insecure_Data_Storage1.this, providerLeakage.class);
+            startActivity(gotoPL);
         }else if (id == R.id.nav_scoreboard) {
             //link to shepherd or webview?
         }
@@ -158,7 +165,53 @@ public class Insecure_Data_Storage1 extends MainActivity implements NavigationVi
         }
     }
 
-    public void insertData(){
+    public void submitPressed(View v) throws IOException {
+
+        EditText username = (EditText) findViewById(R.id.etName);
+        EditText password = (EditText) findViewById(R.id.etPass);
+
+        String user = username.getText().toString();
+        String pass = password.getText().toString();
+
+        InsertData(user,pass);
+
+
+    }
+
+
+    private void InsertData(String user, String pass) throws IOException {
+
+        try {
+            String path = DB_PATH + DB_NAME;
+            Users = this.openOrCreateDatabase(path, MODE_PRIVATE, null);
+
+            //get the base64 functionality
+            annoyingObfuscationUtil util = new annoyingObfuscationUtil();
+
+            SQLiteStatement stmt = Users.compileStatement("INSERT INTO Users (name, password) VALUES (?,?);");
+            stmt.bindString(1, user);
+            stmt.bindString(2, util.Obfuscation1(pass));
+            stmt.execute();
+
+            Snackbar insert = Snackbar.make(findViewById(android.R.id.content), "Data Inserted!", Snackbar.LENGTH_LONG);
+            insert.show();
+
+            EditText username = (EditText) findViewById(R.id.etName);
+            EditText password = (EditText) findViewById(R.id.etPass);
+
+            username.setText("");
+            password.setText("");
+
+        } catch (Exception e) {
+            Log.e("DB ERROR", "Error Inserting into Database");
+
+            Snackbar error = Snackbar.make(findViewById(android.R.id.content), "Could not Insert Data.", Snackbar.LENGTH_LONG);
+            error.show();
+        }
+    }
+
+
+    public void initialiseTable(){
 
         Users.execSQL("DELETE FROM Users;");
 

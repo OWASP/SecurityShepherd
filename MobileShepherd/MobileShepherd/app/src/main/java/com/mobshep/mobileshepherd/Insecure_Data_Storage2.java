@@ -125,6 +125,9 @@ public class Insecure_Data_Storage2 extends MainActivity {
 		}if (id == R.id.nav_udl1) {
 			Intent gotoUDL1 = new Intent(Insecure_Data_Storage2.this, UDataLeakage1.class);
 			startActivity(gotoUDL1);
+		}if (id == R.id.nav_pl) {
+			Intent gotoPL = new Intent(Insecure_Data_Storage2.this, providerLeakage.class);
+			startActivity(gotoPL);
 		}else if (id == R.id.nav_scoreboard) {
 			//link to shepherd or webview?
 		}

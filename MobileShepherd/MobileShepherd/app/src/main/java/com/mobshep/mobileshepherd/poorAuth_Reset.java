@@ -29,7 +29,7 @@ import android.widget.Toast;
  * @author Sean Duggan
  */
 
-public class poorAuth_Forgotton extends Activity {
+public class poorAuth_Reset extends Activity {
 
 	EditText question1, question2;
 	TextView tempPass;
@@ -48,7 +48,7 @@ public class poorAuth_Forgotton extends Activity {
 	}
 
 	public void cancel(View v) {
-        Intent gotoMain = new Intent(poorAuth_Forgotton.this, poorAuth.class);
+        Intent gotoMain = new Intent(poorAuth_Reset.this, poorAuth.class);
 		startActivity(gotoMain);
 	}
 
@@ -57,14 +57,14 @@ public class poorAuth_Forgotton extends Activity {
 		String CheckQ2 = question2.getText().toString();
 
 		if (CheckQ1.contentEquals("") || CheckQ2.contentEquals("")) {
-			Toast empty = Toast.makeText(poorAuth_Forgotton.this,
+			Toast empty = Toast.makeText(poorAuth_Reset.this,
 					"Empty Fields Detected.", Toast.LENGTH_SHORT);
 			empty.show();
 		}
 
 		if (CheckQ1.equalsIgnoreCase("Chicken")
 				&& CheckQ2.equalsIgnoreCase("Meade")) {
-			Toast reset = Toast.makeText(poorAuth_Forgotton.this, "Password Reset.",
+			Toast reset = Toast.makeText(poorAuth_Reset.this, "Password Reset.",
 					Toast.LENGTH_SHORT);
 			reset.show();
 
@@ -79,7 +79,7 @@ public class poorAuth_Forgotton extends Activity {
 		}
 
 		else {
-			Toast invalid = Toast.makeText(poorAuth_Forgotton.this, "Invalid answers.",
+			Toast invalid = Toast.makeText(poorAuth_Reset.this, "Invalid answers.",
 					Toast.LENGTH_SHORT);
 			invalid.show();
 		}

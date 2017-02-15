@@ -55,7 +55,8 @@ public class poorAuth extends Activity implements OnClickListener {
 		setContentView(R.layout.pa_login_content);
 		referenceXML();
 
-		logDetails("Today I had chicken again! I love Chicken! #deliciousChicken #whyDoIDoThis");
+		logDetails("chicken");
+		logDetails("meade");
 		//store secret questions locally.
 	}
 
@@ -74,7 +75,7 @@ public class poorAuth extends Activity implements OnClickListener {
 		switch (arg0.getId()) {
 
 		case (R.id.bForgot):
-			Intent gotoForgot = new Intent("com.mobshep.mobileshepherd.poorAuth_Forgotton");
+			Intent gotoForgot = new Intent("com.mobshep.mobileshepherd.poorAuth_Reset");
 			startActivity(gotoForgot);
 			break;
 
@@ -83,7 +84,7 @@ public class poorAuth extends Activity implements OnClickListener {
 			String CheckName = username.getText().toString();
 			String CheckPass = password.getText().toString();
 
-			Log.d(TAG, "temp pass = " + poorAuth_Forgotton.tempPassVar
+			Log.d(TAG, "temp pass = " + poorAuth_Reset.tempPassVar
 					+ "passwordReset = " + passwordReset);
 
 			if (passwordReset == true)
@@ -123,7 +124,7 @@ public class poorAuth extends Activity implements OnClickListener {
 			}
 
 			if (CheckName.equals("Jack") == false
-					|| CheckPass.equals(poorAuth_Forgotton.tempPassVar) == false
+					|| CheckPass.equals(poorAuth_Reset.tempPassVar) == false
 					|| passwordReset == false) {
 				Toast invalid = Toast.makeText(poorAuth.this,
 						"Invalid Credentials!", Toast.LENGTH_SHORT);
@@ -132,7 +133,7 @@ public class poorAuth extends Activity implements OnClickListener {
 				Log.d(TAG, CheckName);
 				Log.d(TAG, CheckPass);
 
-				Log.d(TAG, "temp pass = " + poorAuth_Forgotton.tempPassVar
+				Log.d(TAG, "temp pass = " + poorAuth_Reset.tempPassVar
 						+ "passwordReset = " + passwordReset);
 				break;
 			}

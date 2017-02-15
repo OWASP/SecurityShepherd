@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,7 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
+import java.io.IOException;
 
 
 /**
@@ -43,12 +48,17 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
     SQLiteDatabase Members = null;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         createDatabase();
-        insertKey();
+        try {
+            InsertData("Admin","Battery777");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         setTitle(R.string.ids);
         setContentView(R.layout.ids_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -62,6 +72,7 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     public void createDatabase() {
@@ -163,6 +174,9 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
         }if (id == R.id.nav_udl1) {
             Intent gotoUDL1 = new Intent(Insecure_Data_Storage.this, UDataLeakage1.class);
             startActivity(gotoUDL1);
+        }if (id == R.id.nav_pl) {
+            Intent gotoPL = new Intent(Insecure_Data_Storage.this, providerLeakage.class);
+            startActivity(gotoPL);
         }else if (id == R.id.nav_scoreboard) {
             //link to shepherd or webview?
         }
@@ -172,14 +186,45 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
         return true;
     }
 
+    public void submitPressed(View v) throws IOException {
 
-    public void insertUserData(){
+        EditText username = (EditText) findViewById(R.id.etName);
+        EditText password = (EditText) findViewById(R.id.etPass);
+
+        String user = username.getText().toString();
+        String pass = password.getText().toString();
+
+        InsertData(user,pass);
+
 
     }
 
-    public void insertKey(){
-        Members.execSQL("DELETE FROM Members;");
-        Members.execSQL("INSERT INTO Members (name, password) VALUES ('Admin','Battery777');");
+    private void InsertData(String user, String pass) throws IOException {
+
+        try {
+            String path = DB_PATH + DB_NAME;
+            Members = this.openOrCreateDatabase(path, MODE_PRIVATE, null);
+
+            SQLiteStatement stmt = Members.compileStatement("INSERT INTO Members (name, password) VALUES (?,?);");
+            stmt.bindString(1, user);
+            stmt.bindString(2, pass);
+            stmt.execute();
+
+            Snackbar insert = Snackbar.make(findViewById(android.R.id.content), "Data Inserted!", Snackbar.LENGTH_LONG);
+            insert.show();
+
+            EditText username = (EditText) findViewById(R.id.etName);
+            EditText password = (EditText) findViewById(R.id.etPass);
+
+            username.setText("");
+            password.setText("");
+
+        } catch (Exception e) {
+            Log.e("DB ERROR", "Error Inserting into Database");
+
+            Snackbar error = Snackbar.make(findViewById(android.R.id.content), "Could not Insert Data.", Snackbar.LENGTH_LONG);
+            error.show();
+        }
     }
 
 }
