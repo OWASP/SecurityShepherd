@@ -170,6 +170,9 @@ public class BrokenCrypto2 extends MainActivity implements NavigationView.OnNavi
 		}if (id == R.id.nav_udl1) {
 			Intent gotoUDL1 = new Intent(BrokenCrypto2.this, UDataLeakage1.class);
 			startActivity(gotoUDL1);
+		}if (id == R.id.nav_udl2) {
+			Intent gotoUDL2 = new Intent(BrokenCrypto2.this, UnintendedDataLeakage2.class);
+			startActivity(gotoUDL2);
 		}if (id == R.id.nav_pl) {
 			Intent gotoPL = new Intent(BrokenCrypto2.this, providerLeakage.class);
 			startActivity(gotoPL);

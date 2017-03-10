@@ -130,61 +130,6 @@ public class Insecure_Data_Storage extends MainActivity implements NavigationVie
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_ids) {
-            Intent gotoIDS = new Intent(Insecure_Data_Storage.this, Insecure_Data_Storage.class);
-            startActivity(gotoIDS);
-        } else if (id == R.id.nav_ids1) {
-            Intent gotoIDS1 = new Intent(Insecure_Data_Storage.this, Insecure_Data_Storage1.class);
-            startActivity(gotoIDS1);
-        } else if (id == R.id.nav_ids2) {
-            Intent gotoIDS2 = new Intent(Insecure_Data_Storage.this, Insecure_Data_Storage2.class);
-            startActivity(gotoIDS2);
-        } else if (id == R.id.nav_ids3) {
-            Intent gotoIDS3 = new Intent(Insecure_Data_Storage.this, ids3Login.class);
-            startActivity(gotoIDS3);
-        }else if (id == R.id.nav_bc) {
-            Intent gotoBC = new Intent(Insecure_Data_Storage.this, BrokenCrypto.class);
-            startActivity(gotoBC);
-        }else if (id == R.id.nav_bc1) {
-            Intent gotoBC1 = new Intent(Insecure_Data_Storage.this, BrokenCrypto1.class);
-            startActivity(gotoBC1);
-        }else if (id == R.id.nav_bc2) {
-            Intent gotoBC2 = new Intent(Insecure_Data_Storage.this, BrokenCrypto2.class);
-            startActivity(gotoBC2);
-        }else if (id == R.id.nav_bc3) {
-            Intent gotoBC3 = new Intent(Insecure_Data_Storage.this, BrokenCrypto3.class);
-            startActivity(gotoBC3);
-        }else if (id == R.id.nav_csi) {
-            Intent gotoCSI = new Intent(Insecure_Data_Storage.this, CSInjection.class);
-            startActivity(gotoCSI);
-        }else if (id == R.id.nav_csi1) {
-            Intent gotoCSI1 = new Intent(Insecure_Data_Storage.this, CSInjection1.class);
-            startActivity(gotoCSI1);
-        }else if (id == R.id.nav_csi2) {
-            Intent gotoCSI2 = new Intent(Insecure_Data_Storage.this, CSInjection2.class);
-            startActivity(gotoCSI2);
-        }if (id == R.id.nav_udl) {
-            Intent gotoUDL = new Intent(Insecure_Data_Storage.this, UDataLeakage.class);
-            startActivity(gotoUDL);
-        }if (id == R.id.nav_udl1) {
-            Intent gotoUDL1 = new Intent(Insecure_Data_Storage.this, UDataLeakage1.class);
-            startActivity(gotoUDL1);
-        }if (id == R.id.nav_pl) {
-            Intent gotoPL = new Intent(Insecure_Data_Storage.this, providerLeakage.class);
-            startActivity(gotoPL);
-        }else if (id == R.id.nav_scoreboard) {
-            //link to shepherd or webview?
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     public void submitPressed(View v) throws IOException {
 

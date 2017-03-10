@@ -143,6 +143,9 @@ public class MainActivity extends AppCompatActivity
         }if (id == R.id.nav_udl1) {
             Intent gotoUDL1 = new Intent(MainActivity.this, UDataLeakage1.class);
             startActivity(gotoUDL1);
+        }if (id == R.id.nav_udl2) {
+            Intent gotoUDL2 = new Intent(MainActivity.this, UnintendedDataLeakage2.class);
+            startActivity(gotoUDL2);
         }if (id == R.id.nav_pa) {
             Intent gotoPA = new Intent(MainActivity.this, poorAuth.class);
             startActivity(gotoPA);
