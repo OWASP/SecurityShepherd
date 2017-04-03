@@ -71,7 +71,7 @@
 					<%= bundle.getString("challenge.hint.description") %>
 					<br />
 					<br />
-					<div>SELECT * FROM customers WHERE customerId =&quot;<a id="userContent"></a>&quot;;</div>
+					<div>SELECT * FROM customers WHERE customerId =&prime;<a id="userContent"></a>&prime;;</div>
 					<br />
 					<br />
 				</div>
