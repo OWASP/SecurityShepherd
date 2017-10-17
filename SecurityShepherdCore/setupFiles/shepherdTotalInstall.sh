@@ -8,14 +8,14 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 else
 	# Install Pre-Requisite Stuff
-	sudo apt-get update -y 
-	sudo apt-get install -y python-software-properties 
-	sudo add-apt-repository -y ppa:webupd8team/java 
-	sudo apt-get update -y 
-	sudo apt-get install -y oracle-java7-installer 
+	sudo apt-get update -y
+	sudo apt-get install -y python-software-properties
+	sudo add-apt-repository -y ppa:webupd8team/java
+	sudo apt-get update -y
+	sudo apt-get install -y oracle-java8-installer
 	sudo apt-get install -y tomcat7 tomcat7-admin mysql-server-5.5
 	sudo apt-get install -y unzip
-	
+
 	#Download and Deploy Shepherd to Tomcat and MySQL
 	sudo wget --quiet $shepherdManualPackLocation -O manualPack.zip
 	mkdir manualPack
@@ -34,7 +34,7 @@ else
 	mysql -u root -e "source coreSchema.sql" --force -p
 	echo "MySQL Password Please:"
 	mysql -u root -e "source moduleSchemas.sql" --force -p
-	
+
 	#Install and Config MongoDB
 	echo "Installing MongoDB"
 	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
@@ -43,10 +43,10 @@ else
 	sudo apt-get install -y mongodb-org=2.6.9 mongodb-org-server=2.6.9 mongodb-org-shell=2.6.9 mongodb-org-mongos=2.6.9 mongodb-org-tools=2.6.9
 	sleep 10
 	mongo /home/*/manualPack/mongoSchema.js
-	
+
 	#Configuring Tomcat to Run the way we want (Oracle Java, HTTPs, Port 80 redirect to 443
 	echo "Configuring Tomcat"
-	sudo echo "JAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/default/tomcat7
+	sudo echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/default/tomcat7
 	sudo echo "AUTHBIND=yes" >> /etc/default/tomcat7
 	cd /home/*
 	homeDirectory="$(pwd)/"
@@ -76,8 +76,8 @@ else
 	chmod 500 /etc/authbind/byport/443
 	chown tomcat7 /etc/authbind/byport/80
 	chown tomcat7 /etc/authbind/byport/443
-	
+
 	#Restart Tomcat
-	sudo service tomcat7 restart	
+	sudo service tomcat7 restart
 	echo "Shepherd is Ready to Rock!"
 fi
