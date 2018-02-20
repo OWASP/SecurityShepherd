@@ -6,7 +6,7 @@
 ###################################################################
 
 
-FROM ubuntu:precise
+FROM ubuntu:trusty
 ENV DEBIAN_FRONTEND noninteractive
 
 MAINTAINER Paul <@ismisepaul>
@@ -29,7 +29,7 @@ RUN apt-get update -y &&\
 	apt-get update -y &&\ 
 	apt-get install -y mongodb-org=2.6.9 mongodb-org-server=2.6.9 mongodb-org-shell=2.6.9 mongodb-org-mongos=2.6.9 mongodb-org-tools=2.6.9 &&\
 	echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections &&\
-	apt-get install -y oracle-java7-installer --force-yes &&\
+	apt-get install -y oracle-java8-installer --force-yes &&\
 	echo "mysql-server mysql-server/root_password password $mysqlRootPwd" | debconf-set-selections &&\
 	echo "mysql-server mysql-server/root_password_again password $mysqlRootPwd" | debconf-set-selections &&\
 	apt-get install -y tomcat7 tomcat7-common tomcat7-admin mysql-server-5.5 authbind unzip tofrodos wget less vim &&\
@@ -48,11 +48,13 @@ RUN wget --quiet $shepherdManualPackLocation -O manualPack.zip &&\
 
 #Configuring MySQL & Mongodb
 WORKDIR /home/shepherd/manualPack
-RUN /bin/bash -c "/usr/bin/mysqld_safe &" &&\
-	sleep 5 &&\
+#Fix for MySQL BUG in Overlay2
+RUN find /var/lib/mysql -type f -exec touch {} \; &&\
+  service mysql start &&\
+	sleep 10 &&\
 	mysql -u root -e "source coreSchema.sql" --force -p$mysqlRootPwd &&\
 	mysql -u root -e "source moduleSchemas.sql" --force -p$mysqlRootPwd
-
+	
 #Configuring Mongodb
 	RUN mkdir -p /data/db/ &&\
 	chown `id -u` /data/db &&\
@@ -63,7 +65,7 @@ RUN /bin/bash -c "/usr/bin/mysqld_safe &" &&\
 
 #Configuring Tomcat
 WORKDIR /home/shepherd
-RUN echo "JAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/default/tomcat7 && \
+RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/default/tomcat7 && \
 	echo "AUTHBIND=yes" >> /etc/default/tomcat7 && \
 	keytool -genkey -alias tomcat -keyalg RSA -keystore $keyStoreFileName -dname "cn=OwaspShepherd, ou=Security Shepherd, o=OWASP, L=Baile Átha Cliath, ST=Laighin, C=IE" -storepass $keystorePwd -keypass $keystorePwd -deststoretype JKS && \
 	cd /var/lib/tomcat7/conf/ && \
@@ -81,8 +83,8 @@ RUN echo "JAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/default/tomcat7 && \
 	chown tomcat7 /etc/authbind/byport/80 && \
 	chown tomcat7 /etc/authbind/byport/443
 
+#Docker Entrypoint
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 EXPOSE 80 443 3306 27017
 
-CMD /usr/bin/mysqld_safe & \
-	/usr/bin/mongod & \
-	service tomcat7 start;
+CMD ["/bin/bash", "/docker-entrypoint.sh"]
