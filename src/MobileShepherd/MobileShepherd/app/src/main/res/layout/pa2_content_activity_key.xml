@@ -1,0 +1,44 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    android:weightSum="1">
+    <RelativeLayout android:id="@+id/Spacer"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="44dp">
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="0.31">
+
+        <RelativeLayout android:id="@+id/innerBox"
+            android:layout_width="700dip"
+            android:background="@xml/box"
+            android:layout_height="700dip"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true">
+
+           <EditText
+            android:id="@+id/etKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The Key is: MegaKillerExtremeCheese"
+            android:background="@xml/edittext"
+            android:ems="10"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#DA70D6"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>
