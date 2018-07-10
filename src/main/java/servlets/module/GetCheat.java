@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import dbProcs.Getter;
 import utils.CheatSheetStatus;
@@ -59,7 +59,7 @@ public class GetCheat extends HttpServlet
 		String[] result = null;
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
+		
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
@@ -82,7 +82,7 @@ public class GetCheat extends HttpServlet
 						{
 							out.write(
 									"<div id='theActualCheat' class='cheatBox'>" + 
-									"<big style='color:#A878EF;'>" + encoder.encodeForHTML(result[0]) + " Cheat</big>" +
+									"<big style='color:#A878EF;'>" + Encode.forHtml(result[0]) + " Cheat</big>" +
 									"<p>" +
 									result[1] +
 									"</div></p><br>");

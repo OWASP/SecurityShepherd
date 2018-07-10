@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: addPlayers.jsp *************************");
@@ -45,12 +45,12 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 	//Logging Username
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 // Getting Session Variables
-//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-Encoder encoder = ESAPI.encoder();
-String csrfToken = encoder.encodeForHTMLAttribute(tokenCookie.getValue());
-String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
-String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
-String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
+//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+
+String csrfToken = Encode.forHtmlAttribute(tokenCookie.getValue());
+String userName = Encode.forHtml(ses.getAttribute("userName").toString());
+String userRole = Encode.forHtml(ses.getAttribute("userRole").toString());
+String userId = Encode.forHtml(ses.getAttribute("userStamp").toString());
 String ApplicationRoot = getServletContext().getRealPath("");
 boolean showClasses = false;
 
@@ -86,8 +86,8 @@ catch(SQLException e)
 										{
 											do
 											{
-												String classId = encoder.encodeForHTMLAttribute(classList.getString(1));
-												String classYearName = encoder.encodeForHTML(classList.getString(3)) + " " + encoder.encodeForHTML(classList.getString(2));
+												String classId = Encode.forHtmlAttribute(classList.getString(1));
+												String classYearName = Encode.forHtml(classList.getString(3)) + " " + Encode.forHtml(classList.getString(2));
 												%>
 													<option value="<%=classId%>"><%=classYearName%></option>
 												<%

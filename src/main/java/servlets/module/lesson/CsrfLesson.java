@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import dbProcs.Getter;
 import utils.FindXSS;
@@ -68,7 +68,7 @@ public class CsrfLesson extends HttpServlet
 		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
+		
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -104,7 +104,7 @@ public class CsrfLesson extends HttpServlet
 					htmlOutput += "<h2 class='title'>" + bundle.getString("challenge.messageSent") + "</h2>" +
 						"<p><table><tr><td>" + bundle.getString("challenge.sentTo") + ": </td><td>administrator@SecurityShepherd.com</td></tr>" +
 						"<tr><td>" + bundle.getString("challenge.message") + ": </td><td> " +
-						"<img src=\"" + encoder.encodeForHTMLAttribute(messageForAdmin) + "\"/>" +
+						"<img src=\"" + Encode.forHtmlAttribute(messageForAdmin) + "\"/>" +
 						"</td></tr></table></p>";
 					log.debug("Outputting HTML");
 					out.write(htmlOutput);

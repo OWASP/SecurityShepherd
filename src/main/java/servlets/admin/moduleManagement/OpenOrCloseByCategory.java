@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
 
 import dbProcs.Setter;
 import utils.ShepherdLogManager;
@@ -35,7 +34,6 @@ public class OpenOrCloseByCategory extends HttpServlet
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& servlets.module.OpenOrCloseByCategory &&&");
 		String htmlOutput = new String();
-		Encoder encoder = ESAPI.encoder();
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -56,7 +54,7 @@ public class OpenOrCloseByCategory extends HttpServlet
 				}
 				if(validData && request.getParameterValues("toOpenOrClose[]") != null)
 				{
-					htmlOutput = "<h2 class='title'>Categories Set to " + encoder.encodeForHTML(openOrClose) + "</h2>";
+					htmlOutput = "<h2 class='title'>Categories Set to " + Encode.forHtml(openOrClose) + "</h2>";
 					String[] toDo = request.getParameterValues("toOpenOrClose[]");
 					log.debug("toOpen = " + toDo.toString());
 					for(int i = 0; i < toDo.length; i++)

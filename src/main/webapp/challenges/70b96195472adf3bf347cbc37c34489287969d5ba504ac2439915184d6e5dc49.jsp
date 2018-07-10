@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 	// Cross Site Request Forgery Challenge 5
@@ -49,16 +49,16 @@ if (request.getSession() != null)
 	{
 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 		// Getting Session Variables
-		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-		Encoder encoder = ESAPI.encoder();
+		//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+		
 		String ApplicationRoot = getServletContext().getRealPath("");
-		String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
+		String csrfToken = Encode.forHtml(tokenCookie.getValue());
 		String userClass = null;
 		if(ses.getAttribute("userClass") != null)
 		{
-			userClass = encoder.encodeForHTML(ses.getAttribute("userClass").toString());
+			userClass = Encode.forHtml(ses.getAttribute("userClass").toString());
 		}
-		String userId = encoder.encodeForHTML(ses.getAttribute("userStamp").toString());
+		String userId = Encode.forHtml(ses.getAttribute("userStamp").toString());
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">

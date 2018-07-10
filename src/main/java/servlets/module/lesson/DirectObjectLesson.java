@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -91,8 +91,8 @@ public class DirectObjectLesson extends HttpServlet
 				else
 				{
 					log.debug("No Profile Found");
-					Encoder encoder = ESAPI.encoder();
-					htmlOutput = "<h2 class='title'>" + bundle.getString("response.user") + ": " + bundle.getString("response.notFound") + "</h2><p>" + bundle.getString("response.user") + " '" + encoder.encodeForHTML(userName) + "' " + bundle.getString("response.couldNotFind") + ".</p>";
+					
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.user") + ": " + bundle.getString("response.notFound") + "</h2><p>" + bundle.getString("response.user") + " '" + Encode.forHtml(userName) + "' " + bundle.getString("response.couldNotFind") + ".</p>";
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);

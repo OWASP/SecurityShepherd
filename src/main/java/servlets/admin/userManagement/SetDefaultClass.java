@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import dbProcs.Getter;
 import servlets.Register;
@@ -55,7 +55,7 @@ public class SetDefaultClass extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.SetDefaultClass ***");
-		Encoder encoder = ESAPI.encoder();
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -94,7 +94,7 @@ public class SetDefaultClass extends HttpServlet
 						{
 							log.debug("Valid Class Submitted");
 							Register.setDefaultClass(classId);
-							htmlOutput = "Default class has been set to " + encoder.encodeForHTML(classInfo[0]);
+							htmlOutput = "Default class has been set to " + Encode.forHtml(classInfo[0]);
 							log.debug(htmlOutput);
 						}
 					}

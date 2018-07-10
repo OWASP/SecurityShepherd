@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -73,7 +73,7 @@ public class SqlInjection6 extends HttpServlet
 			out.print(getServletInfo());
 			String htmlOutput = new String();
 			String applicationRoot = getServletContext().getRealPath("");
-			Encoder encoder = ESAPI.encoder();
+			
 			try
 			{
 				String userPin = (String) request.getParameter("pinNumber");
@@ -91,8 +91,8 @@ public class SqlInjection6 extends HttpServlet
 				{
 					if(users.next())
 					{
-						htmlOutput = "<h3>" + bundle.getString("response.welcomeBack")+ "" + encoder.encodeForHTML(users.getString(1)) + "</h3>"
-								+ "<p>" + bundle.getString("response.authNumber")+ "" + encoder.encodeForHTML(Hash.randomString()) + "</p>";
+						htmlOutput = "<h3>" + bundle.getString("response.welcomeBack")+ "" + Encode.forHtml(users.getString(1)) + "</h3>"
+								+ "<p>" + bundle.getString("response.authNumber")+ "" + Encode.forHtml(Hash.randomString()) + "</p>";
 					}
 					else
 					{

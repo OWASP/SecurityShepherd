@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -140,7 +140,7 @@ public class GetPlayersByClass extends HttpServlet
 	public static String playersInOptionTags(ResultSet playerList) 
 	{
 		String players = new String();
-		Encoder encoder = ESAPI.encoder();
+		
 		log.debug("Iterating through playerList");
 		try
 		{
@@ -149,8 +149,8 @@ public class GetPlayersByClass extends HttpServlet
 			{
 				
 				players +=
-					"<option value=\"" + encoder.encodeForHTMLAttribute(playerList.getString(1)) + "\">" +
-					encoder.encodeForHTML(playerList.getString(2)) +
+					"<option value=\"" + Encode.forHtmlAttribute(playerList.getString(1)) + "\">" +
+					Encode.forHtml(playerList.getString(2)) +
 					"</option>";
 				log.debug("Adding " + playerList.getString(2) + " to output");
 			}

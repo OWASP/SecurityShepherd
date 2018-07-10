@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -137,7 +137,7 @@ extends HttpServlet
 	
 	public static String doLevelSqlStuff (String applicationRoot, String username, ResourceBundle bundle)
 	{
-		Encoder encoder = ESAPI.encoder();
+		
 		String result = new String();
 		try 
 		{
@@ -152,18 +152,18 @@ extends HttpServlet
 			for(int i = 0; resultSet.next(); i++)
 			{
 				log.debug("Row " + i + ": User ID = " + resultSet.getString(1));
-				result = encoder.encodeForHTML(resultSet.getString(1));
+				result = Encode.forHtml(resultSet.getString(1));
 			}
 			log.debug("That's All");
 		} 
 		catch (SQLException e)
 		{
 			log.debug("SQL Error caught - " + e.toString());
-			result = bundle.getString("example.error") + ": " + encoder.encodeForHTML(e.toString()); //Html Encode Error to prevent XSS
+			result = bundle.getString("example.error") + ": " + Encode.forHtml(e.toString()); //Html Encode Error to prevent XSS
 		}
 		catch (Exception e)
 		{
-			log.fatal(bundle.getString("example.error") + ": " + encoder.encodeForHTML(e.toString())); //Html Encode Error to prevent XSS
+			log.fatal(bundle.getString("example.error") + ": " + Encode.forHtml(e.toString())); //Html Encode Error to prevent XSS
 		}
 		return result;
 	}

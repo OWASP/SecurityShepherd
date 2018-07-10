@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.UserKicker;
@@ -52,7 +52,7 @@ public class UnSuspendUser extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin." + functionName + " ***");
-		Encoder encoder = ESAPI.encoder();
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -89,7 +89,7 @@ public class UnSuspendUser extends HttpServlet
 							String userName = new String(Getter.getUserName(ApplicationRoot, player));
 							//Adding to Kick List So they application signs them out if they are currently logged in
 							UserKicker.removeFromKicklist(userName);
-							reponseMessage += "<a>" + encoder.encodeForHTML(userName) + "</a> has been enabled for play<br>";
+							reponseMessage += "<a>" + Encode.forHtml(userName) + "</a> has been enabled for play<br>";
 						}
 						else
 						{
@@ -116,7 +116,7 @@ public class UnSuspendUser extends HttpServlet
 						}
 						out.print("<h3 class=\"title\">" + functionName + " Failure</h3>" +
 								"<p><font color=\"red\">" +
-								encoder.encodeForHTML(errorMessage) +
+								Encode.forHtml(errorMessage) +
 								"</font><p>");
 					}
 				}

@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -59,7 +58,6 @@ public class AddPlayer extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.addPlayer ***");
-		Encoder encoder = ESAPI.encoder();
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -126,13 +124,13 @@ public class AddPlayer extends HttpServlet
 							if(userAddress.isEmpty())
 								userAddress = "blank"; //For Output Message
 							reponseMessage = "<p>" +
-								"Player <a>" + encoder.encodeForHTML(userName) +"</a> added to <a>" + encoder.encodeForHTML(classInfo[0] + " " + classInfo[1]) + "</a> created successfully." +
+								"Player <a>" + Encode.forHtml(userName) +"</a> added to <a>" + Encode.forHtml(classInfo[0] + " " + classInfo[1]) + "</a> created successfully." +
 								"</p>";
 						}
 						else
 						{
 							reponseMessage = "<div id='error' class='informationBox'><p colour='red'><strong>" +
-							encoder.encodeForHTML(userName) + " was not added to the system due to an error." +
+									Encode.forHtml(userName) + " was not added to the system due to an error." +
 							"</strong></p></div>";
 						}
 						out.print(reponseMessage);
@@ -167,7 +165,7 @@ public class AddPlayer extends HttpServlet
 							errorMessage += "Class not found.";
 						}
 						out.print("<div id='error' class='informationBox'><p colour='red'><strong>" +
-								encoder.encodeForHTML(errorMessage) +
+								Encode.forHtml(errorMessage) +
 								"</strong></p></div>");
 					}
 				}

@@ -60,13 +60,13 @@ public class Database
 		try
 		{
 		   //Pull Driver and DB URL out of database.properties
-		   String props = ApplicationRoot+"/WEB-INF/database.properties";
+		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
 		   //Pull DB Schema, Schema User name and Schema Password from level specific properties File
-		   props = ApplicationRoot+"/WEB-INF/challenges/" + path + ".properties";
+		   props = ApplicationRoot+"/WEB-INF/classes/challenges/" + path + ".properties";
 		   log.debug("Level Properties File = " + path + ".properties");
 		   //Add DB Schema to the end of the connectionURL
 		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
@@ -96,7 +96,7 @@ public class Database
 	   {
 		   //log.debug("Getting Prop File");
 		   //Pull Driver and DB URL out of database.properties
-		   String props = ApplicationRoot+"/WEB-INF/database.properties";
+		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
 		   //log.debug("Getting Driver");
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   //log.debug("Getting Driver Instance");
@@ -104,7 +104,7 @@ public class Database
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
 		   //Pull Schema, User name and Password from SqlInjLesson.properties
-		   props = ApplicationRoot+"/WEB-INF/coreDatabase.properties";
+		   props = ApplicationRoot+"/WEB-INF/classes/coreDatabase.properties";
 		   
 		   //log.debug("Reading Prop File");
 		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
@@ -132,7 +132,7 @@ public class Database
 	   Connection conn = null;
 	   try
 	   {
-		   String props = ApplicationRoot+"/WEB-INF/database.properties";
+		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
 		  
 		   String DriverType = FileInputProperties.readfile(props, "DriverType"); 
 		   Class.forName(DriverType).newInstance();
@@ -164,13 +164,13 @@ public class Database
 	   try
 	   {
 		   //Pull Driver and DB URL out of database.properties
-		   String props = ApplicationRoot+"/WEB-INF/database.properties";
+		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
 		   //Pull Schema, User name and Password from SqlInjLesson.properties
-		   props = ApplicationRoot+"/WEB-INF/lessons/SqlInjLesson.properties";
+		   props = ApplicationRoot+"/WEB-INF/classes/lessons/SqlInjLesson.properties";
 		   
 		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
 		   String username=FileInputProperties.readfile(props, "databaseUsername");

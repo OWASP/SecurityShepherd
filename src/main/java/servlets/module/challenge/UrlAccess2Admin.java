@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -71,7 +71,7 @@ public class UrlAccess2Admin extends HttpServlet
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
 			String htmlOutput = new String();
-			Encoder encoder = ESAPI.encoder();
+			
 			try
 			{
 				String userData = request.getParameter("adminData");
@@ -92,7 +92,7 @@ public class UrlAccess2Admin extends HttpServlet
 				else
 					htmlOutput = "<h2 class='title'>" + bundle.getString("response.failue") + "</h2>"
 							+ "<p>" + bundle.getString("response.failue.message") + "</p>"
-							+ "<!-- " + encoder.encodeForHTML(userData) + " -->";
+							+ "<!-- " + Encode.forHtml(userData) + " -->";
 			}
 			catch(Exception e)
 			{

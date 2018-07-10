@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -73,7 +73,7 @@ public class NoSqlInjection1 extends HttpServlet
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
 			String htmlOutput = new String();
-			Encoder encoder = ESAPI.encoder();
+			
 			
 			//MongoDb
 			// To directly connect to a single MongoDB server (note that this will not auto-discover the primary even
@@ -136,9 +136,9 @@ public class NoSqlInjection1 extends HttpServlet
 						
 						log.debug("Mongodb Query Results " + result.toString());
 						htmlOutput += "<tr><td>"
-							+ encoder.encodeForHTML(id.toString()) + "</td><td>"
-							+ encoder.encodeForHTML(name.toString()) + "</td><td>"
-							+ encoder.encodeForHTML(address.toString()) + "</td></tr>";
+							+ Encode.forHtml(id.toString()) + "</td><td>"
+							+ Encode.forHtml(name.toString()) + "</td><td>"
+							+ Encode.forHtml(address.toString()) + "</td></tr>";
 						i++;
 					}
 					htmlOutput += "</table>";
@@ -152,7 +152,7 @@ public class NoSqlInjection1 extends HttpServlet
 				{
 					log.debug("MongoDb Error caught - " + e.toString());
 					htmlOutput += "<p>An error was detected!</p>" +
-						"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
+						"<p>" + Encode.forHtml(e.toString()) + "</p>";
 				}
 				catch(Exception e)
 				{
@@ -167,7 +167,7 @@ public class NoSqlInjection1 extends HttpServlet
 			{
 				log.debug("MongoDb Error caught - " + e.toString());
 				htmlOutput += "<p>An error was detected!</p>" +
-					"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
+					"<p>" + Encode.forHtml(e.toString()) + "</p>";
 			}
 
 			log.debug("Outputting HTML");

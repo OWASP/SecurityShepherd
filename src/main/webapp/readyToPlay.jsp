@@ -1,4 +1,4 @@
-<%@ page import="org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, utils.ShepherdLogManager" %>
+<%@ page import="org.owasp.encoder.Encode, utils.ShepherdLogManager" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"  language="java" import="utils.*" errorPage="" %>
 <%@ include file="translation.jsp" %>
 <%
@@ -42,7 +42,7 @@
  	if (Validate.validateSession(ses) && tokenCookie != null)
  	{
  		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
-		Encoder encoder = ESAPI.encoder();
+		
 		String parameter = (String)request.getParameter("ThreadSequenceId");
 		try
 		{

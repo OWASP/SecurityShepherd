@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -80,8 +80,8 @@ public class SecurityMisconfigLesson extends HttpServlet
 						htmlOutput = bundle.getString("response.incorrectPassword");
 					else
 					{
-						Encoder encoder = ESAPI.encoder();
-						htmlOutput = bundle.getString("response.noUserFound") + " \"" + encoder.encodeForHTML(userName) + "\"";
+						
+						htmlOutput = bundle.getString("response.noUserFound") + " \"" + Encode.forHtml(userName) + "\"";
 					}
 					htmlOutput = "<h2 class='title'>" + bundle.getString("response.authError") + "</h2><p>" + htmlOutput + "</p>";
 				}

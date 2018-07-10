@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -74,7 +74,7 @@ public class SessionManagement2 extends HttpServlet
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
-			Encoder encoder = ESAPI.encoder();
+			
 			String htmlOutput = new String();
 			log.debug(levelName + " Servlet accessed");
 			try
@@ -115,7 +115,7 @@ public class SessionManagement2 extends HttpServlet
 					log.debug("Successful Login");
 					// Get key and add it to the output
 					String userKey = Hash.generateUserSolution(Getter.getModuleResultFromHash(ApplicationRoot, levelHash), (String)ses.getAttribute("userName"));
-					htmlOutput = "<h2 class='title'>" + bundle.getString("response.welcome") + " " + encoder.encodeForHTML(resultSet.getString(1)) + "</h2>" +
+					htmlOutput = "<h2 class='title'>" + bundle.getString("response.welcome") + " " + Encode.forHtml(resultSet.getString(1)) + "</h2>" +
 							"<p>" +
 							bundle.getString("response.resultKey") + " <a>" + userKey + "</a>" +
 							"</p>";
@@ -130,7 +130,7 @@ public class SessionManagement2 extends HttpServlet
 					if(resultSet.next())
 					{
 						log.debug("User Found");
-						userAddress = bundle.getString("response.badPass") + " <a>" + encoder.encodeForHTML(resultSet.getString(1)) + "</a><br/>";
+						userAddress = bundle.getString("response.badPass") + " <a>" + Encode.forHtml(resultSet.getString(1)) + "</a><br/>";
 					}
 					else
 					{

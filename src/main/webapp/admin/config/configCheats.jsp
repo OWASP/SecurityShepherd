@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: configCheats.jsp *************************");
@@ -45,9 +45,9 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 	//Logging Username
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 	// Getting Session Variables
-	//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-	Encoder encoder = ESAPI.encoder();
-	String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
+	//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+	
+	String csrfToken = Encode.forHtml(tokenCookie.getValue());
 	String ApplicationRoot = getServletContext().getRealPath("");
 %>
 	<h1 class="title">Configure Cheat Sheets</h1>

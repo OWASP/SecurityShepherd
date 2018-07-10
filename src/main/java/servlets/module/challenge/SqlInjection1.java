@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -76,7 +76,7 @@ public class SqlInjection1 extends HttpServlet
 			out.print(getServletInfo());
 			
 			String htmlOutput = new String();
-			Encoder encoder = ESAPI.encoder();
+			
 			try
 			{
 				String aUserId = request.getParameter("aUserId");
@@ -99,9 +99,9 @@ public class SqlInjection1 extends HttpServlet
 				{
 					log.debug("Adding Customer " + resultSet.getString(2));
 					htmlOutput += "<tr><td>"
-						+ encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" 
-						+ encoder.encodeForHTML(resultSet.getString(3)) + "</td><td>"
-						+ encoder.encodeForHTML(resultSet.getString(4)) + "</td></tr>";
+						+ Encode.forHtml(resultSet.getString(2)) + "</td><td>" 
+						+ Encode.forHtml(resultSet.getString(3)) + "</td><td>"
+						+ Encode.forHtml(resultSet.getString(4)) + "</td></tr>";
 					i++;
 				}
 				htmlOutput += "</table>";
@@ -114,7 +114,7 @@ public class SqlInjection1 extends HttpServlet
 			{
 				log.debug("SQL Error caught - " + e.toString());
 				htmlOutput += "<p>"+errors.getString("error.detected")+"</p>" +
-					"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
+					"<p>" + Encode.forHtml(e.toString()) + "</p>";
 			}
 			catch(Exception e)
 			{

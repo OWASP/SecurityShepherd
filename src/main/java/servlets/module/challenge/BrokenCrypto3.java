@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -76,9 +76,9 @@ public class BrokenCrypto3 extends HttpServlet
 				//Using level key as encryption key
 				String decryptedUserData = decrypt(userData, levelResult);
 				log.debug("Decrypted to: " + decryptedUserData);
-				Encoder encoder = ESAPI.encoder();
+				
 				htmlOutput = "<h2 class='title'>" + bundle.getString("insecureCyrptoStorage.3.plaintextResult") + "</h2><p>" + bundle.getString("insecureCyrptoStorage.3.plaintextResult.message") + "<br/><br/><em>"
-						+ encoder.encodeForHTML(decryptedUserData)
+						+ Encode.forHtml(decryptedUserData)
 						+ "</em></p>";
 			}
 			catch(Exception e)

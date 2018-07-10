@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.encoder.Encode" errorPage="" %>
 <%@ include file="translation.jsp" %>
 
 <%
@@ -54,7 +54,7 @@ else
 String registrationSuccess = new String();
 String loginFailed = new String();
 String registerError = new String();
-Encoder encoder = ESAPI.encoder();
+
 
 if(ses.getAttribute("loginFailed") != null)
 {

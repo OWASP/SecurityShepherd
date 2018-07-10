@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -69,7 +69,7 @@ public class SqlInjection7 extends HttpServlet
 			out.print(getServletInfo());
 			String htmlOutput = new String();
 			String applicationRoot = getServletContext().getRealPath("");
-			Encoder encoder = ESAPI.encoder();
+			
 			try
 			{
 				String subEmail = Validate.validateParameter(request.getParameter("subEmail"), 60);
@@ -88,7 +88,7 @@ public class SqlInjection7 extends HttpServlet
 						ResultSet users = prepstmt.executeQuery();
 						if(users.next())
 						{
-							htmlOutput = "<h3>" + bundle.getString("response.welcome")+ " " + encoder.encodeForHTML(users.getString(1)) + "</h3>"
+							htmlOutput = "<h3>" + bundle.getString("response.welcome")+ " " + Encode.forHtml(users.getString(1)) + "</h3>"
 									+ "<p>" + bundle.getString("response.resultKey")+ "" + Hash.generateUserSolution(Getter.getModuleResultFromHash(applicationRoot, levelHash), (String)ses.getAttribute("userName")) + "</p>";
 						}
 						else

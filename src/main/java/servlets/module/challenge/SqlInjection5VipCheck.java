@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -65,7 +65,7 @@ public class SqlInjection5VipCheck extends HttpServlet
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
-			Encoder encoder = ESAPI.encoder();
+			
 			String htmlOutput = new String();
 			String applicationRoot = getServletContext().getRealPath("");
 			
@@ -88,7 +88,7 @@ public class SqlInjection5VipCheck extends HttpServlet
 						htmlOutput = new String("Valid Coupon for ");
 						log.debug("Found coupon for %" + coupons.getInt(2));
 						log.debug("For Item Name " + coupons.getString(3));
-						htmlOutput += "" + bundle.getString("response.percent")+ "" + coupons.getInt(2) + " " + bundle.getString("response.off")+ " " + encoder.encodeForHTML(coupons.getString(3)) + " " + bundle.getString("response.items")+ "";
+						htmlOutput += "" + bundle.getString("response.percent")+ "" + coupons.getInt(2) + " " + bundle.getString("response.off")+ " " + Encode.forHtml(coupons.getString(3)) + " " + bundle.getString("response.items")+ "";
 					}
 					else
 					{

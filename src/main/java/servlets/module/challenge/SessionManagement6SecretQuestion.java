@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -76,7 +76,7 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
-			Encoder encoder = ESAPI.encoder();
+			
 			String htmlOutput = new String();
 			log.debug(levelName + " Servlet accessed");
 			try
@@ -106,7 +106,7 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 							log.debug("Correct Answer Submitted");
 							// Get key and add it to the output
 							String userKey = Hash.generateUserSolution(Getter.getModuleResultFromHash(ApplicationRoot, levelHash), (String)ses.getAttribute("userName"));
-							htmlOutput = "<h2 class='title'>" + bundle.getString("response.welcome") + " " + encoder.encodeForHTML(rs.getString(1)) + "</h2>" +
+							htmlOutput = "<h2 class='title'>" + bundle.getString("response.welcome") + " " + Encode.forHtml(rs.getString(1)) + "</h2>" +
 									"<p>" +
 									bundle.getString("response.welcome")+ " <a>" + userKey + "</a>" +
 									"</p>";
@@ -170,7 +170,7 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
-			Encoder encoder = ESAPI.encoder();
+			
 			String htmlOutput = new String();
 			log.debug(levelName + " Servlet accessed");
 			try
@@ -217,7 +217,7 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 									log.debug("'Valid' User Detected");
 									log.debug("Encoding for output: " + rs.getString(1));
 									//rs.getString(1) contains the question for the user to answer. This question is asked in English as it must be answered in English to successfully pass the level
-									htmlOutput = new String(encoder.encodeForHTML(rs.getString(1)));
+									htmlOutput = new String(Encode.forHtml(rs.getString(1)));
 								}
 								else
 								{

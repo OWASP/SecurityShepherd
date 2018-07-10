@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -78,7 +78,7 @@ public class SessionManagement5SetToken extends HttpServlet
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
-			Encoder encoder = ESAPI.encoder();
+			
 			String htmlOutput = new String();
 			log.debug(levelName + " Servlet Accessed");
 			try
@@ -111,12 +111,12 @@ public class SessionManagement5SetToken extends HttpServlet
 				if(resultSet.next())
 				{
 					log.debug("User found");
-					htmlOutput = bundle.getString("setToken.sentTo.1") + " '" + encoder.encodeForHTML(userName) + "' " +  bundle.getString("setToken.sentTo.2");
+					htmlOutput = bundle.getString("setToken.sentTo.1") + " '" + Encode.forHtml(userName) + "' " +  bundle.getString("setToken.sentTo.2");
 				}
 				else
 				{
 					log.debug("User not Found");
-					htmlOutput = bundle.getString("response.badUser") + "" + encoder.encodeForHTML(userName);
+					htmlOutput = bundle.getString("response.badUser") + "" + Encode.forHtml(userName);
 				}
 				Database.closeConnection(conn);
 				log.debug("Outputting HTML");
