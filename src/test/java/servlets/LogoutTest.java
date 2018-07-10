@@ -12,6 +12,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.GetterTest;
+import testUtils.TestProperties;
 
 public class LogoutTest
 {
@@ -24,7 +25,7 @@ public class LogoutTest
     @Before
 	public void setup() 
 	{
-		applicationRoot = System.getProperty("user.dir") + "/site";
+		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
 		log.debug("Setting Up Blank Request and Response");
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();

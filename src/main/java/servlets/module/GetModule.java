@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -53,7 +52,7 @@ public class GetModule extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& servlets.module.GetModule &&&");
-		Encoder encoder = ESAPI.encoder();
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -95,7 +94,7 @@ public class GetModule extends HttpServlet
 						}
 						else
 						{
-							String theHash = encoder.encodeForHTMLAttribute(Getter.getModuleAddress(ApplicationRoot, moduleId, userId));
+							String theHash = Encode.forHtmlAttribute(Getter.getModuleAddress(ApplicationRoot, moduleId, userId));
 							out.write(theHash);
 							log.debug("Returning: " + theHash);
 						}

@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -73,7 +73,7 @@ public class SessionManagement2ChangePassword extends HttpServlet
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
-			Encoder encoder = ESAPI.encoder();
+			
 			String htmlOutput = new String();
 			log.debug(levelName + " Servlet accessed");
 			try
@@ -105,7 +105,7 @@ public class SessionManagement2ChangePassword extends HttpServlet
 					callstmt.execute();
 					log.debug("Changes committed.");
 					
-					htmlOutput = encoder.encodeForHTML(newPassword);
+					htmlOutput = Encode.forHtml(newPassword);
 					Database.closeConnection(conn);
 				}
 				catch(SQLException e)

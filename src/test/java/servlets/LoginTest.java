@@ -14,6 +14,7 @@ import org.springframework.mock.web.MockServletConfig;
 import dbProcs.Getter;
 import dbProcs.GetterTest;
 import dbProcs.Setter;
+import testUtils.TestProperties;
 
 public class LoginTest
 {
@@ -26,7 +27,7 @@ public class LoginTest
 	@Before
 	public void setup() 
 	{
-		applicationRoot = System.getProperty("user.dir") + "/site";
+		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
 		log.debug("Setting Up Blank Request and Response");
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
@@ -420,6 +421,7 @@ public class LoginTest
 			request.addParameter("login", userName);
 			request.addParameter("pwd", password);
 			request.getSession().setAttribute("lang", lang);
+			
 			
 			log.debug("Running doPost");
 			servlet.doPost(request, response);

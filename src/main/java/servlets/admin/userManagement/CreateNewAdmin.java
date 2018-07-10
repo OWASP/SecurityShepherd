@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -58,7 +58,7 @@ public class CreateNewAdmin extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.createNewAdmin ***");
-		Encoder encoder = ESAPI.encoder();
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -117,7 +117,7 @@ public class CreateNewAdmin extends HttpServlet
 						Setter.userCreate(ApplicationRoot, null, userName, passWord, "admin", userAddress, true);
 						if(userAddress.isEmpty())
 							userAddress = "blank"; //For Output Message
-						String reponseMessage = "<a>" + encoder.encodeForHTML(userName) +"</a> created successfully with email address " + encoder.encodeForHTML(userAddress);
+						String reponseMessage = "<a>" + Encode.forHtml(userName) +"</a> created successfully with email address " + Encode.forHtml(userAddress);
 						out.print("<h3 class=\"title\">Admin Created</h3>" +
 								"<p>" +
 								reponseMessage +
@@ -149,7 +149,7 @@ public class CreateNewAdmin extends HttpServlet
 						}
 						out.print("<h3 class=\"title\">Admin Create Failure</h3>" +
 								"<p><font color=\"red\">" +
-								encoder.encodeForHTML(errorMessage) +
+								Encode.forHtml(errorMessage) +
 								"</font><p>");
 					}
 				}

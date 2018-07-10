@@ -9,9 +9,9 @@ import java.net.URL;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+
 import org.apache.log4j.Logger;
 import org.w3c.tidy.Tidy;
 
@@ -323,8 +323,8 @@ public class FindXSS
 						if(uriAttributeValue.contains("&"))
 						{
 							log.debug("HTML Encoded URI attriute detected");
-							Encoder encoder = ESAPI.encoder();
-							uriAttributeValue = encoder.decodeForHTML(uriAttributeValue);
+							
+							uriAttributeValue = Parser.unescapeEntities(uriAttributeValue, false);
 							log.debug("Decoded Attribute = " + uriAttributeValue);
 						}
 						//URI Attacks need a Colon after data or javascript - Need to find that else it is invalid

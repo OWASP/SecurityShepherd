@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*,org.owasp.encoder.Encode" errorPage="" %>
 <%@ include file="translation.jsp" %>
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: register.jsp *************************");
@@ -50,9 +50,9 @@ else
 {
 	response.sendRedirect("register.jsp");
 }
-//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-Encoder encoder = ESAPI.encoder();
-String csrfToken = encoder.encodeForHTML(Hash.randomString());
+//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+
+String csrfToken = Encode.forHtml(Hash.randomString());
 ses.setAttribute("csrfToken", csrfToken);
 
 String registrationSuccess = new String();
@@ -64,9 +64,9 @@ if(ses.getAttribute("errorMessage") != null)
 {
 	try
 	{
-		errorMessage = encoder.encodeForHTML(ses.getAttribute("errorMessage").toString());
-		userName = encoder.encodeForHTMLAttribute(ses.getAttribute("userName").toString());
-		userAddress = encoder.encodeForHTMLAttribute(ses.getAttribute("userAddress").toString());
+		errorMessage = Encode.forHtml(ses.getAttribute("errorMessage").toString());
+		userName = Encode.forHtmlAttribute(ses.getAttribute("userName").toString());
+		userAddress = Encode.forHtmlAttribute(ses.getAttribute("userAddress").toString());
 		ses.removeAttribute("userName");
 		ses.removeAttribute("userAddress");
 		ses.removeAttribute("errorMessage");

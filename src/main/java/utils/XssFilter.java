@@ -4,8 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 /**
  * Provides a number of filters that are used in different XSS challenges.
@@ -98,8 +98,8 @@ public class XssFilter
 	public static String encodeForHtml (String input)
 	{
 		log.debug("Filtering input at XSS white list");
-		Encoder encoder = ESAPI.encoder();
-		input = encoder.encodeForHTML(input);
+		
+		input = Encode.forHtml(input);
 		//Decode a few things to open security holes
 		input = input.replaceAll("&amp;", "&").replaceFirst("&quot;", "\"").replaceAll("&#x23;", "#").replaceFirst("&#x3d;", "=").replaceAll("&#x3b;", ";");
 		//Encode lower-case "on" and upper-case "on" to complicate the required attack vectors to pass

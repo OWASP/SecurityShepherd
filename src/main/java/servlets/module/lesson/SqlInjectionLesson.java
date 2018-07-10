@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -126,7 +126,7 @@ extends HttpServlet
 	
 	public static String[][] getSqlInjectionResult (String ApplicationRoot, String username)
 	{
-		Encoder encoder = ESAPI.encoder();
+		
 		String[][] result = new String[10][3];
 		try 
 		{
@@ -138,9 +138,9 @@ extends HttpServlet
 			for(int i = 0; resultSet.next(); i++)
 			{
 				log.debug("Row " + i + ": User ID = " + resultSet.getString(1));
-				result[i][0] = encoder.encodeForHTML(resultSet.getString(1));
-				result[i][1] = encoder.encodeForHTML(resultSet.getString(2));
-				result[i][2] = encoder.encodeForHTML(resultSet.getString(3));
+				result[i][0] = Encode.forHtml(resultSet.getString(1));
+				result[i][1] = Encode.forHtml(resultSet.getString(2));
+				result[i][2] = Encode.forHtml(resultSet.getString(3));
 			}
 			log.debug("That's All");
 		} 
@@ -148,7 +148,7 @@ extends HttpServlet
 		{
 			log.debug("SQL Error caught - " + e.toString());
 			result[0][0] = "error";
-			result[0][1] = encoder.encodeForHTML(e.toString());
+			result[0][1] = Encode.forHtml(e.toString());
 		}
 		catch (Exception e)
 		{

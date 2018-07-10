@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -74,7 +74,7 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 				String htmlOutput = new String("Your csrf Token for this Challenge is: ");
 				String userId = request.getParameter("userId").toString();
-				Encoder encoder = ESAPI.encoder();
+				
 				Connection conn = Database.getChallengeConnection(getServletContext().getRealPath(""), "csrfChallengeSix");
 				try
 				{
@@ -87,7 +87,7 @@ public class CsrfChallengeSixGetToken extends HttpServlet
 					while(rs.next())
 					{
 						i++;
-						htmlOutput += encoder.encodeForHTML("\"" + rs.getString(1) + "\"") + " <br/>";
+						htmlOutput += Encode.forHtml("\"" + rs.getString(1) + "\"") + " <br/>";
 					}
 					log.debug("Returned " + i + " CSRF Tokens for ID: " + userId);
 					conn.close();

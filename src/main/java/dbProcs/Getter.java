@@ -12,8 +12,7 @@ import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
 
 import utils.ScoreboardStatus;
 
@@ -278,7 +277,6 @@ public class Getter
 		//Getting Translated Level Names
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
 		//Encoder to prevent XSS
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -297,9 +295,9 @@ public class Getter
 					challengeCategory = challenges.getString(2);
 					//log.debug("New Category Detected: " + challengeCategory);
 					if(rowNumber > 0) //output prepared for Every row after row 1
-						output += "</ul></li><li><a href='javascript:;' class='challengeHeader' >" + encoder.encodeForHTML(bundle.getString("category." + challengeCategory))+ "</a><ul class='challengeList' style='display: none;'>";
+						output += "</ul></li><li><a href='javascript:;' class='challengeHeader' >" + Encode.forHtml(bundle.getString("category." + challengeCategory))+ "</a><ul class='challengeList' style='display: none;'>";
 					else //output prepared for First row in entire challenge
-						output += "<li><a href='javascript:;' class='challengeHeader'>" + encoder.encodeForHTML(bundle.getString("category." + challengeCategory))+ "</a><ul class='challengeList' style='display: none;'>";
+						output += "<li><a href='javascript:;' class='challengeHeader'>" + Encode.forHtml(bundle.getString("category." + challengeCategory))+ "</a><ul class='challengeList' style='display: none;'>";
 					//log.debug("Compiling Challenge Category - " + challengeCategory);
 				}
 				output += "<li>"; //Starts next LI element
@@ -313,9 +311,9 @@ public class Getter
 				}
 				//Final out put compilation
 				output +="<a class='lesson' id='" 
-					+ encoder.encodeForHTMLAttribute(challenges.getString(3))
+					+ Encode.forHtmlAttribute(challenges.getString(3))
 					+ "' href='javascript:;'>" 
-					+ encoder.encodeForHTML(bundle.getString(challenges.getString(1))) 
+					+ Encode.forHtml(bundle.getString(challenges.getString(1))) 
 					+ "</a>";
 				output += "</li>";
 				rowNumber++;
@@ -436,7 +434,6 @@ public class Getter
 	{
 		log.debug("*** Getter.getCsrfForum ***");
 		log.debug("Getting stored messages from class: " + classId);
-		Encoder encoder = ESAPI.encoder();
 		String htmlOutput = new String();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
@@ -459,7 +456,7 @@ public class Getter
 				{
 					counter++;
 					//Table content
-					htmlOutput += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td><iframe sandbox=\"allow-scripts allow-forms\" src=\"" + encoder.encodeForHTMLAttribute(resultSet.getString(2)) + "\"></iframe></td></tr>";
+					htmlOutput += "<tr><td>" + Encode.forHtml(resultSet.getString(1)) + "</td><td><iframe sandbox=\"allow-scripts allow-forms\" src=\"" + Encode.forHtmlAttribute(resultSet.getString(2)) + "\"></iframe></td></tr>";
 				}
 				if(counter > 0)
 					log.debug("Added a " + counter + " row table");
@@ -500,7 +497,6 @@ public class Getter
 	{
 		log.debug("*** Getter.getCsrfForum ***");
 		log.debug("Getting stored messages from class: " + classId);
-		Encoder encoder = ESAPI.encoder();
 		String htmlOutput = new String();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
@@ -523,7 +519,7 @@ public class Getter
 				{
 					counter++;
 					//Table content
-					htmlOutput += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td><img src=\"" + encoder.encodeForHTMLAttribute(resultSet.getString(2)) + "\"/></td></tr>";
+					htmlOutput += "<tr><td>" + Encode.forHtml(resultSet.getString(1)) + "</td><td><img src=\"" + Encode.forHtmlAttribute(resultSet.getString(2)) + "\"/></td></tr>";
 				}
 				if(counter > 0)
 					log.debug("Added a " + counter + " row table");
@@ -563,7 +559,6 @@ public class Getter
 		log.debug("*** Getter.getFeedback ***");
 		
 		String result = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
@@ -597,9 +592,9 @@ public class Getter
 						result += "BGCOLOR='D4BCF7'";
 					}
 					//A row off information
-					result += "><td>" + encoder.encodeForHTML(resultSet.getString(1)) + "</td><td>" + encoder.encodeForHTML(resultSet.getString(2)) + "</td><td>" +
+					result += "><td>" + Encode.forHtml(resultSet.getString(1)) + "</td><td>" + Encode.forHtml(resultSet.getString(2)) + "</td><td>" +
 							resultSet.getInt(3) + "</td><td>" + resultSet.getInt(4) + "</td><td>" +
-							resultSet.getInt(5) + "</td><td>" + encoder.encodeForHTML(resultSet.getString(6)) + "</td></tr>";
+							resultSet.getInt(5) + "</td><td>" + Encode.forHtml(resultSet.getString(6)) + "</td></tr>";
 				}
 			}
 			if(resultAmount > 0)//Table header
@@ -632,7 +627,6 @@ public class Getter
 	{
 		log.debug("*** Getter.getIncrementalChallenges ***");
 		String output = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		
 		Locale.setDefault(new Locale("en"));
@@ -663,9 +657,9 @@ public class Getter
 					completedModules = true;
 					output += "<li>";
 					output += "<a class='lesson' id='" 
-						+ encoder.encodeForHTMLAttribute(modules.getString(3))
+						+ Encode.forHtmlAttribute(modules.getString(3))
 						+ "' href='javascript:;'>" 
-						+ encoder.encodeForHTML(levelNames.getString(modules.getString(1))) 
+						+ Encode.forHtml(levelNames.getString(modules.getString(1))) 
 						+ "</a>";
 					output += "</li>";
 				}
@@ -685,7 +679,7 @@ public class Getter
 					
 					//Second category - Uncompleted
 					output += "<a class='lesson' id='" 
-						+ encoder.encodeForHTMLAttribute(modules.getString(3))
+						+ Encode.forHtmlAttribute(modules.getString(3))
 						+ "' href='javascript:;'>" 
 						+ "<div class='menuButton'>" + bundle.getString("getter.button.nextChallenge")+ "</div>" 
 						+ "</a>";
@@ -709,7 +703,7 @@ public class Getter
 			}
 			
 			//This is the script for menu interaction
-			output += "<script>applyMenuButtonActionsCtfMode('" + encoder.encodeForHTML(csrfToken) + "', \"" + encoder.encodeForHTML(bundle.getString("generic.text.sorryError")) + "\");</script>";
+			output += "<script>applyMenuButtonActionsCtfMode('" + Encode.forHtml(csrfToken) + "', \"" + Encode.forHtml(bundle.getString("generic.text.sorryError")) + "\");</script>";
 		}
 		catch(Exception e)
 		{
@@ -732,7 +726,6 @@ public class Getter
 	{
 		log.debug("*** Getter.getIncrementalChallengesWithoutScript ***");
 		String output = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		
 		Locale.setDefault(new Locale("en"));
@@ -763,9 +756,9 @@ public class Getter
 					completedModules = true;
 					output += "<li>";
 					output += "<a class='lesson' id='" 
-						+ encoder.encodeForHTMLAttribute(modules.getString(3))
+						+ Encode.forHtmlAttribute(modules.getString(3))
 						+ "' href='javascript:;'>" 
-						+ encoder.encodeForHTML(levelNames.getString(modules.getString(1))) 
+						+ Encode.forHtml(levelNames.getString(modules.getString(1))) 
 						+ "</a>";
 					output += "</li>";
 				}
@@ -785,7 +778,7 @@ public class Getter
 					
 					//Second category - Uncompleted
 					output += "<a class='lesson' id='" 
-						+ encoder.encodeForHTMLAttribute(modules.getString(3))
+						+ Encode.forHtmlAttribute(modules.getString(3))
 						+ "' href='javascript:;'>" 
 						+ "<div class='menuButton'>" + bundle.getString("getter.button.nextChallenge")+ "</div>" 
 						+ "</a>";
@@ -832,7 +825,6 @@ public class Getter
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
-			Encoder encoder = ESAPI.encoder();
 			//Returns User's: Name, # of Completed modules and Score
 			CallableStatement callstmnt = null;
 			if(ScoreboardStatus.getScoreboardClass().isEmpty() && !ScoreboardStatus.isClassSpecificScoreboard())
@@ -942,9 +934,9 @@ public class Getter
 							userMedalString += "s";
 					}
 						
-					jsonInner.put("id", new String(encoder.encodeForHTML(resultSet.getString(1)))); //User Id
-					jsonInner.put("username", new String(encoder.encodeForHTML(resultSet.getString(2)))); //User Name
-					jsonInner.put("userTitle", new String(encoder.encodeForHTML(resultSet.getString(2)) + " with " + score + " points" + userMedalString)); //User name encoded for title attribute
+					jsonInner.put("id", new String(Encode.forHtml(resultSet.getString(1)))); //User Id
+					jsonInner.put("username", new String(Encode.forHtml(resultSet.getString(2)))); //User Name
+					jsonInner.put("userTitle", new String(Encode.forHtml(resultSet.getString(2)) + " with " + score + " points" + userMedalString)); //User name encoded for title attribute
 					jsonInner.put("score", new Integer(score)); //Score
 					jsonInner.put("scale", barScale); //Scale of score bar
 					jsonInner.put("place", place); //Place on board
@@ -991,7 +983,6 @@ public class Getter
 		//Getting Translated Level Names
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
 		String output = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -1016,9 +1007,9 @@ public class Getter
 				}
 				//Prepare lesson output
 				output += "<a class='lesson' id='" 
-					+ encoder.encodeForHTMLAttribute(lessons.getString(3))
+					+ Encode.forHtmlAttribute(lessons.getString(3))
 					+ "' href='javascript:;'>" 
-					+ encoder.encodeForHTML(bundle.getString(lessons.getString(1))) 
+					+ Encode.forHtml(bundle.getString(lessons.getString(1))) 
 					+ "</a>";
 				output += "</li>";
 			}
@@ -1316,7 +1307,6 @@ public class Getter
 	{
 		log.debug("*** Getter.getModulesInOptionTags ***");
 		String output = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -1327,8 +1317,8 @@ public class Getter
 			while(modules.next())
 			{
 				//Each module name is embed in option tags, with a value of their module identifier
-				output += "<option value='" + encoder.encodeForHTMLAttribute(modules.getString(1)) + "'>" +
-						encoder.encodeForHTML(modules.getString(2)) + "</option>\n";
+				output += "<option value='" + Encode.forHtmlAttribute(modules.getString(1)) + "'>" +
+						Encode.forHtml(modules.getString(2)) + "</option>\n";
 			}
 		}
 		catch(Exception e)
@@ -1350,7 +1340,6 @@ public class Getter
 	{
 		log.debug("*** Getter.getModulesInOptionTags ***");
 		String output = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -1361,8 +1350,8 @@ public class Getter
 			while(modules.next())
 			{
 				//Each module name is embed in option tags, with a value of their module identifier
-				output += "<option value='" + encoder.encodeForHTMLAttribute(modules.getString(1)) + "'>" +
-						encoder.encodeForHTML(modules.getString(2)) + "</option>\n";
+				output += "<option value='" + Encode.forHtmlAttribute(modules.getString(1)) + "'>" +
+						Encode.forHtml(modules.getString(2)) + "</option>\n";
 			}
 		}
 		catch(Exception e)
@@ -1422,7 +1411,6 @@ public class Getter
 		String openModules = new String();
 		String closedModules = new String();
 		String output = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -1433,8 +1421,8 @@ public class Getter
 			log.debug("Opening Result Set from moduleAllStatus");
 			while(modules.next())
 			{
-				String theModule = "<option value='" + encoder.encodeForHTMLAttribute(modules.getString(1)) + 
-						"'>" + encoder.encodeForHTML(modules.getString(2)) + "</option>\n";
+				String theModule = "<option value='" + Encode.forHtmlAttribute(modules.getString(1)) + 
+						"'>" + Encode.forHtml(modules.getString(2)) + "</option>\n";
 				if(modules.getString(3).equalsIgnoreCase("open"))
 				{
 					//Module is Open currently, so add it to the open side of the list
@@ -1470,7 +1458,6 @@ public class Getter
 		log.debug("*** Getter.getOpenCloseCategoryMenu ***");
 		String theModules = new String();
 		String output = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -1479,8 +1466,8 @@ public class Getter
 			ResultSet modules = callstmt.executeQuery();
 			while(modules.next())
 			{
-				String theModule = "<option value='" + encoder.encodeForHTMLAttribute(modules.getString(1)) + 
-						"'>" + encoder.encodeForHTML(modules.getString(1)) + "</option>\n";
+				String theModule = "<option value='" + Encode.forHtmlAttribute(modules.getString(1)) + 
+						"'>" + Encode.forHtml(modules.getString(1)) + "</option>\n";
 				theModules += theModule;
 			}
 			//This is the actual output: It assumes a <table> environment
@@ -1547,7 +1534,6 @@ public class Getter
 		log.debug("*** Getter.getProgress ***");
 		
 		String result = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
@@ -1562,7 +1548,7 @@ public class Getter
 				resultAmount++;
 				if(resultSet.getString(1) != null)
 				{
-					result += "<tr><td>" + encoder.encodeForHTML(resultSet.getString(1)) + //Output their progress
+					result += "<tr><td>" + Encode.forHtml(resultSet.getString(1)) + //Output their progress
 						"</td><td><div style='background-color: #A878EF; heigth: 25px; width: " + widthOfUnitBar*resultSet.getInt(2) + "px;'>" +
 								"<font color='white'><strong>" +
 								resultSet.getInt(2);
@@ -1598,7 +1584,6 @@ public class Getter
 		log.debug("*** Getter.getProgressJSON ***");
 		
 		String result = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
@@ -1617,7 +1602,7 @@ public class Getter
 				jsonInner = new JSONObject();
 				if(resultSet.getString(1) != null)
 				{
-					jsonInner.put("userName", new String(encoder.encodeForHTML(resultSet.getString(1)))); //User Name
+					jsonInner.put("userName", new String(Encode.forHtml(resultSet.getString(1)))); //User Name
 					jsonInner.put("progressBar", new Integer(resultSet.getInt(2)*widthOfUnitBar)); //Progress Bar Width
 					jsonInner.put("score", new Integer(resultSet.getInt(3))); //Score
 					log.debug("Adding: " + jsonInner.toString());
@@ -1674,7 +1659,6 @@ public class Getter
 	{
 		log.debug("*** Getter.getTournamentModules ***");
 		String levelMasterList = new String();
-		Encoder encoder = ESAPI.encoder();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		//Getting Translations
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", lang);
@@ -1706,9 +1690,9 @@ public class Getter
 				}
 				//Prepare entry output
 				listEntry += "<a class='lesson' id='" 
-					+ encoder.encodeForHTMLAttribute(levels.getString(3))
+					+ Encode.forHtmlAttribute(levels.getString(3))
 					+ "' href='javascript:;'>" 
-					+ encoder.encodeForHTML(levelNames.getString(levels.getString(1))) 
+					+ Encode.forHtml(levelNames.getString(levels.getString(1))) 
 					+ "</a>\n";
 				listEntry += "</li>";
 				//What section does this belong in? Current or Next?

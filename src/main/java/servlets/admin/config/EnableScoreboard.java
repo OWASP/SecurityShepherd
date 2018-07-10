@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
 
 import dbProcs.Getter;
 import utils.ScoreboardStatus;
@@ -44,9 +43,8 @@ public class EnableScoreboard extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(EnableScoreboard.class);
 
-	/** Initiated by assignPlayers.jsp. A number of players can be assigned to a new class. Changing the actual class of the player is handed by Setter.changePlayerClass
+	/** 
 	 * @param classId The identifier of the class to add the players to
-	 * @param players[] An array of player identifiers to add to the specified class	
 	 * @param csrfToken
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
@@ -55,7 +53,6 @@ public class EnableScoreboard extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.EnableScoreboard ***");
-		Encoder encoder = ESAPI.encoder();
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -97,7 +94,7 @@ public class EnableScoreboard extends HttpServlet
 						{
 							log.debug("Valid Class Submitted");
 							ScoreboardStatus.setScoreboardClass(classId);
-							scoreboardMessage = "Scoreboard has been enabled and only lists users from " + encoder.encodeForHTML(classInfo[0]);
+							scoreboardMessage = "Scoreboard has been enabled and only lists users from " + Encode.forHtml(classInfo[0]);
 						}
 					}
 					if(scoreboardMessage.isEmpty())
@@ -105,7 +102,7 @@ public class EnableScoreboard extends HttpServlet
 						htmlOutput = "<h3 class='title'>Scoreboard Settings are Unchanged</h3>"
 								+ "<p>Invalid data was submitted. Please try again.</p>";
 					}
-					else //Function must have completed if this isn't empty
+					else //Function must have completed if this isn't empty 
 					{
 						log.debug(scoreboardMessage);
 						String restrictedScoreboard = Validate.validateParameter(request.getParameter("restricted"), 5);

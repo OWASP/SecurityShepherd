@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
 <%@ page import="java.util.Locale"%>
 <%@ include file="translation.jsp" %>
 <%
@@ -44,14 +44,14 @@ if (request.getSession() != null)
 		//Log User Name
 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 		// Getting Session Variables
-		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-		Encoder encoder = ESAPI.encoder();
-		String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
-		String userName = encoder.encodeForHTML(ses.getAttribute("userName").toString());
-		String userRole = encoder.encodeForHTML(ses.getAttribute("userRole").toString());
-		String userId = encoder.encodeForJavaScript(ses.getAttribute("userStamp").toString());
+		//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+		
+		String csrfToken = Encode.forHtml(tokenCookie.getValue());
+		String userName = Encode.forHtml(ses.getAttribute("userName").toString());
+		String userRole = Encode.forHtml(ses.getAttribute("userRole").toString());
+		String userId = Encode.forJavaScriptBlock(ses.getAttribute("userStamp").toString());
 		boolean canSeeScoreboard = ScoreboardStatus.canSeeScoreboard((String)ses.getAttribute("userRole"));
-		String csrfJsToken = encoder.encodeForJavaScript(tokenCookie.getValue());
+		String csrfJsToken = Encode.forJavaScriptBlock(tokenCookie.getValue());
 		String ApplicationRoot = getServletContext().getRealPath("");
 		boolean showCheatSheet = CheatSheetStatus.showCheat(userRole);
 		int i = 0;
@@ -745,10 +745,10 @@ if (request.getSession() != null)
 				});
 			}
 		<% if(ModulePlan.isIncrementalFloor()) { %>
-			applyMenuButtonActionsCtfMode('<%= encoder.encodeForHTML(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");
+			applyMenuButtonActionsCtfMode('<%= Encode.forHtml(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");
 		<% } //End of if(CTF Mode Enabled) %>
 		<% if (!ModulePlan.isIncrementalFloor()) {%>
-			applyMenuButtonActionsOpenOrTourney('<%= encoder.encodeForHTML(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");
+			applyMenuButtonActionsOpenOrTourney('<%= Encode.forHtml(csrfToken) %>', "<fmt:message key="generic.text.sorryError"/>");
 		<% } // End of Not CTF Mode If%>
 		//RefreshModuleFormScript
 		function refreshSideMenu(theCsrfToken, localErrorMessage){

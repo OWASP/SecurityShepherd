@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -98,8 +98,8 @@ public class DirectObjectBankLogin extends HttpServlet
 				else
 				{
 					log.debug("Authentication Failed");
-					Encoder encoder = ESAPI.encoder();
-					htmlOutput = bundle.getString("login.authFailedMessage.1") + " '" + encoder.encodeForHTML(accountHolder) + "' " + bundle.getString("login.authFailedMessage.2");
+					
+					htmlOutput = bundle.getString("login.authFailedMessage.1") + " '" + Encode.forHtml(accountHolder) + "' " + bundle.getString("login.authFailedMessage.2");
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
@@ -134,7 +134,7 @@ public class DirectObjectBankLogin extends HttpServlet
 	 */
 	public static String bankForm(String accountNumber, String applicationRoot, HttpSession ses, ResourceBundle bundle, ResourceBundle errors) throws SQLException 
 	{
-		Encoder encoder = ESAPI.encoder();
+		
 		float currentBalance = getAccountBalance(accountNumber, applicationRoot);
 		String bankForm = "<h2 class='title'>" + bundle.getString("bankForm.yourAccount") + "</h2>" +
 				"<p>" + bundle.getString("bankForm.yourAccount.balance") + " <div id='currentAccountBalanceDiv'><b>" + currentBalance + "</b></div></p>";
@@ -145,7 +145,7 @@ public class DirectObjectBankLogin extends HttpServlet
 					+ "" + bundle.getString("result.theKeyIs") + " <a>" + Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName")) + "</a>";
 		}
 		bankForm += ""
-				+ "<input type='hidden' value='" + encoder.encodeForHTMLAttribute(accountNumber) + "' id='currentAccountNumber'>"
+				+ "<input type='hidden' value='" + Encode.forHtmlAttribute(accountNumber) + "' id='currentAccountNumber'>"
 				+ "<h2 class='title'>" + bundle.getString("bankForm.transferFunds") + "</h2><p>" + bundle.getString("bankForm.transferFunds.whatToDo") + "</p>"
 				+ "<div id='transferFundsForm'><form id='transferFunds' action='javascript:transferFunds();'>"
 				+ "<table><tr><td>" + bundle.getString("bankForm.recieverNumber") + " </td><td><input type='text' id='recieverAccountNumber'></td></tr>"
@@ -180,7 +180,7 @@ public class DirectObjectBankLogin extends HttpServlet
 		Locale locale = new Locale(Validate.validateLanguage(ses));
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.directObject.directObjectBank", locale);
 				
-		Encoder encoder = ESAPI.encoder();
+		
 		float currentBalance = getAccountBalance(accountNumber, applicationRoot);
 		String bankForm = "<h2 class='title'>" + bundle.getString("bankForm.yourAccount") + "</h2>" +
 				"<p>" + bundle.getString("bankForm.yourAccount.balance") + " <div id='currentAccountBalanceDiv'><b>" + currentBalance + "</b></div></p>";
@@ -188,10 +188,10 @@ public class DirectObjectBankLogin extends HttpServlet
 		{
 			//Level Complete As the user has more than 5000000 in account. Return Key
 			bankForm += "<h2 class='title'>" + bundle.getString("result.complete") + "</h2><p>" + bundle.getString("result.wellDone") + "<br><br>"
-					+ "" + bundle.getString("result.theKeyIs") + " <a>" + encoder.encodeForHTML(Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"))) + "</a>";
+					+ "" + bundle.getString("result.theKeyIs") + " <a>" + Encode.forHtml(Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"))) + "</a>";
 		}
 		bankForm += ""
-				+ "<input type='hidden' value='" + encoder.encodeForHTMLAttribute(accountNumber) + "' id='currentAccountNumber'>"
+				+ "<input type='hidden' value='" + Encode.forHtmlAttribute(accountNumber) + "' id='currentAccountNumber'>"
 				+ "<h2 class='title'>" + bundle.getString("bankForm.transferFunds") + "</h2><p>" + bundle.getString("bankForm.transferFunds.whatToDo") + "</p>"
 				+ "<div id='transferFundsForm'><form id='transferFunds' action='javascript:transferFunds();'>"
 				+ "<table><tr><td>" + bundle.getString("bankForm.recieverNumber") + " </td><td><input type='text' id='recieverAccountNumber'></td></tr>"

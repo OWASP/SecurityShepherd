@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ModulePlan;
 import utils.ShepherdLogManager;
@@ -73,7 +73,7 @@ public class RefreshMenu extends HttpServlet
 			{
 				try 
 				{
-					Encoder encoder = ESAPI.encoder();
+					
 					String ApplicationRoot = getServletContext().getRealPath("");
 					String userId = (String)ses.getAttribute("userStamp");
 					if(ModulePlan.isIncrementalFloor())
@@ -91,7 +91,7 @@ public class RefreshMenu extends HttpServlet
 						"<a id=\"challengeList\" href=\"javascript:;\"><div class=\"menuButton\">" + 
 						bundle.getString("generic.text.challenges") + "</div></a><ul id=\"theChallengeList\" style=\"display: none;\">" + 
 						Getter.getChallenges(ApplicationRoot, userId, locale) + "</ul></li>"
-						+ "<script>applyMenuButtonActionsOpenOrTourney('" + encoder.encodeForHTML(tokenParmeter.toString()) + "', \"" + encoder.encodeForHTML(bundle.getString("generic.text.sorryError")) + "\");openFloorToggleFunctions();makeSearchList();</script>");
+						+ "<script>applyMenuButtonActionsOpenOrTourney('" + Encode.forHtml(tokenParmeter.toString()) + "', \"" + Encode.forHtml(bundle.getString("generic.text.sorryError")) + "\");openFloorToggleFunctions();makeSearchList();</script>");
 					}
 					else
 					{
@@ -99,7 +99,7 @@ public class RefreshMenu extends HttpServlet
 							log.fatal("Could not Pick ModulePlan to use (All False). Using Tournament Instead");
 						log.debug("Returning Tournament Floor Menu");
 						out.write(Getter.getTournamentModules(ApplicationRoot, userId, locale)
-								+ "<script>applyMenuButtonActionsOpenOrTourney('" + encoder.encodeForHTML(tokenParmeter.toString()) + "', \"" + encoder.encodeForHTML(bundle.getString("generic.text.sorryError")) + "\");tournamentToggleFunctions();startScrollsBars();makeSearchList();</script>");
+								+ "<script>applyMenuButtonActionsOpenOrTourney('" + Encode.forHtml(tokenParmeter.toString()) + "', \"" + Encode.forHtml(bundle.getString("generic.text.sorryError")) + "\");tournamentToggleFunctions();startScrollsBars();makeSearchList();</script>");
 					}
 				}
 				catch (Exception e)

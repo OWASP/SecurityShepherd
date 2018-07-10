@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.jsoup.parser.Parser;
+import org.owasp.encoder.Encode;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -63,7 +63,7 @@ public class FeedbackSubmit extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& servlets.module.FeedbackSubmit &&&");
-		Encoder encoder = ESAPI.encoder();
+		
 		String htmlOutput = new String();
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
@@ -85,7 +85,9 @@ public class FeedbackSubmit extends HttpServlet
 					log.debug("Getting Parameters");
 					String moduleId = (String)request.getParameter("moduleId");;
 					log.debug("moduleId = " + moduleId.toString());
-					String solutionKey = encoder.decodeForHTML((String)request.getParameter("solutionKey"));
+					
+					
+					String solutionKey = Parser.unescapeEntities((String)request.getParameter("solutionKey"), false);
 					log.debug("solutionKey = " + solutionKey.toString());
 					int before = Integer.parseInt(Validate.validateParameter(request.getParameter("before"), 1));
 					log.debug("before = " + before);
@@ -135,10 +137,10 @@ public class FeedbackSubmit extends HttpServlet
 									log.debug("User Result for module " + result + " succeeded");
 									htmlOutput = new String("<h2 class=\"title\">Solution Submission Success</h2><br>" +
 											"<p>" +
-											encoder.encodeForHTML(result) + " completed! Congratulations.");
+											Encode.forHtml(result) + " completed! Congratulations.");
 									htmlOutput += "</p>";
 									//Refresh Side Menu
-									htmlOutput += refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter), "Refresh Error");
+									htmlOutput += refreshMenuScript(Encode.forHtml((String)tokenParmeter), "Refresh Error");
 								}
 								else
 								{
@@ -187,7 +189,7 @@ public class FeedbackSubmit extends HttpServlet
 						}
 						htmlOutput = new String("<h2 class=\"title\">Feedback Submission Failure</h2><br>" +
 								"<p><font color=\"red\">" +
-								encoder.encodeForHTML(errorMessage) +
+								Encode.forHtml(errorMessage) +
 								"</font></p>");
 					}
 				}

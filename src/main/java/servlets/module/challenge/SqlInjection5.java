@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -68,7 +68,7 @@ public class SqlInjection5 extends HttpServlet
 			out.print(getServletInfo());
 			String htmlOutput = new String();
 			String applicationRoot = getServletContext().getRealPath("");
-			Encoder encoder = ESAPI.encoder();
+			
 			try
 			{
 				int megustaAmount = validateAmount(Integer.parseInt(request.getParameter("megustaAmount")));
@@ -146,7 +146,7 @@ public class SqlInjection5 extends HttpServlet
 						+ "" + bundle.getString("response.orderComplete.p2")+ "<a><strong>$" + finalCost + "</strong></a>";
 				if (trollAmount > 0 && trollCost == 0)
 				{
-					htmlOutput += "<br><br>" + bundle.getString("response.trollsFreeSolution")+ "<a><b>" + encoder.encodeForHTML(levelSolution) + "</b></a>";
+					htmlOutput += "<br><br>" + bundle.getString("response.trollsFreeSolution")+ "<a><b>" + Encode.forHtml(levelSolution) + "</b></a>";
 				}
 			}
 			catch(Exception e)

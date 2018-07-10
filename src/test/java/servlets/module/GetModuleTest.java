@@ -10,6 +10,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
 import servlets.Login;
+import testUtils.TestProperties;
 import utils.ModuleBlock;
 import dbProcs.GetterTest;
 import dbProcs.Setter;
@@ -25,7 +26,7 @@ public class GetModuleTest
     @Before
 	public void setup() 
 	{
-		applicationRoot = System.getProperty("user.dir") + "/site";
+		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
 		log.debug("Setting Up Blank Request and Response");
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
@@ -61,7 +62,7 @@ public class GetModuleTest
 			servlet.doPost(request, response);
 			
 			if(response.getStatus() != expectedResponseCode)
-				fail("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
+				fail("GetModule Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
 			{
 				log.debug("302 OK Detected");
@@ -74,51 +75,6 @@ public class GetModuleTest
 			throw e;
 		}
 		return null;
-	}
-	
-	/**
-	 * Method to simulate login servlet interaction. Can't seem to recyle the method in LoginTest with the MockRequests
-	 * @param userName User to Sign in
-	 * @param password User Password to use to Sign in
-	 * @param theClass Class of the User
-	 * @throws Exception If the process fails, an exception will be thrown
-	 */
-	public void loginDoPost(String userName, String password, String theClass) throws Exception
-	{
-		try
-		{
-			int expectedResponseCode = 302;
-			
-			log.debug("Creating Login Servlet Instance");
-			Login servlet = new Login();
-			servlet.init(new MockServletConfig("Login"));
-			
-			//Setup Servlet Parameters and Attributes
-			log.debug("Setting Up Params and Atrributes");
-			request.addParameter("login", userName);
-			request.addParameter("pwd", password);
-			request.getSession().setAttribute("lang", lang);
-			
-			log.debug("Running doPost");
-			servlet.doPost(request, response);
-			
-			if(response.getStatus() != expectedResponseCode)
-				fail("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
-			else
-			{
-				log.debug("302 OK Detected");
-				String location = response.getHeader("Location");
-				log.debug("302 pointing at: " + location);
-				if(!location.endsWith("index.jsp"))
-				{
-					throw new Exception("Login not Redirecting to index.jsp. Login Proceedure Failed");
-				}
-			}
-		}
-		catch(Exception e)
-		{
-			throw e;
-		}
 	}
 	
 	/**
@@ -135,7 +91,7 @@ public class GetModuleTest
 			GetterTest.verifyTestUser(applicationRoot, userName, userName);
 			//Sign in as Normal User
 			log.debug("Signing in as User Through LoginServlet");
-			loginDoPost(userName, userName, null);
+			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
 			log.debug("Login Servlet Complete, Getting CSRF Token");
 			if(response.getCookie("token") == null)
 				fail("No CSRF Token Was Returned from Login Servlet");
@@ -189,7 +145,7 @@ public class GetModuleTest
 			GetterTest.verifyTestUser(applicationRoot, userName, userName);
 			//Sign in as Normal User
 			log.debug("Signing in as User Through LoginServlet");
-			loginDoPost(userName, userName, null);
+			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
 			log.debug("Login Servlet Complete, Getting CSRF Token");
 			if(response.getCookie("token") == null)
 				fail("No CSRF Token Was Returned from Login Servlet");
@@ -205,7 +161,7 @@ public class GetModuleTest
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
 				String moduleAddress = getModuleDoPost(moduleId, csrfToken);
-				if(moduleAddress.endsWith("challenges&#x2f;" + levelHash + ".jsp"))
+				if(moduleAddress.endsWith("challenges/" + levelHash + ".jsp"))
 				{
 					log.debug("Correct Location Returned");
 				}
@@ -214,6 +170,7 @@ public class GetModuleTest
 					String message = "The Incorrect Location was Returned for the CSRF 1 Challenge.";
 					log.fatal(message);
 					log.debug("location returned: " + moduleAddress);
+					log.debug("Should be        : challenges&#x2f;" + levelHash + ".jsp");
 					fail(message);
 				}
 			}
@@ -237,7 +194,7 @@ public class GetModuleTest
 			GetterTest.verifyTestUser(applicationRoot, userName, userName);
 			//Sign in as Normal User
 			log.debug("Signing in as User Through LoginServlet");
-			loginDoPost(userName, userName, null);
+			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
 			log.debug("Login Servlet Complete, Getting CSRF Token");
 			if(response.getCookie("token") == null)
 				fail("No CSRF Token Was Returned from Login Servlet");
@@ -253,7 +210,7 @@ public class GetModuleTest
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
 				String moduleAddress = getModuleDoPost(moduleId, csrfToken);
-				if(moduleAddress.endsWith("lessons&#x2f;" + levelHash + ".jsp"))
+				if(moduleAddress.endsWith("lessons/" + levelHash + ".jsp"))
 				{
 					log.debug("Correct Location Returned");
 				}
@@ -287,7 +244,7 @@ public class GetModuleTest
 			GetterTest.verifyTestUser(applicationRoot, userName, userName);
 			//Sign in as Normal User
 			log.debug("Signing in as User Through LoginServlet");
-			loginDoPost(userName, userName, null);
+			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
 			log.debug("Login Servlet Complete, Getting CSRF Token");
 			if(response.getCookie("token") == null)
 				fail("No CSRF Token Was Returned from Login Servlet");
@@ -335,7 +292,7 @@ public class GetModuleTest
 			GetterTest.verifyTestUser(applicationRoot, userName, userName);
 			//Sign in as Normal User
 			log.debug("Signing in as User Through LoginServlet");
-			loginDoPost(userName, userName, null);
+			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
 			log.debug("Login Servlet Complete, Getting CSRF Token");
 			if(response.getCookie("token") == null)
 				fail("No CSRF Token Was Returned from Login Servlet");
@@ -382,7 +339,7 @@ public class GetModuleTest
 			GetterTest.verifyTestUser(applicationRoot, userName, userName);
 			//Sign in as Normal User
 			log.debug("Signing in as User Through LoginServlet");
-			loginDoPost(userName, userName, null);
+			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
 			log.debug("Login Servlet Complete, Getting CSRF Token");
 			if(response.getCookie("token") == null)
 				fail("No CSRF Token Was Returned from Login Servlet");
@@ -427,7 +384,7 @@ public class GetModuleTest
 			GetterTest.verifyTestUser(applicationRoot, userName, userName);
 			//Sign in as Normal User
 			log.debug("Signing in as User Through LoginServlet");
-			loginDoPost(userName, userName, null);
+			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
 			log.debug("Login Servlet Complete, Getting CSRF Token");
 			if(response.getCookie("token") == null)
 				fail("No CSRF Token Was Returned from Login Servlet");

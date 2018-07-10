@@ -1,7 +1,7 @@
 package utils;
 
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 /**
  * This class is just an instance memory structure for module blockers. Including the id of the module block, the message to give users and the current block status.
@@ -41,8 +41,8 @@ public class ModuleBlock
 	
 	public static String getBlockerMessage ()
 	{
-		Encoder encoder = ESAPI.encoder();
-		return encoder.encodeForHTML(blockerMessage);
+		
+		return Encode.forHtml(blockerMessage);
 	}
 	
 	public static void setMessage(String theMessage)

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 	// Cross Site Scripting Challenge 4
@@ -50,15 +50,15 @@ String translatedLevelName = bundle.getString("challenge.challengeName");
  	{
  		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
  		// Getting Session Variables
-		//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-		Encoder encoder = ESAPI.encoder();
-		String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
+		//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+		
+		String csrfToken = Encode.forHtml(tokenCookie.getValue());
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= encoder.encodeForHTML(translatedLevelName) %></title>
+	<title>Security Shepherd - <%= Encode.forHtml(translatedLevelName) %></title>
 	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 	
 </head>
@@ -68,7 +68,7 @@ String translatedLevelName = bundle.getString("challenge.challengeName");
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
-			<h2 class="title"><%= encoder.encodeForHTML(translatedLevelName) %></h2>
+			<h2 class="title"><%= Encode.forHtml(translatedLevelName) %></h2>
 			<p> 
 				<%= bundle.getString("challenge.description") %>
 				<form id="leForm" action="javascript:;">

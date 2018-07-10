@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
 
 import utils.FeedbackStatus;
 import utils.Hash;
@@ -54,7 +53,7 @@ public class SolutionSubmit extends HttpServlet
 	 * @param solutionKey The solution key for the proposed module
 	 * @param csrfToken
 	 */
-	private static Encoder encoder = ESAPI.encoder();
+
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
@@ -62,7 +61,6 @@ public class SolutionSubmit extends HttpServlet
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& servlets.module.SolutionSubmit &&&");
 		PrintWriter out = response.getWriter();  
-		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
@@ -134,7 +132,7 @@ public class SolutionSubmit extends HttpServlet
 								log.debug("Returning Feedback Form for module: " + result);
 								out.write("<h2 class=\"title\">Solution Submission Success</h2><br>" +
 										"<p> You are one step away from completing <a>" +
-										encoder.encodeForHTML(result) + "</a>! To complete the level please submit your feedback!" +
+										Encode.forHtml(result) + "</a>! To complete the level please submit your feedback!" +
 										"</p><br/>" +
 										generateFeedbackForm(moduleId, (String)tokenParmeter, solutionKey));
 								}
@@ -153,7 +151,7 @@ public class SolutionSubmit extends HttpServlet
 												compltedModuleLocalName + " completed! Congratulations.");
 										htmlOutput += "</p>";
 										//Refresh Side Menu
-										htmlOutput += FeedbackSubmit.refreshMenuScript(encoder.encodeForHTML((String)tokenParmeter), "Refresh Error");
+										htmlOutput += FeedbackSubmit.refreshMenuScript(Encode.forHtml((String)tokenParmeter), "Refresh Error");
 										log.debug("Resetting user's Bad Submisison count to 0");
 										Setter.resetBadSubmission(ApplicationRoot, userId);
 										out.write(htmlOutput);
@@ -206,7 +204,7 @@ public class SolutionSubmit extends HttpServlet
 						}
 						out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
 								"<p><font color=\"red\">" +
-								encoder.encodeForHTML(errorMessage) +
+								Encode.forHtml(errorMessage) +
 								"</font><p>");
 					}
 				}
@@ -247,8 +245,8 @@ public class SolutionSubmit extends HttpServlet
 	 */
 	private static String generateFeedbackForm (String moduleId, String csrfToken, String theKey)
 	{
-		return feedbackForm + encoder.encodeForHTML(moduleId) + feedbackForm21 + encoder.encodeForHTML(theKey) 
-			+ feedbackForm22 + encoder.encodeForHTML(csrfToken) + feedbackForm3;
+		return feedbackForm + Encode.forHtml(moduleId) + feedbackForm21 + Encode.forHtml(theKey) 
+			+ feedbackForm22 + Encode.forHtml(csrfToken) + feedbackForm3;
 	}
 	
 	//To be written to the user

@@ -17,6 +17,7 @@ import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 
+import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
 /**
@@ -27,7 +28,6 @@ import utils.ScoreboardStatus;
 public class GetterTest 
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(GetterTest.class);
-	private static String propertiesFileDirectory = new String("/site");
 	private static String lang = new String("en_GB");
 	private static Locale locale = new Locale(lang);
 	private static String applicationRoot = new String();
@@ -245,7 +245,7 @@ public class GetterTest
 	@Before
 	public void setUp()
 	{
-		applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
 	}
 	
 	@Test
@@ -2430,10 +2430,12 @@ public class GetterTest
 					if(mobileDbModuleCount != numberOfMobileLevelsOpen)
 					{
 						fail("There are " + numberOfMobileLevelsOpen + " mobile levels in open list, but there are " + mobileDbModuleCount + " in the DB");
+						//This may mean that the where clause in the setter method is not correct and needs to be updated
 					}
 					else if(webDbModuleCount != numberOfWebLevelsClosed)
 					{
 						fail("There are " + numberOfWebLevelsClosed + " web levels in open list, but there are " + webDbModuleCount + " in the DB");
+						//This may mean that the where clause in the setter method is not correct and needs to be updated
 					}
 					else if((mobileDbModuleCount+webDbModuleCount) != (numberOfMobileLevelsOpen+numberOfWebLevelsClosed))
 					{

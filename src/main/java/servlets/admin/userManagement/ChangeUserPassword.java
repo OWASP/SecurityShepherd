@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -51,7 +50,7 @@ public class ChangeUserPassword extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin." + functionName + " ***");
-		Encoder encoder = ESAPI.encoder();
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -90,7 +89,7 @@ public class ChangeUserPassword extends HttpServlet
 						if(Setter.updatePasswordAdmin(ApplicationRoot, player, newPassword))
 						{
 							String userName = new String(Getter.getUserName(ApplicationRoot, player));
-							reponseMessage += "<a>" + encoder.encodeForHTML(userName) + "</a>'s password has been updated. They will have to change it upon sign in.<br>";
+							reponseMessage += "<a>" + Encode.forHtml(userName) + "</a>'s password has been updated. They will have to change it upon sign in.<br>";
 						}
 						else
 						{
@@ -117,7 +116,7 @@ public class ChangeUserPassword extends HttpServlet
 						}
 						out.print("<h3 class=\"title\">" + functionName + " Failure</h3>" +
 								"<p><font color=\"red\">" +
-								encoder.encodeForHTML(errorMessage) +
+								Encode.forHtml(errorMessage) +
 								"</font><p>");
 					}
 				}

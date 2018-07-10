@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
@@ -55,7 +54,6 @@ public class AssignPlayers extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.AssignPlayers ***");
-		Encoder encoder = ESAPI.encoder();
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -126,7 +124,7 @@ public class AssignPlayers extends HttpServlet
 							}
 							if(userName != null)
 							{
-								reponseMessage += "<a>" + encoder.encodeForHTML(userName) + "</a> assigned successfully to <a>" + encoder.encodeForHTML(classInfo[1] + " " + classInfo[0]) + "</a>.<br>";
+								reponseMessage += "<a>" + Encode.forHtml(userName) + "</a> assigned successfully to <a>" + Encode.forHtml(classInfo[1] + " " + classInfo[0]) + "</a>.<br>";
 							}
 							else
 							{
@@ -154,7 +152,7 @@ public class AssignPlayers extends HttpServlet
 						}
 						out.print("<h3 class=\"title\">Player Assignment Failure</h3>" +
 								"<p><font color=\"red\">" +
-								encoder.encodeForHTML(errorMessage) +
+								Encode.forHtml(errorMessage) +
 								"</font><p>");
 					}
 				}

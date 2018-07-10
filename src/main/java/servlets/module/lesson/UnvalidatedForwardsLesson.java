@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.FindXSS;
 import utils.Hash;
@@ -63,7 +63,7 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 		log.debug(levelName +" Servlet Accessed");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
-		Encoder encoder = ESAPI.encoder();
+		
 
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
@@ -145,8 +145,8 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 						htmlOutput += "<h2 class='title'>" + bundle.getString("response.messageSent") + "</h2>" +
 							"<p><table><tr><td>" + bundle.getString("response.sentTo") + ": </td><td>administrator@SecurityShepherd.com</td></tr>" +
 							"<tr><td>" + bundle.getString("response.message") + ": </td><td><a href='" +
-							encoder.encodeForHTMLAttribute(messageForAdmin) +
-							"'>" + encoder.encodeForHTML("" + bundle.getString("response.linkFrom") + " " + userName) +
+							Encode.forHtmlAttribute(messageForAdmin) +
+							"'>" + Encode.forHtml("" + bundle.getString("response.linkFrom") + " " + userName) +
 							"</a></td></tr></table></p>";
 					}
 					log.debug("Outputting HTML");

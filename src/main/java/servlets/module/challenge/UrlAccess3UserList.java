@@ -17,8 +17,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import dbProcs.Database;
 import utils.ShepherdLogManager;
@@ -73,7 +73,7 @@ public class UrlAccess3UserList extends HttpServlet
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
 			String htmlOutput = new String();
-			Encoder encoder = ESAPI.encoder();
+			
 			try
 			{
 				Cookie userCookies[] = request.getCookies();
@@ -105,7 +105,7 @@ public class UrlAccess3UserList extends HttpServlet
 				ResultSet rs = callstmt.executeQuery();
 				while(rs.next())
 				{
-					htmlOutput += encoder.encodeForHTML(rs.getString(1)) + "<br>";
+					htmlOutput += Encode.forHtml(rs.getString(1)) + "<br>";
 					if(rs.getString(1).equalsIgnoreCase("MrJohnReillyTheSecond"))
 					{
 						log.debug("Super Admin contained in response");

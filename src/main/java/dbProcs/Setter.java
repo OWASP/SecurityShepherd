@@ -151,25 +151,27 @@ public class Setter
 		return result;
 	}
 	
+	//TODO - Replace this with a new mobile/web/etc attribute in the modules table
 	final public static String webModuleCategoryHardcodedWhereClause = new String(""
 			+ "moduleCategory = 'CSRF'"
 			+ " OR moduleCategory = 'Failure to Restrict URL Access'"
 			+ " OR moduleCategory = 'Injection'"
 			+ " OR moduleCategory = 'Insecure Cryptographic Storage'"
 			+ " OR moduleCategory = 'Insecure Direct Object References'"
+			+ " OR moduleCategory = 'Poor Data Validation'"
+			+ " OR moduleCategory = 'Security Misconfigurations'"
 			+ " OR moduleCategory = 'Session Management'"
 			+ " OR moduleCategory = 'Unvalidated Redirects and Forwards'"
-			+ " OR moduleCategory = 'XSS'"
-			+ " OR moduleCategory = 'Poor Data Validation'"
-			+ " OR moduleCategory = 'Security Misconfigurations'");
+			+ " OR moduleCategory = 'XSS'");
 	final public static String mobileModuleCategoryHardcodedWhereClause = new String(""
-			+ "moduleCategory = 'Mobile Data Leakage'"
+			+ "moduleCategory = 'Mobile Broken Crypto'"
+			+ " OR moduleCategory = 'Mobile Content Provider'"
+			+ " OR moduleCategory = 'Mobile Data Leakage'"
 			+ " OR moduleCategory = 'Mobile Injection'"
 			+ " OR moduleCategory = 'Mobile Insecure Data Storage'"
+			+ " OR moduleCategory = 'Mobile Poor Authentication'"
 			+ " OR moduleCategory = 'Mobile Reverse Engineering'"
-			+ " OR moduleCategory = 'Mobile Broken Crypto'"
-			+ " OR moduleCategory = 'Mobile Content Providers'"
-			+ " OR moduleCategory = 'Mobile Poor Authentication'");
+			+ " OR moduleCategory = 'Mobile Security Decisions via Untrusted Input'");
 	
 	/**
 	 * This is used to only open Mobile category levels
@@ -395,35 +397,6 @@ public class Setter
 		}
 		Database.closeConnection(conn);		
 		return result;
-	}
-	
-	/**
-	 * This method converts the default database properties file at applicationRoot/WEB-INF/vulnerableDb.properties
-	 * @param applicationRoot The directory that the server is actually in
-	 * @param url The Url of the exposed Database
-	 * @param userName The username of the database user
-	 * @param password The password of the database user
-	 * @return Boolean value depicting the success of the method
-	 */
-	public static boolean setExposedDatabaseInfo(String applicationRoot, String url, String userName, String password)
-	{
-		try 
-		{
-			File siteProperties = new File(applicationRoot + "/WEB-INF/vulnerableDb.properties");
-			DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties,false));
-			String theProperties = new String("databaseConnectionURL=" + url +
-										"\ndatabaseUsername=" + userName +
-										"\ndatabasePassword=" + password +
-										"\nDriverType=org.gjt.mm.mysql.Driver");
-			writer.write(theProperties.getBytes());
-			writer.close();
-			return true;
-		} 
-		catch (IOException e) 
-		{
-			log.error("Could not update Exposed Database Info: " + e.toString());
-			return false;
-		}
 	}
 	
 	/**

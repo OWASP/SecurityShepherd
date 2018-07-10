@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.SqlFilter;
@@ -76,7 +76,7 @@ public class SqlInjection4 extends HttpServlet
 			PrintWriter out = response.getWriter();  
 			out.print(getServletInfo());
 			String htmlOutput = new String();
-			Encoder encoder = ESAPI.encoder();
+			
 			try
 			{
 				String theUserName = request.getParameter("theUserName");
@@ -103,11 +103,11 @@ public class SqlInjection4 extends HttpServlet
 				if(resultSet.next())
 				{
 					log.debug("Signed in as " + resultSet.getString(1));
-					htmlOutput += "<p>" + bundle.getString("response.signedInAs")+ "" + encoder.encodeForHTML(resultSet.getString(1)) + "</p>";
+					htmlOutput += "<p>" + bundle.getString("response.signedInAs")+ "" + Encode.forHtml(resultSet.getString(1)) + "</p>";
 					if(resultSet.getString(1).equalsIgnoreCase("admin"))
 					{
 						htmlOutput += "<p>" + bundle.getString("response.adminResultKey")+ ""
-									+ "<a>"	+ encoder.encodeForHTML(levelResult) + "</a>";
+									+ "<a>"	+ Encode.forHtml(levelResult) + "</a>";
 					}
 					else
 					{
@@ -124,7 +124,7 @@ public class SqlInjection4 extends HttpServlet
 			{
 				log.debug("SQL Error caught - " + e.toString());
 				htmlOutput += "<p>"+errors.getString("error.detected")+"</p>" +
-					"<p>" + encoder.encodeForHTML(e.toString()) + "</p>";
+					"<p>" + Encode.forHtml(e.toString()) + "</p>";
 			}
 			catch(Exception e)
 			{

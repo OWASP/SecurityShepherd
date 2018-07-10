@@ -15,19 +15,19 @@ import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 
+import testUtils.TestProperties;
 import utils.Hash;
 import utils.ScoreboardStatus;
 
 public class SetterTest 
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(SetterTest.class);
-	private static String propertiesFileDirectory = new String("/site");
 	private static String applicationRoot = new String();
 
 	@Before
 	public void setUp()
 	{
-		applicationRoot = System.getProperty("user.dir") + propertiesFileDirectory;
+		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.esapi.ESAPI, org.owasp.esapi.Encoder" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.encoder.Encode" errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
@@ -52,9 +52,9 @@
 		{
 			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 			// Getting Session Variables
-			//This encoder should escape all output to prevent XSS attacks. This should be performed everywhere for safety
-			Encoder encoder = ESAPI.encoder();
-			String csrfToken = encoder.encodeForHTML(tokenCookie.getValue());
+			//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+			
+			String csrfToken = Encode.forHtml(tokenCookie.getValue());
 
 	
 %>

@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Encoder;
+import org.owasp.encoder.Encode;
+
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -55,7 +55,7 @@ public class UpgradePlayer extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.UpgradePlayer ***");
-		Encoder encoder = ESAPI.encoder();
+		
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
@@ -95,7 +95,7 @@ public class UpgradePlayer extends HttpServlet
 						userName = Setter.updateUserRole(ApplicationRoot, players, "admin");
 						if(userName != null)
 						{
-							reponseMessage += "<a>" + encoder.encodeForHTML(userName) + "</a> upgraded successfully to administrator.<br>";
+							reponseMessage += "<a>" + Encode.forHtml(userName) + "</a> upgraded successfully to administrator.<br>";
 						}
 						else
 						{
@@ -122,7 +122,7 @@ public class UpgradePlayer extends HttpServlet
 						}
 						out.print("<h3 class=\"title\">Player Upgrade Failure</h3>" +
 								"<p><font color=\"red\">" +
-								encoder.encodeForHTML(errorMessage) +
+								Encode.forHtml(errorMessage) +
 								"</font><p>");
 					}
 				}
