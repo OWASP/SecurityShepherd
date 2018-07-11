@@ -26,7 +26,15 @@
 		<env-entry-value>true</env-entry-value>
 	</env-entry> 
  
-	
+	<servlet>
+		<servlet-name>/setup</servlet-name>
+		<servlet-class>servlets.Setup</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/setup</servlet-name>
+		<url-pattern>/setup</url-pattern>
+	</servlet-mapping>
+		
 	<servlet>
 		<servlet-name>/login</servlet-name>
 		<servlet-class>servlets.Login</servlet-class>
