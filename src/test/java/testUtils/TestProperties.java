@@ -1,5 +1,7 @@
 package testUtils;
 
+import static org.junit.Assert.fail;
+
 import java.sql.ResultSet;
 
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -246,5 +248,66 @@ public class TestProperties
 			}
 		}
 		return classId;
+	}
+	
+	/**
+	 * This method will login/create a PLAYER, open all modules, Collect the Module Adddress and Mark the moduleId as complete 
+	 * @param log Logger
+	 * @param userName Username to complete level with
+	 * @param userPass Password to complete level with
+	 * @param moduleId If of level to complete
+	 * @param feedbackString Leave as null for default
+	 * @param applicationRoot
+	 */
+	public static boolean completeModuleForUser(org.apache.log4j.Logger log, String userName, String userPass, String moduleId, String feedbackString, String applicationRoot)
+	{
+		boolean result = false;
+		try
+		{
+			if(verifyTestUser(log, applicationRoot, userName, userPass))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, moduleId, userId).isEmpty())
+					{
+						//Then, Mark the Challenge Complete for user (Insecure Data Storage Lesson)
+						String feedbackSearchCode = "RwarUNiqueFeedbackCodeToSEARCHFor1182371723";
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, moduleId, userId, feedbackSearchCode, 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{
+							String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, moduleId, userId);
+							log.debug("checkPlayerResultTest" + checkPlayerResultTest);
+							if(checkPlayerResultTest == null)
+							{
+								result = true;
+							}
+							else
+							{
+								fail("Function says user has not completed module"); //Even though this test just marked it as Completed
+							}
+						}
+						else
+							fail("Could not mark data storage lesson as complete for user");
+					}
+					else
+						fail("Could not Mark Data Storage Lesson as Opened by Default admin");
+				}
+				else
+					fail("Could not Open All Modules");
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+		return result;
 	}
 }
