@@ -22,11 +22,11 @@ public class GetModuleTest
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-	
+
     @Before
-	public void setup() 
+	public void setup()
 	{
-		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
+		TestProperties.setTestPropertiesFileDirectory(log);
 		log.debug("Setting Up Blank Request and Response");
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
@@ -34,7 +34,7 @@ public class GetModuleTest
         if(!Setter.openAllModules(applicationRoot))
         	fail("Could not Mark All Modules As Open");
 	}
-    
+
 	/**
 	 * Method to Simulate the interaction with the getModule servlet.
 	 * @param moduleId The ID of the Module to Search For
@@ -47,20 +47,20 @@ public class GetModuleTest
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating GetModule Servlet Instance");
 			GetModule servlet = new GetModule();
 			servlet.init(new MockServletConfig("GetModule"));
-			
+
 			//Setup Servlet Parameters and Attributes
 			log.debug("Setting Up Params and Atrributes");
 			request.addParameter("moduleId", moduleId);
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail("GetModule Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
@@ -76,7 +76,7 @@ public class GetModuleTest
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This test checks the module address returned when the requested module is currently blocked
 	 */
@@ -129,7 +129,7 @@ public class GetModuleTest
 			fail("Could not Complete testGetBlockedModule");
 		}
 	}
-	
+
 	/**
 	 * This test retreives the location of a challenge module
 	 */
@@ -181,7 +181,7 @@ public class GetModuleTest
 			fail("Could not Complete testGetChallenge");
 		}
 	}
-	
+
 	@Test
 	public void testGetModule()
 	{
@@ -229,7 +229,7 @@ public class GetModuleTest
 			fail("Could not Complete testGetModule");
 		}
 	}
-	
+
 	/**
 	 * This test submits a valid Module Id but with an invalid CSRF Token Pair
 	 */
@@ -277,14 +277,14 @@ public class GetModuleTest
 			fail("Could not Complete testGetModuleBadCsrfToken");
 		}
 	}
-	
+
 	/**
 	 * This test attempts to retrieve a module with a non existant identifier
 	 */
 	@Test
 	public void testGetModuleBadId()
 	{
-		String moduleId = new String("ThisModuleDoesNotExist"); 
+		String moduleId = new String("ThisModuleDoesNotExist");
 		String userName = "getModule3";
 		try
 		{
@@ -324,7 +324,7 @@ public class GetModuleTest
 			fail("Could not Complete testGetModuleBadId");
 		}
 	}
-	
+
 	/**
 	 * This test submits a null value to the getModule Servlet
 	 */
@@ -371,7 +371,7 @@ public class GetModuleTest
 			fail("Could not Complete testGetModuleNullId");
 		}
 	}
-	
+
 	@Test
 	public void testGetModuleWhenClosed()
 	{

@@ -245,7 +245,7 @@ public class GetterTest
 	@Before
 	public void setUp()
 	{
-		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
+		TestProperties.setTestPropertiesFileDirectory(log);
 	}
 	
 	@Test

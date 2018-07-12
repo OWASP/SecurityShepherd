@@ -1,5 +1,6 @@
 package testUtils;
 
+import java.io.File;
 import java.sql.ResultSet;
 
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -12,7 +13,19 @@ import servlets.Login;
 
 public class TestProperties 
 {
-	public static String propertiesFileDirectory = new String("/target/test-classes");
+	/**
+	 * Bit of a Hack to get JUnits to run inside of 
+	 * @param log
+	 */
+	public static void setTestPropertiesFileDirectory(org.apache.log4j.Logger log)
+	{
+		if(System.getProperty("catalina.base") == null)
+		{
+			String userDir = System.getProperty("user.dir");
+			log.debug("catalina.base returns null. Creating it with base of user.dir; " + userDir);
+			System.setProperty("catalina.base", userDir+File.separator+"target"+File.separator+"test-classes");
+		}
+	}
 	
 	/**
 	 * Method to simulate login servlet interaction. Can't seem to recyle the method in LoginTest with the MockRequests
