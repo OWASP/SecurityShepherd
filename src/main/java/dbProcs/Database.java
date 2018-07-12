@@ -1,5 +1,6 @@
 package dbProcs;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -67,7 +68,8 @@ public class Database
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
 		   //Pull DB Schema, Schema User name and Schema Password from level specific properties File
-		   props = ApplicationRoot+"/WEB-INF/classes/challenges/" + path + ".properties";
+		   
+		   props = new File(Database.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
 		   log.debug("Level Properties File = " + path + ".properties");
 		   //Add DB Schema to the end of the connectionURL
 		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
