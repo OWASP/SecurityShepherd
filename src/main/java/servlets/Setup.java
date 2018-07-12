@@ -37,6 +37,13 @@ public class Setup extends HttpServlet {
 		String dbPass = request.getParameter("dbpass");
 		String dbAuth = request.getParameter("dbauth");
 
+		dbHost = "localhost";
+		dbPort = "3306";
+		dbUser = "secsec";
+		dbPass = "secsec";
+		dbAuth = "435dd06c-a168-4842-968e-5c4b01cf41e8";
+
+
 		String auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
 
 		StringBuffer dbProp = new StringBuffer();
