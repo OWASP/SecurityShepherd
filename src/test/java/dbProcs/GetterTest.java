@@ -2408,14 +2408,14 @@ public class GetterTest
 					try
 					{
 						log.debug("Getting Number of Mobile Levels From DB");
-						PreparedStatement prepStatement = conn.prepareStatement("SELECT COUNT(*) FROM MODULES WHERE " + Setter.mobileModuleCategoryHardcodedWhereClause);
+						PreparedStatement prepStatement = conn.prepareStatement("SELECT COUNT(*) FROM modules WHERE " + Setter.mobileModuleCategoryHardcodedWhereClause);
 						log.debug("Executing Query");
 						ResultSet resultSet = prepStatement.executeQuery();
 						resultSet.next();
 						mobileDbModuleCount = resultSet.getInt(1);
 						resultSet.close();
 						log.debug("Getting Number of Web Levels from DB");
-						prepStatement = conn.prepareStatement("SELECT COUNT(*) FROM MODULES WHERE " + Setter.webModuleCategoryHardcodedWhereClause);
+						prepStatement = conn.prepareStatement("SELECT COUNT(*) FROM modules WHERE " + Setter.webModuleCategoryHardcodedWhereClause);
 						resultSet = prepStatement.executeQuery();
 						resultSet.next();
 						webDbModuleCount = resultSet.getInt(1);

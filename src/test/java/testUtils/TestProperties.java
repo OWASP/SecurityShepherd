@@ -22,7 +22,7 @@ public class TestProperties
 		if(System.getProperty("catalina.base") == null)
 		{
 			String userDir = System.getProperty("user.dir");
-			log.debug("catalina.base returns null. Creating it with base of user.dir; " + userDir);
+			log.debug("catalina.base returns null. Creating it with base of user.dir; " + userDir+File.separator+"target"+File.separator+"test-classes");
 			System.setProperty("catalina.base", userDir+File.separator+"target"+File.separator+"test-classes");
 		}
 	}
