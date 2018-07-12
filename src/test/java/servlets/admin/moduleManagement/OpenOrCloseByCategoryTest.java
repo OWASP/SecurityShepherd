@@ -23,7 +23,7 @@ public class OpenOrCloseByCategoryTest
 	@Before
 	public void setUp()
 	{
-		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
+		TestProperties.setTestPropertiesFileDirectory(log);
 		request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
       //Open All modules

@@ -27,7 +27,7 @@ public class LoginTest
 	@Before
 	public void setup() 
 	{
-		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
+		TestProperties.setTestPropertiesFileDirectory(log);
 		log.debug("Setting Up Blank Request and Response");
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
