@@ -1,5 +1,7 @@
 package testUtils;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.sql.ResultSet;
 
@@ -11,10 +13,10 @@ import dbProcs.Getter;
 import dbProcs.Setter;
 import servlets.Login;
 
-public class TestProperties 
+public class TestProperties
 {
 	/**
-	 * Bit of a Hack to get JUnits to run inside of 
+	 * Bit of a Hack to get JUnits to run inside of
 	 * @param log
 	 */
 	public static void setTestPropertiesFileDirectory(org.apache.log4j.Logger log)
@@ -26,33 +28,33 @@ public class TestProperties
 			System.setProperty("catalina.base", userDir+File.separator+"target"+File.separator+"test-classes");
 		}
 	}
-	
+
 	/**
 	 * Method to simulate login servlet interaction. Can't seem to recyle the method in LoginTest with the MockRequests
 	 * @param userName User to Sign in
 	 * @param password User Password to use to Sign in
 	 * @param theClass Class of the User
 	 * @throws Exception If the process fails, an exception will be thrown
-	 */	
+	 */
 	public static void loginDoPost(org.apache.log4j.Logger log, MockHttpServletRequest request, MockHttpServletResponse response, String userName, String password, String theClass, String lang) throws Exception
 	{
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating Login Servlet Instance");
 			Login servlet = new Login();
 			servlet.init(new MockServletConfig("Login"));
-			
+
 			//Setup Servlet Parameters and Attributes
 			log.debug("Setting Up Params and Atrributes");
 			request.addParameter("login", userName);
 			request.addParameter("pwd", password);
 			request.getSession().setAttribute("lang", lang);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				throw new Exception("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
 			else
@@ -71,7 +73,7 @@ public class TestProperties
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * This method will sign in as a User, or create the user and sign in as them. If this fails it will throw an Exception
 	 * @param applicationRoot Context of running application
@@ -109,7 +111,7 @@ public class TestProperties
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This method will sign in as a User, or create the user and sign in as them. If this fails it will throw an Exception
 	 * @param applicationRoot Context of running application
@@ -148,7 +150,7 @@ public class TestProperties
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This method will sign in as a User, or create the user and sign in as them. If this fails it will throw an Exception
 	 * @param applicationRoot Context of running application
@@ -187,7 +189,7 @@ public class TestProperties
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This method will sign in as an admin, or create the admin and sign in as them. If this fails it will throw an Exception
 	 * @param applicationRoot Context of running application
@@ -225,7 +227,7 @@ public class TestProperties
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Searches for class based on class name. If nothing is found, the class is created and the new class Id is returned
 	 * @param className Name of the class you wish to search / create
@@ -259,5 +261,66 @@ public class TestProperties
 			}
 		}
 		return classId;
+	}
+
+	/**
+	 * This method will login/create a PLAYER, open all modules, Collect the Module Adddress and Mark the moduleId as complete
+	 * @param log Logger
+	 * @param userName Username to complete level with
+	 * @param userPass Password to complete level with
+	 * @param moduleId If of level to complete
+	 * @param feedbackString Leave as null for default
+	 * @param applicationRoot
+	 */
+	public static boolean completeModuleForUser(org.apache.log4j.Logger log, String userName, String userPass, String moduleId, String feedbackString, String applicationRoot)
+	{
+		boolean result = false;
+		try
+		{
+			if(verifyTestUser(log, applicationRoot, userName, userPass))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				//Open all Modules First so that the Module Can Be Opened
+				if(Setter.openAllModules(applicationRoot))
+				{
+					//Simulate user Opening Level
+					if(!Getter.getModuleAddress(applicationRoot, moduleId, userId).isEmpty())
+					{
+						//Then, Mark the Challenge Complete for user (Insecure Data Storage Lesson)
+						String feedbackSearchCode = "RwarUNiqueFeedbackCodeToSEARCHFor1182371723";
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, moduleId, userId, feedbackSearchCode, 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{
+							String checkPlayerResultTest = Getter.checkPlayerResult(applicationRoot, moduleId, userId);
+							log.debug("checkPlayerResultTest" + checkPlayerResultTest);
+							if(checkPlayerResultTest == null)
+							{
+								result = true;
+							}
+							else
+							{
+								fail("Function says user has not completed module"); //Even though this test just marked it as Completed
+							}
+						}
+						else
+							fail("Could not mark data storage lesson as complete for user");
+					}
+					else
+						fail("Could not Mark Data Storage Lesson as Opened by Default admin");
+				}
+				else
+					fail("Could not Open All Modules");
+			}
+			else
+			{
+				fail("Could not verify user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify User: " + e.toString());
+			fail("Could not Verify User " + userName);
+		}
+		return result;
 	}
 }

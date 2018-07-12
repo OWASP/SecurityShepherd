@@ -9,7 +9,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
-import servlets.Login;
 import testUtils.TestProperties;
 import utils.ModuleBlock;
 import dbProcs.GetterTest;
@@ -33,6 +32,14 @@ public class GetModuleTest
         //Open All modules
         if(!Setter.openAllModules(applicationRoot))
         	fail("Could not Mark All Modules As Open");
+        //Ensure no Module block enabled
+        ModuleBlock.reset();
+        if(ModuleBlock.blockerEnabled)
+        {
+        	String message = "Unable to disable module block";
+        	log.fatal(message);
+        	fail(message);
+        }
 	}
 
 	/**
