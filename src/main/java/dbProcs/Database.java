@@ -60,7 +60,6 @@ public class Database
 		try
 		{
 		   //Pull Driver and DB URL out of database.properties
-//		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
 		   String props = Constants.DBPROP;
 		   
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
@@ -98,7 +97,6 @@ public class Database
 	   {
 		   //log.debug("Getting Prop File");
 		   //Pull Driver and DB URL out of database.properties
-//		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
 		   
 		   String props = Constants.DBPROP;
 		   
@@ -109,7 +107,6 @@ public class Database
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 		   
 		   //Pull Schema, User name and Password from SqlInjLesson.properties
-//		   props = ApplicationRoot+"/WEB-INF/classes/coreDatabase.properties";
 		   
 		   //log.debug("Reading Prop File");
 		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseSchema");
@@ -141,7 +138,6 @@ public class Database
 	   Connection conn = null;
 	   try
 	   {
-//		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
 		   String props = Constants.DBPROP;
 		  
 		   String DriverType = FileInputProperties.readfile(props, "DriverType"); 
@@ -176,7 +172,6 @@ public class Database
 	   try
 	   {
 		   //Pull Driver and DB URL out of database.properties
-//		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
 		   String props = Constants.DBPROP;
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
