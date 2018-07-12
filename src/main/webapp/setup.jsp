@@ -118,6 +118,14 @@ if (Setup.isInstalled()) {
 									</p></td>
 							</tr>
 							<tr>
+								<td><p>
+										<fmt:message key="generic.text.setup.overridedb" />
+										:</td>
+								<td><input type="checkbox" name="dboverride" value="dboverride"
+									autocomplete="OFF" autofocus />
+									</p></td>
+							</tr>								
+							<tr>
 								<td colspan="2">
 								<p>	<fmt:message key="generic.text.setup.authentication.help" />	:
 								<%=Constants.SETUP_AUTH%>

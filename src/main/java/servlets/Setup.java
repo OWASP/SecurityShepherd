@@ -36,13 +36,7 @@ public class Setup extends HttpServlet {
 		String dbUser = request.getParameter("dbuser");
 		String dbPass = request.getParameter("dbpass");
 		String dbAuth = request.getParameter("dbauth");
-
-		dbHost = "localhost";
-		dbPort = "3306";
-		dbUser = "secsec";
-		dbPass = "secsec";
-		dbAuth = "435dd06c-a168-4842-968e-5c4b01cf41e8";
-
+		String dbOverride = request.getParameter("dboverride");
 
 		String auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
 
@@ -69,7 +63,9 @@ public class Setup extends HttpServlet {
 				ses.setAttribute("dbConnectionFailed", dbConnectionFailed);
 			} else {
 				try {
-					executeSqlScript();
+					if (dbOverride != null) {
+						executeSqlScript();
+					}
 				} catch (InstallationException e) {
 					String dbSetupFailed = "Failed setting up the database: " +  e.getMessage();
 					ses.setAttribute("dbSetupFailed", dbSetupFailed);
@@ -109,7 +105,7 @@ public class Setup extends HttpServlet {
 		}
 	}
 
-	private void executeSqlScript() throws InstallationException {
+	private synchronized void executeSqlScript() throws InstallationException {
 
 		try {
 			File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
