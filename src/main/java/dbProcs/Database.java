@@ -60,7 +60,9 @@ public class Database
 		try
 		{
 		   //Pull Driver and DB URL out of database.properties
-		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
+//		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
+		   String props = Constants.DBPROP;
+		   
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
@@ -174,7 +176,8 @@ public class Database
 	   try
 	   {
 		   //Pull Driver and DB URL out of database.properties
-		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
+//		   String props = ApplicationRoot+"/WEB-INF/classes/database.properties";
+		   String props = Constants.DBPROP;
 		   String DriverType = FileInputProperties.readfile(props, "DriverType");
 		   Class.forName(DriverType).newInstance();
 		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");

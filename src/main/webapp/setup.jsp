@@ -1,3 +1,4 @@
+<%@page import="dbProcs.Constants"%>
 <%@page import="servlets.Setup"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	language="java" import="utils.*, org.owasp.encoder.Encode" errorPage=""%>
@@ -88,7 +89,7 @@ if (Setup.isInstalled()) {
 						<table>
 							<tr>
 								<td><p>
-										<fmt:message key="generic.text.database.host" />
+										<fmt:message key="generic.text.setup.host" />
 										:</td>
 								<td><input type="text" name="dbhost" value=""
 									autocomplete="OFF" autofocus />
@@ -96,13 +97,13 @@ if (Setup.isInstalled()) {
 							</tr>
 							<tr>
 								<td><p>
-										<fmt:message key="generic.text.database.port" />
+										<fmt:message key="generic.text.setup.port" />
 										:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 								<td><input type="text" name="dbport" autocomplete="OFF" /><br /></td>
 							</tr>
 							<tr>
 								<td><p>
-										<fmt:message key="generic.text.database.user" />
+										<fmt:message key="generic.text.setup.user" />
 										:</td>
 								<td><input type="text" name="dbuser" value=""
 									autocomplete="OFF" autofocus />
@@ -110,22 +111,26 @@ if (Setup.isInstalled()) {
 							</tr>
 							<tr>
 								<td><p>
-										<fmt:message key="generic.text.database.pwd" />
+										<fmt:message key="generic.text.setup.pwd" />
 										:</td>
 								<td><input type="password" name="dbpass" value=""
 									autocomplete="OFF" autofocus />
 									</p></td>
 							</tr>
 							<tr>
+								<td colspan="2">
+								<p>	<fmt:message key="generic.text.setup.authentication.help" />	:
+								<%=Constants.SETUP_AUTH%>
+								</p></td>
+							</tr>								
+							<tr>
 								<td><p>
-										<fmt:message key="generic.text.authentication" />
+										<fmt:message key="generic.text.setup.authentication" />
 										:</td>
 								<td><input type="text" name="dbauth" value=""
 									autocomplete="OFF" autofocus />
 									</p></td>
 							</tr>
-
-
 							<tr>
 								<td colspan="2" align="center"><fmt:message
 										key="generic.text.submit" var="buttonValue" /> <input
