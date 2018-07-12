@@ -121,7 +121,7 @@ if (Setup.isInstalled()) {
 								<td><p>
 										<fmt:message key="generic.text.setup.overridedb" />
 										:</td>
-								<td><input type="checkbox" name="dboverride" value="dboverride"
+								<td><input type="checkbox" name="dboverride" value="dboverride" checked
 									autocomplete="OFF" autofocus />
 									</p></td>
 							</tr>								
