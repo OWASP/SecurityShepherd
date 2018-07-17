@@ -28,7 +28,7 @@ public class EnableModuleBlockTest
 	@Before
 	public void setUp()
 	{
-		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
+		TestProperties.setTestPropertiesFileDirectory(log);
 		request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         ModuleBlock.reset();

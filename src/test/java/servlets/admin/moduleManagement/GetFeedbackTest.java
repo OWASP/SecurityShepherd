@@ -16,22 +16,22 @@ import testUtils.TestProperties;
  * @author Mark Denihan
  *
  */
-public class GetFeedbackTest 
+public class GetFeedbackTest
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(GetFeedbackTest.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    
+
 	@Before
 	public void setUp()
 	{
-		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
+		TestProperties.setTestPropertiesFileDirectory(log);
 		request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
 	}
-	
+
 	public String doThePost(String csrfToken, String moduleId) throws Exception
 	{
 		try
@@ -44,10 +44,10 @@ public class GetFeedbackTest
 			request.addParameter("moduleId", moduleId);
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail(moduleClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
@@ -63,9 +63,9 @@ public class GetFeedbackTest
 		}
 		return null;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void testWithUserAuth()
@@ -106,8 +106,8 @@ public class GetFeedbackTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Could not Complete: " + e.toString());
@@ -158,8 +158,8 @@ public class GetFeedbackTest
 						log.debug("Got Feedback");
 					}
 				}
-			} 
-			catch (Exception e) 
+			}
+			catch (Exception e)
 			{
 				log.fatal("Could not Complete: " + e.toString());
 				fail("Could not Complete: " + e.toString());
@@ -167,7 +167,7 @@ public class GetFeedbackTest
 		}
 		//else the method already threw a fail so no need to do anything here
 	}
-	
+
 	@Test
 	public void testWithAdminAuthNoResult()
 	{
@@ -215,15 +215,15 @@ public class GetFeedbackTest
 					}
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testCsrf()
 	{
@@ -263,8 +263,8 @@ public class GetFeedbackTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());

@@ -23,7 +23,7 @@ public class DisableFeedbackTest
 	@Before
 	public void setUp()
 	{
-		applicationRoot = System.getProperty("user.dir") + TestProperties.propertiesFileDirectory;
+		TestProperties.setTestPropertiesFileDirectory(log);
 		request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         //Enable Feedback before Each test
