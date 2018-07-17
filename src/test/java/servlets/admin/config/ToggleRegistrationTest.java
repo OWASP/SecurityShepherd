@@ -12,14 +12,14 @@ import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 import utils.OpenRegistration;
 
-public class ToggleRegistrationTest 
+public class ToggleRegistrationTest
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(EnableCheats.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    
+
 	@Before
 	public void setUp()
 	{
@@ -35,7 +35,7 @@ public class ToggleRegistrationTest
         	fail(message);
         }
 	}
-	
+
 	/**
 	 * Method to Simulate the interaction with the Toggle Registration
 	 * @param csrfToken The CSRF Token of the User
@@ -48,17 +48,17 @@ public class ToggleRegistrationTest
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating " + servletClassName + " Servlet Instance");
 			ToggleRegistration servlet = new ToggleRegistration();
 			servlet.init(new MockServletConfig(servletClassName));
-			
+
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
@@ -74,7 +74,7 @@ public class ToggleRegistrationTest
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when changing Registration
 	 */
@@ -114,7 +114,7 @@ public class ToggleRegistrationTest
 						log.fatal(message);
 						fail(message);
 					}
-				} 
+				}
 				else
 				{
 					String message = "Normal user did not get error when performing admin function";
@@ -122,14 +122,14 @@ public class ToggleRegistrationTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when changing the registration
 	 */
@@ -174,7 +174,7 @@ public class ToggleRegistrationTest
 						String message = "OpenRegistration still returning possitive for isDisabled() check";
 						log.fatal(message);
 						fail(message);
-					} 
+					}
 					else
 					{
 						//Do the Request again to disable registration again
@@ -193,7 +193,7 @@ public class ToggleRegistrationTest
 								String message = "OpenRegistration still returning possitive for isEnabled() check";
 								log.fatal(message);
 								fail(message);
-							} 
+							}
 						}
 						else
 						{
@@ -210,14 +210,14 @@ public class ToggleRegistrationTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testCsrf()
 	{
@@ -262,8 +262,8 @@ public class ToggleRegistrationTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());

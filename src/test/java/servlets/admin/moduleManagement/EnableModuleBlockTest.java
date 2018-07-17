@@ -17,14 +17,14 @@ import utils.ModuleBlock;
  * @author Mark Denihan
  *
  */
-public class EnableModuleBlockTest 
+public class EnableModuleBlockTest
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(EnableModuleBlockTest.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    
+
 	@Before
 	public void setUp()
 	{
@@ -39,7 +39,7 @@ public class EnableModuleBlockTest
         	fail(message);
         }
 	}
-	
+
 	public String doThePost(String csrfToken, String blockedMessage, String moduleId) throws Exception
 	{
 		try
@@ -53,10 +53,10 @@ public class EnableModuleBlockTest
 			request.addParameter("blockedMessage", blockedMessage);
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail(moduleClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
@@ -72,9 +72,9 @@ public class EnableModuleBlockTest
 		}
 		return null;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void testWithUserAuth()
@@ -116,8 +116,8 @@ public class EnableModuleBlockTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Could not Complete: " + e.toString());
@@ -182,14 +182,14 @@ public class EnableModuleBlockTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testWithAdminAuthInvalidModule()
 	{
@@ -230,14 +230,14 @@ public class EnableModuleBlockTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testWithAdminAuthDefaultMessage()
 	{
@@ -296,14 +296,14 @@ public class EnableModuleBlockTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testCsrf()
 	{
@@ -344,8 +344,8 @@ public class EnableModuleBlockTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());

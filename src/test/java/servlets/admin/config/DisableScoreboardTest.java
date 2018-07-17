@@ -12,14 +12,14 @@ import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
-public class DisableScoreboardTest 
+public class DisableScoreboardTest
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(DisableScoreboard.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    
+
 	@Before
 	public void setUp()
 	{
@@ -35,7 +35,7 @@ public class DisableScoreboardTest
         	fail(message);
         }
 	}
-	
+
 	/**
 	 * Method to Simulate the interaction with the disableScoreboard servlet.
 	 * @param csrfToken The CSRF Token of the User
@@ -48,17 +48,17 @@ public class DisableScoreboardTest
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating " + servletClassName + " Servlet Instance");
 			DisableScoreboard servlet = new DisableScoreboard();
 			servlet.init(new MockServletConfig(servletClassName));
-			
+
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
@@ -74,7 +74,7 @@ public class DisableScoreboardTest
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when disabling the scoreboard
 	 */
@@ -114,22 +114,22 @@ public class DisableScoreboardTest
 						log.fatal(message);
 						fail(message);
 					}
-				} 
-				else 
+				}
+				else
 				{
 					String message = "Normal user did not get error when performing admin function";
 					log.fatal(message);
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when disabling the scoreboard
 	 */
@@ -175,14 +175,14 @@ public class DisableScoreboardTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when disabling the scoreboard
 	 */
@@ -228,8 +228,8 @@ public class DisableScoreboardTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());

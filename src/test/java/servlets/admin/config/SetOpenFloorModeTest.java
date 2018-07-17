@@ -12,14 +12,14 @@ import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 import utils.ModulePlan;
 
-public class SetOpenFloorModeTest 
+public class SetOpenFloorModeTest
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(EnableCheats.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    
+
 	@Before
 	public void setUp()
 	{
@@ -35,7 +35,7 @@ public class SetOpenFloorModeTest
         	fail(message);
         }
 	}
-	
+
 	/**
 	 * Method to Simulate the interaction with the Set Open Floor Mode Servlet
 	 * @param moduleId The ID of the Module to Search For
@@ -49,17 +49,17 @@ public class SetOpenFloorModeTest
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating " + servletClassName + " Servlet Instance");
 			SetOpenFloorMode servlet = new SetOpenFloorMode();
 			servlet.init(new MockServletConfig(servletClassName));
-			
+
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
@@ -75,7 +75,7 @@ public class SetOpenFloorModeTest
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when Setting Open Floor Mode
 	 */
@@ -115,7 +115,7 @@ public class SetOpenFloorModeTest
 						log.fatal(message);
 						fail(message);
 					}
-				} 
+				}
 				else
 				{
 					String message = "Normal user did not get error when performing admin function";
@@ -123,14 +123,14 @@ public class SetOpenFloorModeTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when enabling open floor mode
 	 */
@@ -184,14 +184,14 @@ public class SetOpenFloorModeTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testCsrf()
 	{
@@ -242,8 +242,8 @@ public class SetOpenFloorModeTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());

@@ -12,14 +12,14 @@ import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 import utils.CheatSheetStatus;
 
-public class EnableCheatsTest 
+public class EnableCheatsTest
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(EnableCheats.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    
+
 	@Before
 	public void setUp()
 	{
@@ -34,7 +34,7 @@ public class EnableCheatsTest
         	fail("Unable to Disable Cheat Sheets");
         }
 	}
-	
+
 	/**
 	 * Method to Simulate the interaction with the enableCheats servlet.
 	 * @param moduleId The ID of the Module to Search For
@@ -48,19 +48,19 @@ public class EnableCheatsTest
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating " + servletClassName + " Servlet Instance");
 			EnableCheats servlet = new EnableCheats();
 			servlet.init(new MockServletConfig(servletClassName));
-			
+
 			//Adding Params for Servlet
 			request.addParameter("enableForAll", enableForAll);
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
@@ -76,7 +76,7 @@ public class EnableCheatsTest
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when disabling the cheats
 	 */
@@ -117,7 +117,7 @@ public class EnableCheatsTest
 						log.fatal(message);
 						fail(message);
 					}
-				} 
+				}
 				else
 				{
 					String message = "Normal user did not get error when performing admin function";
@@ -125,14 +125,14 @@ public class EnableCheatsTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when enabling the cheats for all
 	 */
@@ -179,14 +179,14 @@ public class EnableCheatsTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when enabling the cheats for all
 	 */
@@ -233,16 +233,16 @@ public class EnableCheatsTest
 						log.fatal(message);
 						fail(message);
 					}
-				} 
-				else 
+				}
+				else
 				{
 					String message = "Admin was unable to enable cheat sheets for administrators";
 					log.fatal(message);
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());

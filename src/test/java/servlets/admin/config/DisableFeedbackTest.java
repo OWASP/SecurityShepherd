@@ -12,14 +12,14 @@ import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 import utils.FeedbackStatus;
 
-public class DisableFeedbackTest 
+public class DisableFeedbackTest
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(DisableFeedbackTest.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    
+
 	@Before
 	public void setUp()
 	{
@@ -35,7 +35,7 @@ public class DisableFeedbackTest
         	fail(message);
         }
 	}
-	
+
 	/**
 	 * Method to Simulate the interaction with the disableFeedback servlet.
 	 * @param moduleId The ID of the Module to Search For
@@ -49,17 +49,17 @@ public class DisableFeedbackTest
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating " + servletClassName + " Servlet Instance");
 			DisableFeedback servlet = new DisableFeedback();
 			servlet.init(new MockServletConfig(servletClassName));
-			
+
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
@@ -75,7 +75,7 @@ public class DisableFeedbackTest
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when disabling the feedback
 	 */
@@ -123,14 +123,14 @@ public class DisableFeedbackTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
 	/**
 	 * This test checks that non admin users get access errors when disabling the feedback
 	 */
@@ -172,8 +172,8 @@ public class DisableFeedbackTest
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Exception Caught: " + e.toString());
