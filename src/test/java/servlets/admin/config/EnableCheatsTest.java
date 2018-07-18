@@ -134,7 +134,7 @@ public class EnableCheatsTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when enabling the cheats for all
+	 * This test checks that admin can the cheats for all
 	 */
 	@Test
 	public void testAdminCompleteEnableCheatsCall()
@@ -188,7 +188,7 @@ public class EnableCheatsTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when enabling the cheats for all
+	 * This test checks that admin users can enable restricted cheat sheets (Admins Only)
 	 */
 	@Test
 	public void testAdminRestrictedEnableCheatsCall()

@@ -131,7 +131,7 @@ public class DisableScoreboardTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when disabling the scoreboard
+	 * This test checks that admin users can disable the scoreboard
 	 */
 	@Test
 	public void testAdminCompleteDisableScoreabordCall()
@@ -184,7 +184,7 @@ public class DisableScoreboardTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when disabling the scoreboard
+	 * Test with Bad CSRF Tokens
 	 */
 	@Test
 	public void testCsrf()

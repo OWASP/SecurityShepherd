@@ -131,7 +131,7 @@ public class DisableCheatsTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when disabling the cheats
+	 * This test checks that admin users can disable the cheats
 	 */
 	@Test
 	public void testAdminCompleteDisableCheatsCall()

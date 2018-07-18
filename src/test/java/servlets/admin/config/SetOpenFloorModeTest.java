@@ -132,7 +132,7 @@ public class SetOpenFloorModeTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when enabling open floor mode
+	 * This test checks that admin users can enable open floor mode
 	 */
 	@Test
 	public void testAdminSetOpenFloorMode()

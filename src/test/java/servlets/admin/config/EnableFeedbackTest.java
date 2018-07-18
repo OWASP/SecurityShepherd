@@ -130,7 +130,7 @@ public class EnableFeedbackTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when enabling the feedback
+	 * This test checks that admin users can enable the feedback
 	 */
 	@Test
 	public void testAdminEnableFeedbackCall()

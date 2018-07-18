@@ -76,9 +76,6 @@ public class SetTournamentModeTest
 		return null;
 	}
 
-	/**
-	 * This test checks that non admin users get access errors when Setting Tournament Mode
-	 */
 	@Test
 	public void testUserEnableTournamentMode()
 	{
@@ -131,9 +128,6 @@ public class SetTournamentModeTest
 		}
 	}
 
-	/**
-	 * This test checks that non admin users get access errors when enabling the cheats for all
-	 */
 	@Test
 	public void testAdminSetTournamentMode()
 	{

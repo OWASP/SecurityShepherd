@@ -132,7 +132,7 @@ public class SetCtfModeTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when enabling the CTF Mode
+	 * This test checks that  admin users can enable the CTF Mode
 	 */
 	@Test
 	public void testAdminSetCtfMode()

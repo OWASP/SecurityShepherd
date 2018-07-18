@@ -131,7 +131,7 @@ public class ToggleRegistrationTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when changing the registration
+	 * This test checks that admin users can change the registration
 	 */
 	@Test
 	public void testAdminToggle()

@@ -132,7 +132,7 @@ public class DisableFeedbackTest
 	}
 
 	/**
-	 * This test checks that non admin users get access errors when disabling the feedback
+	 * This test checks that admin users can disable the feedback
 	 */
 	@Test
 	public void testAdminCompleteDisableFeedbackCall()
