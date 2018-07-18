@@ -1,4 +1,4 @@
-package servlets.admin.moduleManagement;
+package servlets.admin.config;
 
 import static org.junit.Assert.*;
 
@@ -9,51 +9,59 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
-import dbProcs.Setter;
 import testUtils.TestProperties;
+import utils.ModulePlan;
 
-public class OpenOrCloseByCategoryTest 
+public class SetOpenFloorModeTest
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(OpenOrCloseByCategoryTest.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(EnableCheats.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    
+
 	@Before
 	public void setUp()
 	{
 		TestProperties.setTestPropertiesFileDirectory(log);
 		request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
-        //Close All modules
-        if(!Setter.closeAllModules(applicationRoot))
-        	fail("Could not Mark All Modules As Closed");
+        //Set Module Plan to CTF Floor
+        ModulePlan.setIncrementalFloor();
+        if(!ModulePlan.isIncrementalFloor())
+        {
+        	String message = "Unable to Set floor plan to CTF";
+        	log.fatal(message);
+        	fail(message);
+        }
 	}
-	
-	public String openOrCloseByCategoryDoPost(String openOrClose, String moduleCategory, String csrfToken) throws Exception
+
+	/**
+	 * Method to Simulate the interaction with the Set Open Floor Mode Servlet
+	 * @param moduleId The ID of the Module to Search For
+	 * @param csrfToken The CSRF Token of the User
+	 * @return The Content of the Response (Which is supposed to be the location of the module)
+	 * @throws Exception
+	 */
+	public String doThePost(String csrfToken) throws Exception
 	{
+		String servletClassName = "SetOpenFloorMode";
 		try
 		{
 			int expectedResponseCode = 302;
-			
-			log.debug("Creating OpenOrCloseByCategory Servlet Instance");
-			OpenOrCloseByCategory servlet = new OpenOrCloseByCategory();
-			servlet.init(new MockServletConfig("OpenOrCloseByCategory"));
-			
-			//Setup Servlet Parameters and Attributes
-			log.debug("Setting Up Params and Atrributes");
-			request.addParameter("openOrClose", openOrClose);
-			request.addParameter("toOpenOrClose[]", moduleCategory);
-			
+
+			log.debug("Creating " + servletClassName + " Servlet Instance");
+			SetOpenFloorMode servlet = new SetOpenFloorMode();
+			servlet.init(new MockServletConfig(servletClassName));
+
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
-				fail("OpenOrCloseByCategory Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
+				fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
 			else
 			{
 				log.debug(expectedResponseCode + " Detected");
@@ -67,71 +75,14 @@ public class OpenOrCloseByCategoryTest
 		}
 		return null;
 	}
-	
+
 	/**
-	 * 
+	 * This test checks that non admin users get access errors when Setting Open Floor Mode
 	 */
 	@Test
-	public void testOpenByCategory()
+	public void testUserEnableOpenFloorMode()
 	{
-		String userName = "openAndCloseAdmin";
-		String password = userName;
-		//Verify / Create user in DB
-		try
-		{
-			TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
-			//Sign in as Admin User
-			log.debug("Signing in as Admin Through LoginServlet");
-			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
-			if(response.getCookie("token") == null)
-				fail("No CSRF Token Was Returned from Login Servlet");
-			String csrfToken = response.getCookie("token").getValue();
-			if(csrfToken.isEmpty())
-			{
-				String message = new String("No CSRF token returned from Login Servlet");
-				log.fatal(message);
-				fail(message);
-			}
-			else
-			{
-				//Add Cookies from Response to outgoing request
-				request.setCookies(response.getCookies());
-				String responseBody = openOrCloseByCategoryDoPost("open", "Injection", csrfToken);
-				if(!responseBody.contains("Please try non administrator functions"))
-				{
-					log.debug("No Admin Access Result Recieved");
-					String expectedResult = "The categories selected have been opened";
-					if(responseBody.contains(expectedResult))
-					{
-						log.debug("Received Expected Message for this test");
-					}
-					else
-					{
-						String message = "Did not find 'Categories Set to open' in response";
-						log.fatal(message);
-						fail(message);
-					}
-				}
-				else
-				{
-					String message = "Admin user did gets 'Not an Admin' Error";
-					log.fatal(message);
-					fail(message);
-				}
-			}
-		} 
-		catch (Exception e) 
-		{
-			log.fatal("Could not Complete testValidEnableScoreboardCall: " + e.toString());
-			fail("Could not Complete testValidEnableScoreboardCall");
-		}
-	}
-
-	@Test
-	public void testOpenByCategoryUser()
-	{
-		String userName = "openAndCloseUser";
+		String userName = "configUserTester";
 		String password = userName;
 		//Verify / Create user in DB
 		try
@@ -154,37 +105,46 @@ public class OpenOrCloseByCategoryTest
 			{
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
-				String responseBody = openOrCloseByCategoryDoPost("open", "Injection", csrfToken);
-				if(responseBody.contains("loggedOutSheep"))
+				String responseBody = doThePost(csrfToken);
+				if(responseBody.isEmpty())
 				{
-					log.debug("Admin Access Result Recieved");
+					log.debug("Expected Empty Result Recieved");
+					if(ModulePlan.isOpenFloor())
+					{
+						String message = "Floor Plan Changed to Open Floor after what should have been a failed request";
+						log.fatal(message);
+						fail(message);
+					}
 				}
 				else
 				{
-					String message = "User Does not get 'Admin' Error";
+					String message = "Normal user did not get error when performing admin function";
 					log.fatal(message);
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
-			log.fatal("Could not Complete testValidEnableScoreboardCall: " + e.toString());
-			fail("Could not Complete testValidEnableScoreboardCall");
+			log.fatal("Could not Complete: " + e.toString());
+			fail("Exception Caught: " + e.toString());
 		}
 	}
-	
+
+	/**
+	 * This test checks that admin users can enable open floor mode
+	 */
 	@Test
-	public void testOpenByCategoryXss()
+	public void testAdminSetOpenFloorMode()
 	{
-		String userName = "openAndCloseAdmin";
+		String userName = "configAdminTester";
 		String password = userName;
 		//Verify / Create user in DB
 		try
 		{
 			TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
-			//Sign in as Normal User
-			log.debug("Signing in as Admin Through LoginServlet");
+			//Sign in as Admin User
+			log.debug("Signing in as User Through LoginServlet");
 			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
 			log.debug("Login Servlet Complete, Getting CSRF Token");
 			if(response.getCookie("token") == null)
@@ -200,34 +160,93 @@ public class OpenOrCloseByCategoryTest
 			{
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
-				String responseBody = openOrCloseByCategoryDoPost("<script>alert(1)</script>", "Injection", csrfToken);
-				if(!responseBody.contains("Please try non administrator functions"))
+				String responseBody = doThePost(csrfToken);
+				if(responseBody.contains("Open Floor Plan Enabled"))
 				{
-					log.debug("No Admin Access Result Recieved");
-					String expectedResult = "Invalid Request";
-					if(responseBody.contains(expectedResult))
+					log.debug("OpenFloor Mode enabled");
+					if(!ModulePlan.isOpenFloor())
 					{
-						log.debug("Received Expected Message for this test");
+						String message = "Open Floor Mode was not actually Enabled";
+						log.fatal(message);
+						fail(message);
 					}
-					else
+					else if (ModulePlan.isIncrementalFloor())
 					{
-						String message = "Did not find '" + expectedResult + "' in response";
+						String message = "ModulePlan still returning possitive for CTF Mode Check";
 						log.fatal(message);
 						fail(message);
 					}
 				}
 				else
 				{
-					String message = "Admin user did gets 'Not an Admin' Error";
+					String message = "Admin was unable to enable OpenFloor mode";
 					log.fatal(message);
 					fail(message);
 				}
 			}
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
-			log.fatal("Could not Complete testValidEnableScoreboardCall: " + e.toString());
-			fail("Could not Complete testValidEnableScoreboardCall");
+			log.fatal("Could not Complete: " + e.toString());
+			fail("Exception Caught: " + e.toString());
+		}
+	}
+
+	@Test
+	public void testCsrf()
+	{
+		String userName = "configAdminTester";
+		String password = userName;
+		//Verify / Create user in DB
+		try
+		{
+			TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
+			//Sign in as Admin User
+			log.debug("Signing in as User Through LoginServlet");
+			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
+			log.debug("Login Servlet Complete, Getting CSRF Token");
+			if(response.getCookie("token") == null)
+				fail("No CSRF Token Was Returned from Login Servlet");
+			String csrfToken = response.getCookie("token").getValue();
+			if(csrfToken.isEmpty())
+			{
+				String message = new String("No CSRF token returned from Login Servlet");
+				log.fatal(message);
+				fail(message);
+			}
+			else
+			{
+				//Add Cookies from Response to outgoing request
+				request.setCookies(response.getCookies());
+				String responseBody = doThePost("wrongToken");
+				if(responseBody.contains("Error Occurred"))
+				{
+					log.debug("CSRF Error Occurred");
+					if(ModulePlan.isOpenFloor())
+					{
+						String message = "OpenFloor Mode was enabled after what should have been a failed request";
+						log.fatal(message);
+						fail(message);
+					}
+					else if (!ModulePlan.isIncrementalFloor())
+					{
+						String message = "ModulePlan no longer returning possitive for CTF Floor Check after what should have been a failed request";
+						log.fatal(message);
+						fail(message);
+					}
+				}
+				else
+				{
+					String message = "Registration Availability Update Failure";
+					log.fatal(message);
+					fail(message);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			log.fatal("Could not Complete: " + e.toString());
+			fail("Exception Caught: " + e.toString());
 		}
 	}
 }

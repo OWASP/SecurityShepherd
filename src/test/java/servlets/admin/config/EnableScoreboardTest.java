@@ -249,7 +249,7 @@ public class EnableScoreboardTest
 	}
 	
 	/**
-	 * This test checks that admin users can open the scoreboard for class specific scoreboards
+	 * This test checks that admin users cannot open the scoreboard for an invalid class specific scoreboards
 	 */
 	@Test
 	public void testUserScoreboardInvalidClass()
@@ -359,7 +359,7 @@ public class EnableScoreboardTest
 	}
 	
 	/**
-	 * This test checks that admin users can configure the scoreboard to be open with a specific class
+	 * This test checks that admin users can configure the scoreboard to be open with a specific class for admins only
 	 */
 	@Test
 	public void testUserScoreboardRestrictedValidClass()
