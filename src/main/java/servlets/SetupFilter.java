@@ -12,10 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
 
 public class SetupFilter implements Filter {
-	private static org.apache.log4j.Logger log = Logger.getLogger(SetupFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -31,10 +29,13 @@ public class SetupFilter implements Filter {
 		String requestURL = req.getRequestURL().toString();
 		String pageName = FilenameUtils.getBaseName(requestURL);
 		
-		if (!pageName.contains("setup") && !Setup.isInstalled()) {
-			log.info("System not setup. Forwarding to Setup");
-			res.sendRedirect("setup.jsp");
-		} else {
+		if (!Setup.isInstalled()) {
+			if (pageName.contains("setup") || requestURL.contains("/css/") || requestURL.contains("/js/")) {
+				chain.doFilter(request, response);
+			} else {
+				res.sendRedirect("setup.jsp");
+			}
+		}  else {
 			chain.doFilter(request, response);
 		}
 	}
