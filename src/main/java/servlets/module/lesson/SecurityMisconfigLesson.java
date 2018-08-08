@@ -105,7 +105,7 @@ public class SecurityMisconfigLesson extends HttpServlet
 		else
 		{
 			log.error(levelName + " servlet accessed with no session");
-			out.write(bundle.getString("error.noSession"));
+			out.write(errors.getString("error.noSession"));
 		}
 	}
 }
