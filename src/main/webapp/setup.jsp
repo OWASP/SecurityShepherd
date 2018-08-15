@@ -53,13 +53,14 @@ if (Setup.isInstalled()) {
 <head>
 <title>OWASP Security Shepherd - Login</title>
 
-<link href="css/theCss.css" rel="stylesheet" type="text/css"
-	media="screen" />
-<link href="css/theResponsiveCss.css" rel="stylesheet" type="text/css"
-	media="screen">
+<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="css/theResponsiveCss.css" rel="stylesheet" type="text/css" media="screen">
 </head>
 <body>
 	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript" src="js/clipboard-js/clipboard-events.js"></script>
 	<div id="wrapper">
 		<jsp:include page="translation-select.jsp" />
 		<!-- start header -->
@@ -70,126 +71,82 @@ if (Setup.isInstalled()) {
 		<!-- start page -->
 		<div id="page">
 			<!-- start content -->
-			<div id="content"
-				style="margin-right: auto; margin-left: auto; width: 40%; max-width: 320px;">
-				<div class="post">
-					<h1 class="title" id="login_title">
-						<fmt:message key="generic.text.setup" />
-					</h1>
-					<%
-						if (!error.isEmpty()) {
-					%>
-					<p>
-						<strong><font color="red"><%=error%></font></strong>
-					</p>
-					<%
-						}
-					%>					
-					<form name="loginForm" method="POST" action="setup">
-						<table>
-							<tr>
-								<td><p>
-										<fmt:message key="generic.text.setup.host" />
-										:</td>
-								<td><input type="text" name="dbhost" value=""
-									autocomplete="OFF" autofocus />
-									</p></td>
-							</tr>
-							<tr>
-								<td><p>
-										<fmt:message key="generic.text.setup.port" />
-										:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td><input type="text" name="dbport" autocomplete="OFF" /><br /></td>
-							</tr>
-							<tr>
-								<td><p>
-										<fmt:message key="generic.text.setup.user" />
-										:</td>
-								<td><input type="text" name="dbuser" value=""
-									autocomplete="OFF" autofocus />
-									</p></td>
-							</tr>
-							<tr>
-								<td><p>
-										<fmt:message key="generic.text.setup.pwd" />
-										:</td>
-								<td><input type="password" name="dbpass" value=""
-									autocomplete="OFF" autofocus />
-									</p></td>
-							</tr>
-							<tr>
-								<td><p>
-										<fmt:message key="generic.text.setup.overridedb" />
-										:</td>
-								<td><input type="checkbox" name="dboverride" value="dboverride" checked
-									autocomplete="OFF" autofocus />
-									</p></td>
-							</tr>								
-							<tr>
-								<td colspan="2">
-								<p>	<fmt:message key="generic.text.setup.authentication.help" />	:
-								<%=Constants.SETUP_AUTH%>
-								</p></td>
-							</tr>								
-							<tr>
-								<td><p>
-										<fmt:message key="generic.text.setup.authentication" />
-										:</td>
-								<td><input type="text" name="dbauth" value=""
-									autocomplete="OFF" autofocus />
-									</p></td>
-							</tr>
-							<tr>
-								<td colspan="2" align="center"><fmt:message
-										key="generic.text.submit" var="buttonValue" /> <input
-									type="submit" name="submit" value="${buttonValue}" /></td>
-							</tr>
-						</table>
-					</form>
-					<br /> <br />
-					<div align="center">
-						<a id="tools" href="javascript:;"><fmt:message
-								key="login.text.proxy_question" /></a>
-						<div id="toolsTable" style="display: none;">
-							<p>
-								<fmt:message key="login.text.download_proxy" />
-								;
-							</p>
-							<table>
-								<tr>
-									<td align="center"><a href="http://bit.ly/zapWindows"><fmt:message
-												key="login.link.zap_win" /></a></td>
-								</tr>
-								<tr>
-									<td align="center"><a href="http://bit.ly/zapLinux"><fmt:message
-												key="login.link.zap_lin" /></a></td>
-								</tr>
-								<tr>
-									<td align="center"><a href="http://bit.ly/zapForMac"><fmt:message
-												key="login.link.zap_mac" /></a></td>
-								</tr>
-							</table>
-						</div>
-						<br> <a id="showAbout" href="javascript:;"><fmt:message
-								key="generic.text.aboutSecShep" /></a>
+			<div id="content">
+				<div class="setupPage">
+					<h1 class="title" id="login_title"><fmt:message key="generic.text.setup.title" /></h1>
+					<p><fmt:message key="generic.text.setup.description" /></p>
+					<h2 class="title" id="login_title"><fmt:message key="generic.text.setup.token.title" /></h2>
+					<p><fmt:message key="generic.text.setup.token.description" /></p>
+					<script>prepTooltips();prepClipboardEvents();</script>
+					<div class='input-group' style="margin-bottom: 15px;">
+						<textarea id='theKey' style="font-size: 10px; height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:95%"><%=Constants.SETUP_AUTH%></textarea>
+						<span class='input-group-button'>
+							<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey' style='height: 30px;'>
+								<img src='js/clipboard-js/clippy.svg' width='14' alt='<fmt:message key="generic.text.copy.to.clip"/>'>
+							</button>
+						</span>
 					</div>
-				</div>
-			</div>
-			<div align="justify">
-
-				<div id="aboutDiv" style="display: none;">
-					<h2 class="title">
-						<fmt:message key="generic.text.aboutSecShep" />
-					</h2>
-					<p id="about_shepherd_blurb">
-						<fmt:message key="login.text.about_blurb" />
-					</p>
-					<%= Analytics.sponsorshipMessage(new Locale(Validate.validateLanguage(request.getSession()))) %>
+					<h2 class="title" id="login_title"><fmt:message key="generic.text.setup.form.title" /></h2>
+					<form id="setupForm" action="javascript:;">
+						<div class="row">
+							<div class="col-25">
+								<label for="dbhost"><fmt:message key="generic.text.setup.host" /></label>
+							</div>
+							<div class="col-75">
+								<input type="text" id="dbhost" name="dbhost" placeholder="Database Hostname..." autofocus required>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-25">
+								<label for="dbport"><fmt:message key="generic.text.setup.port" /></label>
+							</div>
+							<div class="col-75">
+								<input type="text" id="dbport" name="dbport" placeholder="Database Port..." required>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-25">
+								<label for="dbuser"><fmt:message key="generic.text.setup.user" /></label>
+							</div>
+							<div class="col-75">
+								<input type="text" id="dbuser" name="dbuser" placeholder="Shepherd Database User.." required>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-25">
+								<label for="dbpass"><fmt:message key="generic.text.setup.pwd" /></label>
+							</div>
+							<div class="col-75">
+								<input type="password" id="dbpass" name="dbpass" placeholder="Database Password.." required>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-25">
+								<label for="dboverride"><fmt:message key="generic.text.setup.overridedb" /></label> </div>
+							<div class="col-75">
+								<select id="dboverride" name="dboverride">
+									<option value="true"><fmt:message key="generic.text.setup.wipe" /></option>
+									<option value="false"><fmt:message key="generic.text.setup.dontwipe" /></option>
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-25">
+								<label for="dbauth"><fmt:message key="generic.text.setup.authentication" /></label>
+							</div>
+							<div class="col-75">
+								<input type="text" id="dbauth" name="dbauth" placeholder="Token from Server File System..." required>
+							</div>
+						</div>
+						<div class="row">
+							<input type="submit" id="submitButton" value="<fmt:message key="generic.text.submit" />">
+						</div>
+						<div align="center" id="submitLoading" style="display: none;"><fmt:message key="generic.text.loading" /></div>
+					</form>
+					<div id="resultResponse"></div>
 				</div>
 			</div>
 			<!-- end content -->
-			<!-- start sidebar -->
-			<!-- end sidebar -->
 		</div>
 	</div>
 	<!-- end page -->
@@ -207,6 +164,57 @@ if (Setup.isInstalled()) {
 		
 		$("#showAbout").click(function(){
 			$("#aboutDiv").show("slow");
+		});
+		
+		$("#setupForm").submit(function(){
+			var thedbhost = $("#dbhost").val();
+			var thedbport = $("#dbport").val();
+			var thedbuser = $("#dbuser").val();
+			var thedbpass = $("#dbpass").val();
+			var thedboverride = $("#dboverride").val();
+			var thedbauth = $("#dbauth").val();
+			if(thedbauth != null)
+			{
+				$("#submitLoading").slideDown("fast");
+				$("#resultResponse").slideUp("fast");
+				//The Ajax Operation
+				$("#submitButton").slideUp("fast", function(){
+					var ajaxCall = $.ajax({
+						type: "POST",
+						url: "setup",
+						data: {
+							dbhost: thedbhost,
+							dbport: thedbport,
+							dbuser: thedbuser,
+							dbpass: thedbpass,
+							dboverride: thedboverride,
+							dbauth: thedbauth
+						},
+						async: false
+					});
+					$("#submitLoading").slideUp("fast", function(){
+						if(ajaxCall.status == 200)
+						{
+							console.log("Request OK. Showing Reponse");
+							$('#resultResponse').html(ajaxCall.responseText);
+						}
+						else
+						{
+							$('#resultResponse').html("<br/><p> <fmt:message key="generic.text.sorryError" />: " + ajaxCall.status + " " + ajaxCall.statusText + "</p><br/>");
+						}
+						$("#resultResponse").show("slow");
+						$("#submitButton").slideDown("slow");
+					});
+					if(ajaxCall.responseText.indexOf("<fmt:message key="generic.text.setup.response.success" />")!=-1)
+					{
+						window.location.replace("login.jsp");
+					}
+				});
+			}
+			else
+			{
+				console.log("No dbauth Submitted");
+			}
 		});
 	</script>
 	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
