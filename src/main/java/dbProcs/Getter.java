@@ -1901,4 +1901,32 @@ public class Getter
 		log.debug("*** END isCsrfLevelComplete ***");
 		return result;
 	}
+	
+	public static boolean isModuleOpen (String ApplicationRoot, String moduleId)
+	{
+		log.debug("*** Getter.isModuleOpen ***");
+		boolean result = false;
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			//Get the modules
+			PreparedStatement prepStmt = conn.prepareCall("SELECT moduleStatus FROM modules WHERE moduleId = ?");
+			prepStmt.setString(1, moduleId);
+			ResultSet rs = prepStmt.executeQuery();
+			if(rs.next())
+			{
+				if(rs.getString(1).equalsIgnoreCase("open"))
+				{
+					result = true;
+				}
+			}
+			rs.close();
+		}
+		catch(Exception e)
+		{
+			log.error("isModuleOpen Error: " + e.toString());
+		}
+		Database.closeConnection(conn);
+		return result;
+	}
 }
