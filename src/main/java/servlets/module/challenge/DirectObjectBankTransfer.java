@@ -89,7 +89,18 @@ public class DirectObjectBankTransfer extends HttpServlet
 					float senderFunds = DirectObjectBankLogin.getAccountBalance(senderAccountNumber, applicationRoot);
 					if((senderFunds-tranferAmount) > 0)
 					{
-						performTransfer = true;
+						//Check Receiver Account Exists
+						try 
+						{
+							float recieverAccountBalanace = DirectObjectBankLogin.getAccountBalance(recieverAccountNumber, applicationRoot);
+							if(recieverAccountBalanace >= 0)
+								performTransfer = true;
+						}
+						catch(Exception e)
+						{
+							log.debug("Reciever Account does not exist. Cancelling");
+							errorMessage = bundle.getString("transfer.error.recieverNotFound");
+						}
 					}
 					else
 						errorMessage = bundle.getString("transfer.error.notEnoughCash");
