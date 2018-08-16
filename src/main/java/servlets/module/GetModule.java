@@ -84,7 +84,12 @@ public class GetModule extends HttpServlet
 					{
 						storedResult = Getter.getModuleResult(ApplicationRoot, moduleId);
 					}
+					boolean moduleOpen = false;
 					if(notNull && storedResult != null)
+					{
+						moduleOpen = Getter.isModuleOpen(ApplicationRoot, moduleId);
+					}
+					if(notNull && storedResult != null && moduleOpen)
 					{
 						//Data is good, Add result: Now to check if there is a block in place
 						if(ModuleBlock.blockerEnabled && ModuleBlock.blockerId.compareTo(moduleId) == 0)
@@ -109,6 +114,10 @@ public class GetModule extends HttpServlet
 						else if(storedResult == null)
 						{
 							log.error("Module not found");
+						}
+						else 
+						{
+							log.fatal("Module Not Open");
 						}
 					}
 				}

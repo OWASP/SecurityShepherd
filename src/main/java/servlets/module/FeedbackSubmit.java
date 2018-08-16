@@ -109,7 +109,12 @@ public class FeedbackSubmit extends HttpServlet
 					{
 						storedResult = Getter.getModuleResult(ApplicationRoot, moduleId);
 					}
+					boolean moduleOpen = false;
 					if(notNull && storedResult != null)
+					{
+						moduleOpen = Getter.isModuleOpen(ApplicationRoot, moduleId);
+					}
+					if(notNull && storedResult != null && moduleOpen)
 					{
 						boolean validKey = false;
 						//Identify if solution is a user Specific key (Does it need to be decrypted?)
@@ -186,6 +191,11 @@ public class FeedbackSubmit extends HttpServlet
 						{
 							log.error("Module not found");
 							errorMessage += "Module Not Found. Please try again";
+						}
+						else 
+						{
+							log.fatal("Module Not Open");
+							errorMessage += "Module Not Open. Please try a level that is marked as open. ";
 						}
 						htmlOutput = new String("<h2 class=\"title\">Feedback Submission Failure</h2><br>" +
 								"<p><font color=\"red\">" +

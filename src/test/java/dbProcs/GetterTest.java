@@ -3069,4 +3069,23 @@ public class GetterTest
 			fail("Could not Verify User " + userName);
 		}
 	}
+	
+	@Test
+	public void testIsModuleOpen() 
+	{
+		String csrfChallengeTwo = new String("94cd2de560d89ef59fc450ecc647ff4d4a55c15d"); //CSRF Challenge 2 (Should have CSRF Counter of 0 for new user
+		//Open all Modules First so that the Module Can Be Opened
+		if(Setter.openAllModules(applicationRoot))
+		{
+			if(!Getter.isModuleOpen(applicationRoot, csrfChallengeTwo))
+				fail("isModuleOpen returned False when the module should have been open");
+			Setter.closeAllModules(applicationRoot);
+			if(Getter.isModuleOpen(applicationRoot, csrfChallengeTwo))
+				fail("isModuleOpen returned True when the module should have been closed");
+		}
+		else
+		{
+			fail("Could not mark All Modules as Opened");
+		}
+	}
 }

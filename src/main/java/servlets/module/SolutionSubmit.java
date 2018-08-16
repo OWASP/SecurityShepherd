@@ -95,7 +95,12 @@ public class SolutionSubmit extends HttpServlet
 					{
 						storedResult = Getter.getModuleResult(ApplicationRoot, moduleId);
 					}
+					boolean moduleOpen = false;
 					if(notNull && storedResult != null)
+					{
+						moduleOpen = Getter.isModuleOpen(ApplicationRoot, moduleId);
+					}
+					if(notNull && storedResult != null && moduleOpen)
 					{
 						boolean validKey = false;
 						//Identify if solution is a user Specific key (Does it need to be decrypted?)
@@ -201,6 +206,11 @@ public class SolutionSubmit extends HttpServlet
 						{
 							log.error("Module not found");
 							errorMessage += "Module Not Found. Please try again";
+						} 
+						else 
+						{
+							log.fatal("Module Not Open");
+							errorMessage += "Module Not Open. Please try a level that is marked as open. ";
 						}
 						out.print("<h2 class=\"title\">Solution Submission Failure</h2><br>" +
 								"<p><font color=\"red\">" +
