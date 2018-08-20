@@ -79,7 +79,7 @@ if (Setup.isInstalled()) {
 					<p><fmt:message key="generic.text.setup.token.description" /></p>
 					<script>prepTooltips();prepClipboardEvents();</script>
 					<div class='input-group' style="margin-bottom: 15px;">
-						<textarea id='theKey' style="font-size: 10px; height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:95%"><%=Constants.SETUP_AUTH%></textarea>
+						<textarea id='theKey' style="font-size: 12px; padding:0.1em; height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:95%"><%=Constants.SETUP_AUTH%></textarea>
 						<span class='input-group-button'>
 							<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey' style='height: 30px;'>
 								<img src='js/clipboard-js/clippy.svg' width='14' alt='<fmt:message key="generic.text.copy.to.clip"/>'>
