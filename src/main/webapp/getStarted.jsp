@@ -47,7 +47,6 @@ String csrfToken = Encode.forHtmlAttribute(tokenCookie.getValue());
 String userName = Encode.forHtml(ses.getAttribute("userName").toString());
 String userRole = Encode.forHtml(ses.getAttribute("userRole").toString());
 String userId = Encode.forHtml(ses.getAttribute("userStamp").toString());
-String threadId = (String) ses.getAttribute("ThreadSequenceId");
 String ApplicationRoot = getServletContext().getRealPath("");
 boolean isAdmin = userRole.equalsIgnoreCase("admin");
 boolean changePassword = false;
@@ -96,16 +95,16 @@ if(!changePassword)
 		</div>
 		<br/>
 	<div id="cantSee">
-		
+
 	</div>
 	</div>
 	</div>
 	<script>
 	var theCsrfToken = "<%= csrfToken %>";
 	var theRefreshError = "Could not Refresh Menu";
-	
+
 	$('#getStarted').slideDown("slow");
-	$('#cantSee').html("<iframe class='levelIframe' frameborder='no' id='theStart' src='readyToPlay.jsp?ThreadSequenceId=<%=Encode.forHtmlAttribute(Encode.forUriComponent(threadId))%>'></iframe>");
+	$('#cantSee').html("<iframe class='levelIframe' frameborder='no' id='theStart' src='readyToPlay.jsp'></iframe>");
 	$('#cantSee').html(function(){
 		$("#theStart").load(function(){
 			$("#contentDiv").slideDown("slow");

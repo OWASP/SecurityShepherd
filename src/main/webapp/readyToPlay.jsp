@@ -42,22 +42,6 @@
  	if (Validate.validateSession(ses) && tokenCookie != null)
  	{
  		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
-		
-		String parameter = (String)request.getParameter("ThreadSequenceId");
-		try
-		{
-			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Thread Parameter = " + parameter, ses.getAttribute("userName"));
-			Cookie cookie = new Cookie("JSESSIONID3", parameter);
-			if(request.getRequestURL().toString().startsWith("https"))//If Requested over HTTPs
-			cookie.setSecure(true);
-		    ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Thread Cookie Value = " + cookie.getValue(), ses.getAttribute("userName"));
-		    response.addCookie(cookie);
-		}
-		catch(Exception e)
-		{
-			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Thread Parameter caused Failure: " + parameter);
-			parameter = "";
-		}
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -67,20 +51,15 @@
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-		<div id="contentDiv">		
-			<% if(parameter.isEmpty()) { %>
-			<h2 class="title"><fmt:message key="readyToPlay.header.notReady" /></h2>
-			<p><fmt:message key="readyToPlay.text.info.notReady" /></p>
-			<% } else { %>
+		<div id="contentDiv">
 			<h2 class="title"><fmt:message key="readyToPlay.title.enteredGame" /></h2>
 			<p> <fmt:message key="readyToPlay.text.info.enteredGame" /> </p>
-			<% } %>
 			<%= Analytics.sponsorshipMessage(new Locale(Validate.validateLanguage(request.getSession()))) %>
 			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 		</div>
 </body>
 </html>
-<% 
+<%
 	}
 	else
 	{

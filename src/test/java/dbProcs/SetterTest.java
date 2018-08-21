@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -37,8 +39,8 @@ public class SetterTest
 	@Test
 	public void testClassCreate() 
 	{
-		String random = Hash.randomKeyLengthString();
-		String className = "newC"+random;
+		Random rand = new Random();
+		String className = "newC"+rand.nextInt(50)+rand.nextInt(50)+rand.nextInt(50);
 		if(!Setter.classCreate(applicationRoot, className, "2015"))
 		{
 			fail("Could not Create Class");

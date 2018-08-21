@@ -94,7 +94,7 @@ if (request.getSession() != null)
 <br/>
 <br/>
 <br/>
-<p><%= bundle.getString("challenge.resultKey") %>: <strong><%= Hash.generateUserSolution(levelResult, request.getCookies()) %></strong></p>
+<p><%= bundle.getString("challenge.resultKey") %>: <strong><%= Hash.generateUserSolutionKeyOnly(levelResult, (String)ses.getAttribute("userName")) %></strong></p>
 </body></html>
 <%
 	}

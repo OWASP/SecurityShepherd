@@ -84,10 +84,6 @@ public class Login extends HttpServlet
 				   ses.setAttribute("userName", user[1]);
 				   ses.setAttribute("userRole", user[2]);
 				   ses.setAttribute("lang", language);
-				   
-				   //Used to make returned Keys user specific. Transferred to Exposed Server
-				   String encyptedUserName = Hash.encrypt(Hash.userNameKey, p_login);
-				   ses.setAttribute("ThreadSequenceId", encyptedUserName);
 				   log.debug("userClassId = " + user[4]);
 				   
 				   ses.setAttribute("userClass", user[4]);
