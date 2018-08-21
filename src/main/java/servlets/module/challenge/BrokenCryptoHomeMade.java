@@ -444,38 +444,4 @@ public class BrokenCryptoHomeMade extends HttpServlet
 	{
 		return Base64.encodeBase64String(encryptionKeySalt.getBytes());
 	}
-	
-	public static String validateEncryptionKey(String userSalt)
-	{
-		String newKey = new String();
-		int keySize = userSalt.length();
-		if(keySize == 16)
-		{
-			//log.debug("Key Already Valid");
-			newKey = userSalt;
-		}
-		else
-		{
-			if(keySize > 16)
-			{
-				//log.debug("Key too Long...");
-				newKey = userSalt.substring(0, 16);
-			}
-			else // Shorter than 16
-			{
-				//log.debug("Key too Short...");
-				newKey = userSalt;
-				int howManyTimes = (16 / keySize) - 1;
-				//log.debug("Repeating String " + howManyTimes + " times");
-				for(int i = 0; i < howManyTimes; i++)
-					newKey += userSalt;
-				keySize = newKey.length();
-				int toAdd = 16 - keySize;
-				//log.debug("Adding " + toAdd + " more characters");
-				newKey = newKey.concat(userSalt.substring(0, toAdd));
-			}
-		}
-		log.debug("Encryption key is '" + newKey + "'");
-		return newKey;
-	}
 }
