@@ -122,12 +122,11 @@ public class FeedbackSubmit extends HttpServlet
 							validKey = storedResult.compareTo(solutionKey) == 0;
 						else
 						{
-							//Encrypted Solution key,  must be decrypted before compare
-							String decryptedKey = Hash.decryptUserSpecificSolution(Validate.validateEncryptionKey(userName), solutionKey);
-							storedResult += Hash.getCurrentSalt(); //Add server solution salt to base key before compare with decrypted key
-							validKey = storedResult.compareTo(decryptedKey) == 0;
-							log.debug("Decrypted Submitted Key: " + decryptedKey);
-							log.debug("Stored Expected Key    : " + storedResult);
+							//User has submitted a string. Lets see if it matches a freshly computed Key
+							storedResult = Hash.generateUserSolutionKeyOnly(Getter.getModuleResult(ApplicationRoot, moduleId), userName);
+							validKey = storedResult.compareTo(solutionKey) == 0;
+							log.debug("Submitted Key: " + storedResult);
+							log.debug("Expected Key : " + solutionKey);
 						}
 						if(validKey)
 						{

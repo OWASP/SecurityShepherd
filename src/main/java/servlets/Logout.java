@@ -68,8 +68,6 @@ public class Logout extends HttpServlet
 				//Remove cookie
 				Cookie emptyCookie = new Cookie("token", "");
 				response.addCookie(emptyCookie);
-				emptyCookie = new Cookie("JSESSIONID3", "");
-				response.addCookie(emptyCookie);
 				log.debug("User Logged Out");
 				response.sendRedirect("login.jsp");
 			}
