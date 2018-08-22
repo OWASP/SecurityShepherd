@@ -3,9 +3,7 @@ package utils;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-import javax.crypto.Cipher;
 import javax.crypto.Mac;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.log4j.Logger;
@@ -79,7 +77,7 @@ public class Hash
 				byte[] key = getCurrentKey();
 				SecretKeySpec keySpec = new SecretKeySpec(key, HMAC_SHA512);
 				sha512_HMAC.init(keySpec);
-				byte [] mac_data = sha512_HMAC.doFinal((baseKey+userSalt).getBytes("US-ASCII"));
+				byte [] mac_data = sha512_HMAC.doFinal((baseKey+userSalt).getBytes("UTF-16"));
 				StringBuilder sb = new StringBuilder();
 			    for (byte b : mac_data) {
 			        sb.append(String.format("%02X", b));
