@@ -15,9 +15,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import testUtils.TestProperties;
+import utils.InstallationException;
 import utils.ScoreboardStatus;
 
 /**
@@ -32,6 +34,25 @@ public class GetterTest
 	private static Locale locale = new Locale(lang);
 	private static String applicationRoot = new String();
 	private static final int totalNumberOfModulesInShepherd = 58;
+	
+	/**
+	 * Creates DB or Restores DB to Factory Defaults before running tests
+	 */
+	@BeforeClass
+	public static void resetDatabase() 
+	{
+		TestProperties.setTestPropertiesFileDirectory(log);
+		try 
+		{
+			TestProperties.executeSql(log);
+		} 
+		catch (InstallationException e) 
+		{
+			String message = new String("Could not create DB: " + e.toString());
+			log.fatal(message);
+			fail(message);
+		}
+	}
 	
 	/**
 	 * Searches for class based on class name. If nothing is found, the class is created and the new class Id is returned

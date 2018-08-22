@@ -9,16 +9,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import testUtils.TestProperties;
-import utils.Hash;
+import utils.InstallationException;
 import utils.ScoreboardStatus;
 
 public class SetterTest 
@@ -26,10 +25,23 @@ public class SetterTest
 	private static org.apache.log4j.Logger log = Logger.getLogger(SetterTest.class);
 	private static String applicationRoot = new String();
 
-	@Before
-	public void setUp()
+	/**
+	 * Creates DB or Restores DB to Factory Defaults before running tests
+	 */
+	@BeforeClass
+	public static void resetDatabase() 
 	{
 		TestProperties.setTestPropertiesFileDirectory(log);
+		try 
+		{
+			TestProperties.executeSql(log);
+		} 
+		catch (InstallationException e) 
+		{
+			String message = new String("Could not create DB: " + e.toString());
+			log.fatal(message);
+			fail(message);
+		}
 	}
 	
 	/**

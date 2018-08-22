@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -13,6 +14,7 @@ import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.GetterTest;
 import testUtils.TestProperties;
+import utils.InstallationException;
 
 public class LogoutTest
 {
@@ -22,10 +24,28 @@ public class LogoutTest
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
 	
+    /**
+	 * Creates DB or Restores DB to Factory Defaults before running tests
+	 */
+	@BeforeClass
+	public static void resetDatabase() 
+	{
+		TestProperties.setTestPropertiesFileDirectory(log);
+		try 
+		{
+			TestProperties.executeSql(log);
+		} 
+		catch (InstallationException e) 
+		{
+			String message = new String("Could not create DB: " + e.toString());
+			log.fatal(message);
+			fail(message);
+		}
+	}
+    
     @Before
 	public void setup() 
 	{
-		TestProperties.setTestPropertiesFileDirectory(log);
 		log.debug("Setting Up Blank Request and Response");
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();

@@ -3,18 +3,47 @@ package testUtils;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
+import dbProcs.Database;
 import dbProcs.Getter;
 import dbProcs.Setter;
 import servlets.Login;
+import utils.InstallationException;
 
 public class TestProperties
 {
+	public static void executeSql(org.apache.log4j.Logger log) throws InstallationException
+	{
+		try 
+		{
+			File file = new File(System.getProperty("user.dir")+"/src/main/resources/database/coreSchema.sql");
+			String data = FileUtils.readFileToString(file, Charset.defaultCharset() );
+			
+			Connection databaseConnection = Database.getDatabaseConnection(null, true);
+			Statement psProcToexecute = databaseConnection.createStatement();
+			psProcToexecute.executeUpdate(data);
+			
+			file = new File(System.getProperty("user.dir")+"/src/main/resources/database/moduleSchemas.sql");
+			data = FileUtils.readFileToString(file, Charset.defaultCharset() );
+			psProcToexecute = databaseConnection.createStatement();
+			psProcToexecute.executeUpdate(data);
+	
+		} 
+		catch (Exception e) 
+		{
+			throw new InstallationException(e);
+		}
+	}
+	
 	/**
 	 * Bit of a Hack to get JUnits to run inside of
 	 * @param log

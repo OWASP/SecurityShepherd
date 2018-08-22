@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -11,6 +12,7 @@ import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.Setter;
 import testUtils.TestProperties;
+import utils.InstallationException;
 
 public class OpenOrCloseByCategoryTest 
 {
@@ -19,6 +21,24 @@ public class OpenOrCloseByCategoryTest
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
+    
+    /**
+	 * Creates DB or Restores DB to Factory Defaults before running tests
+	 */
+	@BeforeClass
+	public static void resetDatabase() 
+	{
+		try 
+		{
+			TestProperties.executeSql(log);
+		} 
+		catch (InstallationException e) 
+		{
+			String message = new String("Could not create DB: " + e.toString());
+			log.fatal(message);
+			fail(message);
+		}
+	}
     
 	@Before
 	public void setUp()
