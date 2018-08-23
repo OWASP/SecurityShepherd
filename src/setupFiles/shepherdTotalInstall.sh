@@ -2,7 +2,7 @@ set -e
 
 shepherdServerXmlLocation=https://raw.githubusercontent.com/owasp/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleServer.xml
 shepherdWebXmlLocation=https://raw.githubusercontent.com/owasp/SecurityShepherd/master/SecurityShepherdCore/setupFiles/tomcatShepherdSampleWeb.xml
-shepherdManualPackLocation=http://sourceforge.net/projects/owaspshepherd/files/owaspSecurityShepherd_V3.0%20Manual%20Pack.zip/download
+shepherdManualPackLocation=https://github.com/OWASP/SecurityShepherd/releases/download/v3.0/owaspSecurityShepherd_V3.0.Manual.Pack.zip
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 1>&2
    exit 1
