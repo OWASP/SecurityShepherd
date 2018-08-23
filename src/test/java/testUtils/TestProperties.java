@@ -158,8 +158,8 @@ public class TestProperties
 			String user[] = Getter.authUser(applicationRoot, userName, userName);
 			if(user == null || user[0].isEmpty())
 			{
-				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
-				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName+"@test.com", false);
+				log.debug("User not found in DB. Adding user to DB");
+				Setter.userCreate(applicationRoot, classId, userName, userName, "player", userName+"@test.com", false);
 				user = Getter.authUser(applicationRoot, userName, userName);
 			}
 			if(user != null && !user[0].isEmpty())
@@ -198,7 +198,7 @@ public class TestProperties
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
-				Setter.userCreate(applicationRoot, null, userName, userName, "admin", userName+"@test.com", false);
+				Setter.userCreate(applicationRoot, classId, userName, userName, "admin", userName+"@test.com", false);
 				user = Getter.authUser(applicationRoot, userName, userName);
 			}
 			if(user != null && !user[0].isEmpty())
