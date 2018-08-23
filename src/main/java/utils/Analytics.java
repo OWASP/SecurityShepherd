@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
  * @author Mark Denihan
  *
  */
-public class Analytics 
+public class Analytics
 {
 
 	public static boolean googleAnalyticsOn = false;
@@ -21,8 +21,8 @@ public class Analytics
 		"ga('create', 'UA-51746570-1', 'securityshepherd.eu');\n" +
 		"ga('send', 'pageview');\n" +
 		"</script>";
-	public static String sourceForgeMobileVmLinkBlurb = new String(""
-			+ "To complete this challenge you'll need to use the <a href='http://bit.ly/mobileShepherdVm'>Security Shepherd Android Virtual Machine</a> that contains the app. ");
+	public static String mobileVmLinkBlurb = new String(""
+			+ "To complete this challenge you'll need to use the <a href='http://bit.ly/latestShepherdRelease'>Security Shepherd Android Virtual Machine</a> that contains the app. ");
 	public static String sponsorshipMessage(Locale locale)
 	{
 		//Get Language Bundle
@@ -36,7 +36,7 @@ public class Analytics
 			"<br/>" +
 			"<a href=\"http://bit.ly/manicode\"><img src=\"css/images/manicode-logo.png\" style=\"margin-top: 5px;\"></a>" +
 			"<br/><br/>" +
-			bundle.getString("sponsorship.message.2") +  
+			bundle.getString("sponsorship.message.2") +
 			"<br/><a href=\"http://securityresearch.ie/\"><img src=\"https://www.owasp.org/images/thumb/2/24/Fontlogo.png/300px-Fontlogo.png\"/></a></p>");
 	}
 }
