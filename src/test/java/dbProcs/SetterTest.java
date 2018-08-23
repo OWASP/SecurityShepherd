@@ -998,4 +998,116 @@ public class SetterTest
 			fail("Could not Complete testUpdateUserRole");
 		}
 	}
+	
+	@Test
+	public void testMutipleClassMedals() 
+	{
+		String moduleId = "853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5"; //CSRF7
+		String userName = new String("classUserOne");
+		String otherUserName = new String("difClassUserTwo");
+		try
+		{
+			String classOne = TestProperties.findCreateClassId(log, "classA2737", applicationRoot);
+			String classTwo = TestProperties.findCreateClassId(log, "classB2737", applicationRoot);
+			log.debug("classOne: " + classOne);
+			log.debug("classTwo: " + classTwo);
+			if(TestProperties.verifyTestUser(log, applicationRoot, userName, userName, classOne) && TestProperties.verifyTestUser(log, applicationRoot, otherUserName, otherUserName, classTwo))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
+				if(!Setter.openAllModules(applicationRoot))
+				{
+					fail("Could not mark all modules as open");
+				}
+				else
+				{
+					//Simulate user Opening Level
+					if(Getter.getModuleAddress(applicationRoot, moduleId, userId).isEmpty() || Getter.getModuleAddress(applicationRoot, moduleId, otherUserId).isEmpty())
+					{
+						fail("Could not Simulate Opening Level for Users");
+					} 
+					else
+					{
+						String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, moduleId, userId, "Feedback is Disabled", 1, 1, 1);
+						if (markLevelCompleteTest != null)
+						{					
+							String markLevelCompleteTestOtherUser = Setter.updatePlayerResult(applicationRoot, moduleId, otherUserId, "Feedback is Disabled", 1, 1, 1);
+							//Do both Users have a gold medal?
+							if (markLevelCompleteTestOtherUser != null)
+							{					
+								ScoreboardStatus.setScoreboeardOpen();
+								String scoreboardData = Getter.getJsonScore(applicationRoot, "");
+								if(scoreboardData.isEmpty())
+								{
+									fail("Could not detect user in scoreboard before bad submission test");
+								}
+								else
+								{
+									JSONArray scoreboardJson = (JSONArray)JSONValue.parse(scoreboardData);
+									//Loop through array to find Our first user
+									boolean goldMedal = false;
+									for(int i = 0; i < scoreboardJson.size(); i++)
+									{
+										//log.debug("Looping through Array " + i);
+										JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
+										if(scoreRowJson.get("username").toString().compareTo(userName) == 0)
+										{
+											log.debug("Found user with goldMedalCount: " + scoreRowJson.get("goldMedalCount"));
+											goldMedal = Integer.parseInt(scoreRowJson.get("goldMedalCount").toString()) > 0;
+											break;
+										}
+									}
+									if(!goldMedal)
+									{
+										String message = userName + " should have a gold medal and does not. They were first in their class to complete challenge " + moduleId;
+										log.fatal(message);
+										fail(message);
+									}
+									else
+									{
+										//Search for the other user
+										goldMedal = false;
+										for(int i = 0; i < scoreboardJson.size(); i++)
+										{
+											//log.debug("Looping through Array " + i);
+											JSONObject scoreRowJson = (JSONObject)scoreboardJson.get(i);
+											if(scoreRowJson.get("username").toString().compareTo(otherUserName) == 0)
+											{
+												log.debug("Found user with goldMedalCount: " + scoreRowJson.get("goldMedalCount"));
+												goldMedal = Integer.parseInt(scoreRowJson.get("goldMedalCount").toString()) > 0;
+												break;
+											}
+										}
+										if(!goldMedal)
+										{
+											String message = otherUserName + " should have a gold medal and does not. They were first in their class to complete challenge " + moduleId;
+											log.fatal(message);
+											fail(message);
+										}
+									}
+								}
+							}
+							else
+							{
+								fail("Could not Mark First level as complete for Second User");
+							}
+						}
+						else
+						{
+							fail("Could not Mark First level as complete");
+						}
+					}
+				}
+			}
+			else
+			{
+				fail("Could not Create/Verify User");
+			}
+		}
+		catch (Exception e)
+		{
+			log.fatal("Could not complete badSubmission Test: " + e.toString());
+			fail("Could not complete badSubmission Test");
+		}
+	}
 }
