@@ -157,29 +157,29 @@ SELECT "Creating Procedures" FROM DUAL;
 -- procedure authUser
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`authUser` (IN theName VARCHAR(32), IN theHash VARCHAR(512))
 BEGIN
 DECLARE theDate DATETIME;
 COMMIT;
 SELECT NOW() FROM DUAL INTO theDate;
 SELECT userId, userName, userRole, badLoginCount, tempPassword, classId FROM `users`
-    WHERE userName = theName 
+    WHERE userName = theName
     AND userPass = SHA2(theHash, 512)
     AND suspendedUntil < theDate ;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure userLock
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userLock` (theName VARCHAR(32))
 BEGIN
 DECLARE theDate DATETIME;
@@ -189,12 +189,12 @@ DECLARE theCount INT;
 COMMIT;
 SELECT NOW() FROM DUAL INTO theDate;
 -- Get the badLoginCount from users if they are not suspended already or account has attempted a login within the last 10 mins
-SELECT badLoginCount FROM `users` 
+SELECT badLoginCount FROM `users`
     WHERE userName = theName
     AND suspendedUntil < (theDate - '0000-00-00 00:10:00')
     INTO theCount;
-    
-SELECT suspendedUntil FROM `users` 
+
+SELECT suspendedUntil FROM `users`
     WHERE userName = theName
     AND suspendedUntil < (theDate - '0000-00-00 00:10:00')
     INTO untilDate;
@@ -213,9 +213,9 @@ IF (untilDate < theDate) THEN
             WHERE userName = theName
             AND suspendedUntil < (theDate - '0000-00-00 00:10:00')
             INTO theCount;
-            
+
         -- IF a user was counted then they are not suspended, but have attemped a bad login within 10 mins of their last
-        IF (theCount > 0) THEN 
+        IF (theCount > 0) THEN
             UPDATE `users` SET
                 badLoginCount = (badLoginCount + 1),
                 suspendedUntil = theDate
@@ -233,16 +233,16 @@ IF (untilDate < theDate) THEN
 END IF;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure suspendUser
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`suspendUser` (theId VARCHAR(64), theMins INT)
 BEGIN
 DECLARE theDate DATETIME;
@@ -254,16 +254,16 @@ UPDATE `users` SET
 COMMIT;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure unSuspendUser
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`unSuspendUser` (theId VARCHAR(64))
 BEGIN
 DECLARE theDate DATETIME;
@@ -275,16 +275,16 @@ UPDATE `users` SET
 COMMIT;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure userFind
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userFind` (IN theName VARCHAR(32))
 BEGIN
 COMMIT;
@@ -292,15 +292,15 @@ SELECT userName, suspendedUntil FROM `users`
     WHERE userName = theName;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure playerCount
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`playerCount` ()
 BEGIN
     COMMIT;
@@ -309,19 +309,19 @@ BEGIN
 END
 
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userCreate
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userCreate` (IN theClassId VARCHAR(64), IN theUserName VARCHAR(32), IN theUserPass VARCHAR(512), IN theUserRole VARCHAR(32), IN theUserAddress VARCHAR(128), tempPass BOOLEAN)
 BEGIN
     DECLARE theId VARCHAR(64);
-    DECLARE theClassCount INT;    
+    DECLARE theClassCount INT;
     DECLARE theDate DATETIME;
 
     COMMIT;
@@ -336,7 +336,7 @@ BEGIN
                 SELECT null FROM DUAL INTO theClassId;
             END IF;
         END IF;
-                
+
         -- Increment sequence for users table
         UPDATE sequence SET
             currVal = currVal + 1
@@ -345,7 +345,7 @@ BEGIN
         SELECT SHA(CONCAT(currVal, tableName, theDate)) FROM sequence
             WHERE tableName = 'users'
             INTO theId;
-        
+
         -- Insert the values, badLoginCount and suspendedUntil Values will use the defaults defined by the table
         INSERT INTO users (
                 userId,
@@ -371,15 +371,15 @@ BEGIN
     END IF;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userBadLoginReset
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userBadLoginReset` (IN theUserId VARCHAR(45))
 BEGIN
     COMMIT;
@@ -389,15 +389,15 @@ BEGIN
     COMMIT;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userPasswordChange
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userPasswordChange` (IN theUserName VARCHAR(32), IN currentPassword VARCHAR(512), IN newPassword VARCHAR(512))
 BEGIN
 DECLARE theDate DATETIME;
@@ -412,15 +412,15 @@ UPDATE users SET
 COMMIT;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userPasswordChangeAdmin
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userPasswordChangeAdmin` (IN theUserId VARCHAR(64), IN newPassword VARCHAR(512))
 BEGIN
 DECLARE theDate DATETIME;
@@ -433,15 +433,15 @@ UPDATE users SET
 COMMIT;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure classCreate
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`classCreate` (IN theClassName VARCHAR(32), IN theClassYear VARCHAR(5))
 BEGIN
     DECLARE theId VARCHAR(64);
@@ -456,52 +456,58 @@ BEGIN
     INSERT INTO class VALUES (theId, theClassName, theClassYear);
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure classCount
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`classCount` ()
 BEGIN
     SELECT count(ClassId) FROM class;
-END;
+END
 
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure classesGetData
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`classesGetData` ()
 BEGIN
     SELECT classId, className, classYear FROM class;
-END;
+END
 
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure classFind
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`classFind` (IN theClassId VARCHAR(64))
 BEGIN
     SELECT className, classYear FROM class
         WHERE classId = theClassId;
-END;
+END
 
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure playersByClass
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`playersByClass` (IN theClassId VARCHAR(64))
 BEGIN
     COMMIT;
@@ -511,15 +517,15 @@ BEGIN
         ORDER BY userName;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure playerUpdateClass
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`playerUpdateClass` (IN theUserId VARCHAR(64), IN theClassId VARCHAR(64))
 BEGIN
 COMMIT;
@@ -534,30 +540,32 @@ SELECT userName FROM users
     AND userRole = 'player';
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure playerFindById
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`playerFindById` (IN playerId VARCHAR(64))
 BEGIN
 COMMIT;
 SELECT userName FROM users
     WHERE userId = playerId
     AND userRole = 'player';
-END;
+END
 
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure playersWithoutClass
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`playersWithoutClass` ()
 BEGIN
     COMMIT;
@@ -567,15 +575,15 @@ BEGIN
         ORDER BY userName;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure playerUpdateClassToNull
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`playerUpdateClassToNull` (IN theUserId VARCHAR(45))
 BEGIN
 COMMIT;
@@ -589,15 +597,15 @@ SELECT userName FROM users
     AND classId IS NULL
     AND userRole = 'player';
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userUpdateRole
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userUpdateRole` (IN theUserId VARCHAR(64), IN theNewRole VARCHAR(32))
 BEGIN
 COMMIT;
@@ -608,15 +616,15 @@ COMMIT;
 SELECT userName FROM users
     WHERE userId = theUserId;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleCreate
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleCreate` (IN theModuleName VARCHAR(64), theModuleType VARCHAR(16), theModuleCategory VARCHAR(64), isHardcodedKey BOOLEAN, theModuleSolution VARCHAR(256))
 BEGIN
 DECLARE theId VARCHAR(64);
@@ -661,47 +669,47 @@ END IF;
 
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleAllInfo
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleAllInfo` (IN theType VARCHAR(64), IN theUserId VARCHAR(64))
 BEGIN
 (SELECT moduleNameLangPointer, moduleCategoryLangPointer, moduleId, finishTime
 FROM modules LEFT JOIN results USING (moduleId) WHERE userId = theUserId AND moduleType = theType AND moduleStatus = 'open') UNION (SELECT moduleNameLangPointer, moduleCategoryLangPointer, moduleId, null FROM modules WHERE moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId AND moduleType = theType AND moduleStatus = 'open') AND moduleType = theType  AND moduleStatus = 'open') ORDER BY moduleCategoryLangPointer, moduleNameLangPointer;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure lessonInfo
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`lessonInfo` (IN theUserId VARCHAR(64))
 BEGIN
 (SELECT moduleNameLangPointer, moduleCategory, moduleId, finishTime
 FROM modules LEFT JOIN results USING (moduleId) WHERE userId = theUserId AND moduleType = 'lesson' AND moduleStatus = 'open') UNION (SELECT moduleNameLangPointer, moduleCategory, moduleId, null FROM modules WHERE moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId AND moduleType = 'lesson' AND moduleStatus = 'open') AND moduleType = 'lesson'  AND moduleStatus = 'open') ORDER BY moduleNameLangPointer, moduleCategory, moduleNameLangPointer;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure moduleGetResult
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleGetResult` (IN theModuleId VARCHAR(64))
 BEGIN
 COMMIT;
@@ -710,16 +718,16 @@ SELECT moduleName, moduleResult FROM modules
     AND moduleResult IS NOT NULL;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure moduleGetNameLocale
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleGetNameLocale` (IN theModuleId VARCHAR(64))
 BEGIN
 COMMIT;
@@ -727,15 +735,15 @@ SELECT moduleNameLangPointer, moduleName FROM modules
     WHERE moduleId = theModuleId;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userUpdateResult
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userUpdateResult` (IN theModuleId VARCHAR(64), IN theUserId VARCHAR(64), IN theBefore INT, IN theAfter INT, IN theDifficulty INT, IN theAdditionalInfo LONGTEXT)
 BEGIN
 DECLARE theDate TIMESTAMP;
@@ -865,16 +873,18 @@ SELECT moduleName FROM modules
     AND finishTime IS NOT NULL
     AND userId = theUserId
     AND moduleId = theModuleId;
-END ;
+END
 
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure moduleGetHash
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleGetHash` (IN theModuleId VARCHAR(64), IN theUserId VARCHAR(64))
 BEGIN
 DECLARE theDate DATETIME;
@@ -888,7 +898,7 @@ SELECT COUNT(*) FROM results
     AND startTime IS NOT NULL
     INTO tempInt;
 IF(tempInt = 0) THEN
-    INSERT INTO results 
+    INSERT INTO results
         (moduleId, userId, startTime)
         VALUES
         (theModuleId, theUserId, theDate);
@@ -898,15 +908,15 @@ SELECT moduleHash, moduleCategory, moduleType FROM modules
     WHERE moduleId = theModuleId AND moduleStatus = 'open';
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleGetResultFromHash
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleGetResultFromHash` (IN theHash VARCHAR(256))
 BEGIN
 COMMIT;
@@ -914,15 +924,15 @@ SELECT moduleResult FROM modules
     WHERE moduleHash = theHash;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure resultMessageByClass
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`resultMessageByClass` (IN theClassId VARCHAR(64), IN theModuleId VARCHAR(64))
 BEGIN
 COMMIT;
@@ -933,15 +943,15 @@ SELECT userName, resultSubmission FROM results
     AND moduleId = theModuleId;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure resultMessageSet
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`resultMessageSet` (IN theMessage VARCHAR(128), IN theUserId VARCHAR(64), IN theModuleId VARCHAR(64))
 BEGIN
 COMMIT;
@@ -952,15 +962,15 @@ UPDATE results SET
 COMMIT;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure resultMessagePlus
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`resultMessagePlus` (IN theModuleId VARCHAR(64), IN theUserId2 VARCHAR(64))
 BEGIN
 UPDATE results SET
@@ -970,16 +980,16 @@ UPDATE results SET
 COMMIT;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure resultMessagePlus
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`csrfLevelComplete` (IN theModuleId VARCHAR(64), IN theUserId2 VARCHAR(64))
 BEGIN
 	DECLARE temp INT;
@@ -989,16 +999,16 @@ SELECT csrfCount FROM results
     AND moduleId = theModuleId;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure moduleGetIdFromHash
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleGetIdFromHash` (IN theHash VARCHAR(256))
 BEGIN
 COMMIT;
@@ -1006,63 +1016,63 @@ SELECT moduleId FROM modules
     WHERE moduleHash = theHash;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userGetNameById
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userGetNameById` (IN theUserId VARCHAR(64))
 BEGIN
 COMMIT;
 SELECT userName FROM users
     WHERE userId = theUserId;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure userGetIdByName
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userGetIdByName` (IN theUserName VARCHAR(64))
 BEGIN
 COMMIT;
 SELECT userId FROM users
     WHERE userName = theUserName;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure userClassId
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userClassId` (IN theUserName VARCHAR(64))
 BEGIN
 COMMIT;
 SELECT classId FROM users
     WHERE userName = theUserName;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure userBadSubmission
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userBadSubmission` (IN theUserId VARCHAR(64))
 BEGIN
 UPDATE users SET
@@ -1073,21 +1083,21 @@ UPDATE users SET
 	userScore = userScore - userScore/10
 	WHERE userId = theUserId AND badSubmissionCount > 40 AND userScore > 5;
 COMMIT;
-UPDATE users SET 
+UPDATE users SET
 	userScore = userScore - 10
 	WHERE userId = theUserId AND badSubmissionCount > 40 AND userScore <= 5;
 COMMIT;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure resetUserBadSubmission
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`resetUserBadSubmission` (IN theUserId VARCHAR(64))
 BEGIN
 UPDATE users SET
@@ -1095,16 +1105,16 @@ UPDATE users SET
     WHERE userId = theUserId;
 COMMIT;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure moduleComplete
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleComplete` (IN theModuleId VARCHAR(64), IN theUserId VARCHAR(64))
 BEGIN
 DECLARE theDate DATETIME;
@@ -1119,15 +1129,15 @@ UPDATE results SET
 COMMIT;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure cheatSheetCreate
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`cheatSheetCreate` (IN theModule VARCHAR(64), IN theSheet LONGTEXT)
 BEGIN
 DECLARE theDate DATETIME;
@@ -1138,11 +1148,11 @@ DECLARE theId VARCHAR(64);
         WHERE tableName = 'cheatSheet';
     COMMIT;
 	SELECT NOW() FROM DUAL INTO theDate;
-	
+
     SELECT SHA(CONCAT(currVal, tableName, theDate)) FROM `core`.`sequence`
         WHERE tableName = 'cheatSheet'
         INTO theId;
-    
+
     INSERT INTO `core`.`cheatsheet`
         (cheatSheetId, moduleId, createDate, solution)
         VALUES
@@ -1150,30 +1160,30 @@ DECLARE theId VARCHAR(64);
     COMMIT;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleGetAll
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleGetAll` ()
 BEGIN
 COMMIT;
 SELECT moduleId, moduleName, moduleType, moduleCategory FROM modules
     ORDER BY moduleType, moduleCategory, moduleName;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure cheatSheetGetSolution
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`cheatSheetGetSolution` (IN theModuleId VARCHAR(64))
 BEGIN
 COMMIT;
@@ -1182,15 +1192,15 @@ SELECT moduleName, solution FROM modules
     WHERE moduleId = theModuleID
     ORDER BY createDate DESC;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleGetHashById
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleGetHashById` (IN theModuleId VARCHAR(64))
 BEGIN
 COMMIT;
@@ -1198,15 +1208,15 @@ SELECT moduleHash FROM modules
     WHERE moduleId = theModuleId;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userCheckResult
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userCheckResult` (IN theModuleId VARCHAR(64), IN theUserId VARCHAR(64))
 BEGIN
 COMMIT;
@@ -1221,100 +1231,100 @@ SELECT moduleName FROM results
 END
 
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleIncrementalInfo
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleIncrementalInfo` (IN theUserId VARCHAR(64))
 BEGIN
 (SELECT moduleNameLangPointer, moduleCategory, moduleId, finishTime, incrementalRank FROM modules LEFT JOIN results USING (moduleId) WHERE userId = theUserId AND moduleStatus = 'open') UNION (SELECT moduleNameLangPointer, moduleCategory, moduleId, null, incrementalRank FROM modules WHERE moduleStatus = 'open' AND moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId)) ORDER BY incrementalRank;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleFeedback
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleFeedback` (IN theModuleId VARCHAR(64))
 BEGIN
 SELECT userName, TIMESTAMPDIFF(MINUTE, finishTime, startTime)*(-1), difficulty, knowledgeBefore, knowledgeAfter, resultSubmission
-	FROM modules 
+	FROM modules
 	LEFT JOIN results USING (moduleId)
   LEFT JOIN users USING (userId)
   WHERE moduleId = theModuleId;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userProgress
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userProgress` (IN theClassId VARCHAR(64))
 BEGIN
     COMMIT;
-SELECT userName, count(finishTime), userScore FROM users JOIN results USING (userId) WHERE finishTime IS NOT NULL 
+SELECT userName, count(finishTime), userScore FROM users JOIN results USING (userId) WHERE finishTime IS NOT NULL
 AND classId = theClassId
 GROUP BY userName UNION SELECT userName, 0, userScore FROM users WHERE classId = theClassId AND userId NOT IN (SELECT userId FROM users JOIN results USING (userId) WHERE classId = theClassId AND finishTime IS NOT NULL GROUP BY userName) ORDER BY userScore DESC;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure classScoreboard
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`classScoreboard` (IN theClassId VARCHAR(64))
 BEGIN
     COMMIT;
-SELECT userId, userName, userScore, goldMedalCount, silverMedalCount, bronzeMedalCount FROM users 
+SELECT userId, userName, userScore, goldMedalCount, silverMedalCount, bronzeMedalCount FROM users
 	WHERE classId = theClassId AND userRole = 'player' AND userScore > 0
 	ORDER BY userScore DESC, goldMedalCount DESC, silverMedalCount DESC, bronzeMedalCount DESC, userId ASC;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure totalScoreboard
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`totalScoreboard` ()
 BEGIN
     COMMIT;
-SELECT userId, userName, userScore, goldMedalCount, silverMedalCount, bronzeMedalCount FROM users 
+SELECT userId, userName, userScore, goldMedalCount, silverMedalCount, bronzeMedalCount FROM users
 	WHERE userRole = 'player' AND userScore > 0
 	ORDER BY userScore DESC, goldMedalCount DESC, silverMedalCount DESC, bronzeMedalCount DESC, userId ASC;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure userStats
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userStats` (IN theUserName VARCHAR(32))
 BEGIN
 DECLARE temp INT;
@@ -1327,15 +1337,15 @@ SELECT userName, sum(TIMESTAMPDIFF(MINUTE, finishTime, startTime)*(-1)) AS "Time
     GROUP BY userName;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure userStatsDetailed
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`userStatsDetailed` (IN theUserName VARCHAR(32))
 BEGIN
 DECLARE temp INT;
@@ -1348,61 +1358,61 @@ SELECT userName, moduleName, TIMESTAMPDIFF(MINUTE, finishTime, startTime)*(-1) A
     ORDER BY incrementalRank;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleOpenInfo
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleOpenInfo` (IN theUserId VARCHAR(64))
 BEGIN
-(SELECT moduleName, moduleCategory, moduleId, finishTime FROM modules LEFT JOIN results USING (moduleId) 
+(SELECT moduleName, moduleCategory, moduleId, finishTime FROM modules LEFT JOIN results USING (moduleId)
 WHERE userId = theUserId AND moduleStatus = 'open') UNION (SELECT moduleName, moduleCategory, moduleId, null FROM modules WHERE moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId AND moduleStatus = 'open') AND moduleStatus = 'open') ORDER BY moduleCategory, moduleName;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleClosednfo
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleClosednfo` (IN theUserId VARCHAR(64))
 BEGIN
 (SELECT moduleName, moduleCategory, moduleId, finishTime
 FROM modules LEFT JOIN results USING (moduleId) WHERE userId = theUserId AND moduleStatus = 'closed') UNION (SELECT moduleName, moduleCategory, moduleId, null FROM modules WHERE moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId AND moduleStatus = 'closed') AND moduleStatus = 'closed') ORDER BY moduleCategory, moduleName;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure moduleTournamentOpenInfo
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleTournamentOpenInfo` (IN theUserId VARCHAR(64))
 BEGIN
-(SELECT moduleNameLangPointer, moduleCategory, moduleId, finishTime, incrementalRank, scoreValue FROM modules LEFT JOIN results USING (moduleId) 
+(SELECT moduleNameLangPointer, moduleCategory, moduleId, finishTime, incrementalRank, scoreValue FROM modules LEFT JOIN results USING (moduleId)
 WHERE userId = theUserId AND moduleStatus = 'open') UNION (SELECT moduleNameLangPointer, moduleCategory, moduleId, null, incrementalRank, scoreValue FROM modules WHERE moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId AND moduleStatus = 'open') AND moduleStatus = 'open') ORDER BY incrementalRank, scoreValue, moduleNameLangPointer;
 END
 
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 -- -----------------------------------------------------
 -- procedure moduleSetStatus
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleSetStatus` (IN theModuleId VARCHAR(64), IN theStatus VARCHAR(16))
 BEGIN
 UPDATE modules SET
@@ -1410,23 +1420,23 @@ UPDATE modules SET
     WHERE moduleId = theModuleId;
 COMMIT;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 -- -----------------------------------------------------
 -- procedure moduleAllStatus
 -- -----------------------------------------------------
 
--- DELIMITER ;
 USE `core`;
+-- DELIMITER $$
 CREATE PROCEDURE `core`.`moduleAllStatus` ()
 BEGIN
 SELECT moduleId, moduleName, moduleStatus
     FROM modules;
 END
-;
-
+-- $$
 -- DELIMITER ;
+;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -1567,8 +1577,8 @@ INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solu
 CALL cheatSheetCreate('a84bbf8737a9ca749d81d5226fc87e0c828138ee', 'a84bbf8737a9ca749d81d5226fc87e0c828138ee.solution');
 CALL cheatSheetCreate('e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998', 'e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998.solution');
 CALL cheatSheetCreate('ad332a32a6af1f005f9c8d1e98db264eb2ae5dfe', 'ad332a32a6af1f005f9c8d1e98db264eb2ae5dfe.solution');
-CALL cheatSheetCreate('182f519ef2add981c77a584380f41875edc65a56', '182f519ef2add981c77a584380f41875edc65a56.solution'); 
-CALL cheatSheetCreate('fccf8e4d5372ee5a73af5f862dc810545d19b176', 'fccf8e4d5372ee5a73af5f862dc810545d19b176.solution'); 
+CALL cheatSheetCreate('182f519ef2add981c77a584380f41875edc65a56', '182f519ef2add981c77a584380f41875edc65a56.solution');
+CALL cheatSheetCreate('fccf8e4d5372ee5a73af5f862dc810545d19b176', 'fccf8e4d5372ee5a73af5f862dc810545d19b176.solution');
 CALL cheatSheetCreate('0a37cb9296ff3763f7f3a45ff313bce47afa9384', '0a37cb9296ff3763f7f3a45ff313bce47afa9384.solution');
 CALL cheatSheetCreate('04a5bd8656fdeceac26e21ef6b04b90eaafbd7d5', '04a5bd8656fdeceac26e21ef6b04b90eaafbd7d5.solution');
 CALL cheatSheetCreate('853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5', '853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5.solution');
@@ -1629,7 +1639,7 @@ call userCreate(null, 'admin', 'password', 'admin', 'admin@securityShepherd.org'
 SELECT "Creating BackUp Schema" FROM DUAL;
 
 DROP DATABASE IF EXISTS backup;
-CREATE DATABASE backup; 
+CREATE DATABASE backup;
 
 SET GLOBAL event_scheduler = ON;
 SET @@global.event_scheduler = ON;
@@ -1772,6 +1782,8 @@ Insert into `backup`.`results` (Select * from `core`.`results`);
 Insert into `backup`.`cheatsheet` (Select * from `core`.`cheatsheet`);
 Insert into `backup`.`sequence` (Select * from `core`.`sequence`);
 
-END ;
+END
 
+ -- $$
 -- DELIMITER ;
+;
