@@ -1,0 +1,20 @@
+version: '2'
+services:
+  db:
+    container_name: "secshep_mysql"
+    build: ./docker/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=CowSaysMoo
+  mongo:
+    container_name: "secshep_mongo"
+    build: ./docker/mongo
+  web:
+    container_name: "secshep_tomcat"
+    build: .
+    volumes:
+      - ./target:/usr/local/tomcat/webapps
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+      - mongo
