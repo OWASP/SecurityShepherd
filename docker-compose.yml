@@ -21,8 +21,6 @@ services:
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASS: ${MYSQL_PASS}
         MYSQL_URI: jdbc:mysql://${CONTAINER_MYSQL}:3306
-    volumes:
-      - ./target:/usr/local/tomcat/webapps
     ports:
       - 8080:8080
     depends_on:
