@@ -1,16 +1,26 @@
 version: '2'
 services:
   db:
-    container_name: "secshep_mysql"
-    build: ./docker/mysql
+    container_name: ${CONTAINER_MYSQL}
+    env_file:
+      - .env
+    build:
+      context: ./docker/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=CowSaysMoo
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASS}
   mongo:
-    container_name: "secshep_mongo"
+    container_name: ${CONTAINER_MONGO}
     build: ./docker/mongo
   web:
-    container_name: "secshep_tomcat"
-    build: .
+    container_name: ${CONTAINER_TOMCAT}
+    env_file:
+      - .env
+    build:
+      context: .
+      args:
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASS: ${MYSQL_PASS}
+        MYSQL_URI: jdbc:mysql://${CONTAINER_MYSQL}:3306
     volumes:
       - ./target:/usr/local/tomcat/webapps
     ports:
