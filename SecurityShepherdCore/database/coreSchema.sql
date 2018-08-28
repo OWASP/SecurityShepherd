@@ -92,7 +92,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`results` (
   CONSTRAINT `fk_Results_users1`
     FOREIGN KEY (`userId` )
     REFERENCES `core`.`users` (`userId` )
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Results_Modules1`
     FOREIGN KEY (`moduleId` )
@@ -1657,7 +1657,7 @@ CREATE  TABLE IF NOT EXISTS `backup`.`results` (
   CONSTRAINT `fk_Results_users1`
     FOREIGN KEY (`userId` )
     REFERENCES `backup`.`users` (`userId` )
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Results_Modules1`
     FOREIGN KEY (`moduleId` )

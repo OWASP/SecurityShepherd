@@ -150,6 +150,7 @@ if (request.getSession() != null)
 										<a id="userManagementList" href="javascript:;"><fmt:message key="index.link.admin.userMange" /></a>
 										<ul id="theUserManagementList" style="display: none;">
 											<li><a id="addPlayersLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.addPlayer" /></a></li>
+											<li><a id="deletePlayersLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.deletePlayers" /></a></li>
 											<li><a id="updatePlayerScoreLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.addPoints" /></a></li>
 											<li><a id="assignPlayersLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.assignPlayer" /></a></li>
 											<li><a id="createNewClassLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.createClass" /></a></li>
@@ -360,6 +361,20 @@ if (request.getSession() != null)
 				$("#submitResult").slideUp("fast", function(){
 					$("#contentDiv").hide("fast", function(){
 						$("#contentDiv").load("admin/userManagement/addPlayers.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});
+			
+			$("#deletePlayersLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/deletePlayers.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 						  if (status == "error") {
 							var msg = "<fmt:message key="generic.text.sorryError" />: ";
 							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
