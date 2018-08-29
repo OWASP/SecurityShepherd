@@ -1,8 +1,8 @@
 FROM tomcat:alpine
 
-ENV DB_DRIVER org.gjt.mm.mysql.Driver
-ENV DB_SCHEMA core
-ENV PROPS_DIR /usr/local/tomcat/conf/database.properties
+ARG DB_DRIVER=org.gjt.mm.mysql.Driver
+ARG DB_SCHEMA=core
+ARG PROPS_DIR=/usr/local/tomcat/conf/database.properties
 
 ARG MYSQL_USER
 ARG MYSQL_PASS
@@ -13,4 +13,4 @@ RUN printf "databaseConnectionURL=$MYSQL_URI/\nDriverType=$DB_DRIVER\ndatabaseSc
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 COPY target/owaspSecurityShepherd.war /usr/local/tomcat/webapps/ROOT.war
 
-RUN [ "keytool",  "-genkey", "-alias", "tomcat", "-keyalg", "RSA", "-keystore", "$TLS_KEYSTORE_FILE", "-dname", "cn=OwaspShepherd, ou=Security Shepherd, o=OWASP, L=Baile Átha Cliath, ST=Laighin, C=IE", "-storepass", "$TLS_KEYSTORE_PASS", "-keypass", "$TLS_KEYSTORE_PASS", "-deststoretype", "pkcs12" ]
+RUN [ "keytool", "-genkey", "-alias", "tomcat", "-keyalg", "RSA", "-keystore", "$TLS_KEYSTORE_FILE", "-dname", "cn=OwaspShepherd, ou=Security Shepherd, o=OWASP, L=Baile Átha Cliath, ST=Laighin, C=IE", "-storepass", "$TLS_KEYSTORE_PASS", "-keypass", "$TLS_KEY_PASS", "-deststoretype", "pkcs12" ]

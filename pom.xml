@@ -183,6 +183,36 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<echo>ANT TASK - copying files....</echo>
+								<copy todir="${basedir}/docker/mysql" overwrite="true" flatten="true">
+									<fileset dir="${basedir}/src/main/resources/database" includes="*.sql" >
+										<include name="*.sql" />
+									</fileset>
+								</copy>
+
+								<copy todir="${basedir}/docker/mongo" overwrite="true" flatten="true">
+									<fileset dir="${basedir}/src/database" includes="*.js" >
+										<include name="*.js" />
+									</fileset>
+								</copy>
+
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>
