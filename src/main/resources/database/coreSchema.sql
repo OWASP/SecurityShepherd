@@ -1647,7 +1647,7 @@ SET GLOBAL event_scheduler = 1;
 SET @@global.event_scheduler = 1;
 
 USE core;
--- DELIMITER ;
+-- DELIMITER $$
 
 drop event IF EXISTS update_status;
 
