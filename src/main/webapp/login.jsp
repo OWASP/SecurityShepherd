@@ -110,9 +110,9 @@ if(ses.getAttribute("loginFailed") != null)
 					<div id="toolsTable" style="display: none;">
 					<p><fmt:message key="login.text.download_proxy" />;</p>
 					<table>
-						<tr><td align="center"><a href="http://bit.ly/zapWindows"><fmt:message key="login.link.zap_win" /></a></td></tr>
-						<tr><td align="center"><a href="http://bit.ly/zapLinux"><fmt:message key="login.link.zap_lin" /></a></td></tr>
-						<tr><td align="center"><a href="http://bit.ly/zapForMac"><fmt:message key="login.link.zap_mac" /></a></td></tr>
+						<tr><td align="center"><a href="https://github.com/zaproxy/zaproxy/wiki/Downloads"><fmt:message key="login.link.zap_win" /></a></td></tr>
+						<tr><td align="center"><a href="https://github.com/zaproxy/zaproxy/wiki/Downloads"><fmt:message key="login.link.zap_lin" /></a></td></tr>
+						<tr><td align="center"><a href="https://github.com/zaproxy/zaproxy/wiki/Downloads"><fmt:message key="login.link.zap_mac" /></a></td></tr>
 					</table>
 					</div>
 					<br><a id="showAbout" href="javascript:;"><fmt:message key="generic.text.aboutSecShep" /></a>
