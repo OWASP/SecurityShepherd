@@ -184,27 +184,44 @@
 				</executions>
 			</plugin>
 			<plugin>
+                <!-- Copy the SQL scripts and modify them so they can be run from mysql -->
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.8</version>
 				<executions>
 					<execution>
-						<id>copy</id>
+						<id>copy-database</id>
 						<phase>package</phase>
 						<configuration>
 							<target>
-								<echo>ANT TASK - copying files....</echo>
+								<echo>ANT TASK - Copying database files and modifying for use with mysql</echo>
 								<copy todir="${basedir}/docker/mysql" overwrite="true" flatten="true">
 									<fileset dir="${basedir}/src/main/resources/database" includes="*.sql" >
 										<include name="*.sql" />
 									</fileset>
 								</copy>
-
 								<copy todir="${basedir}/docker/mongo" overwrite="true" flatten="true">
 									<fileset dir="${basedir}/src/database" includes="*.js" >
 										<include name="*.js" />
 									</fileset>
 								</copy>
-
+								<exec executable="sed">
+									<arg value="-i" />
+									<arg value="s/-- DELIMITER \$\$/DELIMITER \$\$/g" />
+									<arg value="${basedir}/docker/mysql/coreSchema.sql" />
+                                    <arg value="${basedir}/docker/mysql/moduleSchemas.sql" />
+								</exec>
+								<exec executable="sed">
+									<arg value="-i" />
+									<arg value="s/-- \$\$/\$\$/g" />
+									<arg value="${basedir}/docker/mysql/coreSchema.sql" />
+                                    <arg value="${basedir}/docker/mysql/moduleSchemas.sql" />
+								</exec>
+								<exec executable="sed">
+									<arg value="-i" />
+									<arg value="s/-- DELIMITER \;/DELIMITER \;/g" />
+									<arg value="${basedir}/docker/mysql/coreSchema.sql" />
+                                    <arg value="${basedir}/docker/mysql/moduleSchemas.sql" />
+								</exec>
 							</target>
 						</configuration>
 						<goals>

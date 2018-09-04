@@ -1,18 +1,11 @@
 FROM mysql:5.5
 
-ARG MYSQL_ROOT_PASSWORD
+ARG MYSQL_ROOT_PASSWORD=$MYSQL_PASS
 
 COPY coreSchema.sql /docker-entrypoint-initdb.d/coreSchema.sql
 COPY moduleSchemas.sql /docker-entrypoint-initdb.d/moduleSchemas.sql
 
-RUN sed -i 's/-- DELIMITER \$\$/DELIMITER \$\$/g' /docker-entrypoint-initdb.d/coreSchema.sql &&\
-        sed -i 's/-- \$\$/\$\$/g' /docker-entrypoint-initdb.d/coreSchema.sql &&\
-        sed -i 's/-- DELIMITER \;/DELIMITER \;/g' /docker-entrypoint-initdb.d/coreSchema.sql
-
-RUN sed -i 's/-- DELIMITER \$\$/DELIMITER \$\$/g' /docker-entrypoint-initdb.d/moduleSchemas.sql &&\
-        sed -i 's/-- \$\$/\$\$/g' /docker-entrypoint-initdb.d/moduleSchemas.sql &&\
-        sed -i 's/-- DELIMITER \;/DELIMITER \;/g' /docker-entrypoint-initdb.d/moduleSchemas.sql &&\
-        sed -i 's/@'\''localhost'\''/@'\''secshep_tomcat.securityshepherd_default'\''/g' /docker-entrypoint-initdb.d/moduleSchemas.sql
+RUN sed -i 's/@'\''localhost'\''/@'\''secshep_tomcat.securityshepherd_default'\''/g' /docker-entrypoint-initdb.d/moduleSchemas.sql
 
 RUN mkdir -p /etc/mysql/conf.d \
 	&& { \
