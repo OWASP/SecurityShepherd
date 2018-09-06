@@ -21,5 +21,9 @@ COPY target/shepherdKeystore.p12 /usr/local/tomcat/conf/shepherdKeystore.p12
 COPY docker/serverxml.patch /usr/local/tomcat/conf/serverxml.patch
 RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS"\/>/keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'"\/>/g' /usr/local/tomcat/conf/serverxml.patch &&\
     patch /usr/local/tomcat/conf/server.xml /usr/local/tomcat/conf/serverxml.patch
+
+COPY docker/webxml.patch /usr/local/tomcat/conf/webxml.patch
+RUN patch /usr/local/tomcat/conf/web.xml /usr/local/tomcat/conf/webxml.patch
+
 EXPOSE 8080 8443
 CMD ["catalina.sh", "run"]
