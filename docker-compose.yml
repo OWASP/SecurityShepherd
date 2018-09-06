@@ -21,8 +21,12 @@ services:
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASS: ${MYSQL_PASS}
         MYSQL_URI: jdbc:mysql://${CONTAINER_MYSQL}:3306
+        TLS_KEYSTORE_FILE: ${TLS_KEYSTORE_FILE}
+        TLS_KEYSTORE_PASS: ${TLS_KEYSTORE_PASS}
+        ALIAS: ${ALIAS}
     ports:
       - 8080:8080
+      - 8443:8443
     depends_on:
       - db
       - mongo
