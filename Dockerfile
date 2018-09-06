@@ -19,7 +19,7 @@ COPY target/owaspSecurityShepherd.war /usr/local/tomcat/webapps/ROOT.war
 COPY target/shepherdKeystore.p12 /usr/local/tomcat/conf/shepherdKeystore.p12
 
 COPY docker/serverxml.patch /usr/local/tomcat/conf/serverxml.patch
-RUN sed -i 's/clientAuth="false" sslProtocol="TLS" keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS"\/>/clientAuth="false" sslProtocol="TLS" keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'"\/>/g' /usr/local/tomcat/conf/serverxml.patch &&\
+RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS"\/>/keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'"\/>/g' /usr/local/tomcat/conf/serverxml.patch &&\
     patch /usr/local/tomcat/conf/server.xml /usr/local/tomcat/conf/serverxml.patch
 EXPOSE 8080 8443
 CMD ["catalina.sh", "run"]

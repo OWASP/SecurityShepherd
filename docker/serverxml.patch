@@ -1,21 +1,25 @@
---- 1server.xml 2018-09-06 16:12:42.172032179 +0100
-+++ 2server.xml 2018-09-06 16:13:31.614266826 +0100
-@@ -70,12 +70,12 @@
+--- server.xml
++++ serverhttps.xml
+@@ -66,16 +66,16 @@
+          APR (HTTP/AJP) Connector: /docs/apr.html
+          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
+     -->
++    <!--
+     <Connector port="8080" protocol="HTTP/1.1"
                 connectionTimeout="20000"
                 redirectPort="8443" />
++    -->
      <!-- A "Connector" using the shared thread pool-->
 -    <!--
-+    <!--   -->
      <Connector executor="tomcatThreadPool"
                 port="8080" protocol="HTTP/1.1"
                 connectionTimeout="20000"
                 redirectPort="8443" />
 -    -->
-+
      <!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443
           This connector uses the NIO implementation. The default
           SSLImplementation will depend on the presence of the APR/native
-@@ -84,15 +84,11 @@
+@@ -84,15 +84,10 @@
           Either JSSE or OpenSSL style configuration may be used regardless of
           the SSLImplementation selected. JSSE style configuration is used below.
      -->
@@ -28,10 +32,9 @@
 -        </SSLHostConfig>
 -    </Connector>
 -    -->
-+    <!--    -->
 +    <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
-+               maxThreads="150" scheme="https" secure="true"
-+               clientAuth="false" sslProtocol="TLS" keystoreFile="conf/shepherdKeystore.p12" keystorePass="CowSaysMoo" keyAlias="tomcat"/>
++               maxThreads="150" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS"
++               keystoreFile="conf/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS"/>
 +
      <!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443 with HTTP/2
           This connector uses the APR/native implementation which always uses
