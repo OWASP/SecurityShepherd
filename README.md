@@ -10,42 +10,18 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases/tag/v3.0)
 
 ### Docker (Linux Host)
-Firstly run maven (```mvn```) to generate the WAR and HTTPS Cert. 
-Then run ```docker-compose``` to bring up the environment.
-All environment variables can be configured and set in dotenv ```.env``` file in the root dir.
+Before you run please check [Setup Version 3.1](https://github.com/OWASP/SecurityShepherd/wiki/Setup-Version-3.1)
 
-```bash
-mvn -Pdocker install -DskipTests
-docker-compose up
-```
+1. Firstly run maven (mvn) to generate the WAR and HTTPS Cert. 
+2. Then run docker-compose to bring up the environment. 
 
-To rebuild everything again
- ```bash
-mvn -Pdocker clean install -DskipTests
-docker-compose build
-docker-compose up
- ```
- 
- To rebuild only docker
-```bash
-docker-compose build
-docker-compose up
-```
+* ```mvn -Pdocker clean install -DskipTests```
+* ```docker-compose up```
 
-To shutdown the environment
-```bash
-docker-compose stop
-```
+To get your terminal back (don't tail the logs) issue a -d ```docker-compose up -d```
 
-To start the environment 
-```bash
-docker-compose start
-```
+Note: All environment variables can be configured in dotenv ```.env``` file in the root dir.
 
-To wipe the environment (delete everything)
-```bash
-docker-compose down
-```
 
 # How do I setup Security Shepherd?
 We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.
