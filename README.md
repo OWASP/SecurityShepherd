@@ -9,19 +9,19 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 ### Virtual Machine or Manual Setup
 You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases/tag/v3.0)
 
-### Docker
-To run docker firstly build with maven to generate the war and https cert. 
+### Docker (Linux Host)
+Firstly run maven (```mvn```) to generate the WAR and HTTPS Cert. 
 Then run ```docker-compose``` to bring up the environment.
 All environment variables can be configured and set in dotenv ```.env``` file in the root dir.
 
 ```bash
-mvn -Pdocker install
+mvn -Pdocker install -DskipTests
 docker-compose up
 ```
 
 To rebuild everything again
  ```bash
-mvn -Pdocker clean install
+mvn -Pdocker clean install -DskipTests
 docker-compose build
 docker-compose up
  ```
