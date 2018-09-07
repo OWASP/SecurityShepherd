@@ -9,28 +9,19 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 ### Virtual Machine or Manual Setup
 You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases/tag/v3.0)
 
-### Docker
-There is also a docker image available from [Dockerhub](https://hub.docker.com/r/ismisepaul/securityshepherd/) you can pull it down with  
-`docker pull ismisepaul/securityshepherd` 
+### Docker (Linux Host)
+Before you run please check [Setup Version 3.1](https://github.com/OWASP/SecurityShepherd/wiki/Setup-Version-3.1)
 
-Note: You'll need to get a shell on your docker container and run mysql and tomcat manually;  
-```BASH 
-docker run -i -p 80:80 -p 443:443 -t ismisepaul/securityshepherd /bin/bash
-```
-```BASH 
-/usr/bin/mysqld_safe &
-service tomcat7 start
-```  
-If you don't have ```authbind``` installed and configured on your host machine e.g. on Ubuntu you'll need to do the following;  
-```BASH
-sudo apt-get install authbind   
-touch /etc/authbind/byport/80  
-touch /etc/authbind/byport/443  
-chmod 550 /etc/authbind/byport/80  
-chmod 550 /etc/authbind/byport/443  
-chown tomcat7 /etc/authbind/byport/80  
-chown tomcat7 /etc/authbind/byport/443  
-```
+1. Firstly run maven (mvn) to generate the WAR and HTTPS Cert. 
+2. Then run docker-compose to bring up the environment. 
+
+* ```mvn -Pdocker clean install -DskipTests```
+* ```docker-compose up```
+
+To get your terminal back (don't tail the logs) issue a -d ```docker-compose up -d```
+
+Note: All environment variables can be configured in dotenv ```.env``` file in the root dir.
+
 
 # How do I setup Security Shepherd?
 We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.
