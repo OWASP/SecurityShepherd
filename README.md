@@ -15,7 +15,7 @@ Then run ```docker-compose``` to bring up the environment.
 All environment variables can be configured and set in dotenv ```.env``` file in the root dir.
 
 ```bash
-mvn -Pdocker install -DskipTests
+mvn -Pdocker clean install -DskipTests
 docker-compose up
 ```
 
