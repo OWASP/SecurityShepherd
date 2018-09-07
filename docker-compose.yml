@@ -1,17 +1,23 @@
 version: '2'
 services:
   db:
+    image: ${IMAGE_MYSQL}
     container_name: ${CONTAINER_MYSQL}
     env_file:
       - .env
     build:
       context: ./docker/mysql
+      args:
+        CONTAINER_TOMCAT: ${CONTAINER_TOMCAT}
+        DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASS}
   mongo:
+    image: ${IMAGE_MONGO}
     container_name: ${CONTAINER_MONGO}
     build: ./docker/mongo
   web:
+    image: ${IMAGE_TOMCAT}
     container_name: ${CONTAINER_TOMCAT}
     env_file:
       - .env
