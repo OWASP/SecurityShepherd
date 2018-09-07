@@ -11,6 +11,7 @@ ARG MYSQL_URI
 ARG TLS_KEYSTORE_FILE
 ARG TLS_KEYSTORE_PASS
 ARG ALIAS
+ARG HTTPS_PORT
 
 RUN printf "databaseConnectionURL=$MYSQL_URI/\nDriverType=$DB_DRIVER\ndatabaseSchema=$DB_SCHEMA\ndatabaseUsername=$MYSQL_USER\ndatabasePassword=$MYSQL_PASS\n" >> $PROPS_DIR
 
@@ -20,6 +21,7 @@ COPY target/shepherdKeystore.p12 /usr/local/tomcat/conf/shepherdKeystore.p12
 
 COPY docker/serverxml.patch /usr/local/tomcat/conf/serverxml.patch
 RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS"\/>/keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'"\/>/g' /usr/local/tomcat/conf/serverxml.patch &&\
+    sed -i 's/redirectPort="HTTPS_PORT" \/>/redirectPort="'"$HTTPS_PORT"'" \/>/g' /usr/local/tomcat/conf/serverxml.patch &&\
     patch /usr/local/tomcat/conf/server.xml /usr/local/tomcat/conf/serverxml.patch
 
 COPY docker/webxml.patch /usr/local/tomcat/conf/webxml.patch

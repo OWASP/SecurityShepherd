@@ -24,9 +24,10 @@ services:
         TLS_KEYSTORE_FILE: ${TLS_KEYSTORE_FILE}
         TLS_KEYSTORE_PASS: ${TLS_KEYSTORE_PASS}
         ALIAS: ${ALIAS}
+        HTTPS_PORT: ${HTTPS_PORT}
     ports:
-      - 8080:8080
-      - 8443:8443
+      - $HTTP_PORT:8080
+      - $HTTPS_PORT:8443
     depends_on:
       - db
       - mongo
