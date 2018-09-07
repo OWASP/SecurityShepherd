@@ -203,7 +203,7 @@
                         <configuration>
                             <alias>${ALIAS}</alias>
                             <keyalg>${KEY_ALG}</keyalg>
-                            <keystore>${basedir}/target/shepherdKeystore.p12</keystore>
+                            <keystore>${basedir}/target/${TLS_KEYSTORE_FILE}</keystore>
                             <dname>${DNAME}</dname>
                             <storepass>${TLS_KEYSTORE_PASS}</storepass>
                             <keypass>${TLS_KEYSTORE_PASS}</keypass>
