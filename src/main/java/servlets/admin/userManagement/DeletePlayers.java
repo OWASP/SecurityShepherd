@@ -139,7 +139,7 @@ public class DeletePlayers extends HttpServlet{
 				log.debug("CSRF Tokens did not match");
 				out.print("<h3 class=\"title\">Player Deletion Failure</h3>" +
 						"<p>" +
-						"<font color=\"red\">An error Occurred! Please try again.</font>" +
+						"<font color=\"red\">CSRF Tokens Did Not Match. Function Aborted.</font>" +
 						"<p>");
 			}
 		}
