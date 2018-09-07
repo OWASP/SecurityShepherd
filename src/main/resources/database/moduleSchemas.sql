@@ -18,7 +18,7 @@
  
 -- Script used to create all of the schemas on the vulnerable database server
 
---  -- 
+-- DELIMITER ;
 
 -- ======================================================
 -- SQL Lesson
@@ -991,8 +991,8 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- getToken Procedure
- -- 
 USE `securityMisconfigStealToken`;
+-- DELIMITER $$
 CREATE PROCEDURE `securityMisconfigStealToken`.`getToken` (IN theUserId VARCHAR(64))
 BEGIN
 DECLARE tokenExists INT;
@@ -1005,20 +1005,22 @@ END IF;
 SELECT token FROM tokens WHERE userId = theUserId;
 END
 ;
+-- $$
 
---  -- 
+-- DELIMITER ;
 
 -- validToken Procedure
- -- 
 USE `securityMisconfigStealToken`;
+-- DELIMITER $$
 CREATE PROCEDURE `securityMisconfigStealToken`.`validToken` (IN theUserId VARCHAR(64), theToken VARCHAR(64))
 BEGIN
 COMMIT;
 SELECT count(token) FROM `securityMisconfigStealToken`.`tokens` WHERE userId != theUserId AND token = theToken;
 END
 ;
+-- $$
 
---  -- 
+-- DELIMITER ;
 
 COMMIT;
 
@@ -1062,32 +1064,34 @@ INSERT INTO `directObjectBank`.`bankAccounts` (`account_number`, `account_holder
 COMMIT;
 
 -- BankAuth Procedure
- -- 
 USE `directObjectBank`;
+-- DELIMITER $$
 CREATE PROCEDURE `directObjectBank`.`bankAuth` (IN theUserId VARCHAR(45), thePass VARCHAR(256))
 BEGIN
 COMMIT;
 SELECT account_number, account_holder FROM `directObjectBank`.`bankAccounts` WHERE account_holder = theUserId AND account_password = SHA2(thePass, 256);
 END
 ;
+-- $$
 
---  -- 
+-- DELIMITER ;
 
 -- CurrentFunds Procedure
- -- 
 USE `directObjectBank`;
+-- DELIMITER $$
 CREATE PROCEDURE `directObjectBank`.`currentFunds` (IN theBankAccountNumber VARCHAR(45))
 BEGIN
 COMMIT;
 SELECT account_balance FROM `directObjectBank`.`bankAccounts` WHERE account_number = theBankAccountNumber;
 END
 ;
+-- $$
 
---  -- 
+-- DELIMITER ;
 
 -- transferFunds Procedure
- -- 
 USE `directObjectBank`;
+-- DELIMITER $$
 CREATE PROCEDURE `directObjectBank`.`transferFunds` (IN theGiverAccountNumber VARCHAR(45), IN theRecieverAccountNumber VARCHAR(45), IN theAmmount FLOAT)
 BEGIN
 COMMIT;
@@ -1100,12 +1104,13 @@ UPDATE `directObjectBank`.`bankAccounts`
 COMMIT;
 END
 ;
+-- $$
 
---  -- 
+-- DELIMITER ;
 
 -- createAccount Procedure
- -- 
 USE `directObjectBank`;
+-- DELIMITER $$
 CREATE PROCEDURE `directObjectBank`.`createAccount` (IN accountHolder VARCHAR(45), IN accountPassword VARCHAR(256))
 BEGIN
 COMMIT;
@@ -1113,8 +1118,9 @@ INSERT INTO `directObjectBank`.`bankAccounts` (`account_holder`, `account_passwo
 COMMIT;
 END
 ;
+-- $$
 
---  -- 
+-- DELIMITER ;
 
 COMMIT;
 
@@ -1158,16 +1164,17 @@ INSERT INTO `SqlChalStoredProc`.`customers` (`customerId`, `customerName`, `cust
 COMMIT;
 
 -- findUser Procedure
- -- 
 USE `SqlChalStoredProc`;
+-- DELIMITER $$
 CREATE PROCEDURE `SqlChalStoredProc`.`findUser` (IN theAddress VARCHAR(128))
 BEGIN
 COMMIT;
 SELECT * FROM customers WHERE customerAddress = theAddress;
 END
 ;
+-- $$
 
---  -- 
+-- DELIMITER ;
 
 COMMIT;
 
