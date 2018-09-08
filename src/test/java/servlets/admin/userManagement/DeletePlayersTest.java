@@ -9,6 +9,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
+import dbProcs.Getter;
+import dbProcs.Setter;
 import servlets.admin.userManagement.DeletePlayers;
 
 import testUtils.TestProperties;
@@ -33,7 +35,7 @@ public class DeletePlayersTest {
         response = new MockHttpServletResponse();
 	}
 	
-	public String doThePost(String csrfToken) throws Exception
+	public String doThePost(String csrfToken, String testuserId) throws Exception
 	{
 		try
 		{
@@ -45,7 +47,7 @@ public class DeletePlayersTest {
 
 			//Adding Correct CSRF Token (Token Submitted)
 			request.addParameter("csrfToken", csrfToken);
-			request.addParameter("player", new String());
+			request.addParameter("player", testuserId);
 
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
@@ -92,7 +94,7 @@ public class DeletePlayersTest {
 			{
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
-				String responseBody = doThePost(csrfToken);
+				String responseBody = doThePost(csrfToken, new String());
 				if(responseBody.contains("Please try non administrator functions"))
 				{
 					log.debug("No Admin Access Result Recieved");
@@ -138,7 +140,7 @@ public class DeletePlayersTest {
 			{
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
-				String responseBody = doThePost(csrfToken);
+				String responseBody = doThePost(csrfToken, new String());
 				if(responseBody.contains("Player(s) Not Found"))
 				{
 					log.debug("Player(s) Not Found Message Recieved");
@@ -158,6 +160,61 @@ public class DeletePlayersTest {
 		}
 	}
 
+	@Test
+	public void testWithAdminAuthValidUser() {
+		String userName = "configAdminTester";
+		String password = userName;
+		//Verify / Create user in DB
+		try
+		{
+			TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
+			//Sign in as Normal User
+			log.debug("Signing in as Admin User Through LoginServlet");
+			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
+			log.debug("Login Servlet Complete, Getting CSRF Token");
+			if(response.getCookie("token") == null)
+				fail("No CSRF Token Was Returned from Login Servlet");
+			String csrfToken = response.getCookie("token").getValue();
+			if(csrfToken.isEmpty())
+			{
+				String message = new String("No CSRF token returned from Login Servlet");
+				log.fatal(message);
+				fail(message);
+			}
+			else
+			{
+				//Add Cookies from Response to outgoing request
+				request.setCookies(response.getCookies());
+				
+				String testUsername = "testuserdeleteservlet";
+				String testuserId = Getter.getUserIdFromName(applicationRoot, testUsername);
+				
+				if(testuserId == null || testuserId.isEmpty()) {
+					assert(Setter.userCreate(applicationRoot, null, testUsername, testUsername, "player", testUsername+"@test.com", false));
+					testuserId = Getter.getUserIdFromName(applicationRoot, testUsername);
+				}
+				assert(testuserId != null && !testuserId.isEmpty());
+				
+				String responseBody = doThePost(csrfToken, testuserId);
+				if(responseBody.contains("User deleted successfully"))
+				{
+					log.debug("User deleted successfully Message Recieved");
+				}
+				else
+				{
+					String message = "Admin unable to use delete player";
+					log.fatal(message);
+					fail(message);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			log.fatal("Could not Complete: " + e.toString());
+			fail("Could not Complete: " + e.toString());
+		}
+	}
+	
 	@Test
 	public void testCsrf()
 	{
@@ -184,7 +241,7 @@ public class DeletePlayersTest {
 			{
 				//Add Cookies from Response to outgoing request
 				request.setCookies(response.getCookies());
-				String responseBody = doThePost("wrongToken");
+				String responseBody = doThePost("wrongToken", new String());
 				if(responseBody.contains("CSRF Tokens Did Not Match"))
 				{
 					log.debug("CSRF Error Occurred");
