@@ -1110,4 +1110,29 @@ public class SetterTest
 			fail("Could not complete badSubmission Test");
 		}
 	}
+
+	
+	@Test
+	public void testUserDelete()
+	{
+		String testUsername = "testuserdelete";
+		String testuserId = Getter.getUserIdFromName(applicationRoot, testUsername);
+		
+		try {
+			if(testuserId == null || testuserId.isEmpty())
+				assert(Setter.userCreate(applicationRoot, null, testUsername, testUsername, "player", testUsername+"@test.com", false));
+			
+			testuserId = Getter.getUserIdFromName(applicationRoot, testUsername);
+			assert(testuserId != null && !testuserId.isEmpty());
+			
+			assert(Setter.userDelete(applicationRoot, testuserId));
+			
+			testuserId = Getter.getUserIdFromName(applicationRoot, testUsername);
+			assert(testuserId == null || testuserId.isEmpty());
+			
+		} catch (SQLException sqlEx) {
+			log.fatal("DB Error: " + sqlEx.toString());
+			fail("Could not Complete testUserDelete because DB Error");
+		}
+	}
 }
