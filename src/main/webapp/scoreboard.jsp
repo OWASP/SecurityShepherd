@@ -68,6 +68,9 @@
 			<!-- start content -->
 				<div id="badData"></div>
 				<% if(canSeeScoreboard) { %>
+					<div id="whereistand-div" style="position: fixed; left:50px">
+						<a href="#userbar-<%= ses.getAttribute("userStamp").toString() %>">Where I stand?</a>
+					</div>
 					<ul id="leaderboard" class="leaderboard"></ul>
 				<% } else { %>
 					<p>Scoreboard is not currently available!</p>
