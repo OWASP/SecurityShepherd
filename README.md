@@ -12,8 +12,9 @@ You can download Security Shepherd VM's or Manual Installation Packs from [GitHu
 ### Docker (Linux Host)
 Before you run please check [Setup Version 3.1](https://github.com/OWASP/SecurityShepherd/wiki/Setup-Version-3.1)
 
-1. Firstly run maven (mvn) to generate the WAR and HTTPS Cert. 
-2. Then run docker-compose to bring up the environment. 
+1. Firstly run maven (```mvn```) to generate the WAR and HTTPS Cert. 
+2. Then run ```docker-compose``` to bring up the environment. 
+3. Open a browser and type ```localhost``` in the address bar from the host machine running docker. To hit Security Shepherd from a remote machine use the IP or hostname of the host machine.
 
 * ```mvn -Pdocker clean install -DskipTests```
 * ```docker-compose up```
