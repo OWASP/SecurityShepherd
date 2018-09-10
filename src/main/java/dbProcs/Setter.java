@@ -924,4 +924,36 @@ public class Setter
 		log.debug("*** END userCreate ***");	
 		return result;
 	}
+	
+	public static boolean userDelete (String ApplicationRoot, String userId) throws SQLException
+	 {
+         boolean result = false;
+         log.debug("*** Setter.userDelete ***");
+         log.debug("userId = " + userId);
+
+         Connection conn = Database.getCoreConnection(ApplicationRoot);
+         try {
+        	 log.debug("Deleting User's Results");
+             PreparedStatement callDelResults = conn.prepareStatement("DELETE FROM results WHERE userId = ?");
+             callDelResults.setString(1, userId);
+             callDelResults.executeUpdate();
+        	 
+             log.debug("Executing delete from users on Database");
+             PreparedStatement callUserDel = conn.prepareStatement("DELETE FROM users WHERE userId = ?");
+             callUserDel.setString(1, userId);
+             int deleteAttemptResult = callUserDel.executeUpdate();
+
+             if (deleteAttemptResult == 1) {
+                     result = true;
+             }
+         }
+         catch(SQLException sqlEx) {
+             log.fatal("userDelete Failure: " + sqlEx.toString());
+             throw new SQLException(sqlEx);
+         }
+         Database.closeConnection(conn);
+         log.debug("*** END userDelete ***");
+         return result;
+	 }
+	
 }

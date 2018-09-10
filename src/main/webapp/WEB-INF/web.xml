@@ -121,6 +121,16 @@
 	</servlet-mapping>
 
 	<servlet>
+	  <servlet-name>/deletePlayers</servlet-name>
+	  <servlet-class>servlets.admin.userManagement.DeletePlayers</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	      <servlet-name>/deletePlayers</servlet-name>
+	      <url-pattern>/deletePlayers</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
 		<servlet-name>/assignPlayers</servlet-name>
 		<servlet-class>servlets.admin.userManagement.AssignPlayers</servlet-class>
 	</servlet>
@@ -1191,15 +1201,6 @@
 	<servlet-mapping>
 		<servlet-name>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</servlet-name>
 		<url-pattern>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</servlet-name>
-		<servlet-class>servlets.module.challenge.BrokenCryptoHomeMade</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</servlet-name>
-		<url-pattern>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</url-pattern>
 	</servlet-mapping>
 
 	<filter>
