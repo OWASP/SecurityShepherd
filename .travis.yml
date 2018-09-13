@@ -5,7 +5,7 @@ services:
 install:
 - mvn install -P docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 after_success:
-  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+  - docker login -u='$DOCKER_USER' -p='$DOCKER_PASS'
   - docker-compose build
   - docker tag owasp/securityshepherd_tomcat:v3.1 ismisepaul/shepherd:latest
   - docker push ismisepaul/shepherd:latest
