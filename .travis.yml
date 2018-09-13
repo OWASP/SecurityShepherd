@@ -7,5 +7,5 @@ install:
 after_success:
   - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
   - docker-compose build
-  - docker tag secshep_tomcat ismisepaul/shepherd:latest
-  - docker push ismisepaul/shepherd:v3.1
+  - docker tag owasp/securityshepherd_tomcat:v3.1 ismisepaul/shepherd:latest
+  - docker push ismisepaul/shepherd:latest
