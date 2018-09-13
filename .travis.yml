@@ -2,6 +2,8 @@ language: java
 services:
   - mysql
   - docker
+install:
+- mvn install -P docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 after_success:
   - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
   - docker-compose build
