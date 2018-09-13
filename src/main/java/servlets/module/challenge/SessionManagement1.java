@@ -88,7 +88,7 @@ public class SessionManagement1 extends HttpServlet
 				{
 					log.debug("Cookie value: " + theCookie.getValue());
 					
-					if(theCookie.getValue().equals("dXNlclJvbGU9YWRtaW5pc3RyYXRvcg"))
+					if(theCookie.getValue().equals("dXNlclJvbGU9YWRtaW5pc3RyYXRvcg=="))
 					{
 						log.debug("Challenge Complete");
 						// Get key and add it to the output
