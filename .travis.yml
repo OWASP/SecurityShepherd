@@ -3,8 +3,7 @@ services:
   - mysql
   - docker
 after_success:
-  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USER" -p="$DOCKER_PASS"
+  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
   - docker-compose build
-  - docker tag $CONTAINER_TOMCAT ismisepaul/shepherd:v3.1
-  - docker tag $CONTAINER_TOMCAT ismisepaul/shepherd:latest
+  - docker tag secshep_tomcat ismisepaul/shepherd:latest
   - docker push ismisepaul/shepherd:v3.1
