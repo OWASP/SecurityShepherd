@@ -6,10 +6,8 @@ install:
 - mvn install -P docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 after_success:
   - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
-  - docker-compose build
-  - docker tag owasp/securityshepherd_tomcat:v3.1 ismisepaul/shepherd_tomcat:latest
-  - docker tag owasp/securityshepherd_mysql:v3.1 ismisepaul/shepherd_mysql:latest
-  - docker tag owasp/securityshepherd_mongo:v3.1 ismisepaul/shepherd_mongo:latest
+  - docker-compose build web
+  - docker tag owasp/securityshepherd_tomcat:3.1 ismisepaul/shepherd_tomcat:3.1
+  - docker tag ismisepaul/shepherd_tomcat:3.1 ismisepaul/shepherd_tomcat:latest
   - docker push ismisepaul/shepherd_tomcat:latest
-  - docker push ismisepaul/shepherd_mysql:latest
-  - docker push ismisepaul/shepherd_mongo:latest
+  - docker push ismisepaul/shepherd_tomcat:3.1
