@@ -1,28 +1,31 @@
-language: java
-services:
-  - mysql
-  - docker
 env: VERSION=3.1
 jobs:
   include:
     - stage: build
+      language: java
+      services:
+        - mysql
       script: mvn install -P docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
     - stage: deploy-master
+    services:
+      - docker
       env: TAG=latest
       script: docker login -u=$DOCKER_USER -p=$DOCKER_PASS
-        - docker-compose build web
-        - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
-        - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
-        - docker push ismisepaul/shepherd_tomcat:$TAG
-        - docker push ismisepaul/shepherd_tomcat:$VERSION
-      stage:
+      script: docker-compose build web
+      script: docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
+      script: docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
+      script: docker push ismisepaul/shepherd_tomcat:$TAG
+      script: docker push ismisepaul/shepherd_tomcat:$VERSION
+    - stage: deploy-dev
+      services:
+        - docker
         env: TAG=dev
         script: docker login -u=$DOCKER_USER -p=$DOCKER_PASS
-          - docker-compose build web
-          - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
-          - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
-          - docker push ismisepaul/shepherd_tomcat:$TAG
-          - docker push ismisepaul/shepherd_tomcat:$VERSION
+        script: docker-compose build web
+        script: docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
+        script: docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
+        script: docker push ismisepaul/shepherd_tomcat:$TAG
+        script: docker push ismisepaul/shepherd_tomcat:$VERSION
 stages:
   - build
   - name: deploy-master
