@@ -2,25 +2,31 @@ language: java
 services:
   - mysql
   - docker
-install:
-- mvn install -P docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-after_success:
-  stages:
-    - name: deploy
-    env: VERSION=3.1
+env: VERSION=3.1
+jobs:
+  include:
+    - stage: build
+      script: mvn install -P docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - stage: deploy-master
+      env: TAG=latest
+      script: docker login -u=$DOCKER_USER -p=$DOCKER_PASS
+        - docker-compose build web
+        - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
+        - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
+        - docker push ismisepaul/shepherd_tomcat:$TAG
+        - docker push ismisepaul/shepherd_tomcat:$VERSION
+      stage:
+        env: TAG=dev
+        script: docker login -u=$DOCKER_USER -p=$DOCKER_PASS
+          - docker-compose build web
+          - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
+          - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
+          - docker push ismisepaul/shepherd_tomcat:$TAG
+          - docker push ismisepaul/shepherd_tomcat:$VERSION
+stages:
+  - build
+  - name: deploy-master
     if: branch = master
-    env: TAG=latest
-    - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
-    - docker-compose build web
-    - docker tag owasp/securityshepherd_tomcat:3.1 ismisepaul/shepherd_tomcat:$VERSION
-    - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
-    - docker push ismisepaul/shepherd_tomcat:$TAG
-    - docker push ismisepaul/shepherd_tomcat:$VERSION
+  - name: deploy-dev
     if: branch = dev
-    env: TAG=dev
-    - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
-    - docker-compose build web
-    - docker tag owasp/securityshepherd_tomcat:3.1 ismisepaul/shepherd_tomcat:$VERSION
-    - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
-    - docker push ismisepaul/shepherd_tomcat:$TAG
-    - docker push ismisepaul/shepherd_tomcat:$VERSION
+
