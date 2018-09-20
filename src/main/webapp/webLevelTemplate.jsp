@@ -27,7 +27,7 @@ String levelName = "Level Name";
 String levelHash = "Level Hash";
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-ResourceBundle bundle = ResourceBundle.getBundle("i18n." + levelHash, locale);
+ResourceBundle bundle = ResourceBundle.getBundle("thei18nFileWithTheStrings", locale);
 //Used more than once translations
 String i18nLevelName = bundle.getString("title.");
 
