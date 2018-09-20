@@ -3109,4 +3109,93 @@ public class GetterTest
 			fail("Could not mark All Modules as Opened");
 		}
 	}
+	
+	
+	@Test
+	public void testFindAdminById()
+	{ 
+		String userName = new String("UserForAdminIdSearch");
+		try
+		{
+			if(verifyTestAdmin(applicationRoot, userName, userName))
+			{
+				String userId = Getter.getUserIdFromName(applicationRoot, userName);
+				if(Getter.findAdminById(applicationRoot, userId))
+				{
+					log.debug("PASS: Found admin user");
+					return;
+				}
+				else
+				{
+					fail("Could Not Find Admin in Admin Search");
+				}
+			}
+			else
+			{
+				fail("Could not verify admin user (No Exception Failure)");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Verify Admin User: " + e.toString());
+			fail("Could not Verify Admin User " + userName);
+		}
+	}
+	
+	@Test
+	public void testGetAdmins()
+	{
+		try
+		{
+			String userName = new String("adminsGetAll");
+			for(int i = 0; i <= 9; i++)
+			{
+				if(verifyTestAdmin(applicationRoot, userName+i, userName+i))
+				{
+					log.debug("Created User " + userName+i);
+				}
+				else
+				{
+					fail("Could not create user " + userName+i);
+				}
+			}
+			ResultSet admins = Getter.getAdmins(applicationRoot);
+			try
+			{
+				int i = 0;
+				while(admins.next())
+				{
+					i++; //Count the total admins returned
+					if(admins.getString(2).startsWith(userName))
+					{
+						i++;
+					}
+				}
+				if(i != 10)
+				{
+					if(i < 10)
+						fail("Too Few Admins Returned");
+					else if (i > 10)
+						fail("Too Many Admins Returned");
+					else
+					{
+						log.fatal("Then surely the number WAS 10? How did this happen");
+						fail("Incorrect Amount of Admin User Returned");
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.fatal("Failed to itterate through getAdmins: " + e.toString());
+				fail("GetAdmins Result Set Issue");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not create Admin Users: " + e.toString());
+			fail("Could not create Admin Users");
+		}
+	}
+	
+	
 }

@@ -195,6 +195,15 @@
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>/downgradeAdmin</servlet-name>
+		<servlet-class>servlets.admin.userManagement.DowngradeAdmin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/downgradeAdmin</servlet-name>
+		<url-pattern>/downgradeAdmin</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>/updateRegistration</servlet-name>
 		<servlet-class>servlets.admin.config.ToggleRegistration</servlet-class>
 	</servlet>

@@ -160,6 +160,7 @@ if (request.getSession() != null)
 											<li><a id="suspendPlayerLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.suspendPlayer" /></a></li>
 											<li><a id="unSuspendPlayerLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.unsuspendPlayer" /></a></li>
 											<li><a id="upgradePlayersLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.upgradeToAdmin" /></a></li>
+											<li><a id="downgradeAdminLink" href="javascript:;"><fmt:message key="index.link.admin.userMange.downgradeToPlayer" /></a></li>
 										</ul>
 									</li>
 								</ul>
@@ -426,6 +427,20 @@ if (request.getSession() != null)
 					});	
 				});
 			});
+			
+			$("#downgradeAdminLink").click(function(){
+				$("#submitResult").slideUp("fast", function(){
+					$("#contentDiv").hide("fast", function(){
+						$("#contentDiv").load("admin/userManagement/downgradeAdmins.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
+						  if (status == "error") {
+							var msg = "<fmt:message key="generic.text.sorryError" />: ";
+							$("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
+						  }
+						  $("#contentDiv").show("fast");
+						});
+					});	
+				});
+			});			
 
 			$("#feedbackLink").click(function(){
 				$("#submitResult").slideUp("fast", function(){
