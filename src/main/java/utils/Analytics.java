@@ -31,12 +31,11 @@ public class Analytics
 			"<p>" +
 			bundle.getString("sponsorship.message.1") +
 			"<br/><br/>" +
-			"<a href=\"http://bit.ly/BccRiskAdvisorySite\"><img src=\"css/images/bccRiskAdvisorySmallLogo.jpg\" alt=\"BCC Risk Advisory\"/></a>" +
-			"<a href=\"http://bit.ly/EdgeScan\"><img src=\"css/images/edgescanSmallLogo.jpg\" alt=\"EdgeScan\" /></a>" +
+			"<a href=\"http://bit.ly/BccRiskAdvisorySite\"><img src=\"css/images/bccRiskAdvisorySmallLogo.jpg\" alt=\"BCC Risk Advisory\" style=\"margin: 5px;\"/></a>" +
+			"<a href=\"http://bit.ly/EdgeScan\"><img src=\"css/images/edgescanSmallLogo.jpg\" alt=\"EdgeScan\" style=\"margin: 5px;\"/></a>" +
 			"<br/>" +
 			"<a href=\"http://bit.ly/manicode\"><img src=\"css/images/manicode-logo.png\" style=\"margin-top: 5px;\"></a>" +
-			"<br/><br/>" +
-			bundle.getString("sponsorship.message.2") +
-			"<br/><a href=\"http://securityresearch.ie/\"><img src=\"https://www.owasp.org/images/thumb/2/24/Fontlogo.png/300px-Fontlogo.png\"/></a></p>");
+			"<br/><a href=\"https://www.axway.com/en\"><img src=\"css/images/axway_logo.png\" style=\"margin: 5px; height: 90px\"></a>" +
+			"</p>");
 	}
 }
