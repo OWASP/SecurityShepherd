@@ -3144,6 +3144,7 @@ public class GetterTest
 	
 	@Test
 	public void testGetAdmins()
+	//TODO
 	{
 		try
 		{
@@ -3165,7 +3166,6 @@ public class GetterTest
 				int i = 0;
 				while(admins.next())
 				{
-					i++; //Count the total admins returned
 					if(admins.getString(2).startsWith(userName))
 					{
 						i++;
