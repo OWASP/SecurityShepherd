@@ -3144,7 +3144,6 @@ public class GetterTest
 	
 	@Test
 	public void testGetAdmins()
-	//TODO
 	{
 		try
 		{
