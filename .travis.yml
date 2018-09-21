@@ -1,14 +1,14 @@
-env: VERSION=3.1
 jobs:
   include:
     - stage: build
       services:
         - mysql
     - stage: deploy-master
+      env: VERSION=3.1
+      env: TAG=latest
       install: true
       services:
         - docker
-      env: TAG=latest
       before_install:
         - mvn install -P docker -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
@@ -18,10 +18,11 @@ jobs:
         - docker push ismisepaul/shepherd_tomcat:$TAG
         - docker push ismisepaul/shepherd_tomcat:$VERSION
     - stage: deploy-dev
+      env: VERSION=3.1
+      env: TAG=latest
       install: true
       services:
         - docker
-      env: TAG=dev
       before_install:
         - mvn install -P docker -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
