@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.codec.binary.Base64;
 import org.owasp.encoder.Encode;
 
 
@@ -94,8 +95,10 @@ public class SessionManagement7 extends HttpServlet
 				if(theCookie != null)
 				{
 					log.debug("Cookie value: " + theCookie.getValue());
-					
-					if(theCookie.getValue().equals("ZG9Ob3RSZXR1cm5BbnN3ZXJz")) //Untampered Cookie
+					byte[] decodedCookieBytes = Base64.decodeBase64(theCookie.getValue());
+					String decodedCookie = new String(decodedCookieBytes, "UTF-8");
+					log.debug("Decoded Cookie: " + decodedCookie);
+					if(decodedCookie.equals("doNotReturnAnswers")) //Untampered Cookie
 					{
 						log.debug("Getting Challenge Parameters");
 						Object nameObj = request.getParameter("subName");
