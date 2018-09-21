@@ -4,8 +4,9 @@ jobs:
       services:
         - mysql
     - stage: deploy-master
-      env: VERSION=3.1
-      env: TAG=latest
+      env:
+        - VERSION=3.1
+        - TAG=latest
       install: true
       services:
         - docker
@@ -18,8 +19,9 @@ jobs:
         - docker push ismisepaul/shepherd_tomcat:$TAG
         - docker push ismisepaul/shepherd_tomcat:$VERSION
     - stage: deploy-dev
-      env: VERSION=3.1
-      env: TAG=latest
+      env:
+        - VERSION=3.1
+        - TAG=latest
       install: true
       services:
         - docker
