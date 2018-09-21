@@ -21,7 +21,7 @@ jobs:
     - stage: deploy-dev
       env:
         - VERSION=3.1
-        - TAG=latest
+        - TAG=dev
       install: true
       services:
         - docker
