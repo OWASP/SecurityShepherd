@@ -5,6 +5,7 @@ jobs:
       services:
         - mysql
     - stage: deploy-master
+      install: true
       services:
         - docker
       env: TAG=latest
@@ -12,12 +13,12 @@ jobs:
         - mvn install -P docker -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - docker-compose build web
-      after_install:
         - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
         - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
         - docker push ismisepaul/shepherd_tomcat:$TAG
         - docker push ismisepaul/shepherd_tomcat:$VERSION
     - stage: deploy-dev
+      install: true
       services:
         - docker
       env: TAG=dev
@@ -25,7 +26,6 @@ jobs:
         - mvn install -P docker -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - docker-compose build web
-      after_install:
         - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
         - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
         - docker push ismisepaul/shepherd_tomcat:$TAG
