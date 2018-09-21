@@ -620,6 +620,36 @@ END
 -- DELIMITER ;
 ;
 -- -----------------------------------------------------
+-- procedure adminFindById
+-- -----------------------------------------------------
+USE `core`;
+-- DELIMITER $$
+CREATE PROCEDURE `core`.`adminFindById` (IN adminId VARCHAR(64))
+BEGIN
+COMMIT;
+SELECT userName FROM users
+    WHERE userId = adminId
+    AND userRole = 'admin';
+END
+-- $$
+-- DELIMITER ;
+;
+-- -----------------------------------------------------
+-- procedure adminGetAll
+-- -----------------------------------------------------
+USE `core`;
+-- DELIMITER $$
+CREATE PROCEDURE `core`.`adminGetAll` ()
+BEGIN
+COMMIT;
+SELECT userId, userName, userAddress FROM users
+    WHERE userRole = 'admin'
+    ORDER BY userName;
+END
+-- $$
+-- DELIMITER ;
+;
+-- -----------------------------------------------------
 -- procedure moduleCreate
 -- -----------------------------------------------------
 
