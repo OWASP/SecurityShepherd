@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 import utils.Hash;
@@ -87,11 +88,17 @@ public class SessionManagement4 extends HttpServlet
 				if(theCookie != null)
 				{
 					log.debug("Cookie value: " + theCookie.getValue());
-					if(theCookie.getValue().equals("TURBd01EQXdNREF3TURBd01EQXdNUT09")) //Guest Session
+					//Decode Twice
+					byte[] decodedCookieBytes = Base64.decodeBase64(theCookie.getValue());
+					String decodedCookie = new String(decodedCookieBytes, "UTF-8");
+					decodedCookieBytes = Base64.decodeBase64(decodedCookie.getBytes());
+					decodedCookie = new String(decodedCookieBytes, "UTF-8");
+					log.debug("Decoded Cookie: " + decodedCookie);
+					if(decodedCookie.equals("0000000000000001")) //Guest Session
 					{
 						log.debug("Guest Session Detected");
 					}
-					else if (theCookie.getValue().equals("TURBd01EQXdNREF3TURBd01EQXlNUT09")) //Admin Session
+					else if (decodedCookie.equals("0000000000000021")) //Admin Session
 					{
 						log.debug("Admin Session Detected: Challenge Complete");
 						// Get key and add it to the output

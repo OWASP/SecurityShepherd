@@ -1929,4 +1929,61 @@ public class Getter
 		Database.closeConnection(conn);
 		return result;
 	}
+	
+	/**
+	* @param ApplicationRoot The current running context of the application
+	* @return Result set containing admin info in the order userId, userName and userAddress
+	*/
+	public static ResultSet getAdmins(String ApplicationRoot)
+	{
+		ResultSet result = null;
+		log.debug("*** Getter.adminGetAll () ***");
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			CallableStatement callstmt = conn.prepareCall("call adminGetAll()");
+			log.debug("Gathering adminGetAll ResultSet");
+			result = callstmt.executeQuery();
+			log.debug("Returning Result Set from adminGetAll");
+		}
+		catch (SQLException e)
+		{
+			log.error("Could not execute query: " + e.toString());
+			result = null;
+		}
+		log.debug("*** END adminGetAll ***");
+		return result;
+	}
+		
+	/**
+	 * Used to decipher whether or not a user exists as an admin
+	 * @param userId The user identifier of the admin to be found
+	 * @return A boolean reflecting the state of existence of the admin
+	 */
+	public static boolean findAdminById (String ApplicationRoot, String userId)
+	{
+		log.debug("*** Getter.findAdminById ***");
+		boolean userFound = false;
+		//Get connection
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			CallableStatement callstmt = conn.prepareCall("call adminFindById(?)");
+			log.debug("Gathering adminFindById ResultSet");
+			callstmt.setString(1, userId);
+			ResultSet userFind = callstmt.executeQuery();
+			log.debug("Opening Result Set from adminFindById");
+			userFind.next(); //This will throw an exception if player not found
+			log.debug("Admin Found: " + userFind.getString(1)); //This line will not execute if admin not found
+			userFound = true;
+		}
+		catch(Exception e)
+		{
+			log.error("Admin does not exist: " + e.toString());
+			userFound = false;
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END findAdminById ***");
+		return userFound;
+	}	
 }

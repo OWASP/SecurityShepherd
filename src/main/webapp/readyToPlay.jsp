@@ -47,10 +47,10 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title><fmt:message key="readyToPlay.title.readyToPlay" /></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
-	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><fmt:message key="readyToPlay.title.enteredGame" /></h2>
 			<p> <fmt:message key="readyToPlay.text.info.enteredGame" /> </p>
