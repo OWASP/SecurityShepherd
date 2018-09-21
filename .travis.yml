@@ -7,29 +7,32 @@ jobs:
         - mysql
       script: mvn install -P docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
     - stage: deploy-master
-    services:
-      - docker
+      services:
+        - docker
       env: TAG=latest
-      script: docker login -u=$DOCKER_USER -p=$DOCKER_PASS
-      script: docker-compose build web
-      script: docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
-      script: docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
-      script: docker push ismisepaul/shepherd_tomcat:$TAG
-      script: docker push ismisepaul/shepherd_tomcat:$VERSION
+      before_install:
+        - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
+        - docker-compose build web
+      after_install:
+        - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
+        - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
+        - docker push ismisepaul/shepherd_tomcat:$TAG
+        - docker push ismisepaul/shepherd_tomcat:$VERSION
     - stage: deploy-dev
       services:
         - docker
-        env: TAG=dev
-        script: docker login -u=$DOCKER_USER -p=$DOCKER_PASS
-        script: docker-compose build web
-        script: docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
-        script: docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
-        script: docker push ismisepaul/shepherd_tomcat:$TAG
-        script: docker push ismisepaul/shepherd_tomcat:$VERSION
+      env: TAG=dev
+      before_install:
+        - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
+        - docker-compose build web
+      after_install:
+        - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
+        - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
+        - docker push ismisepaul/shepherd_tomcat:$TAG
+        - docker push ismisepaul/shepherd_tomcat:$VERSION
 stages:
   - build
   - name: deploy-master
     if: branch = master
   - name: deploy-dev
     if: branch = dev
-
