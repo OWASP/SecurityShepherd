@@ -11,15 +11,14 @@ jobs:
         - mvn install -P docker -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - docker-compose build web
-      if: branch = dev
-      env:
-        - TAG=latest
+      if: branch = master
+      env: TAG=latest
       install:
         - docker tag $CONTAINER_TOMCAT $IMAGE_TOMCAT:$VERSION
         - docker tag $IMAGE_TOMCAT:$VERSION $IMAGE_TOMCAT:$TAG
         - docker push $IMAGE_TOMCAT:$TAG
         - docker push $IMAGE_TOMCAT:$VERSION
-      if: branch = master
+      if: branch = dev
       env: TAG=dev
       install:
         - docker tag $CONTAINER_TOMCAT $IMAGE_TOMCAT:$TAG
