@@ -5,26 +5,25 @@ jobs:
         - mysql
     - stage: deploy
       script: skip
+      services:
+        - docker
       before_install:
         - mvn install -P docker -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - docker-compose build web
-      if: branch = master
+      if: branch = dev
       env:
-        - VERSION=3.1
         - TAG=latest
       install:
-        - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
-        - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
-        - docker push ismisepaul/shepherd_tomcat:$TAG
-        - docker push ismisepaul/shepherd_tomcat:$VERSION
-      if: branch = dev
+        - docker tag $CONTAINER_TOMCAT $IMAGE_TOMCAT:$VERSION
+        - docker tag $IMAGE_TOMCAT:$VERSION $IMAGE_TOMCAT:$TAG
+        - docker push $IMAGE_TOMCAT:$TAG
+        - docker push $IMAGE_TOMCAT:$VERSION
+      if: branch = master
       env: TAG=dev
       install:
-        - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$TAG
-        - docker push ismisepaul/shepherd_tomcat:$TAG
-      services:
-        - docker
+        - docker tag $CONTAINER_TOMCAT $IMAGE_TOMCAT:$TAG
+        - docker push $IMAGE_TOMCAT:$TAG
 language: java
 stages:
   - build
