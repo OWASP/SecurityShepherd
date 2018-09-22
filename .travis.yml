@@ -4,6 +4,7 @@ jobs:
       services:
         - mysql
     - stage: deploy
+      script: skip
       before_install:
         - mvn install -P docker -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
