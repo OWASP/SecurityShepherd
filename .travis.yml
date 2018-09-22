@@ -3,7 +3,12 @@ jobs:
     - stage: build
       services:
         - mysql
-    - stage: deploy-master
+    - stage: deploy
+      if: branch = master
+      env:
+        - VERSION=3.1
+        - TAG=latest
+      if: branch = dev
       env:
         - VERSION=3.1
         - TAG=latest
@@ -18,25 +23,7 @@ jobs:
         - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
         - docker push ismisepaul/shepherd_tomcat:$TAG
         - docker push ismisepaul/shepherd_tomcat:$VERSION
-    - stage: deploy-dev
-      env:
-        - VERSION=3.1
-        - TAG=dev
-      install: true
-      services:
-        - docker
-      before_install:
-        - mvn install -P docker -DskipTests
-        - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
-        - docker-compose build web
-        - docker tag secshep_tomcat ismisepaul/shepherd_tomcat:$VERSION
-        - docker tag ismisepaul/shepherd_tomcat:$VERSION ismisepaul/shepherd_tomcat:$TAG
-        - docker push ismisepaul/shepherd_tomcat:$TAG
-        - docker push ismisepaul/shepherd_tomcat:$VERSION
 language: java
 stages:
   - build
-  - name: deploy-master
-    if: branch = master
-  - name: deploy-dev
-    if: branch = dev
+  - deploy
