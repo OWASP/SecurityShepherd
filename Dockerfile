@@ -24,6 +24,7 @@ RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_
     sed -i 's/redirectPort="HTTPS_PORT" \/>/redirectPort="'"$HTTPS_PORT"'" \/>/g' /usr/local/tomcat/conf/serverxml.patch &&\
     patch /usr/local/tomcat/conf/server.xml /usr/local/tomcat/conf/serverxml.patch
 
+
 COPY docker/webxml.patch /usr/local/tomcat/conf/webxml.patch
 RUN patch /usr/local/tomcat/conf/web.xml /usr/local/tomcat/conf/webxml.patch
 

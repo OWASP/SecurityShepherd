@@ -23,7 +23,6 @@ To get your terminal back (don't tail the logs) issue a -d ```docker-compose up 
 
 Note: All environment variables can be configured in dotenv ```.env``` file in the root dir.
 
-
 # How do I setup Security Shepherd?
 We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.
   
