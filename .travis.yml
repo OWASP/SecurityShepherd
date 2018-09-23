@@ -10,7 +10,6 @@ jobs:
         - docker
       before_install:
         - mvn install -P docker -DskipTests
-        - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - docker-compose build web
       script: bash docker/deploy/push_master.sh
     - stage: deploy-dev
@@ -20,7 +19,6 @@ jobs:
         - docker
       before_install:
         - mvn install -P docker -DskipTests
-        - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - docker-compose build web
       script: bash docker/deploy/push_dev.sh
 language: java
