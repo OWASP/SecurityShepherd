@@ -25,6 +25,7 @@ language: java
 stages:
   - build
   - name: deploy-master
-    if: branch = master
+    if: branch = master AND type != pull_request OR fork = false
   - name: deploy-dev
     if: branch = dev
+    type != pull_request AND type != pull_request OR fork = false
