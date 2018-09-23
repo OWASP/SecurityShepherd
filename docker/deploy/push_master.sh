@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-export $(cat ../../.env | xargs)
+if [ -f .env ]
+then
+  export $(cat .env | xargs)
+else
+    export $(cat ../../.env | xargs)
+fi
+
 export TAG=latest
 
 docker tag $CONTAINER_TOMCAT $IMAGE_TOMCAT:$VERSION
