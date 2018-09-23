@@ -4,6 +4,7 @@ jobs:
       services:
         - mysql
     - stage: deploy
+      provider: script
       script: skip
       services:
         - docker

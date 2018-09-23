@@ -8,6 +8,7 @@ fi
 
 export TAG=latest
 
+docker ps -a
 docker tag $CONTAINER_TOMCAT $IMAGE_TOMCAT:$VERSION
 docker tag $IMAGE_TOMCAT:$VERSION $IMAGE_TOMCAT:$TAG
 docker push $IMAGE_TOMCAT:$TAG
