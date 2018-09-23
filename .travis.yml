@@ -31,7 +31,6 @@ stages:
       OR fork = false
   - name: deploy-dev
     if: |
-      branch = dev
-      type != pull_request AND \
+      branch = dev AND \
       type != pull_request OR \
       fork = false
