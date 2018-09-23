@@ -11,10 +11,10 @@ jobs:
         - mvn install -P docker -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - docker-compose build web
-      script: bash docker/push_dev.sh
+      script: bash docker/deploy/push_dev.sh
       on:
           branch: dev
-      script: bash docker/push_master.sh
+      script: bash docker/deploy/push_master.sh
       on:
           branch: master
 language: java
