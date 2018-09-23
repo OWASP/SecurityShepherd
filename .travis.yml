@@ -11,12 +11,12 @@ jobs:
         - mvn install -P docker -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - docker-compose build web
-      if: branch = dev
-      env: TAG=dev
       script: bash docker/push_dev.sh
-      if: branch = master
-      env: TAG=latest
+      on:
+          branch: dev
       script: bash docker/push_master.sh
+      on:
+          branch: master
 language: java
 stages:
   - build
