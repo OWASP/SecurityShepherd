@@ -1,6 +1,7 @@
 jobs:
   include:
     - stage: build
+      language: java
       services:
         - mysql
     - stage: deploy-master
@@ -21,10 +22,9 @@ jobs:
         - mvn install -P docker -DskipTests
         - docker-compose build web
       script: bash docker/deploy/push_dev.sh
-language: java
 stages:
   - build
   - name: deploy-master
-    if: branch = master AND type = push AND fork = true
+    if: branch = master AND type = push
   - name: deploy-dev
-    if: branch = dev AND type = push AND fork = true
+    if: branch = dev AND type = push
