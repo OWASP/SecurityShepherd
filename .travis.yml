@@ -25,6 +25,6 @@ language: java
 stages:
   - build
   - name: deploy-master
-    if: branch = master AND type = push AND fork = false
+    if: branch = master AND type = push AND fork = true
   - name: deploy-dev
-    if: branch = dev AND type = push AND fork = false
+    if: branch = dev AND type = push AND fork = true
