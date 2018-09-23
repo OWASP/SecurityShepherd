@@ -25,12 +25,6 @@ language: java
 stages:
   - build
   - name: deploy-master
-    if: |
-      branch = master AND \
-      type != pull_request \
-      OR fork = false
+    if: (NOT type IN (pull_request)) AND (branch = master)
   - name: deploy-dev
-    if: |
-      branch = dev AND \
-      type != pull_request OR \
-      fork = false
+    if: (NOT type IN (pull_request)) AND (branch = dev)
