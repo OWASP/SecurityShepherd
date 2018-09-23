@@ -7,6 +7,5 @@ else
 fi
 export TAG=dev
 
-docker images
 docker tag ${IMAGE_TOMCAT}:latest ${IMAGE_TOMCAT}:${TAG}
 docker push ${IMAGE_TOMCAT}:${TAG}
