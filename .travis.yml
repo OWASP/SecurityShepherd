@@ -25,6 +25,6 @@ language: java
 stages:
   - build
   - name: deploy-master
-    if: (NOT type IN (pull_request) AND head_repo = ismisepaul/SecurityShepherd) AND (branch = master)
+    if: branch = master AND type = push AND fork = false
   - name: deploy-dev
-    if: (NOT type IN (pull_request) AND head_repo = ismisepaul/SecurityShepherd) AND (branch = dev)
+    if: branch = dev AND type = push AND fork = false
