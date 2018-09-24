@@ -7,7 +7,6 @@ body {
 
 body, th, td, input, textarea, select, option, p, div {
 	font-family: "Helvetica Neue", Helvetica Arial, "Lucida Grande", sans-serif;
-	word-break: break-all;
 }
 
 h1, h2, h3 {
@@ -53,7 +52,7 @@ a:hover {
 }
 
 td {
-	word-wrap:break-word; 
+	word-wrap:break-word;
 	max-width: 400px;
 }
 
@@ -98,7 +97,7 @@ td {
 }
 
 #resultDiv {
-	word-wrap:break-word; 
+	word-wrap:break-word;
 	max-width: 610px;
 }
 
