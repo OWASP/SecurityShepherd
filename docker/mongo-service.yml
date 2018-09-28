@@ -1,0 +1,6 @@
+version: '2'
+services:
+  mongo:
+    image: ${IMAGE_MONGO}
+    container_name: ${CONTAINER_MONGO}
+    build: ./docker/mongo
