@@ -100,8 +100,8 @@ public class XssFilter
 		log.debug("Filtering input at XSS white list");
 		
 		input = Encode.forHtml(input);
-		//Decode a few things to open security holes
-		input = input.replaceAll("&amp;", "&").replaceFirst("&quot;", "\"").replaceAll("&#x23;", "#").replaceFirst("&#x3d;", "=").replaceAll("&#x3b;", ";");
+		//Decode quotes to open a security hole in Encoder
+		input = input.replaceFirst("&#34;", "\"");
 		//Encode lower-case "on" and upper-case "on" to complicate the required attack vectors to pass
 		return input.replaceAll("on", "&#x6f;&#x6e;").replaceAll("ON", "&#x4f;&#x4e;");
 	}
