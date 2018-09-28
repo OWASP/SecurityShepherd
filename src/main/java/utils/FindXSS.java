@@ -234,12 +234,19 @@ public class FindXSS
 			log.debug("theAttack Port: " + theAttack.getPort());
 			log.debug("theAttack Path: " + theAttack.getPath());
 			log.debug("theAttack Query: " + theAttack.getQuery());
-			validAttack = theAttack.getPath().toLowerCase().equalsIgnoreCase(csrfAttackPath);
-			if(!validAttack)
-				log.debug("Invalid Solution: Bad Path or Above");
-			validAttack = theAttack.getQuery().toLowerCase().equalsIgnoreCase((userIdParameterName + "=" + userIdParameterValue).toLowerCase()) && validAttack;
-			if(!validAttack)
-				log.debug("Invalid Solution: Bad Query or Above");
+			boolean validPath = theAttack.getPath().toLowerCase().endsWith(csrfAttackPath.toLowerCase());
+			if(!validPath)
+				log.debug("Invalid Solution: Bad Path submitted. Expected:" + csrfAttackPath.toLowerCase());
+			else
+			{
+				boolean validQuery = theAttack.getQuery().toLowerCase().equalsIgnoreCase((userIdParameterName + "=" + userIdParameterValue).toLowerCase());
+				if(!validQuery)
+					log.debug("Invalid Solution: Bad Query. Expected: " + (userIdParameterName + "=" + userIdParameterValue).toLowerCase());
+				else
+				{
+					validAttack = true;
+				}
+			}
 		}
 		catch(MalformedURLException e)
 		{
