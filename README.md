@@ -9,17 +9,39 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 ### Virtual Machine or Manual Setup
 You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases/tag/v3.0)
 
-### Docker (Linux Host)
-Before you run please check [Setup Version 3.1](https://github.com/OWASP/SecurityShepherd/wiki/Setup-Version-3.1)
+### Docker (Ubuntu Linux Host)
 
-1. Firstly run maven (```mvn```) to generate the WAR and HTTPS Cert. 
-2. Then run ```docker-compose``` to bring up the environment. 
-3. Open a browser and type ```localhost``` in the address bar from the host machine running docker. To hit Security Shepherd from a remote machine use the IP or hostname of the host machine.
+#### Full Guide
+[Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
 
-* ```mvn -Pdocker clean install -DskipTests```
-* ```docker-compose up```
+#### Quick Start Guide
+```console
+# Install pre-reqs
+sudo apt install git maven docker docker-compose default-jdk
 
-To get your terminal back (don't tail the logs) issue a -d ```docker-compose up -d```
+# Clone the github repository
+git clone https://github.com/OWASP/SecurityShepherd.git
+
+# Change directory into the local copy of the repository
+cd SecurityShepherd
+
+# Adds current user to the docker group (don't have to run docker with sudo)
+sudo gpasswd -a $USER docker
+
+# Run maven to generate the WAR and HTTPS Cert.
+mvn -Pdocker clean install -DskipTests
+
+# Build the docker images, docker network and bring up the environment
+docker-compose up
+```
+
+When you see the following in the console output the application is ready to use!
+```org.apache.catalina.startup.Catalina.start Server startup in 7987 ms```
+
+Open up an Internet Browser & type in the address bar;
+```console
+localhost
+```
 
 Note: All environment variables can be configured in dotenv ```.env``` file in the root dir.
 
