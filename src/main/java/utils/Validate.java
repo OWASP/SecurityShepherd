@@ -165,7 +165,7 @@ public class Validate
 	public static boolean isValidUser(String userName, String passWord)
 	{
 		boolean result = false;
-		result = userName.length() > 4 && passWord.length() > 7 && userName.length() <= 32 && passWord.length() <= 512;
+		result = userName.length() > 2 && passWord.length() > 7 && userName.length() <= 32 && passWord.length() <= 512;
 		if (!result)
 		{
 			log.debug("Invalid Data detected in Validate.isValidUser()");
@@ -183,7 +183,7 @@ public class Validate
 	public static boolean isValidUser(String userName, String passWord, String userAddress)
 	{
 		boolean result = false;
-		result = userName.length() > 4 && passWord.length() >= 8 && userName.length() <= 32 && passWord.length() <= 512 && userAddress.length() <= 128;
+		result = userName.length() > 2 && passWord.length() >= 8 && userName.length() <= 32 && passWord.length() <= 512 && userAddress.length() <= 128;
 		if (!result)
 		{
 			log.debug("Invalid Data detected in Validate.isValidUser()");
