@@ -113,8 +113,8 @@ if(ses.getAttribute("errorMessage") != null)
 					<tr><td><p><fmt:message key="generic.text.username" /><font color="red"><small>* </small></font>:</p></td><td><input type="text" id="userName" value="<%=userName%>" minlength="3" maxlength="32" required/></td></tr>
 					<tr><td><p><fmt:message key="generic.text.password" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWord" autocomplete="OFF" minlength="8" maxlength="512" required/></td></tr>
 					<tr><td><p><fmt:message key="generic.text.confirmPasswd" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWordConfirm" autocomplete="OFF" minlength="8" maxlength="512" required/></td></tr>
-					<tr><td><p><fmt:message key="generic.text.emailAddr" />:</p></td><td><input type="text" id="userAddress" value="<%=userAddress%>" maxlength="128"/></td></tr>
-					<tr><td><p><fmt:message key="generic.text.confirmEmailAddr" />:</p></td><td><input type="text" id="userAddressCnf" maxlength="128"/></td></tr>
+					<tr><td><p><fmt:message key="generic.text.emailAddr" />:</p></td><td><input type="email" id="userAddress" value="<%=userAddress%>" maxlength="128"/></td></tr>
+					<tr><td><p><fmt:message key="generic.text.confirmEmailAddr" />:</p></td><td><input type="email" id="userAddressCnf" maxlength="128"/></td></tr>
 				</table>
 				
 				<br/>
