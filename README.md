@@ -34,7 +34,12 @@ docker-compose up
 
 Open up an Internet Browser & type in the address bar;
 
-[localhost](http://localhost)
+* [localhost](http://localhost)
+
+To login use the following credentials (you will be asked to update after login);
+
+* username: ```admin```
+* password: ```password```
 
 Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
 
