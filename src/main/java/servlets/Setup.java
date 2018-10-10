@@ -73,10 +73,14 @@ public class Setup extends HttpServlet {
 					htmlOutput = bundle.getString("generic.text.setup.connection.failed");
 				} else {
 					try {
-						if (dbOverride.equalsIgnoreCase("true")) {
+						if (dbOverride.equalsIgnoreCase("overide")) {
 							executeSqlScript();
 							htmlOutput = bundle.getString("generic.text.setup.success") + " " + bundle.getString("generic.text.setup.success.overwrittendb");
-						} else {
+						}
+						else if (dbOverride.equalsIgnoreCase("upgrade")) {
+							executeUpdateScript();
+							htmlOutput = bundle.getString("generic.text.setup.success") + " " + bundle.getString("generic.text.setup.success.updatedb");
+						}else {
 							htmlOutput = bundle.getString("generic.text.setup.success");
 						}
 						success = true;
@@ -151,6 +155,23 @@ public class Setup extends HttpServlet {
 			file = new File(getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
 			data = FileUtils.readFileToString(file, Charset.defaultCharset() );
 			psProcToexecute = databaseConnection.createStatement();
+			psProcToexecute.executeUpdate(data);
+
+		} catch (Exception e) {
+			log.fatal(e);
+			e.printStackTrace();
+			throw new InstallationException(e);
+		}
+	}
+
+	private synchronized void executeUpdateScript() throws InstallationException {
+
+		try {
+			File file = new File(getClass().getClassLoader().getResource("/database/updatev3_0tov3_1.sql").getFile());
+			String data = FileUtils.readFileToString(file, Charset.defaultCharset() );
+
+			Connection databaseConnection = Database.getDatabaseConnection(null, true);
+			Statement psProcToexecute = databaseConnection.createStatement();
 			psProcToexecute.executeUpdate(data);
 
 		} catch (Exception e) {
