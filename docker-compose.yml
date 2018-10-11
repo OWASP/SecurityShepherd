@@ -1,0 +1,50 @@
+version: '2'
+services:
+  db:
+    image: ${IMAGE_MYSQL}
+    container_name: ${CONTAINER_MYSQL}
+    env_file:
+      - .env
+    build:
+      context: ./docker/mysql
+      args:
+        MYSQL_VERSION: ${MYSQL_VERSION}
+        CONTAINER_TOMCAT: ${CONTAINER_TOMCAT}
+        DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASS}
+  mongo:
+    image: ${IMAGE_MONGO}
+    container_name: ${CONTAINER_MONGO}
+    env_file:
+      - .env
+    build:
+      context: ./docker/mongo
+      args:
+        MONGODB_VERSION: ${MONGODB_VERSION}
+  web:
+    image: ${IMAGE_TOMCAT}
+    container_name: ${CONTAINER_TOMCAT}
+    env_file:
+      - .env
+    build:
+      context: .
+      args:
+        TOMCAT_DOCKER_VERSION: ${TOMCAT_DOCKER_VERSION}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASS: ${MYSQL_PASS}
+        MYSQL_URI: jdbc:mysql://${CONTAINER_MYSQL}:3306
+        MONGO_HOST: ${CONTAINER_MONGO}
+        MONGO_PORT: 27017
+        MONGO_CONN_TIMEOUT: 1000
+        MONGO_SOCK_TIMEOUT: 0
+        MONGO_SVR_TIMEOUT: 30000
+        TLS_KEYSTORE_FILE: ${TLS_KEYSTORE_FILE}
+        TLS_KEYSTORE_PASS: ${TLS_KEYSTORE_PASS}
+        ALIAS: ${ALIAS}
+        HTTPS_PORT: ${HTTPS_PORT}
+    ports:
+      - $HTTP_PORT:8080
+      - $HTTPS_PORT:8443
+    depends_on:
+      - db

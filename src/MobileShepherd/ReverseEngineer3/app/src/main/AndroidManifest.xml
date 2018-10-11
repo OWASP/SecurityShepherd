@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mobshep.reverseengineer3"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="20" />
+    
+    <permission
+        android:name="com.mobshep.RE4.START_ACTIVITY"
+        android:icon="@drawable/ic_launcher"
+        android:logo="@drawable/ic_launcher"
+        android:protectionLevel="dangerous" >
+    </permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.mobshep.reverseengineer3.Reverse_Engineering4"
+            android:label="@string/app_name"
+            android:permission="com.app.mobshep.RE4.START_ACTIVITY"
+            android:theme="@style/ShepherdTheme" >
+            <intent-filter>
+                <action android:name="com.mobshep.ReverseEngineer4.Reverse_Engineering4" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.mobshep.reverseengineer3.Splash"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
