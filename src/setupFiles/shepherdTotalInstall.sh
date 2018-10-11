@@ -24,8 +24,8 @@ else
 	sudo echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/default/tomcat8
 	sudo echo "AUTHBIND=yes" >> /etc/default/tomcat8
   #Have to CHOWN conf / etc/tomcat8 so Tomcat can create DB Auth / DB Prop files there.
-  sudo chown /etc/tomcat8 tomcat8
-  sudo chown -R /var/lib/tomcat8/conf tomcat8
+  sudo chown tomcat8 /etc/tomcat8
+  sudo chown -R tomcat8 /var/lib/tomcat8/conf
 	cd /home/*
 	homeDirectory="$(pwd)/"
 	keyStoreFileName="shepherdKeystore.jks"
@@ -55,7 +55,7 @@ else
 	chown tomcat8 /etc/authbind/byport/80
 	chown tomcat8 /etc/authbind/byport/443
 
-  echo "Configuring MySQL"
+  echo "Configuring MySQL (Blank Pass, just hit return after these two commands)"
 	mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'CowSaysMoo';" --force -p
 	mysql -u root -e "FLUSH PRIVILEGES;" --force -p
 
