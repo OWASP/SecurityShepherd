@@ -761,14 +761,36 @@ if (request.getSession() != null)
 						});
 						if(ajaxCall.status == 200) {
 							theActualFile = ajaxCall.responseText;
-							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");			
+							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
 							$("#theLesson").load(function(){
-								$("#submitResult").slideDown("fast", function(){
-									$("#contentDiv").slideDown("slow");
-								});
+								<% if(showCheatSheet) { %>
+									$("#submitResult").slideDown("fast", function(){
+										$("#cheatSheetButton").slideDown("fast", function(){
+											$("#contentDiv").slideDown("slow", function(){
+												var scrollTo = $("#moduleResult").offset().top;
+												scrollTo = scrollTo - 60;
+												console.log("Scroll Up to: " + scrollTo);
+												$('html, body').animate({
+													scrollTop: scrollTo
+												}, 1000);
+											});
+										});
+									});
+									<% } else { %>
+									$("#submitResult").slideDown("fast", function(){
+										$("#contentDiv").slideDown("slow", function(){
+											var scrollTo = $("#moduleResult").offset().top;
+											scrollTo = scrollTo - 60;
+											console.log("Scroll Up to: " + scrollTo);
+											$('html, body').animate({
+												scrollTop: scrollTo
+											}, 1000);
+										});
+									});
+								<% } %>
 							}).appendTo('#contentDiv');
-						} else {			
-							$('#contentDiv').html("<p> " + theErrorMessage + ": " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");			
+						} else {
+							$('#contentDiv').html("<p> " + theErrorMessage + ": " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 							$("#contentDiv").slideDown("slow");
 						}
 					});
