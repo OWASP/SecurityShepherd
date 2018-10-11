@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">Mobile Shepherd</string>
+
+    <string name="ids">Insecure Data</string>
+    <string name="ids1">Insecure Data 1</string>
+    <string name="ids2">Insecure Data 2</string>
+    <string name="ids3">Insecure Data 3</string>
+    <string name="csi">Injection</string>
+    <string name="csi1">Injection 1</string>
+    <string name="csi2">Injection 2</string>
+    <string name="bc">Broken Crypto</string>
+    <string name="bc1">Broken Crypto 1</string>
+    <string name="bc2">Broken Crypto 2</string>
+    <string name="bc3">Broken Crypto 3</string>
+    <string name="udl">Data Leakage</string>
+    <string name="udl1">Data Leakage 1</string>
+    <string name="udl2">Data Leakage 2</string>
+    <string name="pa">Poor Auth</string>
+    <string name="itls">Insufficient TLS</string>
+    <string name="cpl">Provider Leakage</string>
+    <string name="cpl1">Provider Leakage 1</string>
+    <string name="sdui">Untrusted Input</string>
+    <string name="re">Reverse Engineer</string>
+    <string name="re1">Reverse Engineer 1</string>
+    <string name="re2">Reverse Engineer 2</string>
+    <string name="re3">Reverse Engineer 3</string>
+
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
+    <string name="action_clearSession">Clear Session</string>
+    <string name="action_license">License</string>
+    <string name="action_exit">Exit</string>
+
+
+    <!--  Preferences -->
+    <string name="dialog_based_preferences">Server Preferences</string>
+
+    <string name="intro">This is a vulnerable App made to be used with the OWASP Security Shepherd Project. You will need to configure the server address in the settings to match the address of the Security Shepherd instance you have access to. This can be either a URL or an IP. For more information, please visit https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
+
+    <string name="server_title">Server Address</string>
+    <string name="server_summary">Enter Server address here</string>
+    <string name="server_dialog_title">Enter Server Address</string>
+
+    <string name="license_title">License</string>
+    <string name="summary_license">This App is part of the Security Shepherd Project. The Security Shepherd project is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. The Security Shepherd project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with the Security Shepherd project.  If not, see http://www.gnu.org/licenses.</string>
+    <string name="title_test_preference">Test Server Connection</string>
+    <string name="summary_test_preference">Tests the specified Server connection</string>
+
+    <string name="message1">48656c6c6f2c20686f772061726520796f753f2057652061726520686f6c64696e67206120636f6d7065746974696f6e2c2077686f657665722063616e2067657420746865206b65792066726f6d207468697320636f6e766572736174696f6e2077696c6c2077696e2074686520636f6d7065746974696f6e</string>
+    <string name="message2">576169742e2e2e20576861743f21204e6f626f647920746f6c64206d6521205468697320636f6d7065746974696f6e2077696c6c206265206f76657220696e207365636f6e64732120576861746576657220796f7520646f2c20646f206e6f74207075626c697368207468697320636f6e766572736174696f6e</string>
+    <string name="message3">4f683f20416e642077687920776f756c6420746861742062653f</string>
+    <string name="message4">5468697320636f6e766572736174696f6e206973206e6f7420656e6372797074656420616e64207468657265666f7265206e6f742073656375726520696e2074686520736c6967687465737421205365637572697479206e65766572206d61646520697420746f207468652066696e616c2070726f647563742e204f757220646973636c61696d657220636c6561726c792073746174657320746861742075736572732073686f756c64206e6f742073656e642073656e7369746976652064617461206f766572206f7572204170702e </string>
+    <string name="message5">57656c6c2049206861766520746f20646f20746869732e2e2e2020546865206b65792069732033336564656233393764363635656437643161353830663331343864346232662e20492077696c6c2065646974207468697320636f6e766572736174696f6e20627920454f442e</string>
+
+    <string name="bc1message1">mJv7SjMKHUotNI1W1rZgeMkPY5YB6PQzi8oSwBOmEJ58FL3x1lTY0j9Yx6iqK4+i51ApyYLamzbIbL84lN/AIEyrKbnbaJ0yupysVDCXMmHu7Sivr6766ah7MpbPPGdZGpbn+QZ7pdkUi8x4VqX6zsC5XMPAbKQc</string>
+    <string name="bc1message2">g915WutGOXkVflgYAOALfpumYUMFKIMUqmWDF0JJkD1EkEq2aNFIBHKg/sPquHMDxpaE5t+rqcmQREh2KtHyxz71qqlL3G54tUflHYDalSiMbxXkKbCnwVvLRu9y/CMB</string>
+    <string name="bc1message3">XJygdr1j/z2eiNHwJwn7okCDJlpZ5JxHjER1mJhveOOaxjBtwkUMQOJPb0Sdnu2Yw3OGpxV+3OfqYL+o3n9JVOwIKCVJc3d0pdNGmHspCgT5kXYeaegzRWLj0ClVPznpeH0cuF43em6wLnKW6Yvfaa4EqJ9tmWMZKl1nex+fTaP8tHM/3MWV+w==</string>
+
+    <string name="action_info">Info</string>
+    <string name = "action_disclaimer">Disclaimer</string>
+</resources>

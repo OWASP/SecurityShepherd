@@ -1,0 +1,26 @@
+[
+    {
+        "outputFile": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\res\\merged\\release\\values-port\\values-port.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 55,
+                    "endOffset": 106
+                },
+                "from": {
+                    "file": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\21.0.3\\res\\values-port\\values.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 56,
+                        "endColumn": 55,
+                        "endOffset": 107
+                    }
+                }
+            }
+        ]
+    }
+]

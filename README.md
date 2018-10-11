@@ -1,33 +1,50 @@
-# OWASP Security Shepherd
+ 
+# OWASP Security Shepherd [![OWASP Flagship](https://img.shields.io/badge/owasp-flagship%20project-48A646.svg)](https://www.owasp.org/index.php/OWASP_Project_Inventory#tab=Flagship_Projects) 
 The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skill set to security expert status.
+
+[![Build Status](https://travis-ci.com/OWASP/SecurityShepherd.svg?branch=dev)](https://travis-ci.com/OWASP/SecurityShepherd)
   
 # Where can I download Security Shepherd?
 
 ### Virtual Machine or Manual Setup
-You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases/tag/v3.0)
+You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases)
 
-### Docker
-There is also a docker image available from [Dockerhub](https://hub.docker.com/r/ismisepaul/securityshepherd/) you can pull it down with  
-`docker pull ismisepaul/securityshepherd` 
+### Docker (Ubuntu Linux Host)
 
-Note: You'll need to get a shell on your docker container and run mysql and tomcat manually;  
-```BASH 
-docker run -i -p 80:80 -p 443:443 -t ismisepaul/securityshepherd /bin/bash
+#### Initial Setup
+```console
+# Install pre-reqs
+sudo apt install git maven docker docker-compose default-jdk
+
+# Clone the github repository
+git clone https://github.com/OWASP/SecurityShepherd.git
+
+# Change directory into the local copy of the repository
+cd SecurityShepherd
+
+# Adds current user to the docker group (don't have to run docker with sudo)
+sudo gpasswd -a $USER docker
+
+# Run maven to generate the WAR and HTTPS Cert.
+mvn -Pdocker clean install -DskipTests
+
+# Build the docker images, docker network and bring up the environment
+docker-compose up
 ```
-```BASH 
-/usr/bin/mysqld_safe &
-service tomcat7 start
-```  
-If you don't have ```authbind``` installed and configured on your host machine e.g. on Ubuntu you'll need to do the following;  
-```BASH
-sudo apt-get install authbind   
-touch /etc/authbind/byport/80  
-touch /etc/authbind/byport/443  
-chmod 550 /etc/authbind/byport/80  
-chmod 550 /etc/authbind/byport/443  
-chown tomcat7 /etc/authbind/byport/80  
-chown tomcat7 /etc/authbind/byport/443  
-```
+
+Open up an Internet Browser & type in the address bar;
+
+* [localhost](http://localhost)
+
+To login use the following credentials (you will be asked to update after login);
+
+* username: ```admin```
+* password: ```password```
+
+Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
+
+#### Full Guide
+[Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
 
 # How do I setup Security Shepherd?
 We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.
@@ -47,19 +64,19 @@ Shepherd includes over sixty levels across the entire spectrum of Web and Mobile
 * **Gentle Learning Curve**  
 Shepherd is a perfect for users completely new to security with levels increases in difficulty at a pleasant pace.
 * **Layman Write Ups**  
-Each security concept when first presented in Shepherd, is done so in layman terms so that anyone can beginner can absorb them.
+When each security concept is first presented in Shepherd, it is done so in layman terms so that anyone (even beginners) can absorb them.
 * **Real World Examples**  
-The security risks in Shepherd are real vulnerabilities that have had their exploit impact dampened to protect the application, users and environment. There are no simulated security risks which require an expected, specific attack vector in order to pass a level. Attack vectors when used on Shepherd are how they would behave in the real world.
+The security risks in Shepherd are real vulnerabilities that have had their exploit impact dampened to protect the application, users, and environment. There are no simulated security risks which require an expected, specific attack vector in order to pass a level. Attack vectors when used on Shepherd are how they would behave in the real world.
 * **Scalability**  
 Shepherd can be used locally by a single user or easily as a server for a high amount of users.
 * **Highly Customisable**  
 Shepherd enables admins to set what levels are available to their users and in what way they are presentended (Open, CTF and Tournament Layouts)
 * **Perfect for Classrooms**  
-Shepherd gives its players user specific solution keys to prevent students from sharing keys, rather than going through the steps required to complete a level.
+Shepherd gives it's players user specific solution keys to prevent students from sharing keys, rather than going through the steps required to complete a level.
 * **Scoreboard**  
 Security Shepherd has a configurable scoreboard to encourage a competitive learning environment. Users that complete levels first, second and third get medals on their scoreboard entry and bonus points to keep things entertaining on the scoreboard.
 * **User Management**  
-Security Shepherd admins can create users, create admins, suspend, unsuspend, add bonus points or take penalty points away user accounts with the admin user management controls. Admins can also segment their students into specific class groups. Admins can view the progress a class has made to identify struggling participants. An admin can even close public registration and manually create users if they wish for a private experience.
+Security Shepherd admins can create users, create admins, suspend, unsuspend, add bonus points, or take penalty points away from user's accounts with the admin user management controls. Admins can also segment their students into specific class groups. Admins can view the progress a class has made to identify struggling participants. An admin can even close public registration and manually create users if they wish for a private experience.
 * **Robust Service**  
 Shepherd has been used to run online CTFs such as the OWASP Global CTF and OWASP LATAM Tour CTF 2015, both surpassing 200 active users and running with no down time, bar planned maintenance periods.
 * **Configurable Feedback**  

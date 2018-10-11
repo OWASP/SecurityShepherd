@@ -1,0 +1,493 @@
+body {
+	margin: 0;
+	padding: 0;
+	background: #FFFFFF url(images/grassTile.jpg) repeat-x top center;
+	font-size: 13px;
+	color: #090212;
+}
+
+body, th, td, input, textarea, select, option, p, div {
+	font-family: "Helvetica Neue", Helvetica Arial, "Lucida Grande", sans-serif;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+	color: #0A000A;
+}
+
+h1 {
+	letter-spacing: -2px;
+	font-size: 3em;
+}
+
+h2 {
+	letter-spacing: -1px;
+	font-size: 2em;
+}
+
+h2 a {
+	color: #0A000A;
+}
+
+h3 {
+	font-size: 1.5em;
+}
+
+p, ul, ol {
+	line-height: 200%;
+}
+
+a {
+	color: #9B1AC8;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #E6B715;
+}
+
+#wrapper {
+	/* Empty */
+}
+
+#header {
+	width: 757px;
+	height: 240px;
+	margin: 0 auto;
+	background: url(images/shepherdAndSheep.jpg) no-repeat right top;
+}
+
+#header h1, #header p {
+	margin: 0;
+	color: #A878EF;
+}
+
+#header h1 {
+	padding: 65px 0 0 70px;
+}
+
+#header p {
+	padding-left: 73px;
+	margin-top: -10px;
+}
+#header a {
+	color: #A878EF;
+	text-decoration:none;
+}
+
+#page {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+#contentDiv {
+	float: right;
+	width: 685px;
+	margin: 0;
+}
+
+.errorMessage {
+	padding: 10px 10px 10px 10px;
+	background: #FFFFFF;
+	border-style:ridge;
+	border-width:5px;
+	border-color:#E42217;
+}
+
+.errorAlert {
+	background: #E42217;
+	color:#FFFFFF;
+	padding-left = 10px;
+}
+
+.successAlert {
+	background: #7B55B4;
+	color:#FFFFFF;
+	padding-left = 10px;
+}
+
+.title {
+	margin: 0;
+	padding-bottom: 5px;
+	border-bottom: 2px solid #A878EF;
+}
+
+#sidebar {
+	width: 250px;
+}
+
+#sidebar ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#sidebar li {
+}
+
+#sidebar li ul {
+	padding: 15px 15px;
+}
+
+#sidebar li li {
+	border-bottom: 1px dotted #FFFFFF;
+	padding-left: 15px;
+}
+
+#sidebar h2 {
+	margin: 0;
+	padding: 10px 0 0 40px;
+	height: 40px;
+}
+
+#sidebar a {
+	text-decoration: none;
+}
+
+#sidebar a:hover {
+}
+
+#searchResults {
+	width: 100%;
+}
+
+#searchResults li { 
+	cursor: pointer; 
+	cursor: hand;
+	border-bottom: 1px solid #d4d4d4;
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 90%;
+}
+
+/* Footer */
+
+#footer {
+	clear: both;
+	width: 760px;
+	height: 40px;
+	margin: 0 auto;
+	padding: 20px 0 0 0;
+	background: url(images/footer1.gif) no-repeat left top;
+	text-align: center;
+	font-size: smaller;
+	color: #FFFFFF;
+}
+
+#footer a {
+	color: #FFFFFF;
+}
+
+.menuIcon{
+    position: relative;
+    padding-left: 0.05em;
+    font-size: 3em;
+    display: none;
+    padding-top: 5px;
+}
+
+.menuButton {
+	display: block;
+	border-bottom: 3px solid #A878EF;
+	background: #D4D4D4;
+	padding: 5px 5px;
+	border-radius: 5px;
+	color: black;
+	font-size: 1.5em;
+	text-align: center;
+	text-decoration: none;
+	vertical-align: middle;
+	margin-bottom: 5px;
+   }
+   
+.menuButton:hover {
+   border-top-color: #CC99FF;
+   background: #BFBFBF;
+   }
+.menuButton:active {
+   border-top-color: #8660BF;
+   background: #8660BF;
+   }
+   
+   .scoreBar {
+	background-color: #965BED;
+	height: 30px;
+	position: relative;
+	font-size: 25px;
+	font-weight: bold;
+	padding-left: 5;
+	vertical-align: middle;
+	padding-top: 5;
+	border: white;
+	margin: 0 0 3px 0;
+	min-width: 240px;
+	color: white;
+}
+
+.scoreBar:hover {
+	background-color: #AC7DF2;
+	height: 30px;
+	position: relative;
+	font-size: 25px;
+	font-weight: bold;
+	padding-left: 5;
+	vertical-align: middle;
+	padding-top: 5;
+	border: white;
+	margin: 0 0 3px 0;
+	min-width: 240px;
+	color: white;
+}
+
+.scoreLine{
+	display:inline;
+	min-width: 100%;
+}
+
+.leaderboard{
+	min-width: 100%;
+}
+
+.scoreName{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline;
+	position: absolute;
+	left: 80px;
+	width: 50%
+}
+
+.place{
+	display: inline; 
+	color: #000000;
+	min-width:25px;
+}
+
+.scoreNumber{
+	display: inline; 
+	float: right;
+	padding-right: 5px;
+	padding-top: 2px;
+	color: white;
+}
+
+.medalContainer {
+	display: inline;
+}
+
+
+.goldMedalAmountBubble {
+	width: 20px;
+	height: 20px;
+	box-shadow: 1px 1px 1px gray;
+	background-color: gold;
+	color: black;
+	font-weight: bold;
+	font-size: 14px;
+	border-radius: 50%;
+	text-align: center;
+	display: inline-block;
+	margin-left: 5px;
+	line-height: 23px;
+}
+
+.silverMedalAmountBubble {
+	width: 20px;
+	height: 20px;
+	box-shadow: 1px 1px 1px gray;
+	background-color: silver;
+	color: black;
+	font-weight: bold;
+	font-size: 14px;
+	border-radius: 50%;
+	text-align: center;
+	display: inline-block;
+	margin-left: 5px;
+	line-height: 23px;
+}
+
+.bronzeMedalAmountBubble {
+	width: 20px;
+	height: 20px;
+	box-shadow: 1px 1px 1px gray;
+	background-color: #CD7F32;
+	color: black;
+	font-weight: bold;
+	font-size: 14px;
+	border-radius: 50%;
+	text-align: center;
+	display: inline-block;
+	margin-left: 5px;
+	line-height: 23px;
+}
+
+.informationBox {
+	display: block; 
+	margin 0; 
+	border-color:#A878EF; 
+	border-style:dashed; 
+	background-color: #D4D4D4; 
+	padding-top:5px; 
+	padding-bottom:5px; 
+	padding-right:5px; 
+	padding-left:5px;
+	margin-bottom: 5px;
+}
+
+.cheatBox {
+	float: right; 
+	margin 0; 
+	width: 685px;
+	border-color:#A878EF;
+	border-style:dashed;
+	background-color: #D4D4D4;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-right:5px;
+	padding-left:5px;
+	margin-bottom:10px;
+}
+
+.moduleSearchBox{
+	height: 26px;
+	width: 100%;
+	padding: 0 12px 0 25px;
+	background: white url("images/searchIcon.png") 8px 6px no-repeat;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #BFBFBF #BFBFBF #BFBFBF;
+	border-radius: 13px;
+	margin-top: 2px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+	-moz-box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+	-ms-box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+	-o-box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+	box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+}
+
+.resultbox{
+	width: 620px;
+}
+
+#submitResult{
+	display: none; 
+	float: right; 
+}
+
+.levelIframe{
+	word-wrap: break-word;
+	width: 100%;
+	height: 2056px;
+}
+
+.levelList{
+	max-height: 230px; 
+}
+
+.tooltipped {
+	position:relative;
+}
+
+.tooltipped::before{
+	position:absolute;
+	z-index:1000001;
+	display:none;
+	width:0;
+	height:0;
+	color:rgba(0,0,0,0.8);
+	pointer-events:none;
+	content:"";
+	border:5px solid;
+}
+
+.tooltipped::after{
+	background: rgba(212, 212, 212, 0.8);
+    border: 2px solid rgba(168, 120, 239, 0.8);
+    border-radius: 3px;
+    content: attr(aria-label);
+    display: inline-block;
+    font:normal normal 11px/1.5 Helvetica,arial,nimbussansl,liberationsans,freesans,clean,sans-serif";
+    letter-spacing: 0.5px;
+    padding: 5px 8px;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    white-space: pre;
+    word-wrap: break-word;
+    z-index: 1000000;
+	-webkit-font-smoothing:subpixel-antialiased;
+}
+
+.setupPage {
+	width: 80%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.setupPage input[type=text], .setupPage input[type=password], .setupPage select, div .setupPage textarea{
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.setupPage label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+.setupPage input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+
+.setupPage .container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.setupPage .col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.setupPage .col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+.setupPage .row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media screen and (max-width: 600px) {
+  .setupPage .col-25,  .setupPage .col-75, .setupPage  [type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
