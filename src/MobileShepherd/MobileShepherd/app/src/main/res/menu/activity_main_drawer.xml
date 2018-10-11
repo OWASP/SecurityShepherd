@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:title="Insecure Data Storage">
+            <menu>
+                <item
+                    android:id="@+id/nav_ids"
+                    android:icon="@mipmap/ic_folder_black_24dp"
+                    android:title="Insecure Data Storage" />
+                <item
+                    android:id="@+id/nav_ids1"
+                    android:icon="@mipmap/ic_folder_black_24dp"
+                    android:title="Insecure Data Storage 1" />
+                <item
+                    android:id="@+id/nav_ids2"
+                    android:icon="@mipmap/ic_folder_black_24dp"
+                    android:title="Insecure Data Storage 2" />
+                <item
+                    android:id="@+id/nav_ids3"
+                    android:icon="@mipmap/ic_folder_black_24dp"
+                    android:title="Insecure Data Storage 3" />
+            </menu>
+        </item>
+
+        <item android:title="Broken Crypto">
+             <menu>
+                <item
+                    android:id="@+id/nav_bc"
+                    android:icon="@mipmap/ic_https_black_24dp"
+                    android:title="Broken Crypto" />
+                <item
+                    android:id="@+id/nav_bc1"
+                    android:icon="@mipmap/ic_https_black_24dp"
+                    android:title="Broken Crypto 1" />
+                <item
+                    android:id="@+id/nav_bc2"
+                    android:icon="@mipmap/ic_https_black_24dp"
+                    android:title="Broken Crypto 2" />
+                <item
+                    android:id="@+id/nav_bc3"
+                    android:icon="@mipmap/ic_https_black_24dp"
+                    android:title="Broken Crypto 3" />
+            </menu>
+        </item>
+
+
+        <item android:title="Client Side Injection">
+        <menu>
+            <item
+                android:id="@+id/nav_csi"
+                android:icon="@mipmap/ic_storage_black_24dp"
+                android:title="Client Side Injection" />
+            <item
+                android:id="@+id/nav_csi1"
+                android:icon="@mipmap/ic_storage_black_24dp"
+                android:title="Client Side Injection 1" />
+            <item
+                android:id="@+id/nav_csi2"
+                android:icon="@mipmap/ic_storage_black_24dp"
+                android:title="Client Side Injection 2" />
+
+        </menu>
+    </item>
+
+
+        <item android:title="Unintended Data Leakage">
+            <menu>
+                <item
+                    android:id="@+id/nav_udl"
+                    android:icon="@mipmap/ic_https_black_24dp"
+                    android:title="Unintended Data Leakage" />
+
+                <item
+                    android:id="@+id/nav_udl1"
+                    android:icon="@mipmap/ic_https_black_24dp"
+                    android:title="Unintended Data Leakage 1 " />
+
+                <item
+                    android:id="@+id/nav_udl2"
+                    android:icon="@mipmap/ic_https_black_24dp"
+                    android:title="Unintended Data Leakage 2" />
+
+            </menu>
+        </item>
+
+        <item android:title="Poor Authentication">
+            <menu>
+                <item
+                    android:id="@+id/nav_pa"
+                    android:icon="@mipmap/ic_action_image_timer_auto"
+                    android:title="Poor Authentication"
+                />
+                <item
+                    android:id="@+id/nav_pa1"
+                    android:icon="@mipmap/ic_action_image_timer_auto"
+                    android:title="Poor Authentication 1"
+                />
+
+                <item
+                    android:id="@+id/nav_pa2"
+                    android:icon="@mipmap/ic_action_image_timer_auto"
+                    android:title="Poor Authentication 1"
+                    />
+
+            </menu>
+        </item>
+
+        <item android:title="Provider Leakage">
+            <menu>
+                <item
+                    android:id="@+id/nav_pl"
+                    android:icon="@mipmap/ic_action_notification_adb"
+                    android:title="Provider Leakage"
+                    />
+                <item
+                    android:id="@+id/nav_pl1"
+                    android:icon="@mipmap/ic_action_notification_adb"
+                    android:title="Provider Leakage 1"
+                    />
+            </menu>
+        </item>
+
+
+        <item android:title="Insufficient Transport Layer Security">
+            <menu>
+                <item
+                    android:id="@+id/nav_itls"
+                    android:icon="@mipmap/ic_action_notification_adb"
+                    android:title="Insufficient TLS"
+                    />
+            </menu>
+
+        </item>
+
+        <item android:title="Security Decisions Via Untrusted Input">
+            <menu>
+                <item
+                    android:id="@+id/nav_ui"
+                    android:icon="@mipmap/ic_action_notification_adb"
+                    android:title="Untrusted Input"
+                    />
+            </menu>
+
+        </item>
+
+        <item
+            android:id="@+id/nav_scoreboard"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Scoreboard" />
+
+    </group>
+
+</menu>

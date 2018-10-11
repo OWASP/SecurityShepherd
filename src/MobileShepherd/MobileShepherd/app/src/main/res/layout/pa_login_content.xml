@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+     >
+
+    <include
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etName"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="81dp"
+                        android:text="Login"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+
+                    <EditText
+                        android:id="@+id/etName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_alignRight="@+id/etPass"
+                        android:layout_below="@+id/tvTitle"
+                        android:layout_marginTop="25dp"
+                        android:ems="10"
+                        android:background="@xml/edittext"
+                        android:hint="Username"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" />
+                        <requestFocus />
+
+
+                        <EditText
+                        android:id="@+id/etPass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/etName"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="35dp"
+                        android:ems="10"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:background="@xml/edittext"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#DA70D6" >
+
+                    </EditText>
+
+                    <Button
+                        android:id="@+id/bLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/etPass"
+                        android:layout_marginTop="33dp"
+                        android:background="@xml/button"
+                        android:filterTouchesWhenObscured="true"
+                        android:text="Login"
+                        android:layout_alignRight="@+id/etPass"
+                        android:layout_alignEnd="@+id/etPass"
+                        android:layout_alignLeft="@+id/etPass"
+                        android:layout_alignStart="@+id/etPass" />
+
+                    <Button
+                        android:id="@+id/bForgot"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/bLogin"
+                        android:background="@xml/button"
+                        android:layout_marginTop="26dp"
+                        android:text="Reset"
+                        android:layout_alignRight="@+id/bLogin"
+                        android:layout_alignEnd="@+id/bLogin"
+                        android:layout_alignLeft="@+id/bLogin"
+                        android:layout_alignStart="@+id/bLogin" />
+
+</RelativeLayout>

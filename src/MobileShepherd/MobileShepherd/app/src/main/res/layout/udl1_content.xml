@@ -1,0 +1,84 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/mainLayout"
+    android:background="@drawable/background"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+    <include
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+    <RelativeLayout android:id="@+id/Spacer"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="1000dp"
+        android:layout_weight="0.08">
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="400dp"
+        android:layout_weight="0.31"
+        android:layout_marginTop="173dp"
+        android:layout_below="@+id/include"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+
+    <RelativeLayout android:id="@+id/innerBox"
+        android:layout_width="500dip"
+        android:background="@xml/box"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true">
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:onClick="submitClicked"
+        android:id="@+id/bSubmit"
+        android:background="@xml/button"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/etSecret"
+        android:layout_alignEnd="@+id/etSecret"
+        android:layout_alignLeft="@+id/etSecret"
+        android:layout_alignStart="@+id/etSecret" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:hint="Enter Secret"
+        android:background="@xml/edittext"
+        android:textColorHint="#FFFFFF"
+        android:textColor="#DA70D6"
+        android:id="@+id/etSecret"
+        android:layout_marginTop="69dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Show Secret"
+        android:textColor="#DA70D6"
+        android:onClick="onCheckboxClicked"
+        android:id="@+id/cbReveal"
+        android:button="@xml/checkbox"
+        android:layout_marginTop="51dp"
+        android:layout_below="@+id/bSubmit"
+        android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+</RelativeLayout>
+
+</RelativeLayout>

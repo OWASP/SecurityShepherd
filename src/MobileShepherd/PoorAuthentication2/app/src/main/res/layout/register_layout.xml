@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:orientation="vertical"
+android:background="@mipmap/background"
+android:weightSum="1">
+<RelativeLayout android:id="@+id/Spacer"
+    android:layout_width="fill_parent"
+    android:orientation="horizontal"
+    android:layout_height="40dp"
+    android:layout_weight="0.12">
+</RelativeLayout>
+<RelativeLayout android:id="@+id/RelativeLayout01"
+    android:layout_width="fill_parent"
+    android:layout_height="150dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_weight="0.31">
+
+    <RelativeLayout android:id="@+id/innerBox"
+        android:layout_width="500dip"
+        android:background="@xml/box"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true">
+        <requestFocus />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textColor="#FFFFFF"
+            android:hint="Username"
+            android:id="@+id/etUsername"
+            android:textColorHint="#ffbc00ff"
+            android:background="@xml/edittext"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:textColor="#FFFFFF"
+            android:hint="Password"
+            android:id="@+id/etPassword"
+            android:textColorHint="#ffbc00ff"
+            android:background="@xml/edittext"
+            android:layout_below="@+id/etUsername"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:onClick="Register"
+            android:id="@+id/bRegister"
+            android:layout_below="@+id/etPassword"
+            android:layout_alignLeft="@+id/bReturn"
+            android:layout_alignStart="@+id/bReturn"
+            android:layout_alignRight="@+id/bReturn"
+            android:layout_alignEnd="@+id/bReturn" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Return"
+            android:onClick="returnToLogin"
+            android:id="@+id/bReturn"
+            android:layout_below="@+id/bRegister"
+            android:layout_alignRight="@+id/etPassword"
+            android:layout_alignEnd="@+id/etPassword"
+            android:layout_alignLeft="@+id/etPassword"
+            android:layout_alignStart="@+id/etPassword" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
+
+</LinearLayout>

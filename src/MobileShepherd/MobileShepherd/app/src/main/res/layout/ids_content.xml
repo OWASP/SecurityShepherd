@@ -1,0 +1,85 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    android:weightSum="1">
+
+    <include
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+    <RelativeLayout android:id="@+id/Spacer"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="100dp"
+        android:layout_weight="0.08">
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:background="@xml/box"
+        android:layout_height="100dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="0.70">
+
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColorHint="#eaeaea"
+            android:textColor="#eaeaea"
+            android:hint="Name"
+            android:ems="10"
+            android:background="@xml/edittext"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="156dp"
+            android:id="@+id/etName" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColorHint="#eaeaea"
+            android:textColor="#eaeaea"
+            android:hint="Password"
+            android:ems="10"
+            android:background="@xml/edittext"
+            android:layout_below="@+id/etName"
+            android:layout_alignLeft="@+id/etName"
+            android:layout_alignStart="@+id/etName"
+            android:layout_marginTop="46dp"
+            android:id="@+id/etPass" />
+
+        <TextView
+            android:text="Register for updates!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="108dp"
+            android:textColor="#DA70D6"
+            android:id="@+id/textView3" />
+
+        <Button
+            android:text="Submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@xml/button"
+            android:onClick="submitPressed"
+            android:id="@+id/button2"
+            android:layout_below="@+id/etPass"
+            android:layout_marginTop="69dp"
+            android:layout_alignRight="@+id/etPass"
+            android:layout_alignEnd="@+id/etPass"
+            android:layout_alignLeft="@+id/etPass"
+            android:layout_alignStart="@+id/etPass" />
+    </RelativeLayout>
+
+</LinearLayout>
+
