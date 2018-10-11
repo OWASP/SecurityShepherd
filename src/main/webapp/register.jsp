@@ -176,37 +176,13 @@ if(ses.getAttribute("errorMessage") != null)
 		var theEmailAgain = $("#userAddressCnf").val();
 		//Validation
 		var theError = "";
-		if (theName.length == 0 || thePass.length == 0 || thePassAgain.length == 0)
-		{
-			theError = "Please fill out all required fields marked with a '*'";
-		}
-		else if (theName.length < 5)
-		{
-			theError = "Your name must be longer than 5 characters";
-		}
-		else if (theName.length > 32)
-		{
-			theError = "Your name must be no longer than 32 characters";
-		}
-		else if (thePass != thePassAgain)
+		if (thePass != thePassAgain)
 		{
 			theError = "Passwords do not match";
 		}
 		else if (theEmail.length != 0 && theEmail != theEmailAgain)
 		{
 			theError = "Email addresses did not match";
-		}
-		else if (thePass.length < 8)
-		{
-			theError = "Your password must be at least 8 characters long";
-		}
-		else if (thePass.length > 512)
-		{
-			theError = "Your password must be no longer than 512 characters long";
-		}
-		else if (theEmail.length > 128)
-		{
-			theError = "Your email address must be no longer than 128 characters long";
 		}
 		
 		//If Valid, Sent info to servlet, if not, spit out the expected error
