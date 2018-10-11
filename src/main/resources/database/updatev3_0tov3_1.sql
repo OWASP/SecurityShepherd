@@ -1,26 +1,6 @@
--- -----------------------------------------------------
--- Table `core`.`modules`
--- -----------------------------------------------------
-ALTER TABLE `core`.`modules` (
-  `moduleId` VARCHAR(64) NOT NULL ,
-  `moduleName` VARCHAR(64) NOT NULL ,
-  `moduleNameLangPointer` VARCHAR(64) NOT NULL UNIQUE,
-  `moduleType` VARCHAR(16) NOT NULL ,
-  `moduleCategory` VARCHAR(64) NULL ,
-  `moduleCategoryLangPointer` VARCHAR(64) NULL ,
-  `moduleResult` VARCHAR(256) NULL ,
-  `moduleHash` VARCHAR(256) NULL UNIQUE,
-  `moduleStatus` VARCHAR(16) NULL DEFAULT 'open' ,
-  `incrementalRank` INT NULL DEFAULT 200,
-  `scoreValue` INT NOT NULL DEFAULT 50 ,
+use `core`;
 
-  `hardcodedKey` TINYINT(1) NOT NULL DEFAULT TRUE,
-  PRIMARY KEY (`moduleId`) )
-ENGINE = InnoDB;
 
--- -----------------------------------------------------
--- Table `core`.`medals`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `core`.`medals` (
   `medalId` INT NOT NULL AUTO_INCREMENT,
   `classId` VARCHAR(64) NULL,
@@ -44,9 +24,11 @@ CREATE TABLE IF NOT EXISTS `core`.`medals` (
 ENGINE = InnoDB;
 
 
+
 -- -----------------------------------------------------
 -- procedure adminFindById
 -- -----------------------------------------------------
+
 USE `core`;
 -- DELIMITER $$
 CREATE PROCEDURE `core`.`adminFindById` (IN adminId VARCHAR(64))
@@ -59,6 +41,7 @@ END
 -- $$
 -- DELIMITER ;
 ;
+
 -- -----------------------------------------------------
 -- procedure adminGetAll
 -- -----------------------------------------------------
@@ -81,8 +64,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-
-DROP PROCEDURE `core`.`userUpdateResult` (IN theModuleId VARCHAR(64), IN theUserId VARCHAR(64), IN theBefore INT, IN theAfter INT, IN theDifficulty INT, IN theAdditionalInfo LONGTEXT);
+DROP PROCEDURE `core`.`userUpdateResult`;
 -- $$
 -- DELIMITER ;
 
@@ -140,9 +122,6 @@ IF (theBonus > 0) THEN
     END IF;
     COMMIT;
 END IF;
-
--- Medal Available?
-
 
 
 
@@ -240,8 +219,8 @@ END
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`) VALUES ('6f5db377c28da4179bca1a43ede8d6bcf7bd322e', 'Untrusted Input', 'untrusted.input', 'lesson', 'Mobile Security Decisions via Untrusted Input', 'mobile.security.decisions.via.untrusted.input', 'RetroMagicFuturePunch', '5e2b61c679d1f290d23308b3b66c3ec00cd069f1483b705d17f2795a4e77dcb6', 'open', '82', '50', 1);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`) VALUES ('064e28ea4b2f7708b8cb4495d9db1a5e05decdb8', 'Poor Authentication 2', 'poor.authentication.2','challenge', 'Mobile Poor Authentication', 'mobile.poor.authentication', 'MoreRobotsNotEnoughNuts', '808d8372ec7bc7e37e8e3b30d313cb47763926065a4623b27b24cc537fee72a7', 'open', '173', '70', 1);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`) VALUES ('6a411618a05e3cef8ccb6f3d7914412d27782a88', 'Content Provider Leakage 1', 'content.provider.leakage.1', 'challenge', 'Mobile Content Provider', 'mobile.content.provider', 'BlueCupNoPartySorry', '2a845ec1943a6342956a48cdc8ca60f40036b68a810109d0b9d2a35271377980', 'open', '178', '75', 1);
-INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`) VALUES ('145111e80400e4fd48bd3aa5aca382e9c5640793', 'Insecure Cryptographic Storage Challenge 4', 'insecure.cryptographic.storage.challenge.4', 'challenge', 'Insecure Cryptographic Storage', 'insecure.cryptographic.storage', '50980917266ce6ec07471f49b1a046ca6a5034eb9261fb44c3ffc4b16931255c', 'b927fc4d8c9f70a78f8b6fc46a0cc18533a88b2363054a1f391fe855954d12f9', 'open', '211', '115', 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`) VALUES ('f02ce6bcd0a822d245433533997eaf44379065f4', 'Insecure Cryptographic Storage Home Made Key', 'insecure.cryptographic.storage.home.made.key', 'challenge', 'Insecure Cryptographic Storage', 'insecure.cryptographic.storage', '59A8D9A8020C61B3D76A600F94AJCECEABEDD44DF26874BD070BD07D', '9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4', 'open', '240', '140', 0);
 
 
 CALL cheatSheetCreate('6f5db377c28da4179bca1a43ede8d6bcf7bd322e', '6f5db377c28da4179bca1a43ede8d6bcf7bd322e.solution');
+CALL cheatSheetCreate('f02ce6bcd0a822d245433533997eaf44379065f4', 'f02ce6bcd0a822d245433533997eaf44379065f4.solution');
