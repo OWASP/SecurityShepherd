@@ -11,10 +11,7 @@ You can download Security Shepherd VM's or Manual Installation Packs from [GitHu
 
 ### Docker (Ubuntu Linux Host)
 
-#### Full Guide
-[Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
-
-#### Quick Start Guide
+#### Initial Setup
 ```console
 # Install pre-reqs
 sudo apt install git maven docker docker-compose default-jdk
@@ -35,15 +32,19 @@ mvn -Pdocker clean install -DskipTests
 docker-compose up
 ```
 
-When you see the following in the console output the application is ready to use!
-```org.apache.catalina.startup.Catalina.start Server startup in 7987 ms```
-
 Open up an Internet Browser & type in the address bar;
-```console
-localhost
-```
 
-Note: All environment variables can be configured in dotenv ```.env``` file in the root dir.
+* [localhost](http://localhost)
+
+To login use the following credentials (you will be asked to update after login);
+
+* username: ```admin```
+* password: ```password```
+
+Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
+
+#### Full Guide
+[Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
 
 # How do I setup Security Shepherd?
 We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.

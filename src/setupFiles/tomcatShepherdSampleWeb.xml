@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -15,11 +15,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-                      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-  version="3.0">
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+  version="3.1">
 
   <!-- ======================== Introduction ============================== -->
   <!-- This document defines default values for *all* web applications      -->
@@ -42,7 +42,8 @@
   <!-- parameters (default values are in square brackets):                  -->
   <!--                                                                      -->
   <!--   debug               Debugging detail level for messages logged     -->
-  <!--                       by this servlet.  [0]                          -->
+  <!--                       by this servlet. Useful values are 0, 1, and   -->
+  <!--                       11 where higher values mean more detail. [0]   -->
   <!--                                                                      -->
   <!--   fileEncoding        Encoding to be used to read static resources   -->
   <!--                       [platform default]                             -->
@@ -88,10 +89,16 @@
   <!--                       globalXsltFile[null]                           -->
   <!--                                                                      -->
   <!--   globalXsltFile      Site wide configuration version of             -->
-  <!--                       localXsltFile This argument is expected        -->
-  <!--                       to be a physical file. [null]                  -->
+  <!--                       localXsltFile. This argument must either be an -->
+  <!--                       absolute or relative (to either                -->
+  <!--                       $CATALINA_BASE/conf or $CATALINA_HOME/conf)    -->
+  <!--                       path that points to a location below either    -->
+  <!--                       $CATALINA_BASE/conf (checked first) or         -->
+  <!--                       $CATALINA_HOME/conf (checked second).[null]    -->
   <!--                                                                      -->
-  <!--                                                                      -->
+  <!--   showServerInfo      Should server information be presented in the  -->
+  <!--                       response sent to clients when directory        -->
+  <!--                       listings is enabled? [true]                    -->
 
     <servlet>
         <servlet-name>default</servlet-name>
@@ -131,9 +138,9 @@
   <!--                       pages.  See the jasper documentation for more  -->
   <!--                       information.                                   -->
   <!--                                                                      -->
-  <!--   compilerSourceVM    Compiler source VM. [1.6]                      -->
+  <!--   compilerSourceVM    Compiler source VM. [1.7]                      -->
   <!--                                                                      -->
-  <!--   compilerTargetVM    Compiler target VM. [1.6]                      -->
+  <!--   compilerTargetVM    Compiler target VM. [1.7]                      -->
   <!--                                                                      -->
   <!--   development         Is Jasper used in development mode? If true,   -->
   <!--                       the frequency at which JSPs are checked for    -->
@@ -156,6 +163,8 @@
   <!--   engineOptionsClass  Allows specifying the Options class used to    -->
   <!--                       configure Jasper. If not present, the default  -->
   <!--                       EmbeddedServletOptions will be used.           -->
+  <!--                       This option is ignored when running under a    -->
+  <!--                       SecurityManager.                               -->
   <!--                                                                      -->
   <!--   errorOnUseBeanInvalidClassAttribute                                -->
   <!--                       Should Jasper issue an error when the value of -->
@@ -217,15 +226,27 @@
   <!--   scratchdir          What scratch directory should we use when      -->
   <!--                       compiling JSP pages?  [default work directory  -->
   <!--                       for the current web application]               -->
+  <!--                       This option is ignored when running under a    -->
+  <!--                       SecurityManager.                               -->
   <!--                                                                      -->
   <!--   suppressSmap        Should the generation of SMAP info for JSR45   -->
   <!--                       debugging be suppressed?  [false]              -->
   <!--                                                                      -->
-  <!--   trimSpaces          Should white spaces in template text between   -->
-  <!--                       actions or directives be trimmed?  [false]     -->
+  <!--   trimSpaces          Should template text that consists entirely of -->
+  <!--                       whitespace be removed from the output? [false] -->
   <!--                                                                      -->
   <!--   xpoweredBy          Determines whether X-Powered-By response       -->
   <!--                       header is added by generated servlet.  [false] -->
+  <!--                                                                      -->
+  <!--   strictQuoteEscaping When scriptlet expressions are used for        -->
+  <!--                       attribute values, should the rules in JSP.1.6  -->
+  <!--                       for the escaping of quote characters be        -->
+  <!--                       strictly applied? [true]                       -->
+  <!--                                                                      -->
+  <!--   quoteAttributeEL    When EL is used in an attribute value on a     -->
+  <!--                       JSP page should the rules for quoting of       -->
+  <!--                       attributes described in JSP.1.6 be applied to  -->
+  <!--                       the expression? [true]                         -->
 
     <servlet>
         <servlet-name>jsp</servlet-name>
@@ -263,7 +284,7 @@
   <!--   isVirtualWebappRelative                                            -->
   <!--                       Should "virtual" paths be interpreted as       -->
   <!--                       relative to the context root, instead of       -->
-  <!--                       the server root?  (0=false, 1=true) [0]        -->
+  <!--                       the server root? [false]                       -->
   <!--                                                                      -->
   <!--   inputEncoding       The encoding to assume for SSI resources if    -->
   <!--                       one is not available from the resource.        -->
@@ -294,7 +315,7 @@
         </init-param>
         <init-param>
           <param-name>isVirtualWebappRelative</param-name>
-          <param-value>0</param-value>
+          <param-value>false</param-value>
         </init-param>
         <load-on-startup>4</load-on-startup>
     </servlet>
@@ -311,13 +332,34 @@
   <!--                                                                      -->
   <!--   cgiPathPrefix        The CGI search path will start at             -->
   <!--                        webAppRootDir + File.separator + this prefix. -->
-  <!--                        [WEB-INF/cgi]                                 -->
+  <!--                        If not set, then webAppRootDir is used.       -->
+  <!--                        Recommended value: WEB-INF/cgi                -->
   <!--                                                                      -->
-  <!--   debug                Debugging detail level for messages logged    -->
-  <!--                        by this servlet.  [0]                         -->
+  <!--   enableCmdLineArguments                                             -->
+  <!--                        Are command line parameters generated from    -->
+  <!--                        the query string as per section 4.4 of 3875   -->
+  <!--                        RFC? [true]                                   -->
   <!--                                                                      -->
   <!--   executable           Name of the executable used to run the        -->
   <!--                        script. [perl]                                -->
+  <!--                                                                      -->
+  <!--   envHttpHeaders       A regular expression used to select the HTTP  -->
+  <!--                        headers passed to the CGI process as          -->
+  <!--                        environment variables. Note that headers are  -->
+  <!--                        converted to upper case before matching and   -->
+  <!--                        that the entire header name must match the    -->
+  <!--                        pattern.                                      -->
+  <!--                        [ACCEPT[-0-9A-Z]*|CACHE-CONTROL|COOKIE|HOST|  -->
+  <!--                         IF-[-0-9A-Z]*|REFERER|USER-AGENT]            -->
+  <!--                                                                      -->
+  <!--  environment-variable- An environment to be set for the execution    -->
+  <!--                        environment of the CGI script. The name of    -->
+  <!--                        variable is taken from the parameter name.    -->
+  <!--                        To configure an environment variable named    -->
+  <!--                        FOO, configure a parameter named              -->
+  <!--                        environment-variable-FOO. The parameter value -->
+  <!--                        is used as the environment variable value.    -->
+  <!--                        The default is no environment variables.      -->
   <!--                                                                      -->
   <!--   parameterEncoding    Name of parameter encoding to be used with    -->
   <!--                        CGI servlet.                                  -->
@@ -335,14 +377,10 @@
         <servlet-name>cgi</servlet-name>
         <servlet-class>org.apache.catalina.servlets.CGIServlet</servlet-class>
         <init-param>
-          <param-name>debug</param-name>
-          <param-value>0</param-value>
-        </init-param>
-        <init-param>
           <param-name>cgiPathPrefix</param-name>
           <param-value>WEB-INF/cgi</param-value>
         </init-param>
-         <load-on-startup>5</load-on-startup>
+        <load-on-startup>5</load-on-startup>
     </servlet>
 -->
 
@@ -387,6 +425,46 @@
 
 
   <!-- ================== Built In Filter Definitions ===================== -->
+
+  <!-- A filter that sets various security related HTTP Response headers.   -->
+  <!-- This filter supports the following initialization parameters         -->
+  <!-- (default values are in square brackets):                             -->
+  <!--                                                                      -->
+  <!--   hstsEnabled         Should the HTTP Strict Transport Security      -->
+  <!--                       (HSTS) header be added to the response? See    -->
+  <!--                       RFC 6797 for more information on HSTS. [true]  -->
+  <!--                                                                      -->
+  <!--   hstsMaxAgeSeconds   The max age value that should be used in the   -->
+  <!--                       HSTS header. Negative values will be treated   -->
+  <!--                       as zero. [0]                                   -->
+  <!--                                                                      -->
+  <!--   hstsIncludeSubDomains                                              -->
+  <!--                       Should the includeSubDomains parameter be      -->
+  <!--                       included in the HSTS header.                   -->
+  <!--                                                                      -->
+  <!--   antiClickJackingEnabled                                            -->
+  <!--                       Should the anti click-jacking header           -->
+  <!--                       X-Frame-Options be added to every response?    -->
+  <!--                       [true]                                         -->
+  <!--                                                                      -->
+  <!--   antiClickJackingOption                                             -->
+  <!--                       What value should be used for the header. Must -->
+  <!--                       be one of DENY, SAMEORIGIN, ALLOW-FROM         -->
+  <!--                       (case-insensitive). [DENY]                     -->
+  <!--                                                                      -->
+  <!--   antiClickJackingUri IF ALLOW-FROM is used, what URI should be      -->
+  <!--                       allowed? []                                    -->
+  <!--                                                                      -->
+  <!--   blockContentTypeSniffingEnabled                                    -->
+  <!--                       Should the header that blocks content type     -->
+  <!--                       sniffing be added to every response? [true]    -->
+<!--
+    <filter>
+        <filter-name>httpHeaderSecurity</filter-name>
+        <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+-->
 
   <!-- A filter that sets character encoding that is used to decode -->
   <!-- parameters in a POST request -->
@@ -444,7 +522,7 @@
   <!--   isVirtualWebappRelative                                            -->
   <!--                       Should "virtual" paths be interpreted as       -->
   <!--                       relative to the context root, instead of       -->
-  <!--                       the server root?  (0=false, 1=true) [0]        -->
+  <!--                       the server root? [false]                       -->
   <!--                                                                      -->
   <!--   allowExec           Is use of the exec command enabled? [false]    -->
 
@@ -468,13 +546,22 @@
         </init-param>
         <init-param>
           <param-name>isVirtualWebappRelative</param-name>
-          <param-value>0</param-value>
+          <param-value>false</param-value>
         </init-param>
     </filter>
 -->
 
 
   <!-- ==================== Built In Filter Mappings ====================== -->
+
+  <!-- The mapping for the HTTP header security Filter -->
+<!--
+    <filter-mapping>
+        <filter-name>httpHeaderSecurity</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+-->
 
   <!-- The mapping for the Set Character Encoding Filter -->
 <!--
@@ -516,6 +603,7 @@
   <!-- based on these mappings.  Additional mappings can be added here (to  -->
   <!-- apply to all web applications), or in your own application's web.xml -->
   <!-- deployment descriptor.                                               -->
+  <!-- Note: Extensions are always matched in a case-insensitive manner.    -->
 
     <mime-mapping>
         <extension>123</extension>
@@ -524,6 +612,10 @@
     <mime-mapping>
         <extension>3dml</extension>
         <mime-type>text/vnd.in3d.3dml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>3ds</extension>
+        <mime-type>image/x-3ds</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>3g2</extension>
@@ -642,12 +734,20 @@
         <mime-type>application/vnd.android.package-archive</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>appcache</extension>
+        <mime-type>text/cache-manifest</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>application</extension>
         <mime-type>application/x-ms-application</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>apr</extension>
         <mime-type>application/vnd.lotus-approach</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>arc</extension>
+        <mime-type>application/x-freearc</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>art</extension>
@@ -758,6 +858,14 @@
         <mime-type>application/octet-stream</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>blb</extension>
+        <mime-type>application/x-blorb</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>blorb</extension>
+        <mime-type>application/x-blorb</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>bmi</extension>
         <mime-type>application/vnd.bmi</mime-type>
     </mime-mapping>
@@ -834,6 +942,10 @@
         <mime-type>application/vnd.ms-cab-compressed</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>caf</extension>
+        <mime-type>audio/x-caf</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>cap</extension>
         <mime-type>application/vnd.tcpdump.pcap</mime-type>
     </mime-mapping>
@@ -844,6 +956,26 @@
     <mime-mapping>
         <extension>cat</extension>
         <mime-type>application/vnd.ms-pki.seccat</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>cb7</extension>
+        <mime-type>application/x-cbr</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>cba</extension>
+        <mime-type>application/x-cbr</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>cbr</extension>
+        <mime-type>application/x-cbr</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>cbt</extension>
+        <mime-type>application/x-cbr</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>cbz</extension>
+        <mime-type>application/x-cbr</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>cc</extension>
@@ -904,6 +1036,10 @@
     <mime-mapping>
         <extension>cer</extension>
         <mime-type>application/pkix-cert</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>cfs</extension>
+        <mime-type>application/x-cfs-compressed</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>cgm</extension>
@@ -1078,12 +1214,20 @@
         <mime-type>application/vnd.mobius.daf</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>dart</extension>
+        <mime-type>application/vnd.dart</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>dataless</extension>
         <mime-type>application/vnd.fdsn.seed</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>davmount</extension>
         <mime-type>application/davmount+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>dbk</extension>
+        <mime-type>application/docbook+xml</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>dcr</extension>
@@ -1120,6 +1264,10 @@
     <mime-mapping>
         <extension>dfac</extension>
         <mime-type>application/vnd.dreamfactory</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>dgc</extension>
+        <mime-type>application/x-dgc-compressed</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>dib</extension>
@@ -1159,7 +1307,7 @@
     </mime-mapping>
     <mime-mapping>
         <extension>dmg</extension>
-        <mime-type>application/octet-stream</mime-type>
+        <mime-type>application/x-apple-diskimage</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>dmp</extension>
@@ -1306,12 +1454,20 @@
         <mime-type>application/octet-stream</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>emf</extension>
+        <mime-type>application/x-msmetafile</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>eml</extension>
         <mime-type>message/rfc822</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>emma</extension>
         <mime-type>application/emma+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>emz</extension>
+        <mime-type>application/x-msmetafile</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>eol</extension>
@@ -1334,6 +1490,10 @@
         <mime-type>application/vnd.eszigno3+xml</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>esa</extension>
+        <mime-type>application/vnd.osgi.subsystem</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>esf</extension>
         <mime-type>application/vnd.epson.esf</mime-type>
     </mime-mapping>
@@ -1344,6 +1504,14 @@
     <mime-mapping>
         <extension>etx</extension>
         <mime-type>text/x-setext</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eva</extension>
+        <mime-type>application/x-eva</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>evy</extension>
+        <mime-type>application/x-envoy</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>exe</extension>
@@ -1388,6 +1556,10 @@
     <mime-mapping>
         <extension>fbs</extension>
         <mime-type>image/vnd.fastbidsheet</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>fcdt</extension>
+        <mime-type>application/vnd.adobe.formscentral.fcdt</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>fcs</extension>
@@ -1530,8 +1702,16 @@
         <mime-type>application/vnd.groove-account</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>gam</extension>
+        <mime-type>application/x-tads</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>gbr</extension>
         <mime-type>application/rpki-ghostbusters</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>gca</extension>
+        <mime-type>application/x-gca-compressed</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>gdl</extension>
@@ -1566,6 +1746,10 @@
         <mime-type>application/vnd.groove-identity-message</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>gml</extension>
+        <mime-type>application/gml+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>gmx</extension>
         <mime-type>application/vnd.gmx</mime-type>
     </mime-mapping>
@@ -1578,6 +1762,10 @@
         <mime-type>application/vnd.flographit</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>gpx</extension>
+        <mime-type>application/gpx+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>gqf</extension>
         <mime-type>application/vnd.grafeq</mime-type>
     </mime-mapping>
@@ -1588,6 +1776,10 @@
     <mime-mapping>
         <extension>gram</extension>
         <mime-type>application/srgs</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>gramps</extension>
+        <mime-type>application/x-gramps-xml</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>gre</extension>
@@ -1620,6 +1812,10 @@
     <mime-mapping>
         <extension>gv</extension>
         <mime-type>text/vnd.graphviz</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>gxf</extension>
+        <mime-type>application/gxf</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>gxt</extension>
@@ -1790,6 +1986,10 @@
         <mime-type>application/inkml+xml</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>install</extension>
+        <mime-type>application/x-install-instructions</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>iota</extension>
         <mime-type>application/vnd.astraea-software.iota</mime-type>
     </mime-mapping>
@@ -1811,7 +2011,7 @@
     </mime-mapping>
     <mime-mapping>
         <extension>iso</extension>
-        <mime-type>application/octet-stream</mime-type>
+        <mime-type>application/x-iso9660-image</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>itp</extension>
@@ -1894,6 +2094,10 @@
         <mime-type>application/json</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>jsonml</extension>
+        <mime-type>application/jsonml+json</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>jspf</extension>
         <mime-type>text/plain</mime-type>
     </mime-mapping>
@@ -1942,6 +2146,10 @@
         <mime-type>application/vnd.kde.kpresenter</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>kpxx</extension>
+        <mime-type>application/vnd.ds-keypoint</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>ksp</extension>
         <mime-type>application/vnd.kde.kspread</mime-type>
     </mime-mapping>
@@ -1987,7 +2195,7 @@
     </mime-mapping>
     <mime-mapping>
         <extension>lha</extension>
-        <mime-type>application/octet-stream</mime-type>
+        <mime-type>application/x-lzh-compressed</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>link66</extension>
@@ -2004,6 +2212,10 @@
     <mime-mapping>
         <extension>listafp</extension>
         <mime-type>application/vnd.ibm.modcap</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>lnk</extension>
+        <mime-type>application/x-ms-shortcut</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>log</extension>
@@ -2035,7 +2247,7 @@
     </mime-mapping>
     <mime-mapping>
         <extension>lzh</extension>
-        <mime-type>application/octet-stream</mime-type>
+        <mime-type>application/x-lzh-compressed</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>m13</extension>
@@ -2118,6 +2330,10 @@
         <mime-type>text/troff</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>mar</extension>
+        <mime-type>application/octet-stream</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>mathml</extension>
         <mime-type>application/mathml+xml</mime-type>
     </mime-mapping>
@@ -2166,6 +2382,10 @@
         <mime-type>application/metalink4+xml</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>metalink</extension>
+        <mime-type>application/metalink+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>mets</extension>
         <mime-type>application/mets+xml</mime-type>
     </mime-mapping>
@@ -2194,6 +2414,10 @@
         <mime-type>audio/midi</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>mie</extension>
+        <mime-type>application/x-mie</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>mif</extension>
         <mime-type>application/x-mif</mime-type>
     </mime-mapping>
@@ -2210,6 +2434,22 @@
         <mime-type>video/mj2</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>mk3d</extension>
+        <mime-type>video/x-matroska</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>mka</extension>
+        <mime-type>audio/x-matroska</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>mks</extension>
+        <mime-type>video/x-matroska</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>mkv</extension>
+        <mime-type>video/x-matroska</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>mlp</extension>
         <mime-type>application/vnd.dolby.mlp</mime-type>
     </mime-mapping>
@@ -2224,6 +2464,10 @@
     <mime-mapping>
         <extension>mmr</extension>
         <mime-type>image/vnd.fujixerox.edmics-mmr</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>mng</extension>
+        <mime-type>video/x-mng</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>mny</extension>
@@ -2454,8 +2698,16 @@
         <mime-type>application/x-dtbncx+xml</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>nfo</extension>
+        <mime-type>text/x-nfo</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>ngdat</extension>
         <mime-type>application/vnd.nokia.n-gage.data</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>nitf</extension>
+        <mime-type>application/vnd.nitf</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>nlu</extension>
@@ -2482,8 +2734,20 @@
         <mime-type>image/vnd.net-fpx</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>nsc</extension>
+        <mime-type>application/x-conference</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>nsf</extension>
         <mime-type>application/vnd.lotus-notes</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ntf</extension>
+        <mime-type>application/vnd.nitf</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>nzb</extension>
+        <mime-type>application/x-nzb</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>oa2</extension>
@@ -2500,6 +2764,10 @@
     <mime-mapping>
         <extension>obd</extension>
         <mime-type>application/x-msbinder</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>obj</extension>
+        <mime-type>application/x-tgif</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>oda</extension>
@@ -2572,6 +2840,10 @@
         <mime-type>application/ogg</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>omdoc</extension>
+        <mime-type>application/omdoc+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>onepkg</extension>
         <mime-type>application/onenote</mime-type>
     </mime-mapping>
@@ -2590,6 +2862,10 @@
     <mime-mapping>
         <extension>opf</extension>
         <mime-type>application/oebps-package+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>opml</extension>
+        <mime-type>text/x-opml</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>oprc</extension>
@@ -2613,7 +2889,7 @@
     </mime-mapping>
     <mime-mapping>
         <extension>otf</extension>
-        <mime-type>application/x-font-otf</mime-type>
+        <mime-type>font/otf</mime-type>
     </mime-mapping>
     <mime-mapping>
         <!-- OpenDocument Drawing Template -->
@@ -3037,6 +3313,10 @@
         <mime-type>audio/vnd.rip</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>ris</extension>
+        <mime-type>application/x-research-info-systems</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>rl</extension>
         <mime-type>application/resource-lists+xml</mime-type>
     </mime-mapping>
@@ -3063,6 +3343,10 @@
     <mime-mapping>
         <extension>rms</extension>
         <mime-type>application/vnd.jcp.javame.midlet-rms</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>rmvb</extension>
+        <mime-type>application/vnd.rn-realmedia-vbr</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>rnc</extension>
@@ -3115,6 +3399,10 @@
     <mime-mapping>
         <extension>s</extension>
         <mime-type>text/x-asm</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>s3m</extension>
+        <mime-type>audio/s3m</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>saf</extension>
@@ -3217,6 +3505,14 @@
         <mime-type>application/vnd.spotfire.sfs</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>sfv</extension>
+        <mime-type>text/x-sfv</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>sgi</extension>
+        <mime-type>image/sgi</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>sgl</extension>
         <mime-type>application/vnd.stardivision.writer-global</mime-type>
     </mime-mapping>
@@ -3247,8 +3543,16 @@
     </mime-mapping>
     -->
     <mime-mapping>
+        <extension>sid</extension>
+        <mime-type>image/x-mrsid-image</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>sig</extension>
         <mime-type>application/pgp-signature</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>sil</extension>
+        <mime-type>audio/silk</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>silo</extension>
@@ -3315,6 +3619,10 @@
         <mime-type>application/smil+xml</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>smv</extension>
+        <mime-type>video/x-smv</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>smzip</extension>
         <mime-type>application/vnd.stepmania.package</mime-type>
     </mime-mapping>
@@ -3359,8 +3667,16 @@
         <mime-type>audio/ogg</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>sql</extension>
+        <mime-type>application/x-sql</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>src</extension>
         <mime-type>application/x-wais-source</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>srt</extension>
+        <mime-type>application/x-subrip</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>sru</extension>
@@ -3369,6 +3685,10 @@
     <mime-mapping>
         <extension>srx</extension>
         <mime-type>application/sparql-results+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ssdl</extension>
+        <mime-type>application/ssdl+xml</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>sse</extension>
@@ -3495,6 +3815,10 @@
         <mime-type>text/troff</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>t3</extension>
+        <mime-type>application/x-t3vm-image</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>taglet</extension>
         <mime-type>application/vnd.mynfc</mime-type>
     </mime-mapping>
@@ -3551,6 +3875,10 @@
         <mime-type>application/x-tex-tfm</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>tga</extension>
+        <mime-type>image/x-tga</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>thmx</extension>
         <mime-type>application/vnd.ms-officetheme</mime-type>
     </mime-mapping>
@@ -3600,11 +3928,11 @@
     </mime-mapping>
     <mime-mapping>
         <extension>ttc</extension>
-        <mime-type>application/x-font-ttf</mime-type>
+        <mime-type>font/collection</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>ttf</extension>
-        <mime-type>application/x-font-ttf</mime-type>
+        <mime-type>font/ttf</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>ttl</extension>
@@ -3649,6 +3977,10 @@
     <mime-mapping>
         <extension>ulw</extension>
         <mime-type>audio/basic</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ulx</extension>
+        <mime-type>application/x-glulx</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>umj</extension>
@@ -3831,6 +4163,10 @@
         <mime-type>video/vnd.vivo</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>vob</extension>
+        <mime-type>video/x-ms-vob</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>vor</extension>
         <mime-type>application/vnd.stardivision.writer</mime-type>
     </mime-mapping>
@@ -3908,6 +4244,10 @@
         <mime-type>application/vnd.ms-works</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>wdp</extension>
+        <mime-type>image/vnd.ms-photo</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>weba</extension>
         <mime-type>audio/webm</mime-type>
     </mime-mapping>
@@ -3977,11 +4317,15 @@
     </mime-mapping>
     <mime-mapping>
         <extension>wmz</extension>
-        <mime-type>application/x-ms-wmz</mime-type>
+        <mime-type>application/x-msmetafile</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>woff</extension>
-        <mime-type>application/x-font-woff</mime-type>
+        <mime-type>font/woff</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>font/woff2</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>wpd</extension>
@@ -4029,7 +4373,31 @@
     </mime-mapping>
     <mime-mapping>
         <extension>x3d</extension>
-        <mime-type>application/vnd.hzn-3d-crossword</mime-type>
+        <mime-type>model/x3d+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>x3db</extension>
+        <mime-type>model/x3d+binary</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>x3dbz</extension>
+        <mime-type>model/x3d+binary</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>x3dv</extension>
+        <mime-type>model/x3d+vrml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>x3dvz</extension>
+        <mime-type>model/x3d+vrml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>x3dz</extension>
+        <mime-type>model/x3d+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>xaml</extension>
+        <mime-type>application/xaml+xml</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>xap</extension>
@@ -4116,6 +4484,10 @@
         <mime-type>application/vnd.ms-excel</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>xlf</extension>
+        <mime-type>application/x-xliff+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>xlm</extension>
         <mime-type>application/vnd.ms-excel</mime-type>
     </mime-mapping>
@@ -4152,6 +4524,10 @@
         <mime-type>application/vnd.ms-excel</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>xm</extension>
+        <mime-type>audio/xm</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>xml</extension>
         <mime-type>application/xml</mime-type>
     </mime-mapping>
@@ -4166,6 +4542,10 @@
     <mime-mapping>
         <extension>xpi</extension>
         <mime-type>application/x-xpinstall</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>xpl</extension>
+        <mime-type>application/xproc+xml</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>xpm</extension>
@@ -4224,6 +4604,10 @@
         <mime-type>chemical/x-xyz</mime-type>
     </mime-mapping>
     <mime-mapping>
+        <extension>xz</extension>
+        <mime-type>application/x-xz</mime-type>
+    </mime-mapping>
+    <mime-mapping>
         <extension>yang</extension>
         <mime-type>application/yang</mime-type>
     </mime-mapping>
@@ -4238,6 +4622,38 @@
     <mime-mapping>
         <extension>Z</extension>
         <mime-type>application/x-compress</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>z1</extension>
+        <mime-type>application/x-zmachine</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>z2</extension>
+        <mime-type>application/x-zmachine</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>z3</extension>
+        <mime-type>application/x-zmachine</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>z4</extension>
+        <mime-type>application/x-zmachine</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>z5</extension>
+        <mime-type>application/x-zmachine</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>z6</extension>
+        <mime-type>application/x-zmachine</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>z7</extension>
+        <mime-type>application/x-zmachine</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>z8</extension>
+        <mime-type>application/x-zmachine</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>zaz</extension>
@@ -4279,13 +4695,13 @@
         <welcome-file>index.htm</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-	<security-constraint>
-        <web-resource-collection>
-                <web-resource-name>Entire Application</web-resource-name>
-                <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <user-data-constraint>
-                <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
-	</security-constraint>
+    <security-constraint>
+          <web-resource-collection>
+                  <web-resource-name>Entire Application</web-resource-name>
+                  <url-pattern>/*</url-pattern>
+          </web-resource-collection>
+          <user-data-constraint>
+                  <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+          </user-data-constraint>
+    </security-constraint>
 </web-app>

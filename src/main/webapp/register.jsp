@@ -110,11 +110,11 @@ if(ses.getAttribute("errorMessage") != null)
 				<div align="center">
 				<br/>
 				<table>
-					<tr><td><p><fmt:message key="generic.text.username" /><font color="red"><small>* </small></font>:</p></td><td><input type="text" id="userName" value="<%=userName%>"/></td></tr>
-					<tr><td><p><fmt:message key="generic.text.password" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWord" autocomplete="OFF" /></td></tr>
-					<tr><td><p><fmt:message key="generic.text.confirmPasswd" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWordConfirm" autocomplete="OFF" /></td></tr>
-					<tr><td><p><fmt:message key="generic.text.emailAddr" />:</p></td><td><input type="text" id="userAddress" value="<%=userAddress%>"/></td></tr>
-					<tr><td><p><fmt:message key="generic.text.confirmEmailAddr" />:</p></td><td><input type="text" id="userAddressCnf" /></td></tr>
+					<tr><td><p><fmt:message key="generic.text.username" /><font color="red"><small>* </small></font>:</p></td><td><input type="text" id="userName" value="<%=userName%>" minlength="3" maxlength="32" required/></td></tr>
+					<tr><td><p><fmt:message key="generic.text.password" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWord" autocomplete="OFF" minlength="8" maxlength="512" required/></td></tr>
+					<tr><td><p><fmt:message key="generic.text.confirmPasswd" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWordConfirm" autocomplete="OFF" minlength="8" maxlength="512" required/></td></tr>
+					<tr><td><p><fmt:message key="generic.text.emailAddr" />:</p></td><td><input type="email" id="userAddress" value="<%=userAddress%>" maxlength="128"/></td></tr>
+					<tr><td><p><fmt:message key="generic.text.confirmEmailAddr" />:</p></td><td><input type="email" id="userAddressCnf" maxlength="128"/></td></tr>
 				</table>
 				
 				<br/>
@@ -176,37 +176,13 @@ if(ses.getAttribute("errorMessage") != null)
 		var theEmailAgain = $("#userAddressCnf").val();
 		//Validation
 		var theError = "";
-		if (theName.length == 0 || thePass.length == 0 || thePassAgain.length == 0)
-		{
-			theError = "Please fill out all required fields marked with a '*'";
-		}
-		else if (theName.length < 5)
-		{
-			theError = "Your name must be longer than 5 characters";
-		}
-		else if (theName.length > 32)
-		{
-			theError = "Your name must be no longer than 32 characters";
-		}
-		else if (thePass != thePassAgain)
+		if (thePass != thePassAgain)
 		{
 			theError = "Passwords do not match";
 		}
 		else if (theEmail.length != 0 && theEmail != theEmailAgain)
 		{
 			theError = "Email addresses did not match";
-		}
-		else if (thePass.length < 8)
-		{
-			theError = "Your password must be at least 8 characters long";
-		}
-		else if (thePass.length > 512)
-		{
-			theError = "Your password must be no longer than 512 characters long";
-		}
-		else if (theEmail.length > 128)
-		{
-			theError = "Your email address must be no longer than 128 characters long";
 		}
 		
 		//If Valid, Sent info to servlet, if not, spit out the expected error
