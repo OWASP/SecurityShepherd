@@ -1,0 +1,1226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+
+	<display-name>Security Shepherd</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/serverError.html</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/lostSheep.html</location>
+	</error-page>
+
+	<env-entry>
+		<env-entry-name>java.net.preferipv4stack</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>true</env-entry-value>
+	</env-entry>
+
+	<servlet>
+		<servlet-name>/setup</servlet-name>
+		<servlet-class>servlets.Setup</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/setup</servlet-name>
+		<url-pattern>/setup</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/login</servlet-name>
+		<servlet-class>servlets.Login</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/login</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/mobileLogin</servlet-name>
+		<servlet-class>servlets.MobileLogin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/mobileLogin</servlet-name>
+		<url-pattern>/mobileLogin</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>/register</servlet-name>
+		<servlet-class>servlets.Register</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/register</servlet-name>
+		<url-pattern>/register</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/refreshMenu</servlet-name>
+		<servlet-class>servlets.module.RefreshMenu</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/refreshMenu</servlet-name>
+		<url-pattern>/refreshMenu</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/logout</servlet-name>
+		<servlet-class>servlets.Logout</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/logout</servlet-name>
+		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/passwordChange</servlet-name>
+		<servlet-class>servlets.ChangePassword</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/passwordChange</servlet-name>
+		<url-pattern>/passwordChange</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/createNewAdmin</servlet-name>
+		<servlet-class>servlets.admin.userManagement.CreateNewAdmin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/createNewAdmin</servlet-name>
+		<url-pattern>/createNewAdmin</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/createNewClass</servlet-name>
+		<servlet-class>servlets.admin.userManagement.CreateClass</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/createNewClass</servlet-name>
+		<url-pattern>/createNewClass</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/addPlayer</servlet-name>
+		<servlet-class>servlets.admin.userManagement.AddPlayer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/addPlayer</servlet-name>
+		<url-pattern>/addPlayer</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+	  <servlet-name>/deletePlayers</servlet-name>
+	  <servlet-class>servlets.admin.userManagement.DeletePlayers</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	      <servlet-name>/deletePlayers</servlet-name>
+	      <url-pattern>/deletePlayers</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>/assignPlayers</servlet-name>
+		<servlet-class>servlets.admin.userManagement.AssignPlayers</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/assignPlayers</servlet-name>
+		<url-pattern>/assignPlayers</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/setDefaultRegistrationClass</servlet-name>
+		<servlet-class>servlets.admin.userManagement.SetDefaultClass</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/setDefaultRegistrationClass</servlet-name>
+		<url-pattern>/setDefaultRegistrationClass</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>/getPlayersByClass</servlet-name>
+		<servlet-class>servlets.admin.userManagement.GetPlayersByClass</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/getPlayersByClass</servlet-name>
+		<url-pattern>/getPlayersByClass</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/suspendPlayer</servlet-name>
+		<servlet-class>servlets.admin.userManagement.SuspendUser</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/suspendPlayer</servlet-name>
+		<url-pattern>/suspendPlayer</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/unSuspendPlayer</servlet-name>
+		<servlet-class>servlets.admin.userManagement.UnSuspendUser</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/unSuspendPlayer</servlet-name>
+		<url-pattern>/unSuspendPlayer</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/giveTakePoints</servlet-name>
+		<servlet-class>servlets.admin.userManagement.GiveTakePoints</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/giveTakePoints</servlet-name>
+		<url-pattern>/giveTakePoints</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/upgradePlayer</servlet-name>
+		<servlet-class>servlets.admin.userManagement.UpgradePlayer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/upgradePlayer</servlet-name>
+		<url-pattern>/upgradePlayer</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/downgradeAdmin</servlet-name>
+		<servlet-class>servlets.admin.userManagement.DowngradeAdmin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/downgradeAdmin</servlet-name>
+		<url-pattern>/downgradeAdmin</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/updateRegistration</servlet-name>
+		<servlet-class>servlets.admin.config.ToggleRegistration</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/updateRegistration</servlet-name>
+		<url-pattern>/updateRegistration</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/changeUserPassword</servlet-name>
+		<servlet-class>servlets.admin.userManagement.ChangeUserPassword</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/changeUserPassword</servlet-name>
+		<url-pattern>/changeUserPassword</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/getProgress</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.GetProgress</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/getProgress</servlet-name>
+		<url-pattern>/getProgress</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/openEveryModules</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.OpenAllModules</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/openEveryModules</servlet-name>
+		<url-pattern>/openEveryModules</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/tournamentModeModules</servlet-name>
+		<servlet-class>servlets.admin.config.SetTournamentMode</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/tournamentModeModules</servlet-name>
+		<url-pattern>/tournamentModeModules</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/closeEveryModules</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.CloseAllModules</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/closeEveryModules</servlet-name>
+		<url-pattern>/closeEveryModules</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/openWebModules</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.OpenWebModules</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/openWebModules</servlet-name>
+		<url-pattern>/openWebModules</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/openMobileModules</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.OpenMobileModules</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/openMobileModules</servlet-name>
+		<url-pattern>/openMobileModules</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/enableModuleBlock</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.EnableModuleBlock</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/enableModuleBlock</servlet-name>
+		<url-pattern>/enableModuleBlock</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/removeModuleLock</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.RemoveModuleLock</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/removeModuleLock</servlet-name>
+		<url-pattern>/removeModuleLock</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/getJsonProgress</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.GetJsonProgress</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/getJsonProgress</servlet-name>
+		<url-pattern>/getJsonProgress</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/EnableScoreboard</servlet-name>
+		<servlet-class>servlets.admin.config.EnableScoreboard</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/EnableScoreboard</servlet-name>
+		<url-pattern>/EnableScoreboard</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/DisableScoreboard</servlet-name>
+		<servlet-class>servlets.admin.config.DisableScoreboard</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/DisableScoreboard</servlet-name>
+		<url-pattern>/DisableScoreboard</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/scoreboard</servlet-name>
+		<servlet-class>servlets.GetJsonScore</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/scoreboard</servlet-name>
+		<url-pattern>/scoreboard</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/enableCheats</servlet-name>
+		<servlet-class>servlets.admin.config.EnableCheats</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/enableCheats</servlet-name>
+		<url-pattern>/enableCheats</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/disableCheats</servlet-name>
+		<servlet-class>servlets.admin.config.DisableCheats</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/disableCheats</servlet-name>
+		<url-pattern>/disableCheats</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/getCheat</servlet-name>
+		<servlet-class>servlets.module.GetCheat</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/getCheat</servlet-name>
+		<url-pattern>/getCheat</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/getModule</servlet-name>
+		<servlet-class>servlets.module.GetModule</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/getModule</servlet-name>
+		<url-pattern>/getModule</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/solutionSubmit</servlet-name>
+		<servlet-class>servlets.module.SolutionSubmit</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/solutionSubmit</servlet-name>
+		<url-pattern>/solutionSubmit</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/feedbackSubmit</servlet-name>
+		<servlet-class>servlets.module.FeedbackSubmit</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/feedbackSubmit</servlet-name>
+		<url-pattern>/feedbackSubmit</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/openFloorModules</servlet-name>
+		<servlet-class>servlets.admin.config.SetOpenFloorMode</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/openFloorModules</servlet-name>
+		<url-pattern>/openFloorModules</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/setCtfMode</servlet-name>
+		<servlet-class>servlets.admin.config.SetCtfMode</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/setCtfMode</servlet-name>
+		<url-pattern>/setCtfMode</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/getFeedback</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.GetFeedback</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/getFeedback</servlet-name>
+		<url-pattern>/getFeedback</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/setModuleStatus</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.SetModuleStatus</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/setModuleStatus</servlet-name>
+		<url-pattern>/setModuleStatus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/openCloseModuleCategories</servlet-name>
+		<servlet-class>servlets.admin.moduleManagement.OpenOrCloseByCategory</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/openCloseModuleCategories</servlet-name>
+		<url-pattern>/openCloseModuleCategories</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/changeHostAddress</servlet-name>
+		<servlet-class>servlets.admin.config.ChangeHostAddress</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/changeHostAddress</servlet-name>
+		<url-pattern>/changeHostAddress</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/changeVulnerableAppRoot</servlet-name>
+		<servlet-class>servlets.admin.config.ChangeVulnerableAppRoot</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/changeVulnerableAppRoot</servlet-name>
+		<url-pattern>/changeVulnerableAppRoot</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a</servlet-name>
+		<servlet-class>servlets.module.lesson.XssLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a</servlet-name>
+		<url-pattern>/lessons/zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa</servlet-name>
+		<servlet-class>servlets.module.challenge.XssChallengeOne</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa</servlet-name>
+		<url-pattern>/challenges/d72ca2694422af2e6b3c5d90e4c11e7b4575a7bc12ee6d0a384ac2469449e8fa</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/t27357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888</servlet-name>
+		<servlet-class>servlets.module.challenge.XssChallengeTwo</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/t27357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888</servlet-name>
+		<url-pattern>/challenges/t27357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e</servlet-name>
+		<servlet-class>servlets.module.challenge.XssChallengeThree</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e</servlet-name>
+		<url-pattern>/challenges/ad2628bcc79bf10dd54ee62de148ab44b7bd028009a908ce3f1b4d019886d0e</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7</servlet-name>
+		<servlet-class>servlets.module.lesson.CsrfLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7</servlet-name>
+		<url-pattern>/lessons/ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/root/grantComplete/csrfLesson</servlet-name>
+		<servlet-class>servlets.module.lesson.CsrfLessonTarget</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/root/grantComplete/csrfLesson</servlet-name>
+		<url-pattern>/root/grantComplete/csrfLesson</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengeone/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetOne</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengeone/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengeone/plusplus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengetwo/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetTwo</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengetwo/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengetwo/plusplus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengejson/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetJSON</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengejson/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengejson/plusplus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengethree/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetThree</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengethree/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengethree/plusplus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeOne</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52</servlet-name>
+		<url-pattern>/challenges/s74a796e84e25b854906d88f622170c1c06817e72b526b3d1e9a6085f429cf52</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTwo</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e</servlet-name>
+		<url-pattern>/challenges/z311736498a13604705d608fb3171ebf49bc18753b0ec34b8dff5e4f9147eb5e</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeJSON</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb</servlet-name>
+		<url-pattern>/challenges/2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeThree</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c</servlet-name>
+		<url-pattern>/challenges/z6b2f5ebbe112dd09a6c430a167415820adc5633256a7b44a7d1e262db105e3c</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f</servlet-name>
+		<servlet-class>servlets.module.lesson.UnvalidatedForwardsLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f</servlet-name>
+		<url-pattern>/lessons/f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/root/grantcomplete/unvalidatedredirectlesson</servlet-name>
+		<servlet-class>servlets.module.lesson.RedirectLessonTarget</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/root/grantcomplete/unvalidatedredirectlesson</servlet-name>
+		<url-pattern>/root/grantcomplete/unvalidatedredirectlesson</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/redirect</servlet-name>
+		<servlet-class>servlets.module.lesson.Redirect</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/redirect</servlet-name>
+		<url-pattern>/user/redirect</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/changeCoreHostAddress</servlet-name>
+		<servlet-class>servlets.admin.config.ChangeCoreHostAddress</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/changeCoreHostAddress</servlet-name>
+		<url-pattern>/changeCoreHostAddress</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/changeCoreDatabase</servlet-name>
+		<servlet-class>servlets.admin.config.ChangeCoreDatabase</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/changeCoreDatabase</servlet-name>
+		<url-pattern>/changeCoreDatabase</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/changeExposedDatabase</servlet-name>
+		<servlet-class>servlets.admin.config.ChangeExposedDatabase</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/changeExposedDatabase</servlet-name>
+		<url-pattern>/changeExposedDatabase</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/enableFeedback</servlet-name>
+		<servlet-class>servlets.admin.config.EnableFeedback</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/enableFeedback</servlet-name>
+		<url-pattern>/enableFeedback</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/disableFeedback</servlet-name>
+		<servlet-class>servlets.admin.config.DisableFeedback</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/disableFeedback</servlet-name>
+		<url-pattern>/disableFeedback</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/cancelConfigPrompt</servlet-name>
+		<servlet-class>servlets.admin.config.NoMoreQuickConfig</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/cancelConfigPrompt</servlet-name>
+		<url-pattern>/cancelConfigPrompt</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751</servlet-name>
+		<servlet-class>servlets.module.challenge.XssChallengeFour</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751</servlet-name>
+		<url-pattern>/challenges/06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671</servlet-name>
+		<servlet-class>servlets.module.challenge.XssChallengeFive</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671</servlet-name>
+		<url-pattern>/challenges/f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeFive</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49</servlet-name>
+		<url-pattern>/challenges/70b96195472adf3bf347cbc37c34489287969d5ba504ac2439915184d6e5dc49</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengefive/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetFive</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengefive/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengefive/plusplus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeSix</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569</servlet-name>
+		<url-pattern>/challenges/2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengesix/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetSix</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengesix/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengesix/plusplus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeSeven</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3</servlet-name>
+		<url-pattern>/challenges/7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengeseven/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetSeven</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengeseven/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengeseven/plusplus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/84118752e6cd78fecc3563ba2873d944aacb7b72f28693a23f9949ac310648b5</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeFour</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/84118752e6cd78fecc3563ba2873d944aacb7b72f28693a23f9949ac310648b5</servlet-name>
+		<url-pattern>/challenges/84118752e6cd78fecc3563ba2873d944aacb7b72f28693a23f9949ac310648b5</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengefour/plusplus</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetFour</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengefour/plusplus</servlet-name>
+		<url-pattern>/user/csrfchallengefour/plusplus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengeseven/getToken</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeSevenGetToken</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengeseven/getToken</servlet-name>
+		<url-pattern>/user/csrfchallengeseven/getToken</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/d330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf</servlet-name>
+		<servlet-class>servlets.module.challenge.XssChallengeSix</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/d330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf</servlet-name>
+		<url-pattern>/challenges/d330dea1acf21886b685184ee222ea8e0a60589c3940afd6ebf433469e997caf</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>/lessons/e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594</servlet-name>
+		<servlet-class>servlets.module.lesson.SqlInjectionLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594</servlet-name>
+		<url-pattern>/lessons/e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/a59bf026c49b603759662b5cfe70b8d292e68650cc3cb5c2fc964e8ea2ce9aca</servlet-name>
+		<servlet-class>servlets.a59bf026c49b603759662b5cfe70b8d292e68650cc3cb5c2fc964e8ea2ce9aca</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/a59bf026c49b603759662b5cfe70b8d292e68650cc3cb5c2fc964e8ea2ce9aca</servlet-name>
+		<url-pattern>/lessons/a59bf026c49b603759662b5cfe70b8d292e68650cc3cb5c2fc964e8ea2ce9aca</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjectionEmail</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b</servlet-name>
+		<url-pattern>/challenges/ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjection1</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a</servlet-name>
+		<url-pattern>/challenges/e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjection3</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6</servlet-name>
+		<url-pattern>/challenges/b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806</servlet-name>
+		<servlet-class>servlets.module.lesson.SessionManagementLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806</servlet-name>
+		<url-pattern>/lessons/b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement1</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a</servlet-name>
+		<url-pattern>/challenges/dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement2</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7</servlet-name>
+		<url-pattern>/challenges/d779e34a54172cbc245300d3bc22937090ebd3769466a501a5e7ac605b9f34b7</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement2ChangePassword</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959</servlet-name>
+		<url-pattern>/challenges/f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement3</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3</servlet-name>
+		<url-pattern>/challenges/t193c6634f049bcf65cdcac72269eeac25dbb2a6887bdb38873e57d0ef447bc3</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement3ChangePassword</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a</servlet-name>
+		<url-pattern>/challenges/b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100</servlet-name>
+		<servlet-class>servlets.module.lesson.DirectObjectLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100</servlet-name>
+		<url-pattern>/lessons/fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObject1</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c</servlet-name>
+		<url-pattern>/challenges/o9a450a64cc2a196f55878e2bd9a27a72daea0f17017253f87e7ebd98c71c98c</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObject2</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4</servlet-name>
+		<url-pattern>/challenges/vc9b78627df2c032ceaf7375df1d847e47ed7abac2a4ce4cb6086646e0f313a4</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjection4</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629</servlet-name>
+		<url-pattern>/challenges/1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjection5</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62</servlet-name>
+		<url-pattern>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62CouponCheck</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjection5CouponCheck</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62CouponCheck</servlet-name>
+		<url-pattern>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62CouponCheck</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62VipCouponCheck</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjection5VipCheck</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62VipCouponCheck</servlet-name>
+		<url-pattern>/challenges/8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62VipCouponCheck</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/d0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjection6</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/d0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2</servlet-name>
+		<url-pattern>/challenges/d0e12e91dafdba4825b261ad5221aae15d28c36c7981222eb59f7fc8d8f212a2</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/8c2dd7e9818e5c6a9f8562feefa002dc0e455f0e92c8a46ab0cf519b1547eced</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjection7</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/8c2dd7e9818e5c6a9f8562feefa002dc0e455f0e92c8a46ab0cf519b1547eced</servlet-name>
+		<url-pattern>/challenges/8c2dd7e9818e5c6a9f8562feefa002dc0e455f0e92c8a46ab0cf519b1547eced</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c992</servlet-name>
+		<servlet-class>servlets.module.challenge.UrlAccess1Admin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c992</servlet-name>
+		<url-pattern>/challenges/4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c992</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99</servlet-name>
+		<servlet-class>servlets.module.challenge.UrlAccess1</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99</servlet-name>
+		<url-pattern>/challenges/4a1bc73dd68f64107db3bbc7ee74e3f1336d350c4e1e51d4eda5b52dddf86c99</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fahghghmin</servlet-name>
+		<servlet-class>servlets.module.challenge.UrlAccess2Admin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fahghghmin</servlet-name>
+		<url-pattern>/challenges/278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fahghghmin</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa</servlet-name>
+		<servlet-class>servlets.module.challenge.UrlAccess2</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa</servlet-name>
+		<url-pattern>/challenges/278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4</servlet-name>
+		<servlet-class>servlets.module.challenge.UrlAccess3</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4</servlet-name>
+		<url-pattern>/challenges/e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4UserList</servlet-name>
+		<servlet-class>servlets.module.challenge.UrlAccess3UserList</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4UserList</servlet-name>
+		<url-pattern>/challenges/e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4UserList</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1</servlet-name>
+		<servlet-class>servlets.module.challenge.BrokenCrypto3</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1</servlet-name>
+		<url-pattern>/challenges/2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/b927fc4d8c9f70a78f8b6fc46a0cc18533a88b2363054a1f391fe855954d12f9</servlet-name>
+		<servlet-class>servlets.module.challenge.BrokenCrypto4</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/b927fc4d8c9f70a78f8b6fc46a0cc18533a88b2363054a1f391fe855954d12f9</servlet-name>
+		<url-pattern>/challenges/b927fc4d8c9f70a78f8b6fc46a0cc18533a88b2363054a1f391fe855954d12f9</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement4</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6</servlet-name>
+		<url-pattern>/challenges/ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement5</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1</servlet-name>
+		<url-pattern>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1SendToken</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement5SetToken</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1SendToken</servlet-name>
+		<url-pattern>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1SendToken</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1ChangePass</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement5ChangePassword</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1ChangePass</servlet-name>
+		<url-pattern>/challenges/7aed58f3a00087d56c844ed9474c671f8999680556c127a19ee79fa5d7a132e1ChangePass</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316ece</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement6</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316ece</servlet-name>
+		<url-pattern>/challenges/b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316ece</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316eceSecretQuestion</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement6SecretQuestion</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316eceSecretQuestion</servlet-name>
+		<url-pattern>/challenges/b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316eceSecretQuestion</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement7</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80</servlet-name>
+		<url-pattern>/challenges/269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80SecretQuestion</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement7SecretQuestion</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80SecretQuestion</servlet-name>
+		<url-pattern>/challenges/269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80SecretQuestion</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54705bb1ea4316334</servlet-name>
+		<servlet-class>servlets.module.challenge.SessionManagement8</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54705bb1ea4316334</servlet-name>
+		<url-pattern>/challenges/714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54705bb1ea4316334</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/ca0e89caf3c50dbf9239a0b3c6f6c17869b2a1e2edc3aa6f029fd30925d66c7e</servlet-name>
+		<servlet-class>servlets.module.challenge.PoorValidation1</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/ca0e89caf3c50dbf9239a0b3c6f6c17869b2a1e2edc3aa6f029fd30925d66c7e</servlet-name>
+		<url-pattern>/challenges/ca0e89caf3c50dbf9239a0b3c6f6c17869b2a1e2edc3aa6f029fd30925d66c7e</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/20e8c4bb50180fed9c1c8d1bf6af5eac154e97d3ce97e43257c76e73e3bbe5d5</servlet-name>
+		<servlet-class>servlets.module.challenge.PoorValidation2</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/20e8c4bb50180fed9c1c8d1bf6af5eac154e97d3ce97e43257c76e73e3bbe5d5</servlet-name>
+		<url-pattern>/challenges/20e8c4bb50180fed9c1c8d1bf6af5eac154e97d3ce97e43257c76e73e3bbe5d5</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f</servlet-name>
+		<servlet-class>servlets.module.lesson.PoorValidationLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f</servlet-name>
+		<url-pattern>/lessons/4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833</servlet-name>
+		<servlet-class>servlets.module.lesson.SecurityMisconfigLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833</servlet-name>
+		<url-pattern>/lessons/fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4</servlet-name>
+		<servlet-class>servlets.module.challenge.SecurityMisconfigStealTokens</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4</servlet-name>
+		<url-pattern>/challenges/c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankLogin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cReg</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankRegistration</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cReg</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cReg</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cCurrentBalance</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankCurrentBalance</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cCurrentBalance</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cCurrentBalance</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cTransfer</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankTransfer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cTransfer</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cTransfer</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</servlet-name>
+		<servlet-class>servlets.module.challenge.DirectObjectBankLogout</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</servlet-name>
+		<url-pattern>/challenges/1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00cLogout</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66</servlet-name>
+		<servlet-class>servlets.module.challenge.NoSqlInjection1</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66</servlet-name>
+		<url-pattern>/challenges/d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjectionEscaping</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4</servlet-name>
+		<url-pattern>/challenges/8c3c35c30cdbbb73b7be3a4f8587aa9d88044dc43e248984a252c6e861f673d4</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</servlet-name>
+		<servlet-class>servlets.module.challenge.SqlInjectionStoredProcedure</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</servlet-name>
+		<url-pattern>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<filter-name>SetupFilter</filter-name>
+		<filter-class>servlets.SetupFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>SetupFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<servlet-name>Setup</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+</web-app>

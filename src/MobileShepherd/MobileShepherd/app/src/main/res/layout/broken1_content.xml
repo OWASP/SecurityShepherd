@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/brokenLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:textColor="#DA70D6" >
+
+        <include
+            layout="@layout/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="402dp"
+            android:layout_height="wrap_content"
+            android:text="Click a message to copy it."
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#DA70D6" />
+
+        <Button
+            android:id="@+id/bc1Message1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38dp"
+            android:background="@xml/purple"
+            android:onClick="copyMessage1"
+            android:text="@string/bc1message1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
+
+        <Button
+            android:id="@+id/bc1Message2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="39dp"
+            android:background="@xml/green"
+            android:onClick="copyMessage2"
+            android:text="@string/bc1message2"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
+
+        <Button
+            android:id="@+id/bc1Message3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38dp"
+            android:background="@xml/purple"
+            android:onClick="copyMessage3"
+            android:text="@string/bc1message3"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
+
+
+    </LinearLayout>
+
+</ScrollView>

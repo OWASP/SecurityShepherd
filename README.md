@@ -1,33 +1,50 @@
-# OWASP Security Shepherd
+ 
+# OWASP Security Shepherd [![OWASP Flagship](https://img.shields.io/badge/owasp-flagship%20project-48A646.svg)](https://www.owasp.org/index.php/OWASP_Project_Inventory#tab=Flagship_Projects) 
 The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skill set to security expert status.
+
+[![Build Status](https://travis-ci.com/OWASP/SecurityShepherd.svg?branch=dev)](https://travis-ci.com/OWASP/SecurityShepherd)
   
 # Where can I download Security Shepherd?
 
 ### Virtual Machine or Manual Setup
 You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases/tag/v3.0)
 
-### Docker
-There is also a docker image available from [Dockerhub](https://hub.docker.com/r/ismisepaul/securityshepherd/) you can pull it down with  
-`docker pull ismisepaul/securityshepherd` 
+### Docker (Ubuntu Linux Host)
 
-Note: You'll need to get a shell on your docker container and run mysql and tomcat manually;  
-```BASH 
-docker run -i -p 80:80 -p 443:443 -t ismisepaul/securityshepherd /bin/bash
+#### Initial Setup
+```console
+# Install pre-reqs
+sudo apt install git maven docker docker-compose default-jdk
+
+# Clone the github repository
+git clone https://github.com/OWASP/SecurityShepherd.git
+
+# Change directory into the local copy of the repository
+cd SecurityShepherd
+
+# Adds current user to the docker group (don't have to run docker with sudo)
+sudo gpasswd -a $USER docker
+
+# Run maven to generate the WAR and HTTPS Cert.
+mvn -Pdocker clean install -DskipTests
+
+# Build the docker images, docker network and bring up the environment
+docker-compose up
 ```
-```BASH 
-/usr/bin/mysqld_safe &
-service tomcat7 start
-```  
-If you don't have ```authbind``` installed and configured on your host machine e.g. on Ubuntu you'll need to do the following;  
-```BASH
-sudo apt-get install authbind   
-touch /etc/authbind/byport/80  
-touch /etc/authbind/byport/443  
-chmod 550 /etc/authbind/byport/80  
-chmod 550 /etc/authbind/byport/443  
-chown tomcat7 /etc/authbind/byport/80  
-chown tomcat7 /etc/authbind/byport/443  
-```
+
+Open up an Internet Browser & type in the address bar;
+
+* [localhost](http://localhost)
+
+To login use the following credentials (you will be asked to update after login);
+
+* username: ```admin```
+* password: ```password```
+
+Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
+
+#### Full Guide
+[Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
 
 # How do I setup Security Shepherd?
 We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.

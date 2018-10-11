@@ -1,0 +1,140 @@
+[
+    {
+        "outputFile": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\res\\merged\\release\\values-xlarge-v4\\values-xlarge-v4.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 76,
+                    "endOffset": 127
+                },
+                "from": {
+                    "file": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\21.0.3\\res\\values-xlarge\\values.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 56,
+                        "endColumn": 76,
+                        "endOffset": 128
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 132,
+                    "endColumn": 63,
+                    "endOffset": 191
+                },
+                "from": {
+                    "file": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\21.0.3\\res\\values-xlarge\\values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 134,
+                        "endColumn": 63,
+                        "endOffset": 193
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 196,
+                    "endColumn": 66,
+                    "endOffset": 258
+                },
+                "from": {
+                    "file": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\21.0.3\\res\\values-xlarge\\values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 199,
+                        "endColumn": 66,
+                        "endOffset": 261
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 263,
+                    "endColumn": 66,
+                    "endOffset": 325
+                },
+                "from": {
+                    "file": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\21.0.3\\res\\values-xlarge\\values.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 266,
+                        "endColumn": 66,
+                        "endOffset": 328
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 330,
+                    "endColumn": 65,
+                    "endOffset": 391
+                },
+                "from": {
+                    "file": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\21.0.3\\res\\values-xlarge\\values.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 333,
+                        "endColumn": 65,
+                        "endOffset": 394
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 396,
+                    "endColumn": 65,
+                    "endOffset": 457
+                },
+                "from": {
+                    "file": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\21.0.3\\res\\values-xlarge\\values.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 4,
+                        "startOffset": 399,
+                        "endColumn": 65,
+                        "endOffset": 460
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 462,
+                    "endColumn": 54,
+                    "endOffset": 512
+                },
+                "from": {
+                    "file": "C:\\Users\\sean\\Desktop\\Shepherd\\SecurityShepherd\\MobileShepherd\\ReverseEngineer3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\21.0.3\\res\\values-xlarge\\values.xml",
+                    "position": {
+                        "startLine": 12,
+                        "startColumn": 4,
+                        "startOffset": 466,
+                        "endColumn": 54,
+                        "endOffset": 516
+                    }
+                }
+            }
+        ]
+    }
+]
