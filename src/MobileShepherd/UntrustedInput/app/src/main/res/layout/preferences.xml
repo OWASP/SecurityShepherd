@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <PreferenceCategory android:title="@string/dialog_based_preferences" >
+
+        <EditTextPreference
+            android:dialogTitle="@string/server_dialog_title"
+            android:key="server_preference"
+            android:summary="@string/server_summary"
+            android:title="@string/server_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="License">
+        <PreferenceScreen android:summary="@string/summary_license" >/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
