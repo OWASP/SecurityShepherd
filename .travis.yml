@@ -2,29 +2,18 @@ jobs:
   include:
     - stage: build
       language: java
-      services:
-        - mysql
-    - stage: deploy-master
+      services: mysql
+    - stage: deploy
+      language: generic
       provider: script
+      skip_cleanup: true
       script: skip
-      services:
-        - docker
+      services: docker
       before_install:
         - mvn install -P docker -DskipTests
         - docker-compose build web
-      script: bash docker/deploy/push_master.sh
-    - stage: deploy-dev
-      provider: script
-      script: skip
-      services:
-        - docker
-      before_install:
-        - mvn install -P docker -DskipTests
-        - docker-compose build web
-      script: bash docker/deploy/push_dev.sh
+      script: bash docker/scripts/deploy.sh $TRAVIS_BRANCH
 stages:
   - build
-  - name: deploy-master
-    if: branch = master AND type = push
-  - name: deploy-dev
-    if: branch = dev AND type = push
+  - name: deploy
+    if: type = push

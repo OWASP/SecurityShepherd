@@ -1,10 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>owaspSecurityShepherd</groupId>
 	<artifactId>owaspSecurityShepherd</artifactId>
 	<version>3.1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
@@ -135,85 +140,77 @@
 		</dependency>
 	</dependencies>
 
-    <profiles>
-        <profile>
-            <id>docker</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <!-- Copy the SQL scripts and modify them so they can be run from mysql -->
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.8</version>
-                        <executions>
-                            <execution>
-                                <id>copy-db-scripts</id>
-                                <phase>package</phase>
-                                <configuration>
-                                    <target>
-                                        <echo>ANT TASK - Copying database files and modifying for use with mysql</echo>
-                                        <copy todir="${basedir}/docker/mysql" overwrite="true" flatten="true">
-                                            <fileset dir="${basedir}/src/main/resources/database" includes="*.sql" >
-                                                <include name="*.sql" />
-                                            </fileset>
-                                        </copy>
-                                        <copy todir="${basedir}/docker/mongo" overwrite="true" flatten="true">
-                                            <fileset dir="${basedir}/src/database" includes="*.js" >
-                                                <include name="*.js" />
-                                            </fileset>
-                                        </copy>
-                                        <exec executable="sed">
-                                            <arg value="-i" />
-                                            <arg value="s/-- DELIMITER \$\$/DELIMITER \$\$/g" />
-                                            <arg value="${basedir}/docker/mysql/coreSchema.sql" />
-                                            <arg value="${basedir}/docker/mysql/moduleSchemas.sql" />
-                                        </exec>
-                                        <exec executable="sed">
-                                            <arg value="-i" />
-                                            <arg value="s/-- \$\$/\$\$/g" />
-                                            <arg value="${basedir}/docker/mysql/coreSchema.sql" />
-                                            <arg value="${basedir}/docker/mysql/moduleSchemas.sql" />
-                                        </exec>
-                                        <exec executable="sed">
-                                            <arg value="-i" />
-                                            <arg value="s/-- DELIMITER \;/DELIMITER \;/g" />
-                                            <arg value="${basedir}/docker/mysql/coreSchema.sql" />
-                                            <arg value="${basedir}/docker/mysql/moduleSchemas.sql" />
-                                        </exec>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>keytool-maven-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>generate-tls-key</id>
-                                <goals>
-                                    <goal>generateKeyPair</goal>
-                                </goals>
-                                <phase>package</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <alias>${ALIAS}</alias>
-                            <keyalg>${KEY_ALG}</keyalg>
-                            <keystore>${basedir}/target/${TLS_KEYSTORE_FILE}</keystore>
-                            <dname>${DNAME}</dname>
-                            <storepass>${TLS_KEYSTORE_PASS}</storepass>
-                            <keypass>${TLS_KEYSTORE_PASS}</keypass>
-                            <deststoretype>${STORE_TYPE}</deststoretype>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>3.1.0</version>
+						<executions>
+							<execution>
+								<id>copy-sql-scripts</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/docker/mysql</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/database</directory>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.6.0</version>
+						<groupId>org.codehaus.mojo</groupId>
+						<executions>
+							<execution>
+								<id>convert-sql-scripts</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>${basedir}/docker/scripts/convert-sql-scripts.sh</executable>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>keytool-maven-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>generate-tls-key</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>generateKeyPair</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<alias>${ALIAS}</alias>
+							<keyalg>${KEY_ALG}</keyalg>
+							<keystore>${basedir}/target/${TLS_KEYSTORE_FILE}</keystore>
+							<dname>${DNAME}</dname>
+							<storepass>${TLS_KEYSTORE_PASS}</storepass>
+							<keypass>${TLS_KEYSTORE_PASS}</keypass>
+							<deststoretype>${STORE_TYPE}</deststoretype>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
@@ -225,24 +222,24 @@
 		</resources>
 
 		<plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>1.0-alpha-2</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>read-project-properties</goal>
-                        </goals>
-                        <configuration>
-                            <files>
-                                <file>${basedir}/.env</file>
-                            </files>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${basedir}/.env</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
