@@ -4,6 +4,7 @@ jobs:
       language: java
       services: mysql
     - stage: deploy
+      name: "Deploy to Dockerhub"
       language: generic
       provider: script
       skip_cleanup: true
@@ -12,8 +13,8 @@ jobs:
       before_install:
         - mvn install -P docker -DskipTests
         - docker-compose build web
-      script: bash docker/scripts/deploy.sh $TRAVIS_BRANCH
+      script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
 stages:
   - build
   - name: deploy
-    if: type = push
+    if: branch IN (master, dev) AND type = push
