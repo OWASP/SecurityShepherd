@@ -168,6 +168,28 @@
 						</executions>
 					</plugin>
 					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>3.1.0</version>
+						<executions>
+							<execution>
+								<id>copy-sql-scripts</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/docker/mongo</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/database</directory>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
 						<artifactId>exec-maven-plugin</artifactId>
 						<version>1.6.0</version>
 						<groupId>org.codehaus.mojo</groupId>
@@ -228,7 +250,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.0-alpha-2</version>
+				<version>1.0.0</version>
 				<executions>
 					<execution>
 						<phase>initialize</phase>

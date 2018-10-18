@@ -2,18 +2,23 @@ FROM tomcat:alpine
 
 ARG DB_DRIVER=org.gjt.mm.mysql.Driver
 ARG DB_SCHEMA=core
-ARG PROPS_DIR=/usr/local/tomcat/conf/database.properties
+ARG PROPS_MYSQL=/usr/local/tomcat/conf/database.properties
+ARG PROPS_MONGO=/usr/local/tomcat/conf/mongo.properties
 
 ARG MYSQL_USER
 ARG MYSQL_PASS
 ARG MYSQL_URI
+
+ARG MONGO_HOST
+ARG MONGO_PORT
 
 ARG TLS_KEYSTORE_FILE
 ARG TLS_KEYSTORE_PASS
 ARG ALIAS
 ARG HTTPS_PORT
 
-RUN printf "databaseConnectionURL=$MYSQL_URI/\nDriverType=$DB_DRIVER\ndatabaseSchema=$DB_SCHEMA\ndatabaseUsername=$MYSQL_USER\ndatabasePassword=$MYSQL_PASS\n" >> $PROPS_DIR
+RUN printf "databaseConnectionURL=$MYSQL_URI/\nDriverType=$DB_DRIVER\ndatabaseSchema=$DB_SCHEMA\ndatabaseUsername=$MYSQL_USER\ndatabasePassword=$MYSQL_PASS\n" >> $PROPS_MYSQL
+RUN printf "connectionHost=$MONGO_HOST\nconnectionPort=$MONGO_PORT\n"  >> $PROPS_MONGO
 
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 COPY target/owaspSecurityShepherd.war /usr/local/tomcat/webapps/ROOT.war
