@@ -12,6 +12,12 @@ services:
         DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASS}
+  mongo:
+    image: ${IMAGE_MONGO}
+    container_name: ${CONTAINER_MONGO}
+    env_file:
+      - .env
+    build: ./docker/mongo
   web:
     image: ${IMAGE_TOMCAT}
     container_name: ${CONTAINER_TOMCAT}
@@ -23,6 +29,8 @@ services:
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASS: ${MYSQL_PASS}
         MYSQL_URI: jdbc:mysql://${CONTAINER_MYSQL}:3306
+        MONGO_HOST: ${MONGO_HOST}
+        MONGO_PORT: ${MONGO_PORT}
         TLS_KEYSTORE_FILE: ${TLS_KEYSTORE_FILE}
         TLS_KEYSTORE_PASS: ${TLS_KEYSTORE_PASS}
         ALIAS: ${ALIAS}

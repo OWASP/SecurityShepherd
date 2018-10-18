@@ -8,8 +8,6 @@ COPY coreSchema.sql /docker-entrypoint-initdb.d/coreSchema.sql
 COPY moduleSchemas.sql /docker-entrypoint-initdb.d/moduleSchemas.sql
 
 RUN sed -i 's/@'\''localhost'\''/@'\'''"$CONTAINER_TOMCAT"'.'"$DOCKER_NETWORK_NAME"''\''/g' /docker-entrypoint-initdb.d/moduleSchemas.sql
-# For 3.1 Closing NoSQL level
-RUN sed -i '/d7eaeaa1cc4f218abd86d14eefa183a0f8eb6298/d' /docker-entrypoint-initdb.d/coreSchema.sql
 
 RUN mkdir -p /etc/mysql/conf.d \
 	&& { \
