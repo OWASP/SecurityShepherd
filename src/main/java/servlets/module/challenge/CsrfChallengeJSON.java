@@ -43,7 +43,7 @@ public class CsrfChallengeJSON extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeJSON.class);
-	private static String levelName = "Cross Site Request Forgery Challenge NEW";
+	private static String levelName = "Cross Site Request Forgery Challenge JSON";
 	private static String levelHash = "2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb";
 	/**
 	 * Allows users to set their CSRF attack string to complete this module. They should be using this to force users to visit their own pages that

@@ -1212,6 +1212,24 @@
 		<url-pattern>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>/challenges/0eef5d52fa81412aedda863b6332d6eb39f200aabc650dfe59b5d6981678dcd7</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeApplicationJson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/0eef5d52fa81412aedda863b6332d6eb39f200aabc650dfe59b5d6981678dcd7</servlet-name>
+		<url-pattern>/challenges/0eef5d52fa81412aedda863b6332d6eb39f200aabc650dfe59b5d6981678dcd7</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/user/csrfchallengejson/application</servlet-name>
+		<servlet-class>servlets.module.challenge.CsrfChallengeTargetApplicationJson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/user/csrfchallengejson/application</servlet-name>
+		<url-pattern>/user/csrfchallengejson/application</url-pattern>
+	</servlet-mapping>
+
 	<filter>
 		<filter-name>SetupFilter</filter-name>
 		<filter-class>servlets.SetupFilter</filter-class>
