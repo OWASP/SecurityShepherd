@@ -4,8 +4,8 @@ ARG MYSQL_ROOT_PASSWORD=$MYSQL_PASS
 ARG CONTAINER_TOMCAT
 ARG DOCKER_NETWORK_NAME
 
-COPY coreSchema.sql /docker-entrypoint-initdb.d/coreSchema.sql
-COPY moduleSchemas.sql /docker-entrypoint-initdb.d/moduleSchemas.sql
+COPY target/coreSchema.sql /docker-entrypoint-initdb.d/coreSchema.sql
+COPY target/moduleSchemas.sql /docker-entrypoint-initdb.d/moduleSchemas.sql
 
 RUN sed -i 's/@'\''localhost'\''/@'\'''"$CONTAINER_TOMCAT"'.'"$DOCKER_NETWORK_NAME"''\''/g' /docker-entrypoint-initdb.d/moduleSchemas.sql
 

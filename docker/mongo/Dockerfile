@@ -1,5 +1,5 @@
 FROM mongo:4.1
-COPY mongoSchemas.js /docker-entrypoint-initdb.d/mongoSchema.js
+COPY target/moduleSchemas.js /docker-entrypoint-initdb.d/mongoSchema.js
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
