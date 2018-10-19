@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dbProcs.Database;
+import dbProcs.MongoDatabase;
 import org.apache.log4j.Logger;
 import org.owasp.encoder.Encode;
 
@@ -83,7 +83,7 @@ public class NoSqlInjection1 extends HttpServlet
 				String ApplicationRoot = getServletContext().getRealPath("");
 				log.debug("Servlet root = " + ApplicationRoot );
 
-				coll = Database.getMongoChallengeConnection(ApplicationRoot, "NoSqlInjection1");
+				coll = MongoDatabase.getMongoChallengeConnection(ApplicationRoot, "NoSqlInjection1");
 
 				String gamerId = request.getParameter("theGamerName");
 				log.debug("User Submitted - " + gamerId);
