@@ -1,13 +1,15 @@
-/*
--- ======================================================
--- NoSQL Injection One
--- ======================================================
-*/
 
+//-- ======================================================
+//-- NoSQL Injection One
+//-- ======================================================
+
+
+/*
 db = db.getSiblingDB('shepherdGames')
 db.dropDatabase()
 
 db = db.getSiblingDB('shepherdGames')
+*/
 db.createUser({ "user": "gamer1", "pwd": "$ecSh3pdb", "roles": [{"role": "read", "db": "shepherdGames" }] })
 db.createCollection("gamer")
 

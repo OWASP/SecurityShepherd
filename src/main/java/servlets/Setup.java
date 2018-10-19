@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mongodb.*;
+import dbProcs.MongoDatabase;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -51,6 +53,10 @@ public class Setup extends HttpServlet {
 			String dbAuth = request.getParameter("dbauth");
 			String dbOverride = request.getParameter("dboverride");
 
+			String mongodbHost = "localhost";
+			String mongodbPort = "27017";
+			String mongodbName = "shepherdGames";
+
 			String auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
 
 			StringBuffer dbProp = new StringBuffer();
@@ -65,10 +71,22 @@ public class Setup extends HttpServlet {
 			dbProp.append("databasePassword=" + dbPass);
 			dbProp.append("\n");
 
+			//Mongo DB properties
+			StringBuffer mongoProp = new StringBuffer();
+			mongoProp.append("connectionHost=" + mongodbHost);
+			mongoProp.append("\n");
+			mongoProp.append("connectionPort=" + mongodbPort);
+			mongoProp.append("\n");
+			mongoProp.append("databaseName=" + mongodbName);
+			mongoProp.append("\n");
+
+			Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
+			executeMongoScript();
+
 			if (!auth.equals(dbAuth)) {
 				htmlOutput = bundle.getString("generic.text.setup.authentication.failed");
 			} else {
-				Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);	
+				Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 				if (Database.getDatabaseConnection(null) == null) {
 					htmlOutput = bundle.getString("generic.text.setup.connection.failed");
 				} else {
@@ -162,6 +180,35 @@ public class Setup extends HttpServlet {
 			e.printStackTrace();
 			throw new InstallationException(e);
 		}
+	}
+
+	private synchronized void executeMongoScript() throws InstallationException {
+
+		try
+		{
+			File file = new File(getClass().getClassLoader().getResource("/mongodb/moduleSchemas.js").getFile());
+			String data = FileUtils.readFileToString(file, Charset.defaultCharset() );
+
+			log.debug("Mongo File: " + data);
+
+			MongoClient mongoConnection = MongoDatabase.getMongoDbConnection(null);
+
+			DB db = mongoConnection.getDB("shepherdGames");
+
+			DBObject script = new BasicDBObject();
+			script.put("eval", String.format(data));
+
+			CommandResult result = db.command(script);
+
+			log.debug("Mongo Result: " + result);
+		}
+		catch (Exception e)
+		{
+			log.fatal(e);
+			e.printStackTrace();
+			throw new InstallationException(e);
+		}
+
 	}
 
 	private synchronized void executeUpdateScript() throws InstallationException {

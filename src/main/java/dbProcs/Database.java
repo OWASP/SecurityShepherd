@@ -1,14 +1,9 @@
 package dbProcs;
 
 import java.io.File;
-import java.lang.reflect.Executable;
-import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Arrays;
 
-
-import com.mongodb.*;
 import org.apache.log4j.Logger;
 
 /**
@@ -43,22 +38,6 @@ public class Database
 		try
 		{
 			//log.debug("Closing database connection");
-			conn.close();
-		}
-		catch(Exception e)
-		{
-			log.error("Error closing connection:" + e.toString());
-		}
-	}
-
-	/**
-	 * This method is used by the application to close an open MongoDb connection
-	 * @param conn The connection to close
-	 */
-	public static void closeConnection(MongoClient conn)
-	{
-		try
-		{
 			conn.close();
 		}
 		catch(Exception e)

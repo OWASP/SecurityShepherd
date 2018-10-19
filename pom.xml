@@ -151,24 +151,10 @@
 						<configuration>
 							<filesets>
 								<fileset>
-									<directory>${basedir}/docker/**/target</directory>
+									<directory>${basedir}/docker/</directory>
 									<includes>
-										<include>**</include>
-									</includes>
-									<followSymlinks>false</followSymlinks>
-								</fileset>
-							</filesets>
-						</configuration>
-					</plugin>
-					<plugin>
-						<artifactId>maven-clean-plugin</artifactId>
-						<version>3.1.0</version>
-						<configuration>
-							<filesets>
-								<fileset>
-									<directory>${basedir}/docker/mongo/target</directory>
-									<includes>
-										<include>**</include>
+										<include>mysql/target/**</include>
+                                        <include>mongo/target/**</include>
 									</includes>
 									<followSymlinks>false</followSymlinks>
 								</fileset>
@@ -255,7 +241,7 @@
 						<configuration>
 							<alias>${ALIAS}</alias>
 							<keyalg>${KEY_ALG}</keyalg>
-							<keystore>${basedir}/target/docker/tomcat/${TLS_KEYSTORE_FILENAME}${TLS_KEYSTORE_EXT}</keystore>
+							<keystore>${basedir}/target/docker/tomcat/${TLS_KEYSTORE_FILE}</keystore>
 							<dname>${DNAME}</dname>
 							<storepass>${TLS_KEYSTORE_PASS}</storepass>
 							<keypass>${TLS_KEYSTORE_PASS}</keypass>
