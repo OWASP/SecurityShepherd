@@ -3,13 +3,10 @@
 //-- NoSQL Injection One
 //-- ======================================================
 
+//REMOVE db = db.getSiblingDB('shepherdGames')
+//REMOVE db.dropDatabase()
+//REMOVE db = db.getSiblingDB('shepherdGames')
 
-/*
-db = db.getSiblingDB('shepherdGames')
-db.dropDatabase()
-
-db = db.getSiblingDB('shepherdGames')
-*/
 db.createUser({ "user": "gamer1", "pwd": "$ecSh3pdb", "roles": [{"role": "read", "db": "shepherdGames" }] })
 db.createCollection("gamer")
 
