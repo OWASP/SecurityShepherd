@@ -3,11 +3,7 @@ package servlets.module.challenge;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.MongoException;
+import com.mongodb.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +18,9 @@ import org.owasp.encoder.Encode;
 
 import utils.ShepherdLogManager;
 import utils.Validate;
+
+import static dbProcs.MongoDatabase.getMongoDatabase;
+import static dbProcs.MongoDatabase.getMongoDbConnection;
 
 /**
  * NoSQL Injection Challenge One - Does not use user specific key
@@ -72,24 +71,31 @@ public class NoSqlInjection1 extends HttpServlet
 			out.print(getServletInfo());
 			String htmlOutput = new String();
 
-			DBCollection coll;
+			DBCollection dbCollection;
+			MongoCredential credential;
+			MongoClient mongoClient = null;
+			DB mongoDb;
+			String dbCollectionName;
 			DBCursor cursor;
 			Object id;
 			Object name;
 			Object address;
 
 			try{
+				String applicationRoot = getServletContext().getRealPath("");
+				log.debug("Servlet root = " + applicationRoot );
 
-				String ApplicationRoot = getServletContext().getRealPath("");
-				log.debug("Servlet root = " + ApplicationRoot );
-
-				coll = MongoDatabase.getMongoChallengeConnection(ApplicationRoot, "NoSqlInjection1");
+				credential = MongoDatabase.getMongoChallengeCredentials(applicationRoot, "NoSqlInjection1");
+				mongoClient = getMongoDbConnection(applicationRoot, credential);
+				mongoDb = getMongoDatabase(mongoClient);
+				dbCollectionName = MongoDatabase.getMongoChallengeCollName(applicationRoot, "NoSqlInjection1");
+				dbCollection = mongoDb.getCollection(dbCollectionName);
 
 				String gamerId = request.getParameter("theGamerName");
 				log.debug("User Submitted - " + gamerId);
 
 				DBObject whereQuery = new BasicDBObject("$where", "this._id == '" + gamerId + "'");
-				cursor = coll.find(whereQuery);
+				cursor = dbCollection.find(whereQuery);
 
 				try
 				{
@@ -133,6 +139,7 @@ public class NoSqlInjection1 extends HttpServlet
 				}
 				finally {
 					cursor.close();
+					mongoClient.close();
 				}
 			}
 			catch (MongoException e)
@@ -140,6 +147,10 @@ public class NoSqlInjection1 extends HttpServlet
 				log.debug("MongoDb Error caught - " + e.toString());
 				htmlOutput += "<p>An error was detected!</p>" +
 						"<p>" + Encode.forHtml(e.toString()) + "</p>";
+			}
+			finally
+			{
+				mongoClient.close();
 			}
 
 			log.debug("Outputting HTML");

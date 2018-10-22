@@ -90,18 +90,18 @@ if (Setup.isInstalled()) {
 					<form id="setupForm" action="javascript:;">
 						<div class="row">
 							<div class="col-25">
-								<label for="dbhost"><fmt:message key="generic.text.setup.host" /></label>
+								<label for="dbhost">MySQL <fmt:message key="generic.text.setup.host" /></label>
 							</div>
 							<div class="col-75">
-								<input type="text" id="dbhost" name="dbhost" placeholder="Database Hostname..." autofocus required>
+								<input type="text" id="dbhost" name="dbhost" placeholder="MySQL Hostname..." autofocus required>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-25">
-								<label for="dbport"><fmt:message key="generic.text.setup.port" /></label>
+								<label for="dbport">MySQL <fmt:message key="generic.text.setup.port" /></label>
 							</div>
 							<div class="col-75">
-								<input type="text" id="dbport" name="dbport" placeholder="Database Port..." required>
+								<input type="text" id="dbport" name="dbport" placeholder="MySQL Port..." required>
 							</div>
 						</div>
 						<div class="row">
@@ -109,7 +109,7 @@ if (Setup.isInstalled()) {
 								<label for="dbuser"><fmt:message key="generic.text.setup.user" /></label>
 							</div>
 							<div class="col-75">
-								<input type="text" id="dbuser" name="dbuser" placeholder="Shepherd Database User.." required>
+								<input type="text" id="dbuser" name="dbuser" placeholder="Shepherd MySQL User.." required>
 							</div>
 						</div>
 						<div class="row">
@@ -117,7 +117,23 @@ if (Setup.isInstalled()) {
 								<label for="dbpass"><fmt:message key="generic.text.setup.pwd" /></label>
 							</div>
 							<div class="col-75">
-								<input type="password" id="dbpass" name="dbpass" placeholder="Database Password.." required>
+								<input type="password" id="dbpass" name="dbpass" placeholder="Shepherd MySQL Password.." required>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-25">
+								<label for="mhost">MongoDb <fmt:message key="generic.text.setup.host" /></label>
+							</div>
+							<div class="col-75">
+								<input type="text" id="mhost" name="mhost" placeholder="Mongo Host..." required>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-25">
+								<label for="mport">MongoDb <fmt:message key="generic.text.setup.port" /></label>
+							</div>
+							<div class="col-75">
+								<input type="text" id="mport" name="mport" placeholder="Mongo Port..." required>
 							</div>
 						</div>
 						<div class="row">

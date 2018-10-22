@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mongodb.*;
+import dbProcs.FileInputProperties;
 import dbProcs.MongoDatabase;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -53,10 +54,10 @@ public class Setup extends HttpServlet {
 			String dbAuth = request.getParameter("dbauth");
 			String dbOverride = request.getParameter("dboverride");
 
-			String mongodbHost = "localhost";
-			String mongodbPort = "27017";
-			String mongodbName = "shepherdGames";
-
+			String mongodbHost = request.getParameter("mhost");
+			String mongodbPort = request.getParameter("mport");
+			String nosqlprops = new File(Database.class.getResource("/challenges/NoSqlInjection1.properties").getFile()).getAbsolutePath();
+            String mongodbName = FileInputProperties.readfile(nosqlprops, "databaseName");
 			String auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
 
 			StringBuffer dbProp = new StringBuffer();
@@ -80,19 +81,19 @@ public class Setup extends HttpServlet {
 			mongoProp.append("databaseName=" + mongodbName);
 			mongoProp.append("\n");
 
-			Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
-			executeMongoScript();
-
 			if (!auth.equals(dbAuth)) {
 				htmlOutput = bundle.getString("generic.text.setup.authentication.failed");
 			} else {
 				Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
-				if (Database.getDatabaseConnection(null) == null) {
+                Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
+                if (Database.getDatabaseConnection(null) == null ||
+                        MongoDatabase.getMongoDbConnection(null) == null) {
 					htmlOutput = bundle.getString("generic.text.setup.connection.failed");
 				} else {
 					try {
 						if (dbOverride.equalsIgnoreCase("overide")) {
 							executeSqlScript();
+                            executeMongoScript();
 							htmlOutput = bundle.getString("generic.text.setup.success") + " " + bundle.getString("generic.text.setup.success.overwrittendb");
 						}
 						else if (dbOverride.equalsIgnoreCase("upgrade")) {
@@ -184,16 +185,15 @@ public class Setup extends HttpServlet {
 
 	private synchronized void executeMongoScript() throws InstallationException {
 
+		MongoClient mongoConnection = null;
+
 		try
 		{
 			File file = new File(getClass().getClassLoader().getResource("/mongodb/moduleSchemas.js").getFile());
 			String data = FileUtils.readFileToString(file, Charset.defaultCharset() );
 
-			log.debug("Mongo File: " + data);
-
-			MongoClient mongoConnection = MongoDatabase.getMongoDbConnection(null);
-
-			DB db = mongoConnection.getDB("shepherdGames");
+			mongoConnection = MongoDatabase.getMongoDbConnection(null);
+			DB db = MongoDatabase.getMongoDatabase(mongoConnection);
 
 			DBObject script = new BasicDBObject();
 			script.put("eval", String.format(data));
@@ -207,6 +207,10 @@ public class Setup extends HttpServlet {
 			log.fatal(e);
 			e.printStackTrace();
 			throw new InstallationException(e);
+		}
+		finally
+		{
+			MongoDatabase.closeConnection(mongoConnection);
 		}
 
 	}
