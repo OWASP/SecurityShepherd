@@ -52,7 +52,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 %>
 	<h1 class="title">The OWASP Security Shepherd Project</h1>
 	<p>
-		You are currently using Security Shepherd Version 3.0
+		You are currently using Security Shepherd Version 3.2
 		<br><br>
 		The OWASP Security Shepherd project is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skill set to security expert status. 
 		For More information, please visit the <a href="http://bit.ly/owaspSecurityShepherd">OWASP Security Shepherd Wiki Page</a>.
