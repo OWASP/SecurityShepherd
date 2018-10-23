@@ -1,6 +1,10 @@
 package dbProcs;
 
-import com.mongodb.*;
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.MongoException;
+import com.mongodb.ServerAddress;
 import org.apache.log4j.Logger;
 
 import java.io.File;
