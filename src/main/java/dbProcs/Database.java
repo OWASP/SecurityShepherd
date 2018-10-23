@@ -60,31 +60,31 @@ public class Database
 		Connection conn = null;
 		try
 		{
-			//Pull Driver and DB URL out of database.properties
-			String props = Constants.DBPROP;
+		   //Pull Driver and DB URL out of database.properties
+		   String props = Constants.DBPROP;
 
-			String DriverType = FileInputProperties.readfile(props, "DriverType");
-			Class.forName(DriverType).newInstance();
-			String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
+		   String DriverType = FileInputProperties.readfile(props, "DriverType");
+		   Class.forName(DriverType).newInstance();
+		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 
-			//Pull DB Schema, Schema User name and Schema Password from level specific properties File
+		   //Pull DB Schema, Schema User name and Schema Password from level specific properties File
 
-			props = new File(Database.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
-			log.debug("Level Properties File = " + path + ".properties");
-			//Add DB Schema to the end of the connectionURL
-			connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
-			//log.debug("Connection URL: " + connectionURL);
-			String username=FileInputProperties.readfile(props, "databaseUsername");
-			String password=FileInputProperties.readfile(props, "databasePassword");
+		   props = new File(Database.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
+		   log.debug("Level Properties File = " + path + ".properties");
+		   //Add DB Schema to the end of the connectionURL
+		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
+		   //log.debug("Connection URL: " + connectionURL);
+		   String username=FileInputProperties.readfile(props, "databaseUsername");
+		   String password=FileInputProperties.readfile(props, "databasePassword");
 
-			conn = DriverManager.getConnection(connectionURL,username,password);
-		}
-		catch(Exception e)
-		{
-			log.fatal("Unable to create database connection: " + e);
-			e.printStackTrace();
-		}
-		return conn;
+		   conn = DriverManager.getConnection(connectionURL,username,password);
+	   }
+	   catch(Exception e)
+	   {
+		   log.fatal("Unable to create database connection: " + e);
+		   e.printStackTrace();
+	   }
+	   return conn;
 	}
 
 
@@ -99,41 +99,41 @@ public class Database
 	 */
 	public static Connection getCoreConnection(String ApplicationRoot)
 	{
-		Connection conn = null;
-		try
-		{
-			//log.debug("Getting Prop File");
-			//Pull Driver and DB URL out of database.properties
+	   Connection conn = null;
+	   try
+	   {
+		   //log.debug("Getting Prop File");
+		   //Pull Driver and DB URL out of database.properties
 
-			String props = Constants.DBPROP;
+		   String props = Constants.DBPROP;
 
-			//log.debug("Getting Driver");
-			String DriverType = FileInputProperties.readfile(props, "DriverType");
-			//log.debug("Getting Driver Instance");
-			Class.forName(DriverType).newInstance();
-			String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
+		   //log.debug("Getting Driver");
+		   String DriverType = FileInputProperties.readfile(props, "DriverType");
+		   //log.debug("Getting Driver Instance");
+		   Class.forName(DriverType).newInstance();
+		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 
-			//Pull Schema, User name and Password from SqlInjLesson.properties
+		   //Pull Schema, User name and Password from SqlInjLesson.properties
 
-			//log.debug("Reading Prop File");
-			connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseSchema");
-			String username=FileInputProperties.readfile(props, "databaseUsername");
-			String password=FileInputProperties.readfile(props, "databasePassword");
+		   //log.debug("Reading Prop File");
+		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseSchema");
+		   String username=FileInputProperties.readfile(props, "databaseUsername");
+		   String password=FileInputProperties.readfile(props, "databasePassword");
 
-			//log.debug("Creating Connection to DB");
-			conn = DriverManager.getConnection(connectionURL,username,password);
-		}
-		catch(Exception e)
-		{
-			log.fatal("Unable to create database connection: " + e);
-			e.printStackTrace();
-		}
-		return conn;
+		   //log.debug("Creating Connection to DB");
+		   conn = DriverManager.getConnection(connectionURL,username,password);
+	   }
+	   catch(Exception e)
+	   {
+		   log.fatal("Unable to create database connection: " + e);
+		   e.printStackTrace();
+	   }
+	   return conn;
 	}
 
-	public static Connection getDatabaseConnection(String ApplicationRoot) {
-		return getDatabaseConnection(ApplicationRoot, false);
-	}
+	 public static Connection getDatabaseConnection(String ApplicationRoot) {
+		 return getDatabaseConnection(ApplicationRoot, false);
+	 }
 
 	/**
 	 * This method is used by the application to get a connection to the secure database sever
@@ -142,29 +142,29 @@ public class Database
 	 */
 	public static Connection getDatabaseConnection(String ApplicationRoot, boolean allowMulti)
 	{
-		Connection conn = null;
-		try
-		{
-			String props = Constants.DBPROP;
+	   Connection conn = null;
+	   try
+	   {
+		   String props = Constants.DBPROP;
 
-			String DriverType = FileInputProperties.readfile(props, "DriverType");
-			Class.forName(DriverType).newInstance();
+		   String DriverType = FileInputProperties.readfile(props, "DriverType");
+		   Class.forName(DriverType).newInstance();
 
-			String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
-			if (allowMulti) {
-				connectionURL += "?allowMultiQueries=yes";
-			}
+		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
+		   if (allowMulti) {
+			   connectionURL += "?allowMultiQueries=yes";
+		   }
 
-			String username=FileInputProperties.readfile(props, "databaseUsername");
-			String password=FileInputProperties.readfile(props, "databasePassword");
+		   String username=FileInputProperties.readfile(props, "databaseUsername");
+		   String password=FileInputProperties.readfile(props, "databasePassword");
 
-			conn = DriverManager.getConnection(connectionURL,username,password);
-		}
-		catch(Exception e)
-		{
-			log.fatal("Unable to create database connection: " + e);
-		}
-		return conn;
+		   conn = DriverManager.getConnection(connectionURL,username,password);
+	   }
+	   catch(Exception e)
+	   {
+		   log.fatal("Unable to create database connection: " + e);
+	   }
+	   return conn;
 	}
 
 	/**
@@ -175,29 +175,29 @@ public class Database
 	 */
 	public static Connection getSqlInjLessonConnection(String ApplicationRoot)
 	{
-		Connection conn = null;
-		try
-		{
-			//Pull Driver and DB URL out of database.properties
-			String props = Constants.DBPROP;
-			String DriverType = FileInputProperties.readfile(props, "DriverType");
-			Class.forName(DriverType).newInstance();
-			String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
+	   Connection conn = null;
+	   try
+	   {
+		   //Pull Driver and DB URL out of database.properties
+		   String props = Constants.DBPROP;
+		   String DriverType = FileInputProperties.readfile(props, "DriverType");
+		   Class.forName(DriverType).newInstance();
+		   String connectionURL=FileInputProperties.readfile(props, "databaseConnectionURL");
 
-			//Pull Schema, User name and Password from SqlInjLesson.properties
-			props = ApplicationRoot+"/WEB-INF/classes/lessons/SqlInjLesson.properties";
+		   //Pull Schema, User name and Password from SqlInjLesson.properties
+		   props = ApplicationRoot+"/WEB-INF/classes/lessons/SqlInjLesson.properties";
 
-			connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
-			String username=FileInputProperties.readfile(props, "databaseUsername");
-			String password=FileInputProperties.readfile(props, "databasePassword");
+		   connectionURL= connectionURL + FileInputProperties.readfile(props, "databaseConnectionURL");
+		   String username=FileInputProperties.readfile(props, "databaseUsername");
+		   String password=FileInputProperties.readfile(props, "databasePassword");
 
-			conn = DriverManager.getConnection(connectionURL,username,password);
-		}
-		catch(Exception e)
-		{
-			log.fatal("Unable to create database connection: " + e);
-			e.printStackTrace();
-		}
-		return conn;
+		   conn = DriverManager.getConnection(connectionURL,username,password);
+	   }
+	   catch(Exception e)
+	   {
+		   log.fatal("Unable to create database connection: " + e);
+		   e.printStackTrace();
+	   }
+	   return conn;
 	}
 }

@@ -59,6 +59,7 @@ public class Setup extends HttpServlet {
 			String nosqlprops = new File(Database.class.getResource("/challenges/NoSqlInjection1.properties").getFile()).getAbsolutePath();
             String mongodbName = FileInputProperties.readfile(nosqlprops, "databaseName");
 			String auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
+			String enableMongoChallenge = request.getParameter("enableMongoChallenge");
 
 			StringBuffer dbProp = new StringBuffer();
 			dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbHost + ":" + dbPort + "/");
@@ -85,15 +86,12 @@ public class Setup extends HttpServlet {
 				htmlOutput = bundle.getString("generic.text.setup.authentication.failed");
 			} else {
 				Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
-                Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
-                if (Database.getDatabaseConnection(null) == null ||
-                        MongoDatabase.getMongoDbConnection(null) == null) {
+                if (Database.getDatabaseConnection(null) == null) {
 					htmlOutput = bundle.getString("generic.text.setup.connection.failed");
 				} else {
 					try {
 						if (dbOverride.equalsIgnoreCase("overide")) {
 							executeSqlScript();
-                            executeMongoScript();
 							htmlOutput = bundle.getString("generic.text.setup.success") + " " + bundle.getString("generic.text.setup.success.overwrittendb");
 						}
 						else if (dbOverride.equalsIgnoreCase("upgrade")) {
@@ -102,6 +100,16 @@ public class Setup extends HttpServlet {
 						}else {
 							htmlOutput = bundle.getString("generic.text.setup.success");
 						}
+						if (enableMongoChallenge.equalsIgnoreCase("enable")){
+                            log.debug("Creating Mongo Challenge");
+                            Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
+                            if (MongoDatabase.getMongoDbConnection(null) == null) {
+                                htmlOutput = bundle.getString("generic.text.setup.connection.failed");
+                            }
+                            else {
+                                executeMongoScript();
+                            }
+                        }
 						success = true;
 					} catch (InstallationException e) {
 						htmlOutput = bundle.getString("generic.text.setup.failed") + ": " +  e.getMessage();
