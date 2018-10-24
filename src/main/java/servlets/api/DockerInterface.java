@@ -24,7 +24,7 @@ public class DockerInterface extends HttpServlet {
         log.debug("/api/docker GET called");
         PrintWriter out = response.getWriter();
         HttpSession ses = request.getSession(true);
-        if (Validate.validateSession(ses)) {
+        if ((Validate.validateSession(ses)) && (ses.getAttribute("userRole").equals("admin"))) {
             ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
             log.debug("Docker interface called by " + ses.getAttribute("userName").toString());
             Cookie tokenCookie = Validate.getToken(request.getCookies());
@@ -43,11 +43,9 @@ public class DockerInterface extends HttpServlet {
                     log.info("Request for docker information received for " + dockerID + " by " + ses.getAttribute("userName").toString());
                     out.print(docker.getContainerData(dockerID));
                     //out.print(docker.getContainerData("058afa9b1566f31b8ebae22ec2d48476156be229c15eecbd3f175d57834d4c35"));
-                    return;
                 } else {
                     log.info("Request received for all docker information from " + ses.getAttribute("userName").toString());
                     out.print(docker.getContainerData());
-                    return;
                 }
             }
         }
@@ -59,7 +57,7 @@ public class DockerInterface extends HttpServlet {
         log.debug("/api/docker POST called");
         PrintWriter out = response.getWriter();
         HttpSession ses = request.getSession(true);
-        if (Validate.validateSession(ses)) {
+        if ((Validate.validateSession(ses)) && (ses.getAttribute("userRole").equals("admin"))) {
             ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
             log.debug("Docker interface called by " + ses.getAttribute("userName").toString());
             Cookie tokenCookie = Validate.getToken(request.getCookies());
