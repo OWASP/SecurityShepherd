@@ -54,7 +54,7 @@ public class DockerInterface extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //Setting IpAddress To Log and taking header for original IP if forwarded from proxy
         ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-        log.debug("/api/docker POST called");
+        log.debug("/api/docker POST called.");
         PrintWriter out = response.getWriter();
         HttpSession ses = request.getSession(true);
         if ((Validate.validateSession(ses)) && (ses.getAttribute("userRole").equals("admin"))) {
