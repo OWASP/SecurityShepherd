@@ -139,55 +139,55 @@ if (Setup.isInstalled()) {
 								<input type="text" id="dbauth" name="dbauth" placeholder="Token from Server File System..." required>
 							</div>
 						</div>
-                        <script>
-                            function uncheck() {
-                                $('#enableMongoChallenge').removeAttr('checked');
-                            }
+						<script>
+							function uncheck() {
+								$('#enableMongoChallenge').removeAttr('checked');
+							}
 
-                            $(document).ready(function () {
-                                $('#enableMongoChallenge').change(function () {
-                                    if (this.checked)
-                                    {
-                                        $('#showHideDiv').fadeIn('slow');
-                                        $('#enableMongoChallenge').val("enable");
-                                        $("#mhost").prop('required',true);
-                                        $("#mport").prop('required',true);
-                                    }
-                                    else{
-                                        $('#showHideDiv').fadeOut('slow');
-                                        $('#enableMongoChallenge').val("off");
-                                        $("#mhost").prop('required',false);
-                                        $("#mport").prop('required',false);
-                                        }
-                                });
-                            });
-                        </script>
-                        <div class="row">
-                            <div class="col-25">
-                                <label for="mhost"><fmt:message key="generic.text.setup.enable"/> MongoDb Challenge</label>
-                            </div>
-                            <div class="col-75">
-                                <input type="checkbox" id="enableMongoChallenge" name="enableMongoChallenge" value="">
-                            </div>
-                        </div>
-                        <div id="showHideDiv" style="display: none">
-                            <div class="row">
-                                <div class="col-25">
-                                    <label for="mhost">MongoDb <fmt:message key="generic.text.setup.host" /></label>
-                                </div>
-                                <div class="col-75">
-                                    <input type="text" id="mhost" name="mhost" placeholder="Mongo Host..." >
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-25">
-                                    <label for="mport">MongoDb <fmt:message key="generic.text.setup.port" /></label>
-                                </div>
-                                <div class="col-75">
-                                    <input type="text" id="mport" name="mport" placeholder="Mongo Port..." >
-                                </div>
-                            </div>
-                        </div>
+							$(document).ready(function () {
+								$('#enableMongoChallenge').change(function () {
+									if (this.checked)
+									{
+										$('#showHideDiv').fadeIn('slow');
+										$('#enableMongoChallenge').val("enable");
+										$("#mhost").prop('required',true);
+										$("#mport").prop('required',true);
+									}
+									else{
+										$('#showHideDiv').fadeOut('slow');
+										$('#enableMongoChallenge').val("off");
+										$("#mhost").prop('required',false);
+										$("#mport").prop('required',false);
+										}
+								});
+							});
+						</script>
+						<div class="row">
+							<div class="col-25">
+								<label for="mhost"><fmt:message key="generic.text.setup.enable"/> MongoDb Challenge</label>
+							</div>
+							<div class="col-75">
+								<input type="checkbox" id="enableMongoChallenge" name="enableMongoChallenge" value="">
+							</div>
+						</div>
+						<div id="showHideDiv" style="display: none">
+							<div class="row">
+								<div class="col-25">
+									<label for="mhost">MongoDb <fmt:message key="generic.text.setup.host" /></label>
+								</div>
+								<div class="col-75">
+									<input type="text" id="mhost" name="mhost" placeholder="Mongo Host..." >
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-25">
+									<label for="mport">MongoDb <fmt:message key="generic.text.setup.port" /></label>
+								</div>
+								<div class="col-75">
+									<input type="text" id="mport" name="mport" placeholder="Mongo Port..." >
+								</div>
+							</div>
+						</div>
 						<div class="row">
 							<input type="submit" id="submitButton" value="<fmt:message key="generic.text.submit" />">
 						</div>
@@ -223,9 +223,9 @@ if (Setup.isInstalled()) {
 			var thedbpass = $("#dbpass").val();
 			var thedboverride = $("#dboverride").val();
 			var thedbauth = $("#dbauth").val();
-            var enableMongo = $("#enableMongoChallenge").val();
+			var enableMongo = $("#enableMongoChallenge").val();
 			var themhost = $("#mhost").val();
-            var themport = $("#mport").val();
+			var themport = $("#mport").val();
 			if(thedbauth != null)
 			{
 				$("#submitLoading").slideDown("fast");
@@ -242,9 +242,9 @@ if (Setup.isInstalled()) {
 							dbpass: thedbpass,
 							dboverride: thedboverride,
 							dbauth: thedbauth,
-                            enableMongoChallenge: enableMongo,
-                            mhost: themhost,
-                            mport: themport
+							enableMongoChallenge: enableMongo,
+							mhost: themhost,
+							mport: themport
 						},
 						async: false
 					});

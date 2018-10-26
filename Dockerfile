@@ -1,4 +1,4 @@
-FROM tomcat:alpine
+FROM tomcat:8.5.34-jre8-alpine
 
 ARG DB_DRIVER=org.gjt.mm.mysql.Driver
 ARG DB_SCHEMA=core
