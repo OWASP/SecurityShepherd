@@ -109,7 +109,7 @@
 				        return interval + " months";
 				    }
 				    interval = Math.floor(seconds / 86400);
-				    if (interval > 1) {l
+				    if (interval > 1) {
 				        return interval + " days";
 				    }
 				    interval = Math.floor(seconds / 3600);
@@ -151,9 +151,6 @@
 							async: false,
 							success: function(o) {
 								$("#badData").hide("fast");
-								
-								console.log('');
-								
 								for(i=0;i<o.length;i++) {
 									if ($('#userbar-'+ o[i].id).length == 0) {
 										// this id doesn't exist, so add it to our list.
