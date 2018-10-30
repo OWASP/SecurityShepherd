@@ -68,10 +68,9 @@
 			<!-- start content -->
 				<div id="badData"></div>
 				<% if(canSeeScoreboard) { %>
-					<div id="whereistand-div" style="position: fixed; left:30px; display: hidden;">
-						<a href="#userbar-<%= ses.getAttribute("userStamp").toString() %>" style="text-decoration: none;">
-							<div class="menuButton">Where I stand?</div>
-						</a>
+					<div id="whereistand-div" style="position: fixed; left:30px; display: none; border-bottom: 3px solid #a878ef;
+					background:#d4d4d4; padding: 5px 5px; border-radius: 5px">
+							<input type="checkbox" id="whereistand-chk" onChange="whereistandToggle()">Where I stand?
 					</div>
 					<ul id="leaderboard" class="leaderboard"></ul>
 				<% } else { %>
@@ -110,7 +109,7 @@
 				        return interval + " months";
 				    }
 				    interval = Math.floor(seconds / 86400);
-				    if (interval > 1) {
+				    if (interval > 1) {l
 				        return interval + " days";
 				    }
 				    interval = Math.floor(seconds / 3600);
@@ -152,6 +151,9 @@
 							async: false,
 							success: function(o) {
 								$("#badData").hide("fast");
+								
+								console.log('');
+								
 								for(i=0;i<o.length;i++) {
 									if ($('#userbar-'+ o[i].id).length == 0) {
 										// this id doesn't exist, so add it to our list.
@@ -176,11 +178,13 @@
 									        width: o[i].scale+"%"
 									    }, 1300 );
 									}
+									// Different color for current user
+									$('#userbar-<%= ses.getAttribute("userStamp").toString() %>').css('background-color', 'green');
 								}
 								sort();
 								
 								// Show/hide Where I stand button
-								if ( o.length <= 20 )
+								if ($('#userbar-<%= ses.getAttribute("userStamp").toString() %>').length == 0)
 									$("#whereistand-div").hide();
 								else
 									$("#whereistand-div").show();
@@ -243,6 +247,32 @@
 				}
 				//Kick off Scoreboard
 				poll();
+				
+				function whereistandToggle(){
+					if ($('#whereistand-chk')[0].checked)
+						setInterval(function() {
+							whereistandRefresh();
+							}, 1000);
+					else
+						window.scrollTo(0, 0);
+				}
+				
+				function whereistandRefresh() {
+					if ($('#whereistand-chk')[0].checked) {
+						place = Number($('#userplace-<%= ses.getAttribute("userStamp").toString() %>')[0].innerText.replace(/\D/g, ''));
+						console.log('User is on place ' + place);
+						window.scrollTo(0, $('#header').height());
+								
+						var s = Number($('#userplace-<%= ses.getAttribute("userStamp").toString() %>').parent().parent().css('top').replace(/\D/g, ''));	
+						var h = $(window).height()/2;
+						
+						if (s > h){
+							var d = s - h;
+							window.scrollBy(0, d);
+						}
+					}
+				}
+				
 			</script>
 		<% } %>
 		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
