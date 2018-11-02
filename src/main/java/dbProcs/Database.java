@@ -87,6 +87,11 @@ public class Database
 	   return conn;
 	}
 	
+	
+	public static Connection getCoreConnection()
+	{
+		return getCoreConnection("");
+	}
 	/**
 	 * Returns connection to core schema in database
 	 * @param ApplicationRoot
