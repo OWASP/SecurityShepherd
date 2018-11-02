@@ -108,6 +108,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`results` (
   `knowledgeBefore` INT NULL ,
   `knowledgeAfter` INT NULL ,
   `difficulty` INT NULL ,
+  `scored` INT NULL,
+  `medalEarned` VARCHAR(32),
   PRIMARY KEY (`userId`, `moduleId`) ,
   INDEX `fk_Results_Modules1` (`moduleId` ASC) ,
   CONSTRAINT `fk_Results_users1`
@@ -702,6 +704,23 @@ END
 -- $$
 -- DELIMITER ;
 ;
+
+-- -----------------------------------------------------
+-- procedure getMyModules
+-- -----------------------------------------------------
+
+USE `core`;
+-- DELIMITER $$
+CREATE PROCEDURE `core`.`getMyModules` (IN theUserId VARCHAR(64))
+BEGIN
+(SELECT moduleNameLangPointer, moduleCategoryLangPointer, moduleId, finishTime, moduleType, scoreValue, incrementalRank, scored, medalEarned
+FROM modules LEFT JOIN results USING (moduleId) WHERE userId = theUserId AND moduleStatus = 'open') UNION (SELECT moduleNameLangPointer, moduleCategoryLangPointer, moduleId, null, moduleType, scoreValue, incrementalRank, null, null FROM modules WHERE moduleId NOT IN (SELECT moduleId FROM modules JOIN results USING (moduleId) WHERE userId = theUserId AND moduleStatus = 'open')  AND moduleStatus = 'open') ORDER BY incrementalRank;
+END
+
+-- $$
+-- DELIMITER ;
+;
+
 -- -----------------------------------------------------
 -- procedure moduleAllInfo
 -- -----------------------------------------------------
@@ -778,6 +797,7 @@ CREATE PROCEDURE `core`.`userUpdateResult` (IN theModuleId VARCHAR(64), IN theUs
 BEGIN
 DECLARE theDate TIMESTAMP;
 DECLARE theClassId VARCHAR(64);
+DECLARE theMedalEarned VARCHAR(32);
 DECLARE theBonus INT;
 DECLARE totalScore INT;
 DECLARE medalInfo INT; -- Used to find out if there is a medal available
@@ -874,6 +894,23 @@ IF (medalInfo > 0) THEN
   END IF;
 END IF;
 
+-- Get the type of Medal the user might have earned
+IF (medalInfo <= 0) THEN
+	SELECT "none" FROM DUAL INTO theMedalEarned;
+ELSE 
+	IF (goldMedalInfo > 0) THEN
+		SELECT "gold" FROM DUAL INTO theMedalEarned;
+	ELSE
+		IF (silverMedalInfo > 0) THEN
+			SELECT "silver" FROM DUAL INTO theMedalEarned;
+		ELSE
+			IF (bronzeMedalInfo > 0) THEN
+				SELECT "bronze" FROM DUAL INTO theMedalEarned;
+			END IF;
+		END IF;
+	END IF;
+END IF;
+
 -- Get the Score value for the level
 SELECT (totalScore + scoreValue) FROM modules
     WHERE moduleId = theModuleId
@@ -891,7 +928,9 @@ UPDATE results SET
     `knowledgeBefore` = theBefore,
     `knowledgeAfter` = theAfter,
     `difficulty`  = theDifficulty,
-    `resultSubmission` = theAdditionalInfo
+    `resultSubmission` = theAdditionalInfo,
+    `scored` = totalScore,
+    `medalEarned` = theMedalEarned
     WHERE startTime IS NOT NULL
     AND finishTime IS NULL
     AND userId = theUserId
