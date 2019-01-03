@@ -4,4 +4,3 @@
 /bin/
 /.settings/
 docker/*/*.sql
-docker/*/*.sql.bak

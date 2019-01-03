@@ -3,11 +3,11 @@
 core="docker/mysql/coreSchema.sql"
 module="docker/mysql/moduleSchemas.sql"
 
-sed -i .bak 's/-- DELIMITER \$\$/DELIMITER \$\$/g' ${core}
-sed -i .bak 's/-- DELIMITER \$\$/DELIMITER \$\$/g' ${module}
+sed -i '' 's/-- DELIMITER \$\$/DELIMITER \$\$/g' ${core}
+sed -i '' 's/-- DELIMITER \$\$/DELIMITER \$\$/g' ${module}
 
-sed -i .bak 's/-- \$\$/\$\$/g' ${core}
-sed -i .bak 's/-- \$\$/\$\$/g' ${module}
+sed -i '' 's/-- \$\$/\$\$/g' ${core}
+sed -i '' 's/-- \$\$/\$\$/g' ${module}
 
-sed -i .bak 's/-- DELIMITER \;/DELIMITER \;/g' ${core}
-sed -i .bak 's/-- DELIMITER \;/DELIMITER \;/g' ${module}
+sed -i '' 's/-- DELIMITER \;/DELIMITER \;/g' ${core}
+sed -i '' 's/-- DELIMITER \;/DELIMITER \;/g' ${module}
