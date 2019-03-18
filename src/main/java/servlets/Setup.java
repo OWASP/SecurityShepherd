@@ -198,17 +198,8 @@ public class Setup extends HttpServlet {
 		try
 		{
 			File file = new File(getClass().getClassLoader().getResource("/mongodb/moduleSchemas.js").getFile());
-			String data = FileUtils.readFileToString(file, Charset.defaultCharset() );
-
 			mongoConnection = MongoDatabase.getMongoDbConnection(null);
-			DB db = MongoDatabase.getMongoDatabase(mongoConnection);
-
-			DBObject script = new BasicDBObject();
-			script.put("eval", String.format(data));
-
-			CommandResult result = db.command(script);
-
-			log.debug("Mongo Result: " + result);
+			MongoDatabase.executeMongoScript(file, mongoConnection);
 		}
 		catch (Exception e)
 		{
