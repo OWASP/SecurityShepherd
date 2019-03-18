@@ -1,13 +1,20 @@
 package dbProcs;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
-import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
+import com.mongodb.MongoSocketException;
+import com.mongodb.MongoException;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
@@ -65,17 +72,17 @@ public class MongoDatabase {
         String props;
         MongoCredential credential;
 
-        props = new File(Database.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
+        props = new File(MongoDatabase.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
         log.debug("Level Properties File = " + path + ".properties");
 
         String username = FileInputProperties.readfile(props, "databaseUsername");
-        log.debug("Connecting to DB with: " + username);
-        String password = FileInputProperties.readfile(props, "databasePassword");
+        log.debug("Username for Mongo level: " + username);
+        char[] password = FileInputProperties.readfile(props, "databasePassword").toCharArray();
+        log.debug("Password for Mongo level read");
         String dbname = FileInputProperties.readfile(props, "databaseName");
-        String dbCollectionName = FileInputProperties.readfile(props, "databaseCollection");
-        log.debug("Mongo db & collection = " + dbname + " " + dbCollectionName);
+        log.debug("Mongo database name: " + dbname);
 
-        credential = MongoCredential.createScramSha1Credential(username, dbname, password.toCharArray());
+        credential = MongoCredential.createScramSha1Credential(username, dbname, password);
 
         return credential;
     }
@@ -85,32 +92,33 @@ public class MongoDatabase {
      * @return A MongoDb collection name
      */
     public static String getMongoChallengeCollName(String ApplicationRoot, String path){
+
+        String props;
         //Some over paranoid input validation never hurts.
         path = path.replaceAll("\\.", "").replaceAll("/", "");
         log.debug("Path = " + path);
 
-        String props;
-
         props = new File(Database.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
 
+        log.debug(props);
         String dbCollectionName = FileInputProperties.readfile(props, "databaseCollection");
 
         return  dbCollectionName;
 
     }
 
-
     /**
      * Method to get a MongoDb Connection
      * @return A MongoDb Connection
      */
+
     public static MongoClient getMongoDbConnection(String ApplicationRoot){
 
-        //Mongo DB URL out of mongo.properties
+        //Mongo DB URL from mongo.properties
         String props = Constants.MONGO_DB_PROP;
         MongoClient mongoClient = null;
 
-        // Properties file for all of mongo
+        // Properties file for mongodb
         String connectionHost = FileInputProperties.readfile(props, "connectionHost");
         String connectionPort = FileInputProperties.readfile(props, "connectionPort");
 
@@ -118,15 +126,15 @@ public class MongoDatabase {
         {
             mongoClient = new MongoClient(new ServerAddress(connectionHost, Integer.parseInt(connectionPort)));
         }
+        catch (NumberFormatException e){ log.fatal("The port in the properties file is not a number: " + e); }
+        catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
         catch (MongoException e){
-            log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
-            e.printStackTrace();
-            closeConnection(mongoClient);
-        }
-        catch (Exception e){
             log.fatal("Something went wrong with Mongo: " + e);
             e.printStackTrace();
-            closeConnection(mongoClient);
+        }
+        catch (Exception e){
+            log.fatal("Something went wrong: " + e);
+            e.printStackTrace();
         }
 
         return mongoClient;
@@ -152,15 +160,18 @@ public class MongoDatabase {
             mongoClient = new MongoClient(new ServerAddress(connectionHost, Integer.parseInt(connectionPort)),
                     Arrays.asList(credential));
         }
+        catch (MongoSocketException e)
+        {
+            log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
+            e.printStackTrace();
+        }
         catch (MongoException e){
             log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
             e.printStackTrace();
-            closeConnection(mongoClient);
         }
         catch (Exception e){
             log.fatal("Something went wrong with Mongo: " + e);
             e.printStackTrace();
-            closeConnection(mongoClient);
         }
 
         return mongoClient;
@@ -179,5 +190,24 @@ public class MongoDatabase {
         mongoDb = mongoClient.getDB(dbname);
 
         return mongoDb;
+    }
+
+    /**
+     * Method to execute a mongo database JS file in a Mongo Database
+     * @param file the file to run
+     * @param mongoClient to get connection to db
+     */
+    public static void executeMongoScript(File file, MongoClient mongoClient) throws IOException
+    {
+        String data = FileUtils.readFileToString(file, Charset.defaultCharset() );
+
+        DB db = MongoDatabase.getMongoDatabase(mongoClient);
+
+        DBObject script = new BasicDBObject();
+        script.put("eval", String.format(data));
+
+        CommandResult result = db.command(script);
+
+        log.debug("Mongo Result: " + result);
     }
 }

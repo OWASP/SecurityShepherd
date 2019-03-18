@@ -2,6 +2,8 @@ package servlets.module.challenge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +19,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.MongoException;
 import com.mongodb.DBObject;
+import dbProcs.Constants;
 import dbProcs.MongoDatabase;
 import org.apache.log4j.Logger;
 import org.owasp.encoder.Encode;
@@ -54,6 +57,7 @@ public class NoSqlInjection1 extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(NoSqlInjection1.class);
 	private static String levelName = "NoSQL Injection Challenge One";
 	public static String levelHash = "d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66";
+
 	// private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific
 	/**
 	 * Users have to use NoSQL injection to get a specific user (Marlo) gamer ID. The query they are injecting into by default only outputs usernames.
@@ -69,6 +73,9 @@ public class NoSqlInjection1 extends HttpServlet
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
+			Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+			ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.injection.nosql", locale);
+
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
 
@@ -117,7 +124,7 @@ public class NoSqlInjection1 extends HttpServlet
 						name = result.get("name");
 						address = result.get("address");
 
-						log.debug("Mongodb Query Results " + result.toString());
+						log.debug(bundle.getString("results.queryResult") + result.toString());
 						htmlOutput += "<tr><td>"
 								+ Encode.forHtml(id.toString()) + "</td><td>"
 								+ Encode.forHtml(name.toString()) + "</td><td>"
@@ -127,13 +134,13 @@ public class NoSqlInjection1 extends HttpServlet
 					htmlOutput += "</table>";
 					if(i == 0)
 					{
-						htmlOutput = "<p>There were no results found in your search</p>";
+						htmlOutput = "<p>"+  bundle.getString("result.none")  +"</p>";
 					}
 
 				}
 				catch (MongoException e)
 				{
-					log.debug("MongoDb Error caught - " + e.toString());
+					log.debug(bundle.getString("result.mongoError") + e.toString());
 					htmlOutput += "<p>An error was detected!</p>" +
 							"<p>" + Encode.forHtml(e.toString()) + "</p>";
 				}
