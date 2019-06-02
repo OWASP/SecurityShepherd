@@ -248,7 +248,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 	
 	/**
 	 * Merges current server encryption key with user name based encryption key to create user specific key
-	 * @param userName
+	 * @param userNameKey
 	 * @return
 	 */
 	private static String createUserSpecificEncryptionKey (String userNameKey) throws Exception 
