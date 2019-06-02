@@ -398,15 +398,13 @@ public class BrokenCryptoHomeMade extends HttpServlet
 				String forLog = BrokenCryptoHomeMade.encrypt(key, baseKey + getCurrentSalt());
 				toReturn = "<script>prepTooltips();prepClipboardEvents();</script>"
 						+ "<div class='input-group'>" +
-								"<textarea id='theKey' rows=2 style='height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:65%'>"+forLog+"</textarea>" +
+								"<textarea id='theKey"+baseKey+"' rows=2 style='height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:65%'>"+forLog+"</textarea>" +
 								"<span class='input-group-button'>" +
-									"<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey' style='height: 30px;'>" +
+									"<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey"+baseKey+"' style='height: 30px;'>" +
 										"<img src='../js/clipboard-js/clippy.svg' width='14' alt='Copy to clipboard'>" +
 									"</button>" +
 								"</span><p>&nbsp;</p>"
 						+ "</div>";
-
-
 				log.debug("Returning: " + forLog);
 			} 
 			catch (Exception e) 
