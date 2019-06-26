@@ -177,8 +177,10 @@ public class SqlInjection5 extends HttpServlet
 	
 	private static int validateAmount (int amount) throws IllegalArgumentException
 	{
-		if(amount < 0 || amount > 9000)
+		if(amount > 9000)
 			throw new IllegalArgumentException();
+		if (amount < 0)
+			amount = 0;
 		return amount;
 	}
 }
