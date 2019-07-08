@@ -17,26 +17,26 @@ import org.owasp.encoder.Encode;
 import utils.ModulePlan;
 import utils.ScoreboardStatus;
 
-/** 
+/**
  * Used to retrieve information from the Database
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- *  @author Mark					
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
+ *  @author Mark
  */
-public class Getter 
+public class Getter
 {
 	private static org.apache.log4j.Logger log = Logger.getLogger(Getter.class);
 	/**
@@ -44,19 +44,19 @@ public class Getter
 	 */
 	private static int widthOfUnitBar = 11; //px
 	private static int fieldTrainingCap = 45;
-	
+
 	private static int privateCap = 80;
-	
+
 	private static int corporalCap = 105;
-	
+
 	private static int sergeantCap = 130;
-	
+
 	private static int lieutenantCap = 145;
-	
+
 	private static int majorCap = 175;
-	
+
 	private static int admiralCap = 999; //everything above Major is Admiral
-	
+
 	/**
 	 * This method hashes the user submitted password and sends it to the database.
 	 * The database does the rest of the work, including Brute Force prevention.
@@ -64,17 +64,17 @@ public class Getter
 	 * @param password The submitted password in plain text to be used in authentication
 	 * @return A string array made up of nothing or information to be consumed by the initiating authentication process.
 	 */
-	
+
 	public static String[] authUser (String ApplicationRoot, String userName, String password)
 	{
 		String[] result = null;
 		log.debug("$$$ Getter.authUser $$$");
 		log.debug("userName = "  + userName);
-		
+
 		boolean userFound = false;
 		boolean goOn = false;
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try 
+		try
 		{
 			//See if user Exists
 			CallableStatement callstmt = conn.prepareCall("call userFind(?)");
@@ -144,12 +144,12 @@ public class Getter
 							log.debug("userBadLoginReset executed!");
 						}
 					}
-					//User has logged in, or a Authentication Bypass was detected... You never know! Better safe than sorry	
+					//User has logged in, or a Authentication Bypass was detected... You never know! Better safe than sorry
 					return result;
 				}
 			}
-		} 
-		catch (SQLException e) 
+		}
+		catch (SQLException e)
 		{
 			log.error("Login Failure: " + e.toString());
 			result = null;
@@ -159,18 +159,18 @@ public class Getter
 		log.debug("$$$ End authUser $$$");
 		return result;
 	}
-	
+
 	/**
 	 * Used to determine if a user has completed a module already
 	 * @param ApplicationRoot The current running context of an application
-	 * @param moduleId The module identifier 
+	 * @param moduleId The module identifier
 	 * @param userId The user identifier
-	 * @return The module name of the module IF the user has not completed AND the user has previously opened the challenge. 
+	 * @return The module name of the module IF the user has not completed AND the user has previously opened the challenge.
 	 */
 	public static String checkPlayerResult(String ApplicationRoot, String moduleId, String userId)
 	{
 		log.debug("*** Getter.checkPlayerResult ***");
-		
+
 		String result = null;
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
@@ -193,7 +193,7 @@ public class Getter
 		log.debug("*** END checkPlayerResult ***");
 		return result;
 	}
-	
+
 	/**
 	 * Used to decipher whether or not a user exists as a player
 	 * @param userId The user identifier of the player to be found
@@ -225,7 +225,7 @@ public class Getter
 		log.debug("*** END findPlayerById ***");
 		return userFound;
 	}
-	
+
 	/**
 	 * Used to gather all module information for internal functionality. This method is used in creating View's or in control class operations
 	 * @param ApplicationRoot The current runing context of the application
@@ -235,7 +235,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getAllModuleInfo ***");
 		ArrayList<String[]> modules = new ArrayList<String[]>();
-		
+
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -264,12 +264,12 @@ public class Getter
 		log.debug("*** END getAllModuleInfo ***");
 		return modules;
 	}
-	
+
 	/**
-	 * Returns HTML menu for challenges. Challenges are only referenced by their id, 
+	 * Returns HTML menu for challenges. Challenges are only referenced by their id,
 	 * The user will have to go through another servlet to get the module's View address
 	 * @param ApplicationRoot The current running context of the application
-	 * @return HTML menu for challenges	
+	 * @return HTML menu for challenges
 	 */
 	public static String getChallenges (String ApplicationRoot, String userId, Locale lang)
 	{
@@ -311,10 +311,10 @@ public class Getter
 					output+= "<img src='css/images/uncompleted.png'/>"; //Incomplete marker
 				}
 				//Final out put compilation
-				output +="<a class='lesson' id='" 
+				output +="<a class='lesson' id='"
 					+ Encode.forHtmlAttribute(challenges.getString(3))
-					+ "' href='javascript:;'>" 
-					+ Encode.forHtml(bundle.getString(challenges.getString(1))) 
+					+ "' href='javascript:;'>"
+					+ Encode.forHtml(bundle.getString(challenges.getString(1)))
 					+ "</a>";
 				output += "</li>";
 				rowNumber++;
@@ -338,7 +338,7 @@ public class Getter
 		log.debug("*** END getChallenges() ***");
 		return output;
 	}
-	
+
 	/**
 	 * @param ApplicationRoot The current running context of the application
 	 * @return The amount of classes currently existing in the database
@@ -367,7 +367,7 @@ public class Getter
 		log.debug("*** END getClassCount");
 		return result;
 	}
-	
+
 	/**
 	 * @param ApplicationRoot The current running context of the application
 	 * @return Result set containing class info in the order classId, className and then classYear
@@ -392,7 +392,7 @@ public class Getter
 		log.debug("*** END getClassInfo");
 		return result;
 	}
-	
+
 	/**
 	 * @param ApplicationRoot The current running context of the application
 	 * @param classId The identifier of the class
@@ -422,7 +422,7 @@ public class Getter
 		log.debug("*** END getClassInfo");
 		return result;
 	}
-	
+
 	/**
 	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks against each other. URLs are contained in IFRAME tags
 	 * @param ApplicationRoot The current running context of the application
@@ -447,10 +447,10 @@ public class Getter
 				callstmt.setString(2, moduleId);
 				ResultSet resultSet = callstmt.executeQuery();
 				log.debug("resultMessageByClass executed");
-				
+
 				//Table Header
 				htmlOutput = "<table><tr><th>" + bundle.getString("forum.userName") + "</th><th>" + bundle.getString("forum.message") + "</th></tr>";
-				
+
 				log.debug("Opening Result Set from resultMessageByClass");
 				int counter = 0;
 				while(resultSet.next())
@@ -485,7 +485,7 @@ public class Getter
 		log.debug("*** END getCsrfForum ***");
 		return htmlOutput;
 	}
-	
+
 	/**
 	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks against each other. URLs are contained in IMG tags
 	 * @param ApplicationRoot The current running context of the application
@@ -510,10 +510,10 @@ public class Getter
 				callstmt.setString(2, moduleId);
 				ResultSet resultSet = callstmt.executeQuery();
 				log.debug("resultMessageByClass executed");
-				
+
 				//Table Header
 				htmlOutput = "<table><tr><th>" + bundle.getString("forum.userName") + "</th><th>" + bundle.getString("forum.image") + "</th></tr>";
-				
+
 				log.debug("Opening Result Set from resultMessageByClass");
 				int counter = 0;
 				while(resultSet.next())
@@ -548,7 +548,7 @@ public class Getter
 		log.debug("*** END getCsrfForum ***");
 		return htmlOutput;
 	}
-	
+
 	/**
 	 * Used to present a modules feedback, including averages and raw results.
 	 * @param applicationRoot The current running context of the application.
@@ -558,7 +558,7 @@ public class Getter
 	public static String getFeedback(String applicationRoot, String moduleId)
 	{
 		log.debug("*** Getter.getFeedback ***");
-		
+
 		String result = new String();
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
@@ -600,7 +600,7 @@ public class Getter
 			}
 			if(resultAmount > 0)//Table header
 				result = "<table><tr><th>Player</th><th>Time</th><th>Difficulty</th><th>Before</th><th>After</th><th>Comments</th></tr>" +
-						"<tr><td>Average</td><td></td><td>" + difficulty/resultAmount + "</td><td>" + 
+						"<tr><td>Average</td><td></td><td>" + difficulty/resultAmount + "</td><td>" +
 						before/resultAmount + "</td><td>" + after/resultAmount + "</td><td></td></tr>" + result + "<table>";
 			else // If empty, Blank output
 				result = new String();
@@ -614,7 +614,7 @@ public class Getter
 		log.debug("*** END getFeedback ***");
 		return result;
 	}
-	
+
 	/**
 	 * This method prepares the incremental module menu. This is when Security Shepherd is in "Game Mode".
 	 * Users are presented with one uncompleted module at a time. This method also returns a script to be executed every time the menu is chanegd.
@@ -629,12 +629,12 @@ public class Getter
 		log.debug("*** Getter.getIncrementalChallenges ***");
 		String output = new String();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		
+
 		Locale.setDefault(new Locale("en"));
 		Locale locale = new Locale(lang);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
 		ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
-		
+
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)");
@@ -644,12 +644,12 @@ public class Getter
 			log.debug("Opening Result Set from moduleIncrementalInfo");
 			boolean lastRow = false;
 			boolean completedModules = false;
-			
-			
+
+
 			//Preparing first Category header; "Completed"
 			output = "<li><a id='completedList' href='javascript:;'><div class='menuButton'>" + bundle.getString("getter.button.completed") + "</div></a>\n" +
 				"<ul id='theCompletedList' style='display: none;' class='levelList'>";
-			
+
 			while(modules.next() && !lastRow)
 			{
 				//For each row, prepair the modules the users can select
@@ -657,10 +657,10 @@ public class Getter
 				{
 					completedModules = true;
 					output += "<li>";
-					output += "<a class='lesson' id='" 
+					output += "<a class='lesson' id='"
 						+ Encode.forHtmlAttribute(modules.getString(3))
-						+ "' href='javascript:;'>" 
-						+ Encode.forHtml(levelNames.getString(modules.getString(1))) 
+						+ "' href='javascript:;'>"
+						+ Encode.forHtml(levelNames.getString(modules.getString(1)))
 						+ "</a>";
 					output += "</li>";
 				}
@@ -677,17 +677,17 @@ public class Getter
 						//NO completed modules, so dont show any...
 						output = new String();
 					}
-					
+
 					//Second category - Uncompleted
-					output += "<a class='lesson' id='" 
+					output += "<a class='lesson' id='"
 						+ Encode.forHtmlAttribute(modules.getString(3))
-						+ "' href='javascript:;'>" 
-						+ "<div class='menuButton'>" + bundle.getString("getter.button.nextChallenge")+ "</div>" 
+						+ "' href='javascript:;'>"
+						+ "<div class='menuButton'>" + bundle.getString("getter.button.nextChallenge")+ "</div>"
 						+ "</a>";
-					output += "</li>";					
+					output += "</li>";
 				}
 			}
-			
+
 			if(!lastRow) //If true, then the user has completed all challenges
 			{
 				output += "<h2 id='uncompletedList'><a href='javascript:;'>" + bundle.getString("getter.button.finished") + "</a></h2>\n" +
@@ -702,7 +702,7 @@ public class Getter
 				log.debug("Appending End tags");
 				//output += "</ul></li>"; //Commented Out to prevent Search Box being pushed into Footer
 			}
-			
+
 			//This is the script for menu interaction
 			output += "<script>applyMenuButtonActionsCtfMode('" + Encode.forHtml(csrfToken) + "', \"" + Encode.forHtml(bundle.getString("generic.text.sorryError")) + "\");</script>";
 		}
@@ -714,7 +714,7 @@ public class Getter
 		log.debug("*** END getIncrementalChallenges() ***");
 		return output;
 	}
-	
+
 	/**
 	 * This method prepares the incremental module menu. This is when Security Shepherd is in "Game Mode".
 	 * Users are presented with one uncompleted module at a time. This method does not return the JS script describing how the menu used should work
@@ -728,12 +728,12 @@ public class Getter
 		log.debug("*** Getter.getIncrementalChallengesWithoutScript ***");
 		String output = new String();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		
+
 		Locale.setDefault(new Locale("en"));
 		Locale locale = new Locale(lang);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
 		ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
-		
+
 		try
 		{
 			CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)");
@@ -743,12 +743,12 @@ public class Getter
 			log.debug("Opening Result Set from moduleIncrementalInfo");
 			boolean lastRow = false;
 			boolean completedModules = false;
-			
-			
+
+
 			//Preparing first Category header; "Completed"
 			output = "<li><a id='completedList' href='javascript:;'><div class='menuButton'>" + bundle.getString("getter.button.completed") + "</div></a>\n" +
 				"<ul id='theCompletedList' style='display: none;' class='levelList'>";
-			
+
 			while(modules.next() && !lastRow)
 			{
 				//For each row, prepair the modules the users can select
@@ -756,10 +756,10 @@ public class Getter
 				{
 					completedModules = true;
 					output += "<li>";
-					output += "<a class='lesson' id='" 
+					output += "<a class='lesson' id='"
 						+ Encode.forHtmlAttribute(modules.getString(3))
-						+ "' href='javascript:;'>" 
-						+ Encode.forHtml(levelNames.getString(modules.getString(1))) 
+						+ "' href='javascript:;'>"
+						+ Encode.forHtml(levelNames.getString(modules.getString(1)))
 						+ "</a>";
 					output += "</li>";
 				}
@@ -776,17 +776,17 @@ public class Getter
 						//NO completed modules, so dont show any...
 						output = new String();
 					}
-					
+
 					//Second category - Uncompleted
-					output += "<a class='lesson' id='" 
+					output += "<a class='lesson' id='"
 						+ Encode.forHtmlAttribute(modules.getString(3))
-						+ "' href='javascript:;'>" 
-						+ "<div class='menuButton'>" + bundle.getString("getter.button.nextChallenge")+ "</div>" 
+						+ "' href='javascript:;'>"
+						+ "<div class='menuButton'>" + bundle.getString("getter.button.nextChallenge")+ "</div>"
 						+ "</a>";
-					output += "</li>";					
+					output += "</li>";
 				}
 			}
-			
+
 			if(!lastRow) //If true, then the user has completed all challenges
 			{
 				output += "<h2 id='uncompletedList'><a href='javascript:;'>" + bundle.getString("getter.button.finished") + "</a></h2>\n" +
@@ -810,16 +810,16 @@ public class Getter
 		log.debug("*** END getIncrementalChallengesWithoutScript() ***");
 		return output;
 	}
-	
+
 	/**
 	 * Use to return the current progress of a class in JSON format with information like userid, user name and score
 	 * @param applicationRoot The current running context of the application
 	 * @param classId The identifier of the class to use in lookup
-	 * @return A JSON representation of a class's score in the order {id, username, userTitle, score, scale, place, order, 
+	 * @return A JSON representation of a class's score in the order {id, username, userTitle, score, scale, place, order,
 	 * goldmedalcount, goldDisplay, silverMedalCount, silverDisplay, bronzeDisplay, bronzeMedalCount}
 	 */
 	@SuppressWarnings("unchecked")
-	public static String getJsonScore(String applicationRoot, String classId) 
+	public static String getJsonScore(String applicationRoot, String classId)
 	{
 		log.debug("classId: " + classId);
 		String result = new String();
@@ -897,9 +897,9 @@ public class Getter
 						silverDisplayStyle = displayMedal;
 					if (bronzeMedals > 0)
 						bronzeDisplayStyle = displayMedal;
-					
+
 					int barScale = (int)((score*100)/baseBarScale); //bar scale is the percentage the bar should be of the row's context (Highest Possible is depends on scale set in maxBarScale. eg: maxBarScale = 1.1 would mean the max scale would be 91% for a single row)
-					
+
 					String userMedalString = new String();
 					if(goldMedals > 0 || silverMedals > 0 || bronzeMedals > 0)
 					{
@@ -934,7 +934,7 @@ public class Getter
 						if(goldMedals + silverMedals + bronzeMedals > 1)
 							userMedalString += "s";
 					}
-						
+
 					jsonInner.put("id", new String(Encode.forHtml(resultSet.getString(1)))); //User Id
 					jsonInner.put("username", new String(Encode.forHtml(resultSet.getString(2)))); //User Name
 					jsonInner.put("userTitle", new String(Encode.forHtml(resultSet.getString(2)) + " with " + score + " points" + userMedalString)); //User name encoded for title attribute
@@ -971,7 +971,7 @@ public class Getter
 		//log.debug("*** END getJsonScore ***");
 		return result;
 	}
-	
+
 	/**
 	 * Used to gather a menu of lessons for a user, including markers for each lesson they have completed or not completed
 	 * @param ApplicationRoot The current running context of the application
@@ -1007,10 +1007,10 @@ public class Getter
 					output+= "<img src='css/images/uncompleted.png'/>";
 				}
 				//Prepare lesson output
-				output += "<a class='lesson' id='" 
+				output += "<a class='lesson' id='"
 					+ Encode.forHtmlAttribute(lessons.getString(3))
-					+ "' href='javascript:;'>" 
-					+ Encode.forHtml(bundle.getString(lessons.getString(1))) 
+					+ "' href='javascript:;'>"
+					+ Encode.forHtml(bundle.getString(lessons.getString(1)))
 					+ "</a>";
 				output += "</li>";
 			}
@@ -1032,9 +1032,9 @@ public class Getter
 		log.debug("*** END getLesson() ***");
 		return output;
 	}
-	
+
 	/**
-	 * This method returns the address of a module based on the module identifier submitted. 
+	 * This method returns the address of a module based on the module identifier submitted.
 	 * If user has not accessed this level before, they are put down as starting the level at this time.
 	 * If the level is a client side attack, or other issues that cannot be abused to return a result key (like XSS, CSRF or network sniffing)
 	 * the address is of the core server. Otherwise the modules sit on the vulnerable application server
@@ -1079,11 +1079,11 @@ public class Getter
 		log.debug("*** END getModuleAddress() ***");
 		return output;
 	}
-	
+
 	/**
 	 * Retrieves the module category based on the moduleId submitted
 	 * @param ApplicationRoot The current running context of the application
-	 * @param moduleId The id of the module that 
+	 * @param moduleId The id of the module that
 	 * @return
 	 */
 	public static String getModuleCategory (String ApplicationRoot, String moduleId)
@@ -1108,13 +1108,13 @@ public class Getter
 		log.debug("*** END getModuleCategory ***");
 		return theCategory;
 	}
-	
+
 	/**
 	 * @param applicationRoot The current running context of the application.
 	 * @param moduleId The identifier of a module
 	 * @return The hash of the module specified
 	 */
-	public static String getModuleHash(String applicationRoot, String moduleId) 
+	public static String getModuleHash(String applicationRoot, String moduleId)
 	{
 		log.debug("*** Getter.getModuleHash ***");
 		String result = new String();
@@ -1169,11 +1169,11 @@ public class Getter
 		log.debug("*** END getModuleIdFromHash ***");
 		return result;
 	}
-	
+
 	/**
 	 * Returns true if a module has a hard coded key, false if server encrypts it
 	 * @param ApplicationRoot The current running context of the application
-	 * @param moduleId The id of the module 
+	 * @param moduleId The id of the module
 	 * @return Returns true if a module has a hard coded key, false if server encrypts it
 	 */
 	public static boolean getModuleKeyType (String ApplicationRoot, String moduleId)
@@ -1202,14 +1202,14 @@ public class Getter
 		log.debug("*** END getModuleKeyType ***");
 		return theKeyType;
 	}
-	
+
 	/**
 	 * This method retrieves the i18n local key for a module's name.
 	 * @param applicationRoot Application Running Context
 	 * @param moduleId ID of the module to lookup
 	 * @return Locale key for the Module's Name.
 	 */
-	public static String getModuleNameLocaleKey(String applicationRoot, String moduleId) 
+	public static String getModuleNameLocaleKey(String applicationRoot, String moduleId)
 	{
 		log.debug("*** Getter.getModuleNameLocaleKey ***");
 		String result = new String();
@@ -1233,7 +1233,7 @@ public class Getter
 		log.debug("*** END getModuleNameLocaleKey ***");
 		return result;
 	}
-	
+
 	/**
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId Identifier of module
@@ -1264,7 +1264,7 @@ public class Getter
 		log.debug("*** END getModuleResult ***");
 		return moduleFound;
 	}
-	
+
 	/**
 	 * Returns the result key for a module using the module's hash for the lookup procedure.
 	 * @param ApplicationRoot The current running context of the application
@@ -1286,7 +1286,7 @@ public class Getter
 			log.debug("Opening Result Set from moduleGetResultFromHash");
 			resultSet.next();
 			result = resultSet.getString(1);
-			
+
 		}
 		catch (SQLException e)
 		{
@@ -1297,9 +1297,9 @@ public class Getter
 		log.debug("*** END getModuleResultFromHash ***");
 		return result;
 	}
-	
+
 	/**
-	 * Used in creating functionality that requires a user to select a module. 
+	 * Used in creating functionality that requires a user to select a module.
 	 * This method only prepares the option tags for this type of input. It must still be wrapped in select tags.
 	 * @param ApplicationRoot The current running context of the application
 	 * @return All modules in HTML option tags
@@ -1330,9 +1330,9 @@ public class Getter
 		log.debug("*** END getModulesInOptionTags() ***");
 		return output;
 	}
-	
+
 	/**
-	 * Used in creating functionality that requires a user to select a module. 
+	 * Used in creating functionality that requires a user to select a module.
 	 * This method only prepares the option tags for this type of input. It must still be wrapped in select tags.
 	 * @param ApplicationRoot The current running context of the application
 	 * @return All modules in HTML option tags ordered by incrementalRank
@@ -1363,7 +1363,7 @@ public class Getter
 		log.debug("*** END getModulesInOptionTags() ***");
 		return output;
 	}
-	
+
 	/**
 	 * Used to return a module cheat sheet
 	 * @param ApplicationRoot The current running context of the application
@@ -1388,7 +1388,7 @@ public class Getter
 			resultSet.next();
 			result[0] = resultSet.getString(1);
 			result[1] = bundle.getString(resultSet.getString(2));
-			
+
 		}
 		catch (SQLException e)
 		{
@@ -1399,9 +1399,9 @@ public class Getter
 		log.debug("*** END getModuleSolution ***");
 		return result;
 	}
-	
+
 	/**
-	 * This method returns modules in option tags in different &lt;select&gt; elements depending on their current open/closed status. 
+	 * This method returns modules in option tags in different &lt;select&gt; elements depending on their current open/closed status.
 	 * The output assumes it is contained in a table context
 	 * @param ApplicationRoot The Running Context of the Application
 	 * @return Tr/td elements containing a moduleStatusMenu that has lists of the current open and closed modules
@@ -1422,14 +1422,14 @@ public class Getter
 			log.debug("Opening Result Set from moduleAllStatus");
 			while(modules.next())
 			{
-				String theModule = "<option value='" + Encode.forHtmlAttribute(modules.getString(1)) + 
+				String theModule = "<option value='" + Encode.forHtmlAttribute(modules.getString(1)) +
 						"'>" + Encode.forHtml(modules.getString(2)) + "</option>\n";
 				if(modules.getString(3).equalsIgnoreCase("open"))
 				{
 					//Module is Open currently, so add it to the open side of the list
 					openModules += theModule;
 				}
-				else 
+				else
 				{
 					//If it is not open: It must be closed (NULL or not)
 					closedModules += theModule;
@@ -1467,7 +1467,7 @@ public class Getter
 			ResultSet modules = callstmt.executeQuery();
 			while(modules.next())
 			{
-				String theModule = "<option value='" + Encode.forHtmlAttribute(modules.getString(1)) + 
+				String theModule = "<option value='" + Encode.forHtmlAttribute(modules.getString(1)) +
 						"'>" + Encode.forHtml(modules.getString(1)) + "</option>\n";
 				theModules += theModule;
 			}
@@ -1530,10 +1530,10 @@ public class Getter
 	 * @param classId The identifier of the class to use in lookup
 	 * @return A HTML representation of a class's progress in the application
 	 */
-	public static String getProgress(String applicationRoot, String classId) 
+	public static String getProgress(String applicationRoot, String classId)
 	{
 		log.debug("*** Getter.getProgress ***");
-		
+
 		String result = new String();
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
@@ -1580,10 +1580,10 @@ public class Getter
 	 * @return A JSON representation of a class's progress in the application
 	 */
 	@SuppressWarnings("unchecked")
-	public static String getProgressJSON(String applicationRoot, String classId) 
+	public static String getProgressJSON(String applicationRoot, String classId)
 	{
 		log.debug("*** Getter.getProgressJSON ***");
-		
+
 		String result = new String();
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
@@ -1650,7 +1650,7 @@ public class Getter
 	}
 	/**
 	 * This method prepares the Tournament module menu. This is when Security Shepherd is in "Tournament Mode".
-	 * Users are presented with a list of that are specified as open. 
+	 * Users are presented with a list of that are specified as open.
 	 * @param ApplicationRoot The running context of the application.
 	 * @param userId The user identifier of the user.
 	 * @param csrfToken The cross site request forgery token
@@ -1666,7 +1666,7 @@ public class Getter
 		ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
 		try
 		{
-			
+
 			String listEntry = new String();
 			//Get the modules
 			CallableStatement callstmt = conn.prepareCall("call moduleTournamentOpenInfo(?)");
@@ -1690,10 +1690,10 @@ public class Getter
 					listEntry += "<img src='css/images/uncompleted.png'/>";
 				}
 				//Prepare entry output
-				listEntry += "<a class='lesson' id='" 
+				listEntry += "<a class='lesson' id='"
 					+ Encode.forHtmlAttribute(levels.getString(3))
-					+ "' href='javascript:;'>" 
-					+ Encode.forHtml(levelNames.getString(levels.getString(1))) 
+					+ "' href='javascript:;'>"
+					+ Encode.forHtml(levelNames.getString(levels.getString(1)))
 					+ "</a>\n";
 				listEntry += "</li>";
 				//What section does this belong in? Current or Next?
@@ -1771,7 +1771,7 @@ public class Getter
 		Database.closeConnection(conn);
 		return levelMasterList;
 	}
-	
+
 	/**
 	 * Return all modules in JSON for specific User
 	 * @param ApplicationRoot
@@ -1828,8 +1828,8 @@ public class Getter
 							log.debug(levelNames.getString(levels.getString(1)) + " is the Next Module for user " + userId);
 							thisModuleIsOpen = false; //Stop this from being set again
 						}
-					} 
-					else 
+					}
+					else
 					{
 						moduleOpen = false;
 					}
@@ -1877,7 +1877,7 @@ public class Getter
 		log.debug("*** END getUserClass ***");
 		return result;
 	}
-	
+
 	/**
 	 * @param ApplicationRoot The current running context of the application
 	 * @param userName The username of the user
@@ -1907,7 +1907,7 @@ public class Getter
 		log.debug("*** END getUserIdFromName ***");
 		return result;
 	}
-	
+
 	/**
 	 * @param ApplicationRoot The current running context of the application
 	 * @param userId The identifier of a user
@@ -1937,10 +1937,10 @@ public class Getter
 		log.debug("*** END getUserName ***");
 		return result;
 	}
-	
+
 	/**
-	 * This method is used to determine if a CSRF level has been completed. 
-	 * A call is made to the DB that returns the CSRF counter for a level. 
+	 * This method is used to determine if a CSRF level has been completed.
+	 * A call is made to the DB that returns the CSRF counter for a level.
 	 * If this counter is greater than 0, the level has been completed
 	 * @param applicationRoot Running context of the application
 	 * @param moduleHash Hash ID of the CSRF module you wish to check if a user has completed
@@ -1950,9 +1950,9 @@ public class Getter
 	public static boolean isCsrfLevelComplete (String applicationRoot, String moduleId, String userId)
 	{
 		log.debug("*** Setter.isCsrfLevelComplete ***");
-		
+
 		boolean result = false;
-		
+
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try
 		{
@@ -1978,7 +1978,7 @@ public class Getter
 		log.debug("*** END isCsrfLevelComplete ***");
 		return result;
 	}
-	
+
 	public static boolean isModuleOpen (String ApplicationRoot, String moduleId)
 	{
 		log.debug("*** Getter.isModuleOpen ***");
@@ -2006,7 +2006,7 @@ public class Getter
 		Database.closeConnection(conn);
 		return result;
 	}
-	
+
 	/**
 	* @param ApplicationRoot The current running context of the application
 	* @return Result set containing admin info in the order userId, userName and userAddress
@@ -2031,7 +2031,7 @@ public class Getter
 		log.debug("*** END adminGetAll ***");
 		return result;
 	}
-		
+
 	/**
 	 * Used to decipher whether or not a user exists as an admin
 	 * @param userId The user identifier of the admin to be found
@@ -2062,5 +2062,5 @@ public class Getter
 		Database.closeConnection(conn);
 		log.debug("*** END findAdminById ***");
 		return userFound;
-	}	
+	}
 }

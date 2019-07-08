@@ -897,7 +897,7 @@ END IF;
 -- Get the type of Medal the user might have earned
 IF (medalInfo <= 0) THEN
 	SELECT "none" FROM DUAL INTO theMedalEarned;
-ELSE 
+ELSE
 	IF (goldMedalInfo > 0) THEN
 		SELECT "gold" FROM DUAL INTO theMedalEarned;
 	ELSE
