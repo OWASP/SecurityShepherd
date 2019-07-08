@@ -11,15 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.MongoException;
-import com.mongodb.DBObject;
-import dbProcs.Constants;
+import com.mongodb.*;
 import dbProcs.MongoDatabase;
 import org.apache.log4j.Logger;
 import org.owasp.encoder.Encode;
@@ -104,7 +96,7 @@ public class NoSqlInjection1 extends HttpServlet
 				dbCollection = mongoDb.getCollection(dbCollectionName);
 
 				String gamerId = request.getParameter("theGamerName");
-				log.debug("User Submitted - " + gamerId);
+				log.debug("User Submitted: " + gamerId);
 
 				DBObject whereQuery = new BasicDBObject("$where", "this._id == '" + gamerId + "'");
 				cursor = dbCollection.find(whereQuery);
@@ -138,9 +130,14 @@ public class NoSqlInjection1 extends HttpServlet
 					}
 
 				}
+				catch (MongoTimeoutException e){
+					log.fatal(bundle.getString("result.mongoError") + e.toString());
+					htmlOutput += "<p>Mongo Timeout Occured</p>" +
+							"<p>" + Encode.forHtml(e.toString()) + "</p>";
+				}
 				catch (MongoException e)
 				{
-					log.debug(bundle.getString("result.mongoError") + e.toString());
+					log.error(bundle.getString("result.mongoError") + e.toString());
 					htmlOutput += "<p>An error was detected!</p>" +
 							"<p>" + Encode.forHtml(e.toString()) + "</p>";
 				}
@@ -154,9 +151,15 @@ public class NoSqlInjection1 extends HttpServlet
 					mongoClient.close();
 				}
 			}
+			catch (MongoSocketException e)
+			{
+				log.error(bundle.getString("result.mongoError") + e.toString());
+				htmlOutput += "<p>An error was detected!</p>" +
+						"<p>" + Encode.forHtml(e.toString()) + "</p>";
+			}
 			catch (MongoException e)
 			{
-				log.debug("MongoDb Error caught - " + e.toString());
+				log.fatal("MongoDb Error caught - " + e.toString());
 				htmlOutput += "<p>An error was detected!</p>" +
 						"<p>" + Encode.forHtml(e.toString()) + "</p>";
 			}

@@ -1,14 +1,6 @@
 package dbProcs;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
-import com.mongodb.MongoSocketException;
-import com.mongodb.MongoException;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
-import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
+import com.mongodb.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -100,7 +92,7 @@ public class MongoDatabase {
 
         props = new File(Database.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
 
-        log.debug(props);
+        log.debug("Properties File: " + props);
         String dbCollectionName = FileInputProperties.readfile(props, "databaseCollection");
 
         return  dbCollectionName;
@@ -111,7 +103,6 @@ public class MongoDatabase {
      * Method to get a MongoDb Connection
      * @return A MongoDb Connection
      */
-
     public static MongoClient getMongoDbConnection(String ApplicationRoot){
 
         //Mongo DB URL from mongo.properties
@@ -121,24 +112,29 @@ public class MongoDatabase {
         // Properties file for mongodb
         String connectionHost = FileInputProperties.readfile(props, "connectionHost");
         String connectionPort = FileInputProperties.readfile(props, "connectionPort");
+        String connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
+        String socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
+        String serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
+
+        MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
+        optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
+        optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
+        optionsBuilder.serverSelectionTimeout(Integer.parseInt(serverSelectionTimeout));
+        MongoClientOptions mongoOptions = optionsBuilder.build();
 
         try
         {
-            mongoClient = new MongoClient(new ServerAddress(connectionHost, Integer.parseInt(connectionPort)));
+            mongoClient = new MongoClient(new ServerAddress(connectionHost, Integer.parseInt(connectionPort)),
+                    mongoOptions);
         }
         catch (NumberFormatException e){ log.fatal("The port in the properties file is not a number: " + e); }
         catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
-        catch (MongoException e){
-            log.fatal("Something went wrong with Mongo: " + e);
-            e.printStackTrace();
-        }
-        catch (Exception e){
-            log.fatal("Something went wrong: " + e);
-            e.printStackTrace();
-        }
+        catch (MongoException e){log.fatal("Something went wrong with Mongo: " + e);e.printStackTrace(); }
+        catch (Exception e){log.fatal("Something went wrong: " + e);e.printStackTrace(); }
 
         return mongoClient;
     }
+
 
     /**
      * Method to get a MongoDb Connection
@@ -154,25 +150,32 @@ public class MongoDatabase {
         // Properties file for all of mongo
         String connectionHost = FileInputProperties.readfile(props, "connectionHost");
         String connectionPort = FileInputProperties.readfile(props, "connectionPort");
+        String connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
+        String socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
+        String serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
+
+        MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
+        optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
+        optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
+        optionsBuilder.serverSelectionTimeout(Integer.parseInt(serverSelectionTimeout));
+        MongoClientOptions mongoOptions = optionsBuilder.build();
 
         try
         {
             mongoClient = new MongoClient(new ServerAddress(connectionHost, Integer.parseInt(connectionPort)),
-                    Arrays.asList(credential));
+                    Arrays.asList(credential), mongoOptions);
+
+            log.debug("Connection Host: " + connectionHost );
+            log.debug("Connection Port: " + Integer.parseInt(connectionPort));
+            log.debug("Connection Creds: " + Arrays.asList(credential));
         }
-        catch (MongoSocketException e)
-        {
-            log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
-            e.printStackTrace();
-        }
-        catch (MongoException e){
-            log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
-            e.printStackTrace();
-        }
-        catch (Exception e){
-            log.fatal("Something went wrong with Mongo: " + e);
-            e.printStackTrace();
-        }
+        catch (NumberFormatException e){ log.fatal("The port in the properties file is not a number: " + e); }
+        catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
+        catch (MongoTimeoutException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
+        catch (MongoException e){ log.fatal("Something went wrong with Mongo: " + e); e.printStackTrace(); }
+        catch (Exception e){log.fatal("Something went wrong: " + e); e.printStackTrace(); }
+
+        log.debug("Mongo Client: " + mongoClient);
 
         return mongoClient;
     }
@@ -185,9 +188,15 @@ public class MongoDatabase {
     public static DB getMongoDatabase(MongoClient mongoClient)
     {
         String props = Constants.MONGO_DB_PROP;
-        DB mongoDb;
+        DB mongoDb = null;
         String dbname = FileInputProperties.readfile(props, "databaseName");
-        mongoDb = mongoClient.getDB(dbname);
+        try {
+            mongoDb = mongoClient.getDB(dbname);
+        }
+        catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
+        catch (MongoTimeoutException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
+        catch (MongoException e){ log.fatal("Something went wrong with Mongo: " + e); e.printStackTrace(); }
+        catch (Exception e){log.fatal("Something went wrong: " + e); e.printStackTrace(); }
 
         return mongoDb;
     }
