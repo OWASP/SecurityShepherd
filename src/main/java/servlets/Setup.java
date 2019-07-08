@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mongodb.*;
+import com.mongodb.MongoClient;
 import dbProcs.FileInputProperties;
 import dbProcs.MongoDatabase;
 import org.apache.commons.io.FileUtils;
