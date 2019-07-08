@@ -146,6 +146,20 @@
             <scope>test</scope>
         </dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>5.1.1.RELEASE</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-mongodb -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>2.1.1.RELEASE</version>
+		</dependency>
+
 		<!-- Test -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -158,6 +172,14 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>5.0.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-junit -->
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-junit</artifactId>
+			<version>2.0.0.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -247,10 +269,7 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<executable>bash</executable>
-									<arguments>
-										<argument>${basedir}/docker/scripts/convert-sql-scripts.sh</argument>
-									</arguments>
+									<executable>${basedir}/docker/scripts/convert-sql-scripts.sh</executable>
 								</configuration>
 							</execution>
 						</executions>
