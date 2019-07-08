@@ -5,7 +5,7 @@ import com.mongodb.DB;
 import com.mongodb.FongoDB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.log4j.Logger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,7 +26,7 @@ public class MongoDatabaseTest {
 
     private static String TEST_DB = "shepherdTest";
 
-    private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MongoDatabaseTest.class);
+    private static org.apache.log4j.Logger log = Logger.getLogger(MongoDatabaseTest.class);
 
     @BeforeAll
     public static void initAll()

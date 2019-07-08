@@ -2,6 +2,7 @@ package servlets.module.challenge;
 
 import com.github.fakemongo.Fongo;
 
+import org.apache.log4j.Logger;
 import com.mongodb.FongoDB;
 import com.mongodb.MongoClient;
 import com.mongodb.DBCollection;
@@ -42,7 +43,7 @@ public class NoSqlInjection1Test extends Mockito {
     private static String TEST_DB = "shepherdTest";
     private static String LANG = "en_GB";
 
-    private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(NoSqlInjection1Test.class);
+    private static org.apache.log4j.Logger log = Logger.getLogger(NoSqlInjection1Test.class);
     private ResourceBundle bundle = ResourceBundle.getBundle
             ("i18n.servlets.challenges.injection.nosql", new Locale(LANG));
 
