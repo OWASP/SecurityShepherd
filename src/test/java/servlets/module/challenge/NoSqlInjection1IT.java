@@ -118,7 +118,7 @@ public class NoSqlInjection1IT extends Mockito {
                     log.fatal(message);
                     fail(message);
                 }
-                else if(!servletResponse.contains("Jimmy"))
+                else if(!servletResponse.contains("Marlo</td><td>Baltimore</td></tr><tr><td>b6c02"))
                 {
                     String message = new String("Valid Solution did not return Result Key");
                     log.fatal(message);
