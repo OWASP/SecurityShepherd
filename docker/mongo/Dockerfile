@@ -1,4 +1,4 @@
-FROM mongo:4.1
+FROM mongo:${MONGODB_VERSION}
 COPY target/moduleSchemas.js /docker-entrypoint-initdb.d/moduleSchemas.js
 
 RUN sed -i 's/\/\/REMOVE/ /g' /docker-entrypoint-initdb.d/moduleSchemas.js

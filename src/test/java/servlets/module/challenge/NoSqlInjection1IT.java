@@ -92,7 +92,7 @@ public class NoSqlInjection1IT extends Mockito {
 
 
     @Test
-    public void testResultMatches()
+    public void testLevelValidAnswer()
     {
         try {
             GetterTest.verifyTestUser(applicationRoot, USERNAME, USERNAME);

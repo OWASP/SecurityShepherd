@@ -411,7 +411,7 @@
 				<configuration>
 					<images>
 						<image>
-							<name>mongo:4.1</name>
+							<name>mongo:${MONGODB_VERSION}</name>
 							<build>
 								<dockerFile>${project.basedir}/docker/mongo/Dockerfile</dockerFile >
 							</build>

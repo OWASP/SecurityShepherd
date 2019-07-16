@@ -3,6 +3,8 @@ jobs:
     - stage: build
       language: java
       services: mysql
+      before_install:
+        - mvn -Pdocker validate
     - stage: deploy
       name: "Deploy to Dockerhub"
       language: generic
