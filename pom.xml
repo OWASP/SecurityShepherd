@@ -300,6 +300,62 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<id>integ-test</id>
+			<activation>
+				<property>
+					<name>!skipTests</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+				<plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>0.26.0</version>
+					<executions>
+						<execution>
+							<id>start</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>build</goal>
+								<goal>start</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>stop</id>
+							<phase>post-integration-test</phase>
+							<goals>
+								<goal>stop</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<images>
+							<image>
+								<name>mongo:${MONGODB_VERSION}</name>
+								<build>
+									<dockerFile>${project.basedir}/docker/mongo/Dockerfile</dockerFile >
+								</build>
+								<run>
+									<ports>
+										<port>27017:27017</port>
+									</ports>
+									<wait>
+										<!-- Check for this URL to return a 200 return code .... -->
+										<log>waiting for connections on port 27017</log>
+										<time>120000</time>
+									</wait>
+								</run>
+							</image>
+						</images>
+					</configuration>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+
 	</profiles>
 
 	<build>
@@ -387,48 +443,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.26.0</version>
-				<executions>
-					<execution>
-						<id>start</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>build</goal>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<images>
-						<image>
-							<name>mongo:${MONGODB_VERSION}</name>
-							<build>
-								<dockerFile>${project.basedir}/docker/mongo/Dockerfile</dockerFile >
-							</build>
-							<run>
-								<ports>
-									<port>27017:27017</port>
-								</ports>
-								<wait>
-									<!-- Check for this URL to return a 200 return code .... -->
-									<log>waiting for connections on port 27017</log>
-									<time>120000</time>
-								</wait>
-							</run>
-						</image>
-					</images>
-				</configuration>
-			</plugin>
+
 		</plugins>
 	</build>
 </project>
