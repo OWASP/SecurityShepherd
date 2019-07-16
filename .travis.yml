@@ -3,6 +3,13 @@ jobs:
     - stage: build
       language: java
       services: mysql
+      script: "mvn clean install -DskipTests"
+    - stage: unit-test
+      language: java
+      script: "mvn test -B"
+    - stage: integration-test
+      language: java
+      script: "mvn verify"
       before_install:
         - mvn -Pdocker validate
     - stage: deploy
@@ -18,5 +25,7 @@ jobs:
       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
 stages:
   - build
+  - unit-test
+  - integration-test
   - name: deploy
     if: branch IN (master, dev) AND type = push
