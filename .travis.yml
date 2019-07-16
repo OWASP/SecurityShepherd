@@ -2,9 +2,9 @@ jobs:
   include:
     - stage: build
       language: java
-      services: mysql
       script: "mvn clean install -DskipTests"
     - stage: unit-test
+      services: mysql
       language: java
       script: "mvn test -B"
     - stage: integration-test
