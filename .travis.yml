@@ -22,5 +22,6 @@ jobs:
       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
 stages:
   - build
+  - test
   - name: deploy
     if: branch IN (master, dev) AND type = push
