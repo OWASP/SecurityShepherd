@@ -1,6 +1,13 @@
 ARG TOMCAT_VERSION
 FROM tomcat:${TOMCAT_VERSION}
 
+ENV RUN_USER tomcat
+ENV RUN_GROUP tomcat
+
+RUN addgroup -S ${RUN_GROUP} && adduser -S ${RUN_USER} -G ${RUN_GROUP} --home ${CATALINA_HOME}
+RUN chown -R ${RUN_USER}:${RUN_GROUP} $CATALINA_HOME
+USER ${RUN_USER}
+
 ARG DB_DRIVER=org.gjt.mm.mysql.Driver
 ARG DB_SCHEMA=core
 ARG PROPS_MYSQL=/usr/local/tomcat/conf/database.properties
