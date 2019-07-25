@@ -2,7 +2,10 @@ jobs:
   include:
     - stage: build
       language: java
-      script: "mvn clean install -DskipTests"
+      script:
+        - mvn clean install -Pdocker -DskipTests
+        - docker-compose build
+      services: docker
     - stage: test
       services: mysql
       language: java
@@ -17,7 +20,7 @@ jobs:
       script: skip
       services: docker
       before_install:
-        - mvn install -P docker -DskipTests
+        - mvn install -Pdocker -DskipTests
         - docker-compose build web
       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
 stages:
