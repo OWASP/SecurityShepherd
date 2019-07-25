@@ -90,11 +90,6 @@
         <br>
         <code><%= bundle.getString("example.xxe.2") %>
         </code>
-        <br/><br/>
-        <%= bundle.getString("example.text") %> 3:
-        <br>
-        <code><%= bundle.getString("example.xxe.3") %>
-        </code>
         <br/>
         <br/>
         <input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
@@ -106,22 +101,17 @@
     <br/>
     <form id="leForm" action="javascript:;">
         <table>
-            <tr>
-                <td>
-                    <%= bundle.getString("paragraph.info.searchTerm") %>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="submitButton"><input type="submit" value="<%= bundle.getString("button.uploadFile") %>"/>
-                    </div>
-                    <p style="display: none;" id="loadingSign"><%= bundle.getString("word.info.loading") %>
-                    </p>
-                    <div style="display: none;" id="hintButton"><input type="button"
-                                                                       value="<%= bundle.getString("sentence.question.wouldYouLikeHint") %>"
-                                                                       id="theHintButton"/></div>
-                </td>
-            </tr>
+            <tr><td>
+                <%= bundle.getString("paragraph.info.emailAddr") %>
+            </td></tr>
+            <tr><td>
+                <input style="width: 400px;" id="emailAddr" type="text" autocomplete="off"/>
+            </td></tr>
+            <tr><td>
+                <div id="submitButton"><input type="submit" value="<%= bundle.getString("button.resetPassword") %>"/></div>
+                <p style="display: none;" id="loadingSign"><%= bundle.getString("word.info.loading") %></p>
+                <div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sentence.question.wouldYouLikeHint") %>" id="theHintButton"/></div>
+            </td></tr>
         </table>
     </form>
 
@@ -132,13 +122,13 @@
     $("#leForm").submit(function () {
         $("#submitButton").hide("fast");
         $("#loadingSign").show("slow");
-        var theSearchTerm = $("#searchTerm").val();
+        var theEmailAddr = $("#emailAddr").val();
         $("#resultsDiv").hide("slow", function () {
             var ajaxCall = $.ajax({
                 type: "POST",
                 url: "<%= levelHash %>",
                 data: {
-                    searchTerm: theSearchTerm,
+                    emailAddr: theEmailAddr,
                     csrfToken: "<%= csrfToken %>"
                 },
                 async: false
