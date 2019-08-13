@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -11,6 +12,7 @@ import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -27,6 +29,7 @@ import org.apache.log4j.Logger;
 
 import dbProcs.Constants;
 import dbProcs.Database;
+import utils.FileSystem;
 import utils.InstallationException;
 import utils.Validate;
 
@@ -60,6 +63,7 @@ public class Setup extends HttpServlet {
 			String mongodbName = FileInputProperties.readfile(nosqlprops, "databaseName");
 			String auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
 			String enableMongoChallenge = request.getParameter("enableMongoChallenge");
+			String enableUnsafeChallenges = request.getParameter("enableUnsafeChallenges");
 
 			StringBuffer dbProp = new StringBuffer();
 			dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbHost + ":" + dbPort + "/");
@@ -109,6 +113,9 @@ public class Setup extends HttpServlet {
 							else {
 								executeMongoScript();
 							}
+						}
+						if (enableUnsafeChallenges.equalsIgnoreCase("enable")){
+							executeCreateChallengeFile();
 						}
 						success = true;
 					} catch (InstallationException e) {
@@ -229,5 +236,26 @@ public class Setup extends HttpServlet {
 			e.printStackTrace();
 			throw new InstallationException(e);
 		}
+	}
+
+	private synchronized void executeCreateChallengeFile()  {
+
+		String filename;
+		String data;
+
+		InputStream input = getClass().getClassLoader().getResourceAsStream("/file/challenges.properties");
+		Properties prop = new Properties();
+
+		try {
+			prop.load(input);
+		} catch (IOException e) {
+			log.error(e);
+		}
+
+		filename = prop.getProperty("xxe.lesson.file");
+		data = prop.getProperty("xxe.lesson.solution");
+
+		FileSystem.createFile("/" + filename);
+		FileSystem.writeFile(filename, data);
 	}
 }
