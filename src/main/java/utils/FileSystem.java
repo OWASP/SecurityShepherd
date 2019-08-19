@@ -35,18 +35,9 @@ public class FileSystem {
      * Creates a file on the filesystem
      * @param filename the file to be created
      */
-    public static void createFile(String filename) {
+    public static void createFile(String filename) throws IOException{
         File file = new File(filename);
-
-        try {
-            if (file.createNewFile()){
-                log.debug(filename + " was created.");
-            }else{
-                log.debug(filename + " could not be created!");
-            }
-        } catch (IOException e) {
-            log.error(e);
-        }
+        file.createNewFile();
     }
 
     /**
@@ -54,16 +45,11 @@ public class FileSystem {
      * @param filename the file to be written to
      * @param data the data to write to the file
      */
-    public static void writeFile(String filename, String data){
+    public static void writeFile(String filename, String data) throws IOException{
 
         FileWriter writer;
-        try {
-            writer = new FileWriter(filename);
-            writer.write(data);
-            writer.close();
-            log.debug(filename + " was written to with" + data);
-        } catch (IOException e) {
-            log.error(e);
-        }
+        writer = new FileWriter(filename);
+        writer.write(data);
+        writer.close();
     }
 }

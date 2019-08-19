@@ -191,7 +191,7 @@ if (Setup.isInstalled()) {
 						</div>
 
 						<script>
-                            function uncheck() {
+                            function uncheckUnfafe() {
                                 $('#enableUnsafeLevels').removeAttr('checked');
                             }
 
@@ -204,8 +204,7 @@ if (Setup.isInstalled()) {
                                     }
                                     else{
                                         $('#showHideWarning').fadeOut('slow');
-                                        $('#enableUnsafeLevels').val("off");
-
+                                        $('#enableUnsafeLevels').val("disable");
                                     }
                                 });
                             });
@@ -216,7 +215,7 @@ if (Setup.isInstalled()) {
 								<label for="mhost"><fmt:message key="generic.text.setup.enable.unsafe"/></label>
 							</div>
 							<div class="col-75">
-								<input type="checkbox" id="enableUnsafeLevels" name="enableUnsafeLevels" value="">
+								<input type="checkbox" id="enableUnsafeLevels" name="enableUnsafeLevels" value="enableUnsafeLevels">
 								<span id="showHideWarning" style="display: none">
 									<fmt:message key="generic.text.setup.enable.unsafe.warn" />
 								</span>
@@ -261,6 +260,7 @@ if (Setup.isInstalled()) {
 			var enableMongo = $("#enableMongoChallenge").val();
 			var themhost = $("#mhost").val();
 			var themport = $("#mport").val();
+			var enableUnsafeLevels = $("#enableUnsafeLevels").val();
 			if(thedbauth != null)
 			{
 				$("#submitLoading").slideDown("fast");
@@ -279,7 +279,8 @@ if (Setup.isInstalled()) {
 							dbauth: thedbauth,
 							enableMongoChallenge: enableMongo,
 							mhost: themhost,
-							mport: themport
+							mport: themport,
+                            enableUnsafeLevels: enableUnsafeLevels
 						},
 						async: false
 					});

@@ -63,7 +63,8 @@ public class Setup extends HttpServlet {
 			String mongodbName = FileInputProperties.readfile(nosqlprops, "databaseName");
 			String auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
 			String enableMongoChallenge = request.getParameter("enableMongoChallenge");
-			String enableUnsafeChallenges = request.getParameter("enableUnsafeChallenges");
+
+			String enableUnsafeLevels = request.getParameter("enableUnsafeLevels");
 
 			StringBuffer dbProp = new StringBuffer();
 			dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbHost + ":" + dbPort + "/");
@@ -85,14 +86,40 @@ public class Setup extends HttpServlet {
 			mongoProp.append("\n");
 			mongoProp.append("databaseName=" + mongodbName);
 			mongoProp.append("\n");
+			mongoProp.append("connectTimeout=10000");
+			mongoProp.append("\n");
+			mongoProp.append("socketTimeout=0");
+			mongoProp.append("\n");
+			mongoProp.append("serverSelectionTimeout=30000");
+			mongoProp.append("\n");
+
+
 
 			if (!auth.equals(dbAuth)) {
 				htmlOutput = bundle.getString("generic.text.setup.authentication.failed");
-			} else {
+			}
+			else {
 				Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 				if (Database.getDatabaseConnection(null) == null) {
 					htmlOutput = bundle.getString("generic.text.setup.connection.failed");
-				} else {
+				}
+				else if(enableMongoChallenge.equalsIgnoreCase("enable")){
+					if(!checkPortNum(mongodbPort)){
+						htmlOutput = bundle.getString("generic.text.setup.error.valid.port");
+					}
+					else {
+						Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
+						if (MongoDatabase.getMongoDbConnection(null) == null) {
+							htmlOutput = bundle.getString("generic.text.setup.connection.mongo.failed");
+						}
+					}
+				}
+				else if(enableUnsafeLevels.equalsIgnoreCase("enable")){
+					if (executeCreateChallengeFile() == false){
+						htmlOutput = bundle.getString("generic.text.setup.file.failed");
+					}
+				}
+				else {
 					try {
 						if (dbOverride.equalsIgnoreCase("overide")) {
 							executeSqlScript();
@@ -103,19 +130,6 @@ public class Setup extends HttpServlet {
 							htmlOutput = bundle.getString("generic.text.setup.success") + " " + bundle.getString("generic.text.setup.success.updatedb");
 						}else {
 							htmlOutput = bundle.getString("generic.text.setup.success");
-						}
-						if (enableMongoChallenge.equalsIgnoreCase("enable")) {
-							log.debug("Creating Mongo Challenge");
-							Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
-							if (MongoDatabase.getMongoDbConnection(null) == null) {
-								htmlOutput = bundle.getString("generic.text.setup.connection.failed");
-							}
-							else {
-								executeMongoScript();
-							}
-						}
-						if (enableUnsafeChallenges.equalsIgnoreCase("enable")){
-							executeCreateChallengeFile();
 						}
 						success = true;
 					} catch (InstallationException e) {
@@ -174,6 +188,19 @@ public class Setup extends HttpServlet {
 		} else {
 			FileUtils.deleteQuietly(new File(Constants.SETUP_AUTH));
 		}
+	}
+
+	private static Boolean checkPortNum(String portNum){
+		try {
+			Integer validPort = Integer.valueOf(portNum);
+			if (validPort  < 1 &&  validPort > 65535 ){
+				return false;
+			}
+		}catch (NumberFormatException e){
+			log.fatal("Value: " + portNum + "is not a valid number");
+			return false;
+		}
+		return true;
 	}
 
 	private synchronized void executeSqlScript() throws InstallationException {
@@ -238,7 +265,7 @@ public class Setup extends HttpServlet {
 		}
 	}
 
-	private synchronized void executeCreateChallengeFile()  {
+	private synchronized Boolean executeCreateChallengeFile()  {
 
 		String filename;
 		String data;
@@ -250,12 +277,20 @@ public class Setup extends HttpServlet {
 			prop.load(input);
 		} catch (IOException e) {
 			log.error(e);
+			return false;
 		}
 
 		filename = prop.getProperty("xxe.lesson.file");
 		data = prop.getProperty("xxe.lesson.solution");
 
-		FileSystem.createFile("/" + filename);
-		FileSystem.writeFile(filename, data);
+		try {
+			FileSystem.createFile("/" + filename);
+			FileSystem.writeFile(filename, data);
+			return true;
+		}
+		catch (IOException e){
+			log.error(e);
+			return false;
+		}
 	}
 }

@@ -127,10 +127,10 @@ public class MongoDatabase {
             mongoClient = new MongoClient(new ServerAddress(connectionHost, Integer.parseInt(connectionPort)),
                     mongoOptions);
         }
-        catch (NumberFormatException e){ log.fatal("The port in the properties file is not a number: " + e); }
-        catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
-        catch (MongoException e){log.fatal("Something went wrong with Mongo: " + e);e.printStackTrace(); }
-        catch (Exception e){log.fatal("Something went wrong: " + e);e.printStackTrace(); }
+        catch (NumberFormatException e){ log.fatal("The port in the properties file is not a number: " + e); return null;}
+        catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e);  return null;}
+        catch (MongoException e){log.fatal("Something went wrong with Mongo: " + e);e.printStackTrace();  return null;}
+        catch (Exception e){log.fatal("Something went wrong: " + e);e.printStackTrace();  return null;}
 
         return mongoClient;
     }
