@@ -48,7 +48,7 @@ public class TestUnvalidatedForwardsLesson
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         //Open All modules
-        if(!Setter.openAllModules(applicationRoot))
+        if(!Setter.openAllModules(applicationRoot, 0))
         	fail("Could not Mark All Modules As Open");
 	}
 

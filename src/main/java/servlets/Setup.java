@@ -94,7 +94,6 @@ public class Setup extends HttpServlet {
 			mongoProp.append("\n");
 
 
-
 			if (!auth.equals(dbAuth)) {
 				htmlOutput = bundle.getString("generic.text.setup.authentication.failed");
 			}
@@ -104,19 +103,25 @@ public class Setup extends HttpServlet {
 					htmlOutput = bundle.getString("generic.text.setup.connection.failed");
 				}
 				else if(enableMongoChallenge.equalsIgnoreCase("enable")){
-					if(!checkPortNum(mongodbPort)){
+					if(!Validate.isValidPortNumber(mongodbPort)){
 						htmlOutput = bundle.getString("generic.text.setup.error.valid.port");
+                        FileUtils.deleteQuietly(new File(Constants.DBPROP));
 					}
 					else {
 						Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
 						if (MongoDatabase.getMongoDbConnection(null) == null) {
 							htmlOutput = bundle.getString("generic.text.setup.connection.mongo.failed");
+                            FileUtils.deleteQuietly(new File(Constants.DBPROP));
 						}
+						else {
+                            executeMongoScript();
+                        }
 					}
 				}
 				else if(enableUnsafeLevels.equalsIgnoreCase("enable")){
 					if (executeCreateChallengeFile() == false){
 						htmlOutput = bundle.getString("generic.text.setup.file.failed");
+                        FileUtils.deleteQuietly(new File(Constants.DBPROP));
 					}
 				}
 				else {
@@ -188,19 +193,6 @@ public class Setup extends HttpServlet {
 		} else {
 			FileUtils.deleteQuietly(new File(Constants.SETUP_AUTH));
 		}
-	}
-
-	private static Boolean checkPortNum(String portNum){
-		try {
-			Integer validPort = Integer.valueOf(portNum);
-			if (validPort  < 1 &&  validPort > 65535 ){
-				return false;
-			}
-		}catch (NumberFormatException e){
-			log.fatal("Value: " + portNum + "is not a valid number");
-			return false;
-		}
-		return true;
 	}
 
 	private synchronized void executeSqlScript() throws InstallationException {

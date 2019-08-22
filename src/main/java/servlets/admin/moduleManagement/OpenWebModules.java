@@ -21,13 +21,15 @@ public class OpenWebModules extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(OpenWebModules.class);
 	/**
-	 * Control class used to open all modules when called by an administrator
-	 * @param csrfToken The csrf protection token for this function
+	 * Control class used to open all Only Web Categories when called by an administrator
+	 * @param request
+	 * @param response
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
 		String servletName = "servlets.module.OpenWebModules";
+		String unsafeLevels = "disable";
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& " + servletName + " &&&");
@@ -42,10 +44,21 @@ public class OpenWebModules extends HttpServlet
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
+				unsafeLevels = request.getParameter("enableUnsafeLevels");
+				log.debug("Unsafe Levels: " + unsafeLevels);
 				String ApplicationRoot = getServletContext().getRealPath("");
-				Setter.openOnlyWebCategories(ApplicationRoot);
-				htmlOutput = "<h3 class='title'>Only Web Levels Are Now Open</h3>"
-						+ "<p>All of the Security Shepherd Web Application Security levels are now open! All other categories have been closed.</p>";
+				if (unsafeLevels.equals("enable")) {
+					Setter.openOnlyWebCategories(ApplicationRoot, 0);
+					Setter.openOnlyWebCategories(ApplicationRoot, 1);
+					htmlOutput = "<p style='color:red'>[WARNING] Server is vulnerable. Unsafe levels open!<p>"
+							+ "<h3 class='title'>Only Web Levels Are Now Open (including unsafe levels)</h3>"
+							+ "<p>All of the Security Shepherd Web Application Security levels are now open! All other categories have been closed.</p>";
+				}
+				else{
+					Setter.openOnlyWebCategories(ApplicationRoot, 0);
+					htmlOutput = "<h3 class='title'>Only Web Levels Are Now Open</h3>"
+							+ "<p>All of the Security Shepherd Web Application Security levels are now open! All other categories have been closed.</p>";
+				}
 			}
 			else
 			{

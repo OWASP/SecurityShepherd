@@ -87,6 +87,10 @@ if(!changePassword)
 				<a href="javascript:;" style="text-decoration: none;" id="onlyWebApplication"><div class="menuButton"><fmt:message key="getStarted.button.openLevels.web" /></div></a>
 				<a href="javascript:;" style="text-decoration: none;" id="onlyMobileApplication"><div class="menuButton"><fmt:message key="getStarted.button.openLevels.mobile" /></div></a>
 				<a href="javascript:;" style="text-decoration: none;" id="noApplication"><div class="menuButton"><fmt:message key="getStarted.button.closeLevels" /></div></a>
+				<input  type="checkbox" id="enableUnsafeLevels" name="enableUnsafeLevels" value="enable">
+				<label for="enableUnsafeLevels"><fmt:message key="getStarted.button.enable.unsafe" /></label>
+				<br /><span><fmt:message key="getStarted.enable.unsafe.info" /></span>
+
 			</div>
 			<div id="scopeLoadingDiv" style="display: none;"><fmt:message key="generic.text.loading" /></div>
 			</p>
@@ -112,6 +116,13 @@ if(!changePassword)
 	});
 	<% if (isAdmin) { %>
 	$("#allApplication").click(function(){
+        if ($('#enableUnsafeLevels').is(":checked"))
+        {
+            var unsafeLevel = $("#enableUnsafeLevels").val();
+        }
+        else{
+            var unsafeLevel = "disable";
+		}
 		$("#scopeResultsDiv").slideUp("slow");
 		$("#scopeLoadingDiv").show("slow");
 		$("#setScopeDiv").slideUp("fast", function(){
@@ -119,7 +130,8 @@ if(!changePassword)
 				type: "POST",
 				url: "openEveryModules",
 				data: {
-					csrfToken: "<%= csrfToken %>"
+					csrfToken: "<%= csrfToken %>",
+                    enableUnsafeLevels: unsafeLevel
 				},
 				async: false
 			});
@@ -143,6 +155,13 @@ if(!changePassword)
 	});
 	
 	$("#onlyWebApplication").click(function(){
+        if ($('#enableUnsafeLevels').is(":checked"))
+        {
+            var unsafeLevel = $("#enableUnsafeLevels").val();
+        }
+        else{
+            var unsafeLevel = "disable";
+        }
 		$("#scopeResultsDiv").slideUp("slow");
 		$("#scopeLoadingDiv").show("slow");
 		$("#setScopeDiv").slideUp("fast", function(){
@@ -150,7 +169,8 @@ if(!changePassword)
 				type: "POST",
 				url: "openWebModules",
 				data: {
-					csrfToken: "<%= csrfToken %>"
+					csrfToken: "<%= csrfToken %>",
+                    enableUnsafeLevels: unsafeLevel
 				},
 				async: false
 			});

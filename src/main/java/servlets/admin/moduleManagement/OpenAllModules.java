@@ -22,12 +22,14 @@ public class OpenAllModules extends HttpServlet
 	private static org.apache.log4j.Logger log = Logger.getLogger(OpenAllModules.class);
 	/**
 	 * Control class used to open all modules when called by an administrator
-	 * @param csrfToken The csrf protection token for this funciton
+	 * @param request
+	 * @param response
 	 */
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
 	{
 		String servletName = "servlets.module.OpenAllModules";
+		String unsafeLevels = "disable";
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& " + servletName + " &&&");
@@ -42,10 +44,20 @@ public class OpenAllModules extends HttpServlet
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
+				unsafeLevels = request.getParameter("enableUnsafeLevels");
 				String ApplicationRoot = getServletContext().getRealPath("");
-				Setter.openAllModules(ApplicationRoot);
-				htmlOutput = "<h3 class='title'>All Modules are Now Open</h3>"
-						+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
+				if (unsafeLevels.equals("enable")) {
+					Setter.openOnlyWebCategories(ApplicationRoot, 0);
+					Setter.openOnlyWebCategories(ApplicationRoot, 1);
+					htmlOutput = "<p style='color:red'>[WARNING] Server is vulnerable. Unsafe levels open!<p>"
+							+ "<h3 class='title'>All Modules are Now Open (including unsafe levels)</h3>"
+							+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
+				}
+				else{
+					Setter.openAllModules(ApplicationRoot, 0);
+					htmlOutput = "<h3 class='title'>All Modules are Now Open</h3>"
+							+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
+				}
 			}
 			else
 			{

@@ -51,7 +51,7 @@ public class LevelsTest
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         //Open All modules
-        if(!Setter.openAllModules(applicationRoot))
+        if(!Setter.openAllModules(applicationRoot, 0))
         	fail("Could not Mark All Modules As Open");
         // Default to CTF Mode
         ModulePlan.setIncrementalFloor();

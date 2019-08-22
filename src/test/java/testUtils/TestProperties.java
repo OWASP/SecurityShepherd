@@ -310,7 +310,7 @@ public class TestProperties
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot))
+				if(Setter.openAllModules(applicationRoot, 0))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, moduleId, userId).isEmpty())
