@@ -262,21 +262,10 @@ public class Setup extends HttpServlet {
 		String filename;
 		String data;
 
-		InputStream input = getClass().getClassLoader().getResourceAsStream("/file/challenges.properties");
-		Properties prop = new Properties();
-
 		try {
-			prop.load(input);
-		} catch (IOException e) {
-			log.error(e);
-			return false;
-		}
-
-		filename = prop.getProperty("xxe.lesson.file");
-		data = prop.getProperty("xxe.lesson.solution");
-
-		try {
-			FileSystem.createFile("/" + filename);
+			filename = FileSystem.readPropertiesFile("/file/challenges.properties", "xxe.lesson.file");
+			data = FileSystem.readPropertiesFile("/file/challenges.properties", "xxe.lesson.solution");
+			FileSystem.createFile(filename);
 			FileSystem.writeFile(filename, data);
 			return true;
 		}

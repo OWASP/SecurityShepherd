@@ -78,7 +78,7 @@ public class XxeLesson
 
                     if (emailAddr == null) {
                         htmlOutput += "<p>" + bundle.getString("response.blank.email") + "</p>";
-                        out.write(htmlOutput);
+                        out.write(htmlOutput + emailAddr);
                     } else if (Validate.isValidEmailAddress(emailAddr)) {
                         log.debug("User Submitted - " + emailAddr);
 

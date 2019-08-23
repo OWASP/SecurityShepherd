@@ -2,9 +2,8 @@ package utils;
 
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Properties;
 
 /**
  * Class is used to interact with the Filesystem
@@ -51,5 +50,19 @@ public class FileSystem {
         writer = new FileWriter(filename);
         writer.write(data);
         writer.close();
+    }
+
+    /**
+     * Read a properties file and return the string result from the property specified
+     * @param filename the file to be written to
+     * @param property the property value to return
+     */
+    public static String readPropertiesFile(String filename, String property) throws IOException{
+
+        InputStream input = FileSystem.class.getClassLoader().getResourceAsStream(filename);
+        Properties prop = new Properties();
+        prop.load(input);
+
+        return prop.getProperty(property);
     }
 }

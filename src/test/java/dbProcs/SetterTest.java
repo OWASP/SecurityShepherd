@@ -96,7 +96,7 @@ public class SetterTest
 			if(GetterTest.verifyTestUser(applicationRoot, userName, userName))
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				if(!Setter.openAllModules(applicationRoot, 0))
+				if(!Setter.openAllModules(applicationRoot, 0) && !Setter.openAllModules(applicationRoot, 1))
 				{
 					fail("Could not mark all modules as open");
 				}
@@ -231,7 +231,7 @@ public class SetterTest
 			if(GetterTest.verifyTestUser(applicationRoot, userName, userName))
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				if(!Setter.openAllModules(applicationRoot, 0))
+				if(!Setter.openAllModules(applicationRoot, 0) && !Setter.openAllModules(applicationRoot, 1))
 				{
 					fail("Could not mark all modules as open");
 				}
@@ -426,7 +426,7 @@ public class SetterTest
 	public void testSetModuleCategoryStatusClosed()
 	{
 		String moduleCategory = new String("Injection");
-		if(!Setter.openAllModules(applicationRoot, 0))
+		if(!Setter.openAllModules(applicationRoot, 0) && !Setter.openAllModules(applicationRoot, 1))
 			fail("Could not Mark all modules as open");
 		else if (!Setter.setModuleCategoryStatusOpen(applicationRoot, moduleCategory, "closed"))
 			fail("Could not close module Category");

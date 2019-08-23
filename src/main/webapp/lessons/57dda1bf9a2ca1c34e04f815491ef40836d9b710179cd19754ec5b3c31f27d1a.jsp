@@ -2,6 +2,7 @@
          import="utils.*, org.owasp.encoder.Encode" errorPage="" %>
 <%@ page import="java.util.Locale, java.util.ResourceBundle" %>
 <%@ page import="org.apache.log4j.Logger" %>
+<%@ page import="java.util.Properties" %>
 <%
     /**
      * <br/><br/>
@@ -78,7 +79,7 @@
         <%= bundle.getString("paragraph.info.3") %>
         <br/>
         <%= bundle.getString("owasp.guide.more") %>
-        <a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing" target="_blank">
+        <a href="<%= FileSystem.readPropertiesFile("uri.properties", "owasp.attack.xxe")%>" target="_blank">
             <%= bundle.getString("owasp.guide.xxe") %>
         </a>
         <br/>
@@ -98,7 +99,9 @@
     </div>
     <input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson" style="display: none;"/>
     <br/>
-    <%= bundle.getString("paragraph.whattodo.xxe") %>
+    <%= bundle.getString("paragraph.whattodo.xxe")
+            + "<b>" + System.getProperty("user.dir") + "/"
+            + FileSystem.readPropertiesFile("/file/challenges.properties", "xxe.lesson.file") + "</b>" %>
     <br/>
     <br/>
     <form id="leForm" action="javascript:;" contentType="application/xml">

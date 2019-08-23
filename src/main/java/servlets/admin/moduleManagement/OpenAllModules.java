@@ -47,12 +47,18 @@ public class OpenAllModules extends HttpServlet
 				unsafeLevels = request.getParameter("enableUnsafeLevels");
 				String ApplicationRoot = getServletContext().getRealPath("");
 				if (unsafeLevels.equals("enable")) {
-					Setter.openOnlyWebCategories(ApplicationRoot, 0);
-					Setter.openOnlyWebCategories(ApplicationRoot, 1);
+					Setter.openAllModules(ApplicationRoot, 0);
+					Setter.openAllModules(ApplicationRoot, 1);
 					htmlOutput = "<p style='color:red'>[WARNING] Server is vulnerable. Unsafe levels open!<p>"
 							+ "<h3 class='title'>All Modules are Now Open (including unsafe levels)</h3>"
 							+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
 				}
+				else if (unsafeLevels.equals("disable")) {
+				    Setter.closeAllModules(ApplicationRoot);
+                    Setter.openAllModules(ApplicationRoot, 0);
+                    htmlOutput = "<h3 class='title'>All Modules are Now Open</h3>"
+                            + "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
+                }
 				else{
 					Setter.openAllModules(ApplicationRoot, 0);
 					htmlOutput = "<h3 class='title'>All Modules are Now Open</h3>"

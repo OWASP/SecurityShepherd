@@ -54,6 +54,12 @@ public class OpenWebModules extends HttpServlet
 							+ "<h3 class='title'>Only Web Levels Are Now Open (including unsafe levels)</h3>"
 							+ "<p>All of the Security Shepherd Web Application Security levels are now open! All other categories have been closed.</p>";
 				}
+                else if (unsafeLevels.equals("disable")) {
+                    Setter.closeAllModules(ApplicationRoot);
+                    Setter.openOnlyWebCategories(ApplicationRoot, 0);
+                    htmlOutput = "<h3 class='title'>Only Web Levels Are Now Open</h3>"
+                            + "<p>All of the Security Shepherd Web Application Security levels are now open! All other categories have been closed.</p>";
+                }
 				else{
 					Setter.openOnlyWebCategories(ApplicationRoot, 0);
 					htmlOutput = "<h3 class='title'>Only Web Levels Are Now Open</h3>"
