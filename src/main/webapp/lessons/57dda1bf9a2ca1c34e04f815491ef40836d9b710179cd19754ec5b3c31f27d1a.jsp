@@ -2,7 +2,6 @@
          import="utils.*, org.owasp.encoder.Encode" errorPage="" %>
 <%@ page import="java.util.Locale, java.util.ResourceBundle" %>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="java.util.Properties" %>
 <%
     /**
      * <br/><br/>
@@ -101,7 +100,7 @@
     <br/>
     <%= bundle.getString("paragraph.whattodo.xxe")
             + "<b>" + System.getProperty("user.dir") + "/"
-            + FileSystem.readPropertiesFile("/file/challenges.properties", "xxe.lesson.file") + "</b>" %>
+            + FileSystem.readPropertiesFile("/lessons/xxe.properties", "xxe.lesson.file") + "</b>" %>
     <br/>
     <br/>
     <form id="leForm" action="javascript:;" contentType="application/xml">

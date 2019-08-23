@@ -2,7 +2,6 @@ package servlets;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -12,7 +11,6 @@ import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -29,6 +27,7 @@ import org.apache.log4j.Logger;
 
 import dbProcs.Constants;
 import dbProcs.Database;
+import servlets.module.lesson.XxeLesson;
 import utils.FileSystem;
 import utils.InstallationException;
 import utils.Validate;
@@ -99,17 +98,15 @@ public class Setup extends HttpServlet {
 			}
 			else {
 				Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
-				if (Database.getDatabaseConnection(null) == null) {
-					htmlOutput = bundle.getString("generic.text.setup.connection.failed");
-				}
-				else if(enableMongoChallenge.equalsIgnoreCase("enable")){
+
+				if(enableMongoChallenge.equalsIgnoreCase("enable")){
 					if(!Validate.isValidPortNumber(mongodbPort)){
 						htmlOutput = bundle.getString("generic.text.setup.error.valid.port");
                         FileUtils.deleteQuietly(new File(Constants.DBPROP));
 					}
 					else {
 						Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
-						if (MongoDatabase.getMongoDbConnection(null) == null) {
+						if (MongoDatabase.getMongoDbConnection(null).listDatabaseNames() == null) {
 							htmlOutput = bundle.getString("generic.text.setup.connection.mongo.failed");
                             FileUtils.deleteQuietly(new File(Constants.DBPROP));
 						}
@@ -118,11 +115,15 @@ public class Setup extends HttpServlet {
                         }
 					}
 				}
-				else if(enableUnsafeLevels.equalsIgnoreCase("enable")){
+
+				if(enableUnsafeLevels.equalsIgnoreCase("enable")){
 					if (executeCreateChallengeFile() == false){
 						htmlOutput = bundle.getString("generic.text.setup.file.failed");
                         FileUtils.deleteQuietly(new File(Constants.DBPROP));
 					}
+				}
+				if (Database.getDatabaseConnection(null) == null) {
+					htmlOutput = bundle.getString("generic.text.setup.connection.failed");
 				}
 				else {
 					try {
@@ -149,13 +150,14 @@ public class Setup extends HttpServlet {
 			if(success) {
 				htmlOutput = "<h2 class=\"title\" id=\"login_title\">"+bundle.getString("generic.text.setup.response.success")+"</h2><p>"+htmlOutput+" "+bundle.getString("generic.text.setup.response.success.redirecting")+"</p>";
 			} else {
+				FileUtils.deleteQuietly(new File(Constants.DBPROP));
 				htmlOutput = "<h2 class=\"title\" id=\"login_title\">"+bundle.getString("generic.text.setup.response.failed")+"</h2><p>"+htmlOutput+"</p>";
 			}
 			out.write(htmlOutput);
 		}
 		catch (Exception e)
 		{
-			out.write(errors.getString("error.funky"));
+			out.write(errors.getString("error.funky") + ": " + e.getMessage());
 			log.fatal("Unexpected database config creation error: " + e.toString());
 		}
 		out.close();
@@ -257,21 +259,8 @@ public class Setup extends HttpServlet {
 		}
 	}
 
-	private synchronized Boolean executeCreateChallengeFile()  {
+	private synchronized Boolean executeCreateChallengeFile() {
 
-		String filename;
-		String data;
-
-		try {
-			filename = FileSystem.readPropertiesFile("/file/challenges.properties", "xxe.lesson.file");
-			data = FileSystem.readPropertiesFile("/file/challenges.properties", "xxe.lesson.solution");
-			FileSystem.createFile(filename);
-			FileSystem.writeFile(filename, data);
-			return true;
-		}
-		catch (IOException e){
-			log.error(e);
-			return false;
-		}
+		return XxeLesson.createXxeLessonSolutionFile();
 	}
 }

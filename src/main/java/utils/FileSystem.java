@@ -30,6 +30,17 @@ public class FileSystem {
 
     private static org.apache.log4j.Logger log = Logger.getLogger(FileSystem.class);
 
+
+    /**
+     * Checks if a file on the filesystem exists
+     * @param filename the file to check its existence
+     */
+    public static boolean isFileExists(String filename){
+        File file = new File(filename);
+        return file.exists();
+    }
+
+
     /**
      * Creates a file on the filesystem
      * @param filename the file to be created
@@ -38,6 +49,18 @@ public class FileSystem {
         File file = new File(filename);
         file.createNewFile();
     }
+
+
+    /**
+     * Delete a file on the filesystem
+     * @param filename the file to be created
+     */
+    public static void deleteFile(String filename) throws IOException{
+        File file = new File(filename);
+        file.delete();
+    }
+
+
 
     /**
      * Writes content to a file on the filesystem

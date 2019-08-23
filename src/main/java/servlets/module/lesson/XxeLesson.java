@@ -6,6 +6,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import utils.FileSystem;
 import utils.ShepherdLogManager;
 import utils.Validate;
 import utils.XmlDocumentBuilder;
@@ -114,9 +115,7 @@ public class XxeLesson
         try {
             doc = dBuilder.parse(is);
             Element root = doc.getDocumentElement();
-            log.debug("Root: " + root.toString());
             result = root.getTextContent();
-            log.debug("NodeName email: " + result);
             return Encode.forHtml(result.toString());
         } catch (SAXException e) {
             log.warn(e.toString());
@@ -125,5 +124,34 @@ public class XxeLesson
         }
 
         return result;
+    }
+
+    /**
+     * Creates the file with the solution key needed to pass the level
+     */
+    public static boolean createXxeLessonSolutionFile(){
+
+        String filename = null;
+        String solution;
+
+        try {
+            filename = FileSystem.readPropertiesFile("/lessons/xxe.properties", "xxe.lesson.file");
+            solution = FileSystem.readPropertiesFile("/lessons/xxe.properties", "xxe.lesson.solution");
+
+            if(FileSystem.isFileExists(filename)) {
+                log.info("XXE Lesson Solution File " + filename + " already exists");
+                FileSystem.deleteFile(filename);
+                log.info("XXE Lesson Solution File " + filename + " deleted");
+            }
+            FileSystem.createFile(filename);
+            FileSystem.writeFile(filename, solution);
+            log.info("XXE Lesson Solution File " + filename + " created");
+            return true;
+        }
+        catch (IOException e){
+            log.error(e);
+            return false;
+        }
+
     }
 }

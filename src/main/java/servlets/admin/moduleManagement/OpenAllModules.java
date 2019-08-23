@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import dbProcs.Setter;
+import servlets.module.lesson.XxeLesson;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -49,6 +50,7 @@ public class OpenAllModules extends HttpServlet
 				if (unsafeLevels.equals("enable")) {
 					Setter.openAllModules(ApplicationRoot, 0);
 					Setter.openAllModules(ApplicationRoot, 1);
+					XxeLesson.createXxeLessonSolutionFile();
 					htmlOutput = "<p style='color:red'>[WARNING] Server is vulnerable. Unsafe levels open!<p>"
 							+ "<h3 class='title'>All Modules are Now Open (including unsafe levels)</h3>"
 							+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
