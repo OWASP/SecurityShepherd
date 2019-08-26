@@ -2,11 +2,15 @@ jobs:
   include:
     - stage: build
       language: java
-      script: "mvn clean install -DskipTests"
-    - stage: test
+      script: "mvn clean install -DskipTests -B"
+    - stage: unit-test
       services: mysql
       language: java
-      script: "mvn verify test -B"
+      script: "mvn test -B"
+    - stage: integration-test
+      services: mysql
+      language: java
+      script: "mvn verify -DskipUTs=true -DmongoDocker -B"
       before_install:
         - mvn -Pdocker validate
     - stage: deploy
@@ -22,6 +26,7 @@ jobs:
       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
 stages:
   - build
-  - test
+  - unit-test
+  - integration-test
   - name: deploy
     if: branch IN (master, dev) AND type = push

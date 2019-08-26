@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utils.XmlDocumentBuilder;
 
+import testUtils.TestProperties;
+
 import javax.xml.parsers.DocumentBuilder;
 
 import static org.hamcrest.MatcherAssert.assertThat;

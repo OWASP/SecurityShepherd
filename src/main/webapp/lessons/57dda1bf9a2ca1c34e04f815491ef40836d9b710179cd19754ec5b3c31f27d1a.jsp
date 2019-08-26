@@ -2,6 +2,7 @@
          import="utils.*, org.owasp.encoder.Encode" errorPage="" %>
 <%@ page import="java.util.Locale, java.util.ResourceBundle" %>
 <%@ page import="org.apache.log4j.Logger" %>
+<%@ page import="dbProcs.FileInputProperties" %>
 <%
     /**
      * <br/><br/>
@@ -78,7 +79,7 @@
         <%= bundle.getString("paragraph.info.3") %>
         <br/>
         <%= bundle.getString("owasp.guide.more") %>
-        <a href="<%= FileSystem.readPropertiesFile("uri.properties", "owasp.attack.xxe")%>" target="_blank">
+        <a href="<%= FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.attack.xxe")%>" target="_blank">
             <%= bundle.getString("owasp.guide.xxe") %>
         </a>
         <br/>
@@ -100,7 +101,7 @@
     <br/>
     <%= bundle.getString("paragraph.whattodo.xxe")
             + "<b>" + System.getProperty("user.dir") + "/"
-            + FileSystem.readPropertiesFile("/lessons/xxe.properties", "xxe.lesson.file") + "</b>" %>
+            + FileInputProperties.readPropFileClassLoader("/fileSystemKeys.properties", "xxe.lesson.file") + "</b>" %>
     <br/>
     <br/>
     <form id="leForm" action="javascript:;" contentType="application/xml">

@@ -128,10 +128,12 @@ public class MongoDatabase {
                     mongoOptions);
         }
         catch (NumberFormatException e){ log.fatal("The port in the properties file is not a number: " + e); return null;}
+        catch (MongoSocketOpenException e){log.fatal("Mongo Doesn't seem to be running: " + e);e.printStackTrace();  return null;}
         catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e);  return null;}
         catch (MongoException e){log.fatal("Something went wrong with Mongo: " + e);e.printStackTrace();  return null;}
         catch (Exception e){log.fatal("Something went wrong: " + e);e.printStackTrace();  return null;}
 
+        log.debug("Mongo Client: " + mongoClient);
         return mongoClient;
     }
 

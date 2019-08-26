@@ -48,7 +48,7 @@ public class TestXssLesson
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         //Open All modules
-        if(!Setter.openAllModules(applicationRoot, 0))
+        if(!Setter.openAllModules(applicationRoot, 0) && !Setter.openAllModules(applicationRoot, 1))
         	fail("Could not Mark All Modules As Open");
 	}
 

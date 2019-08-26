@@ -9,6 +9,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<skipTests>false</skipTests>
+		<skipITs>${skipTests}</skipITs>
+		<skipUTs>${skipTests}</skipUTs>
 	</properties>
 
 	<dependencies>
@@ -302,10 +305,10 @@
 		</profile>
 
 		<profile>
-			<id>integ-test</id>
+			<id>it-test</id>
 			<activation>
 				<property>
-					<name>!skipTests</name>
+					<name>mongoDocker</name>
 				</property>
 			</activation>
 			<build>
@@ -418,6 +421,10 @@
 									<directory>src/main/resources</directory>
 									<filtering>true</filtering>
 								</resource>
+								<resource>
+									<directory>src/it/resources</directory>
+									<filtering>true</filtering>
+								</resource>
 							</resources>
 						</configuration>
 					</execution>
@@ -427,11 +434,24 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.19.1</version>
+				<configuration>
+					<skipTests>${skipUTs}</skipTests>
+					<excludes>
+						<exclude>**/*IT</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.19.1</version>
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+					<skipITs>${skipITs}</skipITs>
+					<excludes>
+						<exclude>**/*Test*</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<id>integration-tests</id>

@@ -1,12 +1,13 @@
 package servlets.module.lesson;
 
+import dbProcs.FileInputProperties;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.owasp.encoder.Encode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import utils.FileSystem;
 import utils.ShepherdLogManager;
 import utils.Validate;
 import utils.XmlDocumentBuilder;
@@ -14,10 +15,11 @@ import utils.XmlDocumentBuilder;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.xml.parsers.DocumentBuilder;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.StringReader;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -118,7 +120,7 @@ public class XxeLesson
             result = root.getTextContent();
             return Encode.forHtml(result.toString());
         } catch (SAXException e) {
-            log.warn(e.toString());
+            log.error(e.toString());
         } catch (IOException e) {
             log.error(e.toString());
         }
@@ -131,26 +133,27 @@ public class XxeLesson
      */
     public static boolean createXxeLessonSolutionFile(){
 
-        String filename = null;
+        File lessonFile;
+        String filename;
         String solution;
 
         try {
-            filename = FileSystem.readPropertiesFile("/lessons/xxe.properties", "xxe.lesson.file");
-            solution = FileSystem.readPropertiesFile("/lessons/xxe.properties", "xxe.lesson.solution");
+            filename = FileInputProperties.readfile("fileSystemKeys.properties", "xxe.lesson.file");
+            solution = FileInputProperties.readfile("fileSystemKeys.properties", "xxe.lesson.solution");
 
-            if(FileSystem.isFileExists(filename)) {
+            lessonFile = new File(filename);
+
+            if(lessonFile.exists()) {
                 log.info("XXE Lesson Solution File " + filename + " already exists");
-                FileSystem.deleteFile(filename);
+                FileUtils.deleteQuietly(lessonFile);
                 log.info("XXE Lesson Solution File " + filename + " deleted");
             }
-            FileSystem.createFile(filename);
-            FileSystem.writeFile(filename, solution);
+            FileUtils.write(lessonFile, solution, "UTF-8");
             log.info("XXE Lesson Solution File " + filename + " created");
             return true;
         }
-        catch (IOException e){
-            log.error(e);
-            return false;
+        catch (FileNotFoundException e) {log.error(e); return false;}
+        catch (IOException e){ log.error(e); return false;
         }
 
     }

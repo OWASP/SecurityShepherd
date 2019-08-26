@@ -5,7 +5,10 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.IOException;
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
 
 /** 
@@ -85,4 +88,19 @@ public class FileInputProperties
 	    }
 	    return result;
 	  }
+
+
+	/**
+	 * Read a properties file and return the string result from the property specified
+	 * @param filename the file to be written to
+	 * @param property the property value to return
+	 */
+	public static String readPropFileClassLoader(String filename, String property) throws IOException{
+
+		InputStream input = FileInputProperties.class.getClassLoader().getResourceAsStream(filename);
+		Properties prop = new Properties();
+		prop.load(input);
+
+		return prop.getProperty(property);
+	}
 }
