@@ -11,7 +11,9 @@ jobs:
       language: java
       script: "mvn test -B"
     - stage: integration-test
-      services: mysql
+      services: 
+        - mysql
+        - docker
       language: java
       script: "mvn verify -DskipUTs=true -DmongoDocker -B"
       before_install:
