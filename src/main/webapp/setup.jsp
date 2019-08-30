@@ -192,19 +192,19 @@ if (Setup.isInstalled()) {
 
 						<script>
                             function uncheckUnfafe() {
-                                $('#enableUnsafeLevels').removeAttr('checked');
+                                $('#unsafeLevels').removeAttr('checked');
                             }
 
                             $(document).ready(function () {
-                                $('#enableUnsafeLevels').change(function () {
+                                $('#unsafeLevels').change(function () {
                                     if (this.checked)
                                     {
                                         $('#showHideWarning').fadeIn('slow');
-                                        $('#enableUnsafeLevels').val("enable");
+                                        $('#unsafeLevels').val("enable");
                                     }
                                     else{
                                         $('#showHideWarning').fadeOut('slow');
-                                        $('#enableUnsafeLevels').val("disable");
+                                        $('#unsafeLevels').val("disable");
                                     }
                                 });
                             });
@@ -215,7 +215,7 @@ if (Setup.isInstalled()) {
 								<label for="mhost"><fmt:message key="generic.text.setup.enable.unsafe"/></label>
 							</div>
 							<div class="col-75">
-								<input type="checkbox" id="enableUnsafeLevels" name="enableUnsafeLevels" value="enableUnsafeLevels">
+								<input type="checkbox" id="unsafeLevels" name="unsafeLevels" value="enable">
 								<span id="showHideWarning" style="display: none">
 									<fmt:message key="generic.text.setup.enable.unsafe.warn" />
 								</span>
@@ -260,7 +260,7 @@ if (Setup.isInstalled()) {
 			var enableMongo = $("#enableMongoChallenge").val();
 			var themhost = $("#mhost").val();
 			var themport = $("#mport").val();
-			var enableUnsafeLevels = $("#enableUnsafeLevels").val();
+			var unsafeLevels = $("#unsafeLevels").val();
 			if(thedbauth != null)
 			{
 				$("#submitLoading").slideDown("fast");
@@ -280,7 +280,7 @@ if (Setup.isInstalled()) {
 							enableMongoChallenge: enableMongo,
 							mhost: themhost,
 							mport: themport,
-                            enableUnsafeLevels: enableUnsafeLevels
+                            unsafeLevels: unsafeLevels
 						},
 						async: false
 					});

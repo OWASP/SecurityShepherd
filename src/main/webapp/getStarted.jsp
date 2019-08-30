@@ -47,7 +47,6 @@ String csrfToken = Encode.forHtmlAttribute(tokenCookie.getValue());
 String userName = Encode.forHtml(ses.getAttribute("userName").toString());
 String userRole = Encode.forHtml(ses.getAttribute("userRole").toString());
 String userId = Encode.forHtml(ses.getAttribute("userStamp").toString());
-String ApplicationRoot = getServletContext().getRealPath("");
 boolean isAdmin = userRole.equalsIgnoreCase("admin");
 boolean changePassword = false;
 if(ses.getAttribute("ChangePassword") != null)
@@ -87,15 +86,15 @@ if(!changePassword)
 				<a href="javascript:;" style="text-decoration: none;" id="onlyWebApplication"><div class="menuButton"><fmt:message key="getStarted.button.openLevels.web" /></div></a>
 				<a href="javascript:;" style="text-decoration: none;" id="onlyMobileApplication"><div class="menuButton"><fmt:message key="getStarted.button.openLevels.mobile" /></div></a>
 				<a href="javascript:;" style="text-decoration: none;" id="noApplication"><div class="menuButton"><fmt:message key="getStarted.button.closeLevels" /></div></a>
-				<input  type="checkbox" id="enableUnsafeLevels" name="enableUnsafeLevels" value="enable">
-				<label for="enableUnsafeLevels"><fmt:message key="getStarted.button.enable.unsafe" /></label>
+				<input  type="checkbox" id="unsafeLevels" name="unsafeLevels" value="enable">
+				<label for="unsafeLevels"><fmt:message key="getStarted.button.enable.unsafe" /></label>
 				<br /><span><fmt:message key="getStarted.enable.unsafe.info" /></span>
 
 			</div>
 			<div id="scopeLoadingDiv" style="display: none;"><fmt:message key="generic.text.loading" /></div>
-			</p>
+
 			<% } %>
-			<fmt:message key="getStarted.text.checkShepConfigMsg" /></a>.
+			<a><fmt:message key="getStarted.text.checkShepConfigMsg" /></a>.
 		</div>
 		<br/>
 	<div id="cantSee">
@@ -116,9 +115,9 @@ if(!changePassword)
 	});
 	<% if (isAdmin) { %>
 	$("#allApplication").click(function(){
-        if ($('#enableUnsafeLevels').is(":checked"))
+        if ($('#unsafeLevels').is(":checked"))
         {
-            var unsafeLevel = $("#enableUnsafeLevels").val();
+            var unsafeLevel = $("#unsafeLevels").val();
         }
         else{
             var unsafeLevel = "disable";
@@ -131,7 +130,7 @@ if(!changePassword)
 				url: "openEveryModules",
 				data: {
 					csrfToken: "<%= csrfToken %>",
-                    enableUnsafeLevels: unsafeLevel
+                    unsafeLevels: unsafeLevel
 				},
 				async: false
 			});
@@ -155,9 +154,9 @@ if(!changePassword)
 	});
 	
 	$("#onlyWebApplication").click(function(){
-        if ($('#enableUnsafeLevels').is(":checked"))
+        if ($('#unsafeLevels').is(":checked"))
         {
-            var unsafeLevel = $("#enableUnsafeLevels").val();
+            var unsafeLevel = $("#unsafeLevels").val();
         }
         else{
             var unsafeLevel = "disable";
@@ -170,7 +169,7 @@ if(!changePassword)
 				url: "openWebModules",
 				data: {
 					csrfToken: "<%= csrfToken %>",
-                    enableUnsafeLevels: unsafeLevel
+                    unsafeLevels: unsafeLevel
 				},
 				async: false
 			});
@@ -271,7 +270,7 @@ else	//IF the  user doesnt need to change their pass, just post up the get Start
 				<tr><td>Current Password:</td><td><input type="password" name="currentPassword" /></td></tr>
 				<tr><td>New Password:</td><td><input type="password" name="newPassword" /></td></tr>
 				<tr><td>Password Confirmation:</td><td><input type="password" name="passwordConfirmation" /></td></tr>
-				<tr><td colspan="2"><center><input type="submit" id="changePasswordSubmit" value = "Change Password"/></center></td></tr>
+				<tr><td colspan="2" style="align-content: center"><input type="submit" id="changePasswordSubmit" value = "Change Password"/></td></tr>
 			</table>
 			<input type="hidden" name="csrfToken" value="<%=csrfToken%>" />
 			</form>

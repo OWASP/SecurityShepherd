@@ -138,8 +138,8 @@ public class XxeLesson
         String solution;
 
         try {
-            filename = FileInputProperties.readfile("fileSystemKeys.properties", "xxe.lesson.file");
-            solution = FileInputProperties.readfile("fileSystemKeys.properties", "xxe.lesson.solution");
+            filename = FileInputProperties.readPropFileClassLoader("fileSystemKeys.properties", "xxe.lesson.file");
+            solution = FileInputProperties.readPropFileClassLoader("fileSystemKeys.properties", "xxe.lesson.solution");
 
             lessonFile = new File(filename);
 

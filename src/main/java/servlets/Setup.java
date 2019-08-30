@@ -20,13 +20,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mongodb.MongoClient;
+import dbProcs.Constants;
+import dbProcs.Database;
 import dbProcs.FileInputProperties;
 import dbProcs.MongoDatabase;
+import dbProcs.Setter;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-import dbProcs.Constants;
-import dbProcs.Database;
 import servlets.module.lesson.XxeLesson;
 import utils.InstallationException;
 import utils.Validate;
@@ -43,7 +44,7 @@ public class Setup extends HttpServlet {
 		
 		//Output Stuff
 		PrintWriter out = response.getWriter();
-		String htmlOutput = new String();
+		String htmlOutput;
 		boolean success = false;
 		try 
 		{
@@ -62,7 +63,7 @@ public class Setup extends HttpServlet {
 			String auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
 			String enableMongoChallenge = request.getParameter("enableMongoChallenge");
 
-			String enableUnsafeLevels = request.getParameter("enableUnsafeLevels");
+			String enableUnsafeLevels = request.getParameter("unsafeLevels");
 
 			StringBuffer dbProp = new StringBuffer();
 			dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbHost + ":" + dbPort + "/");
@@ -116,7 +117,8 @@ public class Setup extends HttpServlet {
 				}
 
 				if(enableUnsafeLevels.equalsIgnoreCase("enable")){
-					if (executeCreateChallengeFile() == false){
+					openUnsafeLevels();
+					if (!executeCreateChallengeFile()){
 						htmlOutput = bundle.getString("generic.text.setup.file.failed");
                         FileUtils.deleteQuietly(new File(Constants.DBPROP));
 					}
@@ -216,6 +218,7 @@ public class Setup extends HttpServlet {
 			e.printStackTrace();
 			throw new InstallationException(e);
 		}
+
 	}
 
 	private synchronized void executeMongoScript() throws InstallationException {
@@ -258,8 +261,12 @@ public class Setup extends HttpServlet {
 		}
 	}
 
-	private synchronized Boolean executeCreateChallengeFile() {
+	private synchronized void openUnsafeLevels(){
+		String ApplicationRoot = getServletContext().getRealPath("");
+		Setter.openAllModules(ApplicationRoot, 1);
+	}
 
+	private synchronized Boolean executeCreateChallengeFile() {
 		return XxeLesson.createXxeLessonSolutionFile();
 	}
 }

@@ -20,51 +20,60 @@ import utils.Validate;
 public class OpenAllModules extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
+	private static final  String SERVLET_NAME = "servlets.module.OpenAllModules";
 	private static org.apache.log4j.Logger log = Logger.getLogger(OpenAllModules.class);
 	/**
 	 * Control class used to open all modules when called by an administrator
-	 * @param request
-	 * @param response
+	 * @param request the HTTP request
+	 * @param response the HTTP response
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
-	throws ServletException, IOException
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
-		String servletName = "servlets.module.OpenAllModules";
-		String unsafeLevels = "disable";
+		String unsafeLevels;
+		String htmlOutput;
+
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		log.debug("&&& " + servletName + " &&&");
+		log.debug("&&& " + SERVLET_NAME + " &&&");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
-		String htmlOutput = new String();
+
 		HttpSession ses = request.getSession(true);
 		Cookie tokenCookie = Validate.getToken(request.getCookies());
 		Object tokenParmeter = request.getParameter("csrfToken");
+
 		if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			if(Validate.validateTokens(tokenCookie, tokenParmeter))
 			{
-				unsafeLevels = request.getParameter("enableUnsafeLevels");
-				String ApplicationRoot = getServletContext().getRealPath("");
-				if (unsafeLevels.equals("enable")) {
-					Setter.openAllModules(ApplicationRoot, 0);
-					Setter.openAllModules(ApplicationRoot, 1);
-					XxeLesson.createXxeLessonSolutionFile();
-					htmlOutput = "<p style='color:red'>[WARNING] Server is vulnerable. Unsafe levels open!<p>"
-							+ "<h3 class='title'>All Modules are Now Open (including unsafe levels)</h3>"
-							+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
+				unsafeLevels = request.getParameter("unsafeLevels");
+				if (unsafeLevels == null){
+					unsafeLevels = "disable";
 				}
-				else if (unsafeLevels.equals("disable")) {
-				    Setter.closeAllModules(ApplicationRoot);
-                    Setter.openAllModules(ApplicationRoot, 0);
-                    htmlOutput = "<h3 class='title'>All Modules are Now Open</h3>"
-                            + "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
-                }
-				else{
-					Setter.openAllModules(ApplicationRoot, 0);
-					htmlOutput = "<h3 class='title'>All Modules are Now Open</h3>"
-							+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
+				String ApplicationRoot = getServletContext().getRealPath("");
+
+				switch (unsafeLevels){
+					case "enable":
+						Setter.openAllModules(ApplicationRoot, 0);
+						Setter.openAllModules(ApplicationRoot, 1);
+						XxeLesson.createXxeLessonSolutionFile();
+						htmlOutput = "<p style='color:red'>[WARNING] Server is vulnerable. Unsafe levels open!<p>"
+								+ "<h3 class='title'>All Modules are Now Open (including unsafe levels)</h3>"
+								+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
+						break;
+					case "disable":
+						Setter.closeAllModules(ApplicationRoot);
+						Setter.openAllModules(ApplicationRoot, 0);
+						htmlOutput = "<h3 class='title'>All Modules are Now Open</h3>"
+								+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
+						break;
+					default:
+						Setter.openAllModules(ApplicationRoot, 0);
+						htmlOutput = "<h3 class='title'>All Modules are Now Open</h3>"
+								+ "<p>All of the Security Shepherd levels are now open and available for any user to access!</p>";
+
 				}
 			}
 			else
@@ -79,7 +88,7 @@ public class OpenAllModules extends HttpServlet
 			htmlOutput = "<img src=\"css/images/loggedOutSheep.jpg\" /><br/>";
 		}
 		out.write(htmlOutput);
-		log.debug("&&& END " + servletName + " &&&");
+		log.debug("&&& END " + SERVLET_NAME + " &&&");
 	}
 
 }
