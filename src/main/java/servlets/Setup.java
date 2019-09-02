@@ -263,7 +263,7 @@ public class Setup extends HttpServlet {
 
 	private synchronized void openUnsafeLevels(){
 		String ApplicationRoot = getServletContext().getRealPath("");
-		Setter.openAllModules(ApplicationRoot, 1);
+		Setter.openAllModules(ApplicationRoot, true);
 	}
 
 	private synchronized Boolean executeCreateChallengeFile() {

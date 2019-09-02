@@ -94,7 +94,10 @@ public class TestProperties
 	 * @param theClass Class of the User
 	 * @throws Exception If the process fails, an exception will be thrown
 	 */
-	public static void loginDoPost(org.apache.log4j.Logger log, MockHttpServletRequest request, MockHttpServletResponse response, String userName, String password, String theClass, String lang) throws Exception
+	public static void loginDoPost(org.apache.log4j.Logger log, MockHttpServletRequest request,
+								   MockHttpServletResponse response,
+								   String userName, String password,
+								   String theClass, String lang) throws Exception
 	{
 		try
 		{
@@ -115,6 +118,10 @@ public class TestProperties
 
 			if(response.getStatus() != expectedResponseCode)
 				throw new Exception("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
+			else if(response.getHeader("Location").endsWith("login.jsp"))
+			{
+				log.debug("User \"" + userName + "\" is unauthenticated");
+			}
 			else
 			{
 				log.debug("302 OK Detected");
@@ -339,7 +346,7 @@ public class TestProperties
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, moduleId, userId).isEmpty())

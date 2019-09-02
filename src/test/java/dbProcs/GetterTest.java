@@ -424,7 +424,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
@@ -472,7 +472,7 @@ public class GetterTest
 		{
 			if(verifyTestUser(applicationRoot, userName, userName))
 			{
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, contentProviderLeakage, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
@@ -549,7 +549,7 @@ public class GetterTest
 		{
 			if(verifyTestUser(applicationRoot, userName, userName))
 			{
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeThree, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
@@ -685,7 +685,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the GetAllModuleInfo method will return data
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					String modules = Getter.getChallenges(applicationRoot, userId, locale);
 					if(!modules.isEmpty()) //Some Modules were included in response
@@ -909,7 +909,7 @@ public class GetterTest
 			if(verifyTestUser(applicationRoot, userName, userName, classId))
 			{
 				//Open all Modules First so that the Module Can Be Opened by the user
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, moduleId, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
@@ -977,7 +977,7 @@ public class GetterTest
 				if(verifyTestUser(applicationRoot, userName, userName, classId))
 				{
 					//Open all Modules First so that the Module Can Be Opened by the user
-					if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+					if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 					{
 						//Simulate user Opening Level
 						if(!Getter.getModuleAddress(applicationRoot, moduleId, Getter.getUserIdFromName(applicationRoot, userName)).isEmpty())
@@ -1028,7 +1028,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
@@ -1132,7 +1132,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					String incrementalModules = Getter.getIncrementalModules(applicationRoot, userId, lang, "testingCSRFtoken");
 					if(incrementalModules.indexOf("Completed") == -1) //User should not have completed any modules. The Completed Button should not be present
@@ -1190,7 +1190,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, lowestRankModuleId, userId).isEmpty())
@@ -1325,7 +1325,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					String incrementalModules = Getter.getIncrementalModulesWithoutScript(applicationRoot, userId, lang, "testingCSRFtoken");
 					if(incrementalModules.indexOf("Completed") == -1) //User should not have completed any modules. The Completed Button should not be present
@@ -1392,7 +1392,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, lowestRankModuleId, userId).isEmpty())
@@ -1507,7 +1507,7 @@ public class GetterTest
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
 					if(markLevelCompleteTest != null)
@@ -1599,7 +1599,7 @@ public class GetterTest
 				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
 				log.debug("UserId retrieved");
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					log.debug("Opened All Modules");
 					//Not Touching User Zero, But dropping five points from other user
@@ -1691,7 +1691,7 @@ public class GetterTest
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
 					if(markLevelCompleteTest != null)
@@ -1794,7 +1794,7 @@ public class GetterTest
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, insecureDirectObjectRefLesson, userId, "Feedback is Disabled", 1, 1, 1);
 					if(markLevelCompleteTest != null)
@@ -1859,7 +1859,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, inscureDirectObjectLesson, userId).isEmpty())
@@ -1995,7 +1995,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, insecureCryptoLesson, userId).isEmpty())
@@ -2250,7 +2250,7 @@ public class GetterTest
 	{
 		String dataStorageLessonId = new String("53a53a66cb3bf3e4c665c442425ca90e29536edd");
 		String insecureDirectObjectReferenceLesson = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11");
-		if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+		if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 		{
 			String moduleStatusMenu = Getter.getModuleStatusMenu(applicationRoot);
 			if(moduleStatusMenu.indexOf("<tr><th>To Open</th><th>To Close</th></tr><tr>") == -1)
@@ -2577,7 +2577,7 @@ public class GetterTest
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(Getter.getModuleAddress(applicationRoot, insecureDirectObjectRefLesson, userId).isEmpty())
@@ -2681,7 +2681,7 @@ public class GetterTest
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
 				//Open all Modules First
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(Getter.getModuleAddress(applicationRoot, insecureDirectObjectRefLesson, userId).isEmpty())
@@ -2780,7 +2780,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the GetAllModuleInfo method will return data
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, dataStorageLessonId, userId).isEmpty())
@@ -3000,7 +3000,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeOne, userId).isEmpty())
@@ -3055,7 +3055,7 @@ public class GetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, csrfChallengeTwo, userId).isEmpty())
@@ -3096,7 +3096,7 @@ public class GetterTest
 	{
 		String csrfChallengeTwo = new String("94cd2de560d89ef59fc450ecc647ff4d4a55c15d"); //CSRF Challenge 2 (Should have CSRF Counter of 0 for new user
 		//Open all Modules First so that the Module Can Be Opened
-		if(Setter.openAllModules(applicationRoot, 0) && Setter.openAllModules(applicationRoot, 1))
+		if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 		{
 			if(!Getter.isModuleOpen(applicationRoot, csrfChallengeTwo))
 				fail("isModuleOpen returned False when the module should have been open");

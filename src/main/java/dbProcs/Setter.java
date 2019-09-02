@@ -148,19 +148,28 @@ public class Setter
 	/**
 	 * This method sets every module status to Open.
 	 * @param ApplicationRoot Current running director of the application
-	 * @param unsafe set whether to open all modules or all modules that are safe
+	 * @param unsafe set whether to open all safe modules or all modules that are unsafe
 	 * @return Boolean result depicting success of statement
 	 */
-	public static boolean openAllModules (String ApplicationRoot, int unsafe)
+	public static boolean openAllModules (String ApplicationRoot, boolean unsafe)
 	{
 		log.debug("*** Setter.openAllModules ***");
 		boolean result = false;
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
-			PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE isUnsafe = " + unsafe);
-			callstmt.execute();
-			log.debug("All modules Set to open");
+			if (unsafe){
+				PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE isUnsafe = 1");
+				callstmt.execute();
+				log.debug("All unsafe modules set to open");
+			}
+			else
+			{
+				PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE isUnsafe = 0");
+				callstmt.execute();
+				log.debug("All safe modules set to open");
+			}
+
 			result = true;
 		}
 		catch (SQLException e)

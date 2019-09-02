@@ -22,7 +22,7 @@ public class OpenAllModulesIT {
     private static final String LANGUAGE_CODE = "en_GB";
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    private static String[] testUsers = {"configAdminTester", "configUserTester"};
+    private static String[] testUsers = {"configAdminTester", "configUserTester", "unauthenticatedUser"};
     private static final String MODULE_CLASS_NAME = "OpenAllModules";
 
     /**
@@ -81,9 +81,6 @@ public class OpenAllModulesIT {
     }
 
 
-    /**
-     *
-     */
     @Test
     public void testWithUserAuth()
     {
@@ -153,13 +150,29 @@ public class OpenAllModulesIT {
             request.setCookies(response.getCookies());
             String responseBody = doMockPost(csrfToken, unsafe);
 
-            log.debug("Response Body: " + responseBody);
-
             assertTrue(responseBody.contains("[WARNING] Server is vulnerable. Unsafe levels open!"));
             assertTrue(responseBody.contains("All Modules are Now Open"));
 
         }
         catch (NullPointerException e) { fail("Null Pointer" + e.toString());}
+        catch (Exception e) { fail(e.toString()); }
+    }
+
+    @Test
+    public void testWithUnauthenticatedUser()
+    {
+        String unsafe = "enable";
+        try
+        {
+            log.debug("Signing in as Admin User Through LoginServlet");
+            TestProperties.loginDoPost(log, request, response, testUsers[2], testUsers[2], null, LANGUAGE_CODE);
+            log.debug("Login Servlet Complete, Getting CSRF Token");
+
+            //Add Cookies from Response to outgoing request
+            request.setCookies(response.getCookies());
+            String responseBody = doMockPost("test", unsafe);
+            assertTrue(responseBody.contains("loggedOutSheep"));
+        }
         catch (Exception e) { fail(e.toString()); }
     }
 

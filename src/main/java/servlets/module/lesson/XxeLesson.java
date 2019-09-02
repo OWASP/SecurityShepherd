@@ -1,6 +1,7 @@
 package servlets.module.lesson;
 
 import dbProcs.FileInputProperties;
+import dbProcs.Getter;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.owasp.encoder.Encode;
@@ -47,14 +48,18 @@ public class XxeLesson
         extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static Logger log = Logger.getLogger(XxeLesson.class);
-    private static String levelName = "XXE Lesson";
-    private static String levelHash = "57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a";
+    private static final String LEVEL_NAME = "XXE Lesson";
+    private static final String LEVEL_ID = "df2ac757cc135dcb8ce5ea01f677c74f04b446d6";
+    private static final String LEVEL_HASH = "57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a";
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        boolean moduleOpen = false;
+
+
         //Setting IpAddress To Log and taking header for original IP if forwarded from proxy
         ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-        log.debug(levelName + " Servlet Accessed");
+        log.debug(LEVEL_NAME + " Servlet Accessed");
         PrintWriter out = response.getWriter();
         out.print(getServletInfo());
 
@@ -65,44 +70,53 @@ public class XxeLesson
 
         try {
             HttpSession ses = request.getSession(true);
-            if (Validate.validateSession(ses)) {
-                ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
-                        ses.getAttribute("userName").toString());
-                log.debug(levelName + " accessed by: " + ses.getAttribute("userName").toString());
-                Cookie tokenCookie = Validate.getToken(request.getCookies());
-                Object tokenHeader = request.getHeader("csrfToken").toString();
+            if (Validate.validateSession(ses))
+            {
+                if (Getter.isModuleOpen(getServletContext().getRealPath(""), LEVEL_ID))
+                {
+                    ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
+                            ses.getAttribute("userName").toString());
+                    log.debug(LEVEL_NAME + " accessed by: " + ses.getAttribute("userName").toString());
+                    Cookie tokenCookie = Validate.getToken(request.getCookies());
+                    Object tokenHeader = request.getHeader("csrfToken").toString();
 
-                if (Validate.validateTokens(tokenCookie, tokenHeader)) {
-                    InputStream xml = request.getInputStream();
-                    String emailAddr = readXml(xml);
-                    log.debug("Email Addr: " + emailAddr);
+                    if (Validate.validateTokens(tokenCookie, tokenHeader)) {
+                        InputStream xml = request.getInputStream();
+                        String emailAddr = readXml(xml);
+                        log.debug("Email Addr: " + emailAddr);
 
-                    String htmlOutput = new String();
+                        String htmlOutput = new String();
 
-                    if (emailAddr == null) {
-                        htmlOutput += "<p>" + bundle.getString("response.blank.email") + "</p>";
-                        out.write(htmlOutput + emailAddr);
-                    } else if (Validate.isValidEmailAddress(emailAddr)) {
-                        log.debug("User Submitted - " + emailAddr);
+                        if (emailAddr == null) {
+                            htmlOutput += "<p>" + bundle.getString("response.blank.email") + "</p>";
+                            out.write(htmlOutput + emailAddr);
+                        } else if (Validate.isValidEmailAddress(emailAddr)) {
+                            log.debug("User Submitted - " + emailAddr);
 
-                        htmlOutput += "<p>" + bundle.getString("response.success.reset") + ": " + emailAddr
-                                + " has been reset</p>";
-                        out.write(htmlOutput);
-                    } else {
-                        htmlOutput += "<p>" + bundle.getString("response.invalid.email") + ": "
-                                + emailAddr + "</p>";
-                        out.write(htmlOutput);
+                            htmlOutput += "<p>" + bundle.getString("response.success.reset") + ": " + emailAddr
+                                    + " has been reset</p>";
+                            out.write(htmlOutput);
+                        } else {
+                            htmlOutput += "<p>" + bundle.getString("response.invalid.email") + ": "
+                                    + emailAddr + "</p>";
+                            out.write(htmlOutput);
+                        }
                     }
                 }
+                else
+                {
+                    log.error(LEVEL_NAME + " accessed but level is closed");
+                    out.write(errors.getString("error.notOpen"));
+                }
             } else {
-                log.error(levelName + " accessed with no session");
+                log.error(LEVEL_NAME + " accessed with no session");
                 out.write(errors.getString("error.noSession"));
             }
         } catch (Exception e) {
             out.write(errors.getString("error.funky"));
-            log.fatal(levelName + " - " + e.toString());
+            log.fatal(LEVEL_NAME + " - " + e.toString());
         }
-        log.debug("End of " + levelName + " Servlet");
+        log.debug("End of " + LEVEL_NAME + " Servlet");
     }
 
     public static String readXml(InputStream xmlEmail) {

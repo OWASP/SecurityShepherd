@@ -48,7 +48,7 @@ public class TestSecurityMisconfigLesson
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         //Open All modules
-        if(!Setter.openAllModules(applicationRoot, 0))
+        if(!Setter.openAllModules(applicationRoot, false))
         	fail("Could not Mark All Modules As Open");
 	}
 
