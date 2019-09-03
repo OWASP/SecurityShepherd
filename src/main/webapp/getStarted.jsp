@@ -88,12 +88,14 @@ if(!changePassword)
 				<a href="javascript:;" style="text-decoration: none;" id="noApplication"><div class="menuButton"><fmt:message key="getStarted.button.closeLevels" /></div></a>
 				<input  type="checkbox" id="unsafeLevels" name="unsafeLevels" value="enable">
 				<label for="unsafeLevels"><fmt:message key="getStarted.button.enable.unsafe" /></label>
-				<br /><span><fmt:message key="getStarted.enable.unsafe.info" /></span>
+				<br /><span><a><fmt:message key="getStarted.enable.unsafe.info" /></a></span>
 
 			</div>
 			<div id="scopeLoadingDiv" style="display: none;"><fmt:message key="generic.text.loading" /></div>
 
 			<% } %>
+			<br />
+			<br />
 			<a><fmt:message key="getStarted.text.checkShepConfigMsg" /></a>.
 		</div>
 		<br/>

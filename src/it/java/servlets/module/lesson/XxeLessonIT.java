@@ -30,7 +30,7 @@ public class XxeLessonIT
     private MockHttpServletResponse response;
 	private static final String MODULE_CLASS_NAME = "XxeLesson";
 	private static String TEST_USERNAME = "lessonTester";
-	private static Locale enLocale;
+
 	private static ResourceBundle errors;
 
 	/**
@@ -39,7 +39,7 @@ public class XxeLessonIT
 	@BeforeClass
 	public static void before()
 	{
-		enLocale = Locale.forLanguageTag(LANGUAGE_CODE);
+		Locale enLocale = Locale.forLanguageTag(LANGUAGE_CODE);
 		errors = ResourceBundle.getBundle("i18n.servlets.errors", enLocale);
 		TestProperties.setTestPropertiesFileDirectory(log);
 		try 

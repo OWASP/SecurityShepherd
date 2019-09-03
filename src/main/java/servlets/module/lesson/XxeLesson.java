@@ -49,13 +49,13 @@ public class XxeLesson
     private static final long serialVersionUID = 1L;
     private static Logger log = Logger.getLogger(XxeLesson.class);
     private static final String LEVEL_NAME = "XXE Lesson";
-    private static final String LEVEL_ID = "df2ac757cc135dcb8ce5ea01f677c74f04b446d6";
     private static final String LEVEL_HASH = "57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a";
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        boolean moduleOpen = false;
 
+        String ApplicationRoot = getServletContext().getRealPath("");
+        String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, LEVEL_HASH);
 
         //Setting IpAddress To Log and taking header for original IP if forwarded from proxy
         ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
@@ -72,7 +72,7 @@ public class XxeLesson
             HttpSession ses = request.getSession(true);
             if (Validate.validateSession(ses))
             {
-                if (Getter.isModuleOpen(getServletContext().getRealPath(""), LEVEL_ID))
+                if (Getter.isModuleOpen(getServletContext().getRealPath(""), moduleId))
                 {
                     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
                             ses.getAttribute("userName").toString());
