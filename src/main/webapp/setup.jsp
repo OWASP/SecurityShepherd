@@ -139,6 +139,7 @@ if (Setup.isInstalled()) {
 								<input type="text" id="dbauth" name="dbauth" placeholder="Token from Server File System..." required>
 							</div>
 						</div>
+						<!-- MongoDb / NoSQL level -->
 						<script>
 							function uncheck() {
 								$('#enableMongoChallenge').removeAttr('checked');
@@ -164,7 +165,7 @@ if (Setup.isInstalled()) {
 						</script>
 						<div class="row">
 							<div class="col-25">
-								<label for="mhost"><fmt:message key="generic.text.setup.enable"/> MongoDb Challenge</label>
+								<span><fmt:message key="generic.text.setup.enable.mongodb"/></span>
 							</div>
 							<div class="col-75">
 								<input type="checkbox" id="enableMongoChallenge" name="enableMongoChallenge" value="">
@@ -188,6 +189,39 @@ if (Setup.isInstalled()) {
 								</div>
 							</div>
 						</div>
+
+						<script>
+                            function uncheckUnfafe() {
+                                $('#unsafeLevels').removeAttr('checked');
+                            }
+
+                            $(document).ready(function () {
+                                $('#unsafeLevels').change(function () {
+                                    if (this.checked)
+                                    {
+                                        $('#showHideWarning').fadeIn('slow');
+                                        $('#unsafeLevels').val("enable");
+                                    }
+                                    else{
+                                        $('#showHideWarning').fadeOut('slow');
+                                        $('#unsafeLevels').val("disable");
+                                    }
+                                });
+                            });
+						</script>
+
+						<div class="row">
+							<div class="col-25">
+								<label for="mhost"><fmt:message key="generic.text.setup.enable.unsafe"/></label>
+							</div>
+							<div class="col-75">
+								<input type="checkbox" id="unsafeLevels" name="unsafeLevels" value="enable">
+								<span id="showHideWarning" style="display: none">
+									<fmt:message key="generic.text.setup.enable.unsafe.warn" />
+								</span>
+							</div>
+						</div>
+
 						<div class="row">
 							<input type="submit" id="submitButton" value="<fmt:message key="generic.text.submit" />">
 						</div>
@@ -226,6 +260,7 @@ if (Setup.isInstalled()) {
 			var enableMongo = $("#enableMongoChallenge").val();
 			var themhost = $("#mhost").val();
 			var themport = $("#mport").val();
+			var unsafeLevels = $("#unsafeLevels").val();
 			if(thedbauth != null)
 			{
 				$("#submitLoading").slideDown("fast");
@@ -244,7 +279,8 @@ if (Setup.isInstalled()) {
 							dbauth: thedbauth,
 							enableMongoChallenge: enableMongo,
 							mhost: themhost,
-							mport: themport
+							mport: themport,
+                            unsafeLevels: unsafeLevels
 						},
 						async: false
 					});

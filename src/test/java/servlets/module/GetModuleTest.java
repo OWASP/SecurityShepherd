@@ -50,7 +50,7 @@ public class GetModuleTest
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         //Open All modules
-        if(!Setter.openAllModules(applicationRoot))
+        if(!Setter.openAllModules(applicationRoot, false))
         	fail("Could not Mark All Modules As Open");
         //Ensure no Module block enabled
         ModuleBlock.reset();
