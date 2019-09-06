@@ -363,9 +363,9 @@ public class Validate
 		{
 			lang = ses.getAttribute("lang").toString();
 			//log.debug("lang submitted: " + lang);
-			if(lang != null)
+			if(lang != null || !lang.isEmpty())
 			{
-				if (!lang.isEmpty())
+				if (lang.matches(".[a-z]{2}-[A-Z]{2}$"))
 					result = lang;
 			}
 			//log.debug("lang set to: " + result);
