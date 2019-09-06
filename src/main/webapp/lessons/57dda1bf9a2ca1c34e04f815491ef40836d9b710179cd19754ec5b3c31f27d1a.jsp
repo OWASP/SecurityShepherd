@@ -24,15 +24,21 @@
      * @author ismisepaul
      */
 
-    String levelName = "XXE Lesson";
-    String levelHash = "57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a";
+    final String LEVEL_NAME = "XXE Lesson";
+    final String LEVEL_HASH = "57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a";
+
     Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
     //Logger log = Logger.getLogger(this.getClass());
-    ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.xxe." + levelHash, locale);
+    ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.xxe." + LEVEL_HASH, locale);
     //Used more than once translations
     String i18nLevelName = bundle.getString("title.question.xxe");
 
-    ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
+    ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
+    String owaspMoreInfo = 	generic.getString("module.generic.owasp.more.info");
+    String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
+    String owaspUrlAttack = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.attack.xxe");
+
+    ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME + " Accessed");
     if (request.getSession() != null) {
         HttpSession ses = request.getSession();
         //Getting CSRF Token from client
@@ -41,13 +47,13 @@
             tokenCookie = Validate.getToken(request.getCookies());
         } catch (Exception htmlE) {
             ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
-                    levelName + ".jsp: tokenCookie Error:" + htmlE.toString());
+                    LEVEL_NAME + ".jsp: tokenCookie Error:" + htmlE.toString());
         }
         // validateSession ensures a valid session, and valid role credentials
         // If tokenCookie == null, then the page is not going to continue loading
         if (Validate.validateSession(ses) && tokenCookie != null) {
             ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
-                    levelName + " has been accessed by " + ses.getAttribute("userName").toString(),
+                    LEVEL_NAME + " has been accessed by " + ses.getAttribute("userName").toString(),
                     ses.getAttribute("userName"));
 
             String csrfToken = Encode.forHtml(tokenCookie.getValue());
@@ -78,21 +84,16 @@
         <br/>
         <%= bundle.getString("paragraph.info.3") %>
         <br/>
-        <%= bundle.getString("owasp.guide.more") %>
-        <a href="<%= FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.attack.xxe")%>" target="_blank">
-            <%= bundle.getString("owasp.guide.xxe") %>
-        </a>
+        <%= owaspMoreInfo %> <a href="<%= owaspUrlAttack %>" target="_blank"> <%= owaspGuideTo %> XXE </a>
         <br/>
         <br/>
         <%= bundle.getString("example.text") %> 1:
         <br>
-        <code><%= bundle.getString("example.xxe.1") %>
-        </code>
+        <code><%= bundle.getString("example.xxe.1") %></code>
         <br/><br/>
         <%= bundle.getString("example.text") %> 2:
         <br>
-        <code><%= bundle.getString("example.xxe.2") %>
-        </code>
+        <code><%= bundle.getString("example.xxe.2") %></code>
         <br/>
         <br/>
         <input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
@@ -135,7 +136,7 @@
                     request.setRequestHeader("csrfToken", "<%= csrfToken %>");//don't forget the "" around the Java variable or JS will try convert
                 },
                 contentType: "application/xml",
-                url: "<%= levelHash %>",
+                url: "<%= LEVEL_HASH %>",
                 data: "<?xml version=\"1.0\"?><email>"+ theEmailAddr +"</email>",
                 async: false
             });

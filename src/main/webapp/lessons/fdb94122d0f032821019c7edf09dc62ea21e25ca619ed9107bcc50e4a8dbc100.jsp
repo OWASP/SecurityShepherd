@@ -2,54 +2,59 @@
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
-String levelName = "Insecure Direct Object References Lesson";
-String levelHash = "fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100";
+	/**
+	 * <br/><br/>
+	 * This file is part of the Security Shepherd Project.
+	 *
+	 * The Security Shepherd project is free software: you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation, either version 3 of the License, or
+	 * (at your option) any later version.<br/>
+	 *
+	 * The Security Shepherd project is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.<br/>
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
+	 *
+	 * @author Mark Denihan
+	 */
 
-//Translation Stuff
-Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.insecure_direct_object_ref." + levelHash, locale);
-//Used more than once translations
-String translatedLevelName = bundle.getString("title.quesetion.insecure_direct_object_ref");
+	final String LEVEL_NAME = "Insecure Direct Object References Lesson";
+	final String LEVEL_HASH = "fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100";
 
-/**
- * <br/><br/>
- * This file is part of the Security Shepherd Project.
- *
- * The Security Shepherd project is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
- *
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
- *
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author Mark Denihan
- */
+	//Translation Stuff
+	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.insecure_direct_object_ref." + LEVEL_HASH, locale);
+	//Used more than once translations
+	String translatedLevelName = bundle.getString("title.quesetion.insecure_direct_object_ref");
 
- ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
- if (request.getSession() != null)
- {
- 	HttpSession ses = request.getSession();
- 	//Getting CSRF Token from client
- 	Cookie tokenCookie = null;
- 	try
- 	{
- 		tokenCookie = Validate.getToken(request.getCookies());
- 	}
- 	catch(Exception htmlE)
- 	{
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
- 	}
- 	// validateSession ensures a valid session, and valid role credentials
- 	// If tokenCookie == null, then the page is not going to continue loading
- 	if (Validate.validateSession(ses) && tokenCookie != null)
- 	{
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
+	ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
+	String owaspMoreInfo = 	generic.getString("module.generic.owasp.more.info");
+	String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
+	String owaspUrlAttack = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.attack.insecureDirectObjectReferences");
+
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME + " Accessed");
+	if (request.getSession() != null)
+	 {
+		HttpSession ses = request.getSession();
+		//Getting CSRF Token from client
+		Cookie tokenCookie = null;
+		try
+		{
+			tokenCookie = Validate.getToken(request.getCookies());
+		}
+		catch(Exception htmlE)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME +".jsp: tokenCookie Error:" + htmlE.toString());
+		}
+		// validateSession ensures a valid session, and valid role credentials
+		// If tokenCookie == null, then the page is not going to continue loading
+		if (Validate.validateSession(ses) && tokenCookie != null)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 
  %>
 
@@ -76,6 +81,9 @@ String translatedLevelName = bundle.getString("title.quesetion.insecure_direct_o
 					<br />
 					<br />
 					<%= bundle.getString("paragraph.info3") %>
+					<br/>
+					<br/>
+					<%= owaspMoreInfo %> <a href="<%= owaspUrlAttack %>" target="_blank"> <%= owaspGuideTo %> Insecure Direct Object References </a>
 					<br/>
 					<br/>
 					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
@@ -115,7 +123,7 @@ String translatedLevelName = bundle.getString("title.quesetion.insecure_direct_o
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "<%= levelHash %>",
+						url: "<%= LEVEL_HASH %>",
 						data: {
 							username: "guest"
 						},
