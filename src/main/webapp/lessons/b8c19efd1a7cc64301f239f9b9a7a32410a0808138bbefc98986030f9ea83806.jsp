@@ -1,55 +1,61 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
+<%@ page import="dbProcs.FileInputProperties" %>
 
 <%
-	String levelHash = new String("b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806");	
+	/**
+	 * <br/><br/>
+	 * This file is part of the Security Shepherd Project.
+	 *
+	 * The Security Shepherd project is free software: you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation, either version 3 of the License, or
+	 * (at your option) any later version.<br/>
+	 *
+	 * The Security Shepherd project is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.<br/>
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
+	 *
+	 * @author Mark Denihan
+	 */
+
+	final String LEVEL_NAME = "Session Management Lesson";
+	final String LEVEL_HASH = "b8c19efd1a7cc64301f239f9b9a7a32410a0808138bbefc98986030f9ea83806";
 
 	//Translation Stuff
 	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.session_manage." + levelHash, locale);
+	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.session_manage." + LEVEL_HASH, locale);
 	//Used more than once translations
 	String translatedLevelName = bundle.getString("title.question.session_manage");
 
-/*
- * <br/><br/>
- * This file is part of the Security Shepherd Project.
- * 
- * The Security Shepherd project is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
- * 
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * @author Mark Denihan
- */
+	ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
+	String owaspMoreInfo = 	generic.getString("module.generic.owasp.more.info");
+	String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
+	String owaspUrlAttack = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.attack.sessionManagement");
 
-String levelName = "Session Management Lesson";
-ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
-if (request.getSession() != null)
-{
-	HttpSession ses = request.getSession();
-	//Getting CSRF Token from client
-	Cookie tokenCookie = null;
-	try
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME + " Accessed");
+	if (request.getSession() != null)
 	{
-		tokenCookie = Validate.getToken(request.getCookies());
-	}
-	catch(Exception htmlE)
-	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
-	}
-	// validateSession ensures a valid session, and valid role credentials
-	// If tokenCookie == null, then the page is not going to continue loading
-	if (Validate.validateSession(ses) && tokenCookie != null)
-	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
+		HttpSession ses = request.getSession();
+		//Getting CSRF Token from client
+		Cookie tokenCookie = null;
+		try
+		{
+			tokenCookie = Validate.getToken(request.getCookies());
+		}
+		catch(Exception htmlE)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME +".jsp: tokenCookie Error:" + htmlE.toString());
+		}
+		// validateSession ensures a valid session, and valid role credentials
+		// If tokenCookie == null, then the page is not going to continue loading
+		if (Validate.validateSession(ses) && tokenCookie != null)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
 	
 %>
 <script>
@@ -85,6 +91,9 @@ if (request.getSession() != null)
 					<br /><a><%= bundle.getString("paragraph.info.number.5") %></a> <%= bundle.getString("paragraph.info.5.5") %>
 					<br />
 					<br />
+			<%= owaspMoreInfo %> <a href="<%= owaspUrlAttack %>" target="_blank"> <%= owaspGuideTo %> Session Management </a>
+			<br />
+			<br />
 					<%= bundle.getString("paragraph.info.5.5") %>
 					<br />
 					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
@@ -124,7 +133,7 @@ if (request.getSession() != null)
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "<%= levelHash %>",
+						url: "<%= LEVEL_HASH %>",
 						async: false
 					});
 					if(ajaxCall.status == 200)
