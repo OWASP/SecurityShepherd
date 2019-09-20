@@ -30,7 +30,7 @@ services:
     build:
       context: .
       args:
-        TOMCAT_VERSION: ${TOMCAT_VERSION}
+        TOMCAT_DOCKER_VERSION: ${TOMCAT_DOCKER_VERSION}
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASS: ${MYSQL_PASS}
         MYSQL_URI: jdbc:mysql://${CONTAINER_MYSQL}:3306
