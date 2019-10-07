@@ -17,7 +17,7 @@ ARG DOCKER_NETWORK_NAME
 COPY target/coreSchema.sql /docker-entrypoint-initdb.d/coreSchema.sql
 COPY target/moduleSchemas.sql /docker-entrypoint-initdb.d/moduleSchemas.sql
 
-RUN sed -i 's/@'\''localhost'\''/@'\'''"$CONTAINER_TOMCAT"'.'"$DOCKER_NETWORK_NAME"''\''/g' /docker-entrypoint-initdb.d/moduleSchemas.sql
+RUN sed -i 's/@'\''localhost'\''/@'\'''%''\''/g' /docker-entrypoint-initdb.d/moduleSchemas.sql
 
 RUN mkdir -p /etc/mysql/conf.d \
 	&& { \
