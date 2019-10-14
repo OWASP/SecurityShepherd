@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Locale;
@@ -178,10 +175,21 @@ public class Setup extends HttpServlet {
 	}
 
 	private static void generateAuth() {
+
+		Path herokuHome = Paths.get("/app");
+		Path herokuJdkVersion = Paths.get("/app/.jdk/version.txt");
+		String heroku = "heroku";
+
 		try {
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
-				Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(), StandardOpenOption.CREATE);
+				if(Files.exists(herokuJdkVersion, LinkOption.NOFOLLOW_LINKS)){
+					byte[] content = Files.readAllBytes(herokuJdkVersion);
+					if(new String(content).contains(heroku))
+						Files.write(Paths.get(herokuHome + File.separator + "SecurityShepherd.auth"), randomUUID.toString().getBytes(), StandardOpenOption.CREATE);
+				}
+				else
+					Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(), StandardOpenOption.CREATE);
 				log.info("genrated UUID " + randomUUID + " in " + Constants.SETUP_AUTH);
 			}
 		} catch (IOException e) {
