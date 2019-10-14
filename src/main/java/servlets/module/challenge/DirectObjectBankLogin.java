@@ -1,5 +1,6 @@
 package servlets.module.challenge;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.CallableStatement;
@@ -220,11 +221,18 @@ public class DirectObjectBankLogin extends HttpServlet
 	 * @throws SQLException If no rows found or if SQL error occurs
 	 */
 	public static float getAccountBalance(String accountNumber, String applicationRoot) throws SQLException {
-		Connection conn = Database.getChallengeConnection(applicationRoot, "directObjectBank");
+		
+		Connection conn;
+		
+			conn = Database.getChallengeConnection(applicationRoot, "directObjectBank");
+	
+		
 		CallableStatement callstmt;
 		float toReturn = 0;
 		try 
 		{
+			
+
 			callstmt = conn.prepareCall("CALL currentFunds(?)");
 			callstmt.setString(1, accountNumber);
 			ResultSet rs = callstmt.executeQuery();

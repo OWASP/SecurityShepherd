@@ -166,9 +166,14 @@ public class XxeLesson
             log.info("XXE Lesson Solution File " + filename + " created");
             return true;
         }
-        catch (FileNotFoundException e) {log.error(e); return false;}
-        catch (IOException e){ log.error(e); return false;
-        }
+		catch (FileNotFoundException e) {
+			log.error(e);
+			throw new RuntimeException(e);
+			
+		} catch (IOException e) {
+			log.error(e);
+			throw new RuntimeException(e);
+		}
 
     }
 }

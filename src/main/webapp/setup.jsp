@@ -125,7 +125,7 @@ if (Setup.isInstalled()) {
 								<label for="dboverride"><fmt:message key="generic.text.setup.overridedb" /></label> </div>
 							<div class="col-75">
 								<select id="dboverride" name="dboverride">
-									<option value="overide"><fmt:message key="generic.text.setup.wipe" /></option>
+									<option value="override"><fmt:message key="generic.text.setup.wipe" /></option>
 									<option value="upgrade"><fmt:message key="generic.text.setup.upgrade" /></option>
 									<option value="false"><fmt:message key="generic.text.setup.dontwipe" /></option>
 								</select>
