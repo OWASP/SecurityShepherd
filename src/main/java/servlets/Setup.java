@@ -255,14 +255,8 @@ public class Setup extends HttpServlet {
 
 	private static void generateAuth() {
 
-		Path herokuHome = Paths.get("/app");
-		Path herokuJdkVersion = Paths.get("/app/.jdk/version.txt");
-		String heroku = "heroku";
-		String writtenTo = herokuHome.toString();
 
 		try {
-			String versionInfo = new String(Files.readAllBytes(herokuJdkVersion), Charset.forName("UTF-8"));
-
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
 				Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(),
