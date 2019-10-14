@@ -93,7 +93,7 @@ if (Setup.isInstalled()) {
 								<label for="dbhost"><fmt:message key="generic.text.setup.host" /></label>
 							</div>
 							<div class="col-75">
-								<input type="text" id="dbhost" name="dbhost" placeholder="Database Hostname..." autofocus required>
+								<input type="text" id="dbhost" name="dbhost" value="localhost" autofocus required>
 							</div>
 						</div>
 						<div class="row">
@@ -101,7 +101,7 @@ if (Setup.isInstalled()) {
 								<label for="dbport"><fmt:message key="generic.text.setup.port" /></label>
 							</div>
 							<div class="col-75">
-								<input type="text" id="dbport" name="dbport" placeholder="Database Port..." required>
+								<input type="text" id="dbport" name="dbport" value="3306" required>
 							</div>
 						</div>
 						<div class="row">
@@ -109,7 +109,7 @@ if (Setup.isInstalled()) {
 								<label for="dbuser"><fmt:message key="generic.text.setup.user" /></label>
 							</div>
 							<div class="col-75">
-								<input type="text" id="dbuser" name="dbuser" placeholder="Shepherd Database User.." required>
+								<input type="text" id="dbuser" name="dbuser" value="root" required>
 							</div>
 						</div>
 						<div class="row">
