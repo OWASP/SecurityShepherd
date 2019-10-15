@@ -1,8 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.encoder.Encode" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*, dbProcs.*, java.sql.Connection, org.owasp.encoder.Encode"%>
 <%@ include file="translation.jsp" %>
 
 <%
-
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -41,6 +41,11 @@ if(request.getSession() != null)
 		
 	}
 }
+
+//Try talking to the database to force an early error if there's some db problem so we see error messages before trying to log in
+
+Connection conn = Database.getCoreConnection();
+
 String url = (request.getRequestURL()).toString();
 if(url.contains("login.jsp"))
 {
@@ -54,7 +59,6 @@ else
 String registrationSuccess = new String();
 String loginFailed = new String();
 String registerError = new String();
-
 
 if(ses.getAttribute("loginFailed") != null)
 {

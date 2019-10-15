@@ -47,7 +47,7 @@ public class Setup extends HttpServlet {
 
 		// Output Stuff
 		PrintWriter out = response.getWriter();
-		String htmlOutput="";
+		String htmlOutput = "";
 		boolean success = false;
 
 		// Parameters From Form
@@ -67,7 +67,6 @@ public class Setup extends HttpServlet {
 				.getAbsolutePath();
 		String mongodbName = FileInputProperties.readfile(nosqlprops, "databaseName");
 		String auth = "";
-
 
 		String enableMongoChallenge = request.getParameter("enableMongoChallenge");
 
@@ -103,17 +102,18 @@ public class Setup extends HttpServlet {
 		try {
 			auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
 		} catch (NoSuchFileException e) {
-			// Auth file could not be found. 
+			// Auth file could not be found.
 			htmlOutput += "Auth file could not be found";
 			log.error("Auth file could not be found: " + e.toString());
 
 		}
-		
+
 		if (auth == "") {
-			// No auth loaded, could be because user never reloaded setup page after an error. Generate it again
+			// No auth loaded, could be because user never reloaded setup page after an
+			// error. Generate it again
 			generateAuth();
 		}
-		
+
 		if (!auth.equals(dbAuth)) {
 			// The supplied auth data was incorrect
 			htmlOutput += bundle.getString("generic.text.setup.authentication.failed");
@@ -128,7 +128,7 @@ public class Setup extends HttpServlet {
 				connectionSuccess = true;
 			} catch (SQLException e) {
 				htmlOutput += bundle.getString("generic.text.setup.connection.failed") + e.getMessage();
-				
+
 				log.error("DB connection error: " + e.toString());
 
 			}
@@ -151,7 +151,7 @@ public class Setup extends HttpServlet {
 						htmlOutput = bundle.getString("generic.text.setup.success");
 					}
 					success = true;
-				} catch (InstallationException e) {
+				} catch (SQLException e) {
 					htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
 					FileUtils.deleteQuietly(new File(Constants.DBPROP));
 				}
@@ -172,7 +172,7 @@ public class Setup extends HttpServlet {
 						} else {
 							try {
 								executeMongoScript();
-							} catch (InstallationException e) {
+							} catch (IOException e) {
 								htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
 								FileUtils.deleteQuietly(new File(Constants.DBPROP));
 							}
@@ -180,13 +180,13 @@ public class Setup extends HttpServlet {
 					}
 				}
 
-//				if (enableUnsafeLevels.equalsIgnoreCase("enable")) {
-//					openUnsafeLevels();
-//					if (!executeCreateChallengeFile()) {
-//						htmlOutput = bundle.getString("generic.text.setup.file.failed");
-//						FileUtils.deleteQuietly(new File(Constants.DBPROP));
-//					}
-//				}
+				if (enableUnsafeLevels.equalsIgnoreCase("enable")) {
+					openUnsafeLevels();
+					if (!executeCreateChallengeFile()) {
+						htmlOutput = bundle.getString("generic.text.setup.file.failed");
+						FileUtils.deleteQuietly(new File(Constants.DBPROP));
+					}
+				}
 			}
 
 		}
@@ -220,7 +220,10 @@ public class Setup extends HttpServlet {
 
 		} catch (SQLException e) {
 			// Some other database error occurred
-			e.printStackTrace();
+			log.fatal("Cannot connect to database: " + e.toString());
+			isInstalled = true;
+			throw new RuntimeException(e);
+
 		}
 
 		if (!isInstalled) {
@@ -252,30 +255,23 @@ public class Setup extends HttpServlet {
 		}
 	}
 
-	private synchronized void executeSqlScript() throws InstallationException {
+	private synchronized void executeSqlScript() throws IOException, SQLException {
 
-		try {
-			File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
-			String data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
+		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
-			Connection databaseConnection = Database.getDatabaseConnection(null, true);
-			Statement psProcToexecute = databaseConnection.createStatement();
-			psProcToexecute.executeUpdate(data);
+		Connection databaseConnection = Database.getDatabaseConnection(null, true);
+		Statement psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
 
-			file = new File(getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
-			data = FileUtils.readFileToString(file, Charset.defaultCharset());
-			psProcToexecute = databaseConnection.createStatement();
-			psProcToexecute.executeUpdate(data);
-
-		} catch (Exception e) {
-			log.fatal(e);
-			e.printStackTrace();
-			throw new InstallationException(e);
-		}
+		file = new File(getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
+		data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
 
 	}
 
-	private synchronized void executeMongoScript() throws InstallationException {
+	private synchronized void executeMongoScript() throws IOException  {
 
 		MongoClient mongoConnection = null;
 
@@ -284,30 +280,25 @@ public class Setup extends HttpServlet {
 			mongoConnection = MongoDatabase.getMongoDbConnection(null);
 			MongoDatabase.executeMongoScript(file, mongoConnection);
 		} catch (IOException e) {
-			log.fatal(e);
-			e.printStackTrace();
-			throw new InstallationException(e);
+			throw e;
 		} finally {
 			MongoDatabase.closeConnection(mongoConnection);
 		}
 
 	}
 
-	private synchronized void executeUpdateScript() throws InstallationException {
+	private synchronized void executeUpdateScript() throws IOException, SQLException {
 
-		try {
-			File file = new File(getClass().getClassLoader().getResource("/database/updatev3_0tov3_1.sql").getFile());
-			String data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		File file = new File(getClass().getClassLoader().getResource("/database/updatev3_0tov3_1.sql").getFile());
 
-			Connection databaseConnection = Database.getDatabaseConnection(null, true);
-			Statement psProcToexecute = databaseConnection.createStatement();
-			psProcToexecute.executeUpdate(data);
+		String data;
 
-		} catch (Exception e) {
-			log.fatal(e);
-			e.printStackTrace();
-			throw new InstallationException(e);
-		}
+		data = FileUtils.readFileToString(file, Charset.defaultCharset());
+
+		Connection databaseConnection = Database.getDatabaseConnection(null, true);
+		Statement psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
+
 	}
 
 	private synchronized void openUnsafeLevels() {

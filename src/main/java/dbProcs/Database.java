@@ -48,18 +48,17 @@ public class Database {
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		Connection conn = DriverManager.getConnection(connectionURL, dbUsername, dbPassword);
 
 		return conn;
 	}
-	
+
 	/**
 	 * This method is used by the application to close an open connection to a
 	 * database server
 	 * 
 	 * @param conn The connection to close
-	 * @throws SQLException
 	 */
 	public static void closeConnection(Connection conn) {
 
@@ -67,7 +66,6 @@ public class Database {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
 
@@ -82,11 +80,8 @@ public class Database {
 	 *                        connection. this is filtered for path traversal
 	 *                        attacks
 	 * @return A connection to the secure database server
-	 * @throws FileNotFoundException
-	 * @throws SQLException
 	 */
-	public static Connection getChallengeConnection(String ApplicationRoot, String path)
-			 {
+	public static Connection getChallengeConnection(String ApplicationRoot, String path) {
 		// Some over paranoid input validation never hurts.
 		path = path.replaceAll("\\.", "").replaceAll("/", "");
 		log.debug("Path = " + path);
@@ -105,7 +100,7 @@ public class Database {
 			driverType = FileInputProperties.readfile(props, "DriverType");
 		} catch (FileNotFoundException e) {
 			// db props file doesn't exist
-			//throw e;
+			// throw e;
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -122,8 +117,8 @@ public class Database {
 			username = FileInputProperties.readfile(props, "databaseUsername");
 			password = FileInputProperties.readfile(props, "databasePassword");
 		} catch (FileNotFoundException e) {
-			// db props file doesn't exist
-			//throw e;
+			// challenge db props file doesn't exist
+			// throw e;
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -134,18 +129,15 @@ public class Database {
 		try {
 			conn = getConnection(driverType, connectionURL, username, password);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 		return conn;
 	}
 
 	public static Connection getCoreConnection() {
-		Connection conn=null;
-		
-			conn= getCoreConnection("");
-	
+		Connection conn = getCoreConnection("");
+
 		return conn;
 	}
 
@@ -178,9 +170,10 @@ public class Database {
 
 		} catch (FileNotFoundException e) {
 			// db props file doesn't exist
-			//throw e;
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			throw new RuntimeException(e);
+
+			
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -188,8 +181,8 @@ public class Database {
 		try {
 			conn = getConnection(driverType, connectionURL, username, password);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			throw new RuntimeException(e);
 		}
 
 		return conn;
@@ -220,12 +213,8 @@ public class Database {
 		String password = "";
 
 		try {
+			
 			connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
-
-			if (allowMulti) {
-				connectionURL += "?allowMultiQueries=yes";
-			}
-
 			driverType = FileInputProperties.readfile(props, "DriverType");
 			username = FileInputProperties.readfile(props, "databaseUsername");
 			password = FileInputProperties.readfile(props, "databasePassword");
@@ -235,6 +224,10 @@ public class Database {
 			throw e;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+
+		if (allowMulti) {
+			connectionURL += "?allowMultiQueries=yes";
 		}
 
 		conn = getConnection(driverType, connectionURL, username, password);
@@ -283,7 +276,7 @@ public class Database {
 			password = FileInputProperties.readfile(props, "databasePassword");
 
 		} catch (FileNotFoundException e) {
-			// db props file doesn't exist
+			// sql injection lesson file does not exist
 			throw e;
 		} catch (IOException e) {
 			throw new RuntimeException(e);

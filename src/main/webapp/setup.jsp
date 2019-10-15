@@ -1,7 +1,7 @@
 <%@page import="dbProcs.Constants"%>
 <%@page import="servlets.Setup"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
-	language="java" import="utils.*, org.owasp.encoder.Encode" errorPage=""%>
+	language="java" import="utils.*, org.owasp.encoder.Encode"%>
 <%@ include file="translation.jsp"%>
 
 <%
@@ -215,7 +215,7 @@ if (Setup.isInstalled()) {
 								<label for="mhost"><fmt:message key="generic.text.setup.enable.unsafe"/></label>
 							</div>
 							<div class="col-75">
-								<input type="checkbox" id="unsafeLevels" name="unsafeLevels" value="enable">
+								<input type="checkbox" id="unsafeLevels" name="unsafeLevels" value="">
 								<span id="showHideWarning" style="display: none">
 									<fmt:message key="generic.text.setup.enable.unsafe.warn" />
 								</span>
