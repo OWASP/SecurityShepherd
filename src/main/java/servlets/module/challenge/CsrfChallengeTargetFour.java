@@ -161,11 +161,9 @@ public class CsrfChallengeTargetFour extends HttpServlet
 	{
 		log.debug("*** CSRF4.validCsrfToken ***");
 		boolean result = false;
-		Connection conn = null;
+		Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeFour");
 		try
 		{		
-			conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeFour");
-
 			PreparedStatement prepstmt = conn.prepareStatement("SELECT count(csrfTokenscol) FROM csrfTokens WHERE csrfTokenscol = ?");
 			prepstmt.setString(1, csrfToken);
 			ResultSet rs = prepstmt.executeQuery();
