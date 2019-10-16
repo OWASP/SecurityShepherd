@@ -16,7 +16,7 @@ import utils.InstallationException;
 
 public class EnableFeedbackIT
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(EnableCheatsIT.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(EnableFeedbackIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
