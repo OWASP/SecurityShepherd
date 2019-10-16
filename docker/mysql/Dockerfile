@@ -24,6 +24,7 @@ RUN mkdir -p /etc/mysql/conf.d \
 		echo '[mysqld]'; \
 		echo 'skip-host-cache'; \
 		echo 'datadir = /var/lib/mysql'; \
+		echo 'show_compatibility_56 = ON'; \
 		echo '!includedir /etc/mysql/conf.d/'; \
 	} > /etc/mysql/my.cnf
 
