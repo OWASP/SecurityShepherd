@@ -35,7 +35,7 @@ public class SetupIT
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    private StringBuffer dbProp;
+    private StringBuffer dbProp= new StringBuffer();
 
 	/**
 	 * Initialize directories
