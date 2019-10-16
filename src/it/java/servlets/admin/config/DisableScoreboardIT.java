@@ -16,7 +16,7 @@ import utils.ScoreboardStatus;
 
 public class DisableScoreboardIT
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(DisableScoreboard.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(DisableScoreboardIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
