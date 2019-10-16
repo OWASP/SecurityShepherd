@@ -16,7 +16,7 @@ import utils.OpenRegistration;
 
 public class ToggleRegistrationIT
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(EnableCheatsIT.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(ToggleRegistrationIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
