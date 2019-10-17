@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
@@ -57,27 +58,40 @@ public class SetupIT
 	
 	@Test
 	public void testAuthCreation() {
+
+		log.debug("Creating Setup Servlet Instance");
+		Setup servlet = new Setup();
 		try {
-			log.debug("Creating Setup Servlet Instance");
-			Setup servlet = new Setup();
 			servlet.init(new MockServletConfig("Setup"));
-					
-			String authData= Files.readString(Paths.get(Constants.SETUP_AUTH), StandardCharsets.UTF_8);
-			request.getSession().setAttribute("lang", lang);
-
-			request.getSession().setAttribute("dbAuth", authData);
-
-			log.debug("Running doPost");
-			servlet.doPost(request, response);
-			
-			String location = response.getHeader("Location");
-			if(!location.endsWith("login.jsp"))
-			{
-				throw new Exception("Setup not Redirecting to login.jsp.");
-			}
-		} catch (Exception e) {
-			fail();
+		} catch (ServletException e) {
+			fail(e.toString());
 		}
+
+		String authData="";
+		try {
+			authData = FileUtils.readFileToString(new File(Constants.SETUP_AUTH), StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			fail(e.toString());
+		}
+
+		request.getSession().setAttribute("lang", lang);
+
+		request.getSession().setAttribute("dbAuth", authData);
+
+		log.debug("Running doPost");
+		try {
+			servlet.doPost(request, response);
+		} catch (ServletException | IOException e) {
+			
+			fail(e.toString());
+
+		}
+
+		String location = response.getHeader("Location");
+		if (!location.endsWith("login.jsp")) {
+			fail("Setup not Redirecting to login.jsp.");
+		}
+
 	}
 	
 }
