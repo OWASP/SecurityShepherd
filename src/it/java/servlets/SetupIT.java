@@ -75,9 +75,13 @@ public class SetupIT
 		}
 
 		request.getSession().setAttribute("lang", lang);
-
-		request.getSession().setAttribute("dbAuth", authData);
-
+		
+		request.getSession().setAttribute("dbhost", "localhost");
+		request.getSession().setAttribute("dbport", 3306);
+		request.getSession().setAttribute("dbuser", "root");
+		request.getSession().setAttribute("dbpass", "");
+		request.getSession().setAttribute("dbauth", authData);
+		
 		log.debug("Running doPost");
 		try {
 			servlet.doPost(request, response);
