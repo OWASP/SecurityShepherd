@@ -55,13 +55,13 @@ public class SetupIT {
 		response = new MockHttpServletResponse();
 
 	}
-	
+
 	@After
 	public void tearDown() throws IOException {
 		log.debug("Cleaning up");
 
 		ensureDatabaseProps();
-	}	
+	}
 
 	private void removeDatabaseProps() {
 		FileUtils.deleteQuietly(new File(Constants.DBPROP));
@@ -93,46 +93,43 @@ public class SetupIT {
 			fail(e.toString());
 		}
 
+		if (authData == null) {
+			String message = "Auth data loaded from " + Constants.SETUP_AUTH + " was null!";
+			log.fatal(message);
+			fail(message);
+		}
+
+		if (authData == "") {
+			String message = "Auth data loaded from " + Constants.SETUP_AUTH + " was empty!";
+			log.fatal(message);
+			fail(message);
+		}
 		request.getSession().setAttribute("lang", lang);
 
-		request.getSession().setAttribute("dbhost", "localhost");
-		request.getSession().setAttribute("dbport", 3306);
-		request.getSession().setAttribute("dbuser", "root");
-		request.getSession().setAttribute("dbpass", "");
-		request.getSession().setAttribute("dbauth", authData);
+		request.addParameter("dbhost", "localhost");
+		request.addParameter("dbport", "3306");
+		request.addParameter("dbuser", "root");
+		request.addParameter("dbpass", "");
+		request.addParameter("dbauth", authData);
 
 		log.debug("Running doPost");
 		try {
 			servlet.doPost(request, response);
 		} catch (ServletException | IOException e) {
-
 			fail(e.toString());
-
 		}
 
-		String location = response.getHeader("Location");
+		String location = "";
+		try {
+			location = response.getHeader("Location");
+		} catch (NullPointerException e) {
+			String message = "Got invalid location from posting setup request: " + e.toString();
+			log.fatal(message);
+			fail(message);
+		}
+
 		if (!location.endsWith("login.jsp")) {
 			fail("Setup not Redirecting to login.jsp.");
-		}
-
-	}
-
-	@Test
-	public void testAuthCreation() {
-
-		removeDatabaseProps();
-
-		assertFalse(Setup.isInstalled());
-
-		String authData = "";
-		try {
-			authData = FileUtils.readFileToString(new File(Constants.SETUP_AUTH), StandardCharsets.UTF_8);
-		} catch (IOException e) {
-			fail(e.toString());
-		}
-
-		if (authData == "") {
-			fail("No auth data found.");
 		}
 
 	}

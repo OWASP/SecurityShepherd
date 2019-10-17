@@ -240,7 +240,7 @@ public class Setup extends HttpServlet {
 
 				Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(),
 						StandardOpenOption.CREATE);
-				log.info("genrated UUID " + randomUUID + " in " + Constants.SETUP_AUTH);
+				log.info("Generated UUID " + randomUUID + " in " + Constants.SETUP_AUTH);
 			}
 		} catch (IOException e) {
 			log.fatal("Unable to generate auth: " + e.getMessage());
