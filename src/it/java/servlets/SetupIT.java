@@ -52,77 +52,32 @@ public class SetupIT
 		log.debug("Setting Up Blank Request and Response");
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
-        Path propsPath = Paths.get(Constants.DBPROP);
-        try {
-			dbProp.append(Files.readString(propsPath, StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
 
-	}
-
-	public void removeDatabaseProps() 
-	{
-		FileUtils.deleteQuietly(new File(Constants.DBPROP));
-	}
-
-	public void ensureDatabaseProps() 
-	{
-		FileUtils.deleteQuietly(new File(Constants.DBPROP));
-		try {
-			Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException(e);
-
-		}
 	}
 	
 	@Test
-	public void testNoProps() {
+	public void testAuthCreation() {
 		try {
-			removeDatabaseProps();
-
 			log.debug("Creating Setup Servlet Instance");
 			Setup servlet = new Setup();
 			servlet.init(new MockServletConfig("Setup"));
+					
+			String authData= Files.readString(Paths.get(Constants.SETUP_AUTH), StandardCharsets.UTF_8);
 			request.getSession().setAttribute("lang", lang);
+
+			request.getSession().setAttribute("dbAuth", authData);
 
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
 			
 			String location = response.getHeader("Location");
-			if(!location.endsWith("setup.jsp"))
+			if(!location.endsWith("login.jsp"))
 			{
-				throw new Exception("Setup not Redirecting to setup.jsp.");
+				throw new Exception("Setup not Redirecting to login.jsp.");
 			}
 		} catch (Exception e) {
 			fail();
 		}
 	}
 	
-	@Test
-	public void testWithWrops() {
-		try {
-			ensureDatabaseProps();
-
-			log.debug("Creating Setup Servlet Instance");
-			Setup servlet = new Setup();
-			servlet.init(new MockServletConfig("Setup"));
-			request.getSession().setAttribute("lang", lang);
-
-			log.debug("Running doPost");
-			servlet.doPost(request, response);
-			
-			String location = response.getHeader("Location");
-			if(location.endsWith("setup.jsp"))
-			{
-				throw new Exception("Setup redirecting to setup.jsp when it shouldn't.");
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
 }
