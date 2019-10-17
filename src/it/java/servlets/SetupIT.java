@@ -120,7 +120,9 @@ public class SetupIT {
 	@Test
 	public void testAuthCreation() {
 
-		assertFalse(!Setup.isInstalled());
+		removeDatabaseProps();
+
+		assertFalse(Setup.isInstalled());
 
 		String authData = "";
 		try {
