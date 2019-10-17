@@ -210,7 +210,6 @@ public class Setup extends HttpServlet {
 		try (Connection coreConnection = Database.getDatabaseConnection(null)) {
 			if (coreConnection == null) {
 				isInstalled = false;
-
 			} else {
 				isInstalled = true;
 			}
@@ -237,6 +236,8 @@ public class Setup extends HttpServlet {
 		try {
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
+				log.info("Auth file not found, creating: " + Constants.SETUP_AUTH);
+
 				Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(),
 						StandardOpenOption.CREATE);
 				log.info("genrated UUID " + randomUUID + " in " + Constants.SETUP_AUTH);
