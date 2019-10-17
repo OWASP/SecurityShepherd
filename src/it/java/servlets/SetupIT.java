@@ -69,17 +69,20 @@ public class SetupIT {
 
 	private void ensureDatabaseProps() throws IOException {
 		FileUtils.deleteQuietly(new File(Constants.DBPROP));
-		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+		FileUtils.write(new File(Constants.DBPROP), dbProp.toString(), StandardCharsets.UTF_8);
 	}
 
 	@Test
 	public void testCoreCreation() {
+
+		int expectedResponseCode = 302;
 
 		log.debug("Creating Setup Servlet Instance");
 		Setup servlet = new Setup();
 		try {
 			servlet.init(new MockServletConfig("Setup"));
 		} catch (ServletException e) {
+			log.fatal(e.toString());
 			fail(e.toString());
 		}
 
@@ -116,9 +119,16 @@ public class SetupIT {
 		try {
 			servlet.doPost(request, response);
 		} catch (ServletException | IOException e) {
+			log.fatal(e.toString());
 			fail(e.toString());
 		}
+		log.debug("doPost successful, reading response");
 
+		if(response.getStatus() != expectedResponseCode) {
+			String message="Login Servlet Returned " + response.getStatus() + " Code. 302 Expected";
+			log.fatal(message);
+			fail(message);
+		}
 		String location = "";
 		try {
 			location = response.getHeader("Location");
