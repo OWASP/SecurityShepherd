@@ -60,7 +60,8 @@ public class SetupIT {
 	public void tearDown() throws IOException {
 		log.debug("Cleaning up");
 
-		ensureDatabaseProps();
+		removeDatabaseProps();
+		Setup.isInstalled();
 	}
 
 	private void removeDatabaseProps() {
