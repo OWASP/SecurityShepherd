@@ -43,10 +43,6 @@ public class SetupIT {
 	/**
 	 * Initialize directories
 	 */
-	@BeforeClass
-	public static void setDirectory() {
-		TestProperties.setTestPropertiesFileDirectory(log);
-	}
 
 	@Before
 	public void setup() {
@@ -54,22 +50,6 @@ public class SetupIT {
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
 
-	}
-
-	@After
-	public void tearDown() throws IOException {
-		log.debug("Cleaning up");
-
-		ensureDatabaseProps();
-	}
-
-	private void removeDatabaseProps() {
-		FileUtils.deleteQuietly(new File(Constants.DBPROP));
-	}
-
-	private void ensureDatabaseProps() throws IOException {
-		FileUtils.deleteQuietly(new File(Constants.DBPROP));
-		FileUtils.write(new File(Constants.DBPROP), dbProp.toString(), StandardCharsets.UTF_8);
 	}
 
 	@Test
@@ -86,7 +66,6 @@ public class SetupIT {
 			fail(e.toString());
 		}
 
-		removeDatabaseProps();
 		Setup.isInstalled();
 
 		String authData = "";

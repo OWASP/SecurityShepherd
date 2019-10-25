@@ -2,7 +2,9 @@ package testUtils;
 
 import static org.junit.Assert.fail;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
@@ -15,6 +17,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
+import dbProcs.Constants;
 import dbProcs.Database;
 import dbProcs.Getter;
 import dbProcs.Setter;
@@ -393,9 +396,20 @@ public class TestProperties
 	/**
 	 * Create a mysql database properties file
 	 */
-	public static void createMysqlResource(String dbHost, Integer dbPort, String dbSchema, String dbUsername, String dbPassword) throws IOException
+	public static void createMysqlResource(String dbHost, int dbPort, String dbSchema, String dbUsername, String dbPassword) throws IOException
 	{
-		
+		FileWriter file = new FileWriter(Constants.MYSQL_DB_PROP);
+		BufferedWriter bw = new BufferedWriter(file);
+		bw.write("databaseConnectionURL=jdbc:mysql://" + dbHost + ":" + dbPort + "/");
+		bw.newLine();
+		bw.write("DriverType=org.gjt.mm.mysql.Driver");
+		bw.newLine();
+		bw.write("databaseSchema=" + dbSchema);
+		bw.newLine();
+		bw.write("databaseUsername=" + dbUsername);
+		bw.newLine();
+		bw.write("databasePassword=" + dbPassword);
+        bw.close();
 	}
 	
 	/**

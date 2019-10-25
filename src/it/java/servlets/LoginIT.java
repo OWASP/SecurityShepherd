@@ -2,6 +2,8 @@ package servlets;
 
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -33,6 +35,15 @@ public class LoginIT
 	public static void resetDatabase() 
 	{
 		TestProperties.setTestPropertiesFileDirectory(log);
+		
+		try {
+			TestProperties.createMysqlResource();
+		} catch (IOException e) {
+			String message = "Could not mysql resource file: " + e.toString();
+			log.fatal(message);
+			fail(message);
+		}
+		
 		try 
 		{
 			TestProperties.executeSql(log);
