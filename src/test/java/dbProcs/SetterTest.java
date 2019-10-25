@@ -2,6 +2,7 @@ package dbProcs;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,13 +33,22 @@ public class SetterTest
 	public static void resetDatabase() 
 	{
 		TestProperties.setTestPropertiesFileDirectory(log);
+		
+		try {
+			TestProperties.createMysqlResource();
+		} catch (IOException e) {
+			String message = "Could not mysql resource file: " + e.toString();
+			log.fatal(message);
+			fail(message);
+		}
+		
 		try 
 		{
 			TestProperties.executeSql(log);
 		} 
 		catch (InstallationException e) 
 		{
-			String message = new String("Could not create DB: " + e.toString());
+			String message = "Could not create DB: " + e.toString();
 			log.fatal(message);
 			fail(message);
 		}
