@@ -3,6 +3,7 @@ package testUtils;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -388,4 +389,22 @@ public class TestProperties
 		}
 		return result;
 	}
+	
+	/**
+	 * Create a mysql database properties file
+	 */
+	public static void createMysqlResource(String dbHost, Integer dbPort, String dbSchema, String dbUsername, String dbPassword) throws IOException
+	{
+		
+	}
+	
+	/**
+	 * Create a mysql database properties file
+	 * @throws IOException 
+	 */
+	public static void createMysqlResource() throws IOException
+	{
+		createMysqlResource("localhost", 3306, "core", "root", "");
+	}
+	
 }

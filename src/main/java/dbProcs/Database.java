@@ -88,7 +88,7 @@ public class Database {
 		Connection conn = null;
 
 		// Pull Driver and DB URL out of database.properties
-		String props = Constants.DBPROP;
+		String props = Constants.MYSQL_DB_PROP;
 
 		String connectionURL = "";
 		String driverType = "";
@@ -154,7 +154,7 @@ public class Database {
 
 		// Pull Driver and DB URL out of database.properties
 
-		String props = Constants.DBPROP;
+		String props = Constants.MYSQL_DB_PROP;
 
 		String connectionURL = "";
 		String driverType = "";
@@ -205,7 +205,7 @@ public class Database {
 			throws SQLException, FileNotFoundException {
 		Connection conn = null;
 
-		String props = Constants.DBPROP;
+		String props = Constants.MYSQL_DB_PROP;
 
 		String connectionURL = "";
 		String driverType = "";
@@ -249,7 +249,7 @@ public class Database {
 		Connection conn = null;
 
 		// Pull Driver and DB URL out of database.properties
-		String props = Constants.DBPROP;
+		String props = Constants.MYSQL_DB_PROP;
 
 		String connectionURL = "";
 		String driverType = "";

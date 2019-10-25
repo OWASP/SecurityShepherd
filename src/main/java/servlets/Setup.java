@@ -137,7 +137,7 @@ public class Setup extends HttpServlet {
 				htmlOutput += bundle.getString("generic.text.setup.connection.failed");
 			} else {
 				// Write the user's entered mysql database properties to file
-				Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+				Files.write(Paths.get(Constants.MYSQL_DB_PROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 				try {
 					if (dbOverride.equalsIgnoreCase("override")) {
 						executeSqlScript();
@@ -153,7 +153,7 @@ public class Setup extends HttpServlet {
 					success = true;
 				} catch (SQLException e) {
 					htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
-					FileUtils.deleteQuietly(new File(Constants.DBPROP));
+					FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 				}
 				// Clean up File as it is not needed anymore. Will Cause a new one to be
 				// generated next time too
@@ -162,19 +162,19 @@ public class Setup extends HttpServlet {
 				if (enableMongoChallenge.equalsIgnoreCase("enable")) {
 					if (!Validate.isValidPortNumber(mongodbPort)) {
 						htmlOutput = bundle.getString("generic.text.setup.error.valid.port");
-						FileUtils.deleteQuietly(new File(Constants.DBPROP));
+						FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 					} else {
 						Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(),
 								StandardOpenOption.CREATE);
 						if (MongoDatabase.getMongoDbConnection(null).listDatabaseNames() == null) {
 							htmlOutput = bundle.getString("generic.text.setup.connection.mongo.failed");
-							FileUtils.deleteQuietly(new File(Constants.DBPROP));
+							FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 						} else {
 							try {
 								executeMongoScript();
 							} catch (IOException e) {
 								htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
-								FileUtils.deleteQuietly(new File(Constants.DBPROP));
+								FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 							}
 						}
 					}
@@ -184,7 +184,7 @@ public class Setup extends HttpServlet {
 					openUnsafeLevels();
 					if (!executeCreateChallengeFile()) {
 						htmlOutput = bundle.getString("generic.text.setup.file.failed");
-						FileUtils.deleteQuietly(new File(Constants.DBPROP));
+						FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 					}
 				}
 			}
@@ -195,7 +195,7 @@ public class Setup extends HttpServlet {
 					+ bundle.getString("generic.text.setup.response.success") + "</h2><p>" + htmlOutput + " "
 					+ bundle.getString("generic.text.setup.response.success.redirecting") + "</p>";
 		} else {
-			FileUtils.deleteQuietly(new File(Constants.DBPROP));
+			FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 			htmlOutput = "<h2 class=\"title\" id=\"login_title\">"
 					+ bundle.getString("generic.text.setup.response.failed") + "</h2><p>" + htmlOutput + "</p>";
 		}
