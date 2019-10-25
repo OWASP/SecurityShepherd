@@ -39,7 +39,7 @@ public class LoginIT
 		} 
 		catch (InstallationException e) 
 		{
-			String message = new String("Could not create DB: " + e.toString());
+			String message = "Could not create DB: " + e.toString();
 			log.fatal(message);
 			fail(message);
 		}
