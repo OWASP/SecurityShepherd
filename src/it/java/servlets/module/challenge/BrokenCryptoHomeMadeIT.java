@@ -2,6 +2,7 @@ package servlets.module.challenge;
 
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -30,21 +31,30 @@ public class BrokenCryptoHomeMadeIT
     /**
    	 * Creates DB or Restores DB to Factory Defaults before running tests
    	 */
-   	@BeforeClass
-   	public static void resetDatabase() 
-   	{
-   		TestProperties.setTestPropertiesFileDirectory(log);
-   		try 
-   		{
-   			TestProperties.executeSql(log);
-   		} 
-   		catch (InstallationException e) 
-   		{
-   			String message = new String("Could not create DB: " + e.toString());
-   			log.fatal(message);
-   			fail(message);
-   		}
-   	}
+	@BeforeClass
+	public static void resetDatabase() 
+	{
+		TestProperties.setTestPropertiesFileDirectory(log);
+		
+		try {
+			TestProperties.createMysqlResource();
+		} catch (IOException e) {
+			String message = "Could not create mysql resource file: " + e.toString();
+			log.fatal(message);
+			fail(message);
+		}
+		
+		try 
+		{
+			TestProperties.executeSql(log);
+		} 
+		catch (InstallationException e) 
+		{
+			String message = "Could not create DB: " + e.toString();
+			log.fatal(message);
+			fail(message);
+		}
+	}
     
     @Before
 	public void setup()

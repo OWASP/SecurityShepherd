@@ -421,4 +421,13 @@ public class TestProperties
 		createMysqlResource("localhost", 3306, "core", "root", "");
 	}
 	
+	/**
+	 * Create a mysql database properties file
+	 * @throws IOException 
+	 */
+	public static void deleteMysqlResource()
+	{
+		FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+	}
+	
 }

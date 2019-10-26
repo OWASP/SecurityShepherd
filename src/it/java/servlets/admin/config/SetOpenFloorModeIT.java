@@ -2,6 +2,8 @@ package servlets.admin.config;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -29,13 +31,22 @@ public class SetOpenFloorModeIT
 	public static void resetDatabase() 
 	{
 		TestProperties.setTestPropertiesFileDirectory(log);
+		
+		try {
+			TestProperties.createMysqlResource();
+		} catch (IOException e) {
+			String message = "Could not create mysql resource file: " + e.toString();
+			log.fatal(message);
+			fail(message);
+		}
+		
 		try 
 		{
 			TestProperties.executeSql(log);
 		} 
 		catch (InstallationException e) 
 		{
-			String message = new String("Could not create DB: " + e.toString());
+			String message = "Could not create DB: " + e.toString();
 			log.fatal(message);
 			fail(message);
 		}

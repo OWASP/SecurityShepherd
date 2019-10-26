@@ -28,22 +28,30 @@ public class OpenAllModulesIT {
     /**
      * Sets up DB with levels and users to test with
      */
-    @BeforeClass
-    public static void readyDb()
-    {
-        testUtils.TestProperties.setTestPropertiesFileDirectory(log);
-        try
-        {
-            testUtils.TestProperties.executeSql(log);
-            log.debug("Creating - user: " + testUsers[0] + " password: " + testUsers[0] );
-            TestProperties.verifyTestAdmin(log, null, testUsers[0], testUsers[0]);
-            log.debug("Creating - user: " + testUsers[1] + " password: " + testUsers[1] );
-            TestProperties.verifyTestUser(log, null, testUsers[1], testUsers[0]);
-
-        }
-        catch (InstallationException e) { fail("DB could not be set up" + e.toString()); }
-        catch (Exception e) { fail(e.toString()); }
-    }
+	@BeforeClass
+	public static void resetDatabase() 
+	{
+		TestProperties.setTestPropertiesFileDirectory(log);
+		
+		try {
+			TestProperties.createMysqlResource();
+		} catch (IOException e) {
+			String message = "Could not create mysql resource file: " + e.toString();
+			log.fatal(message);
+			fail(message);
+		}
+		
+		try 
+		{
+			TestProperties.executeSql(log);
+		} 
+		catch (InstallationException e) 
+		{
+			String message = "Could not create DB: " + e.toString();
+			log.fatal(message);
+			fail(message);
+		}
+	}
 
     @Before
     public void setUp()

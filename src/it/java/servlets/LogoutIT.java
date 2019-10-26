@@ -37,7 +37,7 @@ public class LogoutIT
 		try {
 			TestProperties.createMysqlResource();
 		} catch (IOException e) {
-			String message = "Could not mysql resource file: " + e.toString();
+			String message = "Could not create mysql resource file: " + e.toString();
 			log.fatal(message);
 			fail(message);
 		}

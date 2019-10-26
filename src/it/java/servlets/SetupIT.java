@@ -65,8 +65,9 @@ public class SetupIT {
 			log.fatal(e.toString());
 			fail(e.toString());
 		}
-
-		Setup.isInstalled();
+		
+		TestProperties.deleteMysqlResource();
+		assertFalse(Setup.isInstalled());
 
 		String authData = "";
 		try {
