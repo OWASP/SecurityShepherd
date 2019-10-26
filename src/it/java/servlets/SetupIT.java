@@ -2,6 +2,7 @@ package servlets;
 
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,14 +50,13 @@ public class SetupIT {
 		log.debug("Setting Up Blank Request and Response");
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
-
 	}
 
 	@Test
-	public void testCoreCreation() {
-
+	public void testNoCoreDatabase() {
+		
 		int expectedResponseCode = 302;
-
+		
 		log.debug("Creating Setup Servlet Instance");
 		Setup servlet = new Setup();
 		try {
@@ -66,7 +66,14 @@ public class SetupIT {
 			fail(e.toString());
 		}
 		
-		TestProperties.deleteMysqlResource();
+		try {
+			TestProperties.createMysqlResource();
+		} catch (IOException e) {
+			String message = "Could not create mysql resource file: " + e.toString();
+			log.fatal(message);
+			fail(message);
+		}
+		
 		assertFalse(Setup.isInstalled());
 
 		String authData = "";
@@ -89,41 +96,92 @@ public class SetupIT {
 			log.fatal(message);
 			fail(message);
 		}
-		request.getSession().setAttribute("lang", lang);
+		/*
+		 * request.getSession().setAttribute("lang", lang);
+		 * 
+		 * request.addParameter("dbhost", "localhost"); request.addParameter("dbport",
+		 * "3306"); request.addParameter("dbuser", "root");
+		 * request.addParameter("dbpass", ""); request.addParameter("dbauth", authData);
+		 * 
+		 * log.debug("Running doPost"); try { servlet.doPost(request, response); } catch
+		 * (ServletException | IOException e) { e.printStackTrace();
+		 * log.fatal(e.toString()); fail(e.toString()); }
+		 * log.debug("doPost successful, reading response");
+		 * 
+		 * if(response.getStatus() != expectedResponseCode) { String
+		 * message="Login Servlet Returned " + response.getStatus() +
+		 * " Code. 302 Expected"; log.fatal(message); fail(message); } String location =
+		 * ""; try { location = response.getHeader("Location"); } catch
+		 * (NullPointerException e) { String message =
+		 * "Got invalid location from posting setup request: " + e.toString();
+		 * log.fatal(message); fail(message); }
+		 * 
+		 * if (!location.endsWith("login.jsp")) {
+		 * fail("Setup not Redirecting to login.jsp."); }
+		 */
 
-		request.addParameter("dbhost", "localhost");
-		request.addParameter("dbport", "3306");
-		request.addParameter("dbuser", "root");
-		request.addParameter("dbpass", "");
-		request.addParameter("dbauth", authData);
+	}
+	
+	@Test
+	public void testNoMysqlResource() {
 
-		log.debug("Running doPost");
+		int expectedResponseCode = 302;
+
+		log.debug("Creating Setup Servlet Instance");
+		Setup servlet = new Setup();
 		try {
-			servlet.doPost(request, response);
-		} catch (ServletException | IOException e) {
-			e.printStackTrace();
+			servlet.init(new MockServletConfig("Setup"));
+		} catch (ServletException e) {
 			log.fatal(e.toString());
 			fail(e.toString());
 		}
-		log.debug("doPost successful, reading response");
+		
+		TestProperties.deleteMysqlResource();
+		assertTrue(Setup.isInstalled());
 
-		if(response.getStatus() != expectedResponseCode) {
-			String message="Login Servlet Returned " + response.getStatus() + " Code. 302 Expected";
-			log.fatal(message);
-			fail(message);
-		}
-		String location = "";
+		String authData = "";
 		try {
-			location = response.getHeader("Location");
-		} catch (NullPointerException e) {
-			String message = "Got invalid location from posting setup request: " + e.toString();
+			authData = FileUtils.readFileToString(new File(Constants.SETUP_AUTH), StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			String message = "Error when loading auth file " + Constants.SETUP_AUTH + ". Exception message was " + e.toString();
 			log.fatal(message);
 			fail(message);
 		}
 
-		if (!location.endsWith("login.jsp")) {
-			fail("Setup not Redirecting to login.jsp.");
+		if (authData == null) {
+			String message = "Auth data loaded from " + Constants.SETUP_AUTH + " was null!";
+			log.fatal(message);
+			fail(message);
 		}
+
+		if (authData == "") {
+			String message = "Auth data loaded from " + Constants.SETUP_AUTH + " was empty!";
+			log.fatal(message);
+			fail(message);
+		}
+		/*
+		 * request.getSession().setAttribute("lang", lang);
+		 * 
+		 * request.addParameter("dbhost", "localhost"); request.addParameter("dbport",
+		 * "3306"); request.addParameter("dbuser", "root");
+		 * request.addParameter("dbpass", ""); request.addParameter("dbauth", authData);
+		 * 
+		 * log.debug("Running doPost"); try { servlet.doPost(request, response); } catch
+		 * (ServletException | IOException e) { e.printStackTrace();
+		 * log.fatal(e.toString()); fail(e.toString()); }
+		 * log.debug("doPost successful, reading response");
+		 * 
+		 * if(response.getStatus() != expectedResponseCode) { String
+		 * message="Login Servlet Returned " + response.getStatus() +
+		 * " Code. 302 Expected"; log.fatal(message); fail(message); } String location =
+		 * ""; try { location = response.getHeader("Location"); } catch
+		 * (NullPointerException e) { String message =
+		 * "Got invalid location from posting setup request: " + e.toString();
+		 * log.fatal(message); fail(message); }
+		 * 
+		 * if (!location.endsWith("login.jsp")) {
+		 * fail("Setup not Redirecting to login.jsp."); }
+		 */
 
 	}
 }
