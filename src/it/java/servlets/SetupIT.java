@@ -73,7 +73,9 @@ public class SetupIT {
 		try {
 			authData = FileUtils.readFileToString(new File(Constants.SETUP_AUTH), StandardCharsets.UTF_8);
 		} catch (IOException e) {
-			fail(e.toString());
+			String message = "Error when loading auth file " + Constants.SETUP_AUTH + ". Exception message was " + e.toString();
+			log.fatal(message);
+			fail(message);
 		}
 
 		if (authData == null) {
@@ -99,6 +101,7 @@ public class SetupIT {
 		try {
 			servlet.doPost(request, response);
 		} catch (ServletException | IOException e) {
+			e.printStackTrace();
 			log.fatal(e.toString());
 			fail(e.toString());
 		}
