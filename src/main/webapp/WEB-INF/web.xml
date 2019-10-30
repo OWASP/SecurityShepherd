@@ -14,8 +14,6 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
-
-
 	<error-page>
 		<error-code>403</error-code>
 		<location>/serverError.jsp</location>
@@ -1250,5 +1248,14 @@
 		<servlet-name>Setup</servlet-name>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
+<servlet>
+  <servlet-name>saml-meta</servlet-name>
+  <jsp-file>/saml/metadata.jsp</jsp-file>
+</servlet>
+<servlet-mapping>
+  <servlet-name>saml-meta</servlet-name>
+  <url-pattern>/saml/metadata.xml</url-pattern>
+</servlet-mapping>
+
 
 </web-app>
