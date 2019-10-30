@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mongodb.MongoClient;
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+
 import dbProcs.Constants;
 import dbProcs.Database;
 import dbProcs.FileInputProperties;
@@ -218,12 +220,17 @@ public class Setup extends HttpServlet {
 			// DB properties file not found, we're not installed
 			log.fatal("Database properties file not found, assuming not installed: " + e.toString());
 
-		} catch (SQLException e) {
-			// Some other database error occurred
+		} catch (CommunicationsException e) {
+			// Could not connect to database, but db props exist so we'll assume installed
+			// TODO: Display helpful error message to user
 			log.fatal("Cannot connect to database: " + e.toString());
 			isInstalled = true;
+			
+		} catch (SQLException e) {
+			// Some other database error occurred, bail out
+			log.fatal("Cannot connect to database: " + e.toString());
+			isInstalled = false;
 			throw new RuntimeException(e);
-
 		}
 
 		if (!isInstalled) {
