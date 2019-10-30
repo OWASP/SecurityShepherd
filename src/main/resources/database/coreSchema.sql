@@ -270,7 +270,7 @@ USE `core`;
 CREATE PROCEDURE `core`.`userFind` (IN theName VARCHAR(32))
 BEGIN
 COMMIT;
-SELECT userId, userName, userRole, badLoginCount, tempPassword, classIduserName, userPass, suspendedUntil FROM `users`
+SELECT userName, suspendedUntil FROM `users`
     WHERE userName = theName;
 END
 
