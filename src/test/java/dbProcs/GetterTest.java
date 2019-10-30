@@ -312,6 +312,38 @@ public class GetterTest
 	}	
 	
 	@Test
+	public void testAuthUserCorrectCredentialsLongPassword() 
+	{
+		String userName = new String("authWithGoodCreds");
+		String password = new String("goodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPassword");
+
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, password);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("PASS: Successfully signed in as " + userName);
+				return;
+			}
+			else
+			{
+				fail("Could not Authenticate as " + userName);
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
+	}
+	
+	@Test
 	public void testAuthUserCorrectLowerCaseCredentials() 
 	{
 		String userName = new String("authWithGoodCreds");
