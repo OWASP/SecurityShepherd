@@ -302,6 +302,39 @@ public class GetterTest
 	}	
 	
 	@Test
+	public void testAuthUserCorrectNonLatinCredentials() 
+	{
+		// Here is a very non-latin username
+		String userName = new String("NonLatinåäöÅÄÖǎ𝓫𝚌Ⴛḗ𝑓ᶃ我能玻璃မ္ယက္‌אذاसтьᚩᚾ");
+		String password = new String("goodPassword");
+
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, password);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("PASS: Successfully signed in as " + userName);
+				return;
+			}
+			else
+			{
+				fail("Could not Authenticate as " + userName);
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
+	}	
+	
+	@Test
 	public void testAuthUserCorrectCredentialsLongPassword() 
 	{
 		String userName = new String("authWithGoodCredsLongPass");
