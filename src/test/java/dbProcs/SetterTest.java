@@ -1164,12 +1164,8 @@ public class SetterTest
 				// If we're still here
 				log.fatal("No error when creating duplicate user " + userName);
 				fail("No error when creating duplicate user " + userName);
-			} catch (MySQLIntegrityConstraintViolationException e) {
-				log.debug("PASS: Could not add duplicate user " + userName);
 			} catch (SQLException e) {
-				String message = "SQL error when creating user " + userName + ": " + e.toString();
-				log.fatal(message);
-				fail(message);
+				log.debug("PASS: Could not add duplicate user " + userName);
 			} 
 
 		} else {
