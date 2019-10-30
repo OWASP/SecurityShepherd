@@ -315,7 +315,9 @@ public class GetterTest
 	public void testAuthUserCorrectCredentialsLongPassword() 
 	{
 		String userName = new String("authWithGoodCreds");
-		String password = new String("goodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPassword");
+		
+		// A 160 character password should work!
+		String password = new String("goodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgood");
 
 		try
 		{
