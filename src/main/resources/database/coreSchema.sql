@@ -156,22 +156,6 @@ ENGINE = InnoDB;
 
 SELECT "Creating Procedures" FROM DUAL;
 
--- -----------------------------------------------------
--- procedure authUser
--- -----------------------------------------------------
-
-USE `core`;
--- DELIMITER $$
-CREATE PROCEDURE `core`.`authUser` (IN theName VARCHAR(32), IN theHash VARCHAR(512))
-BEGIN
-DECLARE theDate DATETIME;
-COMMIT;
-SELECT NOW() FROM DUAL INTO theDate;
-SELECT userId, userName, userRole, badLoginCount, tempPassword, classId FROM `users`
-    WHERE userName = theName
-    AND userPass = SHA2(theHash, 512)
-    AND suspendedUntil < theDate ;
-END
 
 -- $$
 -- DELIMITER ;
@@ -291,7 +275,7 @@ USE `core`;
 CREATE PROCEDURE `core`.`userFind` (IN theName VARCHAR(32))
 BEGIN
 COMMIT;
-SELECT userName, suspendedUntil FROM `users`
+SELECT userId, userName, userRole, badLoginCount, tempPassword, classIduserName, userPass, suspendedUntil FROM `users`
     WHERE userName = theName;
 END
 
@@ -401,16 +385,15 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userPasswordChange` (IN theUserName VARCHAR(32), IN currentPassword VARCHAR(512), IN newPassword VARCHAR(512))
+CREATE PROCEDURE `core`.`userPasswordChange` (IN theUserName VARCHAR(32), IN newHash VARCHAR(512))
 BEGIN
 DECLARE theDate DATETIME;
 COMMIT;
 SELECT NOW() FROM DUAL INTO theDate;
 UPDATE users SET
-    userPass = SHA2(newPassword, 512),
+    userPass = newHash,
     tempPassword = FALSE
-    WHERE userPass = SHA2(currentPassword, 512)
-    AND userName = theUserName
+    WHERE userName = theUserName
     AND suspendedUntil < theDate;
 COMMIT;
 END
@@ -424,13 +407,13 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userPasswordChangeAdmin` (IN theUserId VARCHAR(64), IN newPassword VARCHAR(512))
+CREATE PROCEDURE `core`.`userPasswordChangeAdmin` (IN theUserId VARCHAR(64), IN newHash VARCHAR(512))
 BEGIN
 DECLARE theDate DATETIME;
 COMMIT;
 SELECT NOW() FROM DUAL INTO theDate;
 UPDATE users SET
-    userPass = SHA2(newPassword, 512),
+    userPass = newHash,
     tempPassword = TRUE
     WHERE userId = theUserId;
 COMMIT;

@@ -496,8 +496,20 @@ public class GetterTest
 			{
 				fail("Couldnt verify " + userName + " could authenticate at all");
 			}
-			Setter.updatePassword(applicationRoot, userName, password, newPassword);
 
+			Boolean result=false;
+			// First try changing password with the wrong password
+			result=Setter.updatePassword(applicationRoot, userName, password+"wrongPassword", newPassword);
+			
+			// That should fail
+			assertFalse(result);
+			
+			// Now change with the correct password
+			result=Setter.updatePassword(applicationRoot, userName, password, newPassword);
+
+			// That shoudl succeed
+			assertFalse(!result);
+			
 			// First test with new password
 			user = Getter.authUser(applicationRoot, userName, newPassword);
 			if(user == null || user[0].isEmpty())

@@ -1,6 +1,8 @@
 package dbProcs;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.CallableStatement;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +16,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.owasp.encoder.Encode;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import utils.ModulePlan;
 import utils.ScoreboardStatus;
 
@@ -72,12 +76,13 @@ public class Getter
 		log.debug("userName = "  + userName);
 
 		boolean userFound = false;
-		boolean goOn = false;
+		
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
 			//See if user Exists
-			CallableStatement callstmt = conn.prepareCall("call userFind(?)");
+			CallableStatement callstmt = conn.prepareCall("SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId FROM `users` WHERE userName = ?");
+ 
 			log.debug("Gathering userFind ResultSet");
 			callstmt.setString(1, userName);
 			ResultSet userFind = callstmt.executeQuery();
@@ -96,33 +101,22 @@ public class Getter
 			if(userFound)
 			{
 				//Authenticate User
-				callstmt = conn.prepareCall("call authUser(?, ?)");
-				log.debug("Gathering authUser ResultSet");
-				callstmt.setString(1, userName);
-				callstmt.setString(2, password);
-				ResultSet loginAttempt = callstmt.executeQuery();
-				log.debug("Opening Result Set from authUser");
-				try
-				{
-					loginAttempt.next();
-					goOn = true; //Valid password for user submitted
-				}
-				catch (SQLException e)
-				{
-					//... Outer Catch has preference to this one for some reason... This code is never reached!
-					// But I'll leave it here just in case. That includes the else block if goOn is false
-					log.debug("Incorrect Credentials");
-					goOn = false;
-				}
-				if(goOn)
-				{
+				
+				//Get the hashed password from db
+				Argon2 argon2 = Argon2Factory.create();
+				
+				String dbHash = userFind.getString(2);
+				
+				if (argon2.verify(dbHash, password.toCharArray()))
+				{				
+
 					//ResultSet Not Empty => Credentials Correct
 					result = new String[5];
-					result[0] = loginAttempt.getString(1); //Id
-					result[1] = loginAttempt.getString(2); //userName
-					result[2] = loginAttempt.getString(3); //role
-					result[4] = loginAttempt.getString(6); //classId
-					if (loginAttempt.getBoolean(5)) //Checking for temp password flag, if true, index View will prompt to change
+					result[0] = userFind.getString(1); //Id
+					result[1] = userFind.getString(2); //userName
+					result[2] = userFind.getString(3); //role
+					result[4] = userFind.getString(6); //classId
+					if (userFind.getBoolean(5)) //Checking for temp password flag, if true, index View will prompt to change
 						result[3] = "true";
 					else
 						result[3] = "false";
@@ -135,7 +129,7 @@ public class Getter
 					{
 						log.debug("User '" + userName + "' has logged in");
 						//Before finishing, check if user had a badlogin history, if so, Clear it
-						if(loginAttempt.getInt(4) > 0)
+						if(userFind.getInt(4) > 0)
 						{
 							log.debug("Clearing Bad Login History");
 							callstmt = conn.prepareCall("call userBadLoginReset(?)");
@@ -145,7 +139,8 @@ public class Getter
 						}
 					}
 					//User has logged in, or a Authentication Bypass was detected... You never know! Better safe than sorry
-					return result;
+					// TODO: will this close the db connection if we return here?
+					return result; 
 				}
 			}
 		}

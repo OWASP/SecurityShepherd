@@ -754,10 +754,103 @@ public class SetterTest
 		catch(Exception e)
 		{
 			log.fatal("Could not complete testUpdatePassword: " + e.toString());
-			fail("Could not complete testUpdatePassword");
+			fail("Could not complete testUpdatePassword" + e.toString());
 		}
 	}
 
+	@Test
+	public void testChangePassword() 
+	{
+		String userName = new String("authWithPwChange");
+		String password = new String("password");
+		String newPassword = new String("updatedPassword");
+
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, password);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, password);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("User " + userName + " exists. Checking if Auth Works with bad pass");
+				if(Getter.authUser(applicationRoot, userName, password+"wrongPassword") == null)
+				{
+					log.debug("PASS: Could not authenticate with bad pass for user " + userName);
+					return;
+				}
+				else
+				{
+					fail("Could Authenticate With Bad Pass for User " + userName);
+				}
+			}
+			else
+			{
+				fail("Couldnt verify " + userName + " could authenticate at all");
+			}
+
+			Boolean result=false;
+			// First try changing password with the wrong password
+			result=Setter.updatePassword(applicationRoot, userName, password+"wrongPassword", newPassword);
+			
+			// That should fail
+			assertFalse(result);
+			
+			// Now change with the correct password
+			result=Setter.updatePassword(applicationRoot, userName, password, newPassword);
+
+			// That should succeed
+			assertFalse(!result);
+			
+			// First test with new password
+			user = Getter.authUser(applicationRoot, userName, newPassword);
+			if(user == null || user[0].isEmpty())
+			{
+				String message ="Test Failed. User not found in DB after password change";
+				
+				log.fatal(message);
+				fail(message);
+				
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("User " + userName + " exists. Checking if Auth Works with old pass");
+				if(Getter.authUser(applicationRoot, userName, password) == null)
+				{
+					log.debug("PASS: Could not authenticate with old pass for user " + userName);
+					return;
+				}
+				else
+				{
+					fail("Could Authenticate With Old Pass for User " + userName);
+				}
+				
+				log.debug("User " + userName + " exists. Checking if Auth Works with bad pass");
+				if(Getter.authUser(applicationRoot, userName, newPassword+"wrongPassword") == null)
+				{
+					log.debug("PASS: Could not authenticate with bad pass for user " + userName);
+					return;
+				}
+				else
+				{
+					fail("Could Authenticate With Bad Pass for User " + userName);
+				}
+			}
+			else
+			{
+				fail("Couldnt verify " + userName + " could authenticate at all");
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
+	}
+	
 	@Test
 	public void testUpdatePasswordAdmin() 
 	{
@@ -1165,6 +1258,7 @@ public class SetterTest
 				log.fatal("No error when creating duplicate user " + userName);
 				fail("No error when creating duplicate user " + userName);
 			} catch (SQLException e) {
+				// TODO: We should be able to catch more specific exceptions here, but alas...
 				log.debug("PASS: Could not add duplicate user " + userName);
 			} 
 
