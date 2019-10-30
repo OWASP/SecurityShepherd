@@ -282,7 +282,7 @@ public class GetterTest
 	@Test
 	public void testAuthUserCorrectUpperCaseCredentials() 
 	{
-		String userName = new String("authWithGoodCreds");
+		String userName = new String("authWithGoodUpperCaseCreds");
 		String password = new String("goodPassword");
 
 		try
@@ -314,7 +314,7 @@ public class GetterTest
 	@Test
 	public void testAuthUserCorrectCredentialsLongPassword() 
 	{
-		String userName = new String("authWithGoodCreds");
+		String userName = new String("authWithGoodCredsLongPass");
 		
 		// A 160 character password should work!
 		String password = new String("goodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgood");
@@ -348,7 +348,7 @@ public class GetterTest
 	@Test
 	public void testAuthUserCorrectLowerCaseCredentials() 
 	{
-		String userName = new String("authWithGoodCreds");
+		String userName = new String("authWithGoodLowerCaseCreds");
 		String password = new String("goodPassword");
 
 		try
