@@ -277,7 +277,7 @@ public class GetterTest
 
 		try
 		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
@@ -310,7 +310,7 @@ public class GetterTest
 
 		try
 		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
@@ -333,6 +333,7 @@ public class GetterTest
 			fail("Could not create user " + userName);
 		}
 	}	
+	
 	@Test
 	public void testAuthUserCorrectNonLatinPassword() 
 	{
@@ -342,7 +343,7 @@ public class GetterTest
 
 		try
 		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
@@ -376,7 +377,7 @@ public class GetterTest
 
 		try
 		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
@@ -408,7 +409,7 @@ public class GetterTest
 
 		try
 		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
