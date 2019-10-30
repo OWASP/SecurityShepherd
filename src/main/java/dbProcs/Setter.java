@@ -703,10 +703,16 @@ public class Setter
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
+			log.debug("Hashing password");
+
+			Argon2 argon2 = Argon2Factory.create();
+
+			String newHash = argon2.hash(10, 65536, 1, newPassword.toCharArray());
+			
 			log.debug("Preparing userPasswordChangeAdmin call");
 			CallableStatement callstmnt = conn.prepareCall("call userPasswordChangeAdmin(?, ?)");
 			callstmnt.setString(1, userId);
-			callstmnt.setString(2, newPassword);
+			callstmnt.setString(2, newHash);
 			log.debug("Executing userPasswordChangeAdmin");
 			callstmnt.execute();
 			result = true;

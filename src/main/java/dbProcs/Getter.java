@@ -1,15 +1,20 @@
 package dbProcs;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.sql.CallableStatement;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -77,6 +82,7 @@ public class Getter
 		boolean userFound = false;
 		
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
 		try
 		{
 			//See if user Exists
@@ -104,18 +110,20 @@ public class Getter
 				//Get the hashed password from db
 				Argon2 argon2 = Argon2Factory.create();
 				
-				String dbHash = userFind.getString(2);
+				String dbHash = userFind.getString(3);
 				
 				if (argon2.verify(dbHash, password.toCharArray()))
 				{				
 
-					//ResultSet Not Empty => Credentials Correct
+					//Hash matches
+					log.debug("Hash matches");
+					
 					result = new String[5];
 					result[0] = userFind.getString(1); //Id
 					result[1] = userFind.getString(2); //userName
-					result[2] = userFind.getString(3); //role
-					result[4] = userFind.getString(6); //classId
-					if (userFind.getBoolean(5)) //Checking for temp password flag, if true, index View will prompt to change
+					result[2] = userFind.getString(4); //role
+					result[4] = userFind.getString(7); //classId
+					if (userFind.getBoolean(6)) //Checking for temp password flag, if true, index View will prompt to change
 						result[3] = "true";
 					else
 						result[3] = "false";
@@ -128,7 +136,7 @@ public class Getter
 					{
 						log.debug("User '" + userName + "' has logged in");
 						//Before finishing, check if user had a badlogin history, if so, Clear it
-						if(userFind.getInt(4) > 0)
+						if(userFind.getInt(5) > 0)
 						{
 							log.debug("Clearing Bad Login History");
 							callstmt = conn.prepareCall("call userBadLoginReset(?)");
@@ -140,6 +148,11 @@ public class Getter
 					//User has logged in, or a Authentication Bypass was detected... You never know! Better safe than sorry
 					// TODO: will this close the db connection if we return here?
 					return result; 
+				}
+				else
+				{
+					//Hash did not match
+					log.debug("Hash did not match");
 				}
 			}
 		}
