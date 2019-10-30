@@ -1,6 +1,5 @@
 package dbProcs;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.CallableStatement;
 
 import java.sql.Connection;

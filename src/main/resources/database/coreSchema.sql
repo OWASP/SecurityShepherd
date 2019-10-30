@@ -156,11 +156,6 @@ ENGINE = InnoDB;
 
 SELECT "Creating Procedures" FROM DUAL;
 
-
--- $$
--- DELIMITER ;
-;
-
 -- -----------------------------------------------------
 -- procedure userLock
 -- -----------------------------------------------------
@@ -346,7 +341,7 @@ BEGIN
                 theId,
                 theClassId,
                 theUserName,
-                SHA2(theUserPass, 512),
+                theUserPass,
                 theUserRole,
                 theUserAddress,
                 tempPass
