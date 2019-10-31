@@ -372,7 +372,7 @@ public class GetterTest
 	@Test
 	public void testAuthUserCorrectNonLatinUsername() {
 		// Here is a very non-latin username
-		String userName = new String("אذاस💩ᚩÅǎ𝓫𝚌Ⴛḗ𝑓ᶃ我璃မ္ယက္‌");
+		String userName = new String("אذاसÅǎ𝓫𝚌Ⴛḗ𝑓ᶃ我璃မ္ယက္‌");
 		String password = new String("goodPassword");
 
 		log.debug("Attempting to authenticate as " + userName);
@@ -399,6 +399,35 @@ public class GetterTest
 
 	}
 	
+	@Test
+	public void testAuthUserCorrectEmojiUsername() {
+		// Here is a very non-latin username
+		String userName = new String("😃😅😍💩👍‌");
+		String password = new String("goodEmojiPassword");
+
+		log.debug("Attempting to authenticate as " + userName);
+		String user[] = Getter.authUser(applicationRoot, userName, password);
+		if (user == null || user[0].isEmpty()) {
+			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			try {
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
+			} catch (SQLException e) {
+				String message = "Could not create user " + userName + ": " + e.toString();
+				log.debug(message);
+				throw new RuntimeException(e);
+			}
+			log.debug("Created user " + userName);
+			user = Getter.authUser(applicationRoot, userName, password);
+		}
+		if (user != null && !user[0].isEmpty()) {
+			log.debug("PASS: Successfully signed in as " + userName);
+			return;
+		} else {
+			log.debug("FAIL: Successfully signed in as " + userName);
+			fail("Could not Authenticate as " + userName);
+		}
+
+	}
 	@Test
 	public void testAuthUserCorrectNonLatinPassword() 
 	{

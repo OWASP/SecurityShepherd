@@ -127,7 +127,7 @@ public class Validate
 	   boolean result = true;
 	   try 
 	   {
-		  log.debug("About to crash");
+		  log.debug("Validating email");
 	      InternetAddress emailAddr = new InternetAddress(email);
 	      log.debug("Did we crash");
 	      emailAddr.validate();
@@ -165,7 +165,7 @@ public class Validate
 	public static boolean isValidUser(String userName, String passWord)
 	{
 		int userLength=userName.length();
-		int passLength=userName.length();
+		int passLength=passWord.length();
 		
 		boolean userOK=userLength > 2 && userLength <= 32;
 		boolean passOK=passLength > 7 && passLength <= 512;
