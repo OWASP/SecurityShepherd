@@ -18,7 +18,7 @@ jobs:
       language: java
       script: "mvn verify -DskipUTs=true -DmongoDocker -B"
       before_install:
-      	- sudo apt-get -y install libargon2-0
+        - sudo apt-get -y install libargon2-0
         - mvn -Pdocker validate
     - stage: deploy
       name: "Deploy to Dockerhub"
