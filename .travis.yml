@@ -7,10 +7,14 @@ jobs:
         - mvn clean install -Pdocker -DskipTests -B
         - docker-compose build
       services: docker
+      
     - stage: unit-test
       services: mysql
       language: java
       script: "mvn test -B"
+      before_install:
+        - sudo apt-get -y install libargon2-0
+        
     - stage: integration-test
       services: 
         - mysql
@@ -20,6 +24,7 @@ jobs:
       before_install:
         - sudo apt-get -y install libargon2-0
         - mvn -Pdocker validate
+        
     - stage: deploy
       name: "Deploy to Dockerhub"
       language: generic
@@ -32,6 +37,7 @@ jobs:
         - mvn install -Pdocker -DskipTests
         - docker-compose build web
       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
+      
 stages:
   - build
   - unit-test
