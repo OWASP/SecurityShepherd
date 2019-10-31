@@ -920,9 +920,10 @@ public class Setter
 		boolean result = false;
 		log.debug("*** Setter.userCreate ***");
 		log.debug("classId = " + classId);
-		log.debug("userName" + userName);
-		log.debug("userRole" + userRole);
-		log.debug("userAddress" + userAddress);
+		log.debug("userName = " + userName);
+		// We don't log passwords
+		log.debug("userRole = " + userRole);
+		log.debug("userAddress = " + userAddress);
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -932,6 +933,8 @@ public class Setter
 
 		    String hash = argon2.hash(10, 65536, 1, userPass.toCharArray());
 		    // TODO: wipe password from memory after hashing
+		    
+		    log.debug("Password hash is " + hash); //FIXME: don't leave this in production
 			
 			log.debug("Executing userCreate procedure on Database");
 			CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?)");
