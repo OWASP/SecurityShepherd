@@ -3,6 +3,7 @@ jobs:
     - stage: build
       language: java
       script:
+        - sudo apt-get -y install libargon2-0
         - mvn clean install -Pdocker -DskipTests -B
         - docker-compose build
       services: docker
@@ -17,6 +18,7 @@ jobs:
       language: java
       script: "mvn verify -DskipUTs=true -DmongoDocker -B"
       before_install:
+      	- sudo apt-get -y install libargon2-0
         - mvn -Pdocker validate
     - stage: deploy
       name: "Deploy to Dockerhub"
@@ -26,6 +28,7 @@ jobs:
       script: skip
       services: docker
       before_install:
+        - sudo apt-get -y install libargon2-0
         - mvn install -Pdocker -DskipTests
         - docker-compose build web
       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
