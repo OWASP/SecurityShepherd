@@ -5,7 +5,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `core` ;
-CREATE SCHEMA IF NOT EXISTS `core` DEFAULT CHARACTER SET latin1 ;
+CREATE SCHEMA IF NOT EXISTS `core` DEFAULT CHARACTER SET utf8 ;
 USE `core` ;
 
 SELECT "Creating Tables" FROM DUAL;
@@ -60,8 +60,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`modules` (
   `moduleType` VARCHAR(16) NOT NULL ,
   `moduleCategory` VARCHAR(64) NULL ,
   `moduleCategoryLangPointer` VARCHAR(64) NULL ,
-  `moduleResult` VARCHAR(256) NULL ,
-  `moduleHash` VARCHAR(256) NULL UNIQUE,
+  `moduleResult` VARCHAR(255) NULL ,
+  `moduleHash` VARCHAR(255) NULL UNIQUE,
   `moduleStatus` VARCHAR(16) NULL DEFAULT 'open' ,
   `incrementalRank` INT NULL DEFAULT 200,
   `scoreValue` INT NOT NULL DEFAULT 50 ,
@@ -142,7 +142,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`cheatsheet` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -636,7 +636,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`moduleCreate` (IN theModuleName VARCHAR(64), theModuleType VARCHAR(16), theModuleCategory VARCHAR(64), isHardcodedKey BOOLEAN, theModuleSolution VARCHAR(256))
+CREATE PROCEDURE `core`.`moduleCreate` (IN theModuleName VARCHAR(64), theModuleType VARCHAR(16), theModuleCategory VARCHAR(64), isHardcodedKey BOOLEAN, theModuleSolution VARCHAR(255))
 BEGIN
 DECLARE theId VARCHAR(64);
 DECLARE theDate DATETIME;
@@ -965,7 +965,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`moduleGetResultFromHash` (IN theHash VARCHAR(256))
+CREATE PROCEDURE `core`.`moduleGetResultFromHash` (IN theHash VARCHAR(255))
 BEGIN
 COMMIT;
 SELECT moduleResult FROM modules
@@ -1057,7 +1057,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`moduleGetIdFromHash` (IN theHash VARCHAR(256))
+CREATE PROCEDURE `core`.`moduleGetIdFromHash` (IN theHash VARCHAR(255))
 BEGIN
 COMMIT;
 SELECT moduleId FROM modules
@@ -1759,8 +1759,8 @@ CREATE  TABLE IF NOT EXISTS `backup`.`modules` (
   `moduleName` VARCHAR(64) NOT NULL ,
   `moduleType` VARCHAR(16) NOT NULL ,
   `moduleCategory` VARCHAR(64) NULL ,
-  `moduleResult` VARCHAR(256) NULL ,
-  `moduleHash` VARCHAR(256) NULL ,
+  `moduleResult` VARCHAR(255) NULL ,
+  `moduleHash` VARCHAR(255) NULL ,
   `incrementalRank` INT NULL ,
   `scoreValue` INT NOT NULL DEFAULT 50 ,
   `scoreBonus` INT NOT NULL DEFAULT 5 ,
