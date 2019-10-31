@@ -305,7 +305,7 @@ public class GetterTest
 	public void testAuthUserCorrectLongUsername() 
 	{
 		// Here is a pretty long username
-		String userName = new String("goodUsernameWhichHappensToJustBeSoveryLongYouWouldntBelieveItRightHereWeAddSomeMoreCharsToMakeItEvenMoreAnnoyinglyLongDealWithItDatabase");
+		String userName = new String("goodUsernameWithADecentOKLength1");
 		String password = new String("goodPassword");
 
 		try
@@ -325,6 +325,41 @@ public class GetterTest
 			else
 			{
 				fail("Could not Authenticate as " + userName);
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
+	}	
+	
+	@Test
+	public void testAuthUserBadLongUsername() 
+	{
+		// Here is a pretty long username
+		String userName = new String("badUsernameWithAnIncrediblyLongLengthWhicIsTooMuch");
+		String password = new String("goodPassword");
+
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, password);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, password);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("FAIL: Could create a bad username " + userName);
+				fail("FAIL: Could create a bad username " + userName);
+				
+			}
+			else
+			{
+				log.debug("PASS: Could create bad username " + userName);
+				return;
 			}
 		}
 		catch(Exception e)
