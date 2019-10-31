@@ -24,8 +24,6 @@ public class MongoDatabaseTest {
     private static MongoClient mongoClient;
     private static FongoDB fakeDB;
     private static String TEST_PATH = "mongo_challenge_test";
-    private MongoDatabase mongoDatabase;
-
     private static String TEST_DB = "shepherdTest";
 
     private static org.apache.log4j.Logger log = Logger.getLogger(MongoDatabaseTest.class);

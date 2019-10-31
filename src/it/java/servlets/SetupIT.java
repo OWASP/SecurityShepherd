@@ -7,34 +7,22 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.After;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.Constants;
-import dbProcs.Getter;
-import dbProcs.GetterTest;
-import dbProcs.Setter;
 import testUtils.TestProperties;
-import utils.InstallationException;
 
 public class SetupIT {
-	private static String lang = "en_GB";
 	private static org.apache.log4j.Logger log = Logger.getLogger(SetupIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
@@ -69,10 +57,8 @@ public class SetupIT {
 		FileUtils.write(new File(Constants.MYSQL_DB_PROP), MYSQL_DB_PROP.toString(), StandardCharsets.UTF_8);
 	}
 
-	@Test
+	@Ignore @Test
 	public void testNoCoreDatabase() {
-		
-		int expectedResponseCode = 302;
 		
 		log.debug("Creating Setup Servlet Instance");
 		Setup servlet = new Setup();
@@ -139,10 +125,8 @@ public class SetupIT {
 
 	}
 	
-	@Test
+	@Ignore @Test
 	public void testNoMysqlResource() {
-
-		int expectedResponseCode = 302;
 
 		log.debug("Creating Setup Servlet Instance");
 		Setup servlet = new Setup();

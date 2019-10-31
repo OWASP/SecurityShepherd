@@ -1833,10 +1833,9 @@ public class Getter
 	{
 		log.debug("*** Getter.getModulesJson ***");
 		JSONArray jsonOutput = new JSONArray();
-		String levelMasterList = new String();
+		new String();
 		Connection conn = Database.getCoreConnection();
-		//Getting Translations
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
+		ResourceBundle.getBundle("i18n.text", locale);
 		ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
 		try
 		{

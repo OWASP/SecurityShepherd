@@ -136,7 +136,7 @@ public class OpenAllModulesIT {
             assertTrue(responseBody.contains("All Modules are Now Open"));
 
 		} catch (NullPointerException e) {
-			fail("Null Pointer" + e.toString());
+			fail("Null Pointer: " + e.toString());
 		} catch (Exception e) {
 			fail(e.toString());
 		}
