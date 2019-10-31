@@ -1682,7 +1682,7 @@ COMMIT;
 
 -- Default admin user
 
-call userCreate(null, 'admin', 'password', 'admin', 'admin@securityShepherd.org', true);
+call userCreate(null, 'admin', '$argon2i$v=19$m=65536,t=10,p=1$7oxgR8QkdOd4tsHFieFKrw$eOy0TCxhY1bQIAbLQcLr9Sz2+4q9DhPTz1frsytgtTk', 'admin', 'admin@securityShepherd.org', true);
 
 -- Enable backup script
 

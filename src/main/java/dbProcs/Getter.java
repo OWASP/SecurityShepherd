@@ -108,13 +108,13 @@ public class Getter
 				//Authenticate User
 				
 				//Get the hashed password from db
+				log.debug("Hashing password");
 				Argon2 argon2 = Argon2Factory.create();
 				
 				String dbHash = userFind.getString(3);
 				
 				if (argon2.verify(dbHash, password.toCharArray()))
 				{				
-
 					//Hash matches
 					log.debug("Hash matches");
 					
@@ -152,7 +152,7 @@ public class Getter
 				else
 				{
 					//Hash did not match
-					log.debug("Hash did not match");
+					log.debug("Hash did not match, authentication failed");
 				}
 			}
 		}
