@@ -63,7 +63,7 @@ public class Setup extends HttpServlet {
 		String dbOverride = request.getParameter("dboverride");
 
 		String connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
-		dbOptions= "useUnicode=true&characterEncoding=utf-8";
+		dbOptions= "useUnicode=true&character_set_server=utf8mb4";
 		String driverType = "org.gjt.mm.mysql.Driver";
 
 		String mongodbHost = request.getParameter("mhost");
