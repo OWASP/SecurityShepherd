@@ -80,9 +80,6 @@ public class Getter
 		String[] result = null;
 		log.debug("$$$ Getter.authUser $$$");
 		
-		// We want case-insensitive usernames
-		userName=userName.toLowerCase();
-		
 		log.debug("userName = " + userName);
 
 		boolean userFound = false;
@@ -180,7 +177,7 @@ public class Getter
 					result[3] = "true";
 				else
 					result[3] = "false";
-				if (!result[1].equals(userName)) // If somehow this functionality has been compromised to sign in as
+				if (!result[1].equalsIgnoreCase(userName)) // If somehow this functionality has been compromised to sign in as
 													// other users, this will limit the expoitability. But the method is
 													// sql injection safe, so it should be ok
 				{

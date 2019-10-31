@@ -644,9 +644,7 @@ public class Setter
 		log.debug("*** Setter.updatePassword ***");
 		
 		boolean result = false;
-		
-		userName=userName.toLowerCase();
-		
+				
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Checking current password");
@@ -921,9 +919,6 @@ public class Setter
 	throws SQLException
 	{
 		boolean result = false;
-		
-		// We want case-insensitive usernames
-		userName=userName.toLowerCase();
 		
 		log.debug("*** Setter.userCreate ***");
 		log.debug("classId = " + classId);
