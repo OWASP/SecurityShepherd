@@ -60,8 +60,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`modules` (
   `moduleType` VARCHAR(16) NOT NULL ,
   `moduleCategory` VARCHAR(64) NULL ,
   `moduleCategoryLangPointer` VARCHAR(64) NULL ,
-  `moduleResult` VARCHAR(255) NULL ,
-  `moduleHash` VARCHAR(255) NULL UNIQUE,
+  `moduleResult` VARCHAR(191) NULL ,
+  `moduleHash` VARCHAR(191) NULL UNIQUE,
   `moduleStatus` VARCHAR(16) NULL DEFAULT 'open' ,
   `incrementalRank` INT NULL DEFAULT 200,
   `scoreValue` INT NOT NULL DEFAULT 50 ,
@@ -636,7 +636,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`moduleCreate` (IN theModuleName VARCHAR(64), theModuleType VARCHAR(16), theModuleCategory VARCHAR(64), isHardcodedKey BOOLEAN, theModuleSolution VARCHAR(255))
+CREATE PROCEDURE `core`.`moduleCreate` (IN theModuleName VARCHAR(64), theModuleType VARCHAR(16), theModuleCategory VARCHAR(64), isHardcodedKey BOOLEAN, theModuleSolution VARCHAR(191))
 BEGIN
 DECLARE theId VARCHAR(64);
 DECLARE theDate DATETIME;
@@ -965,7 +965,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`moduleGetResultFromHash` (IN theHash VARCHAR(255))
+CREATE PROCEDURE `core`.`moduleGetResultFromHash` (IN theHash VARCHAR(191))
 BEGIN
 COMMIT;
 SELECT moduleResult FROM modules
@@ -1057,7 +1057,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`moduleGetIdFromHash` (IN theHash VARCHAR(255))
+CREATE PROCEDURE `core`.`moduleGetIdFromHash` (IN theHash VARCHAR(191))
 BEGIN
 COMMIT;
 SELECT moduleId FROM modules
@@ -1558,7 +1558,7 @@ INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleT
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('a3f7ffd0f9c3d15564428d4df0b91bd927e4e5e4', 'Client Side Injection 1', 'client.side.injection.1', 'challenge', 'Mobile Injection', 'mobile.injection', 'SourHatsAndAngryCats', '8855c8bb9df4446a546414562eda550520e29f7a82400a317c579eb3a5a0a8ef', 'open', '138', '70', 1, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('cfbf7b915ee56508ad46ab79878f37fd9afe0d27', 'CSRF 4', 'csrf.4', 'challenge', 'CSRF', 'csrf', 'bb78f73c7efefec25e518c3a91d50d789b689c4515b453b6140a2e4e1823d203', '84118752e6cd78fecc3563ba2873d944aacb7b72f28693a23f9949ac310648b5', 'open', '139', '70', 0, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('1e3c02ad49fa9a9e396a3b268d7da8f0b647d8f9', 'Unintended Data Leakage 2', 'unintended.data.leakage.2', 'challenge', 'Mobile Data Leakage', 'mobile.data.leakage', '627884736748', '85ceae7ec397c8f4448be51c33a634194bf5da440282227c15954bbdfb54f0c7', 'open', '140', '70', 1, 0);
-INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('fcc2558e0a23b8420e173cf8029876cb887408d3', 'CSRF JSON', 'csrf.json', 'challenge', 'CSRF', 'csrf', 'f57f1377bd847a370d42e1410bfe48c9a3484e78d50e83f851b634fe77d41a6e', '2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb', 'open', '141', '70', 0, 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('fcc1918e0a23b8420e173cf8029876cb887408d3', 'CSRF JSON', 'csrf.json', 'challenge', 'CSRF', 'csrf', 'f57f1377bd847a370d42e1410bfe48c9a3484e78d50e83f851b634fe77d41a6e', '2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb', 'open', '141', '70', 0, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('ced925f8357a17cfe3225c6236df0f681b2447c4', 'Session Management Challenge 4', 'session.management.challenge.4', 'challenge', 'Session Management', 'session.management', '238a43b12dde07f39d14599a780ae90f87a23e', 'ec43ae137b8bf7abb9c85a87cf95c23f7fadcf08a092e05620c9968bd60fcba6', 'open', '145', '75', 0, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('182f519ef2add981c77a584380f41875edc65a56', 'Cross Site Scripting 4', 'cross.site.scripting.4', 'challenge', 'XSS', 'xss', '515e05137e023dd7828adc03f639c8b13752fbdffab2353ccec', '06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751', 'open', '146', '75', 0, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998', 'SQL Injection 4', 'sql.injection.4', 'challenge', 'Injection', 'injection', 'd316e80045d50bdf8ed49d48f130b4acf4a878c82faef34daff8eb1b98763b6f', '1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629', 'open', '147', '75', 1, 0);
@@ -1584,7 +1584,7 @@ INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleT
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('6158a695f20f9286d5f12ff3f4d42678f4a9740c', 'Security Misconfig Cookie Flag', 'security.misconfig.cookie.flag', 'challenge', 'Security Misconfigurations', 'security.misconfigurations', '92755de2ebb012e689caf8bfec629b1e237d23438427499b6bf0d7933f1b8215', 'c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4', 'open', '208', '110', 0, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('368491877a0318e9a774ba5d648c33cb0165ba1e', 'Session Management Challenge 7', 'session.management.challenge.7', 'challenge', 'Session Management', 'session.management', '9042eeaa8455f71deea31a5a32ae51e71477b1581c3612972902206ac51bb621', '269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80', 'open', '209', '110', 0, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('64070f5aec0593962a29a141110b9239d73cd7b3', 'SQL Injection 7', 'sql.injection.7', 'challenge', 'Injection', 'injection', '4637cae3d9b961fdff880d6d5ce4f69e91fe23db0aae7dcd4038e20ed8a287dc', '8c2dd7e9818e5c6a9f8562feefa002dc0e455f0e92c8a46ab0cf519b1547eced', 'open', '210', '110', 0, 0);
-INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('145111e80400e4fd48bd3aa5aca382e9c5640793', 'Insecure Cryptographic Storage Challenge 4', 'insecure.cryptographic.storage.challenge.4', 'challenge', 'Insecure Cryptographic Storage', 'insecure.cryptographic.storage', '50980917266ce6ec07471f49b1a046ca6a5034eb9261fb44c3ffc4b16931255c', 'b927fc4d8c9f70a78f8b6fc46a0cc18533a88b2363054a1f391fe855954d12f9', 'open', '211', '115', 0, 0);
+INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('145111e80400e4fd48bd3aa5aca382e9c5640793', 'Insecure Cryptographic Storage Challenge 4', 'insecure.cryptographic.storage.challenge.4', 'challenge', 'Insecure Cryptographic Storage', 'insecure.cryptographic.storage', '50980917266ce6ec07471f49b1a046ca6a5034eb9261fb44c3ffc4b16931191c', 'b927fc4d8c9f70a78f8b6fc46a0cc18533a88b2363054a1f391fe855954d12f9', 'open', '211', '115', 0, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('7153290d128cfdef5f40742dbaeb129a36ac2340', 'Session Management Challenge 8', 'session.management.challenge.8', 'challenge', 'Session Management', 'session.management', '11d84b0ad628bb6e99e0640ff1791a29a1938609829ef5bdccee92b2bccd2bcd', '714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54705bb1ea4316334', 'open', '215', '115', 0, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5', 'CSRF 7', 'csrf.7', 'challenge', 'CSRF', 'csrf', '849e1efbb0c1e870d17d32a3e1b18a8836514619146521fbec6623fce67b73e8', '7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3', 'open', '235', '120', 0, 0);
 INSERT INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('f02ce6bcd0a822d245433533997eaf44379065f4', 'Insecure Cryptographic Storage Home Made Key', 'insecure.cryptographic.storage.home.made.key', 'challenge', 'Insecure Cryptographic Storage', 'insecure.cryptographic.storage', '59A8D9A8020C61B3D76A600F94AJCECEABEDD44DF26874BD070BD07D', '9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4', 'open', '240', '140', 0, 0);
@@ -1667,7 +1667,7 @@ CALL cheatSheetCreate('6be5de81223cc1b38b6e427cc44f8b6a28d2bc96', '6be5de81223cc
 CALL cheatSheetCreate('3b14ca3c8f9b90c9b2c8cd1fba9fa67add1272a3', '3b14ca3c8f9b90c9b2c8cd1fba9fa67add1272a3.solution');
 CALL cheatSheetCreate('b9d82aa7b46ddaddb6acfe470452a8362136a31e', 'b9d82aa7b46ddaddb6acfe470452a8362136a31e.solution');
 CALL cheatSheetCreate('bf847c4a8153d487d6ec36f4fca9b77749597c64', 'bf847c4a8153d487d6ec36f4fca9b77749597c64.solution');
-CALL cheatSheetCreate('fcc2558e0a23b8420e173cf8029876cb887408d3', 'fcc2558e0a23b8420e173cf8029876cb887408d3.solution');
+CALL cheatSheetCreate('fcc1918e0a23b8420e173cf8029876cb887408d3', 'fcc1918e0a23b8420e173cf8029876cb887408d3.solution');
 CALL cheatSheetCreate('6158a695f20f9286d5f12ff3f4d42678f4a9740c', '6158a695f20f9286d5f12ff3f4d42678f4a9740c.solution');
 CALL cheatSheetCreate('de626470273c01388629e5a56ac6f17e2eef957b', 'de626470273c01388629e5a56ac6f17e2eef957b.solution');
 CALL cheatSheetCreate('dc89383763c68cba0aaa1c6f3fd4c17e9d49a805', 'dc89383763c68cba0aaa1c6f3fd4c17e9d49a805.solution');
@@ -1759,8 +1759,8 @@ CREATE  TABLE IF NOT EXISTS `backup`.`modules` (
   `moduleName` VARCHAR(64) NOT NULL ,
   `moduleType` VARCHAR(16) NOT NULL ,
   `moduleCategory` VARCHAR(64) NULL ,
-  `moduleResult` VARCHAR(255) NULL ,
-  `moduleHash` VARCHAR(255) NULL ,
+  `moduleResult` VARCHAR(191) NULL ,
+  `moduleHash` VARCHAR(191) NULL ,
   `incrementalRank` INT NULL ,
   `scoreValue` INT NOT NULL DEFAULT 50 ,
   `scoreBonus` INT NOT NULL DEFAULT 5 ,
