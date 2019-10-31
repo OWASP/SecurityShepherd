@@ -345,8 +345,7 @@ public class Database {
 		try {
 			
 			try {
-				connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
-				
+				connectionURL += FileInputProperties.readfile(props, "databaseConnectionURL");
 				username = FileInputProperties.readfile(props, "databaseUsername");
 				password = FileInputProperties.readfile(props, "databasePassword");
 			} catch (PropertyNotFoundException e) {
