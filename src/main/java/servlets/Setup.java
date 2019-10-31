@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
 
 import servlets.module.lesson.XxeLesson;
 import utils.InstallationException;
+import utils.PropertyNotFoundException;
 import utils.Validate;
 
 public class Setup extends HttpServlet {
@@ -58,16 +59,24 @@ public class Setup extends HttpServlet {
 		String dbUser = request.getParameter("dbuser");
 		String dbPass = request.getParameter("dbpass");
 		String dbAuth = request.getParameter("dbauth");
+		String dbOptions = "";
 		String dbOverride = request.getParameter("dboverride");
 
 		String connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
+		dbOptions= "useUnicode=true&characterEncoding=utf-8";
 		String driverType = "org.gjt.mm.mysql.Driver";
 
 		String mongodbHost = request.getParameter("mhost");
 		String mongodbPort = request.getParameter("mport");
 		String nosqlprops = new File(Database.class.getResource("/challenges/NoSqlInjection1.properties").getFile())
 				.getAbsolutePath();
-		String mongodbName = FileInputProperties.readfile(nosqlprops, "databaseName");
+		String mongodbName;
+		try {
+			mongodbName = FileInputProperties.readfile(nosqlprops, "databaseName");
+		} catch (PropertyNotFoundException e) {
+			log.fatal("Could not find requested parameter in props file: " + e.toString());
+			throw new RuntimeException(e);
+		}
 		String auth = "";
 
 		String enableMongoChallenge = request.getParameter("enableMongoChallenge");
@@ -78,6 +87,8 @@ public class Setup extends HttpServlet {
 		dbProp.append("databaseConnectionURL=" + connectionURL);
 		dbProp.append("\n");
 		dbProp.append("DriverType=" + driverType);
+		dbProp.append("\n");
+		dbProp.append("databaseOptions=" + dbOptions);
 		dbProp.append("\n");
 		dbProp.append("databaseSchema=core");
 		dbProp.append("\n");
@@ -125,7 +136,7 @@ public class Setup extends HttpServlet {
 			// Test the user's entered database properties
 			Boolean connectionSuccess = false;
 			try {
-				Connection conn = Database.getConnection(driverType, connectionURL, dbUser, dbPass);
+				Connection conn = Database.getConnection(driverType, connectionURL, dbOptions, dbUser, dbPass);
 				Database.closeConnection(conn);
 				connectionSuccess = true;
 			} catch (SQLException e) {

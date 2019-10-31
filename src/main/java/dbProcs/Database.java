@@ -9,6 +9,8 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import utils.PropertyNotFoundException;
+
 /**
  * Used to create database connections using the FileInputProperties.readfile
  * method to gather property information Initiated by Getter.java, Setter.java
@@ -40,13 +42,18 @@ public class Database {
 	 * @param conn The connection to close
 	 * @throws SQLException
 	 */
-	public static Connection getConnection(String driverType, String connectionURL, String dbUsername,
+	public static Connection getConnection(String driverType, String connectionURL, String dbOptions, String dbUsername,
 			String dbPassword) throws SQLException {
 
 		try {
 			Class.forName(driverType).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
+		}
+		
+		if (dbOptions.length() > 0)
+		{
+			connectionURL += "?" + dbOptions;
 		}
 
 		Connection conn = DriverManager.getConnection(connectionURL, dbUsername, dbPassword);
@@ -92,6 +99,7 @@ public class Database {
 
 		String connectionURL = "";
 		String driverType = "";
+		String dbOptions = "";
 		String username = "";
 		String password = "";
 
@@ -100,9 +108,13 @@ public class Database {
 			driverType = FileInputProperties.readfile(props, "DriverType");
 		} catch (FileNotFoundException e) {
 			// db props file doesn't exist
-			// throw e;
+			log.fatal("Did not find db properties file!");
 			throw new RuntimeException(e);
 		} catch (IOException e) {
+			
+			throw new RuntimeException(e);
+		} catch (PropertyNotFoundException e) {
+			// props file didn't contain this property
 			throw new RuntimeException(e);
 		}
 
@@ -113,9 +125,25 @@ public class Database {
 		log.debug("Level Properties File = " + path + ".properties");
 		// Add DB Schema to the end of the connectionURL
 		try {
-			connectionURL += FileInputProperties.readfile(props, "databaseConnectionURL");
-			username = FileInputProperties.readfile(props, "databaseUsername");
-			password = FileInputProperties.readfile(props, "databasePassword");
+			try {
+				connectionURL += FileInputProperties.readfile(props, "databaseConnectionURL");
+				username = FileInputProperties.readfile(props, "databaseUsername");
+				password = FileInputProperties.readfile(props, "databasePassword");
+			} catch (PropertyNotFoundException e) {
+				// props file didn't contain this property
+				log.fatal("Did not find db properties file!");
+
+				throw new RuntimeException(e);
+			}
+
+			try {
+				dbOptions = FileInputProperties.readfile(props, "databaseOptions");
+			} catch (PropertyNotFoundException e) {
+				// TODO Auto-generated catch block
+				log.debug("Did not find database options, defaulting to empty");
+
+				dbOptions="";
+			}
 		} catch (FileNotFoundException e) {
 			// challenge db props file doesn't exist
 			// throw e;
@@ -123,11 +151,13 @@ public class Database {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		
+		
 
 		// log.debug("Connection URL: " + connectionURL);
 
 		try {
-			conn = getConnection(driverType, connectionURL, username, password);
+			conn = getConnection(driverType, connectionURL, dbOptions, username, password);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -158,28 +188,44 @@ public class Database {
 
 		String connectionURL = "";
 		String driverType = "";
+		String dbOptions = "";
 		String username = "";
 		String password = "";
 
 		try {
-			connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
-			connectionURL += FileInputProperties.readfile(props, "databaseSchema");
-			driverType = FileInputProperties.readfile(props, "DriverType");
-			username = FileInputProperties.readfile(props, "databaseUsername");
-			password = FileInputProperties.readfile(props, "databasePassword");
 
+			try {
+				connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
+				connectionURL += FileInputProperties.readfile(props, "databaseSchema");
+				
+				driverType = FileInputProperties.readfile(props, "DriverType");
+				username = FileInputProperties.readfile(props, "databaseUsername");
+				password = FileInputProperties.readfile(props, "databasePassword");
+			} catch (PropertyNotFoundException e) {
+				log.fatal("Could not find requested parameter in props file: " + e.toString());
+				throw new RuntimeException(e);
+				
+			}
+
+			try {
+				dbOptions = FileInputProperties.readfile(props, "databaseOptions");
+			} catch (PropertyNotFoundException e) {
+				log.debug("Did not find database options, defaulting to empty");
+				dbOptions="";
+			}
+			
 		} catch (FileNotFoundException e) {
 			// db props file doesn't exist
-			
+			log.fatal("Could not find db props file!");
 			throw new RuntimeException(e);
-
 			
 		} catch (IOException e) {
+			log.fatal("Could not open db props file!");
 			throw new RuntimeException(e);
 		}
 
 		try {
-			conn = getConnection(driverType, connectionURL, username, password);
+			conn = getConnection(driverType, connectionURL, dbOptions, username, password);
 		} catch (SQLException e) {
 
 			throw new RuntimeException(e);
@@ -209,15 +255,29 @@ public class Database {
 
 		String connectionURL = "";
 		String driverType = "";
+		String dbOptions = "";
 		String username = "";
 		String password = "";
 
 		try {
 			
-			connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
-			driverType = FileInputProperties.readfile(props, "DriverType");
-			username = FileInputProperties.readfile(props, "databaseUsername");
-			password = FileInputProperties.readfile(props, "databasePassword");
+			try {
+				connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
+				driverType = FileInputProperties.readfile(props, "DriverType");
+				
+				username = FileInputProperties.readfile(props, "databaseUsername");
+				password = FileInputProperties.readfile(props, "databasePassword");
+			} catch (PropertyNotFoundException e) {
+				log.fatal("Could not find requested parameter in props file: " + e.toString());
+				throw new RuntimeException(e);
+			}
+
+			try {
+				dbOptions = FileInputProperties.readfile(props, "databaseOptions");
+			} catch (PropertyNotFoundException e) {
+				log.debug("Did not find database options, defaulting to empty");
+				dbOptions="";
+			}
 
 		} catch (FileNotFoundException e) {
 			// db props file doesn't exist
@@ -227,10 +287,14 @@ public class Database {
 		}
 
 		if (allowMulti) {
-			connectionURL += "?allowMultiQueries=yes";
+			if (dbOptions.length() > 0)
+			{
+				dbOptions += "&";
+			}
+			dbOptions += "allowMultiQueries=yes";
 		}
 
-		conn = getConnection(driverType, connectionURL, username, password);
+		conn = getConnection(driverType, connectionURL, dbOptions, username, password);
 
 		return conn;
 	}
@@ -257,8 +321,16 @@ public class Database {
 		String password = "";
 
 		try {
-			driverType = FileInputProperties.readfile(props, "DriverType");
-			connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
+
+
+			try {
+				connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
+				driverType = FileInputProperties.readfile(props, "DriverType");
+
+			} catch (PropertyNotFoundException e) {
+				log.fatal("Could not find requested parameter in props file: " + e.toString());
+				throw new RuntimeException(e);
+			}
 
 		} catch (FileNotFoundException e) {
 			// db props file doesn't exist
@@ -271,9 +343,17 @@ public class Database {
 		props = ApplicationRoot + "/WEB-INF/classes/lessons/SqlInjLesson.properties";
 
 		try {
-			connectionURL += FileInputProperties.readfile(props, "databaseConnectionURL");
-			username = FileInputProperties.readfile(props, "databaseUsername");
-			password = FileInputProperties.readfile(props, "databasePassword");
+			
+			try {
+				connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
+				
+				username = FileInputProperties.readfile(props, "databaseUsername");
+				password = FileInputProperties.readfile(props, "databasePassword");
+			} catch (PropertyNotFoundException e) {
+				log.fatal("Could not find requested parameter in props file: " + e.toString());
+				throw new RuntimeException(e);
+			}
+			
 
 		} catch (FileNotFoundException e) {
 			// sql injection lesson file does not exist
@@ -282,7 +362,7 @@ public class Database {
 			throw new RuntimeException(e);
 		}
 
-		conn = getConnection(driverType, connectionURL, username, password);
+		conn = getConnection(driverType, connectionURL, "", username, password);
 
 		return conn;
 	}
