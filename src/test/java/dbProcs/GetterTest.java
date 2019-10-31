@@ -305,7 +305,7 @@ public class GetterTest
 	public void testAuthUserCorrectLongUsername() 
 	{
 		// Here is a pretty long username
-		String userName = new String("goodUsernameWithADecentOKLength1");
+		String userName = new String("göödUsernämeWithÅDecentOKLengthÖ");
 		String password = new String("goodPassword");
 
 		try
