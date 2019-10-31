@@ -1,4 +1,7 @@
 jobs:
+  # We need ubuntu bionic because libargon2-0 does not exist before 18.04
+  dist: bionic
+  
   include:
     - stage: build
       language: java
