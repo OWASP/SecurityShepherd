@@ -370,37 +370,34 @@ public class GetterTest
 	}	
 	
 	@Test
-	public void testAuthUserCorrectNonLatinUsername() 
-	{
+	public void testAuthUserCorrectNonLatinUsername() {
 		// Here is a very non-latin username
 		String userName = new String("אذاसтьᚩÅÄÖǎ𝓫𝚌Ⴛḗ𝑓ᶃ我能玻璃မ္ယက္‌");
 		String password = new String("goodPassword");
 
-		try
-		{
-			String user[] = Getter.authUser(applicationRoot, userName, password);
-			if(user == null || user[0].isEmpty())
-			{
-				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
-				Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
-				user = Getter.authUser(applicationRoot, userName, password);
+		log.debug("Attempting to authenticate as " + userName);
+		String user[] = Getter.authUser(applicationRoot, userName, password);
+		if (user == null || user[0].isEmpty()) {
+			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			try {
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
+			} catch (SQLException e) {
+				String message = "Could not create user " + userName + ": " + e.toString();
+				log.debug(message);
+				throw new RuntimeException(e);
 			}
-			if(user != null && !user[0].isEmpty())
-			{
-				log.debug("PASS: Successfully signed in as " + userName);
-				return;
-			}
-			else
-			{
-				fail("Could not Authenticate as " + userName);
-			}
+			log.debug("Created user " + userName);
+			user = Getter.authUser(applicationRoot, userName, password);
 		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Create user: " + e.toString());
-			fail("Could not create user " + userName);
+		if (user != null && !user[0].isEmpty()) {
+			log.debug("PASS: Successfully signed in as " + userName);
+			return;
+		} else {
+			log.debug("FAIL: Successfully signed in as " + userName);
+			fail("Could not Authenticate as " + userName);
 		}
-	}	
+
+	}
 	
 	@Test
 	public void testAuthUserCorrectNonLatinPassword() 
