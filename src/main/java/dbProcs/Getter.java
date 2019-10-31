@@ -6,10 +6,13 @@ import java.nio.charset.Charset;
 import java.sql.CallableStatement;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -76,6 +79,10 @@ public class Getter
 	public static String[] authUser(String ApplicationRoot, String userName, String password) {
 		String[] result = null;
 		log.debug("$$$ Getter.authUser $$$");
+		
+		// We want case-insensitive usernames
+		userName=userName.toLowerCase();
+		
 		log.debug("userName = " + userName);
 
 		boolean userFound = false;
@@ -87,7 +94,7 @@ public class Getter
 		CallableStatement callstmt;
 		try {
 			callstmt = conn.prepareCall(
-					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId FROM `users` WHERE userName = ?");
+					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil FROM `users` WHERE userName = ?");
 		} catch (SQLException e) {
 			log.fatal("Could not retrieve users from database: " + e.toString());
 			throw new RuntimeException(e);
@@ -145,20 +152,32 @@ public class Getter
 				result = new String[5];
 				boolean isTempPassword;
 				int badLoginCount;
+				
+				Timestamp suspendedUntil;
+
 				try {
 					result[0] = userFind.getString(1);
 					result[1] = userFind.getString(2); // userName
 					result[2] = userFind.getString(4); // role
-					result[4] = userFind.getString(7); // classId
-					
-					isTempPassword = userFind.getBoolean(6);
-					
 					badLoginCount=userFind.getInt(5);
+					isTempPassword = userFind.getBoolean(6);
+					result[4] = userFind.getString(7); // classId
+					suspendedUntil = userFind.getTimestamp(8);
 				} catch (SQLException e) {
 					log.fatal("Could not retrieve auth data from db: " + e.toString());
 					throw new RuntimeException(e);
-				} // Id
+				} 
 
+				// Get current system time
+		        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+				if (suspendedUntil.after(currentTime))
+				{
+					// User is suspended
+					result = null;
+					return result;
+				}
+				
 				if (isTempPassword) // Checking for temp password flag, if true, index View will prompt to
 											// change
 					result[3] = "true";

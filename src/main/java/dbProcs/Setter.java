@@ -918,6 +918,10 @@ public class Setter
 	throws SQLException
 	{
 		boolean result = false;
+		
+		// We want case-insensitive usernames
+		userName=userName.toLowerCase();
+		
 		log.debug("*** Setter.userCreate ***");
 		log.debug("classId = " + classId);
 		log.debug("userName = " + userName);
