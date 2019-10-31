@@ -1,7 +1,5 @@
 package utils;
 
-import org.apache.log4j.Logger;
-
 /**
  * Scoreboard management class
  * @author Mark Denihan

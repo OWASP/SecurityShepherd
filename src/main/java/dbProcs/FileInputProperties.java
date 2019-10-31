@@ -11,6 +11,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import utils.PropertyNotFoundException;
+
 /** 
  * Locates the database Properties File for Database manipulation methods. This file contains the application sign on credentials for the database.	
  * <br/><br/>
@@ -32,6 +34,7 @@ import org.apache.log4j.Logger;
  */
 public class FileInputProperties 
 {
+	
 	private static org.apache.log4j.Logger log = Logger.getLogger(FileInputProperties.class);
 	
 	/**
@@ -41,14 +44,15 @@ public class FileInputProperties
 	 * @return The value of the specified property to be found
 	 * @throws FileNotFoundException TODO
 	 * @throws IOException TODO
+	 * @throws PropertyNotFoundException 
 	 */
 	@SuppressWarnings("deprecation")
-	public static String readfile(String filename, String property) throws FileNotFoundException, IOException 
+	public static String readfile(String filename, String property) throws FileNotFoundException, IOException, PropertyNotFoundException 
 	{
 		//log.debug("Debug: Properties filename: "+filename);
 		File file = new File(filename);
 		String temp = "";
-		String result = "NO RESULT";
+		String result = "";
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
 		DataInputStream dis = null;
@@ -66,13 +70,15 @@ public class FileInputProperties
 				bool = true;
 			}
 		}
-		if (!bool) {
-			log.debug("Debug: Property not found: " + property);
-		}
-		// TODO: Close these upon exception
+
 		fis.close();
 		bis.close();
 		dis.close();
+		
+		if (!bool) {
+			log.debug("Debug: Property not found: " + property);
+			throw new PropertyNotFoundException("Property " + property + " not found");
+		}
 
 		return result;
 	}

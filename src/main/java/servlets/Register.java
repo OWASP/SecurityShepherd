@@ -73,6 +73,8 @@ public class Register extends HttpServlet
 				String ApplicationRoot = getServletContext().getRealPath("");
 				log.debug("Servlet root = " + ApplicationRoot );
 				
+				request.setCharacterEncoding("UTF-8");
+				
 				log.debug("Ensuring not a CSRF");
 				String paramToken = (String)request.getParameter("csrfToken");
 				String sessToken = (String)ses.getAttribute("csrfToken");

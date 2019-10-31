@@ -752,9 +752,12 @@ public class SetterTest
 					{
 						fail("Could Not Auth With New Pass");
 					}
-					else
+
+					log.debug("Also attempting auth with old pass: " + currentPass);
+					auth = Getter.authUser(applicationRoot, userName, currentPass);
+					if(auth != null)
 					{
-						return; //PASS: Authenticated With New Pass
+						fail("Could auth with old password!");
 					}
 				}
 			}
@@ -762,10 +765,10 @@ public class SetterTest
 		catch(Exception e)
 		{
 			log.fatal("Could not complete testUpdatePassword: " + e.toString());
-			fail("Could not complete testUpdatePassword");
+			fail("Could not complete testUpdatePassword" + e.toString());
 		}
 	}
-
+	
 	@Test
 	public void testUpdatePasswordAdmin() 
 	{
@@ -1145,4 +1148,42 @@ public class SetterTest
 			fail("Could not Complete testUserDelete because DB Error");
 		}
 	}
+
+	@Test
+	public void testCreateDuplicateUser() {
+		String userName = new String("duplicateUser");
+
+		String user[] = Getter.authUser(applicationRoot, userName, userName);
+		if (user == null || user[0].isEmpty()) {
+			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			try {
+				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
+			} catch (SQLException e) {
+				String message = "SQL error when creating user " + userName + ": " + e.toString();
+				log.fatal(message);
+				fail(message);
+			}
+			user = Getter.authUser(applicationRoot, userName, userName);
+		}
+		if (user != null && !user[0].isEmpty()) {
+			log.debug("User " + userName + " exists. Checking what happens if duplicate user is added");
+			try {
+
+				// Should fail here
+				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
+
+				// If we're still here
+				log.fatal("No error when creating duplicate user " + userName);
+				fail("No error when creating duplicate user " + userName);
+			} catch (SQLException e) {
+				// TODO: We should be able to catch more specific exceptions here, but alas...
+				log.debug("PASS: Could not add duplicate user " + userName);
+			} 
+
+		} else {
+			fail("Couldnt verify " + userName + " could authenticate at all");
+		}
+
+	}
+
 }

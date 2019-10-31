@@ -18,6 +18,7 @@ import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import testUtils.TestProperties;
 import utils.InstallationException;
@@ -287,12 +288,171 @@ public class GetterTest
 
 		try
 		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
 				Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
 				user = Getter.authUser(applicationRoot, userName.toUpperCase(), password);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("PASS: Successfully signed in as " + userName);
+				return;
+			}
+			else
+			{
+				fail("Could not Authenticate as " + userName);
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
+	}	
+	
+	@Test
+	public void testAuthUserCorrectLongUsername() 
+	{
+		// Here is a pretty long username
+		String userName = new String("göödUsernämeWithÅDecentOKLengthÖ");
+		String password = new String("goodPassword");
+
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, password);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, password);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("PASS: Successfully signed in as " + userName);
+				return;
+			}
+			else
+			{
+				fail("Could not Authenticate as " + userName);
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Could not Create user: " + e.toString());
+			fail("Could not create user " + userName);
+		}
+	}	
+	
+	@Test
+	public void testAuthUserBadLongUsername() 
+	{
+		// Here is a pretty long username
+		String userName = new String("badUsernameWithAnIncrediblyLongLengthWhicIsTooMuch");
+		String password = new String("goodPassword");
+
+
+			String user[] = Getter.authUser(applicationRoot, userName, password);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				try {
+					Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
+				} catch (SQLException e) {
+					log.debug("PASS: Could not create bad username " + userName);
+					return;
+				}
+				user = Getter.authUser(applicationRoot, userName, password);
+			}
+			if(user != null && !user[0].isEmpty())
+			{
+				log.debug("FAIL: Could create a bad username " + userName);
+				fail("FAIL: Could create a bad username " + userName);
+				
+			}
+			else
+			{
+				log.debug("PASS: Could not create bad username " + userName);
+				return;
+			}
+		
+	}	
+	
+	@Test
+	public void testAuthUserCorrectNonLatinUsername() {
+		// Here is a non-latin username
+		String userName = new String("nonLatinåäöÅÄÖ");
+		String password = new String("goodPassword");
+
+		log.debug("Attempting to authenticate as " + userName);
+		String user[] = Getter.authUser(applicationRoot, userName, password);
+		if (user == null || user[0].isEmpty()) {
+			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			try {
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
+			} catch (SQLException e) {
+				String message = "Could not create user " + userName + ": " + e.toString();
+				log.debug(message);
+				throw new RuntimeException(e);
+			}
+			log.debug("Created user " + userName);
+			user = Getter.authUser(applicationRoot, userName, password);
+		}
+		if (user != null && !user[0].isEmpty()) {
+			log.debug("PASS: Successfully signed in as " + userName);
+			return;
+		} else {
+			log.debug("FAIL: Successfully signed in as " + userName);
+			fail("Could not Authenticate as " + userName);
+		}
+
+	}
+	
+	@Ignore @Test
+	public void testAuthUserCorrectEmojiUsername() {
+		// Here is a very non-latin username
+		String userName = new String("😃😅😍💩👍‌𝑓ᶃ我璃မ္ယက္‌");
+		String password = new String("goodEmojiPassword");
+
+		log.debug("Attempting to authenticate as " + userName);
+		String user[] = Getter.authUser(applicationRoot, userName, password);
+		if (user == null || user[0].isEmpty()) {
+			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			try {
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
+			} catch (SQLException e) {
+				String message = "Could not create user " + userName + ": " + e.toString();
+				log.debug(message);
+				throw new RuntimeException(e);
+			}
+			log.debug("Created user " + userName);
+			user = Getter.authUser(applicationRoot, userName, password);
+		}
+		if (user != null && !user[0].isEmpty()) {
+			log.debug("PASS: Successfully signed in as " + userName);
+			return;
+		} else {
+			log.debug("FAIL: Successfully signed in as " + userName);
+			fail("Could not Authenticate as " + userName);
+		}
+
+	}
+	@Test
+	public void testAuthUserCorrectNonLatinPassword() 
+	{
+		String userName = new String("NonLatinPass");
+		// Here is a very non-latin password
+		String password = new String("אذاसтьᚩᚾåäö123ÅÄÖǎ𝓫𝚌Ⴛḗ𝑓ᶃ");
+
+		try
+		{
+			String user[] = Getter.authUser(applicationRoot, userName, password);
+			if(user == null || user[0].isEmpty())
+			{
+				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
+				user = Getter.authUser(applicationRoot, userName, password);
 			}
 			if(user != null && !user[0].isEmpty())
 			{
@@ -321,7 +481,7 @@ public class GetterTest
 
 		try
 		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
@@ -353,7 +513,7 @@ public class GetterTest
 
 		try
 		{
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
+			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");

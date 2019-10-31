@@ -1,10 +1,12 @@
 package dbProcs;
 
 import java.sql.CallableStatement;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -14,6 +16,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.owasp.encoder.Encode;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import utils.ModulePlan;
 import utils.ScoreboardStatus;
 
@@ -65,96 +69,142 @@ public class Getter
 	 * @return A string array made up of nothing or information to be consumed by the initiating authentication process.
 	 */
 
-	public static String[] authUser (String ApplicationRoot, String userName, String password)
-	{
+	public static String[] authUser(String ApplicationRoot, String userName, String password) {
 		String[] result = null;
 		log.debug("$$$ Getter.authUser $$$");
-		log.debug("userName = "  + userName);
+		
+		log.debug("userName = " + userName);
 
 		boolean userFound = false;
-		boolean goOn = false;
+		boolean userVerified = false;
+
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
-		{
-			//See if user Exists
-			CallableStatement callstmt = conn.prepareCall("call userFind(?)");
-			log.debug("Gathering userFind ResultSet");
+
+		// See if user Exists
+		CallableStatement callstmt;
+		try {
+			callstmt = conn.prepareCall(
+					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil FROM `users` WHERE userName = ?");
+		} catch (SQLException e) {
+			log.fatal("Could not retrieve users from database: " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		log.debug("Gathering userFind ResultSet");
+		ResultSet userFind;
+		try {
 			callstmt.setString(1, userName);
-			ResultSet userFind = callstmt.executeQuery();
-			log.debug("Opening Result Set from userFind");
-			try
-			{
-				userFind.next();
-				log.debug("User Found"); //User found if a row is in the database, this line will not work if the result set is empty
-				userFound = true;
+			userFind = callstmt.executeQuery();
+		} catch (SQLException e) {
+			log.fatal("Could not create call statement: " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		log.debug("Opening Result Set from userFind");
+
+		try {
+			userFind.next();
+			log.debug("User Found"); // User found if a row is in the database, this line will not work if the result
+										// set is empty
+			userFound = true;
+		} catch (SQLException e) {
+			log.debug("User did not exist");
+			userFound = false;
+		}
+
+		if (userFound) {
+			// Authenticate User
+			Argon2 argon2 = Argon2Factory.create();
+
+			log.debug("Getting password hash");
+			String dbHash;
+			try {
+				dbHash = userFind.getString(3);
+				log.debug("Verifying hash");
+
+				userVerified = argon2.verify(dbHash, password.toCharArray());
+
+				log.debug("Verification result: " + password);
+			} catch (SQLException e) {
+				log.error("Could not retrieve password hash from db: " + e.toString());
+				result = null;
+				userVerified=false;
+				// TODO: We should throw a checked exception here instead
 			}
-			catch(Exception e)
-			{
-				log.debug("User did not exist");
-				userFound = false;
-			}
-			if(userFound)
-			{
-				//Authenticate User
-				callstmt = conn.prepareCall("call authUser(?, ?)");
-				log.debug("Gathering authUser ResultSet");
-				callstmt.setString(1, userName);
-				callstmt.setString(2, password);
-				ResultSet loginAttempt = callstmt.executeQuery();
-				log.debug("Opening Result Set from authUser");
-				try
+
+			if (userVerified) {
+				// Hash matches
+				log.debug("Hash matches");
+
+				result = new String[5];
+				boolean isTempPassword;
+				int badLoginCount;
+				
+				Timestamp suspendedUntil;
+
+				try {
+					result[0] = userFind.getString(1);
+					result[1] = userFind.getString(2); // userName
+					result[2] = userFind.getString(4); // role
+					badLoginCount=userFind.getInt(5);
+					isTempPassword = userFind.getBoolean(6);
+					result[4] = userFind.getString(7); // classId
+					suspendedUntil = userFind.getTimestamp(8);
+				} catch (SQLException e) {
+					log.fatal("Could not retrieve auth data from db: " + e.toString());
+					throw new RuntimeException(e);
+				} 
+
+				// Get current system time
+		        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+				if (suspendedUntil.after(currentTime))
 				{
-					loginAttempt.next();
-					goOn = true; //Valid password for user submitted
+					// User is suspended
+					result = null;
+					return result;
 				}
-				catch (SQLException e)
+				
+				if (isTempPassword) // Checking for temp password flag, if true, index View will prompt to
+											// change
+					result[3] = "true";
+				else
+					result[3] = "false";
+				if (!result[1].equalsIgnoreCase(userName)) // If somehow this functionality has been compromised to sign in as
+													// other users, this will limit the expoitability. But the method is
+													// sql injection safe, so it should be ok
 				{
-					//... Outer Catch has preference to this one for some reason... This code is never reached!
-					// But I'll leave it here just in case. That includes the else block if goOn is false
-					log.debug("Incorrect Credentials");
-					goOn = false;
-				}
-				if(goOn)
-				{
-					//ResultSet Not Empty => Credentials Correct
-					result = new String[5];
-					result[0] = loginAttempt.getString(1); //Id
-					result[1] = loginAttempt.getString(2); //userName
-					result[2] = loginAttempt.getString(3); //role
-					result[4] = loginAttempt.getString(6); //classId
-					if (loginAttempt.getBoolean(5)) //Checking for temp password flag, if true, index View will prompt to change
-						result[3] = "true";
-					else
-						result[3] = "false";
-					if (!result[1].equals(userName)) //If somehow this functionality has been compromised to sign in as other users, this will limit the expoitability. But the method is sql injection safe, so it should be ok
-					{
-						log.fatal("User Name used ("+ userName +") and User Name retrieved ("+ result[1] +") were not the Same. Nulling Result");
-						result = null;
-					}
-					else
-					{
-						log.debug("User '" + userName + "' has logged in");
-						//Before finishing, check if user had a badlogin history, if so, Clear it
-						if(loginAttempt.getInt(4) > 0)
-						{
-							log.debug("Clearing Bad Login History");
+					log.fatal("User Name used (" + userName + ") and User Name retrieved (" + result[1]
+							+ ") were not the Same. Nulling Result");
+					result = null;
+				} else {
+					log.debug("User '" + userName + "' has logged in");
+					// Before finishing, check if user had a badlogin history, if so, Clear it
+					if (badLoginCount > 0) {
+						log.debug("Clearing Bad Login History");
+						try {
 							callstmt = conn.prepareCall("call userBadLoginReset(?)");
 							callstmt.setString(1, result[0]);
 							callstmt.execute();
-							log.debug("userBadLoginReset executed!");
+						} catch (SQLException e) {
+							log.fatal("Could not reset bad login count: " + e.toString());
+							throw new RuntimeException(e);
 						}
+
+						log.debug("userBadLoginReset executed!");
 					}
-					//User has logged in, or a Authentication Bypass was detected... You never know! Better safe than sorry
-					return result;
 				}
+				// User has logged in, or a Authentication Bypass was detected... You never
+				// know! Better safe than sorry
+				// TODO: will this close the db connection if we return here?
+				return result;
+			} else {
+				// Hash did not match
+				log.debug("Hash did not match, authentication failed");
 			}
+
 		}
-		catch (SQLException e)
-		{
-			log.error("Login Failure: " + e.toString());
-			result = null;
-			//Lagging Response
-		}
+
 		Database.closeConnection(conn);
 		log.debug("$$$ End authUser $$$");
 		return result;
@@ -1856,6 +1906,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getUserClass ***");
 		String result = new String();
+		userName=userName.toLowerCase();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -1887,6 +1938,9 @@ public class Getter
 	{
 		log.debug("*** Getter.getUserIdFromName ***");
 		String result = new String();
+		
+		userName=userName.toLowerCase();
+		
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{

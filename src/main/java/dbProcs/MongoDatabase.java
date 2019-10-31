@@ -1,6 +1,9 @@
 package dbProcs;
 
 import com.mongodb.*;
+
+import utils.PropertyNotFoundException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -83,7 +86,7 @@ public class MongoDatabase {
 		} catch (FileNotFoundException e) {
 			// db props file doesn't exist
 			throw e;
-		} catch (IOException e) {
+		} catch (IOException | PropertyNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -109,7 +112,7 @@ public class MongoDatabase {
 		String dbCollectionName;
 		try {
 			dbCollectionName = FileInputProperties.readfile(props, "databaseCollection");
-		} catch (IOException e) {
+		} catch (IOException | PropertyNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -140,7 +143,7 @@ public class MongoDatabase {
 			connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
 			socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
 			serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
-		} catch (IOException e) {
+		} catch (IOException | PropertyNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -204,7 +207,7 @@ public class MongoDatabase {
 			connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
 			socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
 			serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
-		} catch (IOException e) {
+		} catch (IOException | PropertyNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -264,7 +267,7 @@ public class MongoDatabase {
         String dbname;
 		try {
 			dbname = FileInputProperties.readfile(props, "databaseName");
-		} catch (IOException e) {
+		} catch (IOException | PropertyNotFoundException e) {
 			throw new RuntimeException(e); 
 
 		}
