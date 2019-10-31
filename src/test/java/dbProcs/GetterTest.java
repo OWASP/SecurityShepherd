@@ -372,7 +372,7 @@ public class GetterTest
 	@Test
 	public void testAuthUserCorrectNonLatinUsername() {
 		// Here is a very non-latin username
-		String userName = new String("אذاसтьᚩÅÄÖǎ𝓫𝚌Ⴛḗ𝑓ᶃ我能玻璃မ္ယက္‌");
+		String userName = new String("אذاसтьᚩÅǎ𝓫𝚌Ⴛḗ𝑓ᶃ我璃မ္ယက္‌");
 		String password = new String("goodPassword");
 
 		log.debug("Attempting to authenticate as " + userName);
