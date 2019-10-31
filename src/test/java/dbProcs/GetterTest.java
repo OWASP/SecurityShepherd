@@ -367,7 +367,6 @@ public class GetterTest
 				return;
 			}
 		
-
 	}	
 	
 	@Test
