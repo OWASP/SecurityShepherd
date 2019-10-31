@@ -982,6 +982,53 @@ public class Setter
 		return result;
 	}
 	
+	public static boolean userCreateSSO (String ApplicationRoot, String classId, String userName, String userID, String userRole)
+	throws SQLException
+	{
+		boolean result = false;
+		
+		log.debug("*** Setter.userCreateSSO ***");
+		log.debug("classId = " + classId);
+		log.debug("userName = " + userName);
+		log.debug("userID = " + userID);
+		// We don't log passwords
+		log.debug("userRole = " + userRole);
+		
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try
+		{
+			
+			log.debug("Executing userCreate procedure on Database");
+			CallableStatement callstmt = conn.prepareCall("INSERT INTO users (userId,classId,userName,userPass,userRole,userAddress,tempPassword) VALUES (?,?,?,?,?,?,?);");
+		
+			callstmt.setString(1, userID);
+			callstmt.setString(2, classId);
+			callstmt.setString(3, userName);
+			callstmt.setString(4, "$argon2i$v=19$m=65536,t=10,p=1$7oxgR8QkdOd4tsHFieFKrw$eOy0TCxhY1bQIAbLQcLr9Sz2+4q9DhPTz1frsytgtTk");
+			callstmt.setString(5, userRole);
+			callstmt.setString(6, "");
+			callstmt.setBoolean(7, false);
+
+			int updateReturnValue = callstmt.executeUpdate();
+
+			if (updateReturnValue == 1) {
+				log.debug("Register Success");
+				result = true;
+			} else // Registration failure
+			{
+				log.debug("Register Failure");
+				result = false;
+
+			}
+		} catch (SQLException e) {
+			log.fatal("userCreate Failure: " + e.toString());
+			throw new SQLException(e);
+		}
+		Database.closeConnection(conn);
+		log.debug("*** END userCreate ***");
+		return result;
+	}
+	
 	public static boolean userDelete (String ApplicationRoot, String userId) throws SQLException
 	 {
          boolean result = false;

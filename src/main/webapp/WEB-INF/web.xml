@@ -64,7 +64,15 @@
 		<url-pattern>/mobileLogin</url-pattern>
 	</servlet-mapping>
 
-
+	<servlet>
+		<servlet-name>/sso-register</servlet-name>
+		<servlet-class>servlets.SSORegister</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/sso-register</servlet-name>
+		<url-pattern>/sso-register</url-pattern>
+	</servlet-mapping>
+	
 	<servlet>
 		<servlet-name>/register</servlet-name>
 		<servlet-class>servlets.Register</servlet-class>
