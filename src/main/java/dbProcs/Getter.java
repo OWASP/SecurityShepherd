@@ -113,7 +113,14 @@ public class Getter
 				
 				log.debug("Verifying hash");
 				
-				if (argon2.verify(dbHash, password.toCharArray()))
+				log.debug("dbHash: " + dbHash);
+				log.debug("password: " + password);
+				
+				boolean userVerified=argon2.verify(dbHash, password.toCharArray());
+				
+				log.debug("Verification result: " + password);
+				
+				if (userVerified)
 				{				
 					//Hash matches
 					log.debug("Hash matches");
