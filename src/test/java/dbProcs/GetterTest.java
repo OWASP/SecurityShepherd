@@ -341,13 +341,17 @@ public class GetterTest
 		String userName = new String("badUsernameWithAnIncrediblyLongLengthWhicIsTooMuch");
 		String password = new String("goodPassword");
 
-		try
-		{
+
 			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if(user == null || user[0].isEmpty())
 			{
 				log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
-				Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
+				try {
+					Setter.userCreate(applicationRoot, null, userName, password, "player", userName+"@test.com", false);
+				} catch (SQLException e) {
+					log.debug("PASS: Could not create bad username " + userName);
+					return;
+				}
 				user = Getter.authUser(applicationRoot, userName, password);
 			}
 			if(user != null && !user[0].isEmpty())
@@ -358,22 +362,18 @@ public class GetterTest
 			}
 			else
 			{
-				log.debug("PASS: Could create bad username " + userName);
+				log.debug("PASS: Could not create bad username " + userName);
 				return;
 			}
-		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Create user: " + e.toString());
-			fail("Could not create user " + userName);
-		}
+		
+
 	}	
 	
 	@Test
 	public void testAuthUserCorrectNonLatinUsername() 
 	{
 		// Here is a very non-latin username
-		String userName = new String("אذاसтьᚩᚾåäöÅÄÖǎ𝓫𝚌Ⴛḗ𝑓ᶃ我能玻璃မ္ယက္‌NonLatinUser");
+		String userName = new String("אذاसтьᚩÅÄÖǎ𝓫𝚌Ⴛḗ𝑓ᶃ我能玻璃မ္ယက္‌");
 		String password = new String("goodPassword");
 
 		try
