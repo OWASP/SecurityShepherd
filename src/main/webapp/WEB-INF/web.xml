@@ -14,13 +14,23 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
+
+
 	<error-page>
-		<error-code>500</error-code>
-		<location>/serverError.html</location>
+		<error-code>403</error-code>
+		<location>/serverError.jsp</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/lostSheep.html</location>
+		<location>/lostSheep.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/serverError.jsp</location>
+	</error-page>
+	<error-page> 
+		<exception-type>java.lang.Exception</exception-type> 
+		<location>/serverError.jsp</location>
 	</error-page>
 
 	<env-entry>
