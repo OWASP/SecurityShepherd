@@ -1,23 +1,16 @@
 package dbProcs;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.sql.CallableStatement;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
