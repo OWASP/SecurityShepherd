@@ -39,7 +39,7 @@ public class SetupIT {
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
-	private StringBuffer dbProp = new StringBuffer();
+	private StringBuffer MYSQL_DB_PROP = new StringBuffer();
 
 	/**
 	 * Initialize directories
@@ -50,6 +50,23 @@ public class SetupIT {
 		log.debug("Setting Up Blank Request and Response");
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
+	}
+
+	@After
+	public void tearDown() throws IOException {
+		log.debug("Cleaning up");
+
+		removeDatabaseProps();
+		Setup.isInstalled();
+	}
+
+	private void removeDatabaseProps() {
+		FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+	}
+
+	private void ensureDatabaseProps() throws IOException {
+		FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+		FileUtils.write(new File(Constants.MYSQL_DB_PROP), MYSQL_DB_PROP.toString(), StandardCharsets.UTF_8);
 	}
 
 	@Test
