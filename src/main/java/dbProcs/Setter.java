@@ -649,12 +649,14 @@ public class Setter
 		log.debug("Checking current password");
 		String user[] = Getter.authUser(ApplicationRoot, userName, currentPassword);
 
-		if (user != null && !user[0].isEmpty()) {
+		if(user == null || user[0].isEmpty()) 
+		{
 			// Wrong password
 			log.debug("Current password incorrect!");
 			return false;
 		}
-		if (user != null && !user[0].isEmpty()) {
+		if (user != null && !user[0].isEmpty()) 
+		{
 			// Correct password, proceed
 			log.debug("Hashing password");
 

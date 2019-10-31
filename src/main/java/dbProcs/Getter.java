@@ -106,12 +106,12 @@ public class Getter
 			if(userFound)
 			{
 				//Authenticate User
-				
-				//Get the hashed password from db
-				log.debug("Hashing password");
 				Argon2 argon2 = Argon2Factory.create();
 				
+				log.debug("Getting password hash");
 				String dbHash = userFind.getString(3);
+				
+				log.debug("Verifying hash");
 				
 				if (argon2.verify(dbHash, password.toCharArray()))
 				{				
