@@ -73,102 +73,132 @@ public class Getter
 	 * @return A string array made up of nothing or information to be consumed by the initiating authentication process.
 	 */
 
-	public static String[] authUser (String ApplicationRoot, String userName, String password)
-	{
+	public static String[] authUser(String ApplicationRoot, String userName, String password) {
 		String[] result = null;
 		log.debug("$$$ Getter.authUser $$$");
-		log.debug("userName = "  + userName);
+		log.debug("userName = " + userName);
 
 		boolean userFound = false;
-		
+		boolean userVerified = false;
+
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		try
-		{
-			//See if user Exists
-			CallableStatement callstmt = conn.prepareCall("SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId FROM `users` WHERE userName = ?");
- 
-			log.debug("Gathering userFind ResultSet");
+		// See if user Exists
+		CallableStatement callstmt;
+		try {
+			callstmt = conn.prepareCall(
+					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId FROM `users` WHERE userName = ?");
+		} catch (SQLException e) {
+			log.fatal("Could not retrieve users from database: " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		log.debug("Gathering userFind ResultSet");
+		ResultSet userFind;
+		try {
 			callstmt.setString(1, userName);
-			ResultSet userFind = callstmt.executeQuery();
-			log.debug("Opening Result Set from userFind");
-			try
-			{
-				userFind.next();
-				log.debug("User Found"); //User found if a row is in the database, this line will not work if the result set is empty
-				userFound = true;
-			}
-			catch(Exception e)
-			{
-				log.debug("User did not exist");
-				userFound = false;
-			}
-			if(userFound)
-			{
-				//Authenticate User
-				Argon2 argon2 = Argon2Factory.create();
-				
-				log.debug("Getting password hash");
-				String dbHash = userFind.getString(3);
-				
+			userFind = callstmt.executeQuery();
+		} catch (SQLException e) {
+			log.fatal("Could not create call statement: " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		log.debug("Opening Result Set from userFind");
+
+		try {
+			userFind.next();
+			log.debug("User Found"); // User found if a row is in the database, this line will not work if the result
+										// set is empty
+			userFound = true;
+		} catch (SQLException e) {
+			log.debug("User did not exist");
+			userFound = false;
+		}
+
+		if (userFound) {
+			// Authenticate User
+			Argon2 argon2 = Argon2Factory.create();
+
+			log.debug("Getting password hash");
+			String dbHash;
+			try {
+				dbHash = userFind.getString(3);
 				log.debug("Verifying hash");
-				
+
 				log.debug("dbHash: " + dbHash);
 				log.debug("password: " + password);
-				
-				boolean userVerified=argon2.verify(dbHash, password.toCharArray());
-				
+
+				userVerified = argon2.verify(dbHash, password.toCharArray());
+
 				log.debug("Verification result: " + password);
-				
-				if (userVerified)
-				{				
-					//Hash matches
-					log.debug("Hash matches");
+			} catch (SQLException e) {
+				log.error("Could not retrieve password hash from db: " + e.toString());
+				result = null;
+				userVerified=false;
+				throw new RuntimeException(e);
+			}
+
+			if (userVerified) {
+				// Hash matches
+				log.debug("Hash matches");
+
+				result = new String[5];
+				boolean isTempPassword;
+				int badLoginCount;
+				try {
+					result[0] = userFind.getString(1);
+					result[1] = userFind.getString(2); // userName
+					result[2] = userFind.getString(4); // role
+					result[4] = userFind.getString(7); // classId
 					
-					result = new String[5];
-					result[0] = userFind.getString(1); //Id
-					result[1] = userFind.getString(2); //userName
-					result[2] = userFind.getString(4); //role
-					result[4] = userFind.getString(7); //classId
-					if (userFind.getBoolean(6)) //Checking for temp password flag, if true, index View will prompt to change
-						result[3] = "true";
-					else
-						result[3] = "false";
-					if (!result[1].equals(userName)) //If somehow this functionality has been compromised to sign in as other users, this will limit the expoitability. But the method is sql injection safe, so it should be ok
-					{
-						log.fatal("User Name used ("+ userName +") and User Name retrieved ("+ result[1] +") were not the Same. Nulling Result");
-						result = null;
-					}
-					else
-					{
-						log.debug("User '" + userName + "' has logged in");
-						//Before finishing, check if user had a badlogin history, if so, Clear it
-						if(userFind.getInt(5) > 0)
-						{
-							log.debug("Clearing Bad Login History");
+					isTempPassword = userFind.getBoolean(6);
+					
+					badLoginCount=userFind.getInt(5);
+				} catch (SQLException e) {
+					log.fatal("Could not retrieve auth data from db: " + e.toString());
+					throw new RuntimeException(e);
+				} // Id
+
+				if (isTempPassword) // Checking for temp password flag, if true, index View will prompt to
+											// change
+					result[3] = "true";
+				else
+					result[3] = "false";
+				if (!result[1].equals(userName)) // If somehow this functionality has been compromised to sign in as
+													// other users, this will limit the expoitability. But the method is
+													// sql injection safe, so it should be ok
+				{
+					log.fatal("User Name used (" + userName + ") and User Name retrieved (" + result[1]
+							+ ") were not the Same. Nulling Result");
+					result = null;
+				} else {
+					log.debug("User '" + userName + "' has logged in");
+					// Before finishing, check if user had a badlogin history, if so, Clear it
+					if (badLoginCount > 0) {
+						log.debug("Clearing Bad Login History");
+						try {
 							callstmt = conn.prepareCall("call userBadLoginReset(?)");
 							callstmt.setString(1, result[0]);
 							callstmt.execute();
-							log.debug("userBadLoginReset executed!");
+						} catch (SQLException e) {
+							log.fatal("Could not reset bad login count: " + e.toString());
+							throw new RuntimeException(e);
 						}
+
+						log.debug("userBadLoginReset executed!");
 					}
-					//User has logged in, or a Authentication Bypass was detected... You never know! Better safe than sorry
-					// TODO: will this close the db connection if we return here?
-					return result; 
 				}
-				else
-				{
-					//Hash did not match
-					log.debug("Hash did not match, authentication failed");
-				}
+				// User has logged in, or a Authentication Bypass was detected... You never
+				// know! Better safe than sorry
+				// TODO: will this close the db connection if we return here?
+				return result;
+			} else {
+				// Hash did not match
+				log.debug("Hash did not match, authentication failed");
 			}
+
 		}
-		catch (SQLException e)
-		{
-			log.error("Login Failure: " + e.toString());
-			result = null;
-			//Lagging Response
-		}
+
 		Database.closeConnection(conn);
 		log.debug("$$$ End authUser $$$");
 		return result;
