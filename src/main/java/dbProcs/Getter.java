@@ -135,7 +135,7 @@ public class Getter
 				log.error("Could not retrieve password hash from db: " + e.toString());
 				result = null;
 				userVerified=false;
-				throw new RuntimeException(e);
+				// TODO: We should throw a checked exception here instead
 			}
 
 			if (userVerified) {
