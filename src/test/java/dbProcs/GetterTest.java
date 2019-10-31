@@ -371,8 +371,8 @@ public class GetterTest
 	
 	@Test
 	public void testAuthUserCorrectNonLatinUsername() {
-		// Here is a very non-latin username
-		String userName = new String("אذاसÅǎ𝓫𝚌Ⴛḗ𝑓ᶃ我璃မ္ယက္‌");
+		// Here is a non-latin username
+		String userName = new String("nonLatinåäöÅÄÖ");
 		String password = new String("goodPassword");
 
 		log.debug("Attempting to authenticate as " + userName);
@@ -402,7 +402,7 @@ public class GetterTest
 	@Test
 	public void testAuthUserCorrectEmojiUsername() {
 		// Here is a very non-latin username
-		String userName = new String("😃😅😍💩👍‌");
+		String userName = new String("😃😅😍💩👍‌𝑓ᶃ我璃မ္ယက္‌");
 		String password = new String("goodEmojiPassword");
 
 		log.debug("Attempting to authenticate as " + userName);
