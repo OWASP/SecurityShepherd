@@ -937,9 +937,7 @@ public class Setter
 
 		    String hash = argon2.hash(10, 65536, 1, userPass.toCharArray());
 		    // TODO: wipe password from memory after hashing
-		    
-		    log.debug("Password hash is " + hash); //FIXME: don't leave this in production
-			
+		    			
 			log.debug("Executing userCreate procedure on Database");
 			CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?)");
 			callstmt.setString(1, classId);

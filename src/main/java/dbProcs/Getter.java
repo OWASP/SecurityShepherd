@@ -132,9 +132,6 @@ public class Getter
 				dbHash = userFind.getString(3);
 				log.debug("Verifying hash");
 
-				log.debug("dbHash: " + dbHash);
-				log.debug("password: " + password);
-
 				userVerified = argon2.verify(dbHash, password.toCharArray());
 
 				log.debug("Verification result: " + password);
