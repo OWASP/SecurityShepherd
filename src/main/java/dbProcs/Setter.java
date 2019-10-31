@@ -285,6 +285,9 @@ public class Setter
 	 */
 	public static boolean setCoreDatabaseInfo(String applicationRoot, String url, String userName, String password)
 	{
+		
+		userName=userName.toLowerCase();
+		
 		try 
 		{
 			//Update Database Settings
@@ -642,7 +645,7 @@ public class Setter
 		
 		boolean result = false;
 		
-
+		userName=userName.toLowerCase();
 		
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 

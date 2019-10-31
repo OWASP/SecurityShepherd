@@ -1916,6 +1916,7 @@ public class Getter
 	{
 		log.debug("*** Getter.getUserClass ***");
 		String result = new String();
+		userName=userName.toLowerCase();
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
@@ -1947,6 +1948,9 @@ public class Getter
 	{
 		log.debug("*** Getter.getUserIdFromName ***");
 		String result = new String();
+		
+		userName=userName.toLowerCase();
+		
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
