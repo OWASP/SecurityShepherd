@@ -1004,7 +1004,7 @@ public class Setter
 			callstmt.setString(1, userID);
 			callstmt.setString(2, classId);
 			callstmt.setString(3, userName);
-			callstmt.setString(4, "$argon2i$v=19$m=65536,t=10,p=1$7oxgR8QkdOd4tsHFieFKrw$eOy0TCxhY1bQIAbLQcLr9Sz2+4q9DhPTz1frsytgtTk");
+			callstmt.setString(4, "DISABLED");
 			callstmt.setString(5, userRole);
 			callstmt.setString(6, "");
 			callstmt.setBoolean(7, false);

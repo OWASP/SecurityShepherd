@@ -111,7 +111,7 @@ if(ses.getAttribute("errorMessage") != null)
 				<br/>
 				<table>
 					<tr><td><p>Display name:</p></td><td><input type="text" id="userName" value="<%=userName%>" minlength="3" maxlength="32" required/></td></tr>
-					<tr><td><p>Username:</p></td><td><input type="text" id="userID" minlength="3" disabled="disabled" value="userID123" required/></td></tr>
+					<tr><td><p>Username:</p></td><td><input type="text" id="userID" minlength="3" disabled="disabled" value="<%=request.getParameter("userID") %>" required/></td></tr>
 					
 				</table>
 				
