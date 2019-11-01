@@ -25,23 +25,30 @@ jobs:
       before_install:
       - sudo apt-get -y install libargon2-0
       - mvn -Pdocker validate
-   -  stage: deploy
-      on:
-         repo: OWASP/SecurityShepherd
-      name: Deploy to Dockerhub
-      dist: bionic
-      language: generic
-      provider: script
-      skip_cleanup: true
-      services: docker
-      before_install:
-      - sudo apt-get -y install libargon2-0
-      - mvn install -Pdocker -DskipTests
-      - docker-compose build web
-      script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
+#    -  stage: deploy
+#       on:
+#          repo: OWASP/SecurityShepherd
+#       name: Deploy to Dockerhub
+#       dist: bionic
+#       language: generic
+#       provider: script
+#       skip_cleanup: true
+#       services: docker
+#       before_install:
+#       - sudo apt-get -y install libargon2-0
+#       - mvn install -Pdocker -DskipTests
+#       - docker-compose build web
+#       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
 stages:
 - build
 - unit-test
 - integration-test
--  name: deploy
-   if: branch IN (master, dev) AND type = push
+#-  name: deploy
+#   if: branch IN (master, dev) AND type = push
+   
+language: java
+
+script: "mvn cobertura:cobertura"
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
