@@ -253,7 +253,7 @@ public class GetFeedbackIT {
 			request.setCookies(response.getCookies());
 			String responseBody = doThePost("wrongToken", moduleId);
 			if (responseBody.equalsIgnoreCase("Error Occurred!")) {
-				TestProperties.failAndPrint("CSRF Error Occurred (Expected Empty Response)");
+				log.debug("PASS: CSRF Error Occurred when incorrect CSRF token was supplied");
 			} else {
 				TestProperties.failAndPrint("CSRF Error Not Detected with Bad CSRF Token");
 			}
