@@ -3,6 +3,7 @@ package servlets.admin.config;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
@@ -29,24 +30,13 @@ public class DisableFeedbackIT {
 	 * Creates DB or Restores DB to Factory Defaults before running tests
 	 */
 	@BeforeClass
-	public static void resetDatabase() {
+	public static void resetDatabase() throws IOException, SQLException {
 		TestProperties.setTestPropertiesFileDirectory(log);
 
-		try {
-			TestProperties.createMysqlResource();
-		} catch (IOException e) {
-			String message = "Could not create mysql resource file: " + e.toString();
-			log.fatal(message);
-			fail(message);
-		}
+		TestProperties.createMysqlResource();
 
-		try {
-			TestProperties.executeSql(log);
-		} catch (InstallationException e) {
-			String message = "Could not create DB: " + e.toString();
-			log.fatal(message);
-			fail(message);
-		}
+		TestProperties.executeSql(log);
+
 	}
 
 	@Before

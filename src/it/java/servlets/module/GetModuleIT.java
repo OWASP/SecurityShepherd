@@ -3,6 +3,7 @@ package servlets.module;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
@@ -30,28 +31,13 @@ public class GetModuleIT
 	 * Creates DB or Restores DB to Factory Defaults before running tests
 	 */
 	@BeforeClass
-	public static void resetDatabase() 
-	{
+	public static void resetDatabase() throws IOException, SQLException {
 		TestProperties.setTestPropertiesFileDirectory(log);
-		
-		try {
-			TestProperties.createMysqlResource();
-		} catch (IOException e) {
-			String message = "Could not create mysql resource file: " + e.toString();
-			log.fatal(message);
-			fail(message);
-		}
-		
-		try 
-		{
-			TestProperties.executeSql(log);
-		} 
-		catch (InstallationException e) 
-		{
-			String message = "Could not create DB: " + e.toString();
-			log.fatal(message);
-			fail(message);
-		}
+
+		TestProperties.createMysqlResource();
+
+		TestProperties.executeSql(log);
+
 	}
     
     @Before

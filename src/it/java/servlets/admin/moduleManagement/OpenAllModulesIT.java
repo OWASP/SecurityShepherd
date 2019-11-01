@@ -15,6 +15,7 @@ import utils.InstallationException;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
@@ -29,22 +30,20 @@ public class OpenAllModulesIT {
 
 	/**
 	 * Sets up DB with levels and users to test with
+	 * @throws InstallationException 
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
 	@BeforeClass
-	public static void resetDatabase() {
-		TestProperties.setTestPropertiesFileDirectory(log);
+	public static void readyDb() throws SQLException, IOException {
+		testUtils.TestProperties.setTestPropertiesFileDirectory(log);
 
-		try {
-			TestProperties.createMysqlResource();
-		} catch (IOException e) {
-			TestProperties.failAndPrint("Could not create mysql resource file: " + e.toString());
-		}
+		testUtils.TestProperties.executeSql(log);
+		log.debug("Creating - user: " + testUsers[0] + " password: " + testUsers[0]);
+		TestProperties.verifyTestAdmin(log, null, testUsers[0], testUsers[0]);
+		log.debug("Creating - user: " + testUsers[1] + " password: " + testUsers[1]);
+		TestProperties.verifyTestUser(log, null, testUsers[1], testUsers[0]);
 
-		try {
-			TestProperties.executeSql(log);
-		} catch (InstallationException e) {
-			TestProperties.failAndPrint("Could not create DB: " + e.toString());
-		}
 	}
 
 	@Before

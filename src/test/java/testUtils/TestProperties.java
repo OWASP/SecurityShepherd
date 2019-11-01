@@ -37,23 +37,20 @@ public class TestProperties {
 		fail(message);
 	}
 
-	public static void executeSql(org.apache.log4j.Logger log) throws InstallationException {
-		try {
-			File file = new File(System.getProperty("user.dir") + "/src/main/resources/database/coreSchema.sql");
-			String data = FileUtils.readFileToString(file, Charset.defaultCharset());
+	public static void executeSql(org.apache.log4j.Logger log) throws IOException, SQLException {
 
-			Connection databaseConnection = Database.getDatabaseConnection(null, true);
-			Statement psProcToexecute = databaseConnection.createStatement();
-			psProcToexecute.executeUpdate(data);
+		File file = new File(System.getProperty("user.dir") + "/src/main/resources/database/coreSchema.sql");
+		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
-			file = new File(System.getProperty("user.dir") + "/src/main/resources/database/moduleSchemas.sql");
-			data = FileUtils.readFileToString(file, Charset.defaultCharset());
-			psProcToexecute = databaseConnection.createStatement();
-			psProcToexecute.executeUpdate(data);
+		Connection databaseConnection = Database.getDatabaseConnection(null, true);
+		Statement psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
 
-		} catch (Exception e) {
-			throw new InstallationException(e);
-		}
+		file = new File(System.getProperty("user.dir") + "/src/main/resources/database/moduleSchemas.sql");
+		data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
+
 	}
 
 	public static void createFileSystemKey(org.apache.log4j.Logger log, String fileProp, String solutionProp)
@@ -154,7 +151,7 @@ public class TestProperties {
 	 * @param password        The password of the user you want to create or sign in
 	 *                        as
 	 * @return Boolean value depicting if the user exists and can be authenticated
-
+	 * 
 	 */
 	public static boolean verifyTestUser(org.apache.log4j.Logger log, String applicationRoot, String userName,
 			String password) throws SQLException {
@@ -251,7 +248,7 @@ public class TestProperties {
 	 * @param password        The password of the user you want to create or sign in
 	 *                        as
 	 * @return Boolean value depicting if the user exists and can be authenticated
-
+	 * 
 	 */
 	public static boolean verifyTestAdmin(org.apache.log4j.Logger log, String applicationRoot, String userName,
 			String password) throws SQLException {
