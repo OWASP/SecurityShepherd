@@ -11,8 +11,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.ServletException;
+
 import dbProcs.FileInputProperties;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -22,10 +25,18 @@ import dbProcs.Database;
 import dbProcs.Getter;
 import dbProcs.Setter;
 import servlets.Login;
+import servlets.admin.moduleManagement.OpenAllModulesIT;
 import utils.InstallationException;
 
 public class TestProperties
 {
+	private static org.apache.log4j.Logger log = Logger.getLogger(OpenAllModulesIT.class);
+	
+	public static void failAndPrint(String message)
+	{
+		log.fatal(message);
+		fail(message);
+	}
 	public static void executeSql(org.apache.log4j.Logger log) throws InstallationException
 	{
 		try 
@@ -99,47 +110,44 @@ public class TestProperties
 	 * @throws Exception If the process fails, an exception will be thrown
 	 */
 	public static void loginDoPost(org.apache.log4j.Logger log, MockHttpServletRequest request,
-								   MockHttpServletResponse response,
-								   String userName, String password,
-								   String theClass, String lang) throws Exception
-	{
-		try
-		{
-			int expectedResponseCode = 302;
+			MockHttpServletResponse response, String userName, String password, String theClass, String lang) {
 
-			log.debug("Creating Login Servlet Instance");
-			Login servlet = new Login();
+		int expectedResponseCode = 302;
+
+		log.debug("Creating Login Servlet Instance");
+		Login servlet = new Login();
+		try {
 			servlet.init(new MockServletConfig("Login"));
-
-			//Setup Servlet Parameters and Attributes
-			log.debug("Setting Up Params and Atrributes");
-			request.addParameter("login", userName);
-			request.addParameter("pwd", password);
-			request.getSession().setAttribute("lang", lang);
-
-			log.debug("Running doPost");
-			servlet.doPost(request, response);
-
-			if(response.getStatus() != expectedResponseCode)
-				throw new Exception("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
-			else if(response.getHeader("Location").endsWith("login.jsp"))
-			{
-				log.debug("User \"" + userName + "\" is unauthenticated");
-			}
-			else
-			{
-				log.debug("302 OK Detected");
-				String location = response.getHeader("Location");
-				log.debug("302 pointing at: " + location);
-				if(!location.endsWith("index.jsp"))
-				{
-					throw new Exception("Login not Redirecting to index.jsp. Login Proceedure Failed");
-				}
-			}
+		} catch (ServletException e) {
+			failAndPrint("Could not create login Servlet instance: " + e.toString());
+			throw new RuntimeException(e);
 		}
-		catch(Exception e)
-		{
-			throw e;
+
+		// Setup Servlet Parameters and Attributes
+		log.debug("Setting Up Params and Atrributes");
+		request.addParameter("login", userName);
+		request.addParameter("pwd", password);
+		request.getSession().setAttribute("lang", lang);
+
+		log.debug("Running doPost");
+		try {
+			servlet.doPost(request, response);
+		} catch (ServletException | IOException e) {
+			failAndPrint("Could not post Servlet: " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		if (response.getStatus() != expectedResponseCode) {
+			failAndPrint("Login Servlet returned " + response.getStatus() + " instead of expected code 302.");
+		} else if (response.getHeader("Location").endsWith("login.jsp")) {
+			log.debug("User \"" + userName + "\" is unauthenticated");
+		} else {
+			log.debug("302 OK Detected");
+			String location = response.getHeader("Location");
+			log.debug("302 pointing at: " + location);
+			if (!location.endsWith("index.jsp")) {
+				failAndPrint("Login not Redirecting to index.jsp. Login Proceedure Failed");
+			}
 		}
 	}
 
