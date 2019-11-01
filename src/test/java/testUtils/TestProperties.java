@@ -154,8 +154,7 @@ public class TestProperties {
 	 * @param password        The password of the user you want to create or sign in
 	 *                        as
 	 * @return Boolean value depicting if the user exists and can be authenticated
-	 * @throws Exception If User Create function fails, an exception will be passed
-	 *                   up
+
 	 */
 	public static boolean verifyTestUser(org.apache.log4j.Logger log, String applicationRoot, String userName,
 			String password) throws SQLException {
