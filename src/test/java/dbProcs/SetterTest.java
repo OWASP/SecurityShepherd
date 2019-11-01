@@ -59,7 +59,7 @@ public class SetterTest {
 		Random rand = new Random();
 		String className = "newC" + rand.nextInt(50) + rand.nextInt(50) + rand.nextInt(50);
 		if (!Setter.classCreate(applicationRoot, className, "2015")) {
-			fail("Could not Create Class");
+			TestProperties.failAndPrint("Could not Create Class");
 		} else {
 
 			boolean pass = false;
@@ -71,7 +71,7 @@ public class SetterTest {
 				}
 			}
 			if (!pass) {
-				fail("Could not find class in DB");
+				TestProperties.failAndPrint("Could not find class in DB");
 			} else
 				return; // PASS
 
@@ -86,11 +86,11 @@ public class SetterTest {
 		if (GetterTest.verifyTestUser(applicationRoot, userName, userName)) {
 			String userId = Getter.getUserIdFromName(applicationRoot, userName);
 			if (!Setter.openAllModules(applicationRoot, false) && !Setter.openAllModules(applicationRoot, true)) {
-				fail("Could not mark all modules as open");
+				TestProperties.failAndPrint("Could not mark all modules as open");
 			} else {
 				// Simulate user Opening Level
 				if (Getter.getModuleAddress(applicationRoot, moduleId, userId).isEmpty()) {
-					fail("Could not Simulate Opening First Level for User");
+					TestProperties.failAndPrint("Could not Simulate Opening First Level for User");
 				} else {
 					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, moduleId, userId,
 							"Feedback is Disabled", 1, 1, 1);
@@ -98,13 +98,13 @@ public class SetterTest {
 						// Giving the User a Score Bump in case they have already completed CSRF7 and
 						// this is the 20th time the unit test has run
 						if (!Setter.updateUserPoints(applicationRoot, userId, 20))
-							fail("Could not give user extra points");
+							TestProperties.failAndPrint("Could not give user extra points");
 
 						int scoreBefore = 0;
 						ScoreboardStatus.setScoreboeardOpen();
 						String scoreboardData = Getter.getJsonScore(applicationRoot, "");
 						if (scoreboardData.isEmpty()) {
-							fail("Could not detect user in scoreboard before bad submission test");
+							TestProperties.failAndPrint("Could not detect user in scoreboard before bad submission test");
 						} else {
 							JSONArray scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
 							// Loop through array to find Our user
@@ -119,12 +119,12 @@ public class SetterTest {
 							}
 							if (scoreBefore == 0) {
 								log.fatal("Could not find user " + userName + " with score > 0: " + scoreboardData);
-								fail("User has score of 0 before BadSubmission Emulation");
+								TestProperties.failAndPrint("User has score of 0 before BadSubmission Emulation");
 							}
 
 							// Resetting resetBadSubmission count back to 0
 							if (!Setter.resetBadSubmission(applicationRoot, userId))
-								fail("Could not Reset bad submission count");
+								TestProperties.failAndPrint("Could not Reset bad submission count");
 							// Simulating 41 bad submissions
 							for (int i = 0; i <= 40; i++)
 								Setter.incrementBadSubmission(applicationRoot, userId);
@@ -154,7 +154,7 @@ public class SetterTest {
 								log.debug("Expected After: " + expectedAfter);
 								int roundedUp = scoreAfter + 1;
 								if (roundedUp != expectedAfter)
-									fail("Invalid Score Deduction Detected");
+									TestProperties.failAndPrint("Invalid Score Deduction Detected");
 								else
 									return; // PASS
 							} else {
@@ -162,25 +162,25 @@ public class SetterTest {
 							}
 						}
 					} else {
-						fail("Could not Mark First level as complete");
+						TestProperties.failAndPrint("Could not Mark First level as complete");
 					}
 				}
 			}
 		} else {
-			fail("Could not Create/Verify User");
+			TestProperties.failAndPrint("Could not Create/Verify User");
 		}
 	}
 
 	@Test
 	public void testOpenOnlyMobileCategories() {
 		if (!Setter.openOnlyMobileCategories(applicationRoot))
-			fail("Could not Open Only Mobile Categories");
+			TestProperties.failAndPrint("Could not Open Only Mobile Categories");
 	}
 
 	@Test
 	public void testOpenOnlyWebCategories() {
 		if (!Setter.openOnlyWebCategories(applicationRoot, 0))
-			fail("Could not Open Only Web Categories");
+			TestProperties.failAndPrint("Could not Open Only Web Categories");
 	}
 
 	@Test
@@ -191,11 +191,11 @@ public class SetterTest {
 		if (GetterTest.verifyTestUser(applicationRoot, userName, userName)) {
 			String userId = Getter.getUserIdFromName(applicationRoot, userName);
 			if (!Setter.openAllModules(applicationRoot, false) && !Setter.openAllModules(applicationRoot, true)) {
-				fail("Could not mark all modules as open");
+				TestProperties.failAndPrint("Could not mark all modules as open");
 			} else {
 				// Simulate user Opening Level
 				if (Getter.getModuleAddress(applicationRoot, moduleId, userId).isEmpty()) {
-					fail("Could not Simulate Opening First Level for User");
+					TestProperties.failAndPrint("Could not Simulate Opening First Level for User");
 				} else {
 					String markLevelCompleteTest = Setter.updatePlayerResult(applicationRoot, moduleId, userId,
 							"Feedback is Disabled", 1, 1, 1);
@@ -218,23 +218,23 @@ public class SetterTest {
 							}
 							if (scoreBefore == 0) {
 								log.fatal("Could not find user " + userName + " with score > 0: " + scoreboardData);
-								fail("User has score of 0 before BadSubmission Emulation");
+								TestProperties.failAndPrint("User has score of 0 before BadSubmission Emulation");
 							}
 
 							// Resetting resetBadSubmission count back to 0
 							if (!Setter.resetBadSubmission(applicationRoot, userId))
-								fail("Could not Reset bad submission count");
+								TestProperties.failAndPrint("Could not Reset bad submission count");
 							// Simulating 40 bad submissions
 							for (int i = 0; i < 40; i++) {
 								if (!Setter.incrementBadSubmission(applicationRoot, userId))
-									fail("Could not Increment Bad Submission Counter");
+									TestProperties.failAndPrint("Could not Increment Bad Submission Counter");
 							}
 							// Resetting Bad Submission Count back to 0 again
 							if (!Setter.resetBadSubmission(applicationRoot, userId))
-								fail("Could not Reset bad submission count");
+								TestProperties.failAndPrint("Could not Reset bad submission count");
 							// Incrementing one more time (Should set user bad submission counter to 1)
 							if (!Setter.incrementBadSubmission(applicationRoot, userId))
-								fail("Could not Increment Bad Submission Counter");
+								TestProperties.failAndPrint("Could not Increment Bad Submission Counter");
 
 							// Check Score again
 							int scoreAfter = 0;
@@ -256,18 +256,18 @@ public class SetterTest {
 							{
 								log.debug("score before: " + scoreBefore);
 								log.debug("score after : " + scoreAfter);
-								fail("Invalid Score Deduction Detected");
+								TestProperties.failAndPrint("Invalid Score Deduction Detected");
 							} else {
 								return; // Pass
 							}
 						}
 					} else {
-						fail("Could not Mark First level as complete");
+						TestProperties.failAndPrint("Could not Mark First level as complete");
 					}
 				}
 			}
 		} else {
-			fail("Could not Create/Verify User");
+			TestProperties.failAndPrint("Could not Create/Verify User");
 		}
 
 	}
@@ -1001,7 +1001,7 @@ public class SetterTest {
 			}
 
 		} else {
-			fail("Couldnt verify " + userName + " could authenticate at all");
+			TestProperties.failAndPrint("Couldn't verify " + userName + " could authenticate at all");
 		}
 
 	}

@@ -49,17 +49,13 @@ public class GetterTest {
 		try {
 			TestProperties.createMysqlResource();
 		} catch (IOException e) {
-			String message = "Could not create mysql resource file: " + e.toString();
-			log.fatal(message);
-			fail(message);
+			TestProperties.failAndPrint("Could not create mysql resource file: " + e.toString());
 		}
 
 		try {
 			TestProperties.executeSql(log);
 		} catch (InstallationException e) {
-			String message = "Could not create DB: " + e.toString();
-			log.fatal(message);
-			fail(message);
+			TestProperties.failAndPrint("Could not create DB: " + e.toString());
 		}
 	}
 

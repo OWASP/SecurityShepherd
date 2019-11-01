@@ -83,20 +83,21 @@ public class GetFeedbackIT {
 		}
 
 		if (response.getStatus() != expectedResponseCode)
-			TestProperties.failAndPrint(moduleClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode
-					+ " Expected");
+			TestProperties.failAndPrint(moduleClassName + " Servlet Returned " + response.getStatus() + " Code. "
+					+ expectedResponseCode + " Expected");
 		else {
 			log.debug("Received the expected response code " + expectedResponseCode);
-			String responseText="";
+			String responseText = "";
 
 			try {
-				responseText=response.getContentAsString();
+				responseText = response.getContentAsString();
 			} catch (UnsupportedEncodingException e) {
-				TestProperties.failAndPrint("Encountered an unsupported encoding when interpreting response: " + e.toString());
+				TestProperties.failAndPrint(
+						"Encountered an unsupported encoding when interpreting response: " + e.toString());
 			}
-			
+
 			assertNotEquals(responseText, "");
-			
+
 			log.debug("Servlet Successful, returning response retrieved: " + responseText);
 			return (responseText);
 		}
@@ -231,39 +232,32 @@ public class GetFeedbackIT {
 	}
 
 	@Test
-	public void testCsrf() {
+	public void testCSRF() throws SQLException, ServletException {
 		String userName = "configAdminTester";
-		String password = userName;
+		String password = "adminTesterPassword";
 		// Verify / Create user in DB
-		try {
-			TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
-			// Sign in as Admin User
-			log.debug("Signing in as Admin Through LoginServlet");
-			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
-			if (response.getCookie("token") == null)
-				fail("No CSRF Token Was Returned from Login Servlet");
-			String csrfToken = response.getCookie("token").getValue();
-			if (csrfToken.isEmpty()) {
-				String message = new String("No CSRF token returned from Login Servlet");
-				log.fatal(message);
-				fail(message);
+
+		TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
+		// Sign in as Admin User
+		log.debug("Signing in as Admin Through LoginServlet");
+		TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
+		log.debug("Login Servlet Complete, Getting CSRF Token");
+		if (response.getCookie("token") == null)
+			TestProperties.failAndPrint("No CSRF Token Was Returned from Login Servlet");
+		String csrfToken = response.getCookie("token").getValue();
+		if (csrfToken.isEmpty()) {
+			TestProperties.failAndPrint("No CSRF token returned from Login Servlet");
+		} else {
+			String moduleId = "853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5"; // CSRF 7
+			// Add Cookies from Response to outgoing request
+			request.setCookies(response.getCookies());
+			String responseBody = doThePost("wrongToken", moduleId);
+			if (responseBody.equalsIgnoreCase("Error Occurred!")) {
+				TestProperties.failAndPrint("CSRF Error Occurred (Expected Empty Response)");
 			} else {
-				String moduleId = "853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5"; // CSRF 7
-				// Add Cookies from Response to outgoing request
-				request.setCookies(response.getCookies());
-				String responseBody = doThePost("wrongToken", moduleId);
-				if (responseBody.equalsIgnoreCase("Error Occurred!")) {
-					log.debug("CSRF Error Occurred (Expected Empty Response)");
-				} else {
-					String message = "CSRF Error Not Detected with Bad CSRF Token";
-					log.fatal(message);
-					fail(message);
-				}
+				TestProperties.failAndPrint("CSRF Error Not Detected with Bad CSRF Token");
 			}
-		} catch (Exception e) {
-			log.fatal("Could not Complete: " + e.toString());
-			fail("Exception Caught: " + e.toString());
 		}
+
 	}
 }
