@@ -69,9 +69,9 @@ public class GetterTest {
 	 * 
 	 * @param className Name of the class you wish to search / create
 	 * @return The Identifier of the class owning the name submitted
-	 * @throws Exception If the class cannot be created or found
+	 * @throws SQLException
 	 */
-	public static String findCreateClassId(String className) throws Exception {
+	public static String findCreateClassId(String className) throws SQLException {
 		String classId = new String();
 		ResultSet rs = Getter.getClassInfo(applicationRoot);
 		while (rs.next()) {
@@ -87,7 +87,7 @@ public class GetterTest {
 				log.debug("Class Created. Getting ID");
 				classId = findCreateClassId(className);
 			} else {
-				throw new Exception("Could not Create Class " + className);
+				TestProperties.failAndPrint("Could not Create Class " + className);
 			}
 		}
 		return classId;
@@ -100,7 +100,6 @@ public class GetterTest {
 	 * @param className Name of the class you wish to search / create
 	 * @return The Identifier of the class owning the name submitted
 	 * @throws SQLException
-	 * @throws Exception    If the class cannot be created or found
 	 */
 	public static String findCreateClassId(String className, String applicationRoot) throws SQLException {
 		String classId = new String();
@@ -135,29 +134,25 @@ public class GetterTest {
 	 * @param password        The password of the admin you want to create or sign
 	 *                        in as
 	 * @return Boolean value depicting if the user exists and can be authenticated
-	 * @throws Exception If admin Create function fails, an exception will be passed
-	 *                   up
+	 * @throws SQLException
 	 */
-	public static boolean verifyTestAdmin(String applicationRoot, String userName, String password) throws Exception {
+	public static boolean verifyTestAdmin(String applicationRoot, String userName, String password)
+			throws SQLException {
 		boolean result = false;
-		try {
-			String user[] = Getter.authUser(applicationRoot, userName, userName);
-			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
-				Setter.userCreate(applicationRoot, null, userName, userName, "admin", userName + "@test.com", false);
-				user = Getter.authUser(applicationRoot, userName, userName);
-			}
-			if (user != null && !user[0].isEmpty()) {
-				log.debug(userName + " could authenticate. returning true");
-				result = true;
-			} else {
-				log.error("Couldnt verify that " + userName + " could authenticate at all. Throwing Exception");
-				throw new Exception("Could not Verify User " + userName + " could authenticate at all.");
-			}
-		} catch (Exception e) {
-			throw new Exception("Could not Create User " + userName + ": " + e.toString());
+
+		String user[] = Getter.authUser(applicationRoot, userName, userName);
+		if (user == null || user[0].isEmpty()) {
+			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			Setter.userCreate(applicationRoot, null, userName, userName, "admin", userName + "@test.com", false);
+			user = Getter.authUser(applicationRoot, userName, userName);
 		}
+		if (user != null && !user[0].isEmpty()) {
+			log.debug(userName + " could authenticate. returning true");
+			result = true;
+		} else {
+			TestProperties.failAndPrint("Could not verify that user " + userName + " could authenticate at all.");
+		}
+
 		return result;
 	}
 
@@ -873,24 +868,21 @@ public class GetterTest {
 	}
 
 	@Test
-	public void testGetClassInfoString() {
-		try {
-			findCreateClassId("NewClassForGetInfo"); // Throws Exception if Fails
-			ResultSet rs = Getter.getClassInfo(applicationRoot);
-			if (rs.next()) {
-				if (!rs.getString(1).isEmpty()) {
-					log.debug("PASS: Class Information was returned");
-				} else {
-					fail("Data in Class Info Result Set was Blank");
-				}
+	public void testGetClassInfoString() throws SQLException {
+
+		findCreateClassId("NewClassForGetInfo"); 
+		ResultSet rs = Getter.getClassInfo(applicationRoot);
+		if (rs.next()) {
+			if (!rs.getString(1).isEmpty()) {
+				log.debug("PASS: Class Information was returned");
 			} else {
-				fail("No Rows In Class Info Result Set");
+				fail("Data in Class Info Result Set was Blank");
 			}
-			rs.close();
-		} catch (Exception e) {
-			log.fatal("ClassInfo Failure: " + e.toString());
-			fail("Could not open ClassInfo Result Set");
+		} else {
+			fail("No Rows In Class Info Result Set");
 		}
+		rs.close();
+
 	}
 
 	@Test

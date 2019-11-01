@@ -187,8 +187,6 @@ public class TestProperties {
 	 *                        as
 	 * @param classId         Class to create the user in
 	 * @return Boolean value depicting if the user exists and can be authenticated
-	 * @throws Exception If User Create function fails, an exception will be passed
-	 *                   up
 	 */
 	public static boolean verifyTestUser(org.apache.log4j.Logger log, String applicationRoot, String userName,
 			String password, String classId) throws SQLException {
@@ -222,8 +220,6 @@ public class TestProperties {
 	 *                        as
 	 * @param classId         Class to create the user in
 	 * @return Boolean value depicting if the user exists and can be authenticated
-	 * @throws Exception If User Create function fails, an exception will be passed
-	 *                   up
 	 */
 	public static boolean verifyTestAdmin(org.apache.log4j.Logger log, String applicationRoot, String userName,
 			String password, String classId) throws SQLException {
@@ -255,8 +251,7 @@ public class TestProperties {
 	 * @param password        The password of the user you want to create or sign in
 	 *                        as
 	 * @return Boolean value depicting if the user exists and can be authenticated
-	 * @throws Exception If User Create function fails, an exception will be passed
-	 *                   up
+
 	 */
 	public static boolean verifyTestAdmin(org.apache.log4j.Logger log, String applicationRoot, String userName,
 			String password) throws SQLException {
@@ -284,7 +279,6 @@ public class TestProperties {
 	 * 
 	 * @param className Name of the class you wish to search / create
 	 * @return The Identifier of the class owning the name submitted
-	 * @throws Exception If the class cannot be created or found
 	 */
 	public static String findCreateClassId(org.apache.log4j.Logger log, String className, String applicationRoot)
 			throws SQLException {
@@ -319,7 +313,6 @@ public class TestProperties {
 	 * @param moduleId        If of level to complete
 	 * @param feedbackString  Leave as null for default
 	 * @param applicationRoot
-	 * @throws Exception
 	 */
 	public static boolean completeModuleForUser(org.apache.log4j.Logger log, String userName, String userPass,
 			String moduleId, String feedbackString, String applicationRoot) throws SQLException {
