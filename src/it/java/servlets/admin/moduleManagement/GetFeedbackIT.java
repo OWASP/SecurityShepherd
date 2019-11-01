@@ -96,8 +96,6 @@ public class GetFeedbackIT {
 						"Encountered an unsupported encoding when interpreting response: " + e.toString());
 			}
 
-			assertNotEquals(responseText, "");
-
 			log.debug("Servlet Successful, returning response retrieved: " + responseText);
 			return (responseText);
 		}

@@ -3,6 +3,7 @@ package servlets.admin.config;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
@@ -68,8 +69,8 @@ public class DisableScoreboardIT {
 	 * @param csrfToken The CSRF Token of the User
 	 * @return The Content of the Response (Which is supposed to be the location of
 	 *         the module)
-	 * @throws ServletException 
-	 * @throws IOException 
+	 * @throws ServletException
+	 * @throws IOException
 	 * @throws Exception
 	 */
 	public String doThePost(String csrfToken) throws ServletException, IOException {
@@ -102,133 +103,135 @@ public class DisableScoreboardIT {
 	/**
 	 * This test checks that non admin users get access errors when disabling the
 	 * scoreboard
+	 * 
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	@Test
-	public void testUserDisableScoreboardCall() {
+	public void testUserDisableScoreboardCall() throws SQLException, ServletException, IOException {
 		String userName = "configUserTester";
 		String password = userName;
 		// Verify / Create user in DB
-		try {
-			TestProperties.verifyTestUser(log, applicationRoot, userName, password);
-			// Sign in as Normal User
-			log.debug("Signing in as User Through LoginServlet");
-			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
-			if (response.getCookie("token") == null)
-				fail("No CSRF Token Was Returned from Login Servlet");
-			String csrfToken = response.getCookie("token").getValue();
-			if (csrfToken.isEmpty()) {
-				String message = new String("No CSRF token returned from Login Servlet");
-				log.fatal(message);
-				fail(message);
-			} else {
-				// Add Cookies from Response to outgoing request
-				request.setCookies(response.getCookies());
-				String responseBody = doThePost(csrfToken);
-				if (responseBody.contains("try non administrator functions")) {
-					log.debug("No Admin Access Expected Result Recieved");
-					if (!ScoreboardStatus.isScoreboardEnabled()) {
-						String message = "Scoreboard was disabled on what should have been a failed request";
-						log.fatal(message);
-						fail(message);
-					}
-				} else {
-					String message = "Normal user did not get error when performing admin function";
+
+		TestProperties.verifyTestUser(log, applicationRoot, userName, password);
+		// Sign in as Normal User
+		log.debug("Signing in as User Through LoginServlet");
+		TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
+		log.debug("Login Servlet Complete, Getting CSRF Token");
+		if (response.getCookie("token") == null)
+			fail("No CSRF Token Was Returned from Login Servlet");
+		String csrfToken = response.getCookie("token").getValue();
+		if (csrfToken.isEmpty()) {
+			String message = new String("No CSRF token returned from Login Servlet");
+			log.fatal(message);
+			fail(message);
+		} else {
+			// Add Cookies from Response to outgoing request
+			request.setCookies(response.getCookies());
+			String responseBody = doThePost(csrfToken);
+			if (responseBody.contains("try non administrator functions")) {
+				log.debug("No Admin Access Expected Result Recieved");
+				if (!ScoreboardStatus.isScoreboardEnabled()) {
+					String message = "Scoreboard was disabled on what should have been a failed request";
 					log.fatal(message);
 					fail(message);
 				}
+			} else {
+				String message = "Normal user did not get error when performing admin function";
+				log.fatal(message);
+				fail(message);
 			}
-		} catch (Exception e) {
-			log.fatal("Could not Complete: " + e.toString());
-			fail("Exception Caught: " + e.toString());
 		}
+
 	}
 
 	/**
 	 * This test checks that admin users can disable the scoreboard
+	 * 
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	@Test
-	public void testAdminCompleteDisableScoreabordCall() {
+	public void testAdminCompleteDisableScoreabordCall() throws SQLException, ServletException, IOException {
 		String userName = "configAdminTester";
 		String password = userName;
 		// Verify / Create user in DB
-		try {
-			TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
-			// Sign in as Admin User
-			log.debug("Signing in as User Through LoginServlet");
-			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
-			if (response.getCookie("token") == null)
-				fail("No CSRF Token Was Returned from Login Servlet");
-			String csrfToken = response.getCookie("token").getValue();
-			if (csrfToken.isEmpty()) {
-				String message = new String("No CSRF token returned from Login Servlet");
-				log.fatal(message);
-				fail(message);
-			} else {
-				// Add Cookies from Response to outgoing request
-				request.setCookies(response.getCookies());
-				String responseBody = doThePost(csrfToken);
-				if (responseBody.contains("Scoreboard is now disabled and cannot be accessed")) {
-					log.debug("Scoreboard was Disabled in message");
-					if (ScoreboardStatus.isScoreboardEnabled()) {
-						String message = "Scoreboard was not actually disabled";
-						log.fatal(message);
-						fail(message);
-					}
-				} else {
-					String message = "Admin was unable to disable Scoreboard";
+
+		TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
+		// Sign in as Admin User
+		log.debug("Signing in as User Through LoginServlet");
+		TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
+		log.debug("Login Servlet Complete, Getting CSRF Token");
+		if (response.getCookie("token") == null)
+			fail("No CSRF Token Was Returned from Login Servlet");
+		String csrfToken = response.getCookie("token").getValue();
+		if (csrfToken.isEmpty()) {
+			String message = new String("No CSRF token returned from Login Servlet");
+			log.fatal(message);
+			fail(message);
+		} else {
+			// Add Cookies from Response to outgoing request
+			request.setCookies(response.getCookies());
+			String responseBody = doThePost(csrfToken);
+			if (responseBody.contains("Scoreboard is now disabled and cannot be accessed")) {
+				log.debug("Scoreboard was Disabled in message");
+				if (ScoreboardStatus.isScoreboardEnabled()) {
+					String message = "Scoreboard was not actually disabled";
 					log.fatal(message);
 					fail(message);
 				}
+			} else {
+				String message = "Admin was unable to disable Scoreboard";
+				log.fatal(message);
+				fail(message);
 			}
-		} catch (Exception e) {
-			log.fatal("Could not Complete: " + e.toString());
-			fail("Exception Caught: " + e.toString());
 		}
+
 	}
 
 	/**
 	 * Test with Bad CSRF Tokens
+	 * @throws SQLException 
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
 	@Test
-	public void testCsrf() {
+	public void testCsrf() throws SQLException, ServletException, IOException {
 		String userName = "configAdminTester";
 		String password = userName;
 		// Verify / Create user in DB
-		try {
-			TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
-			// Sign in as Admin User
-			log.debug("Signing in as User Through LoginServlet");
-			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
-			if (response.getCookie("token") == null)
-				fail("No CSRF Token Was Returned from Login Servlet");
-			String csrfToken = response.getCookie("token").getValue();
-			if (csrfToken.isEmpty()) {
-				String message = new String("No CSRF token returned from Login Servlet");
-				log.fatal(message);
-				fail(message);
-			} else {
-				// Add Cookies from Response to outgoing request
-				request.setCookies(response.getCookies());
-				String responseBody = doThePost("wrongCSRFToken");
-				if (responseBody.contains("Scoreboard Configuration Failure")) {
-					log.debug("Scoreboard Config Failure Recieved");
-					if (!ScoreboardStatus.isScoreboardEnabled()) {
-						String message = "Scoreboard was disabled on what should have been a failed request";
-						log.fatal(message);
-						fail(message);
-					}
-				} else {
-					String message = "No CSRF Error Detected";
+
+		TestProperties.verifyTestAdmin(log, applicationRoot, userName, password);
+		// Sign in as Admin User
+		log.debug("Signing in as User Through LoginServlet");
+		TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
+		log.debug("Login Servlet Complete, Getting CSRF Token");
+		if (response.getCookie("token") == null)
+			fail("No CSRF Token Was Returned from Login Servlet");
+		String csrfToken = response.getCookie("token").getValue();
+		if (csrfToken.isEmpty()) {
+			String message = new String("No CSRF token returned from Login Servlet");
+			log.fatal(message);
+			fail(message);
+		} else {
+			// Add Cookies from Response to outgoing request
+			request.setCookies(response.getCookies());
+			String responseBody = doThePost("wrongCSRFToken");
+			if (responseBody.contains("Scoreboard Configuration Failure")) {
+				log.debug("Scoreboard Config Failure Recieved");
+				if (!ScoreboardStatus.isScoreboardEnabled()) {
+					String message = "Scoreboard was disabled on what should have been a failed request";
 					log.fatal(message);
 					fail(message);
 				}
+			} else {
+				String message = "No CSRF Error Detected";
+				log.fatal(message);
+				fail(message);
 			}
-		} catch (Exception e) {
-			log.fatal("Could not Complete: " + e.toString());
-			fail("Exception Caught: " + e.toString());
 		}
+
 	}
 }
