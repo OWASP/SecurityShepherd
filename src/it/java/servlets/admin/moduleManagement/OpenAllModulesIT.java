@@ -63,7 +63,8 @@ public class OpenAllModulesIT {
 		try {
 			servlet.init(new MockServletConfig(MODULE_CLASS_NAME));
 		} catch (ServletException e) {
-			TestProperties.failAndPrint("Could not initialize Servlet Instance for module " + MODULE_CLASS_NAME + ": " + e.toString());
+			TestProperties.failAndPrint(
+					"Could not initialize Servlet Instance for module " + MODULE_CLASS_NAME + ": " + e.toString());
 
 		}
 
@@ -80,15 +81,15 @@ public class OpenAllModulesIT {
 		}
 
 		assertFalse(response.getStatus() != expectedResponseCode);
-		
-		String result="";
+
+		String result = "";
 		try {
 			result = response.getContentAsString();
 		} catch (UnsupportedEncodingException e) {
 			TestProperties.failAndPrint("Could not get Servlet response: " + e.toString());
 
 		}
-		
+
 		return (result);
 
 	}
