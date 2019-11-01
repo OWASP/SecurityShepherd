@@ -34,6 +34,7 @@ services:
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASS: ${MYSQL_PASS}
         MYSQL_URI: jdbc:mysql://${CONTAINER_MYSQL}:3306
+        MYSQL_OPTIONS: useUnicode=true&character_set_server=utf8mb4
         MONGO_HOST: ${CONTAINER_MONGO}
         MONGO_PORT: 27017
         MONGO_CONN_TIMEOUT: 1000
