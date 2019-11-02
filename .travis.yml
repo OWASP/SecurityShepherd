@@ -1,9 +1,8 @@
 jdk:
-  - oraclejdk8
-  - oraclejdk11
-  - openjdk8
-  - openjdk11
-
+- oraclejdk8
+- oraclejdk11
+- openjdk10
+- openjdk11
 dist: bionic
 jobs:
    include:
@@ -32,6 +31,8 @@ jobs:
 stages:
 - build
 #    -  stage: deploy
+- unit-test
+- integration-test
 #       on:
 #          repo: OWASP/SecurityShepherd
 #       name: Deploy to Dockerhub
@@ -45,11 +46,18 @@ stages:
 #       - mvn install -Pdocker -DskipTests
 #       - docker-compose build web
 #       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
-- unit-test
-- integration-test
 language: java
 script: mvn cobertura:cobertura
 #-  name: deploy
-#   if: branch IN (master, dev) AND type = push
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+# ----------------
+# ----------------
+# Orphan comments:
+# ----------------
+# Was at begin of line:57 :# ----------------
+# Was at begin of line:58 :# Orphan comments:
+# Was at begin of line:59 :# ----------------
+# Was at begin of line:60 :# Was at begin of line:57 :# Orphan comments:
+# Was at begin of line:61 :# Was at begin of line:58 :# ----------------
+# Was at begin of line:62 :# Was at begin of line:59 :# Was at begin of line:56 :#   if: branch IN (master, dev) AND type = push
