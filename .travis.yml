@@ -4,8 +4,9 @@ jobs:
    -  stage: build
       script:
       - sudo apt-get -y install libargon2-0
-      - mvn clean install -Pdocker -DskipTests -B
+      - mvn clean install -Pdocker -DskipTests -Dmaven.javadoc.skip=true -B
       - docker-compose build
+      - mvn cobertura:cobertura
       services: docker
    -  stage: unit-test
       services: mysql
@@ -16,7 +17,9 @@ jobs:
       services:
       - mysql
       - docker
-      script: mvn verify -DskipUTs=true -DmongoDocker -B
+      script:
+      - mvn verify -DskipUTs=true -DmongoDocker -Dmaven.javadoc.skip=true -B
+      - mvn cobertura:cobertura
       before_install:
       - sudo apt-get -y install libargon2-0
       - mvn -Pdocker validate
