@@ -1,23 +1,26 @@
+language: java
 jdk:
 - oraclejdk11
 - openjdk8
 - openjdk11
 dist: bionic
-jobs:
+matrix:
    include:
    -  stage: build
+      name: Build
       script:
       - sudo apt-get -y install libargon2-0
       - mvn clean install -Pdocker -DskipTests -Dmaven.javadoc.skip=true -B
       - docker-compose build
-      - mvn cobertura:cobertura
       services: docker
    -  stage: unit-test
+      name: Unit tests
       services: mysql
       script: mvn test -B
       before_install:
       - sudo apt-get -y install libargon2-0
    -  stage: integration-test
+      name: Integration tests
       services:
       - mysql
       - docker
@@ -27,26 +30,3 @@ jobs:
       before_install:
       - sudo apt-get -y install libargon2-0
       - mvn -Pdocker validate
-stages:
-- build
-#    -  stage: deploy
-- unit-test
-- integration-test
-#       on:
-#          repo: OWASP/SecurityShepherd
-#       name: Deploy to Dockerhub
-#       dist: bionic
-#       language: generic
-#       provider: script
-#       skip_cleanup: true
-#       services: docker
-#       before_install:
-#       - sudo apt-get -y install libargon2-0
-#       - mvn install -Pdocker -DskipTests
-#       - docker-compose build web
-#       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
-language: java
-script: mvn cobertura:cobertura
-#-  name: deploy
-after_success:
-- bash <(curl -s https://codecov.io/bash)
