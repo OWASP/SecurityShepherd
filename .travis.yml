@@ -1,7 +1,6 @@
 jdk:
-- oraclejdk8
 - oraclejdk11
-- openjdk10
+- openjdk8
 - openjdk11
 dist: bionic
 jobs:
@@ -51,13 +50,3 @@ script: mvn cobertura:cobertura
 #-  name: deploy
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-# ----------------
-# ----------------
-# Orphan comments:
-# ----------------
-# Was at begin of line:57 :# ----------------
-# Was at begin of line:58 :# Orphan comments:
-# Was at begin of line:59 :# ----------------
-# Was at begin of line:60 :# Was at begin of line:57 :# Orphan comments:
-# Was at begin of line:61 :# Was at begin of line:58 :# ----------------
-# Was at begin of line:62 :# Was at begin of line:59 :# Was at begin of line:56 :#   if: branch IN (master, dev) AND type = push
