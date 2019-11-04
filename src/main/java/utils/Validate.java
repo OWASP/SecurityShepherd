@@ -334,7 +334,14 @@ public class Validate {
 		String result = "en_GB";
 		String lang = new String();
 
-		lang = ses.getAttribute("lang").toString();
+		try
+		{
+			lang = ses.getAttribute("lang").toString();
+		}
+		catch(NullPointerException e)
+		{
+			lang = "";
+		}
 		// log.debug("lang submitted: " + lang);
 		if (lang != null || !lang.isEmpty()) {
 			if (lang.matches(".[a-z]{2}-[A-Z]{2}$"))

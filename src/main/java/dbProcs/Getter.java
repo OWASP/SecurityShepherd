@@ -89,7 +89,7 @@ public class Getter {
 			callstmt = conn.prepareCall(
 					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil FROM `users` WHERE userName = ?");
 		} catch (SQLException e) {
-			log.fatal("Could not retrieve users from database: " + e.toString());
+			log.fatal("Could create call statement: " + e.toString());
 			throw new RuntimeException(e);
 		}
 
@@ -99,7 +99,7 @@ public class Getter {
 			callstmt.setString(1, userName);
 			userFind = callstmt.executeQuery();
 		} catch (SQLException e) {
-			log.fatal("Could not create call statement: " + e.toString());
+			log.fatal("Could not execute db query: " + e.toString());
 			throw new RuntimeException(e);
 		}
 
@@ -207,6 +207,122 @@ public class Getter {
 			}
 
 		}
+
+		Database.closeConnection(conn);
+		log.debug("$$$ End authUser $$$");
+		return result;
+	}
+
+	/**
+	 * This method hashes the user submitted password and sends it to the database.
+	 * The database does the rest of the work, including Brute Force prevention.
+	 * 
+	 * @param userName The submitted user name to be used in authentication process
+	 * @param password The submitted password in plain text to be used in
+	 *                 authentication
+	 * @return A string array made up of nothing or information to be consumed by
+	 *         the initiating authentication process.
+	 */
+
+	public static String[] authUserSSO(String ApplicationRoot, String classId, String userName, String userID,
+			String userRole) {
+		String[] result = null;
+		log.debug("$$$ Getter.authUserSSO $$$");
+
+		log.debug("userID = " + userID);
+		log.debug("userName = " + userName);
+
+		boolean userFound = false;
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		// See if user Exists
+		CallableStatement callstmt;
+		try {
+			callstmt = conn.prepareCall(
+					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil FROM `users` WHERE userId = ?");
+		} catch (SQLException e) {
+			log.fatal("Could create call statement: " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		log.debug("Gathering userFind ResultSet");
+		ResultSet userFind;
+		try {
+			callstmt.setString(1, userID);
+			log.debug("Executing query");
+			userFind = callstmt.executeQuery();
+		} catch (SQLException e) {
+			log.fatal("Could not execute db query: " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		log.debug("Opening Result Set from userFind");
+
+		try {
+			userFind.next();
+			log.debug("User Found"); // User found if a row is in the database, this line will not work if the result
+										// set is empty
+			userFound = true;
+		} catch (SQLException e) {
+			log.debug("User did not exist");
+			userFound = false;
+		}
+
+		if (!userFound) {
+			// User wasn't found, enroll them in database
+			
+			boolean userCreated=false;
+			
+			log.debug("User did not exist, create it from SSO data");
+			
+			try {
+				userCreated=Setter.userCreateSSO(ApplicationRoot, classId, userName, userID, userRole);
+			} catch (SQLException e) {
+				String message = "Could not create user " + userName + " with ID " + userID + " via SSO: " + e.toString();
+				log.fatal(message);
+				throw new RuntimeException(message);
+			}
+			
+			if (!userCreated) {
+				String message = "Could not create user " + userName + " with ID " + userID + " via SSO";
+				log.fatal(message);
+				throw new RuntimeException(message);
+			}
+			
+			log.debug("User created");
+
+		}
+
+		Timestamp suspendedUntil;
+
+		log.debug("Getting suspension data");
+
+		try {
+			suspendedUntil = userFind.getTimestamp(8);
+		} catch (SQLException e) {
+			log.fatal("Could not find suspension information from userID: " + userID + ": " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		// Get current system time
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+		if (suspendedUntil.after(currentTime)) {
+			// User is suspended
+			log.debug("User is suspended");
+
+			result = null;
+			return result;
+		}
+
+		log.debug("User '" + userName + "' has logged in");
+		// Before finishing, check if user had a badlogin history, if so, Clear it
+
+		result[0] = userID;
+		result[1] = userName; // userName
+		result[2] = userRole; // role
+		result[4] = classId; // classId
 
 		Database.closeConnection(conn);
 		log.debug("$$$ End authUser $$$");

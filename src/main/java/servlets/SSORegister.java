@@ -98,12 +98,12 @@ public class SSORegister extends HttpServlet
 						if(defaultClass.isEmpty())
 						{
 							log.debug("Adding player to database, with null classId");
-							Setter.userCreateSSO(ApplicationRoot, null, userName, userID, "player");
+							Setter.userCreateSSO("", null, userName, userID, "player");
 						}
 						else //defaultClass is not empty, so It must be set to a class!
 						{
 							log.debug("Adding player to database, to class " + defaultClass);
-							Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, userID, "player");
+							Setter.userCreateSSO("", defaultClass, userName, userID, "player");
 						}
 						response.sendRedirect("login.jsp");
 					}

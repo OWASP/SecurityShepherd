@@ -859,7 +859,7 @@ public class GetterTest {
 	@Test
 	public void testGetClassInfoString() throws SQLException {
 
-		findCreateClassId("NewClassForGetInfo"); 
+		findCreateClassId("NewClassForGetInfo");
 		ResultSet rs = Getter.getClassInfo(applicationRoot);
 		if (rs.next()) {
 			if (!rs.getString(1).isEmpty()) {
@@ -2788,4 +2788,17 @@ public class GetterTest {
 		}
 	}
 
+	@Test
+	public void testSSOAuthCorrectCredentials() {
+		String userName = new String("Test user");
+		String userID = new String("user@example.com");
+
+		String user[] = Getter.authUserSSO(applicationRoot, "", userName, userID, "player");
+		if (user == null || user[0].isEmpty()) {
+			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
+		} else {
+			log.debug("PASS: SSO User logged in");
+		}
+
+	}
 }
