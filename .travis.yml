@@ -22,11 +22,6 @@ matrix:
       - docker
       script:
       - mvn verify -DskipUTs=true -DmongoDocker -Dmaven.javadoc.skip=true -B
-      - mvn cobertura:cobertura
       before_install:
       - sudo apt-get -y install libargon2-0
       - mvn -Pdocker validate
-jdk:
-   - oraclejdk11
-   - openjdk8
-   - openjdk11
