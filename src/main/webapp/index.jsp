@@ -24,7 +24,7 @@
  * 
  * @author Mark Denihan
  */
- 
+
 if (request.getSession() != null)
 {
 	HttpSession ses = request.getSession();

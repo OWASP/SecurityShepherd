@@ -260,10 +260,15 @@ public class Getter {
 		log.debug("Opening Result Set from userFind");
 
 		try {
-			userFind.next();
-			log.debug("User Found"); // User found if a row is in the database, this line will not work if the result
-										// set is empty
-			userFound = true;
+			if (userFind.next()) {
+				userFound = true;
+				log.debug("User Found"); // User found if a row is in the database, this line will not work if the
+											// result
+				// set is empty
+			} else {
+				userFound = false;
+			}
+
 		} catch (SQLException e) {
 			log.debug("User did not exist");
 			userFound = false;
@@ -271,53 +276,57 @@ public class Getter {
 
 		if (!userFound) {
 			// User wasn't found, enroll them in database
-			
-			boolean userCreated=false;
-			
+
+			boolean userCreated = false;
+
 			log.debug("User did not exist, create it from SSO data");
-			
+
 			try {
-				userCreated=Setter.userCreateSSO(ApplicationRoot, classId, userName, userID, userRole);
+				userCreated = Setter.userCreateSSO(ApplicationRoot, classId, userName, userID, userRole);
 			} catch (SQLException e) {
-				String message = "Could not create user " + userName + " with ID " + userID + " via SSO: " + e.toString();
+				String message = "Could not create user " + userName + " with ID " + userID + " via SSO: "
+						+ e.toString();
 				log.fatal(message);
 				throw new RuntimeException(message);
 			}
-			
+
 			if (!userCreated) {
 				String message = "Could not create user " + userName + " with ID " + userID + " via SSO";
 				log.fatal(message);
 				throw new RuntimeException(message);
 			}
-			
+
 			log.debug("User created");
 
-		}
+		} else {
 
-		Timestamp suspendedUntil;
+			Timestamp suspendedUntil;
 
-		log.debug("Getting suspension data");
+			log.debug("Getting suspension data");
 
-		try {
-			suspendedUntil = userFind.getTimestamp(8);
-		} catch (SQLException e) {
-			log.fatal("Could not find suspension information from userID: " + userID + ": " + e.toString());
-			throw new RuntimeException(e);
-		}
+			try {
+				suspendedUntil = userFind.getTimestamp(8);
+			} catch (SQLException e) {
+				log.fatal("Could not find suspension information from userID: " + userID + ": " + e.toString());
+				throw new RuntimeException(e);
+			}
 
-		// Get current system time
-		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+			// Get current system time
+			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
-		if (suspendedUntil.after(currentTime)) {
-			// User is suspended
-			log.debug("User is suspended");
+			if (suspendedUntil.after(currentTime)) {
+				// User is suspended
+				log.debug("User is suspended");
 
-			result = null;
-			return result;
+				result = null;
+				return result;
+			}
 		}
 
 		log.debug("User '" + userName + "' has logged in");
 		// Before finishing, check if user had a badlogin history, if so, Clear it
+
+		result = new String[5];
 
 		result[0] = userID;
 		result[1] = userName; // userName
