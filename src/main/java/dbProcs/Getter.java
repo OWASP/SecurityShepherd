@@ -18,6 +18,7 @@ import org.owasp.encoder.Encode;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import servlets.Register;
 import utils.ModulePlan;
 import utils.ScoreboardStatus;
 
@@ -247,6 +248,7 @@ public class Getter {
 		String[] result = new String[5];
 
 		String userID = new String();
+		String defaultClass = Register.getDefaultClass();
 
 		boolean userFound = false;
 
@@ -296,9 +298,19 @@ public class Getter {
 			boolean userCreated = false;
 
 			log.debug("User did not exist, create it from SSO data");
-
+			
 			try {
-				userCreated = Setter.userCreateSSO(ApplicationRoot, classId, userName, ssoName, userRole);
+				if(defaultClass.isEmpty())
+				{
+					log.debug("Adding player to database, with null classId");
+					Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName, userRole);
+				}
+				else //defaultClass is not empty, so It must be set to a class!
+				{
+					log.debug("Adding player to database, to class " + defaultClass);
+					Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName, userRole);
+				}
+				
 			} catch (SQLException e) {
 				String message = "Could not create user " + userName + " with ssoName " + ssoName + " via SSO: "
 						+ e.toString();
