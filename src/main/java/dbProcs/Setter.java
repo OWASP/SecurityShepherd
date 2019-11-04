@@ -887,7 +887,7 @@ public class Setter {
 		callstmt.setString(2, userName);
 		callstmt.setString(3, hash);
 		callstmt.setString(4, userRole);
-		callstmt.setString(5, ""); //ssoName
+		callstmt.setString(5, null); //ssoName
 		callstmt.setString(6, userAddress);
 		callstmt.setString(7, "login"); //login type
 		callstmt.setBoolean(8, tempPass);
@@ -950,7 +950,7 @@ public class Setter {
 				result = true;
 			} else // Registration failure
 			{
-				log.debug("Register Failure");
+				log.debug("Register Failure: return value was " + Integer.toString(updateReturnValue));
 				result = false;
 			}
 		} catch (SQLException e) {
