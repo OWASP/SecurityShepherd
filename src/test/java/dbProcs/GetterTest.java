@@ -2790,14 +2790,49 @@ public class GetterTest {
 
 	@Test
 	public void testSSOAuthCorrectCredentials() {
-		String userName = new String("Test user");
-		String userID = new String("user@example.com");
+		String userName = new String("SSOTestUser Lastname");
+		String userID = new String("ssotestuser@example.com");
 
 		String user[] = Getter.authUserSSO(applicationRoot, "", userName, userID, "player");
 		if (user == null || user[0].isEmpty()) {
 			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
 		} else {
 			log.debug("PASS: SSO User logged in");
+		}
+	}
+
+	@Test
+	public void testSSOAuthSuspended() {
+		String userName = new String("SSOSuspendedUser Lastname");
+		String userID = new String("ssosuspendeduser@example.com");
+
+		String user[] = Getter.authUserSSO(applicationRoot, "", userName, userID, "player");
+		if (user == null || user[0].isEmpty()) {
+			TestProperties.failAndPrint("Test Failed. Initial SSO auth did not succeed");
+		}
+
+		if (!Setter.suspendUser(applicationRoot, userID, 10)) {
+			fail("Could not suspend User");
+		} else {
+			user = Getter.authUserSSO(applicationRoot, "", userName, userID, "player");
+			if (user == null || user[0].isEmpty()) {
+				log.debug("PASS: User Could not Authenticate after suspension");
+			} else {
+				TestProperties.failAndPrint("Could still authenticate as user after suspension");
+			}
+
+		}
+
+		if (!Setter.unSuspendUser(applicationRoot, userID)) {
+			fail("Could not suspend User");
+		} else {
+			user = Getter.authUserSSO(applicationRoot, "", userName, userID, "player");
+			if (user == null || user[0].isEmpty()) {
+				TestProperties.failAndPrint("Could not authenticate as user after unsuspension");
+			} else {
+				log.debug("PASS: User Could Authenticate after unsuspension");
+			}
+
 		}
 
 	}
