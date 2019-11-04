@@ -1,46 +1,28 @@
+language: java
 dist: bionic
-jobs:
+matrix:
    include:
    -  stage: build
+      name: Build
       script:
       - sudo apt-get -y install libargon2-0
-      - mvn clean install -Pdocker -DskipTests -B
+      - mvn clean install -Pdocker -DskipTests -Dmaven.javadoc.skip=true -B
       - docker-compose build
       services: docker
    -  stage: unit-test
+      name: Unit tests
       services: mysql
       script: mvn test -B
       before_install:
       - sudo apt-get -y install libargon2-0
    -  stage: integration-test
+      name: Integration tests
       services:
       - mysql
       - docker
-      script: mvn verify -DskipUTs=true -DmongoDocker -B
+      script:
+      - mvn verify -DskipUTs=true -DmongoDocker -Dmaven.javadoc.skip=true -B
+      - mvn cobertura:cobertura
       before_install:
       - sudo apt-get -y install libargon2-0
       - mvn -Pdocker validate
-stages:
-- build
-#    -  stage: deploy
-#       on:
-#          repo: OWASP/SecurityShepherd
-#       name: Deploy to Dockerhub
-#       dist: bionic
-#       language: generic
-#       provider: script
-#       skip_cleanup: true
-#       services: docker
-#       before_install:
-#       - sudo apt-get -y install libargon2-0
-#       - mvn install -Pdocker -DskipTests
-#       - docker-compose build web
-#       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
-- unit-test
-- integration-test
-language: java
-script: mvn cobertura:cobertura
-#-  name: deploy
-#   if: branch IN (master, dev) AND type = push
-after_success:
-- bash <(curl -s https://codecov.io/bash)
