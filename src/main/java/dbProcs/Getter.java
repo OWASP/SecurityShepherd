@@ -256,7 +256,7 @@ public class Getter {
 		CallableStatement callstmt;
 		try {
 			callstmt = conn.prepareCall(
-					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND loginType=saml");
+					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND loginType='saml'");
 		} catch (SQLException e) {
 			log.fatal("Could create call statement: " + e.toString());
 			throw new RuntimeException(e);
@@ -273,7 +273,7 @@ public class Getter {
 			throw new RuntimeException(e);
 		}
 
-		log.debug("Opening Result Set from userFind");
+		log.debug("Opening Result Set from userResult");
 
 		try {
 			if (userResult.next()) {
@@ -344,7 +344,8 @@ public class Getter {
 		// Find the generated userID by asking the database
 		try {
 			callstmt = conn.prepareCall(
-					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND loginType=saml");
+					"SELECT userId FROM `users` WHERE ssoName = ? AND loginType='saml'");
+			
 		} catch (SQLException e) {
 			log.fatal("Could create call statement: " + e.toString());
 			throw new RuntimeException(e);
