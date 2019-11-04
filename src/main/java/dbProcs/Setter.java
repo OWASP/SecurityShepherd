@@ -882,13 +882,17 @@ public class Setter {
 		// TODO: wipe password from memory after hashing
 
 		log.debug("Executing userCreate procedure on Database");
-		CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?)");
+		CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		callstmt.setString(1, classId);
 		callstmt.setString(2, userName);
 		callstmt.setString(3, hash);
 		callstmt.setString(4, userRole);
-		callstmt.setString(5, userAddress);
-		callstmt.setBoolean(6, tempPass);
+		callstmt.setString(5, ""); //ssoName
+		callstmt.setString(6, userAddress);
+		callstmt.setString(7, "login"); //login type
+		callstmt.setBoolean(8, tempPass);
+		callstmt.setBoolean(9, false); //Tempname
+
 		ResultSet registerAttempt = callstmt.executeQuery();
 		log.debug("Opening result set");
 
@@ -906,21 +910,20 @@ public class Setter {
 			throw new SQLException(registerAttempt.getString(1));
 		}
 
-
 	Database.closeConnection(conn);log.debug("*** END userCreate ***");
 	
 	return result;
 
 	}
 
-	public static boolean userCreateSSO(String ApplicationRoot, String classId, String userName, String userID,
+	public static boolean userCreateSSO(String ApplicationRoot, String classId, String userName, String ssoName,
 			String userRole) throws SQLException {
 		boolean result = false;
 
 		log.debug("*** Setter.userCreateSSO ***");
 		log.debug("classId = " + classId);
 		log.debug("userName = " + userName);
-		log.debug("userID = " + userID);
+		log.debug("ssoName = " + ssoName);
 		// We don't log passwords
 		log.debug("userRole = " + userRole);
 
@@ -928,17 +931,18 @@ public class Setter {
 		try {
 
 			log.debug("Executing userCreate procedure on Database");
-			CallableStatement callstmt = conn.prepareCall(
-					"INSERT INTO users (userId,classId,userName,userPass,userRole,userAddress,tempPassword) VALUES (?,?,?,?,?,?,?);");
 
-			callstmt.setString(1, userID);
-			callstmt.setString(2, classId);
-			callstmt.setString(3, userName);
-			callstmt.setString(4, "DISABLED");
-			callstmt.setString(5, userRole);
-			callstmt.setString(6, "");
-			callstmt.setBoolean(7, false);
-
+			CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			callstmt.setString(1, classId);
+			callstmt.setString(2, userName);
+			callstmt.setString(3, "DISABLED");
+			callstmt.setString(4, userRole);
+			callstmt.setString(5, ssoName);
+			callstmt.setString(6, ""); //userAddress
+			callstmt.setString(7, "saml"); //login type
+			callstmt.setBoolean(8, false); //temppass
+			callstmt.setBoolean(9, true); //Tempname
+			
 			int updateReturnValue = callstmt.executeUpdate();
 
 			if (updateReturnValue == 1) {
@@ -948,14 +952,13 @@ public class Setter {
 			{
 				log.debug("Register Failure");
 				result = false;
-
 			}
 		} catch (SQLException e) {
 			log.fatal("userCreate Failure: " + e.toString());
 			throw new SQLException(e);
 		}
 		Database.closeConnection(conn);
-		log.debug("*** END userCreate ***");
+		log.debug("*** END userCreateSSO ***");
 		return result;
 	}
 

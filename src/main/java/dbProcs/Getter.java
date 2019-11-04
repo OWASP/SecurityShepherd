@@ -87,29 +87,34 @@ public class Getter {
 		CallableStatement callstmt;
 		try {
 			callstmt = conn.prepareCall(
-					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil FROM `users` WHERE userName = ?");
+					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil, loginType FROM `users` WHERE userName = ?");
 		} catch (SQLException e) {
 			log.fatal("Could create call statement: " + e.toString());
 			throw new RuntimeException(e);
 		}
 
-		log.debug("Gathering userFind ResultSet");
-		ResultSet userFind;
+		log.debug("Gathering userResult ResultSet");
+		ResultSet userResult;
 		try {
 			callstmt.setString(1, userName);
-			userFind = callstmt.executeQuery();
+			userResult = callstmt.executeQuery();
 		} catch (SQLException e) {
 			log.fatal("Could not execute db query: " + e.toString());
 			throw new RuntimeException(e);
 		}
 
-		log.debug("Opening Result Set from userFind");
+		log.debug("Opening Result Set from userResult");
 
 		try {
-			userFind.next();
-			log.debug("User Found"); // User found if a row is in the database, this line will not work if the result
-										// set is empty
-			userFound = true;
+			if (userResult.next()) {
+				log.debug("User Found"); // User found if a row is in the database, this line will not work if the
+											// result
+				// set is empty
+				userFound = true;
+			} else {
+				log.debug("User did not exist");
+				userFound = false;
+			}
 		} catch (SQLException e) {
 			log.debug("User did not exist");
 			userFound = false;
@@ -122,7 +127,7 @@ public class Getter {
 			log.debug("Getting password hash");
 			String dbHash;
 			try {
-				dbHash = userFind.getString(3);
+				dbHash = userResult.getString(3);
 				log.debug("Verifying hash");
 
 				userVerified = argon2.verify(dbHash, password.toCharArray());
@@ -142,20 +147,29 @@ public class Getter {
 				result = new String[5];
 				boolean isTempPassword;
 				int badLoginCount;
+				String loginType=new String();
 
 				Timestamp suspendedUntil;
 
 				try {
-					result[0] = userFind.getString(1);
-					result[1] = userFind.getString(2); // userName
-					result[2] = userFind.getString(4); // role
-					badLoginCount = userFind.getInt(5);
-					isTempPassword = userFind.getBoolean(6);
-					result[4] = userFind.getString(7); // classId
-					suspendedUntil = userFind.getTimestamp(8);
+					result[0] = userResult.getString(1);
+					result[1] = userResult.getString(2); // userName
+					result[2] = userResult.getString(4); // role
+					badLoginCount = userResult.getInt(5);
+					isTempPassword = userResult.getBoolean(6);
+					result[4] = userResult.getString(7); // classId
+					suspendedUntil = userResult.getTimestamp(8);
+					loginType = userResult.getString(9);
 				} catch (SQLException e) {
 					log.fatal("Could not retrieve auth data from db: " + e.toString());
 					throw new RuntimeException(e);
+				}
+				
+				if(loginType != "login")
+				{
+					// Login type must be "login" and not "saml" if password login is to be allowed
+					result = null;
+					return result;
 				}
 
 				// Get current system time
@@ -224,13 +238,17 @@ public class Getter {
 	 *         the initiating authentication process.
 	 */
 
-	public static String[] authUserSSO(String ApplicationRoot, String classId, String userName, String userID,
+	public static String[] authUserSSO(String ApplicationRoot, String classId, String userName, String ssoName,
 			String userRole) {
-		String[] result = null;
+		
 		log.debug("$$$ Getter.authUserSSO $$$");
 
-		log.debug("userID = " + userID);
+		log.debug("ssoName = " + ssoName);
 		log.debug("userName = " + userName);
+		
+		String[] result = new String[5];
+		
+		String userID=new String();
 
 		boolean userFound = false;
 
@@ -240,18 +258,18 @@ public class Getter {
 		CallableStatement callstmt;
 		try {
 			callstmt = conn.prepareCall(
-					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil FROM `users` WHERE userId = ?");
+					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND loginType=saml");
 		} catch (SQLException e) {
 			log.fatal("Could create call statement: " + e.toString());
 			throw new RuntimeException(e);
 		}
 
 		log.debug("Gathering userFind ResultSet");
-		ResultSet userFind;
+		ResultSet userResult;
 		try {
-			callstmt.setString(1, userID);
+			callstmt.setString(1, ssoName);
 			log.debug("Executing query");
-			userFind = callstmt.executeQuery();
+			userResult = callstmt.executeQuery();
 		} catch (SQLException e) {
 			log.fatal("Could not execute db query: " + e.toString());
 			throw new RuntimeException(e);
@@ -260,7 +278,7 @@ public class Getter {
 		log.debug("Opening Result Set from userFind");
 
 		try {
-			if (userFind.next()) {
+			if (userResult.next()) {
 				userFound = true;
 				log.debug("User Found"); // User found if a row is in the database, this line will not work if the
 											// result
@@ -282,16 +300,16 @@ public class Getter {
 			log.debug("User did not exist, create it from SSO data");
 
 			try {
-				userCreated = Setter.userCreateSSO(ApplicationRoot, classId, userName, userID, userRole);
+				userCreated = Setter.userCreateSSO(ApplicationRoot, classId, userName, ssoName, userRole);
 			} catch (SQLException e) {
-				String message = "Could not create user " + userName + " with ID " + userID + " via SSO: "
+				String message = "Could not create user " + userName + " with ssoName " + ssoName + " via SSO: "
 						+ e.toString();
 				log.fatal(message);
 				throw new RuntimeException(message);
 			}
 
 			if (!userCreated) {
-				String message = "Could not create user " + userName + " with ID " + userID + " via SSO";
+				String message = "Could not create user " + userName + " with ssoName " + ssoName + " via SSO";
 				log.fatal(message);
 				throw new RuntimeException(message);
 			}
@@ -299,15 +317,15 @@ public class Getter {
 			log.debug("User created");
 
 		} else {
-
+			
 			Timestamp suspendedUntil;
 
 			log.debug("Getting suspension data");
 
 			try {
-				suspendedUntil = userFind.getTimestamp(8);
+				suspendedUntil = userResult.getTimestamp(8);
 			} catch (SQLException e) {
-				log.fatal("Could not find suspension information from userID: " + userID + ": " + e.toString());
+				log.fatal("Could not find suspension information from ssoName: " + ssoName + ": " + e.toString());
 				throw new RuntimeException(e);
 			}
 
@@ -324,9 +342,60 @@ public class Getter {
 		}
 
 		log.debug("User '" + userName + "' has logged in");
-		// Before finishing, check if user had a badlogin history, if so, Clear it
+		
+		// Find the generated userID by asking the database
+		try {
+			callstmt = conn.prepareCall(
+					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND loginType=saml");
+		} catch (SQLException e) {
+			log.fatal("Could create call statement: " + e.toString());
+			throw new RuntimeException(e);
+		}
 
-		result = new String[5];
+		log.debug("Gathering userResult ResultSet");
+		
+		try {
+			callstmt.setString(1, ssoName);
+			log.debug("Executing query");
+			userResult = callstmt.executeQuery();
+		} catch (SQLException e) {
+			log.fatal("Could not execute db query: " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		log.debug("Opening user list result set");
+
+		try {
+			if (userResult.next()) {
+				userFound = true;
+				log.debug("User Found"); // User found if a row is in the database, this line will not work if the
+											// result
+				// set is empty
+			} else {
+				userFound = false;
+			}
+
+		} catch (SQLException e) {
+			log.debug("User did not exist");
+			userFound = false;
+		}
+		
+		if(!userFound)
+		{
+			// If user wasn't found at this stage something is quite wrong, so exit forefully
+			String message="User wasn't found after being added!";
+			log.fatal(message);
+			throw new RuntimeException(message);
+		}
+		
+		try {
+			userID= userResult.getString(1);
+		} catch (SQLException e) {
+			String message = "Could find userID for userName " + userName + " with ssoName " + ssoName + " via SSO: "
+					+ e.toString();
+			log.fatal(message);
+			throw new RuntimeException(message);
+		}
 
 		result[0] = userID;
 		result[1] = userName; // userName

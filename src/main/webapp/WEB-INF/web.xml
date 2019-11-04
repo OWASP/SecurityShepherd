@@ -54,6 +54,24 @@
 		<servlet-name>/login</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/acs</servlet-name>
+		<servlet-class>servlets.ACS</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/acs</servlet-name>
+		<url-pattern>/acs</url-pattern>
+	</servlet-mapping>
+	
+		<servlet>
+		<servlet-name>/sls</servlet-name>
+		<servlet-class>servlets.SLS</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/sls</servlet-name>
+		<url-pattern>/sls</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>/mobileLogin</servlet-name>
@@ -1258,12 +1276,11 @@
 	</filter-mapping>
 <servlet>
   <servlet-name>saml-meta</servlet-name>
-  <jsp-file>/saml/metadata.jsp</jsp-file>
+  <jsp-file>/metadata.jsp</jsp-file>
 </servlet>
 <servlet-mapping>
   <servlet-name>saml-meta</servlet-name>
-  <url-pattern>/saml/metadata.xml</url-pattern>
+  <url-pattern>/metadata.xml</url-pattern>
 </servlet-mapping>
-
 
 </web-app>

@@ -21,7 +21,6 @@ CREATE  TABLE IF NOT EXISTS `core`.`class` (
   PRIMARY KEY (`classId`) )
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `core`.`users`
 -- -----------------------------------------------------
@@ -31,10 +30,13 @@ CREATE  TABLE IF NOT EXISTS `core`.`users` (
   `userName` VARCHAR(32) NOT NULL ,
   `userPass` VARCHAR(512) NOT NULL ,
   `userRole` VARCHAR(32) NOT NULL ,
+  `ssoName` VARCHAR(512) ,
   `badLoginCount` INT NOT NULL DEFAULT 0 ,
   `suspendedUntil` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00' ,
   `userAddress` VARCHAR(128) NULL ,
+  `loginType` VARCHAR(32) NULL ,
   `tempPassword` TINYINT(1)  NULL DEFAULT FALSE ,
+  `tempUsername` TINYINT(1)  NULL DEFAULT FALSE ,
   `userScore` INT NOT NULL DEFAULT 0 ,
   `goldMedalCount` INT NOT NULL DEFAULT 0 ,
   `silverMedalCount` INT NOT NULL DEFAULT 0 ,
@@ -43,13 +45,13 @@ CREATE  TABLE IF NOT EXISTS `core`.`users` (
   PRIMARY KEY (`userId`) ,
   INDEX `classId` (`classId` ASC) ,
   UNIQUE INDEX `userName_UNIQUE` (`userName` ASC) ,
+  UNIQUE INDEX `ssoName_UNIQUE` (`ssoName` ASC) ,
   CONSTRAINT `classId`
     FOREIGN KEY (`classId` )
     REFERENCES `core`.`class` (`classId` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `core`.`modules`
@@ -96,7 +98,6 @@ CREATE TABLE IF NOT EXISTS `core`.`medals` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `core`.`results`
 -- -----------------------------------------------------
@@ -126,7 +127,6 @@ CREATE  TABLE IF NOT EXISTS `core`.`results` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `core`.`cheatsheet`
 -- -----------------------------------------------------
@@ -144,7 +144,6 @@ CREATE  TABLE IF NOT EXISTS `core`.`cheatsheet` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
-
 
 -- -----------------------------------------------------
 -- Table `core`.`sequence`
@@ -301,7 +300,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userCreate` (IN theClassId VARCHAR(64), IN theUserName VARCHAR(32), IN theUserPass VARCHAR(512), IN theUserRole VARCHAR(32), IN theUserAddress VARCHAR(128), tempPass BOOLEAN)
+CREATE PROCEDURE `core`.`userCreate` (IN theClassId VARCHAR(64), IN theUserName VARCHAR(32), IN theUserPass VARCHAR(512), IN theUserRole VARCHAR(32), IN theSSOName VARCHAR(32), IN theUserAddress VARCHAR(128), IN theLoginType VARCHAR(32), theTempPassword BOOLEAN, theTempUsername BOOLEAN)
 BEGIN
     DECLARE theId VARCHAR(64);
     DECLARE theClassCount INT;
@@ -336,16 +335,22 @@ BEGIN
                 userName,
                 userPass,
                 userRole,
+                ssoName,
                 userAddress,
-                tempPassword
+                loginType,
+                tempPassword,
+                tempUsername
             ) VALUES (
                 theId,
                 theClassId,
                 theUserName,
                 theUserPass,
                 theUserRole,
+                theSSOName,
                 theUserAddress,
-                tempPass
+                theLoginType,
+                theTempPass,
+                theTempUsername,                
             );
         COMMIT;
         SELECT null FROM DUAL;
