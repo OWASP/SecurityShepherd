@@ -62,7 +62,7 @@ public class Setup extends HttpServlet {
 		String dbOverride = request.getParameter("dboverride");
 
 		String connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
-		dbOptions= "useUnicode=true&character_set_server=utf8mb4";
+		dbOptions = "useUnicode=true&character_set_server=utf8mb4";
 		String driverType = "org.gjt.mm.mysql.Driver";
 
 		String mongodbHost = request.getParameter("mhost");
@@ -76,6 +76,9 @@ public class Setup extends HttpServlet {
 			log.fatal("Could not find requested parameter in props file: " + e.toString());
 			throw new RuntimeException(e);
 		}
+
+		log.debug("Starting database setup...");
+
 		String auth = "";
 
 		String enableMongoChallenge = request.getParameter("enableMongoChallenge");
@@ -123,10 +126,14 @@ public class Setup extends HttpServlet {
 		if (auth == "") {
 			// No auth loaded, could be because user never reloaded setup page after an
 			// error. Generate it again
+			log.debug("Generating auth file");
+
 			generateAuth();
 		}
 
 		if (!auth.equals(dbAuth)) {
+			log.debug("Invalid auth supplied");
+
 			// The supplied auth data was incorrect
 			htmlOutput += bundle.getString("generic.text.setup.authentication.failed");
 			log.error("Authorization mismatch: " + auth + " does not equal " + dbAuth);
@@ -134,14 +141,19 @@ public class Setup extends HttpServlet {
 		} else {
 			// Test the user's entered database properties
 			Boolean connectionSuccess = false;
+			log.debug("Attempting to connect to database");
+
 			try {
 				Connection conn = Database.getConnection(driverType, connectionURL, dbOptions, dbUser, dbPass);
 				Database.closeConnection(conn);
 				connectionSuccess = true;
+				log.debug("Database connection successful");
+
 			} catch (SQLException e) {
 				htmlOutput += bundle.getString("generic.text.setup.connection.failed") + e.getMessage();
 
 				log.error("DB connection error: " + e.toString());
+				connectionSuccess = false;
 
 			}
 
@@ -149,7 +161,8 @@ public class Setup extends HttpServlet {
 				htmlOutput += bundle.getString("generic.text.setup.connection.failed");
 			} else {
 				// Write the user's entered mysql database properties to file
-				Files.write(Paths.get(Constants.MYSQL_DB_PROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+				Files.write(Paths.get(Constants.MYSQL_DB_PROP), dbProp.toString().getBytes(),
+						StandardOpenOption.CREATE);
 				try {
 					if (dbOverride.equalsIgnoreCase("override")) {
 						executeSqlScript();
@@ -165,6 +178,7 @@ public class Setup extends HttpServlet {
 					success = true;
 				} catch (SQLException e) {
 					htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
+					log.error(bundle.getString("generic.text.setup.failed") + ": " + e.getMessage());
 					FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 				}
 				// Clean up File as it is not needed anymore. Will Cause a new one to be
@@ -207,6 +221,8 @@ public class Setup extends HttpServlet {
 					+ bundle.getString("generic.text.setup.response.success") + "</h2><p>" + htmlOutput + " "
 					+ bundle.getString("generic.text.setup.response.success.redirecting") + "</p>";
 		} else {
+			log.error("Could not create database...");
+
 			FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 			htmlOutput = "<h2 class=\"title\" id=\"login_title\">"
 					+ bundle.getString("generic.text.setup.response.failed") + "</h2><p>" + htmlOutput + "</p>";
@@ -234,7 +250,7 @@ public class Setup extends HttpServlet {
 			// TODO: Display helpful error message to user
 			log.fatal("Cannot connect to database: " + e.toString());
 			isInstalled = true;
-			
+
 		} catch (SQLException e) {
 			// Some other database error occurred, bail out
 			log.fatal("Cannot connect to database: " + e.toString());
@@ -278,18 +294,21 @@ public class Setup extends HttpServlet {
 		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
 		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
+		log.debug("Initializing core database");
 		Connection databaseConnection = Database.getDatabaseConnection(null, true);
 		Statement psProcToexecute = databaseConnection.createStatement();
 		psProcToexecute.executeUpdate(data);
 
 		file = new File(getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
 		data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		log.debug("Initializing module database");
+
 		psProcToexecute = databaseConnection.createStatement();
 		psProcToexecute.executeUpdate(data);
 
 	}
 
-	private synchronized void executeMongoScript() throws IOException  {
+	private synchronized void executeMongoScript() throws IOException {
 
 		MongoClient mongoConnection = null;
 

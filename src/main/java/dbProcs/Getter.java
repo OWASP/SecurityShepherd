@@ -132,7 +132,6 @@ public class Getter {
 
 				userVerified = argon2.verify(dbHash, password.toCharArray());
 
-				log.debug("Verification result: " + password);
 			} catch (SQLException e) {
 				log.error("Could not retrieve password hash from db: " + e.toString());
 				result = null;
@@ -147,7 +146,7 @@ public class Getter {
 				result = new String[5];
 				boolean isTempPassword;
 				int badLoginCount;
-				String loginType=new String();
+				String loginType = new String();
 
 				Timestamp suspendedUntil;
 
@@ -164,9 +163,8 @@ public class Getter {
 					log.fatal("Could not retrieve auth data from db: " + e.toString());
 					throw new RuntimeException(e);
 				}
-				
-				if(loginType != "login")
-				{
+
+				if (!loginType.equals("login")) {
 					// Login type must be "login" and not "saml" if password login is to be allowed
 					result = null;
 					return result;
@@ -240,15 +238,15 @@ public class Getter {
 
 	public static String[] authUserSSO(String ApplicationRoot, String classId, String userName, String ssoName,
 			String userRole) {
-		
+
 		log.debug("$$$ Getter.authUserSSO $$$");
 
 		log.debug("ssoName = " + ssoName);
 		log.debug("userName = " + userName);
-		
+
 		String[] result = new String[5];
-		
-		String userID=new String();
+
+		String userID = new String();
 
 		boolean userFound = false;
 
@@ -317,7 +315,7 @@ public class Getter {
 			log.debug("User created");
 
 		} else {
-			
+
 			Timestamp suspendedUntil;
 
 			log.debug("Getting suspension data");
@@ -342,7 +340,7 @@ public class Getter {
 		}
 
 		log.debug("User '" + userName + "' has logged in");
-		
+
 		// Find the generated userID by asking the database
 		try {
 			callstmt = conn.prepareCall(
@@ -353,7 +351,7 @@ public class Getter {
 		}
 
 		log.debug("Gathering userResult ResultSet");
-		
+
 		try {
 			callstmt.setString(1, ssoName);
 			log.debug("Executing query");
@@ -379,17 +377,17 @@ public class Getter {
 			log.debug("User did not exist");
 			userFound = false;
 		}
-		
-		if(!userFound)
-		{
-			// If user wasn't found at this stage something is quite wrong, so exit forefully
-			String message="User wasn't found after being added!";
+
+		if (!userFound) {
+			// If user wasn't found at this stage something is quite wrong, so exit
+			// forefully
+			String message = "User wasn't found after being added!";
 			log.fatal(message);
 			throw new RuntimeException(message);
 		}
-		
+
 		try {
-			userID= userResult.getString(1);
+			userID = userResult.getString(1);
 		} catch (SQLException e) {
 			String message = "Could find userID for userName " + userName + " with ssoName " + ssoName + " via SSO: "
 					+ e.toString();

@@ -28,9 +28,9 @@ CREATE  TABLE IF NOT EXISTS `core`.`users` (
   `userId` VARCHAR(64) NOT NULL ,
   `classId` VARCHAR(64) NULL ,
   `userName` VARCHAR(32) NOT NULL ,
-  `userPass` VARCHAR(512) NOT NULL ,
+  `userPass` VARCHAR(191) NOT NULL ,
   `userRole` VARCHAR(32) NOT NULL ,
-  `ssoName` VARCHAR(512) ,
+  `ssoName` VARCHAR(191) ,
   `badLoginCount` INT NOT NULL DEFAULT 0 ,
   `suspendedUntil` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00' ,
   `userAddress` VARCHAR(128) NULL ,
@@ -300,7 +300,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userCreate` (IN theClassId VARCHAR(64), IN theUserName VARCHAR(32), IN theUserPass VARCHAR(512), IN theUserRole VARCHAR(32), IN theSSOName VARCHAR(32), IN theUserAddress VARCHAR(128), IN theLoginType VARCHAR(32), theTempPassword BOOLEAN, theTempUsername BOOLEAN)
+CREATE PROCEDURE `core`.`userCreate` (IN theClassId VARCHAR(64), IN theUserName VARCHAR(32), IN theUserPass VARCHAR(191), IN theUserRole VARCHAR(32), IN theSSOName VARCHAR(32), IN theUserAddress VARCHAR(128), IN theLoginType VARCHAR(32), theTempPassword BOOLEAN, theTempUsername BOOLEAN)
 BEGIN
     DECLARE theId VARCHAR(64);
     DECLARE theClassCount INT;
@@ -349,8 +349,8 @@ BEGIN
                 theSSOName,
                 theUserAddress,
                 theLoginType,
-                theTempPass,
-                theTempUsername,                
+                theTempPassword,
+                theTempUsername
             );
         COMMIT;
         SELECT null FROM DUAL;
@@ -386,7 +386,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userPasswordChange` (IN theUserName VARCHAR(32), IN newHash VARCHAR(512))
+CREATE PROCEDURE `core`.`userPasswordChange` (IN theUserName VARCHAR(32), IN newHash VARCHAR(191))
 BEGIN
 DECLARE theDate DATETIME;
 COMMIT;
@@ -408,7 +408,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userPasswordChangeAdmin` (IN theUserId VARCHAR(64), IN newHash VARCHAR(512))
+CREATE PROCEDURE `core`.`userPasswordChangeAdmin` (IN theUserId VARCHAR(64), IN newHash VARCHAR(191))
 BEGIN
 DECLARE theDate DATETIME;
 COMMIT;
@@ -1688,7 +1688,7 @@ COMMIT;
 
 -- Default admin user
 
-call userCreate(null, 'admin', '$argon2i$v=19$m=65536,t=10,p=1$7oxgR8QkdOd4tsHFieFKrw$eOy0TCxhY1bQIAbLQcLr9Sz2+4q9DhPTz1frsytgtTk', 'admin', 'admin@securityShepherd.org', true);
+call userCreate(null, 'admin', '$argon2i$v=19$m=65536,t=10,p=1$7oxgR8QkdOd4tsHFieFKrw$eOy0TCxhY1bQIAbLQcLr9Sz2+4q9DhPTz1frsytgtTk', 'admin', null, 'admin@securityShepherd.org', 'login', true, false);
 
 -- Enable backup script
 
@@ -1740,7 +1740,7 @@ CREATE  TABLE IF NOT EXISTS `backup`.`users` (
   `userId` VARCHAR(64) NOT NULL ,
   `classId` VARCHAR(64) NULL ,
   `userName` VARCHAR(32) NOT NULL ,
-  `userPass` VARCHAR(512) NOT NULL ,
+  `userPass` VARCHAR(191) NOT NULL ,
   `userRole` VARCHAR(32) NOT NULL ,
   `badLoginCount` INT NOT NULL DEFAULT 0 ,
   `suspendedUntil` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00' ,

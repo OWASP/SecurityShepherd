@@ -64,7 +64,7 @@ public class Logout extends HttpServlet {
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
 
-				boolean isSSO = (Boolean) request.getAttribute("SSO");
+				boolean isSSO =  Boolean.TRUE == request.getAttribute("SSO");
 
 				if (isSSO) {
 
