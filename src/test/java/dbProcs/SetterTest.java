@@ -97,7 +97,8 @@ public class SetterTest {
 						ScoreboardStatus.setScoreboeardOpen();
 						String scoreboardData = Getter.getJsonScore(applicationRoot, "");
 						if (scoreboardData.isEmpty()) {
-							TestProperties.failAndPrint("Could not detect user in scoreboard before bad submission test");
+							TestProperties
+									.failAndPrint("Could not detect user in scoreboard before bad submission test");
 						} else {
 							JSONArray scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
 							// Loop through array to find Our user
@@ -955,6 +956,36 @@ public class SetterTest {
 		boolean userDeleted = false;
 		try {
 			userDeleted = Setter.userDelete(applicationRoot, testuserId);
+		} catch (SQLException e) {
+			TestProperties.failAndPrint("Could not delete test user " + testUsername + ": " + e.toString());
+		}
+		assert (userDeleted);
+
+		testuserId = Getter.getUserIdFromName(applicationRoot, testUsername);
+		assert (testuserId == null || testuserId.isEmpty());
+
+	}
+
+	@Test
+	public void testSSOUserDelete() {
+		String testUsername = "testSSOuserdelete";
+		String testSSOName = "testSSOuserdelete@example.com";
+
+		String testuserId;
+
+		String user[];
+		
+		user = Getter.authUserSSO(applicationRoot, null, testUsername, testSSOName, "player");
+
+		if (user == null || user[0].isEmpty()) {
+			TestProperties.failAndPrint("Could not authenticate as newly created SSO user");
+		} else {
+			log.debug("PASS: User Could Authenticate after being created");
+		}
+
+		boolean userDeleted = false;
+		try {
+			userDeleted = Setter.userDelete(applicationRoot, user[0]);
 		} catch (SQLException e) {
 			TestProperties.failAndPrint("Could not delete test user " + testUsername + ": " + e.toString());
 		}
