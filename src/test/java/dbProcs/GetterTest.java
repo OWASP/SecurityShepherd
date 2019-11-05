@@ -160,17 +160,17 @@ public class GetterTest {
 	public static boolean verifyTestUser(String applicationRoot, String userName, String password) throws SQLException {
 		boolean result = false;
 
-		String user[] = Getter.authUser(applicationRoot, userName, userName);
+		String user[] = Getter.authUser(applicationRoot, userName, password);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
-			Setter.userCreate(applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
-			user = Getter.authUser(applicationRoot, userName, userName);
+			log.debug("User not found in DB. Adding user to DB and retesting before giving up");
+			Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@example.com", false);
+			user = Getter.authUser(applicationRoot, userName, password);
 		}
 		if (user != null && !user[0].isEmpty()) {
 			log.debug(userName + " could authenticate. returning true");
 			result = true;
 		} else {
-			TestProperties.failAndPrint("Could not Verify User " + userName + " could authenticate at all.");
+			TestProperties.failAndPrint("Fail: Could not verify user " + userName + " at all.");
 		}
 
 		return result;
