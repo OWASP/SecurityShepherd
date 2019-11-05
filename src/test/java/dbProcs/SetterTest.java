@@ -520,18 +520,18 @@ public class SetterTest {
 	@Test
 	public void testUpdateUsername() {
 		log.debug("Testing update Password");
-		String userName = new String("updateUsername");
-		String newUsername = new String("newUpdatedUsername");
+		String userName = new String("updateUsernameTest");
+		String newUsername = new String("newUpdatedUsernameTest");
 
 		String password = new String("justaTestingPassword");
-		
+
 		boolean loggedIn = false;
 
 		try {
 			log.debug("Logging in as test user " + userName);
 			loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, password);
 		} catch (SQLException e) {
-			loggedIn=false;
+			loggedIn = false;
 			TestProperties.failAndPrint("Could not log in with default pass: " + e.toString());
 		}
 		if (!loggedIn) {
@@ -542,26 +542,22 @@ public class SetterTest {
 				TestProperties.failAndPrint("Could not update username.");
 			} else {
 				log.debug("Username Updated: " + newUsername + ", testing auth as new name");
-				
-				try {
-					log.debug("Logging in with new username");
-					loggedIn = GetterTest.verifyTestUser(applicationRoot, newUsername, password);
-				} catch (SQLException e) {
-					loggedIn=false;
-					TestProperties.failAndPrint("Could not log in with default pass: " + e.toString());
-				}
-				
-				if (!loggedIn) {
-					TestProperties.failAndPrint("Could not sign in as the test user.");
-				} else {
+				String user[];
+
+				log.debug("Logging in with new username");
+				user = Getter.authUser(applicationRoot, newUsername, password);
+
+				if (user != null && !user[0].isEmpty()) {
 					log.debug("Pass: Could log in with new username");
+
+				} else {
+					TestProperties.failAndPrint("Could not sign in as the test user.");
 				}
-				
+
 			}
 		}
-
 	}
-	
+
 	@Test
 	public void testUpdatePassword() {
 		log.debug("Testing update Password");
@@ -1019,7 +1015,7 @@ public class SetterTest {
 		String testuserId;
 
 		String user[];
-		
+
 		user = Getter.authUserSSO(applicationRoot, null, testUsername, testSSOName, "player");
 
 		if (user == null || user[0].isEmpty()) {
