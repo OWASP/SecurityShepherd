@@ -76,6 +76,7 @@ public class ChangeUsername extends HttpServlet {
 					log.debug("New username passed validation! Username Change gets the go ahead");
 					Setter.updateUsername(ApplicationRoot, userName, newUsername);
 					ses.setAttribute("ChangeUsername", "false");
+					ses.setAttribute("userName", newUsername);
 					log.debug("Username changed");
 
 					response.sendRedirect("index.jsp");
