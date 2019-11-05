@@ -88,7 +88,7 @@ public class Getter {
 		CallableStatement callstmt;
 		try {
 			callstmt = conn.prepareCall(
-					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil, loginType FROM `users` WHERE userName = ?");
+					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil, loginType, tempUsername FROM `users` WHERE userName = ?");
 		} catch (SQLException e) {
 			log.fatal("Could create call statement: " + e.toString());
 			throw new RuntimeException(e);
@@ -133,10 +133,13 @@ public class Getter {
 
 				userVerified = argon2.verify(dbHash, password.toCharArray());
 
+				log.debug("Hash verified, result = " + userVerified);
+
 			} catch (SQLException e) {
-				log.error("Could not retrieve password hash from db: " + e.toString());
+				log.fatal("Could not retrieve password hash from db: " + e.toString());
 				result = null;
 				userVerified = false;
+				throw new RuntimeException(e);
 				// TODO: We should throw a checked exception here instead
 			}
 
@@ -144,8 +147,8 @@ public class Getter {
 				// Hash matches
 				log.debug("Hash matches");
 
-				result = new String[5];
-				boolean isTempPassword;
+				result = new String[6];
+
 				int badLoginCount;
 				String loginType = new String();
 
@@ -156,17 +159,20 @@ public class Getter {
 					result[1] = userResult.getString(2); // userName
 					result[2] = userResult.getString(4); // role
 					badLoginCount = userResult.getInt(5);
-					isTempPassword = userResult.getBoolean(6);
+					result[3] = Boolean.toString(userResult.getBoolean(6));
 					result[4] = userResult.getString(7); // classId
 					suspendedUntil = userResult.getTimestamp(8);
 					loginType = userResult.getString(9);
+					result[5] = Boolean.toString(userResult.getBoolean(10));
 				} catch (SQLException e) {
+
 					log.fatal("Could not retrieve auth data from db: " + e.toString());
 					throw new RuntimeException(e);
 				}
 
 				if (!loginType.equals("login")) {
 					// Login type must be "login" and not "saml" if password login is to be allowed
+					log.debug("User is SSO user, can't login with password!");
 					result = null;
 					return result;
 				}
@@ -180,11 +186,6 @@ public class Getter {
 					return result;
 				}
 
-				if (isTempPassword) // Checking for temp password flag, if true, index View will prompt to
-									// change
-					result[3] = "true";
-				else
-					result[3] = "false";
 				if (!result[1].equalsIgnoreCase(userName)) // If somehow this functionality has been compromised to sign
 															// in as
 				// other users, this will limit the expoitability. But the method is
@@ -245,12 +246,14 @@ public class Getter {
 		log.debug("ssoName = " + ssoName);
 		log.debug("userName = " + userName);
 
-		String[] result = new String[5];
+		String[] result = new String[6];
 
 		String userID = new String();
 		String defaultClass = Register.getDefaultClass();
 
 		boolean userFound = false;
+
+		boolean isTempUsername = false;
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
@@ -298,19 +301,17 @@ public class Getter {
 			boolean userCreated = false;
 
 			log.debug("User did not exist, create it from SSO data");
-			
+
 			try {
-				if(defaultClass.isEmpty())
-				{
+				if (defaultClass.isEmpty()) {
 					log.debug("Adding player to database, with null classId");
 					userCreated = Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName, userRole);
-				}
-				else //defaultClass is not empty, so It must be set to a class!
+				} else // defaultClass is not empty, so It must be set to a class!
 				{
 					log.debug("Adding player to database, to class " + defaultClass);
 					userCreated = Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName, userRole);
 				}
-				
+
 			} catch (SQLException e) {
 				String message = "Could not create user " + userName + " with ssoName " + ssoName + " via SSO: "
 						+ e.toString();
@@ -355,9 +356,9 @@ public class Getter {
 
 		// Find the generated userID by asking the database
 		try {
-			callstmt = conn.prepareCall(
-					"SELECT userId FROM `users` WHERE ssoName = ? AND loginType='saml'");
-			
+			callstmt = conn
+					.prepareCall("SELECT userId, tempUsername FROM `users` WHERE ssoName = ? AND loginType='saml'");
+
 		} catch (SQLException e) {
 			log.fatal("Could create call statement: " + e.toString());
 			throw new RuntimeException(e);
@@ -401,6 +402,7 @@ public class Getter {
 
 		try {
 			userID = userResult.getString(1);
+			isTempUsername = userResult.getBoolean(2);
 		} catch (SQLException e) {
 			String message = "Could find userID for userName " + userName + " with ssoName " + ssoName + " via SSO: "
 					+ e.toString();
@@ -408,10 +410,12 @@ public class Getter {
 			throw new RuntimeException(message);
 		}
 
-		result[0] = userID;
+		result[0] = userID; 
 		result[1] = userName; // userName
 		result[2] = userRole; // role
+		result[5] = "false"; // sso logins can't change password
 		result[4] = classId; // classId
+		result[5] = Boolean.toString(isTempUsername);
 
 		Database.closeConnection(conn);
 		log.debug("$$$ End authUser $$$");
