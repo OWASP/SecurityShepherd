@@ -303,12 +303,12 @@ public class Getter {
 				if(defaultClass.isEmpty())
 				{
 					log.debug("Adding player to database, with null classId");
-					Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName, userRole);
+					userCreated = Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName, userRole);
 				}
 				else //defaultClass is not empty, so It must be set to a class!
 				{
 					log.debug("Adding player to database, to class " + defaultClass);
-					Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName, userRole);
+					userCreated = Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName, userRole);
 				}
 				
 			} catch (SQLException e) {

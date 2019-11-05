@@ -962,7 +962,7 @@ public class Setter {
 			
 		} catch (SQLException e) {
 			log.fatal("userCreate Failure: " + e.toString());
-			throw new SQLException(e);
+			throw new SQLException(e);	
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END userCreateSSO ***");
