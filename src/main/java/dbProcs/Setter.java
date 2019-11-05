@@ -943,16 +943,23 @@ public class Setter {
 			callstmt.setBoolean(8, false); //temppass
 			callstmt.setBoolean(9, true); //Tempname
 			
-			int updateReturnValue = callstmt.executeUpdate();
+			ResultSet registerAttempt = callstmt.executeQuery();
+			log.debug("Opening result set");
 
-			if (updateReturnValue == 1) {
+			registerAttempt.next(); // Procedure Ran correctly
+
+			if (registerAttempt.getString(1) == null) 
+			{
+				// Registration success
 				log.debug("Register Success");
 				result = true;
-			} else // Registration failure
-			{
-				log.debug("Register Failure: return value was " + Integer.toString(updateReturnValue));
+			} else {
+				// Registration failure
 				result = false;
+				log.debug("ResultSet contained -> " + registerAttempt.getString(1));
+				throw new SQLException(registerAttempt.getString(1));
 			}
+			
 		} catch (SQLException e) {
 			log.fatal("userCreate Failure: " + e.toString());
 			throw new SQLException(e);
