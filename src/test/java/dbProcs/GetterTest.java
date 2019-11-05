@@ -2791,9 +2791,9 @@ public class GetterTest {
 	@Test
 	public void testSSOAuthCorrectCredentials() {
 		String userName = new String("SSOTestUser Lastname");
-		String userID = new String("ssotestuser@example.com");
+		String ssoName = new String("ssotestuser@example.com");
 
-		String user[] = Getter.authUserSSO(applicationRoot, "", userName, userID, "player");
+		String user[] = Getter.authUserSSO(applicationRoot, "", userName, ssoName, "player");
 		if (user == null || user[0].isEmpty()) {
 			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
 		} else {
@@ -2804,17 +2804,19 @@ public class GetterTest {
 	@Test
 	public void testSSOAuthSuspended() {
 		String userName = new String("SSOSuspendedUser Lastname");
-		String userID = new String("ssosuspendeduser@example.com");
+		String ssoName = new String("ssosuspendeduser@example.com");
 
-		String user[] = Getter.authUserSSO(applicationRoot, "", userName, userID, "player");
+		String user[] = Getter.authUserSSO(applicationRoot, "", userName, ssoName, "player");
 		if (user == null || user[0].isEmpty()) {
 			TestProperties.failAndPrint("Test Failed. Initial SSO auth did not succeed");
 		}
+		
+		String userID=user[0];
 
 		if (!Setter.suspendUser(applicationRoot, userID, 10)) {
 			fail("Could not suspend User");
 		} else {
-			user = Getter.authUserSSO(applicationRoot, "", userName, userID, "player");
+			user = Getter.authUserSSO(applicationRoot, "", userName, ssoName, "player");
 			if (user == null || user[0].isEmpty()) {
 				log.debug("PASS: User Could not Authenticate after suspension");
 			} else {
@@ -2826,7 +2828,7 @@ public class GetterTest {
 		if (!Setter.unSuspendUser(applicationRoot, userID)) {
 			fail("Could not suspend User");
 		} else {
-			user = Getter.authUserSSO(applicationRoot, "", userName, userID, "player");
+			user = Getter.authUserSSO(applicationRoot, "", userName, ssoName, "player");
 			if (user == null || user[0].isEmpty()) {
 				TestProperties.failAndPrint("Could not authenticate as user after unsuspension");
 			} else {
