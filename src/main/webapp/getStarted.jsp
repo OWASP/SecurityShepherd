@@ -102,7 +102,7 @@ else if(changeUsername)
 		<div class="errorMessage">
 			<form id="changeUsername" method="POST" action="usernameChange">
 			<table align="center">
-				<tr><td>New username:</td><td><input type="text" name="newUsername" /></td></tr>
+				<tr><td>New username:</td><td><input type="text" name="newUsername" value="<%= userName %>" /></td></tr>
 				<tr><td colspan="2" style="align-content: center"><input type="submit" id="changeUsernameSubmit" value = "Change Username"/></td></tr>
 			</table>
 			<input type="hidden" name="csrfToken" value="<%=csrfToken%>" />
