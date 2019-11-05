@@ -518,6 +518,51 @@ public class SetterTest {
 	}
 
 	@Test
+	public void testUpdateUsername() {
+		log.debug("Testing update Password");
+		String userName = new String("updateUsername");
+		String newUsername = new String("newUpdatedUsername");
+
+		String password = new String("justaTestingPassword");
+		
+		boolean loggedIn = false;
+
+		try {
+			log.debug("Logging in as test user " + userName);
+			loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, password);
+		} catch (SQLException e) {
+			loggedIn=false;
+			TestProperties.failAndPrint("Could not log in with default pass: " + e.toString());
+		}
+		if (!loggedIn) {
+			TestProperties.failAndPrint("Could not sign in as the test user.");
+		} else {
+			log.debug("Logged in! Updating Username now");
+			if (!Setter.updateUsername(applicationRoot, userName, newUsername)) {
+				TestProperties.failAndPrint("Could not update username.");
+			} else {
+				log.debug("Username Updated: " + newUsername + ", testing auth as new name");
+				
+				try {
+					log.debug("Logging in with new username");
+					loggedIn = GetterTest.verifyTestUser(applicationRoot, newUsername, password);
+				} catch (SQLException e) {
+					loggedIn=false;
+					TestProperties.failAndPrint("Could not log in with default pass: " + e.toString());
+				}
+				
+				if (!loggedIn) {
+					TestProperties.failAndPrint("Could not sign in as the test user.");
+				} else {
+					log.debug("Pass: Could log in with new username");
+				}
+				
+			}
+		}
+
+	}
+	
+	@Test
 	public void testUpdatePassword() {
 		log.debug("Testing update Password");
 		String userName = new String("updatePassword");

@@ -352,12 +352,11 @@ public class Getter {
 			}
 		}
 
-		log.debug("User '" + userName + "' has logged in");
 
-		// Find the generated userID by asking the database
+		// Find the generated userID and username by asking the database
 		try {
-			callstmt = conn
-					.prepareCall("SELECT userId, tempUsername FROM `users` WHERE ssoName = ? AND loginType='saml'");
+			callstmt = conn.prepareCall(
+					"SELECT userId, userName, tempUsername FROM `users` WHERE ssoName = ? AND loginType='saml'");
 
 		} catch (SQLException e) {
 			log.fatal("Could create call statement: " + e.toString());
@@ -402,7 +401,8 @@ public class Getter {
 
 		try {
 			userID = userResult.getString(1);
-			isTempUsername = userResult.getBoolean(2);
+			userName = userResult.getString(2);
+			isTempUsername = userResult.getBoolean(3);
 		} catch (SQLException e) {
 			String message = "Could find userID for userName " + userName + " with ssoName " + ssoName + " via SSO: "
 					+ e.toString();
@@ -410,7 +410,9 @@ public class Getter {
 			throw new RuntimeException(message);
 		}
 
-		result[0] = userID; 
+		log.debug("User '" + userName + "' has logged in via SSO");
+
+		result[0] = userID;
 		result[1] = userName; // userName
 		result[2] = userRole; // role
 		result[5] = "false"; // sso logins can't change password

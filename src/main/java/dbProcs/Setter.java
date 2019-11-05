@@ -649,6 +649,41 @@ public class Setter {
 	}
 
 	/**
+	 * @param ApplicationRoot The current running context of the application
+	 * @param userName        User name of the user
+	 * @param currentPassword User's current password
+	 * @param newPassword     New password to use in update
+	 * @return ResultSet that contains error details if not successful
+	 */
+	public static boolean updateUsername(String ApplicationRoot, String userName, String newUsername) {
+		log.debug("*** Setter.updateUsername ***");
+
+		boolean result = false;
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Preparing username change call from username " + userName + " to " + newUsername);
+		CallableStatement callstmnt;
+		try {
+			callstmnt = conn.prepareCall(
+					"UPDATE users SET userName = ?, tempUsername = FALSE WHERE userName = ?;");
+			callstmnt.setString(1, newUsername);
+
+			callstmnt.setString(2, userName);
+			log.debug("Executing name change query");
+			callstmnt.execute();
+			result = true;
+		} catch (SQLException e) {
+			log.debug("Could not update username: " + e.toString());
+			throw new RuntimeException(e);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END updateUsername ***");
+		return result;
+	}
+
+	/**
 	 * Updates a player's password without needing the current password
 	 * 
 	 * @param ApplicationRoot Running context of the applicaiton
@@ -887,19 +922,18 @@ public class Setter {
 		callstmt.setString(2, userName);
 		callstmt.setString(3, hash);
 		callstmt.setString(4, userRole);
-		callstmt.setString(5, null); //ssoName
+		callstmt.setString(5, null); // ssoName
 		callstmt.setString(6, userAddress);
-		callstmt.setString(7, "login"); //login type
+		callstmt.setString(7, "login"); // login type
 		callstmt.setBoolean(8, tempPass);
-		callstmt.setBoolean(9, false); //Tempname
+		callstmt.setBoolean(9, false); // Tempname
 
 		ResultSet registerAttempt = callstmt.executeQuery();
 		log.debug("Opening result set");
 
 		registerAttempt.next(); // Procedure Ran correctly
 
-		if (registerAttempt.getString(1) == null) 
-		{
+		if (registerAttempt.getString(1) == null) {
 			// Registration success
 			log.debug("Register Success");
 			result = true;
@@ -910,9 +944,10 @@ public class Setter {
 			throw new SQLException(registerAttempt.getString(1));
 		}
 
-	Database.closeConnection(conn);log.debug("*** END userCreate ***");
-	
-	return result;
+		Database.closeConnection(conn);
+		log.debug("*** END userCreate ***");
+
+		return result;
 
 	}
 
@@ -938,18 +973,17 @@ public class Setter {
 			callstmt.setString(3, "DISABLED");
 			callstmt.setString(4, userRole);
 			callstmt.setString(5, ssoName);
-			callstmt.setString(6, ""); //userAddress
-			callstmt.setString(7, "saml"); //login type
-			callstmt.setBoolean(8, false); //temppass
-			callstmt.setBoolean(9, true); //Tempname
-			
+			callstmt.setString(6, ""); // userAddress
+			callstmt.setString(7, "saml"); // login type
+			callstmt.setBoolean(8, false); // temppass
+			callstmt.setBoolean(9, true); // Tempname
+
 			ResultSet registerAttempt = callstmt.executeQuery();
 			log.debug("Opening result set");
 
 			registerAttempt.next(); // Procedure Ran correctly
 
-			if (registerAttempt.getString(1) == null) 
-			{
+			if (registerAttempt.getString(1) == null) {
 				// Registration success
 				log.debug("Register Success");
 				result = true;
@@ -959,10 +993,10 @@ public class Setter {
 				log.debug("ResultSet contained -> " + registerAttempt.getString(1));
 				throw new SQLException(registerAttempt.getString(1));
 			}
-			
+
 		} catch (SQLException e) {
 			log.fatal("userCreate Failure: " + e.toString());
-			throw new SQLException(e);	
+			throw new SQLException(e);
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END userCreateSSO ***");

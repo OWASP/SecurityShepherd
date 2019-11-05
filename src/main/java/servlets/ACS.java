@@ -145,6 +145,12 @@ public class ACS extends HttpServlet {
 						log.debug("userClassId = " + user[4]);
 
 						ses.setAttribute("userClass", user[4]);
+						
+						if (user[5].equalsIgnoreCase("true")) {
+							log.debug("Temporary Username Detected, user will be prompted to change");
+							ses.setAttribute("ChangeUsername", "true");
+						}
+						
 						log.debug("Setting CSRF cookie");
 						Cookie token = new Cookie("token", Hash.randomString());
 						if (request.getRequestURL().toString().startsWith("https"))// If Requested over HTTPs

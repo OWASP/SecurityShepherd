@@ -101,6 +101,10 @@ public class Login extends HttpServlet {
 					log.debug("Temporary Password Detected, user will be prompted to change");
 					ses.setAttribute("ChangePassword", "true");
 				}
+				if (user[5].equalsIgnoreCase("true")) {
+					log.debug("Temporary Username Detected, user will be prompted to change");
+					ses.setAttribute("ChangeUsername", "true");
+				}
 
 				// Removing user from kick list. If they were on it before, their suspension
 				// must have ended if they DB authentication Succeeded

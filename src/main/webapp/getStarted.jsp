@@ -49,18 +49,71 @@ String userRole = Encode.forHtml(ses.getAttribute("userRole").toString());
 String userId = Encode.forHtml(ses.getAttribute("userStamp").toString());
 boolean isAdmin = userRole.equalsIgnoreCase("admin");
 boolean changePassword = false;
+boolean changeUsername = false;
+
 if(ses.getAttribute("ChangePassword") != null)
 {
 	String tempPass = ses.getAttribute("ChangePassword").toString();
 	changePassword = tempPass.equalsIgnoreCase("true");
 }
+if(ses.getAttribute("ChangeUsername") != null)
+{
+	String tempUsername = ses.getAttribute("ChangeUsername").toString();
+	changeUsername = tempUsername.equalsIgnoreCase("true");
+}
+
+if (changeUsername && changePassword)
+{
+	// These should never be true at the same time
+	throw new RuntimeException("Can't both change username and password!");
+}
 
 int i = 0;
 
-//IF Change Password is True, Stick up a form
-if(!changePassword)
+if(changePassword)
 {
-%>
+	//If password is temporary, ask user to change
+
+	%>
+	<div class="errorWrapper">
+		<fmt:message key="getStarted.text.info.changePassword" />
+		<br /><br />
+		<div class="errorMessage">
+			<form id="changePassword" method="POST" action="passwordChange">
+			<table align="center">
+				<tr><td>Current Password:</td><td><input type="password" name="currentPassword" /></td></tr>
+				<tr><td>New Password:</td><td><input type="password" name="newPassword" /></td></tr>
+				<tr><td>Password Confirmation:</td><td><input type="password" name="passwordConfirmation" /></td></tr>
+				<tr><td colspan="2" style="align-content: center"><input type="submit" id="changePasswordSubmit" value = "Change Password"/></td></tr>
+			</table>
+			<input type="hidden" name="csrfToken" value="<%=csrfToken%>" />
+			</form>
+		</div>
+	</div>
+	<%
+}
+else if(changeUsername)
+{
+	// If username is temporary, allow user to change (but not compulsory)
+	%>
+	<div class="errorWrapper">
+		<fmt:message key="getStarted.text.info.changeUsername" />
+		<br /><br />
+		<div class="errorMessage">
+			<form id="changeUsername" method="POST" action="usernameChange">
+			<table align="center">
+				<tr><td>New username:</td><td><input type="text" name="newUsername" /></td></tr>
+				<tr><td colspan="2" style="align-content: center"><input type="submit" id="changeUsernameSubmit" value = "Change Username"/></td></tr>
+			</table>
+			<input type="hidden" name="csrfToken" value="<%=csrfToken%>" />
+			</form>
+		</div>
+	</div>
+	<%
+}
+else
+{
+	%>
 	<div id="getStarted" style="display:none;">
 	<div class="post">
 		<h1 class="title"><fmt:message key="getStarted.text.lets_start" /></h1>
@@ -258,26 +311,6 @@ if(!changePassword)
 	<% } // End of Admin Only Script%>
 	</script>
 	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
-}
-else	//IF the  user doesnt need to change their pass, just post up the get Started message
-{
-	%>
-	<div class="errorWrapper">
-		<fmt:message key="getStarted.text.info.changePassword" />
-		<br /><br />
-		<div class="errorMessage">
-			<form id="changePassword" method="POST" action="passwordChange">
-			<table align="center">
-				<tr><td>Current Password:</td><td><input type="password" name="currentPassword" /></td></tr>
-				<tr><td>New Password:</td><td><input type="password" name="newPassword" /></td></tr>
-				<tr><td>Password Confirmation:</td><td><input type="password" name="passwordConfirmation" /></td></tr>
-				<tr><td colspan="2" style="align-content: center"><input type="submit" id="changePasswordSubmit" value = "Change Password"/></td></tr>
-			</table>
-			<input type="hidden" name="csrfToken" value="<%=csrfToken%>" />
-			</form>
-		</div>
-	</div>
 	<%
 }
 }

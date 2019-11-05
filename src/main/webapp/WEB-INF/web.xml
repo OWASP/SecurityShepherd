@@ -126,6 +126,15 @@
 		<servlet-name>/passwordChange</servlet-name>
 		<url-pattern>/passwordChange</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/usernameChange</servlet-name>
+		<servlet-class>servlets.ChangeUsername</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/usernameChange</servlet-name>
+		<url-pattern>/usernameChange</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>/createNewAdmin</servlet-name>
