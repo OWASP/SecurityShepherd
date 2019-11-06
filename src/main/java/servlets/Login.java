@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import utils.Hash;
+import utils.LoginMethod;
 import utils.ShepherdLogManager;
 import utils.UserKicker;
 import dbProcs.Getter;
@@ -67,6 +68,13 @@ public class Login extends HttpServlet {
 
 			boolean mustRedirect = false;
 
+			if (!LoginMethod.isLogin()) {
+					
+				// Password logins disabled, redirect to SSO login.
+				response.sendRedirect("ssologin");
+				return;
+			}
+			
 			// session is not new, try to set credentials
 			p_login = nvl(p_login, (String) ses.getAttribute("login"));
 			p_pwd = nvl(p_pwd, (String) ses.getAttribute("password"));

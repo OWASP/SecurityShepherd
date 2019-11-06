@@ -88,6 +88,7 @@ if(ses.getAttribute("loginFailed") != null)
 		<div id="content" style="margin-right: auto; margin-left: auto; width: 40%; max-width: 320px;">
 			<div class="post">
 				<h1 class="title" id="login_title"><fmt:message key="generic.text.login" /></h1>
+				<% if (LoginMethod.isLogin()) { %>
 				<p id="login-info"><fmt:message key="login.text.info" />
 				<% if(OpenRegistration.isEnabled()) { %>
 					<p id="register_info"><fmt:message key="login.text.regInfo" /></p>
@@ -107,6 +108,12 @@ if(ses.getAttribute("loginFailed") != null)
 						</td></tr>
 					</table>
 				</form>
+								<% } else if(LoginMethod.isSaml()) { %>
+<a id="login-saml" rel="nofollow" data-method="post" href="ssologin"><span>
+Login via SAML
+</span>
+</a>
+								<% } %>
 				<br/>
 				<br/>
 				<div align="center">
