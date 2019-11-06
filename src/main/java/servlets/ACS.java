@@ -1,8 +1,10 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -121,15 +123,62 @@ public class ACS extends HttpServlet {
 				} else {
 					log.debug("Unpacking SAML attributes...");
 
-					// Get id and name from SAML data
-					String userID = attributes.get("urn:oid:0.9.2342.19200300.100.1.3").get(0);
+					String ssoName = null;
+					String userName = null;
 
-					log.debug("userID = " + userID);
+					ClassLoader classLoader = getClass().getClassLoader();
 
-					String userName = attributes.get("urn:oid:2.16.840.1.113730.3.1.241").get(0);
-					log.debug("userName = " + userName);
+					log.debug("Loading saml unpack properties file");
 
-					String user[] = Getter.authUserSSO("", null, userName, userID, "player");
+					String unpackFileName = "saml.unpack.properties";
+
+					try (InputStream inputStream = classLoader.getResourceAsStream(unpackFileName)) {
+						if (inputStream != null) {
+							Properties prop = new Properties();
+							prop.load(inputStream);
+							if (prop != null) {
+
+								log.debug("Saml unpack properties file loaded, unpacking saml data");
+
+								// Get id and name from SAML data
+
+								String ssoNameKey = prop.getProperty("sso.saml.ssoName");
+
+								ssoName = attributes.get(ssoNameKey).get(0);
+
+								log.debug("ssoName = " + ssoName);
+
+								String userNameKey = prop.getProperty("sso.saml.userName");
+
+								userName = attributes.get(userNameKey).get(0);
+
+								log.debug("userName = " + userName);
+
+							}
+						} else {
+							String errorMsg = "SAML unpack properties file '" + unpackFileName
+									+ "' not found in the classpath";
+							log.error(errorMsg);
+							throw new RuntimeException(errorMsg);
+						}
+					} catch (IOException e) {
+						String errorMsg = "SAML unpack properties file '" + unpackFileName + "' cannot be loaded";
+
+						log.error(errorMsg);
+						throw new RuntimeException(errorMsg);
+
+					}
+
+					if (ssoName == null || userName == null) {
+						String errorMsg = "Unknown error occured when unpacking SAML properties";
+
+						log.error(errorMsg);
+						throw new RuntimeException(errorMsg);
+					}
+
+					log.debug("Saml userdata loaded, calling authUserSSO");
+
+					String user[] = Getter.authUserSSO(ApplicationRoot, null, userName, ssoName, "player");
 
 					if (user != null && !user[0].isEmpty()) {
 
@@ -144,12 +193,12 @@ public class ACS extends HttpServlet {
 						log.debug("userClassId = " + user[4]);
 
 						ses.setAttribute("userClass", user[4]);
-						
+
 						if (user[5].equalsIgnoreCase("true")) {
 							log.debug("Temporary Username Detected, user will be prompted to change");
 							ses.setAttribute("ChangeUsername", "true");
 						}
-						
+
 						log.debug("Setting CSRF cookie");
 						Cookie token = new Cookie("token", Hash.randomString());
 						if (request.getRequestURL().toString().startsWith("https"))// If Requested over HTTPs
