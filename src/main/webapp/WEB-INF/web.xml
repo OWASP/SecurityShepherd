@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 
@@ -14,6 +15,13 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<page-encoding>UTF-8</page-encoding>
+		</jsp-property-group>
+	</jsp-config>
+
 	<error-page>
 		<error-code>403</error-code>
 		<location>/serverError.jsp</location>
@@ -26,8 +34,8 @@
 		<error-code>500</error-code>
 		<location>/serverError.jsp</location>
 	</error-page>
-	<error-page> 
-		<exception-type>java.lang.Exception</exception-type> 
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
 		<location>/serverError.jsp</location>
 	</error-page>
 
@@ -54,7 +62,7 @@
 		<servlet-name>/login</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>/ssologin</servlet-name>
 		<servlet-class>servlets.SSOLogin</servlet-class>
@@ -63,7 +71,7 @@
 		<servlet-name>/ssologin</servlet-name>
 		<url-pattern>/ssologin</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>/ssometadata</servlet-name>
 		<servlet-class>servlets.SSOMetadata</servlet-class>
@@ -72,7 +80,7 @@
 		<servlet-name>/ssometadata</servlet-name>
 		<url-pattern>/ssometadata.xml</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>/acs</servlet-name>
 		<servlet-class>servlets.ACS</servlet-class>
@@ -81,8 +89,8 @@
 		<servlet-name>/acs</servlet-name>
 		<url-pattern>/acs</url-pattern>
 	</servlet-mapping>
-	
-		<servlet>
+
+	<servlet>
 		<servlet-name>/sls</servlet-name>
 		<servlet-class>servlets.SLS</servlet-class>
 	</servlet>
@@ -108,7 +116,7 @@
 		<servlet-name>/sso-register</servlet-name>
 		<url-pattern>/sso-register</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>/register</servlet-name>
 		<servlet-class>servlets.Register</servlet-class>
@@ -144,7 +152,7 @@
 		<servlet-name>/passwordChange</servlet-name>
 		<url-pattern>/passwordChange</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>/usernameChange</servlet-name>
 		<servlet-class>servlets.ChangeUsername</servlet-class>
@@ -182,12 +190,12 @@
 	</servlet-mapping>
 
 	<servlet>
-	  <servlet-name>/deletePlayers</servlet-name>
-	  <servlet-class>servlets.admin.userManagement.DeletePlayers</servlet-class>
+		<servlet-name>/deletePlayers</servlet-name>
+		<servlet-class>servlets.admin.userManagement.DeletePlayers</servlet-class>
 	</servlet>
 	<servlet-mapping>
-	      <servlet-name>/deletePlayers</servlet-name>
-	      <url-pattern>/deletePlayers</url-pattern>
+		<servlet-name>/deletePlayers</servlet-name>
+		<url-pattern>/deletePlayers</url-pattern>
 	</servlet-mapping>
 
 
@@ -1281,7 +1289,7 @@
 		<servlet-name>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</servlet-name>
 		<url-pattern>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</servlet-name>
 		<servlet-class>servlets.module.challenge.BrokenCryptoHomeMade</servlet-class>

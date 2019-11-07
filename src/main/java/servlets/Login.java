@@ -93,7 +93,6 @@ public class Login extends HttpServlet {
 				ses.setAttribute("userStamp", user[0]);
 				ses.setAttribute("userName", user[1]);
 				ses.setAttribute("userRole", user[2]);
-				ses.setAttribute("SSO", false);
 				ses.setAttribute("lang", language);
 				log.debug("userClassId = " + user[4]);
 

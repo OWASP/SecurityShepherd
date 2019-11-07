@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.onelogin.saml2.Auth;
@@ -16,6 +18,7 @@ import com.onelogin.saml2.exception.Error;
 import com.onelogin.saml2.exception.SettingsException;
 import com.onelogin.saml2.exception.XMLEntityException;
 
+import utils.LoginMethod;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -64,9 +67,7 @@ public class Logout extends HttpServlet {
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
 
-				boolean isSSO =  Boolean.TRUE == request.getAttribute("SSO");
-
-				if (isSSO) {
+				if (LoginMethod.isSaml()) {
 
 					Auth auth;
 					try {
@@ -75,6 +76,26 @@ public class Logout extends HttpServlet {
 						throw new RuntimeException("SAML not configured: " + e.toString());
 					} catch (Error e) {
 						throw new RuntimeException("SAML error : " + e.toString());
+					}
+
+					try {
+						auth.processSLO();
+					} catch (Exception e) {
+						
+						throw new RuntimeException("SAML logout error : " + e.toString());
+
+					}
+
+					List<String> errors = auth.getErrors();
+					
+					if(!errors.isEmpty())
+					{
+						
+						// A logout error occurred
+						String message = "SAML logout returned error : " + StringUtils.join(errors, ", ") ;
+						log.error(message);
+						throw new RuntimeException(message);
+						
 					}
 
 					String nameId = null;

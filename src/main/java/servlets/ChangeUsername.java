@@ -54,6 +54,8 @@ public class ChangeUsername extends HttpServlet {
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.ChangeUsername ***");
 
+		request.setCharacterEncoding("UTF-8");
+
 		HttpSession ses = request.getSession(true);
 		if (Validate.validateSession(ses)) {
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),

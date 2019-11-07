@@ -1,49 +1,86 @@
 package utils;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import com.onelogin.saml2.Auth;
-import com.onelogin.saml2.exception.Error;
-import com.onelogin.saml2.exception.SettingsException;
+import java.io.InputStream;
+import java.util.Properties;
+import org.apache.log4j.Logger;
 
 /**
- * Keeps track if we do normal login or SSO login
+ * Loads the SSO login configuration, if any. <br/>
+ * This file is part of the Security Shepherd Project.
+ * 
+ * The Security Shepherd project is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.<br/>
+ * 
+ * The Security Shepherd project is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.<br/>
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
  * 
  * @author Mark Denihan
  *
  */
 public class LoginMethod {
 
-	public static String getLoginMethod() {
-		
-		boolean isSaml=false;
-		
-		try {
-			Auth auth = new Auth();
-			auth.toString();
-			isSaml=true;
-		} catch (IOException | SettingsException | Error e) {
-			// Does not use SAML
-			isSaml=false;
+	private static Boolean isSaml = null;
+	private static org.apache.log4j.Logger log = Logger.getLogger(LoginMethod.class);
+
+	public static boolean isSaml() {
+
+		if (isSaml != null) {
+			// Data is cached, so let's fetch it from cache
+
+			return Boolean.TRUE.equals(isSaml);
+
+		} else {
+
+			ClassLoader classLoader = LoginMethod.class.getClassLoader();
+
+			String unpackFileName = "sso.properties";
+
+			try (InputStream inputStream = classLoader.getResourceAsStream(unpackFileName)) {
+				if (inputStream != null) {
+					Properties prop = new Properties();
+					prop.load(inputStream);
+					if (prop != null) {
+
+						// Get id and name from SAML data
+
+						String isSSOEnabled = prop.getProperty("sso.enabled");
+
+						isSaml = Boolean.parseBoolean(isSSOEnabled);
+
+						return Boolean.TRUE.equals(isSaml);
+
+					}
+				} else {
+					// SSO properties found, we default to sso = false
+					isSaml = false;
+					return false;
+				}
+			} catch (IOException e) {
+				String errorMsg = "SAML unpack properties file '" + unpackFileName + "' cannot be loaded";
+
+				log.error(errorMsg);
+				throw new RuntimeException(errorMsg);
+
+			}
+
+			String errorMsg = "Can't decide SSO setting";
+
+			log.error(errorMsg);
+			throw new RuntimeException(errorMsg);
+
 		}
-		
-		if(isSaml)	{
-			return "saml";
-		}
-		else {
-			return "login";
-		}
-		
 	}
-	
-	public static Boolean isSaml() {
-		return (getLoginMethod().equals("saml"));
-	}
-	
+
 	public static Boolean isLogin() {
-		return (getLoginMethod().equals("login"));
+		return (!isSaml());
 	}
 
 }

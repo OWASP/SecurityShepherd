@@ -48,7 +48,7 @@ import dbProcs.Getter;
  */
 public class ACS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(Login.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(ACS.class);
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -112,7 +112,7 @@ public class ACS extends HttpServlet {
 				ses.setAttribute("nameId", nameId);
 				ses.setAttribute("nameIdFormat", nameIdFormat);
 				ses.setAttribute("sessionIndex", sessionIndex);
-				ses.setAttribute("SSO", true);
+				
 				ses.setAttribute("nameidNameQualifier", nameidNameQualifier);
 				ses.setAttribute("nameidSPNameQualifier", nameidSPNameQualifier);
 
@@ -130,7 +130,7 @@ public class ACS extends HttpServlet {
 
 					log.debug("Loading saml unpack properties file");
 
-					String unpackFileName = "saml.unpack.properties";
+					String unpackFileName = "sso.properties";
 
 					try (InputStream inputStream = classLoader.getResourceAsStream(unpackFileName)) {
 						if (inputStream != null) {
