@@ -2,8 +2,6 @@ package servlets.admin.userManagement;
 
 import static org.junit.Assert.*;
 
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;

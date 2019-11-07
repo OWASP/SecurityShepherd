@@ -15,7 +15,6 @@ import testUtils.TestProperties;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

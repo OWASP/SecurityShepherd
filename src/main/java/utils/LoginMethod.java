@@ -27,15 +27,17 @@ import org.apache.log4j.Logger;
  */
 public class LoginMethod {
 
-	private static Boolean isSaml = null;
+	private static boolean isSaml = false;
+	private static boolean isSet = false;
+
 	private static org.apache.log4j.Logger log = Logger.getLogger(LoginMethod.class);
 
 	public static boolean isSaml() {
 
-		if (isSaml != null) {
+		if (isSet) {
 			// Data is cached, so let's fetch it from cache
 
-			return Boolean.TRUE.equals(isSaml);
+			return isSaml;
 
 		} else {
 
@@ -55,13 +57,13 @@ public class LoginMethod {
 
 						isSaml = Boolean.parseBoolean(isSSOEnabled);
 
-						return Boolean.TRUE.equals(isSaml);
+						isSet = true;
 
 					}
 				} else {
 					// SSO properties found, we default to sso = false
 					isSaml = false;
-					return false;
+					isSet = true;
 				}
 			} catch (IOException e) {
 				String errorMsg = "SAML unpack properties file '" + unpackFileName + "' cannot be loaded";
@@ -71,10 +73,7 @@ public class LoginMethod {
 
 			}
 
-			String errorMsg = "Can't decide SSO setting";
-
-			log.error(errorMsg);
-			throw new RuntimeException(errorMsg);
+			return isSaml;
 
 		}
 	}

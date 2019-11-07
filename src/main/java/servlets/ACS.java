@@ -112,7 +112,7 @@ public class ACS extends HttpServlet {
 				ses.setAttribute("nameId", nameId);
 				ses.setAttribute("nameIdFormat", nameIdFormat);
 				ses.setAttribute("sessionIndex", sessionIndex);
-				
+
 				ses.setAttribute("nameidNameQualifier", nameidNameQualifier);
 				ses.setAttribute("nameidSPNameQualifier", nameidSPNameQualifier);
 
@@ -125,6 +125,7 @@ public class ACS extends HttpServlet {
 
 					String ssoName = null;
 					String userName = null;
+					String userRole = null;
 
 					ClassLoader classLoader = getClass().getClassLoader();
 
@@ -154,6 +155,22 @@ public class ACS extends HttpServlet {
 
 								log.debug("userName = " + userName);
 
+								String affiliationKey = prop.getProperty("sso.saml.affiliation");
+
+								String affiliation = attributes.get(affiliationKey).get(0);
+
+								log.debug("affiliation = " + affiliation);
+
+								String adminAffiliation = prop.getProperty("sso.saml.adminAffiliation");
+
+								if (affiliation.equalsIgnoreCase(adminAffiliation)) {
+									userRole = "admin";
+								} else {
+									userRole = "player";
+								}
+
+								log.debug("userRole= " + userRole);
+
 							}
 						} else {
 							String errorMsg = "SAML unpack properties file '" + unpackFileName
@@ -169,7 +186,7 @@ public class ACS extends HttpServlet {
 
 					}
 
-					if (ssoName == null || userName == null) {
+					if (ssoName == null || userName == null || userRole == null) {
 						String errorMsg = "Unknown error occured when unpacking SAML properties";
 
 						log.error(errorMsg);
@@ -178,7 +195,7 @@ public class ACS extends HttpServlet {
 
 					log.debug("Saml userdata loaded, calling authUserSSO");
 
-					String user[] = Getter.authUserSSO(ApplicationRoot, null, userName, ssoName, "player");
+					String user[] = Getter.authUserSSO(ApplicationRoot, null, userName, ssoName, userRole);
 
 					if (user != null && !user[0].isEmpty()) {
 

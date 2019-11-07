@@ -1,8 +1,6 @@
 package servlets.admin.moduleManagement;
 
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
@@ -18,7 +16,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
 import testUtils.TestProperties;
-import utils.InstallationException;
 
 /**
  * This class just tests the servlet code. The Setter code is better tested in

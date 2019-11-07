@@ -1,8 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.math.BigInteger;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import dbProcs.Getter;
 import dbProcs.Setter;
 import utils.ShepherdLogManager;
 import utils.Validate;

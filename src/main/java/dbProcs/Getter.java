@@ -261,7 +261,7 @@ public class Getter {
 		CallableStatement callstmt;
 		try {
 			callstmt = conn.prepareCall(
-					"SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId, suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND loginType='saml'");
+					"SELECT userId, userName, userPass, badLoginCount, tempPassword, classId, suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND loginType='saml'");
 		} catch (SQLException e) {
 			log.fatal("Could create call statement: " + e.toString());
 			throw new RuntimeException(e);
@@ -305,11 +305,11 @@ public class Getter {
 			try {
 				if (defaultClass.isEmpty()) {
 					log.debug("Adding player to database, with null classId");
-					userCreated = Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName, userRole);
+					userCreated = Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName);
 				} else // defaultClass is not empty, so It must be set to a class!
 				{
 					log.debug("Adding player to database, to class " + defaultClass);
-					userCreated = Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName, userRole);
+					userCreated = Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName);
 				}
 
 			} catch (SQLException e) {
@@ -334,7 +334,7 @@ public class Getter {
 			log.debug("Getting suspension data");
 
 			try {
-				suspendedUntil = userResult.getTimestamp(8);
+				suspendedUntil = userResult.getTimestamp(7);
 			} catch (SQLException e) {
 				log.fatal("Could not find suspension information from ssoName: " + ssoName + ": " + e.toString());
 				throw new RuntimeException(e);

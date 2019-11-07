@@ -81,8 +81,9 @@ public class Logout extends HttpServlet {
 					try {
 						auth.processSLO();
 					} catch (Exception e) {
-						
-						throw new RuntimeException("SAML logout error : " + e.toString());
+						String message = "SAML logout error : " + e.toString();
+						log.error(message);
+						throw new RuntimeException(message);
 
 					}
 

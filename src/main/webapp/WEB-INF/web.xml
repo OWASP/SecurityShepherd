@@ -78,7 +78,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>/ssometadata</servlet-name>
-		<url-pattern>/ssometadata.xml</url-pattern>
+		<url-pattern>/saml/metadata.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet>

@@ -951,8 +951,7 @@ public class Setter {
 
 	}
 
-	public static boolean userCreateSSO(String ApplicationRoot, String classId, String userName, String ssoName,
-			String userRole) throws SQLException {
+	public static boolean userCreateSSO(String ApplicationRoot, String classId, String userName, String ssoName) throws SQLException {
 		boolean result = false;
 
 		log.debug("*** Setter.userCreateSSO ***");
@@ -960,7 +959,6 @@ public class Setter {
 		log.debug("userName = " + userName);
 		log.debug("ssoName = " + ssoName);
 		// We don't log passwords
-		log.debug("userRole = " + userRole);
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try {
@@ -971,7 +969,7 @@ public class Setter {
 			callstmt.setString(1, classId);
 			callstmt.setString(2, userName);
 			callstmt.setString(3, "DISABLED");
-			callstmt.setString(4, userRole);
+			callstmt.setString(4, "player"); //We always set to player, this field is ignored when SSO users log in
 			callstmt.setString(5, ssoName);
 			callstmt.setString(6, ""); // userAddress
 			callstmt.setString(7, "saml"); // login type
