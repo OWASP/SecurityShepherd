@@ -339,7 +339,6 @@ public class GetterTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void testAuthUserCorrectEmojiUsername() {
 		// Here is a very non-latin username

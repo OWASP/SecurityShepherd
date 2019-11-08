@@ -137,7 +137,7 @@
 						} else if (LoginMethod.isSaml()) {
 					%>
 					<a id="login-saml" rel="nofollow" data-method="post"
-						href="ssologin"><span> Login via SAML </span> </a>
+						href="saml/dologin"><span> Login via SAML </span> </a>
 					<%
 						}
 					%>

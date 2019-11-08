@@ -93,6 +93,9 @@ public class ACS extends HttpServlet {
 			log.debug("User not authenticated");
 
 			errorMessage += "Not authenticated";
+			ses.setAttribute("loginFailed", errorMessage);
+			response.sendRedirect("login.jsp");
+			return;
 		} else {
 			log.debug("User authenticated");
 			List<String> errors = auth.getErrors();

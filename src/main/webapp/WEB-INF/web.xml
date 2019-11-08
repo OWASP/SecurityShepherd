@@ -64,40 +64,40 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>/ssologin</servlet-name>
-		<servlet-class>servlets.SSOLogin</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>/ssologin</servlet-name>
-		<url-pattern>/ssologin</url-pattern>
-	</servlet-mapping>
+             <servlet-name>/ssologin</servlet-name>
+                <servlet-class>servlets.SSOLogin</servlet-class>
+    </servlet>
+        <servlet-mapping>
+                <servlet-name>/ssologin</servlet-name>
+                <url-pattern>/saml/dologin</url-pattern>
+        </servlet-mapping>
 
-	<servlet>
-		<servlet-name>/ssometadata</servlet-name>
-		<servlet-class>servlets.SSOMetadata</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>/ssometadata</servlet-name>
-		<url-pattern>/saml/metadata.xml</url-pattern>
-	</servlet-mapping>
+        <servlet>
+                <servlet-name>/ssometadata</servlet-name>
+                <servlet-class>servlets.SSOMetadata</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>/ssometadata</servlet-name>
+                <url-pattern>/saml/metadata.xml</url-pattern>
+        </servlet-mapping>
 
-	<servlet>
-		<servlet-name>/acs</servlet-name>
-		<servlet-class>servlets.ACS</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>/acs</servlet-name>
-		<url-pattern>/acs</url-pattern>
-	</servlet-mapping>
+        <servlet>
+                <servlet-name>/acs</servlet-name>
+                <servlet-class>servlets.ACS</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>/acs</servlet-name>
+                <url-pattern>/saml/acs</url-pattern>
+        </servlet-mapping>
 
-	<servlet>
-		<servlet-name>/sls</servlet-name>
-		<servlet-class>servlets.SLS</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>/sls</servlet-name>
-		<url-pattern>/sls</url-pattern>
-	</servlet-mapping>
+ 		<servlet>
+                <servlet-name>/sls</servlet-name>
+                <servlet-class>servlets.SLS</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>/sls</servlet-name>
+                <url-pattern>/saml/sls</url-pattern>
+        </servlet-mapping>
 
 	<servlet>
 		<servlet-name>/mobileLogin</servlet-name>
@@ -106,15 +106,6 @@
 	<servlet-mapping>
 		<servlet-name>/mobileLogin</servlet-name>
 		<url-pattern>/mobileLogin</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>/sso-register</servlet-name>
-		<servlet-class>servlets.SSORegister</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>/sso-register</servlet-name>
-		<url-pattern>/sso-register</url-pattern>
 	</servlet-mapping>
 
 	<servlet>

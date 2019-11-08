@@ -5,6 +5,8 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+DEFAULT CHARACTER SET = utf8mb4;
+
 DROP SCHEMA IF EXISTS `core` ;
 CREATE SCHEMA IF NOT EXISTS `core` DEFAULT CHARACTER SET utf8mb4 ;
 USE `core` ;
@@ -19,7 +21,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`class` (
   `className` VARCHAR(32) NOT NULL UNIQUE,
   `classYear` VARCHAR(5) NOT NULL ,
   PRIMARY KEY (`classId`) )
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`users`
@@ -51,7 +54,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`users` (
     REFERENCES `core`.`class` (`classId` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`modules`
@@ -153,6 +157,16 @@ CREATE  TABLE IF NOT EXISTS `core`.`sequence` (
   `currVal` BIGINT(20) NOT NULL DEFAULT 282475249 ,
   PRIMARY KEY (`tableName`) )
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `core`.`settings`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `core`.`settings` (
+  `setting` VARCHAR(64) NOT NULL ,
+  `value` VARCHAR(64) NOT NULL ,
+  PRIMARY KEY (`setting`) ,
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 SELECT "Creating Procedures" FROM DUAL;
 
