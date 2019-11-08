@@ -5,8 +5,6 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-DEFAULT CHARACTER SET = utf8mb4;
-
 DROP SCHEMA IF EXISTS `core` ;
 CREATE SCHEMA IF NOT EXISTS `core` DEFAULT CHARACTER SET utf8mb4 ;
 USE `core` ;
@@ -75,7 +73,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`modules` (
   `hardcodedKey` TINYINT(1) NOT NULL DEFAULT TRUE,
   `isUnsafe`  TINYINT(1) NOT NULL DEFAULT TRUE,
   PRIMARY KEY (`moduleId`) )
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`medals`
@@ -100,7 +99,8 @@ CREATE TABLE IF NOT EXISTS `core`.`medals` (
     REFERENCES `core`.`modules` (`moduleId` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`results`
@@ -129,7 +129,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`results` (
     REFERENCES `core`.`modules` (`moduleId` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`cheatsheet`
@@ -156,7 +157,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`sequence` (
   `tableName` VARCHAR(32) NOT NULL ,
   `currVal` BIGINT(20) NOT NULL DEFAULT 282475249 ,
   PRIMARY KEY (`tableName`) )
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`settings`
@@ -164,7 +166,7 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `core`.`settings` (
   `setting` VARCHAR(64) NOT NULL ,
   `value` VARCHAR(64) NOT NULL ,
-  PRIMARY KEY (`setting`) ,
+  PRIMARY KEY (`setting`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
