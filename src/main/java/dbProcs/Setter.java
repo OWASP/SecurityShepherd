@@ -665,8 +665,7 @@ public class Setter {
 		log.debug("Preparing username change call from username " + userName + " to " + newUsername);
 		CallableStatement callstmnt;
 		try {
-			callstmnt = conn.prepareCall(
-					"UPDATE users SET userName = ?, tempUsername = FALSE WHERE userName = ?;");
+			callstmnt = conn.prepareCall("UPDATE users SET userName = ?, tempUsername = FALSE WHERE userName = ?;");
 			callstmnt.setString(1, newUsername);
 
 			callstmnt.setString(2, userName);
@@ -951,7 +950,8 @@ public class Setter {
 
 	}
 
-	public static boolean userCreateSSO(String ApplicationRoot, String classId, String userName, String ssoName) throws SQLException {
+	public static boolean userCreateSSO(String ApplicationRoot, String classId, String userName, String ssoName)
+			throws SQLException {
 		boolean result = false;
 
 		log.debug("*** Setter.userCreateSSO ***");
@@ -969,7 +969,7 @@ public class Setter {
 			callstmt.setString(1, classId);
 			callstmt.setString(2, userName);
 			callstmt.setString(3, "DISABLED");
-			callstmt.setString(4, "player"); //We always set to player, this field is ignored when SSO users log in
+			callstmt.setString(4, "player"); // We always set to player, this field is ignored when SSO users log in
 			callstmt.setString(5, ssoName);
 			callstmt.setString(6, ""); // userAddress
 			callstmt.setString(7, "saml"); // login type
@@ -1027,6 +1027,47 @@ public class Setter {
 		}
 		Database.closeConnection(conn);
 		log.debug("*** END userDelete ***");
+		return result;
+	}
+
+	public static boolean setCheatStatus(String ApplicationRoot, boolean adminCheatsEnabled,
+			boolean playerCheatsEnabled) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setCheatStatus ***");
+		log.debug("adminCheatsEnabled = " + adminCheatsEnabled);
+		log.debug("playerCheatsEnabled = " + playerCheatsEnabled);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting admin cheat setting");
+		PreparedStatement callAdminSetting = conn
+				.prepareStatement("UPDATE settings SET value = ? WHERE setting='adminCheatsEnabled'");
+		callAdminSetting.setBoolean(1, adminCheatsEnabled);
+		if(callAdminSetting.executeUpdate() == 1)
+		{
+			result= true;
+		}
+		else
+		{
+			throw new RuntimeException("Could not set admin cheat setting");
+		}
+
+		log.debug("Setting player cheat setting");
+		PreparedStatement callPlayerSetting = conn
+				.prepareStatement("UPDATE settings SET value = ? WHERE setting='playerCheatsEnabled'");
+		callPlayerSetting.setBoolean(1, playerCheatsEnabled);
+		
+		if(callPlayerSetting.executeUpdate() == 1)
+		{
+			result= true;
+		}
+		else
+		{
+			throw new RuntimeException("Could not set player cheat setting");
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setCheatStatus ***");
 		return result;
 	}
 

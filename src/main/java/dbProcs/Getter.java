@@ -2191,4 +2191,51 @@ public class Getter {
 		log.debug("*** END findAdminById ***");
 		return userFound;
 	}
+	
+	public static boolean getAdminCheatStatus(String ApplicationRoot) throws SQLException {
+		boolean adminCheatStatus = false;
+		log.debug("*** Getter.getAdminCheatStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting admin cheat setting");
+		PreparedStatement callstmt = conn
+				.prepareStatement("SELECT value FROM core.settings WHERE setting='adminCheatsEnabled''");
+
+		ResultSet cheatResult = callstmt.executeQuery();
+
+		cheatResult.next();
+
+		adminCheatStatus = cheatResult.getBoolean(1);
+
+		log.debug("Value found: " + adminCheatStatus);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getAdminCheatStatus ***");
+		return adminCheatStatus;
+	}
+	
+	public static boolean getPlayerCheatStatus(String ApplicationRoot) throws SQLException {
+		boolean getPlayerCheatStatus = false;
+		log.debug("*** Getter.getPlayerCheatStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting admin cheat setting");
+		PreparedStatement callstmt = conn
+				.prepareStatement("SELECT value FROM core.settings WHERE setting='adminCheatsEnabled''");
+
+		ResultSet cheatResult = callstmt.executeQuery();
+
+		cheatResult.next();
+
+		getPlayerCheatStatus = cheatResult.getBoolean(1);
+
+		log.debug("Value found: " + getPlayerCheatStatus);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getPlayerCheatStatus ***");
+		return getPlayerCheatStatus;
+	}
+	
 }

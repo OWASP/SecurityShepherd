@@ -84,4 +84,10 @@ public class CheatSheetStatus
 		return show;
 	}
 	
+	
+	public static void saveCheatStatus()
+	{
+		
+	}
+	
 }

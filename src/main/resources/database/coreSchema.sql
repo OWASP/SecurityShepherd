@@ -1525,6 +1525,18 @@ INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('modules', '28247
 COMMIT;
 
 -- -----------------------------------------------------
+SELECT "Data for table `core`.`sequence`" FROM DUAL;
+-- -----------------------------------------------------
+SET AUTOCOMMIT=0;
+USE `core`;
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('adminCheatsEnabled', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('playerCheatsEnabled', false);
+
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 SELECT "Inserting Data for table `core`.`modules`" FROM DUAL;
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;

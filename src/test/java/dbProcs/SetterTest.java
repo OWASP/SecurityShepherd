@@ -1071,4 +1071,29 @@ public class SetterTest {
 
 	}
 
+	@Test
+	public void testSetCheatSheetSetting() throws SQLException {
+
+		Setter.setCheatStatus(applicationRoot, false, false);
+
+		assertFalse(Getter.getAdminCheatStatus(applicationRoot));
+		assertFalse(Getter.getPlayerCheatStatus(applicationRoot));
+
+		Setter.setCheatStatus(applicationRoot, false, true);
+
+		assertFalse(Getter.getAdminCheatStatus(applicationRoot));
+		assertTrue(Getter.getPlayerCheatStatus(applicationRoot));
+
+		Setter.setCheatStatus(applicationRoot, true, false);
+
+		assertTrue(Getter.getAdminCheatStatus(applicationRoot));
+		assertFalse(Getter.getPlayerCheatStatus(applicationRoot));
+
+		Setter.setCheatStatus(applicationRoot, true, true);
+
+		assertTrue(Getter.getAdminCheatStatus(applicationRoot));
+		assertTrue(Getter.getPlayerCheatStatus(applicationRoot));
+
+	}
+
 }
