@@ -352,8 +352,11 @@ public class TestProperties {
 	 */
 	public static void createMysqlResource(String dbHost, int dbPort, String dbSchema, String dbUsername,
 			String dbPassword) throws IOException {
-		FileWriter file = new FileWriter(Constants.MYSQL_DB_PROP);
-		BufferedWriter bw = new BufferedWriter(file);
+		
+		File file = new File(Constants.MYSQL_DB_PROP);
+		file.getParentFile().mkdirs();
+		FileWriter writer = new FileWriter(file);
+		BufferedWriter bw = new BufferedWriter(writer);
 		bw.write("databaseConnectionURL=jdbc:mysql://" + dbHost + ":" + dbPort + "/");
 		bw.newLine();
 		bw.write("DriverType=org.gjt.mm.mysql.Driver");
@@ -391,8 +394,12 @@ public class TestProperties {
 	 */
 	public static void createMongoResource(String dbHost, long dbPort, String dbName, long connectTimeout,
 			long socketTimeout, long serverSelectionTimeout) throws IOException {
-		FileWriter file = new FileWriter(Constants.MONGO_DB_PROP);
-		BufferedWriter bw = new BufferedWriter(file);
+	
+		File file = new File(Constants.MONGO_DB_PROP);
+		file.getParentFile().mkdirs();
+		FileWriter writer = new FileWriter(file);
+		BufferedWriter bw = new BufferedWriter(writer);
+		
 		bw.write("connectionHost=" + dbHost);
 		bw.newLine();
 		bw.write("connectionPort=" + dbPort);
