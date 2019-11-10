@@ -339,7 +339,7 @@ public class GetterTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void testAuthUserCorrectEmojiUsername() {
 		// Here is a very non-latin username
 		String userName = new String("😃😅😍💩👍‌𝑓ᶃ我璃မ္ယက္‌");
