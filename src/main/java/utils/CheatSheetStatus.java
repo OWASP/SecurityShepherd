@@ -96,7 +96,10 @@ public class CheatSheetStatus {
 
 	private static void saveCheatStatus() {
 		try {
-			Setter.setCheatStatus("", adminEnabled, playerEnabled);
+			
+			Setter.setAdminCheatStatus("", adminEnabled);
+			Setter.setPlayerCheatStatus("", playerEnabled);
+
 		} catch (SQLException e) {
 			log.fatal("Could not save cheat sheet status in database: " + e.toString());
 			throw new RuntimeException(e);

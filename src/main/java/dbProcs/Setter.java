@@ -1030,12 +1030,10 @@ public class Setter {
 		return result;
 	}
 
-	public static boolean setCheatStatus(String ApplicationRoot, boolean adminCheatsEnabled,
-			boolean playerCheatsEnabled) throws SQLException {
+	public static boolean setAdminCheatStatus(String ApplicationRoot, boolean adminCheatsEnabled) throws SQLException {
 		boolean result = false;
-		log.debug("*** Setter.setCheatStatus ***");
+		log.debug("*** Setter.setAdminCheatStatus ***");
 		log.debug("adminCheatsEnabled = " + adminCheatsEnabled);
-		log.debug("playerCheatsEnabled = " + playerCheatsEnabled);
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
@@ -1043,31 +1041,38 @@ public class Setter {
 		PreparedStatement callAdminSetting = conn
 				.prepareStatement("UPDATE settings SET value = ? WHERE setting=adminCheatsEnabled");
 		callAdminSetting.setBoolean(1, adminCheatsEnabled);
-		if(callAdminSetting.executeUpdate() == 1)
-		{
-			result= true;
-		}
-		else
-		{
+		if (callAdminSetting.executeUpdate() == 1) {
+			result = true;
+		} else {
 			throw new RuntimeException("Could not set admin cheat setting");
 		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setAdminCheatStatus ***");
+		return result;
+	}
+
+	public static boolean setPlayerCheatStatus(String ApplicationRoot, boolean playerCheatsEnabled)
+			throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setPlayerCheatStatus ***");
+		log.debug("playerCheatsEnabled = " + playerCheatsEnabled);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting player cheat setting");
 		PreparedStatement callPlayerSetting = conn
 				.prepareStatement("UPDATE settings SET value = ? WHERE setting=playerCheatsEnabled");
 		callPlayerSetting.setBoolean(1, playerCheatsEnabled);
-		
-		if(callPlayerSetting.executeUpdate() == 1)
-		{
-			result= true;
-		}
-		else
-		{
+
+		if (callPlayerSetting.executeUpdate() == 1) {
+			result = true;
+		} else {
 			throw new RuntimeException("Could not set player cheat setting");
 		}
 
 		Database.closeConnection(conn);
-		log.debug("*** END setCheatStatus ***");
+		log.debug("*** END setPlayerCheatStatus ***");
 		return result;
 	}
 
