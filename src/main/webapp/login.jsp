@@ -43,6 +43,7 @@
 	//Try talking to the database to force an early error if there's some db problem so we see error messages before trying to log in
 
 	Connection conn = Database.getCoreConnection();
+	conn.close();
 
 	String url = (request.getRequestURL()).toString();
 	if (url.contains("login.jsp")) {
@@ -117,7 +118,7 @@
 										:</td>
 								<td><input type="text" name="login" value=""
 									autocomplete="OFF" autofocus />
-								</p></td>
+									</p></td>
 							</tr>
 							<tr>
 								<td><p>
@@ -168,8 +169,7 @@
 								</tr>
 							</table>
 						</div>
-						<br>
-						<a id="showAbout" href="javascript:;"><fmt:message
+						<br> <a id="showAbout" href="javascript:;"><fmt:message
 								key="generic.text.aboutSecShep" /></a>
 					</div>
 				</div>
