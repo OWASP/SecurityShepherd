@@ -386,4 +386,44 @@ public class TestProperties {
 		FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 	}
 
+	/**
+	 * Create a mongo database properties file
+	 */
+	public static void createMongoResource(String dbHost, long dbPort, String dbName, long connectTimeout,
+			long socketTimeout, long serverSelectionTimeout) throws IOException {
+		FileWriter file = new FileWriter(Constants.MONGO_DB_PROP);
+		BufferedWriter bw = new BufferedWriter(file);
+		bw.write("connectionHost=" + dbHost);
+		bw.newLine();
+		bw.write("connectionPort=" + dbPort);
+		bw.newLine();
+		bw.write("databaseName=" + dbName);
+		bw.newLine();
+		bw.write("connectTimeout=" + dbName);
+		bw.newLine();
+		bw.write("socketTimeout=" + dbName);
+		bw.newLine();
+		bw.write("serverSelectionTimeout=" + dbName);
+		bw.newLine();
+		bw.close();
+	}
+
+	/**
+	 * Create a mysql database properties file
+	 * 
+	 * @throws IOException
+	 */
+	public static void createMongoResource() throws IOException {
+		createMongoResource("0.0.0.0", 27017, "shepherdGames", 10000, 0, 30000);
+	}
+
+	/**
+	 * Create a mysql database properties file
+	 * 
+	 * @throws IOException
+	 */
+	public static void deleteMongoResource() {
+		FileUtils.deleteQuietly(new File(Constants.MONGO_DB_PROP));
+	}
+
 }

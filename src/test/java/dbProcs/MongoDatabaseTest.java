@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class MongoDatabaseTest {
 
@@ -29,8 +30,10 @@ public class MongoDatabaseTest {
     private static org.apache.log4j.Logger log = Logger.getLogger(MongoDatabaseTest.class);
 
     @BeforeAll
-    public static void initAll()
+    public static void initAll() throws IOException
     {
+		TestProperties.createMysqlResource();
+
         fakeDB = fongo.getDB(TEST_DB);
         mongoClient = fongo.getMongo();
         TestProperties.setTestPropertiesFileDirectory(log);
