@@ -358,6 +358,8 @@ public class TestProperties {
 		bw.newLine();
 		bw.write("DriverType=org.gjt.mm.mysql.Driver");
 		bw.newLine();
+		bw.write("databaseOptions=useUnicode=true&character_set_server=utf8mb4");
+		bw.newLine();
 		bw.write("databaseSchema=" + dbSchema);
 		bw.newLine();
 		bw.write("databaseUsername=" + dbUsername);

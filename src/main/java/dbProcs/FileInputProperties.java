@@ -76,7 +76,7 @@ public class FileInputProperties
 		dis.close();
 		
 		if (!bool) {
-			log.debug("Debug: Property not found: " + property);
+			log.error("Property not found: " + property);
 			throw new PropertyNotFoundException("Property " + property + " not found");
 		}
 
