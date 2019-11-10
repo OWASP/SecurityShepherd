@@ -1041,7 +1041,7 @@ public class Setter {
 
 		log.debug("Setting admin cheat setting");
 		PreparedStatement callAdminSetting = conn
-				.prepareStatement("UPDATE settings SET value = ? WHERE setting='adminCheatsEnabled'");
+				.prepareStatement("UPDATE settings SET value = ? WHERE setting=adminCheatsEnabled");
 		callAdminSetting.setBoolean(1, adminCheatsEnabled);
 		if(callAdminSetting.executeUpdate() == 1)
 		{
@@ -1054,7 +1054,7 @@ public class Setter {
 
 		log.debug("Setting player cheat setting");
 		PreparedStatement callPlayerSetting = conn
-				.prepareStatement("UPDATE settings SET value = ? WHERE setting='playerCheatsEnabled'");
+				.prepareStatement("UPDATE settings SET value = ? WHERE setting=playerCheatsEnabled");
 		callPlayerSetting.setBoolean(1, playerCheatsEnabled);
 		
 		if(callPlayerSetting.executeUpdate() == 1)
