@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
@@ -29,12 +30,12 @@ import dbProcs.Setter;
  *
  */
 public class CheatSheetStatus {
-	
+
 	private static org.apache.log4j.Logger log = Logger.getLogger(CheatSheetStatus.class);
-	
+
 	private static boolean adminEnabled = false;
 	private static boolean playerEnabled = false;
-	
+
 	public static void disableForAll() {
 		adminEnabled = false;
 		playerEnabled = false;
@@ -54,18 +55,22 @@ public class CheatSheetStatus {
 	}
 
 	public static boolean getStatusForAll() {
+		loadCheatStatus();
 		return adminEnabled && playerEnabled;
 	}
 
 	public static boolean isEnabledForAdminsOnly() {
+		loadCheatStatus();
 		return !playerEnabled && adminEnabled;
 	}
 
 	public static boolean isEnabledForPlayers() {
+		loadCheatStatus();
 		return playerEnabled;
 	}
 
 	public static boolean isEnabledAtAll() {
+		loadCheatStatus();
 		return adminEnabled || playerEnabled;
 	}
 
@@ -89,9 +94,21 @@ public class CheatSheetStatus {
 		return show;
 	}
 
-	public static void saveCheatStatus() {
+	private static void saveCheatStatus() {
 		try {
 			Setter.setCheatStatus("", adminEnabled, playerEnabled);
+		} catch (SQLException e) {
+			log.fatal("Could not save cheat sheet status in database: " + e.toString());
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static void loadCheatStatus() {
+		try {
+
+			adminEnabled = Getter.getAdminCheatStatus("");
+			playerEnabled = Getter.getPlayerCheatStatus("");
+
 		} catch (SQLException e) {
 			log.fatal("Could not save cheat sheet status in database: " + e.toString());
 			throw new RuntimeException(e);
