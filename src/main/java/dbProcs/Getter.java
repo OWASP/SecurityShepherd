@@ -90,7 +90,7 @@ public class Getter
 			throw new RuntimeException(e);
 		}
 
-		log.debug("Gathering userFind ResultSet");
+		log.debug("Gathering results from query");
 		ResultSet userFind;
 		try {
 			callstmt.setString(1, userName);
@@ -100,7 +100,7 @@ public class Getter
 			throw new RuntimeException(e);
 		}
 
-		log.debug("Opening Result Set from userFind");
+		log.debug("Opening Result Set from user listing");
 
 		try {
 			userFind.next();
@@ -124,7 +124,6 @@ public class Getter
 
 				userVerified = argon2.verify(dbHash, password.toCharArray());
 
-				log.debug("Verification result: " + password);
 			} catch (SQLException e) {
 				log.error("Could not retrieve password hash from db: " + e.toString());
 				result = null;
