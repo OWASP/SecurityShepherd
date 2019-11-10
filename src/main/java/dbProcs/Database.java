@@ -201,17 +201,12 @@ public class Database {
 				driverType = FileInputProperties.readfile(props, "DriverType");
 				username = FileInputProperties.readfile(props, "databaseUsername");
 				password = FileInputProperties.readfile(props, "databasePassword");
+				dbOptions = FileInputProperties.readfile(props, "databaseOptions");
+
 			} catch (PropertyNotFoundException e) {
 				log.fatal("Could not find requested parameter in props file: " + e.toString());
 				throw new RuntimeException(e);
 				
-			}
-
-			try {
-				dbOptions = FileInputProperties.readfile(props, "databaseOptions");
-			} catch (PropertyNotFoundException e) {
-				log.debug("Did not find database options, defaulting to empty");
-				dbOptions="";
 			}
 			
 		} catch (FileNotFoundException e) {

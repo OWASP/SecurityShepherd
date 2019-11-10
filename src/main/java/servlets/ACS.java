@@ -59,6 +59,8 @@ public class ACS extends HttpServlet {
 		Object language = ses.getAttribute("lang");
 
 		String errorMessage = new String();
+		
+		request.setCharacterEncoding("UTF-8");
 
 		response.setContentType("text/plain");
 

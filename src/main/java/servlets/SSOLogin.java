@@ -51,7 +51,7 @@ public class SSOLogin extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("**** servlets.SSOLogin ***");
-
+		request.setCharacterEncoding("UTF-8");
 		Auth auth;
 		try {
 			auth = new Auth(request, response);

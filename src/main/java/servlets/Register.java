@@ -58,6 +58,7 @@ public class Register extends HttpServlet
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("**** servlets.Register ***");
 		PrintWriter out = response.getWriter();  
+		request.setCharacterEncoding("UTF-8");
 		out.print(getServletInfo());
 		if(OpenRegistration.isEnabled())
 		{

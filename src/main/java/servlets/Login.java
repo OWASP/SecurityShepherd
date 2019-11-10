@@ -58,6 +58,7 @@ public class Login extends HttpServlet {
 		// proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("**** servlets.Login ***");
+		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 		try {
 			response.setContentType("text/plain");

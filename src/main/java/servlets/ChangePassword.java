@@ -56,6 +56,7 @@ public class ChangePassword extends HttpServlet
 		log.debug("*** servlets.ChangePassword ***");
 		try
 		{
+			request.setCharacterEncoding("UTF-8");
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{

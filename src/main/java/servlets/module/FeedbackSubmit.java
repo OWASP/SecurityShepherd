@@ -67,6 +67,7 @@ public class FeedbackSubmit extends HttpServlet
 		String htmlOutput = new String();
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{

@@ -56,6 +56,7 @@ public class SLS extends HttpServlet {
 		// proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("**** servlets.SLS ***");
+		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 		if (Validate.validateSession(ses)) {
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),

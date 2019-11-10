@@ -56,6 +56,7 @@ public class GetJsonScore extends HttpServlet
 		//log.debug("*** servlets.GetJsonScore ***");
 		PrintWriter out = response.getWriter(); 
 		out.print(getServletInfo());
+		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{

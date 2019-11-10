@@ -46,6 +46,7 @@ public class Setup extends HttpServlet {
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
+		request.setCharacterEncoding("UTF-8");
 
 		// Output Stuff
 		PrintWriter out = response.getWriter();

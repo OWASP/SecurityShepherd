@@ -60,7 +60,8 @@ public class SolutionSubmit extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& servlets.module.SolutionSubmit &&&");
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
+		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 		if(Validate.validateSession(ses))
 		{
