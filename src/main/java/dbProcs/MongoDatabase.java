@@ -208,10 +208,11 @@ public class MongoDatabase {
 			connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
 			socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
 			serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
+
 		} catch (IOException | PropertyNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-
+		
 		MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
 		optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
 		optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
@@ -264,12 +265,13 @@ public class MongoDatabase {
 		String props = Constants.MONGO_DB_PROP;
 		DB mongoDb = null;
 		String dbname;
+		
 		try {
 			dbname = FileInputProperties.readfile(props, "databaseName");
 		} catch (IOException | PropertyNotFoundException e) {
 			throw new RuntimeException(e);
-
 		}
+		
 		try {
 			mongoDb = mongoClient.getDB(dbname);
 		} catch (MongoSocketException e) {

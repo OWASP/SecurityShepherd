@@ -413,11 +413,11 @@ public class TestProperties {
 		bw.newLine();
 		bw.write("databaseName=" + dbName);
 		bw.newLine();
-		bw.write("connectTimeout=" + dbName);
+		bw.write("connectTimeout=" + connectTimeout);
 		bw.newLine();
-		bw.write("socketTimeout=" + dbName);
+		bw.write("socketTimeout=" + socketTimeout);
 		bw.newLine();
-		bw.write("serverSelectionTimeout=" + dbName);
+		bw.write("serverSelectionTimeout=" + serverSelectionTimeout);
 		bw.newLine();
 		bw.close();
 		
