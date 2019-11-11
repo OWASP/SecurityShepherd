@@ -32,9 +32,9 @@ import dbProcs.Setter;
 public class ModulePlan {
 	private static org.apache.log4j.Logger log = Logger.getLogger(ModulePlan.class);
 
-	public static boolean openFloor = false;
-	public static boolean incrementalFloor = true;
-	public static boolean tournamentFloor = false;
+	private static boolean openFloor = false;
+	private static boolean incrementalFloor = true;
+	private static boolean tournamentFloor = false;
 
 	private static boolean isLoaded = false;
 
