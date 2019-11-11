@@ -204,33 +204,20 @@ public class MongoDatabase {
 		try {
 
 			connectionHost = FileInputProperties.readfile(props, "connectionHost");
-			log.debug("connectionHost: " + connectionHost);
 			connectionPort = FileInputProperties.readfile(props, "connectionPort");
-			log.debug("connectionPort: " + connectionPort);
 			connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
-			log.debug("connectTimeout: " + connectTimeout);
 			socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
-			log.debug("socketTimeout: " + socketTimeout);
 			serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
-			log.debug("serverSelectionTimeout: " + serverSelectionTimeout);
 
 		} catch (IOException | PropertyNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 		
-		log.debug("Loaded mongo config from " + props);
-
 		MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
-		log.debug("Created builder. connectTimeout= " + connectTimeout);
 		optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
-		log.debug("connectTimeout");
 		optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
-		log.debug("socketTimeout");
 		optionsBuilder.serverSelectionTimeout(Integer.parseInt(serverSelectionTimeout));
-		log.debug("serverSelectionTimeout");
 		MongoClientOptions mongoOptions = optionsBuilder.build();
-		log.debug("Options created");
-
 
 		try {
 			mongoClient = new MongoClient(new ServerAddress(connectionHost, Integer.parseInt(connectionPort)),
