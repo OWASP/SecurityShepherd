@@ -1038,11 +1038,10 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting admin cheat setting");
-		PreparedStatement callAdminSetting = conn
-				.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		PreparedStatement callAdminSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
 		callAdminSetting.setBoolean(1, adminCheatsEnabled);
 		callAdminSetting.setString(2, "adminCheatsEnabled");
-		
+
 		if (callAdminSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
@@ -1063,11 +1062,9 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting player cheat setting");
-		PreparedStatement callPlayerSetting = conn
-				.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
 		callPlayerSetting.setBoolean(1, playerCheatsEnabled);
 		callPlayerSetting.setString(2, "playerCheatsEnabled");
-
 
 		if (callPlayerSetting.executeUpdate() == 1) {
 			result = true;
@@ -1077,6 +1074,30 @@ public class Setter {
 
 		Database.closeConnection(conn);
 		log.debug("*** END setPlayerCheatStatus ***");
+		return result;
+	}
+
+	public static boolean setModulelayout(String ApplicationRoot, String theModulelayout)
+			throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setModulelayout ***");
+		log.debug("playerCheatsEnabled = " + theModulelayout);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting player cheat setting");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		callPlayerSetting.setString(1, theModulelayout);
+		callPlayerSetting.setString(2, "modulelayout");
+
+		if (callPlayerSetting.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set player cheat setting");
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setModulelayout ***");
 		return result;
 	}
 

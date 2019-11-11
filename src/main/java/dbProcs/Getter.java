@@ -2242,4 +2242,29 @@ public class Getter {
 		return getPlayerCheatStatus;
 	}
 	
+	public static String getModuleLayout(String ApplicationRoot) throws SQLException {
+		String theModuleLayout = "";
+		log.debug("*** Getter.getModuleLayout ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting admin cheat setting");
+		PreparedStatement callstmt = conn
+				.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+		
+		callstmt.setString(1, "moduleLayout");
+
+		ResultSet cheatResult = callstmt.executeQuery();
+
+		cheatResult.next();
+
+		theModuleLayout = cheatResult.getString(1);
+
+		log.debug("Value found: " + theModuleLayout);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getModuleLayout ***");
+		return theModuleLayout;
+	}
+	
 }

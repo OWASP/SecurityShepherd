@@ -1531,6 +1531,7 @@ SET AUTOCOMMIT=0;
 USE `core`;
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('adminCheatsEnabled', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('playerCheatsEnabled', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('moduleLayout', 'ctf');
 
 
 COMMIT;
