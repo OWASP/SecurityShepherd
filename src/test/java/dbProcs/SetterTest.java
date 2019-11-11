@@ -1158,45 +1158,94 @@ public class SetterTest {
 		Setter.setModulelayout(applicationRoot, "Open");
 
 	}
-	
+
 	@Test
 	public void testEnableFeedbackStatus() throws SQLException {
-		
+
 		Setter.setFeedbackStatus(applicationRoot, false);
 		Setter.setFeedbackStatus(applicationRoot, true);
-		
+
 		assertTrue(Getter.getFeedbackStatus(applicationRoot));
 
 	}
-	
+
 	@Test
 	public void testDisableFeedbackStatus() throws SQLException {
-		
+
 		Setter.setFeedbackStatus(applicationRoot, true);
 		Setter.setFeedbackStatus(applicationRoot, false);
-		
+
 		assertFalse(Getter.getFeedbackStatus(applicationRoot));
 
 	}
-	
+
 	@Test
 	public void testEnableRegistrationStatus() throws SQLException {
-		
+
 		Setter.setRegistrationStatus(applicationRoot, false);
 		Setter.setRegistrationStatus(applicationRoot, true);
-		
+
 		assertTrue(Getter.getRegistrationStatus(applicationRoot));
 
 	}
-	
+
 	@Test
 	public void testDisableRegistrationStatus() throws SQLException {
-		
+
 		Setter.setRegistrationStatus(applicationRoot, true);
 		Setter.setRegistrationStatus(applicationRoot, false);
-		
+
 		assertFalse(Getter.getRegistrationStatus(applicationRoot));
 
 	}
 
+	@Test
+	public void testSetAdminOnlyScoreboard() throws SQLException {
+
+		Setter.setScoreboardStatus(applicationRoot, "adminOnly");
+
+		assertEquals(Getter.getScoreboardStatus(applicationRoot), "adminOnly");
+
+	}
+
+	@Test
+	public void testSetClassSpecificScoreboard() throws SQLException {
+
+		Setter.setScoreboardStatus(applicationRoot, "classSpecific");
+
+		assertEquals(Getter.getScoreboardStatus(applicationRoot), "classSpecific");
+
+	}
+
+	@Test
+	public void testSetOpenScoreboard() throws SQLException {
+
+		Setter.setScoreboardStatus(applicationRoot, "public");
+
+		assertEquals(Getter.getScoreboardStatus(applicationRoot), "open");
+
+	}
+
+	@Test
+	public void testSetPublicScoreboard() throws SQLException {
+
+		Setter.setScoreboardStatus(applicationRoot, "public");
+
+		assertEquals(Getter.getScoreboardStatus(applicationRoot), "public");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testEmptyScoreboardStatus() throws SQLException {
+
+		Setter.setScoreboardStatus(applicationRoot, "");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidScoreboardStatus() throws SQLException {
+
+		Setter.setScoreboardStatus(applicationRoot, "invalidStatus");
+
+	}
 }

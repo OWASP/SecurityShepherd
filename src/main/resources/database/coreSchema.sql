@@ -1534,6 +1534,7 @@ INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('playerCheatsEnabled'
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('moduleLayout', 'ctf');
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('feedbackStatus', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('openRegistration', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('scoreboardStatus', 'open');
 
 COMMIT;
 

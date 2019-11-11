@@ -2250,11 +2250,11 @@ public class Getter {
 
 		callstmt.setString(1, "moduleLayout");
 
-		ResultSet cheatResult = callstmt.executeQuery();
+		ResultSet layoutResult = callstmt.executeQuery();
 
-		cheatResult.next();
+		layoutResult.next();
 
-		theModuleLayout = cheatResult.getString(1);
+		theModuleLayout = layoutResult.getString(1);
 
 		log.debug("Value found: " + theModuleLayout);
 
@@ -2274,11 +2274,11 @@ public class Getter {
 
 		callstmt.setString(1, "feedbackStatus");
 
-		ResultSet cheatResult = callstmt.executeQuery();
+		ResultSet feedbackResult = callstmt.executeQuery();
 
-		cheatResult.next();
+		feedbackResult.next();
 
-		theFeedbackStatus = cheatResult.getBoolean(1);
+		theFeedbackStatus = feedbackResult.getBoolean(1);
 
 		log.debug("Value found: " + theFeedbackStatus);
 
@@ -2298,16 +2298,40 @@ public class Getter {
 
 		callstmt.setString(1, "openRegistration");
 
-		ResultSet cheatResult = callstmt.executeQuery();
+		ResultSet registrationResult = callstmt.executeQuery();
 
-		cheatResult.next();
+		registrationResult.next();
 
-		theRegistrationStatus = cheatResult.getBoolean(1);
+		theRegistrationStatus = registrationResult.getBoolean(1);
 
 		log.debug("Value found: " + theRegistrationStatus);
 
 		Database.closeConnection(conn);
 		log.debug("*** END getRegistrationStatus ***");
 		return theRegistrationStatus;
+	}
+
+	public static String getScoreboardStatus(String ApplicationRoot) throws SQLException {
+		String theScoreboardStatus = "";
+		log.debug("*** Getter.getScoreboardStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting admin cheat setting");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "openRegistration");
+
+		ResultSet scoreboardResult = callstmt.executeQuery();
+
+		scoreboardResult.next();
+
+		theScoreboardStatus = scoreboardResult.getString(1);
+
+		log.debug("Value found: " + theScoreboardStatus);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getScoreboardStatus ***");
+		return theScoreboardStatus;
 	}
 }
