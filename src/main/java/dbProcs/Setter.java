@@ -1126,5 +1126,28 @@ public class Setter {
 		log.debug("*** END setFeedbackStatus ***");
 		return result;
 	}
+	
+	public static boolean setRegistrationStatus(String ApplicationRoot, boolean theRegistrationStatus) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setRegistrationStatus ***");
+		log.debug("enableRegistration = " + theRegistrationStatus);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting registration status setting");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		callPlayerSetting.setBoolean(1, theRegistrationStatus);
+		callPlayerSetting.setString(2, "openRegistration");
+
+		if (callPlayerSetting.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set registration status to " + theRegistrationStatus);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setRegistrationStatus ***");
+		return result;
+	}
 
 }

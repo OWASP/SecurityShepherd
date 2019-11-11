@@ -1525,17 +1525,17 @@ INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('modules', '28247
 COMMIT;
 
 -- -----------------------------------------------------
-SELECT "Data for table `core`.`sequence`" FROM DUAL;
+SELECT "Data for table `core`.`settings`" FROM DUAL;
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;
 USE `core`;
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('adminCheatsEnabled', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('playerCheatsEnabled', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('moduleLayout', 'ctf');
-
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('feedbackStatus', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('openRegistration', false);
 
 COMMIT;
-
 
 -- -----------------------------------------------------
 SELECT "Inserting Data for table `core`.`modules`" FROM DUAL;

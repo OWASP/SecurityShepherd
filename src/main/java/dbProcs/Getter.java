@@ -350,7 +350,6 @@ public class Getter {
 			}
 		}
 
-
 		// Find the generated userID and username by asking the database
 		try {
 			callstmt = conn.prepareCall(
@@ -2191,7 +2190,7 @@ public class Getter {
 		log.debug("*** END findAdminById ***");
 		return userFound;
 	}
-	
+
 	public static boolean getAdminCheatStatus(String ApplicationRoot) throws SQLException {
 		boolean adminCheatStatus = false;
 		log.debug("*** Getter.getAdminCheatStatus ***");
@@ -2199,11 +2198,10 @@ public class Getter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting admin cheat setting");
-		PreparedStatement callstmt = conn
-				.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "adminCheatsEnabled");
-		
+
 		ResultSet cheatResult = callstmt.executeQuery();
 
 		cheatResult.next();
@@ -2216,7 +2214,7 @@ public class Getter {
 		log.debug("*** END getAdminCheatStatus ***");
 		return adminCheatStatus;
 	}
-	
+
 	public static boolean getPlayerCheatStatus(String ApplicationRoot) throws SQLException {
 		boolean getPlayerCheatStatus = false;
 		log.debug("*** Getter.getPlayerCheatStatus ***");
@@ -2224,9 +2222,8 @@ public class Getter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting admin cheat setting");
-		PreparedStatement callstmt = conn
-				.prepareStatement("SELECT value FROM settings WHERE setting= ?");
-		
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
 		callstmt.setString(1, "playerCheatsEnabled");
 
 		ResultSet cheatResult = callstmt.executeQuery();
@@ -2241,7 +2238,7 @@ public class Getter {
 		log.debug("*** END getPlayerCheatStatus ***");
 		return getPlayerCheatStatus;
 	}
-	
+
 	public static String getModuleLayout(String ApplicationRoot) throws SQLException {
 		String theModuleLayout = "";
 		log.debug("*** Getter.getModuleLayout ***");
@@ -2249,9 +2246,8 @@ public class Getter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting admin cheat setting");
-		PreparedStatement callstmt = conn
-				.prepareStatement("SELECT value FROM settings WHERE setting= ?");
-		
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
 		callstmt.setString(1, "moduleLayout");
 
 		ResultSet cheatResult = callstmt.executeQuery();
@@ -2266,7 +2262,7 @@ public class Getter {
 		log.debug("*** END getModuleLayout ***");
 		return theModuleLayout;
 	}
-	
+
 	public static boolean getFeedbackStatus(String ApplicationRoot) throws SQLException {
 		boolean theFeedbackStatus = false;
 		log.debug("*** Getter.getFeedbackStatus ***");
@@ -2274,10 +2270,9 @@ public class Getter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting admin cheat setting");
-		PreparedStatement callstmt = conn
-				.prepareStatement("SELECT value FROM settings WHERE setting= ?");
-		
-		callstmt.setString(1, "moduleLayout");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "feedbackStatus");
 
 		ResultSet cheatResult = callstmt.executeQuery();
 
@@ -2291,5 +2286,28 @@ public class Getter {
 		log.debug("*** END getFeedbackStatus ***");
 		return theFeedbackStatus;
 	}
-	
+
+	public static boolean getRegistrationStatus(String ApplicationRoot) throws SQLException {
+		boolean theRegistrationStatus = false;
+		log.debug("*** Getter.getRegistrationStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting admin cheat setting");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "openRegistration");
+
+		ResultSet cheatResult = callstmt.executeQuery();
+
+		cheatResult.next();
+
+		theRegistrationStatus = cheatResult.getBoolean(1);
+
+		log.debug("Value found: " + theRegistrationStatus);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getRegistrationStatus ***");
+		return theRegistrationStatus;
+	}
 }

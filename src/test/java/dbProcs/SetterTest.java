@@ -1178,5 +1178,25 @@ public class SetterTest {
 		assertFalse(Getter.getFeedbackStatus(applicationRoot));
 
 	}
+	
+	@Test
+	public void testEnableRegistrationStatus() throws SQLException {
+		
+		Setter.setRegistrationStatus(applicationRoot, false);
+		Setter.setRegistrationStatus(applicationRoot, true);
+		
+		assertTrue(Getter.getRegistrationStatus(applicationRoot));
+
+	}
+	
+	@Test
+	public void testDisableRegistrationStatus() throws SQLException {
+		
+		Setter.setRegistrationStatus(applicationRoot, true);
+		Setter.setRegistrationStatus(applicationRoot, false);
+		
+		assertFalse(Getter.getRegistrationStatus(applicationRoot));
+
+	}
 
 }
