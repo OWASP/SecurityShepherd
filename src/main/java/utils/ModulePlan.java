@@ -1,5 +1,12 @@
 package utils;
 
+import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
+
+import dbProcs.Getter;
+import dbProcs.Setter;
+
 /**
  * This class Determines how the users are presented with the modules. By
  * default this method sets the floor plan to CTF mode <br/>
@@ -23,42 +30,64 @@ package utils;
  *
  */
 public class ModulePlan {
+	private static org.apache.log4j.Logger log = Logger.getLogger(CheatSheetStatus.class);
+
 	public static boolean openFloor = false;
 	public static boolean incrementalFloor = true;
 	public static boolean tournamentFloor = false;
 
+	private static boolean isLoaded = false;
+
 	public static boolean isIncrementalFloor() {
+		loadModuleLayout();
 		return incrementalFloor;
 	}
 
 	public static boolean isOpenFloor() {
+		loadModuleLayout();
 		return openFloor;
 	}
 
 	public static boolean isTournyFloor() {
+		loadModuleLayout();
 		return tournamentFloor;
 	}
 
 	public static void setIncrementalFloor() {
+		if (!isLoaded) {
+			loadModuleLayout();
+		}
 		openFloor = false;
 		incrementalFloor = true;
 		tournamentFloor = false;
+		saveModuleLayout();
 	}
 
 	public static void setOpenFloor() {
+		if (!isLoaded) {
+			loadModuleLayout();
+		}
 		openFloor = true;
 		incrementalFloor = false;
 		tournamentFloor = false;
+		saveModuleLayout();
+
 	}
 
 	public static void setTournyFloor() {
+		if (!isLoaded) {
+			loadModuleLayout();
+		}
 		openFloor = false;
 		incrementalFloor = false;
 		tournamentFloor = true;
+		saveModuleLayout();
+
 	}
 
 	public static String currentMode() {
 		String result = new String();
+		loadModuleLayout();
 		if (openFloor)
 			result = "Open Floor";
 		else if (incrementalFloor)
@@ -67,4 +96,32 @@ public class ModulePlan {
 			result = "Tournament";
 		return result;
 	}
+
+	private static void saveModuleLayout() {
+		try {
+
+			Setter.setAdminCheatStatus("", openFloor);
+			Setter.setAdminCheatStatus("", incrementalFloor);
+			Setter.setAdminCheatStatus("", tournamentFloor);
+
+		} catch (SQLException e) {
+			log.fatal("Could not save module plan setting in database: " + e.toString());
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static void loadModuleLayout() {
+		try {
+
+			openFloor = Getter.getAdminCheatStatus("");
+			incrementalFloor = Getter.getAdminCheatStatus("");
+			tournamentFloor = Getter.getAdminCheatStatus("");
+
+		} catch (SQLException e) {
+			log.fatal("Could not save module plan setting in database: " + e.toString());
+			throw new RuntimeException(e);
+		}
+		isLoaded = true;
+	}
+
 }

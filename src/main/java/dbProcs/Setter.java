@@ -1077,22 +1077,26 @@ public class Setter {
 		return result;
 	}
 
-	public static boolean setModulelayout(String ApplicationRoot, String theModulelayout) throws SQLException {
+	public static boolean setModulelayout(String ApplicationRoot, String theModuleLayout) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setModulelayout ***");
-		log.debug("playerCheatsEnabled = " + theModulelayout);
-		
+		log.debug("playerCheatsEnabled = " + theModuleLayout);
+
+		if (theModuleLayout != "ctf" && theModuleLayout != "tournament" && theModuleLayout != "open") {
+			throw new IllegalArgumentException("Invalid module layout: " + theModuleLayout);
+		}
+
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting player cheat setting");
 		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
-		callPlayerSetting.setString(1, theModulelayout);
+		callPlayerSetting.setString(1, theModuleLayout);
 		callPlayerSetting.setString(2, "modulelayout");
 
 		if (callPlayerSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
-			throw new RuntimeException("Could not set player cheat setting");
+			throw new RuntimeException("Could not set module layout to " + theModuleLayout);
 		}
 
 		Database.closeConnection(conn);
