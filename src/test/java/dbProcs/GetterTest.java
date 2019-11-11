@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.junit.Ignore;
 
 import testUtils.TestProperties;
-import utils.InstallationException;
 import utils.ScoreboardStatus;
 
 /**
