@@ -1229,7 +1229,7 @@ public class SetterTest {
 	@Test
 	public void testSetOpenScoreboard() throws SQLException {
 
-		Setter.setScoreboardStatus(applicationRoot, "public");
+		Setter.setScoreboardStatus(applicationRoot, "open");
 
 		assertEquals(Getter.getScoreboardStatus(applicationRoot), "open");
 
