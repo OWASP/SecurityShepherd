@@ -237,6 +237,8 @@ public class ScoreboardStatus {
 
 			loadedStatus = Getter.getScoreboardStatus("");
 			scoreboardClass = Getter.getScoreboardClass("");
+			
+			log.debug("Loaded scoreboard status " + loadedStatus + " and scoreboard class " + scoreboardClass);
 
 		} catch (SQLException e) {
 

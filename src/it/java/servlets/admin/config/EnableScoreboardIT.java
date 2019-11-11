@@ -309,7 +309,7 @@ public class EnableScoreboardIT {
 					if (scoreboardClass.equalsIgnoreCase(classId)) {
 						log.debug("Correct Class was set");
 					} else {
-						String message = "Did not update Scoreboard Setting to list specific class. Expected '"
+						String message = "Did not update scoreboard setting to list specific class. Expected '"
 								+ classId + "' but got '" + scoreboardClass + "'";
 						log.fatal(message);
 						fail(message);
