@@ -53,7 +53,7 @@ public class FeedbackStatus {
 			Setter.setFeedbackStatus("", enabled);
 
 		} catch (SQLException e) {
-			log.fatal("Could not save feedback status setting in database: " + e.toString());
+			log.fatal("Could not save feedback setting in database: " + e.toString());
 			throw new RuntimeException(e);
 		}
 	}
@@ -64,7 +64,7 @@ public class FeedbackStatus {
 			enabled = Getter.getFeedbackStatus("");
 
 		} catch (SQLException e) {
-			log.fatal("Could not save feedback status setting in database: " + e.toString());
+			log.fatal("Could not load feedback setting from database: " + e.toString());
 			throw new RuntimeException(e);
 		}
 		isLoaded = true;

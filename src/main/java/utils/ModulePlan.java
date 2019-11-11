@@ -118,7 +118,7 @@ public class ModulePlan {
 			tournamentFloor = Getter.getAdminCheatStatus("");
 
 		} catch (SQLException e) {
-			log.fatal("Could not save module plan setting in database: " + e.toString());
+			log.fatal("Could not load module plan setting from database: " + e.toString());
 			throw new RuntimeException(e);
 		}
 		isLoaded = true;

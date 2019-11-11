@@ -2221,7 +2221,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting admin cheat setting");
+		log.debug("Setting player cheat setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "playerCheatsEnabled");
@@ -2245,7 +2245,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting admin cheat setting");
+		log.debug("Setting module layout setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "moduleLayout");
@@ -2269,7 +2269,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting admin cheat setting");
+		log.debug("Setting feedback status setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "feedbackStatus");
@@ -2293,7 +2293,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting admin cheat setting");
+		log.debug("Setting registration status setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "openRegistration");
@@ -2317,7 +2317,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting admin cheat setting");
+		log.debug("Setting scoreboard status setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "openRegistration");
@@ -2333,5 +2333,29 @@ public class Getter {
 		Database.closeConnection(conn);
 		log.debug("*** END getScoreboardStatus ***");
 		return theScoreboardStatus;
+	}
+
+	public static String getScoreboardClass(String ApplicationRoot) throws SQLException {
+		String theScoreboardClass = "";
+		log.debug("*** Getter.getScoreboardClass ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting scoreboard class setting");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "openRegistration");
+
+		ResultSet scoreboardResult = callstmt.executeQuery();
+
+		scoreboardResult.next();
+
+		theScoreboardClass = scoreboardResult.getString(1);
+
+		log.debug("Value found: " + theScoreboardClass);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getScoreboardClass ***");
+		return theScoreboardClass;
 	}
 }

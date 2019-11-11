@@ -80,7 +80,7 @@ public class OpenRegistration {
 			Setter.setRegistrationStatus("", enabled);
 
 		} catch (SQLException e) {
-			log.fatal("Could not save registration status setting in database: " + e.toString());
+			log.fatal("Could not save registration status in database: " + e.toString());
 			throw new RuntimeException(e);
 		}
 	}
@@ -91,7 +91,7 @@ public class OpenRegistration {
 			enabled = Getter.getRegistrationStatus("");
 
 		} catch (SQLException e) {
-			log.fatal("Could not save registration status setting in database: " + e.toString());
+			log.fatal("Could not load registration status from database: " + e.toString());
 			throw new RuntimeException(e);
 		}
 		isLoaded = true;

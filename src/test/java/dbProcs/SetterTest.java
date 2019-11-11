@@ -1200,6 +1200,15 @@ public class SetterTest {
 	}
 
 	@Test
+	public void testSetClosedScoreboard() throws SQLException {
+
+		Setter.setScoreboardStatus(applicationRoot, "closed");
+
+		assertEquals(Getter.getScoreboardStatus(applicationRoot), "closed");
+
+	}
+
+	@Test
 	public void testSetAdminOnlyScoreboard() throws SQLException {
 
 		Setter.setScoreboardStatus(applicationRoot, "adminOnly");
@@ -1248,4 +1257,26 @@ public class SetterTest {
 		Setter.setScoreboardStatus(applicationRoot, "invalidStatus");
 
 	}
+
+	@Test
+	public void testSetScoreboardClass() throws SQLException {
+
+		Setter.setScoreboardClass(applicationRoot, "");
+
+		assertEquals(Getter.getScoreboardClass(applicationRoot), "");
+		
+		Setter.setScoreboardClass(applicationRoot, "class1");
+
+		assertEquals(Getter.getScoreboardClass(applicationRoot), "class1");
+
+		Setter.setScoreboardClass(applicationRoot, "class2");
+
+		assertEquals(Getter.getScoreboardClass(applicationRoot), "class2");
+
+		Setter.setScoreboardClass(applicationRoot, "class3");
+
+		assertEquals(Getter.getScoreboardClass(applicationRoot), "class3");
+
+	}
+
 }

@@ -1038,7 +1038,7 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting admin cheat setting");
-		PreparedStatement callAdminSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		PreparedStatement callAdminSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		callAdminSetting.setBoolean(1, adminCheatsEnabled);
 		callAdminSetting.setString(2, "adminCheatsEnabled");
 
@@ -1062,7 +1062,7 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting player cheat setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		callPlayerSetting.setBoolean(1, playerCheatsEnabled);
 		callPlayerSetting.setString(2, "playerCheatsEnabled");
 
@@ -1089,7 +1089,7 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting player cheat setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		callPlayerSetting.setString(1, theModuleLayout);
 		callPlayerSetting.setString(2, "modulelayout");
 
@@ -1112,14 +1112,14 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting feedback status setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		callPlayerSetting.setBoolean(1, theFeebackStatus);
 		callPlayerSetting.setString(2, "enableFeedback");
 
 		if (callPlayerSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
-			throw new RuntimeException("Could not set module layout to " + theFeebackStatus);
+			throw new RuntimeException("Could not set feedback status to " + theFeebackStatus);
 		}
 
 		Database.closeConnection(conn);
@@ -1136,7 +1136,7 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting registration status setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		callPlayerSetting.setBoolean(1, theRegistrationStatus);
 		callPlayerSetting.setString(2, "openRegistration");
 
@@ -1154,28 +1154,52 @@ public class Setter {
 	public static boolean setScoreboardStatus(String ApplicationRoot, String theScoreboardStatus) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setScoreboardStatus ***");
-		log.debug("enableRegistration = " + theScoreboardStatus);
+		log.debug("scoreboardStatus = " + theScoreboardStatus);
 
-		if (theScoreboardStatus != "adminOnly" && theScoreboardStatus != "classSpecific"
-				&& theScoreboardStatus != "open" && theScoreboardStatus != "public") {
+		if (theScoreboardStatus != "closed" && theScoreboardStatus != "adminOnly"
+				&& theScoreboardStatus != "classSpecific" && theScoreboardStatus != "open"
+				&& theScoreboardStatus != "public") {
 			throw new IllegalArgumentException("Invalid scoreboard status: " + theScoreboardStatus);
 		}
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting registration status setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		log.debug("Setting scoreboard status setting");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		callPlayerSetting.setString(1, theScoreboardStatus);
 		callPlayerSetting.setString(2, "scoreboardStatus");
 
 		if (callPlayerSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
-			throw new RuntimeException("Could not set registration status to " + theScoreboardStatus);
+			throw new RuntimeException("Could not set scoreboard status to " + theScoreboardStatus);
 		}
 
 		Database.closeConnection(conn);
 		log.debug("*** END setScoreboardStatus ***");
+		return result;
+	}
+
+	public static boolean setScoreboardClass(String ApplicationRoot, String theScoreboardClass) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setScoreboardClass ***");
+		log.debug("scoreboardClass = " + theScoreboardClass);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting scoreboard class setting");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		callPlayerSetting.setString(1, theScoreboardClass);
+		callPlayerSetting.setString(2, "scoreboardClass");
+
+		if (callPlayerSetting.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set scoreboard class to " + theScoreboardClass);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setScoreboardClass ***");
 		return result;
 	}
 
