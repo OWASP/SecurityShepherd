@@ -15,6 +15,7 @@ import testUtils.TestProperties;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -36,14 +37,23 @@ public class NoSqlInjection1IT extends Mockito {
 
 	@Mock
 	private MockHttpServletResponse response;
-
+	
+	/**
+	 * Creates DB or Restores DB to Factory Defaults before running tests
+	 */
 	@BeforeClass
-	public static void initAll() {
+	public static void resetDatabase() throws IOException, SQLException {
 		TestProperties.setTestPropertiesFileDirectory(log);
+
+		TestProperties.createMysqlResource();
+		TestProperties.createMongoResource();
+
+		TestProperties.executeSql(log);
+
 	}
 
 	@Before
-	public void init() {
+	public void setup() {
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
 
