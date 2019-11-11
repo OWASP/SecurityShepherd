@@ -1532,7 +1532,7 @@ USE `core`;
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('adminCheatsEnabled', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('playerCheatsEnabled', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('moduleLayout', 'tournament');
-INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('feedbackStatus', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('enableFeedback', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('openRegistration', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('scoreboardStatus', 'open');
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('scoreboardClass', '');
