@@ -261,7 +261,6 @@ public class ScoreboardStatus {
 		} else if (loadedStatus.equals("adminOnly")) {
 			scoreboardEnabled = true;
 			adminOnlyScoreboard = true;
-			scoreboardClass = "";
 			classSpecificScoreboard = false;
 			publicScoreboard = false;
 		} else if (loadedStatus.equals("classSpecific")) {
