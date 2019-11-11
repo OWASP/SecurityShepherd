@@ -1105,7 +1105,9 @@ public class SetterTest {
 	@Test
 	public void testSetOpenFloorLayout() throws SQLException {
 
+		Setter.setModulelayout(applicationRoot, "tournament");
 		Setter.setModulelayout(applicationRoot, "open");
+		
 		assertEquals(Getter.getModuleLayout(applicationRoot), "open");
 
 	}
@@ -1113,6 +1115,7 @@ public class SetterTest {
 	@Test
 	public void testSetCTFLayout() throws SQLException {
 
+		Setter.setModulelayout(applicationRoot, "open");
 		Setter.setModulelayout(applicationRoot, "ctf");
 		assertEquals(Getter.getModuleLayout(applicationRoot), "ctf");
 
@@ -1121,7 +1124,9 @@ public class SetterTest {
 	@Test
 	public void testSetTournamentLayout() throws SQLException {
 
+		Setter.setModulelayout(applicationRoot, "ctf");
 		Setter.setModulelayout(applicationRoot, "tournament");
+		
 		assertEquals(Getter.getModuleLayout(applicationRoot), "tournament");
 
 	}
