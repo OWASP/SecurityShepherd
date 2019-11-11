@@ -217,10 +217,16 @@ public class MongoDatabase {
 		log.debug("Loaded mongo config from " + props);
 
 		MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
+		log.debug("Created builder");
 		optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
+		log.debug("connectTimeout");
 		optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
+		log.debug("socketTimeout");
 		optionsBuilder.serverSelectionTimeout(Integer.parseInt(serverSelectionTimeout));
+		log.debug("serverSelectionTimeout");
 		MongoClientOptions mongoOptions = optionsBuilder.build();
+		log.debug("Options created");
+
 
 		try {
 			mongoClient = new MongoClient(new ServerAddress(connectionHost, Integer.parseInt(connectionPort)),
