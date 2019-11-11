@@ -99,10 +99,17 @@ public class ModulePlan {
 
 	private static void saveModuleLayout() {
 		try {
-
-			Setter.setAdminCheatStatus("", openFloor);
-			Setter.setAdminCheatStatus("", incrementalFloor);
-			Setter.setAdminCheatStatus("", tournamentFloor);
+			if (openFloor) {
+				Setter.setModuleLayout("", "open");
+			} else if (incrementalFloor) {
+				Setter.setModuleLayout("", "ctf");
+			} else if (tournamentFloor) {
+				Setter.setModuleLayout("", "tournament");
+			} else {
+				String message = "No module layouts enabled!";
+				log.fatal(message);
+				throw new RuntimeException(message);
+			}
 
 		} catch (SQLException e) {
 			log.fatal("Could not save module plan setting in database: " + e.toString());
@@ -111,16 +118,37 @@ public class ModulePlan {
 	}
 
 	private static void loadModuleLayout() {
+		String theModuleLayout = "";
+
 		try {
 
-			openFloor = Getter.getAdminCheatStatus("");
-			incrementalFloor = Getter.getAdminCheatStatus("");
-			tournamentFloor = Getter.getAdminCheatStatus("");
+			theModuleLayout = Getter.getModuleLayout("");
 
 		} catch (SQLException e) {
 			log.fatal("Could not load module plan setting from database: " + e.toString());
 			throw new RuntimeException(e);
 		}
+
+		if (theModuleLayout.equals("open")) {
+			openFloor = true;
+			incrementalFloor = false;
+			tournamentFloor = true;
+		} else if (theModuleLayout.equals("ctf")) {
+			openFloor = false;
+			incrementalFloor = true;
+			tournamentFloor = false;
+
+		} else if (theModuleLayout.equals("tournament")) {
+			openFloor = false;
+			incrementalFloor = false;
+			tournamentFloor = true;
+
+		} else {
+			String message = "Invalid module layout loaded from database: " + theModuleLayout;
+			log.fatal(message);
+			throw new RuntimeException(message);
+		}
+
 		isLoaded = true;
 	}
 

@@ -2320,7 +2320,7 @@ public class Getter {
 		log.debug("Setting scoreboard status setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-		callstmt.setString(1, "openRegistration");
+		callstmt.setString(1, "scoreboardStatus");
 
 		ResultSet scoreboardResult = callstmt.executeQuery();
 
@@ -2344,7 +2344,7 @@ public class Getter {
 		log.debug("Setting scoreboard class setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-		callstmt.setString(1, "openRegistration");
+		callstmt.setString(1, "scoreboardClass");
 
 		ResultSet scoreboardResult = callstmt.executeQuery();
 

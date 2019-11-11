@@ -1105,8 +1105,8 @@ public class SetterTest {
 	@Test
 	public void testSetOpenFloorLayout() throws SQLException {
 
-		Setter.setModulelayout(applicationRoot, "tournament");
-		Setter.setModulelayout(applicationRoot, "open");
+		Setter.setModuleLayout(applicationRoot, "tournament");
+		Setter.setModuleLayout(applicationRoot, "open");
 
 		assertEquals(Getter.getModuleLayout(applicationRoot), "open");
 
@@ -1115,8 +1115,8 @@ public class SetterTest {
 	@Test
 	public void testSetCTFLayout() throws SQLException {
 
-		Setter.setModulelayout(applicationRoot, "open");
-		Setter.setModulelayout(applicationRoot, "ctf");
+		Setter.setModuleLayout(applicationRoot, "open");
+		Setter.setModuleLayout(applicationRoot, "ctf");
 		assertEquals(Getter.getModuleLayout(applicationRoot), "ctf");
 
 	}
@@ -1124,8 +1124,8 @@ public class SetterTest {
 	@Test
 	public void testSetTournamentLayout() throws SQLException {
 
-		Setter.setModulelayout(applicationRoot, "ctf");
-		Setter.setModulelayout(applicationRoot, "tournament");
+		Setter.setModuleLayout(applicationRoot, "ctf");
+		Setter.setModuleLayout(applicationRoot, "tournament");
 
 		assertEquals(Getter.getModuleLayout(applicationRoot), "tournament");
 
@@ -1134,28 +1134,28 @@ public class SetterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testEmptyModuleLayouts() throws SQLException {
 
-		Setter.setModulelayout(applicationRoot, "");
+		Setter.setModuleLayout(applicationRoot, "");
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidModuleLayouts() throws SQLException {
 
-		Setter.setModulelayout(applicationRoot, "strangeLayout");
+		Setter.setModuleLayout(applicationRoot, "strangeLayout");
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidCaseCTFModuleLayouts() throws SQLException {
 
-		Setter.setModulelayout(applicationRoot, "CTF");
+		Setter.setModuleLayout(applicationRoot, "CTF");
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidCaseOpenModuleLayouts() throws SQLException {
 
-		Setter.setModulelayout(applicationRoot, "Open");
+		Setter.setModuleLayout(applicationRoot, "Open");
 
 	}
 

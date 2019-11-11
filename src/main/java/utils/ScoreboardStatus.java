@@ -82,7 +82,7 @@ public class ScoreboardStatus {
 
 		return classSpecificScoreboard;
 	}
-	
+
 	/**
 	 * Method to know if scoreboard is public
 	 * 
@@ -181,7 +181,7 @@ public class ScoreboardStatus {
 	/**
 	 * Sets scoreboard to be public, even to unregistered users
 	 */
-	public static void setScoreboeardPublic() {
+	public static void setScoreboardPublic() {
 		if (!isLoaded) {
 			loadScoreboardStatus();
 		}
@@ -253,10 +253,18 @@ public class ScoreboardStatus {
 			scoreboardEnabled = false;
 			adminOnlyScoreboard = false;
 			classSpecificScoreboard = false;
+			scoreboardClass = "";
+			publicScoreboard = false;
+		} else if (loadedStatus.equals("open")) {
+			scoreboardEnabled = true;
+			adminOnlyScoreboard = false;
+			scoreboardClass = "";
+			classSpecificScoreboard = false;
 			publicScoreboard = false;
 		} else if (loadedStatus.equals("adminOnly")) {
 			scoreboardEnabled = true;
 			adminOnlyScoreboard = true;
+			scoreboardClass = "";
 			classSpecificScoreboard = false;
 			publicScoreboard = false;
 		} else if (loadedStatus.equals("classSpecific")) {

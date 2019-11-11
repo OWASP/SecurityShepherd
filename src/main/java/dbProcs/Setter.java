@@ -1077,7 +1077,7 @@ public class Setter {
 		return result;
 	}
 
-	public static boolean setModulelayout(String ApplicationRoot, String theModuleLayout) throws SQLException {
+	public static boolean setModuleLayout(String ApplicationRoot, String theModuleLayout) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setModulelayout ***");
 		log.debug("playerCheatsEnabled = " + theModuleLayout);
