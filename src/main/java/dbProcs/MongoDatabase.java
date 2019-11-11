@@ -204,10 +204,16 @@ public class MongoDatabase {
 		try {
 
 			connectionHost = FileInputProperties.readfile(props, "connectionHost");
+			log.debug("connectionHost: " + connectionHost);
 			connectionPort = FileInputProperties.readfile(props, "connectionPort");
+			log.debug("connectionPort: " + connectionPort);
 			connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
+			log.debug("connectTimeout: " + connectTimeout);
 			socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
+			log.debug("socketTimeout: " + socketTimeout);
 			serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
+			log.debug("serverSelectionTimeout: " + serverSelectionTimeout);
+
 		} catch (IOException | PropertyNotFoundException e) {
 			throw new RuntimeException(e);
 		}
