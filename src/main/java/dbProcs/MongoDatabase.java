@@ -201,8 +201,6 @@ public class MongoDatabase {
 		String socketTimeout = "";
 		String serverSelectionTimeout = "";
 
-		log.debug("Loading mongo config from " + props);
-
 		try {
 
 			connectionHost = FileInputProperties.readfile(props, "connectionHost");
@@ -217,7 +215,7 @@ public class MongoDatabase {
 		log.debug("Loaded mongo config from " + props);
 
 		MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
-		log.debug("Created builder");
+		log.debug("Created builder. connectTimeout= " + connectTimeout);
 		optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
 		log.debug("connectTimeout");
 		optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
