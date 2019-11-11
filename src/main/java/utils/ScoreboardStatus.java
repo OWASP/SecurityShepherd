@@ -256,7 +256,6 @@ public class ScoreboardStatus {
 		} else if (loadedStatus.equals("open")) {
 			scoreboardEnabled = true;
 			adminOnlyScoreboard = false;
-			scoreboardClass = "";
 			classSpecificScoreboard = false;
 			publicScoreboard = false;
 		} else if (loadedStatus.equals("adminOnly")) {
