@@ -1039,8 +1039,10 @@ public class Setter {
 
 		log.debug("Setting admin cheat setting");
 		PreparedStatement callAdminSetting = conn
-				.prepareStatement("UPDATE settings SET value = ? WHERE setting=adminCheatsEnabled");
+				.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
 		callAdminSetting.setBoolean(1, adminCheatsEnabled);
+		callAdminSetting.setString(2, "adminCheatsEnabled");
+		
 		if (callAdminSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
@@ -1062,8 +1064,10 @@ public class Setter {
 
 		log.debug("Setting player cheat setting");
 		PreparedStatement callPlayerSetting = conn
-				.prepareStatement("UPDATE settings SET value = ? WHERE setting=playerCheatsEnabled");
+				.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
 		callPlayerSetting.setBoolean(1, playerCheatsEnabled);
+		callPlayerSetting.setString(2, "playerCheatsEnabled");
+
 
 		if (callPlayerSetting.executeUpdate() == 1) {
 			result = true;

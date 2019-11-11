@@ -36,19 +36,32 @@ public class CheatSheetStatus {
 	private static boolean adminEnabled = false;
 	private static boolean playerEnabled = false;
 
+	private static boolean isLoaded = false;
+
 	public static void disableForAll() {
+
+		if (!isLoaded) {
+			loadCheatStatus();
+		}
+
 		adminEnabled = false;
 		playerEnabled = false;
 		saveCheatStatus();
 	}
 
 	public static void enableForAdminsOnly() {
+		if (!isLoaded) {
+			loadCheatStatus();
+		}
 		playerEnabled = false;
 		adminEnabled = true;
 		saveCheatStatus();
 	}
 
 	public static void enableForAll() {
+		if (!isLoaded) {
+			loadCheatStatus();
+		}
 		adminEnabled = true;
 		playerEnabled = true;
 		saveCheatStatus();
@@ -96,7 +109,7 @@ public class CheatSheetStatus {
 
 	private static void saveCheatStatus() {
 		try {
-			
+
 			Setter.setAdminCheatStatus("", adminEnabled);
 			Setter.setPlayerCheatStatus("", playerEnabled);
 
@@ -116,6 +129,7 @@ public class CheatSheetStatus {
 			log.fatal("Could not save cheat sheet status in database: " + e.toString());
 			throw new RuntimeException(e);
 		}
+		isLoaded = true;
 	}
 
 }

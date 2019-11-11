@@ -2200,8 +2200,10 @@ public class Getter {
 
 		log.debug("Setting admin cheat setting");
 		PreparedStatement callstmt = conn
-				.prepareStatement("SELECT value FROM core.settings WHERE setting='adminCheatsEnabled''");
+				.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
+		callstmt.setString(1, "adminCheatsEnabled");
+		
 		ResultSet cheatResult = callstmt.executeQuery();
 
 		cheatResult.next();
@@ -2223,7 +2225,9 @@ public class Getter {
 
 		log.debug("Setting admin cheat setting");
 		PreparedStatement callstmt = conn
-				.prepareStatement("SELECT value FROM core.settings WHERE setting='adminCheatsEnabled''");
+				.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+		
+		callstmt.setString(1, "playerCheatsEnabled");
 
 		ResultSet cheatResult = callstmt.executeQuery();
 

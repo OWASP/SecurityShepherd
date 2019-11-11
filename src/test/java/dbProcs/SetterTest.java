@@ -1061,7 +1061,6 @@ public class SetterTest {
 				// If we're still here
 				TestProperties.failAndPrint("No error when creating duplicate user " + userName);
 			} catch (SQLException e) {
-				// TODO: We should be able to catch more specific exceptions here, but alas...
 				log.debug("PASS: Could not add duplicate user " + userName);
 			}
 
