@@ -2272,7 +2272,7 @@ public class Getter {
 		log.debug("Setting feedback status setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-		callstmt.setString(1, "feedbackStatus");
+		callstmt.setString(1, "enableFeedback");
 
 		ResultSet feedbackResult = callstmt.executeQuery();
 

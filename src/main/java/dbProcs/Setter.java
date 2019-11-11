@@ -1089,11 +1089,11 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting player cheat setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-		callPlayerSetting.setString(1, theModuleLayout);
-		callPlayerSetting.setString(2, "modulelayout");
+		PreparedStatement moduleLayoutSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		moduleLayoutSetting.setString(1, theModuleLayout);
+		moduleLayoutSetting.setString(2, "modulelayout");
 
-		if (callPlayerSetting.executeUpdate() == 1) {
+		if (moduleLayoutSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
 			throw new RuntimeException("Could not set module layout to " + theModuleLayout);
@@ -1112,11 +1112,11 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting feedback status setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-		callPlayerSetting.setBoolean(1, theFeebackStatus);
-		callPlayerSetting.setString(2, "enableFeedback");
+		PreparedStatement getFeedbackSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		getFeedbackSetting.setBoolean(1, theFeebackStatus);
+		getFeedbackSetting.setString(2, "enableFeedback");
 
-		if (callPlayerSetting.executeUpdate() == 1) {
+		if (getFeedbackSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
 			throw new RuntimeException("Could not set feedback status to " + theFeebackStatus);
@@ -1136,11 +1136,11 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting registration status setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-		callPlayerSetting.setBoolean(1, theRegistrationStatus);
-		callPlayerSetting.setString(2, "openRegistration");
+		PreparedStatement setRegistrationSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		setRegistrationSetting.setBoolean(1, theRegistrationStatus);
+		setRegistrationSetting.setString(2, "openRegistration");
 
-		if (callPlayerSetting.executeUpdate() == 1) {
+		if (setRegistrationSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
 			throw new RuntimeException("Could not set registration status to " + theRegistrationStatus);
@@ -1165,11 +1165,11 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting scoreboard status setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-		callPlayerSetting.setString(1, theScoreboardStatus);
-		callPlayerSetting.setString(2, "scoreboardStatus");
+		PreparedStatement scoreboardSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		scoreboardSetting.setString(1, theScoreboardStatus);
+		scoreboardSetting.setString(2, "scoreboardStatus");
 
-		if (callPlayerSetting.executeUpdate() == 1) {
+		if (scoreboardSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
 			throw new RuntimeException("Could not set scoreboard status to " + theScoreboardStatus);
@@ -1188,11 +1188,11 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting scoreboard class setting");
-		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-		callPlayerSetting.setString(1, theScoreboardClass);
-		callPlayerSetting.setString(2, "scoreboardClass");
+		PreparedStatement scoreboardClassSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		scoreboardClassSetting.setString(1, theScoreboardClass);
+		scoreboardClassSetting.setString(2, "scoreboardClass");
 
-		if (callPlayerSetting.executeUpdate() == 1) {
+		if (scoreboardClassSetting.executeUpdate() == 1) {
 			result = true;
 		} else {
 			throw new RuntimeException("Could not set scoreboard class to " + theScoreboardClass);
