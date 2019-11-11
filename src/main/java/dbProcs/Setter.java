@@ -1116,10 +1116,14 @@ public class Setter {
 		getFeedbackSetting.setBoolean(1, theFeebackStatus);
 		getFeedbackSetting.setString(2, "enableFeedback");
 
-		if (getFeedbackSetting.executeUpdate() == 1) {
+		int updateResult=getFeedbackSetting.executeUpdate();
+		
+		if (updateResult == 1) {
 			result = true;
 		} else {
-			throw new RuntimeException("Could not set feedback status to " + theFeebackStatus);
+			String message="Could not set feedback status to " + theFeebackStatus + ". exceuteUpdate() returned " + updateResult;
+			log.debug(message);
+			throw new RuntimeException(message);
 		}
 
 		Database.closeConnection(conn);
