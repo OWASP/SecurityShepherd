@@ -100,8 +100,11 @@ public class NoSqlInjection1 extends HttpServlet
 				log.debug("Servlet root = " + applicationRoot );
 
 				credential = MongoDatabase.getMongoChallengeCredentials(applicationRoot, "NoSqlInjection1");
+				log.debug("Credentials created");
 				mongoClient = getMongoDbConnection(applicationRoot, credential);
+				log.debug("Client created");
 				mongoDb = getMongoDatabase(mongoClient);
+				log.debug("Database DB connection acquired");
 				dbCollectionName = MongoDatabase.getMongoChallengeCollName(applicationRoot, "NoSqlInjection1");
 				dbCollection = mongoDb.getCollection(dbCollectionName);
 

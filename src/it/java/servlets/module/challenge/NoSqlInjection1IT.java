@@ -37,7 +37,7 @@ public class NoSqlInjection1IT extends Mockito {
 
 	@Mock
 	private MockHttpServletResponse response;
-	
+
 	/**
 	 * Creates DB or Restores DB to Factory Defaults before running tests
 	 */
@@ -62,31 +62,38 @@ public class NoSqlInjection1IT extends Mockito {
 			fail("Could not Mark All Modules As Open");
 	}
 
-	public String moduleDoPost(String theSubmission, String csrfToken, int expectedResponseCode) throws ServletException, IOException  {
-		
-			String servletClassName = "NoSqlInjection1";
-			log.debug("Creating " + servletClassName + " Servlet Instance");
-			NoSqlInjection1 servlet = new NoSqlInjection1();
-			servlet.init(new MockServletConfig(servletClassName));
+	public String moduleDoPost(String theSubmission, String csrfToken, int expectedResponseCode)
+			throws ServletException, IOException {
 
-			// Setup Servlet Parameters and Attributes
-			log.debug("Setting Up Params and Atrributes");
-			request.addParameter("theGamerName", theSubmission);
-			// Adding Correct CSRF Token (Token Submitted)
-			request.addParameter("csrfToken", csrfToken);
+		String servletClassName = "NoSqlInjection1";
+		log.debug("Creating " + servletClassName + " Servlet Instance");
+		NoSqlInjection1 servlet = new NoSqlInjection1();
+		servlet.init(new MockServletConfig(servletClassName));
 
-			log.debug("Running doPost");
-			servlet.doPost(request, response);
+		// Setup Servlet Parameters and Attributes
+		log.debug("Setting Up Params and Atrributes");
+		request.addParameter("theGamerName", theSubmission);
+		// Adding Correct CSRF Token (Token Submitted)
+		request.addParameter("csrfToken", csrfToken);
 
-			if (response.getStatus() != expectedResponseCode)
-				fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode
-						+ " Expected");
-			else {
-				log.debug("302 OK Detected");
-				log.debug(servletClassName + " Successful, returning location retrieved: "
-						+ response.getContentAsString());
-				return (response.getContentAsString());
-			}
+		if (request == null) {
+			log.debug("Request is null");
+		}
+		if (response == null) {
+			log.debug("Request is null");
+		}
+
+		log.debug("Running doPost");
+		servlet.doPost(request, response);
+
+		if (response.getStatus() != expectedResponseCode)
+			fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode
+					+ " Expected");
+		else {
+			log.debug("302 OK Detected");
+			log.debug(servletClassName + " Successful, returning location retrieved: " + response.getContentAsString());
+			return (response.getContentAsString());
+		}
 
 		return null;
 	}
