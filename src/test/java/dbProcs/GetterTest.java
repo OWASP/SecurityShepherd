@@ -131,7 +131,7 @@ public class GetterTest {
 
 		String user[] = Getter.authUser(applicationRoot, userName, userName);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 			Setter.userCreate(applicationRoot, null, userName, userName, "admin", userName + "@test.com", false);
 			user = Getter.authUser(applicationRoot, userName, userName);
 		}
@@ -202,7 +202,7 @@ public class GetterTest {
 
 		String user[] = Getter.authUser(applicationRoot, userName, userName);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 			Setter.userCreate(applicationRoot, theClass, userName, userName, "player", userName + "@test.com", false);
 			user = Getter.authUser(applicationRoot, userName, userName);
 		}
@@ -238,8 +238,8 @@ public class GetterTest {
 		try {
 			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
 				user = Getter.authUser(applicationRoot, userName.toUpperCase(), password);
 			}
@@ -264,8 +264,8 @@ public class GetterTest {
 		try {
 			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
 				user = Getter.authUser(applicationRoot, userName, password);
 			}
@@ -289,7 +289,8 @@ public class GetterTest {
 
 		String user[] = Getter.authUser(applicationRoot, userName, password);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 			try {
 				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
 			} catch (SQLException e) {
@@ -318,7 +319,8 @@ public class GetterTest {
 		log.debug("Attempting to authenticate as " + userName);
 		String user[] = Getter.authUser(applicationRoot, userName, password);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 			try {
 				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
 			} catch (SQLException e) {
@@ -348,7 +350,8 @@ public class GetterTest {
 		log.debug("Attempting to authenticate as " + userName);
 		String user[] = Getter.authUser(applicationRoot, userName, password);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 			try {
 				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
 			} catch (SQLException e) {
@@ -378,8 +381,8 @@ public class GetterTest {
 		try {
 			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
 				user = Getter.authUser(applicationRoot, userName, password);
 			}
@@ -406,8 +409,8 @@ public class GetterTest {
 		try {
 			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
 				user = Getter.authUser(applicationRoot, userName, password);
 			}
@@ -431,8 +434,8 @@ public class GetterTest {
 		try {
 			String user[] = Getter.authUser(applicationRoot, userName, password);
 			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 				Setter.userCreate(applicationRoot, null, userName, password, "player", userName + "@test.com", false);
 				user = Getter.authUser(applicationRoot, userName.toLowerCase(), password);
 			}
@@ -454,8 +457,8 @@ public class GetterTest {
 		try {
 			String user[] = Getter.authUser(applicationRoot, userName, userName);
 			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
 				user = Getter.authUser(applicationRoot, userName, userName);
 			}
@@ -477,8 +480,8 @@ public class GetterTest {
 		try {
 			String user[] = Getter.authUser(applicationRoot, userName, userName);
 			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
 				user = Getter.authUser(applicationRoot, userName, userName);
 			}
@@ -505,8 +508,8 @@ public class GetterTest {
 		try {
 			String user[] = Getter.authUser(applicationRoot, userName, userName);
 			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
 				user = Getter.authUser(applicationRoot, userName, userName);
 			}
@@ -533,8 +536,8 @@ public class GetterTest {
 		try {
 			String user[] = Getter.authUser(applicationRoot, userName, userName);
 			if (user == null || user[0].isEmpty()) {
-				log.debug(
-						"Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+				log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
+
 				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
 				user = Getter.authUser(applicationRoot, userName, userName);
 			}
