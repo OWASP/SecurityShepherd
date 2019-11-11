@@ -76,8 +76,39 @@ public class EnableScoreboard extends HttpServlet {
 											// class
 					{
 						log.debug("Null Class submitted");
-						ScoreboardStatus.setScoreboeardOpen();
-						scoreboardMessage = "Scoreboard is now enabled and lists all users regardless of their class.";
+
+						log.debug("Unpacking restricted scoreboard value");
+						String restrictedScoreboard = Validate.validateParameter(request.getParameter("restricted"), 5);
+
+						if (restrictedScoreboard.isEmpty()) {
+							
+							ScoreboardStatus.setScoreboeardOpen();
+							scoreboardMessage = "Scoreboard is now enabled and lists all users regardless of their class.";
+						} else {
+							log.debug("Restricted scoreboard value found");
+
+							boolean isAdminOnly = restrictedScoreboard.equals("true");
+
+							if (!isAdminOnly) {
+								// Scoreboard is public
+								ScoreboardStatus.setScoreboardPublic();
+								log.debug("Public Scoreboard Enabled");
+								scoreboardMessage = "Scoreboard is now enabled for public view.";
+
+								htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>" + "<p>"
+										+ scoreboardMessage + " The scoreboard is public</p>";
+							} else {
+								// Scoreboard is admin only
+								ScoreboardStatus.setScoreboardPublic();
+								log.debug("Admin only scoreboard set");
+								scoreboardMessage = "Scoreboard is only enabled for administrators.";
+
+								htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>" + "<p>"
+										+ scoreboardMessage + " The scoreboard is admin only</p>";
+							}
+						}
+
+
 					} else if (classId.equalsIgnoreCase("classSpecific")) {
 						// Set Class Specific Scoreboards
 						ScoreboardStatus.setScoreboardClassSpecific();

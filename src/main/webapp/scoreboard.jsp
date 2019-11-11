@@ -1,62 +1,81 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="dbProcs.Getter, utils.*,org.owasp.encoder.Encode" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="dbProcs.Getter, utils.*,org.owasp.encoder.Encode" errorPage=""%>
 
 <%
-	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: scoreboard.jsp *************************");
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
+			"DEBUG: scoreboard.jsp *************************");
 
-/**
- * This file is part of the Security Shepherd Project.
- *
- * The Security Shepherd project is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
- *
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
- *
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author Mark Denihan
- */
- if (request.getSession() != null)
- {
- 	HttpSession ses = request.getSession();
- 	//Getting CSRF Token from client
- 	Cookie tokenCookie = null;
- 	try
- 	{
- 		tokenCookie = Validate.getToken(request.getCookies());
- 	}
- 	catch(Exception htmlE)
- 	{
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG(scoreboard.jsp): tokenCookie Error:" + htmlE.toString());
- 	}
- 	// validateSession ensures a valid session, and valid role credentials
- 	// Also, if tokenCookie != null, then the page is good to continue loading
- 	if (Validate.validateSession(ses) && tokenCookie != null)
- 	{
- 		//Log User Name
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Scoreboard accessed by: " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
- 		// Getting Session Variables
- 		boolean canSeeScoreboard = ScoreboardStatus.canSeeScoreboard((String)ses.getAttribute("userRole"));
- 		//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+	/**
+	 * This file is part of the Security Shepherd Project.
+	 *
+	 * The Security Shepherd project is free software: you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation, either version 3 of the License, or
+	 * (at your option) any later version.<br/>
+	 *
+	 * The Security Shepherd project is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.<br/>
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
+	 *
+	 * @author Mark Denihan
+	 */
+	if (request.getSession() != null) {
+		HttpSession ses = request.getSession();
+		//Getting CSRF Token from client
+		Cookie tokenCookie = null;
+		try {
+			tokenCookie = Validate.getToken(request.getCookies());
+		} catch (Exception htmlE) {
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
+					"DEBUG(scoreboard.jsp): tokenCookie Error:" + htmlE.toString());
+		}
+		// validateSession ensures a valid session, and valid role credentials
+		// Also, if tokenCookie != null, then the page is good to continue loading
+		if (Validate.validateSession(ses) && tokenCookie != null || ScoreboardStatus.isPublicScoreboard()) {
+			//Log User Name
 
- 		String csrfToken = Encode.forHtml(tokenCookie.getValue());
-		%>
-		<html xmlns="http://www.w3.org/1999/xhtml">
-		<head>
-		<title>OWASP Security Shepherd - Scoreboard</title>
+			String userName = (String) ses.getAttribute("userName");
 
-		<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-		<link rel="shortcut icon" href="css/images/flavicon.jpg" type="image/jpeg" />
-		</head>
-		<body>
-		<script type="text/javascript" src="js/jquery.js"></script>
-		<script type="text/javascript" src="js/tinysort.js"></script>
-		<div id="wrapper">
+			if (userName == null) {
+				ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
+						"Scoreboard accessed by an unauthorized user");
+			} else {
+				ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
+						"Scoreboard accessed by: " + userName.toString(), userName);
+			}
+
+			// Getting Session Variables
+
+			String userRole = (String) ses.getAttribute("userRole");
+			boolean canSeeScoreboard = true;
+			if (userRole != null) {
+				canSeeScoreboard = ScoreboardStatus.canSeeScoreboard(userRole);
+			}
+
+			//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+			String csrfToken = "";
+
+			if (tokenCookie != null) {
+				csrfToken = Encode.forHtml(tokenCookie.getValue());
+			}
+%>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>OWASP Security Shepherd - Scoreboard</title>
+
+<link href="css/theCss.css" rel="stylesheet" type="text/css"
+	media="screen" />
+<link rel="shortcut icon" href="css/images/flavicon.jpg"
+	type="image/jpeg" />
+</head>
+<body>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/tinysort.js"></script>
+	<div id="wrapper">
 		<!-- start header -->
 		<div id="header">
 			<h1>Scoreboard</h1>
@@ -66,25 +85,34 @@
 		<!-- start page -->
 		<div id="page">
 			<!-- start content -->
-				<div id="badData"></div>
-				<% if(canSeeScoreboard) { %>
-					<div id="whereistand-div" style="position: fixed; left:30px; display: none; border-bottom: 3px solid #a878ef;
-					background:#d4d4d4; padding: 5px 5px; border-radius: 5px">
-							<input type="checkbox" id="whereistand-chk" onChange="whereistandToggle()">Where I stand?
-					</div>
-					<ul id="leaderboard" class="leaderboard"></ul>
-				<% } else { %>
-					<p>Scoreboard is not currently available!</p>
-				<% } %>
+			<div id="badData"></div>
+			<%
+				if (canSeeScoreboard) {
+			%>
+			<div id="whereistand-div"
+				style="position: fixed; left: 30px; display: none; border-bottom: 3px solid #a878ef; background: #d4d4d4; padding: 5px 5px; border-radius: 5px">
+				<input type="checkbox" id="whereistand-chk"
+					onChange="whereistandToggle()">Where do I stand?
 			</div>
-			<!-- end content -->
-			<!-- start sidebar -->
-			<!-- end sidebar -->
+			<ul id="leaderboard" class="leaderboard"></ul>
+			<%
+				} else {
+			%>
+			<p>Scoreboard is not currently available!</p>
+			<%
+				}
+			%>
 		</div>
-		</div>
-		<!-- end page -->
-		<% if(canSeeScoreboard) { %>
-			<script>
+		<!-- end content -->
+		<!-- start sidebar -->
+		<!-- end sidebar -->
+	</div>
+	</div>
+	<!-- end page -->
+	<%
+		if (canSeeScoreboard) {
+	%>
+	<script>
 				var windowIsActive = true;
 
 				window.onfocus = function windowFocus () {
@@ -146,7 +174,7 @@
 							url: 'scoreboard', // needs to return a JSON array of items having the following properties: id, score, username
 							dataType: 'json',
 							data: {
-								csrfToken: "<%= csrfToken %>"
+								csrfToken: "<%=csrfToken%>"
 							},
 							async: false,
 							success: function(o) {
@@ -175,16 +203,21 @@
 									        width: o[i].scale+"%"
 									    }, 1300 );
 									}
-									// Different color for current user
-									$('#userbar-<%= ses.getAttribute("userStamp").toString() %>').css('background-color', 'green');
+									<%if (tokenCookie != null) {%>
+							// Different color for current user
+									$('#userbar-<%=ses.getAttribute("userStamp").toString()%>').css('background-color', 'green');
+									
+									<%}%>
 								}
 								sort();
 
+								<%if (tokenCookie != null) {%>
 								// Show/hide Where I stand button
-								if ($('#userbar-<%= ses.getAttribute("userStamp").toString() %>').length == 0)
+								if ($('#userbar-<%=ses.getAttribute("userStamp").toString()%>').length == 0)
 									$("#whereistand-div").hide();
 								else
 									$("#whereistand-div").show();
+								<%}%>
 							}
 						});
 						var fullResponse = new String(ajaxCall.responseText);
@@ -245,6 +278,10 @@
 				//Kick off Scoreboard
 				poll();
 
+				<%
+				if (tokenCookie != null) {
+			%>
+				
 				function whereistandToggle(){
 					if ($('#whereistand-chk')[0].checked)
 						setInterval(function() {
@@ -256,34 +293,41 @@
 
 				function whereistandRefresh() {
 					if ($('#whereistand-chk')[0].checked) {
-						place = Number($('#userplace-<%= ses.getAttribute("userStamp").toString() %>')[0].innerText.replace(/\D/g, ''));
+						place = Number($('#userplace-<%=ses.getAttribute("userStamp").toString()%>')[0].innerText.replace(/\D/g, ''));
 						console.log('User is on place ' + place);
 						window.scrollTo(0, $('#header').height());
 
-						var s = Number($('#userplace-<%= ses.getAttribute("userStamp").toString() %>').parent().parent().css('top').replace(/\D/g, ''));
-						var h = $(window).height()/2;
-
-						if (s > h){
-							var d = s - h;
-							window.scrollBy(0, d);
-						}
+						var s = Number($('#userplace-<%=ses.getAttribute("userStamp").toString()%>')
+						.parent().parent().css('top').replace(/\D/g, ''));
+				var h = $(window).height() / 2;
+				
+				<%
 					}
-				}
+				%>
 
-			</script>
-		<% } %>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-		</body>
-	</html>
+				if (s > h) {
+					var d = s - h;
+					window.scrollBy(0, d);
+				}
+			}
+		}
+	</script>
 	<%
- 	}
-	else
-	{
+		}
+	%>
+	<%
+		if (Analytics.googleAnalyticsOn) {
+	%><%=Analytics.googleAnalyticsScript%>
+	<%
+		}
+	%>
+</body>
+</html>
+<%
+	} else {
+			response.sendRedirect("login.jsp");
+		}
+	} else {
 		response.sendRedirect("login.jsp");
 	}
-}
-else
-{
-	response.sendRedirect("login.jsp");
-}
 %>

@@ -151,8 +151,7 @@
 						type: "POST",
 						url: "EnableScoreboard",
 						data: {
-							classId: "<%=Register.getDefaultClass()%>
-	",
+							classId: "<%=Register.getDefaultClass()%>",
 															restricted : "true",
 															csrfToken : theCsrfToken
 														},

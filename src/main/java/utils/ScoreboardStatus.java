@@ -190,7 +190,7 @@ public class ScoreboardStatus {
 		scoreboardClass = new String();
 		adminOnlyScoreboard = false;
 		classSpecificScoreboard = false;
-		publicScoreboard = false;
+		publicScoreboard = true;
 		saveScoreboardStatus();
 
 	}
@@ -204,17 +204,13 @@ public class ScoreboardStatus {
 				statusToSave = "adminOnly";
 			} else {
 				if (classSpecificScoreboard) {
-
+					statusToSave = "classSpecific";
 				} else {
 					if (publicScoreboard) {
 						statusToSave = "public";
-
 					} else {
-						String message = "Could not parse scoreboard status to save";
-						log.fatal(message);
-						throw new RuntimeException(message);
+						statusToSave = "open";
 					}
-
 				}
 			}
 		} else {
