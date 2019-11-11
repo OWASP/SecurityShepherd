@@ -44,7 +44,7 @@ public class DisableScoreboardIT {
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
 		// Enable Scoreboard before Each test
-		ScoreboardStatus.setScoreboeardOpen();
+		ScoreboardStatus.setScoreboardOpen();
 		if (!ScoreboardStatus.isScoreboardEnabled()) {
 			String message = "Was Unable to Enable Scoreboard";
 			log.fatal(message);

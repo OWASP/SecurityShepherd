@@ -81,8 +81,8 @@ public class EnableScoreboard extends HttpServlet {
 						String restrictedScoreboard = Validate.validateParameter(request.getParameter("restricted"), 5);
 
 						if (restrictedScoreboard.isEmpty()) {
-							
-							ScoreboardStatus.setScoreboeardOpen();
+
+							ScoreboardStatus.setScoreboardOpen();
 							scoreboardMessage = "Scoreboard is now enabled and lists all users regardless of their class.";
 						} else {
 							log.debug("Restricted scoreboard value found");
@@ -108,23 +108,27 @@ public class EnableScoreboard extends HttpServlet {
 							}
 						}
 
-
 					} else if (classId.equalsIgnoreCase("classSpecific")) {
 						// Set Class Specific Scoreboards
+
 						ScoreboardStatus.setScoreboardClassSpecific();
 						scoreboardMessage = "Scoreboard has been enabled and only lists users from the viewer's class. Admin users will still see the scoreboard of the default class.";
+						log.debug(scoreboardMessage);
+
 					} else {
 						// validate class identifier
 						classInfo = Getter.getClassInfo(applicationRoot, classId);
 						if (classInfo != null && !classInfo[0].isEmpty()) // Class Exists
 						{
-							log.debug("Valid Class Submitted");
+							log.debug("Valid Class Submitted, setting scoreboard class to " + classId);
 							ScoreboardStatus.setScoreboardClass(classId);
 							scoreboardMessage = "Scoreboard has been enabled and only lists users from "
 									+ Encode.forHtml(classInfo[0]);
 						}
 					}
 					if (scoreboardMessage.isEmpty()) {
+						log.debug("Scoreboard settings unchanged");
+
 						htmlOutput = "<h3 class='title'>Scoreboard Settings are Unchanged</h3>"
 								+ "<p>Invalid data was submitted. Please try again.</p>";
 					} else // Function must have completed if this isn't empty
@@ -134,7 +138,9 @@ public class EnableScoreboard extends HttpServlet {
 
 						boolean isAdminOnly = restrictedScoreboard.equals("true");
 
-						if (!isAdminOnly && classId.equalsIgnoreCase("classSpecific")) // Total Public Scoreboard
+						if (restrictedScoreboard.equals("false") && classId.equalsIgnoreCase("classSpecific")) // Total
+																												// Public
+																												// Scoreboard
 						{
 							log.debug("User Accessible Scoreboard Enabled");
 							htmlOutput = "<h3 class='title'>Scoreboard Settings Updated</h3>" + "<p>"

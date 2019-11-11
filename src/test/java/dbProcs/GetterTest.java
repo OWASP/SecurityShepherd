@@ -1511,7 +1511,7 @@ public class GetterTest {
 					if (Setter.updateUserPoints(applicationRoot, otherUserId, -5)) {
 						log.debug("Updated Points of user Minus 5");
 						// Configure Score board for total open
-						ScoreboardStatus.setScoreboeardOpen();
+						ScoreboardStatus.setScoreboardOpen();
 						log.debug("Scoreboard Set to Open");
 						// Get Score board Data
 						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
@@ -1593,7 +1593,7 @@ public class GetterTest {
 						boolean pass = false;
 						boolean user2 = false;
 						// Configure Score board for class Specific
-						ScoreboardStatus.setScoreboeardOpen();
+						ScoreboardStatus.setScoreboardOpen();
 						// Get Score board Data
 						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
 						// Take the JSON String and make it Java JSON friendly
@@ -1673,7 +1673,7 @@ public class GetterTest {
 						fail("Could Not Mark Level as complete by User 1");
 					if (markLevelCompleteTest != null) {
 						// Configure Score board for total open
-						ScoreboardStatus.setScoreboeardOpen();
+						ScoreboardStatus.setScoreboardOpen();
 						// Get Score board Data
 						String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
 						// Take the JSON String and make it Java JSON friendly

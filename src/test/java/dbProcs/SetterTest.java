@@ -94,7 +94,7 @@ public class SetterTest {
 							TestProperties.failAndPrint("Could not give user extra points");
 
 						int scoreBefore = 0;
-						ScoreboardStatus.setScoreboeardOpen();
+						ScoreboardStatus.setScoreboardOpen();
 						String scoreboardData = Getter.getJsonScore(applicationRoot, "");
 						if (scoreboardData.isEmpty()) {
 							TestProperties
@@ -195,7 +195,7 @@ public class SetterTest {
 							"Feedback is Disabled", 1, 1, 1);
 					if (markLevelCompleteTest != null) {
 						int scoreBefore = 0;
-						ScoreboardStatus.setScoreboeardOpen();
+						ScoreboardStatus.setScoreboardOpen();
 						String scoreboardData = Getter.getJsonScore(applicationRoot, "");
 						if (scoreboardData.isEmpty()) {
 							fail("Could not detect user in scoreboard before bad submission test");
@@ -920,7 +920,7 @@ public class SetterTest {
 						otherUserId, "Feedback is Disabled", 1, 1, 1);
 				// Do both Users have a gold medal?
 				if (markLevelCompleteTestOtherUser != null) {
-					ScoreboardStatus.setScoreboeardOpen();
+					ScoreboardStatus.setScoreboardOpen();
 					String scoreboardData = Getter.getJsonScore(applicationRoot, "");
 					if (scoreboardData.isEmpty()) {
 						fail("Could not detect user in scoreboard before bad submission test");

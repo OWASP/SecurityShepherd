@@ -164,7 +164,7 @@ public class ScoreboardStatus {
 	/**
 	 * Sets scoreboard to list all players regardless of class
 	 */
-	public static void setScoreboeardOpen() {
+	public static void setScoreboardOpen() {
 		if (!isLoaded) {
 			loadScoreboardStatus();
 		}

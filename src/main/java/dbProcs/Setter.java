@@ -1121,9 +1121,7 @@ public class Setter {
 		if (updateResult == 1) {
 			result = true;
 		} else {
-			String message="Could not set feedback status to " + theFeebackStatus + ". exceuteUpdate() returned " + updateResult;
-			log.debug(message);
-			throw new RuntimeException(message);
+			throw new RuntimeException("Could not set feedback status to " + theFeebackStatus);
 		}
 
 		Database.closeConnection(conn);
