@@ -159,7 +159,7 @@ public class TestProperties {
 
 		String user[] = Getter.authUser(applicationRoot, userName, userName);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 			Setter.userCreate(applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
 			user = Getter.authUser(applicationRoot, userName, userName);
 		}
@@ -224,7 +224,7 @@ public class TestProperties {
 
 		String user[] = Getter.authUser(applicationRoot, userName, userName);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 			Setter.userCreate(applicationRoot, classId, userName, userName, "admin", userName + "@test.com", false);
 			user = Getter.authUser(applicationRoot, userName, userName);
 		}
@@ -256,7 +256,7 @@ public class TestProperties {
 
 		String user[] = Getter.authUser(applicationRoot, userName, userName);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 			Setter.userCreate(applicationRoot, null, userName, userName, "admin", userName + "@test.com", false);
 			user = Getter.authUser(applicationRoot, userName, userName);
 		}
@@ -353,6 +353,8 @@ public class TestProperties {
 	public static void createMysqlResource(String dbHost, int dbPort, String dbSchema, String dbUsername,
 			String dbPassword) throws IOException {
 		
+		log.debug("Creating mysql db file at " + Constants.MYSQL_DB_PROP);
+		
 		File file = new File(Constants.MYSQL_DB_PROP);
 		file.getParentFile().mkdirs();
 		FileWriter writer = new FileWriter(file);
@@ -369,6 +371,9 @@ public class TestProperties {
 		bw.newLine();
 		bw.write("databasePassword=" + dbPassword);
 		bw.close();
+		
+		log.debug("Created mysql db file at " + Constants.MYSQL_DB_PROP);
+
 	}
 
 	/**
@@ -381,7 +386,7 @@ public class TestProperties {
 	}
 
 	/**
-	 * Create a mysql database properties file
+	 * Delete the mysql database properties file
 	 * 
 	 * @throws IOException
 	 */
@@ -395,6 +400,8 @@ public class TestProperties {
 	public static void createMongoResource(String dbHost, long dbPort, String dbName, long connectTimeout,
 			long socketTimeout, long serverSelectionTimeout) throws IOException {
 	
+		log.debug("Creating mongo db file at " + Constants.MONGO_DB_PROP);
+		
 		File file = new File(Constants.MONGO_DB_PROP);
 		file.getParentFile().mkdirs();
 		FileWriter writer = new FileWriter(file);
@@ -413,10 +420,12 @@ public class TestProperties {
 		bw.write("serverSelectionTimeout=" + dbName);
 		bw.newLine();
 		bw.close();
+		
+		log.debug("Created mongo db file at " + Constants.MONGO_DB_PROP);
 	}
 
 	/**
-	 * Create a mysql database properties file
+	 * Create a mongo database properties file
 	 * 
 	 * @throws IOException
 	 */
@@ -425,7 +434,7 @@ public class TestProperties {
 	}
 
 	/**
-	 * Create a mysql database properties file
+	 * Delete the mongo database properties file
 	 * 
 	 * @throws IOException
 	 */

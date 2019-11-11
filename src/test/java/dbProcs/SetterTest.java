@@ -1043,7 +1043,7 @@ public class SetterTest {
 
 		String user[] = Getter.authUser(applicationRoot, userName, userName);
 		if (user == null || user[0].isEmpty()) {
-			log.debug("Test Failed. User not found in DB. Adding user to DB and Retesting before reporting failure");
+			log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 			try {
 				Setter.userCreate(applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
 			} catch (SQLException e) {
