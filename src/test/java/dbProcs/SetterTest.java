@@ -1106,53 +1106,52 @@ public class SetterTest {
 	public void testSetOpenFloorLayout() throws SQLException {
 
 		Setter.setModulelayout(applicationRoot, "open");
-		assertEquals(Getter.getModuleLayout(applicationRoot),"open");
+		assertEquals(Getter.getModuleLayout(applicationRoot), "open");
 
 	}
-	
+
 	@Test
 	public void testSetCTFLayout() throws SQLException {
 
 		Setter.setModulelayout(applicationRoot, "ctf");
-		assertEquals(Getter.getModuleLayout(applicationRoot),"ctf");
+		assertEquals(Getter.getModuleLayout(applicationRoot), "ctf");
 
 	}
-	
+
 	@Test
 	public void testSetTournamentLayout() throws SQLException {
 
 		Setter.setModulelayout(applicationRoot, "tournament");
-		assertEquals(Getter.getModuleLayout(applicationRoot),"tournament");
+		assertEquals(Getter.getModuleLayout(applicationRoot), "tournament");
 
 	}
-	
-	@Test (expected = IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testEmptyModuleLayouts() throws SQLException {
 
 		Setter.setModulelayout(applicationRoot, "");
 
 	}
-	
-	@Test (expected = IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidModuleLayouts() throws SQLException {
 
 		Setter.setModulelayout(applicationRoot, "strangeLayout");
 
 	}
-	
-	@Test (expected = IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidCaseCTFModuleLayouts() throws SQLException {
 
 		Setter.setModulelayout(applicationRoot, "CTF");
 
 	}
-	
-	@Test (expected = IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidCaseOpenModuleLayouts() throws SQLException {
 
 		Setter.setModulelayout(applicationRoot, "Open");
 
 	}
-
 
 }

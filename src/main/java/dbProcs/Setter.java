@@ -1077,12 +1077,11 @@ public class Setter {
 		return result;
 	}
 
-	public static boolean setModulelayout(String ApplicationRoot, String theModulelayout)
-			throws SQLException {
+	public static boolean setModulelayout(String ApplicationRoot, String theModulelayout) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setModulelayout ***");
 		log.debug("playerCheatsEnabled = " + theModulelayout);
-
+		
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting player cheat setting");

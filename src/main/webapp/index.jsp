@@ -1060,7 +1060,7 @@ if (request.getSession() != null)
 				$("#theLieutenantList").hide("fast");
 			});
 		}
-	<%if (ModulePlan.tornyFloor) {%>
+	<%if (ModulePlan.tournamentFloor) {%>
 		tournamentToggleFunctions();
 	<%}%>
 		function resizeSidebar() {
