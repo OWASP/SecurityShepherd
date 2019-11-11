@@ -1104,4 +1104,27 @@ public class Setter {
 		return result;
 	}
 
+	public static boolean setFeedbackStatus(String ApplicationRoot, boolean theFeebackStatus) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setFeedbackStatus ***");
+		log.debug("feedbackStatus = " + theFeebackStatus);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting feedback status setting");
+		PreparedStatement callPlayerSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting= ?");
+		callPlayerSetting.setBoolean(1, theFeebackStatus);
+		callPlayerSetting.setString(2, "enableFeedback");
+
+		if (callPlayerSetting.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set module layout to " + theFeebackStatus);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setFeedbackStatus ***");
+		return result;
+	}
+
 }

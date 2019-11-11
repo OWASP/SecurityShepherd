@@ -1158,5 +1158,25 @@ public class SetterTest {
 		Setter.setModulelayout(applicationRoot, "Open");
 
 	}
+	
+	@Test
+	public void testEnableFeedbackStatus() throws SQLException {
+		
+		Setter.setFeedbackStatus(applicationRoot, false);
+		Setter.setFeedbackStatus(applicationRoot, true);
+		
+		assertTrue(Getter.getFeedbackStatus(applicationRoot));
+
+	}
+	
+	@Test
+	public void testDisableFeedbackStatus() throws SQLException {
+		
+		Setter.setFeedbackStatus(applicationRoot, true);
+		Setter.setFeedbackStatus(applicationRoot, false);
+		
+		assertFalse(Getter.getFeedbackStatus(applicationRoot));
+
+	}
 
 }

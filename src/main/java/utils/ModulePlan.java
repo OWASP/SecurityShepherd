@@ -30,7 +30,7 @@ import dbProcs.Setter;
  *
  */
 public class ModulePlan {
-	private static org.apache.log4j.Logger log = Logger.getLogger(CheatSheetStatus.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(ModulePlan.class);
 
 	public static boolean openFloor = false;
 	public static boolean incrementalFloor = true;

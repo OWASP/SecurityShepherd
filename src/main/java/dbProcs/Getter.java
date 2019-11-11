@@ -2267,4 +2267,29 @@ public class Getter {
 		return theModuleLayout;
 	}
 	
+	public static boolean getFeedbackStatus(String ApplicationRoot) throws SQLException {
+		boolean theFeedbackStatus = false;
+		log.debug("*** Getter.getFeedbackStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting admin cheat setting");
+		PreparedStatement callstmt = conn
+				.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+		
+		callstmt.setString(1, "moduleLayout");
+
+		ResultSet cheatResult = callstmt.executeQuery();
+
+		cheatResult.next();
+
+		theFeedbackStatus = cheatResult.getBoolean(1);
+
+		log.debug("Value found: " + theFeedbackStatus);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getFeedbackStatus ***");
+		return theFeedbackStatus;
+	}
+	
 }
