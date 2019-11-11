@@ -1107,7 +1107,7 @@ public class SetterTest {
 
 		Setter.setModulelayout(applicationRoot, "tournament");
 		Setter.setModulelayout(applicationRoot, "open");
-		
+
 		assertEquals(Getter.getModuleLayout(applicationRoot), "open");
 
 	}
@@ -1126,7 +1126,7 @@ public class SetterTest {
 
 		Setter.setModulelayout(applicationRoot, "ctf");
 		Setter.setModulelayout(applicationRoot, "tournament");
-		
+
 		assertEquals(Getter.getModuleLayout(applicationRoot), "tournament");
 
 	}
