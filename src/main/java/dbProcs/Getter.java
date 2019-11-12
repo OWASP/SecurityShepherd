@@ -1,12 +1,11 @@
 package dbProcs;
 
 import java.sql.CallableStatement;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -151,7 +150,7 @@ public class Getter {
 				int badLoginCount;
 				String loginType = new String();
 
-				Time suspendedUntil;
+				Timestamp suspendedUntil;
 
 				try {
 					result[0] = userResult.getString(1);
@@ -160,7 +159,7 @@ public class Getter {
 					badLoginCount = userResult.getInt(5);
 					result[3] = Boolean.toString(userResult.getBoolean(6));
 					result[4] = userResult.getString(7); // classId
-					suspendedUntil = userResult.getTime(8);
+					suspendedUntil = userResult.getTimestamp(8);
 					loginType = userResult.getString(9);
 					result[5] = Boolean.toString(userResult.getBoolean(10));
 				} catch (SQLException e) {
@@ -177,7 +176,7 @@ public class Getter {
 				}
 
 				// Get current system time
-				Time currentTime = new Time(System.currentTimeMillis());
+				Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
 				if (suspendedUntil.after(currentTime)) {
 					// User is suspended
@@ -328,19 +327,19 @@ public class Getter {
 
 		} else {
 
-			Time suspendedUntil;
+			Timestamp suspendedUntil;
 
 			log.debug("Getting suspension data");
 
 			try {
-				suspendedUntil = userResult.getTime(7);
+				suspendedUntil = userResult.getTimestamp(7);
 			} catch (SQLException e) {
 				log.fatal("Could not find suspension information from ssoName: " + ssoName + ": " + e.toString());
 				throw new RuntimeException(e);
 			}
 
 			// Get current system time
-			Time currentTime = new Time(System.currentTimeMillis());
+			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
 			if (suspendedUntil.after(currentTime)) {
 				// User is suspended

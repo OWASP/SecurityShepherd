@@ -14,7 +14,6 @@ import java.sql.Statement;
 
 import javax.servlet.ServletException;
 
-import dbProcs.FileInputProperties;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -23,14 +22,14 @@ import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.Constants;
 import dbProcs.Database;
+import dbProcs.FileInputProperties;
 import dbProcs.Getter;
 import dbProcs.Setter;
 import servlets.Login;
-import servlets.admin.moduleManagement.OpenAllModulesIT;
 import utils.InstallationException;
 
 public class TestProperties {
-	private static org.apache.log4j.Logger log = Logger.getLogger(OpenAllModulesIT.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(TestProperties.class);
 
 	public static void failAndPrint(String message) {
 		log.fatal(message);
@@ -352,9 +351,9 @@ public class TestProperties {
 	 */
 	public static void createMysqlResource(String dbHost, int dbPort, String dbSchema, String dbUsername,
 			String dbPassword) throws IOException {
-		
+
 		log.debug("Creating mysql db file at " + Constants.MYSQL_DB_PROP);
-		
+
 		File file = new File(Constants.MYSQL_DB_PROP);
 		file.getParentFile().mkdirs();
 		FileWriter writer = new FileWriter(file);
@@ -371,7 +370,7 @@ public class TestProperties {
 		bw.newLine();
 		bw.write("databasePassword=" + dbPassword);
 		bw.close();
-		
+
 		log.debug("Created mysql db file at " + Constants.MYSQL_DB_PROP);
 
 	}
@@ -399,14 +398,14 @@ public class TestProperties {
 	 */
 	public static void createMongoResource(String dbHost, long dbPort, String dbName, long connectTimeout,
 			long socketTimeout, long serverSelectionTimeout) throws IOException {
-	
+
 		log.debug("Creating mongo db file at " + Constants.MONGO_DB_PROP);
-		
+
 		File file = new File(Constants.MONGO_DB_PROP);
 		file.getParentFile().mkdirs();
 		FileWriter writer = new FileWriter(file);
 		BufferedWriter bw = new BufferedWriter(writer);
-		
+
 		bw.write("connectionHost=" + dbHost);
 		bw.newLine();
 		bw.write("connectionPort=" + dbPort);
@@ -420,7 +419,7 @@ public class TestProperties {
 		bw.write("serverSelectionTimeout=" + serverSelectionTimeout);
 		bw.newLine();
 		bw.close();
-		
+
 		log.debug("Created mongo db file at " + Constants.MONGO_DB_PROP);
 	}
 
