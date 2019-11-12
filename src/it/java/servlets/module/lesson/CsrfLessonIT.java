@@ -5,6 +5,8 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.servlet.ServletException;
+
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -18,15 +20,14 @@ import utils.InstallationException;
 import dbProcs.GetterTest;
 import dbProcs.Setter;
 
-public class CsrfLessonIT
-{
+public class CsrfLessonIT {
 	private static String lang = "en_GB";
 	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
-    private MockHttpServletResponse response;
+	private MockHttpServletResponse response;
 
-    /**
+	/**
 	 * Creates DB or Restores DB to Factory Defaults before running tests
 	 */
 	@BeforeClass
@@ -38,159 +39,139 @@ public class CsrfLessonIT
 		TestProperties.executeSql(log);
 
 	}
-    
-    @Before
-	public void setup()
-	{
-        request = new MockHttpServletRequest();
-        response = new MockHttpServletResponse();
-        //Open All modules
-        if(!Setter.openAllModules(applicationRoot, false))
-        	fail("Could not Mark All Modules As Open");
+
+	@Before
+	public void setup() {
+		request = new MockHttpServletRequest();
+		response = new MockHttpServletResponse();
+		// Open All modules
+		if (!Setter.openAllModules(applicationRoot, false))
+			fail("Could not Mark All Modules As Open");
 	}
 
-	public String getModuleDoPost(String messageForAdmin, String csrfToken) throws Exception
-	{
-		try
-		{
-			int expectedResponseCode = 302;
-			String servletClassName = "CsrfLesson";
-			log.debug("Creating " + servletClassName + " Servlet Instance");
-			CsrfLesson servlet = new CsrfLesson();
-			servlet.init(new MockServletConfig(servletClassName));
+	public String getModuleDoPost(String messageForAdmin, String csrfToken) throws ServletException, IOException {
 
-			//Setup Servlet Parameters and Attributes
-			log.debug("Setting Up Params and Atrributes");
-			request.addParameter("messageForAdmin", messageForAdmin);
-			//Adding Correct CSRF Token (Token Submitted)
-			request.addParameter("csrfToken", csrfToken);
+		int expectedResponseCode = 302;
+		String servletClassName = "CsrfLesson";
+		log.debug("Creating " + servletClassName + " Servlet Instance");
+		CsrfLesson servlet = new CsrfLesson();
+		servlet.init(new MockServletConfig(servletClassName));
 
-			log.debug("Running doPost");
-			servlet.doPost(request, response);
+		// Setup Servlet Parameters and Attributes
+		log.debug("Setting Up Params and Atrributes");
+		request.addParameter("messageForAdmin", messageForAdmin);
+		// Adding Correct CSRF Token (Token Submitted)
+		request.addParameter("csrfToken", csrfToken);
 
-			if(response.getStatus() != expectedResponseCode)
-				fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode + " Expected");
-			else
-			{
-				log.debug("302 OK Detected");
-				log.debug(servletClassName + " Successful, returning location retrieved: " + response.getContentAsString());
-				return(response.getContentAsString());
-			}
+		log.debug("Running doPost");
+		servlet.doPost(request, response);
+
+		if (response.getStatus() != expectedResponseCode)
+			fail(servletClassName + " Servlet Returned " + response.getStatus() + " Code. " + expectedResponseCode
+					+ " Expected");
+		else {
+			log.debug("302 OK Detected");
+			log.debug(servletClassName + " Successful, returning location retrieved: " + response.getContentAsString());
+			return (response.getContentAsString());
 		}
-		catch(Exception e)
-		{
-			throw e;
-		}
+
 		return null;
 	}
 
 	@Test
-	public void testLevelValidAnswer()
-	{
+	public void testLevelValidAnswer() throws SQLException, ServletException, IOException {
 		String userName = "lessonTester";
-		try
-		{
-			//Verify User Exists in DB
-			GetterTest.verifyTestUser(applicationRoot, userName, userName);
-			//Sign in as Normal User
-			log.debug("Signing in as " + userName + " Through LoginServlet");
-			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
-			if(response.getCookie("token") == null)
-				fail("No CSRF Token Was Returned from Login Servlet");
-			String csrfToken = response.getCookie("token").getValue();
-			if(csrfToken.isEmpty())
-			{
-				String message = new String("No CSRF token returned from Login Servlet");
+
+		// Verify User Exists in DB
+		GetterTest.verifyTestUser(applicationRoot, userName, userName);
+		// Sign in as Normal User
+		log.debug("Signing in as " + userName + " Through LoginServlet");
+		TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
+		log.debug("Login Servlet Complete, Getting CSRF Token");
+		if (response.getCookie("token") == null)
+			fail("No CSRF Token Was Returned from Login Servlet");
+		String csrfToken = response.getCookie("token").getValue();
+		if (csrfToken.isEmpty()) {
+			String message = new String("No CSRF token returned from Login Servlet");
+			log.fatal(message);
+			fail(message);
+		} else {
+			request.setCookies(response.getCookies());
+			String falseIdTestValue = new String("1627312");
+			String httpsBase = new String("https://localhost:8080/");
+			request.getSession().setAttribute("falseId", falseIdTestValue); // Test Value
+			String messageForAdmin = new String(httpsBase + "root/grantComplete/csrflesson?userId=" + falseIdTestValue);
+			String servletResponse = getModuleDoPost(messageForAdmin, csrfToken);
+			if (servletResponse.contains("You must be getting funky")) {
+				String message = new String("General 'Funky' Error Detected");
 				log.fatal(message);
 				fail(message);
 			}
-			else
+			if (!servletResponse.contains("The result key for this lesson is")) {
+				String message = new String("Valid Solution did not yeild Result Key");
+				log.fatal(message);
+				fail(message);
+			} else if (!servletResponse.contains("administrator@SecurityShepherd.com")) // This is hardcoded in
+																						// response. if it fails
+																						// then the level isn't
+																						// working for some reason
 			{
-				request.setCookies(response.getCookies());
-				String falseIdTestValue = new String("1627312");
-				String httpsBase = new String("https://localhost:8080/");
-				request.getSession().setAttribute("falseId", falseIdTestValue); //Test Value
-				String messageForAdmin = new String(httpsBase+"root/grantComplete/csrflesson?userId="+falseIdTestValue);
-				String servletResponse = getModuleDoPost(messageForAdmin, csrfToken);
-				if(servletResponse.contains("You must be getting funky")) 
-				{
-					String message = new String("General 'Funky' Error Detected");
-					log.fatal(message);
-					fail(message);
-				}
-				if(!servletResponse.contains("The result key for this lesson is"))
-				{
-					String message = new String("Valid Solution did not yeild Result Key");
-					log.fatal(message);
-					fail(message);
-				} 
-				else if (!servletResponse.contains("administrator@SecurityShepherd.com")) //This is hardcoded in response. if it fails then the level isn't working for some reason 
-				{
-					String message = new String("Unexpected CSRF Lesson Response");
-					log.fatal(message);
-					fail(message);
-				}
+				String message = new String("Unexpected CSRF Lesson Response");
+				log.fatal(message);
+				fail(message);
 			}
 		}
-		catch(Exception e)
-		{
-			log.fatal("Could not Complete: " + e.toString());
-			fail("Could not Complete: " + e.toString());
-		}
+
 	}
-	
+
 	@Test
-	public void testLevelInvalidAnswer()
-	{
+	public void testLevelInvalidAnswer() {
 		String userName = "lessonTester";
-		try
-		{
-			//Verify User Exists in DB
+		try {
+			// Verify User Exists in DB
 			GetterTest.verifyTestUser(applicationRoot, userName, userName);
-			//Sign in as Normal User
+			// Sign in as Normal User
 			log.debug("Signing in as " + userName + " Through LoginServlet");
 			TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
 			log.debug("Login Servlet Complete, Getting CSRF Token");
-			if(response.getCookie("token") == null)
+			if (response.getCookie("token") == null)
 				fail("No CSRF Token Was Returned from Login Servlet");
 			String csrfToken = response.getCookie("token").getValue();
-			if(csrfToken.isEmpty())
-			{
+			if (csrfToken.isEmpty()) {
 				String message = new String("No CSRF token returned from Login Servlet");
 				log.fatal(message);
 				fail(message);
-			}
-			else
-			{
+			} else {
 				request.setCookies(response.getCookies());
 				String falseIdTestValue = new String("1627312");
 				String httpsBase = new String("https://localhost:8080/");
-				request.getSession().setAttribute("falseId", falseIdTestValue); //Test Value
-				String messageForAdmin = new String(httpsBase+"root/grantComplete/csrflesson?userId="+falseIdTestValue+"wrong"); //+wrong makes the value incorrect
+				request.getSession().setAttribute("falseId", falseIdTestValue); // Test Value
+				String messageForAdmin = new String(
+						httpsBase + "root/grantComplete/csrflesson?userId=" + falseIdTestValue + "wrong"); // +wrong
+																											// makes the
+																											// value
+																											// incorrect
 				String servletResponse = getModuleDoPost(messageForAdmin, csrfToken);
-				if(servletResponse.contains("You must be getting funky")) 
-				{
+				if (servletResponse.contains("You must be getting funky")) {
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
 					fail(message);
 				}
-				if(servletResponse.contains("The result key for this lesson is"))
-				{
+				if (servletResponse.contains("The result key for this lesson is")) {
 					String message = new String("Result Key Returned for incorrect submission");
 					log.fatal(message);
 					fail(message);
-				} 
-				else if (!servletResponse.contains("administrator@SecurityShepherd.com")) //This is hardcoded in response. if it fails then the level isn't working for some reason 
+				} else if (!servletResponse.contains("administrator@SecurityShepherd.com")) // This is hardcoded in
+																							// response. if it fails
+																							// then the level isn't
+																							// working for some reason
 				{
 					String message = new String("Unexpected CSRF Lesson Response");
 					log.fatal(message);
 					fail(message);
 				}
 			}
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			log.fatal("Could not Complete: " + e.toString());
 			fail("Could not Complete: " + e.toString());
 		}

@@ -2821,7 +2821,7 @@ public class GetterTest {
 			if (user == null || user[0].isEmpty()) {
 				log.debug("PASS: User Could not Authenticate after suspension");
 			} else {
-				TestProperties.failAndPrint("Could still authenticate as user after suspension");
+				TestProperties.failAndPrint("Fail: Could still authenticate as user after suspension");
 			}
 
 		}

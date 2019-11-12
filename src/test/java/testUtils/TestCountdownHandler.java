@@ -2,27 +2,17 @@ package testUtils;
 
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import utils.CountdownHandler;
-import utils.XmlDocumentBuilder;
-
 import testUtils.TestProperties;
 
-import javax.xml.parsers.DocumentBuilder;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.Clock;
 import java.time.LocalDateTime;
 
 public class TestCountdownHandler {
@@ -89,12 +79,20 @@ public class TestCountdownHandler {
 		CountdownHandler.setLockTime(testTime);
 
 		assertTrue(CountdownHandler.isLocked());
+		
+		CountdownHandler.disableLockTime();
+
+		assertFalse(CountdownHandler.isLocked());
 
 		testTime = LocalDateTime.now().minusYears(5);
 
 		CountdownHandler.setLockTime(testTime);
 
 		assertTrue(CountdownHandler.isLocked());
+		
+		CountdownHandler.disableLockTime();
+
+		assertFalse(CountdownHandler.isLocked());
 		
 		testTime = LocalDateTime.now().plusMinutes(5);
 
@@ -118,11 +116,19 @@ public class TestCountdownHandler {
 
 		assertTrue(CountdownHandler.hasEnded());
 
+		CountdownHandler.disableEndTime();
+
+		assertFalse(CountdownHandler.hasEnded());
+		
 		testTime = LocalDateTime.now().minusYears(5);
 
 		CountdownHandler.setEndTime(testTime);
 
 		assertTrue(CountdownHandler.hasEnded());
+		
+		CountdownHandler.disableEndTime();
+
+		assertFalse(CountdownHandler.hasEnded());
 		
 		testTime = LocalDateTime.now().plusMinutes(5);
 

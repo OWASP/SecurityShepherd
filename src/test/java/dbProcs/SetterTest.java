@@ -477,7 +477,7 @@ public class SetterTest {
 				if (user == null || user[0].isEmpty()) {
 					return;// PASS: User Could not Authenticate after suspension
 				} else {
-					fail("Could still authenticate as user after suspension");
+					TestProperties.failAndPrint("Fail: could still authenticate as user after suspension");
 				}
 			}
 		}

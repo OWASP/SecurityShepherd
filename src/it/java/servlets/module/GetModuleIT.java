@@ -13,11 +13,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
-import testUtils.TestProperties;
-import utils.InstallationException;
-import utils.ModuleBlock;
 import dbProcs.GetterTest;
 import dbProcs.Setter;
+import testUtils.TestProperties;
+import utils.ModuleBlock;
 
 public class GetModuleIT
 {

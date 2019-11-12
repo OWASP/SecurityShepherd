@@ -1,7 +1,6 @@
 package utils;
 
 import java.sql.SQLException;
-import java.time.Clock;
 import java.time.LocalDateTime;
 
 import org.apache.log4j.Logger;
@@ -37,7 +36,7 @@ public class CountdownHandler {
 	private static boolean hasLockTime = false;
 	private static LocalDateTime endTime;
 	private static boolean hasEndTime = false;
-	
+
 	private static boolean isLoaded = false;
 
 	public static boolean isLocked() {
@@ -51,7 +50,7 @@ public class CountdownHandler {
 
 		return endTime.isBefore(LocalDateTime.now());
 	}
-	
+
 	public static LocalDateTime getLockTime() {
 		loadCountdowns();
 		return lockTime;
@@ -153,7 +152,6 @@ public class CountdownHandler {
 	}
 
 	private static void loadCountdowns() {
-		String theModuleLayout = "";
 
 		try {
 
