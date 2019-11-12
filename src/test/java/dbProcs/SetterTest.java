@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
@@ -1279,4 +1280,60 @@ public class SetterTest {
 
 	}
 
+	@Test
+	public void testSetLockTimestampStatus() throws SQLException {
+
+		Setter.setLockTimestampStatus(applicationRoot, false);
+		Setter.setLockTimestampStatus(applicationRoot, true);
+		
+		assertTrue(Getter.getLockTimestampStatus(applicationRoot));
+
+		Setter.setLockTimestampStatus(applicationRoot, true);
+		Setter.setLockTimestampStatus(applicationRoot, false);
+		
+		assertFalse(Getter.getLockTimestampStatus(applicationRoot));
+		
+	}
+	
+	@Test
+	public void testSetLockTimestamp() throws SQLException {
+
+		Setter.setLockTimestamp(applicationRoot, new Timestamp(4102488000000l));
+
+		assertEquals(Getter.getLockTimestamp(applicationRoot), 4102488000000l);
+		
+		Setter.setLockTimestamp(applicationRoot, new Timestamp(315576000000l));
+
+		assertEquals(Getter.getLockTimestamp(applicationRoot), 315576000000l);
+		
+	}
+	
+	@Test
+	public void testSetEndTimestampStatus() throws SQLException {
+
+		Setter.setEndTimestampStatus(applicationRoot, false);
+		Setter.setEndTimestampStatus(applicationRoot, true);
+		
+		assertTrue(Getter.getEndTimestampStatus(applicationRoot));
+
+		Setter.setEndTimestampStatus(applicationRoot, true);
+		Setter.setEndTimestampStatus(applicationRoot, false);
+		
+		assertFalse(Getter.getEndTimestampStatus(applicationRoot));
+		
+	}
+	
+	@Test
+	public void testSetEndTimestamp() throws SQLException {
+
+		Setter.setEndTimestamp(applicationRoot, new Timestamp(4102488000000l));
+
+		assertEquals(Getter.getEndTimestamp(applicationRoot), 4102488000000l);
+		
+		Setter.setEndTimestamp(applicationRoot, new Timestamp(315576000000l));
+
+		assertEquals(Getter.getEndTimestamp(applicationRoot), 315576000000l);
+		
+	}
+	
 }
