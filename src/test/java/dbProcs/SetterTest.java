@@ -9,7 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
@@ -1281,58 +1282,58 @@ public class SetterTest {
 	}
 
 	@Test
-	public void testSetLockTimestampStatus() throws SQLException {
+	public void testSetLockTimeStatus() throws SQLException {
 
-		Setter.setLockTimestampStatus(applicationRoot, false);
-		Setter.setLockTimestampStatus(applicationRoot, true);
+		Setter.setLockTimeStatus(applicationRoot, false);
+		Setter.setLockTimeStatus(applicationRoot, true);
 		
-		assertTrue(Getter.getLockTimestampStatus(applicationRoot));
+		assertTrue(Getter.getLockTimeStatus(applicationRoot));
 
-		Setter.setLockTimestampStatus(applicationRoot, true);
-		Setter.setLockTimestampStatus(applicationRoot, false);
+		Setter.setLockTimeStatus(applicationRoot, true);
+		Setter.setLockTimeStatus(applicationRoot, false);
 		
-		assertFalse(Getter.getLockTimestampStatus(applicationRoot));
-		
-	}
-	
-	@Test
-	public void testSetLockTimestamp() throws SQLException {
-
-		Setter.setLockTimestamp(applicationRoot, new Timestamp(4102488000000l));
-
-		assertEquals(Getter.getLockTimestamp(applicationRoot), 4102488000000l);
-		
-		Setter.setLockTimestamp(applicationRoot, new Timestamp(315576000000l));
-
-		assertEquals(Getter.getLockTimestamp(applicationRoot), 315576000000l);
+		assertFalse(Getter.getLockTimeStatus(applicationRoot));
 		
 	}
 	
 	@Test
-	public void testSetEndTimestampStatus() throws SQLException {
+	public void testSetLockTime() throws SQLException {
 
-		Setter.setEndTimestampStatus(applicationRoot, false);
-		Setter.setEndTimestampStatus(applicationRoot, true);
-		
-		assertTrue(Getter.getEndTimestampStatus(applicationRoot));
+		Setter.setLockTime(applicationRoot, LocalDateTime.parse("2018-11-03T12:45:30"));
 
-		Setter.setEndTimestampStatus(applicationRoot, true);
-		Setter.setEndTimestampStatus(applicationRoot, false);
+		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));
 		
-		assertFalse(Getter.getEndTimestampStatus(applicationRoot));
+		Setter.setLockTime(applicationRoot, LocalDateTime.parse("2118-11-03T12:45:30"));
+
+		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2118-11-03T12:45:30"));
 		
 	}
 	
 	@Test
-	public void testSetEndTimestamp() throws SQLException {
+	public void testSetEndTimeStatus() throws SQLException {
 
-		Setter.setEndTimestamp(applicationRoot, new Timestamp(4102488000000l));
-
-		assertEquals(Getter.getEndTimestamp(applicationRoot), 4102488000000l);
+		Setter.setEndTimeStatus(applicationRoot, false);
+		Setter.setEndTimeStatus(applicationRoot, true);
 		
-		Setter.setEndTimestamp(applicationRoot, new Timestamp(315576000000l));
+		assertTrue(Getter.getEndTimeStatus(applicationRoot));
 
-		assertEquals(Getter.getEndTimestamp(applicationRoot), 315576000000l);
+		Setter.setEndTimeStatus(applicationRoot, true);
+		Setter.setEndTimeStatus(applicationRoot, false);
+		
+		assertFalse(Getter.getEndTimeStatus(applicationRoot));
+		
+	}
+	
+	@Test
+	public void testSetEndTime() throws SQLException {
+
+		Setter.setEndTime(applicationRoot, LocalDateTime.parse("2018-11-03T12:45:30"));
+
+		assertEquals(Getter.getEndTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));
+		
+		Setter.setEndTime(applicationRoot, LocalDateTime.parse("2118-11-03T12:45:30"));
+
+		assertEquals(Getter.getEndTime(applicationRoot), LocalDateTime.parse("2118-11-03T12:45:30"));
 		
 	}
 	

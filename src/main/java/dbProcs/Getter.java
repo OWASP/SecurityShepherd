@@ -6,7 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -150,7 +151,7 @@ public class Getter {
 				int badLoginCount;
 				String loginType = new String();
 
-				Timestamp suspendedUntil;
+				Time suspendedUntil;
 
 				try {
 					result[0] = userResult.getString(1);
@@ -159,7 +160,7 @@ public class Getter {
 					badLoginCount = userResult.getInt(5);
 					result[3] = Boolean.toString(userResult.getBoolean(6));
 					result[4] = userResult.getString(7); // classId
-					suspendedUntil = userResult.getTimestamp(8);
+					suspendedUntil = userResult.getTime(8);
 					loginType = userResult.getString(9);
 					result[5] = Boolean.toString(userResult.getBoolean(10));
 				} catch (SQLException e) {
@@ -176,7 +177,7 @@ public class Getter {
 				}
 
 				// Get current system time
-				Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+				Time currentTime = new Time(System.currentTimeMillis());
 
 				if (suspendedUntil.after(currentTime)) {
 					// User is suspended
@@ -327,19 +328,19 @@ public class Getter {
 
 		} else {
 
-			Timestamp suspendedUntil;
+			Time suspendedUntil;
 
 			log.debug("Getting suspension data");
 
 			try {
-				suspendedUntil = userResult.getTimestamp(7);
+				suspendedUntil = userResult.getTime(7);
 			} catch (SQLException e) {
 				log.fatal("Could not find suspension information from ssoName: " + ssoName + ": " + e.toString());
 				throw new RuntimeException(e);
 			}
 
 			// Get current system time
-			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+			Time currentTime = new Time(System.currentTimeMillis());
 
 			if (suspendedUntil.after(currentTime)) {
 				// User is suspended
@@ -2197,7 +2198,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting admin cheat setting");
+		log.debug("Getting admin cheat setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "adminCheatsEnabled");
@@ -2221,7 +2222,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting player cheat setting");
+		log.debug("Getting player cheat setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "playerCheatsEnabled");
@@ -2245,7 +2246,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting module layout setting");
+		log.debug("Getting module layout setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "moduleLayout");
@@ -2269,7 +2270,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting feedback status setting");
+		log.debug("Getting feedback status setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "enableFeedback");
@@ -2293,7 +2294,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting registration status setting");
+		log.debug("Getting registration status setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "openRegistration");
@@ -2341,7 +2342,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting scoreboard class setting");
+		log.debug("Getting scoreboard class setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "scoreboardClass");
@@ -2358,4 +2359,105 @@ public class Getter {
 		log.debug("*** END getScoreboardClass ***");
 		return theScoreboardClass;
 	}
+
+	public static Boolean getLockTimeStatus(String ApplicationRoot) throws SQLException {
+		Boolean theLockTimeStatus = null;
+		log.debug("*** Getter.getLockTimeStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Getting timestamp setting");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "hasLockTime");
+
+		ResultSet timestampResult = callstmt.executeQuery();
+
+		timestampResult.next();
+
+		theLockTimeStatus = timestampResult.getBoolean(1);
+
+		log.debug("Value found: " + theLockTimeStatus);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getLockTimeStatus ***");
+		return theLockTimeStatus;
+	}
+
+	public static LocalDateTime getLockTime(String ApplicationRoot) throws SQLException {
+		LocalDateTime theLockTimeStatus = null;
+		log.debug("*** Getter.getLockTimeStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Getting timestamp setting");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "lockTime");
+
+		ResultSet timestampResult = callstmt.executeQuery();
+
+		timestampResult.next();
+
+		String dateTimeString=timestampResult.getString(1);
+
+		log.debug("Value found: " + dateTimeString);
+		
+		theLockTimeStatus = LocalDateTime.parse(dateTimeString);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getLockTime ***");
+		return theLockTimeStatus;
+	}
+	
+	public static Boolean getEndTimeStatus(String ApplicationRoot) throws SQLException {
+		Boolean theEndTimeStatus = null;
+		log.debug("*** Getter.getEndTimeStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Getting timestamp setting");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "hasEndTime");
+
+		ResultSet timestampResult = callstmt.executeQuery();
+
+		timestampResult.next();
+
+		theEndTimeStatus = timestampResult.getBoolean(1);
+
+		log.debug("Value found: " + theEndTimeStatus);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getEndTimeStatus ***");
+		return theEndTimeStatus;
+	}
+
+	public static LocalDateTime getEndTime(String ApplicationRoot) throws SQLException {
+		LocalDateTime theEndTimeStatus = null;
+		log.debug("*** Getter.getEndTimeStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Getting timestamp setting");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "endTime");
+
+		ResultSet timestampResult = callstmt.executeQuery();
+
+		timestampResult.next();
+
+		String dateTimeString=timestampResult.getString(1);
+
+		log.debug("Value found: " + dateTimeString);
+		
+		theEndTimeStatus = LocalDateTime.parse(dateTimeString);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getEndTime ***");
+		return theEndTimeStatus;
+	}
+
 }

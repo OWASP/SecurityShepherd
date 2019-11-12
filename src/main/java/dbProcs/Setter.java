@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import org.apache.log4j.Logger;
 
@@ -1202,6 +1203,96 @@ public class Setter {
 
 		Database.closeConnection(conn);
 		log.debug("*** END setScoreboardClass ***");
+		return result;
+	}
+	public static boolean setLockTimeStatus(String ApplicationRoot, boolean theLockTimeStatus) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setLockTimeStatus ***");
+		log.debug("theLockTimeStatus = " + theLockTimeStatus);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting lock timestamp setting");
+		PreparedStatement lockTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		lockTimeStatement.setBoolean(1, theLockTimeStatus);
+		lockTimeStatement.setString(2, "hasLockTime");
+
+		if (lockTimeStatement.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set lock timestamp status to " + theLockTimeStatus);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setLockTimeStatus ***");
+		return result;
+	}
+	
+	public static boolean setLockTime(String ApplicationRoot, LocalDateTime theLockTime) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setLockTime ***");
+		log.debug("theLockTime = " + theLockTime);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting lock timestamp");
+		PreparedStatement lockTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		lockTimeStatement.setString(1, theLockTime.toString());
+		lockTimeStatement.setString(2, "lockTime");
+
+		if (lockTimeStatement.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set lock timestamp to " + theLockTime);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setLockTime ***");
+		return result;
+	}	
+	public static boolean setEndTimeStatus(String ApplicationRoot, boolean theEndTimeStatus) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setEndTimeStatus ***");
+		log.debug("theEndTimeStatus = " + theEndTimeStatus);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting end timestamp setting");
+		PreparedStatement lockTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		lockTimeStatement.setBoolean(1, theEndTimeStatus);
+		lockTimeStatement.setString(2, "hasEndTime");
+
+		if (lockTimeStatement.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set end timestamp status to " + theEndTimeStatus);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END theEndTimeStatus ***");
+		return result;
+	}
+	
+	public static boolean setEndTime(String ApplicationRoot, LocalDateTime theEndTime) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setEndTime ***");
+		log.debug("theLockTime = " + theEndTime);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting end timestamp");
+		PreparedStatement endTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		endTimeStatement.setString(1, theEndTime.toString());
+		endTimeStatement.setString(2, "endTime");
+
+		if (endTimeStatement.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set end timestamp to " + theEndTime);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setEndTime ***");
 		return result;
 	}
 

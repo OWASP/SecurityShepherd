@@ -1,7 +1,8 @@
 package utils;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.time.Clock;
+import java.time.LocalDateTime;
 
 import org.apache.log4j.Logger;
 
@@ -32,16 +33,28 @@ import dbProcs.Setter;
 public class CountdownHandler {
 	private static org.apache.log4j.Logger log = Logger.getLogger(CountdownHandler.class);
 
-	private static Timestamp lockTimestamp;
+	private static LocalDateTime lockTime;
 	private static boolean hasLockTime = false;
-	private static Timestamp endTimestamp;
+	private static LocalDateTime endTime;
 	private static boolean hasEndTime = false;
-
+	
 	private static boolean isLoaded = false;
 
-	public static Timestamp getLockTimestamp() {
+	public static boolean isLocked() {
 		loadCountdowns();
-		return lockTimestamp;
+
+		return lockTime.isBefore(LocalDateTime.now());
+	}
+
+	public static boolean hasEnded() {
+		loadCountdowns();
+
+		return endTime.isBefore(LocalDateTime.now());
+	}
+	
+	public static LocalDateTime getLockTime() {
+		loadCountdowns();
+		return lockTime;
 	}
 
 	public static boolean hasLockTime() {
@@ -49,9 +62,9 @@ public class CountdownHandler {
 		return hasLockTime;
 	}
 
-	public static Timestamp getEndTimestamp() {
+	public static LocalDateTime getEndTime() {
 		loadCountdowns();
-		return endTimestamp;
+		return endTime;
 	}
 
 	public static boolean hasEndTime() {
@@ -59,18 +72,18 @@ public class CountdownHandler {
 		return hasEndTime;
 	}
 
-	public static void setLockTimestamp(Timestamp theLockTimestamp) {
+	public static void setLockTime(LocalDateTime theLockTime) {
 		if (!isLoaded) {
 			loadCountdowns();
 		}
 
 		hasLockTime = true;
-		lockTimestamp = theLockTimestamp;
+		lockTime = theLockTime;
 
 		saveCountdowns();
 	}
 
-	public static void enableLockTimestamp() {
+	public static void enableLockTime() {
 		if (!isLoaded) {
 			loadCountdowns();
 		}
@@ -80,7 +93,7 @@ public class CountdownHandler {
 		saveCountdowns();
 	}
 
-	public static void disableLockTimestamp() {
+	public static void disableLockTime() {
 		if (!isLoaded) {
 			loadCountdowns();
 		}
@@ -90,18 +103,18 @@ public class CountdownHandler {
 		saveCountdowns();
 	}
 
-	public static void setEndTimestamp(Timestamp theEndTimestamp) {
+	public static void setEndTime(LocalDateTime theEndTime) {
 		if (!isLoaded) {
 			loadCountdowns();
 		}
 
 		hasEndTime = true;
-		endTimestamp = theEndTimestamp;
+		endTime = theEndTime;
 
 		saveCountdowns();
 	}
 
-	public static void enableEndTimestamp() {
+	public static void enableEndTime() {
 		if (!isLoaded) {
 			loadCountdowns();
 		}
@@ -111,7 +124,7 @@ public class CountdownHandler {
 		saveCountdowns();
 	}
 
-	public static void disableEndTimestamp() {
+	public static void disableEndTime() {
 		if (!isLoaded) {
 			loadCountdowns();
 		}
@@ -126,10 +139,10 @@ public class CountdownHandler {
 
 			if (isLoaded) {
 
-				Setter.setLockTimestamp("", lockTimestamp);
-				Setter.setLockTimestampStatus("", hasLockTime);
-				Setter.setEndTimestamp("", endTimestamp);
-				Setter.setEndTimestampStatus("", hasEndTime);
+				Setter.setLockTime("", lockTime);
+				Setter.setLockTimeStatus("", hasLockTime);
+				Setter.setEndTime("", endTime);
+				Setter.setEndTimeStatus("", hasEndTime);
 
 			}
 
@@ -144,10 +157,10 @@ public class CountdownHandler {
 
 		try {
 
-			lockTimestamp = Getter.getLockTimestamp("");
-			hasLockTime = Getter.getLockTimestampStatus("");
-			endTimestamp = Getter.getEndTimestamp("");
-			hasEndTime = Getter.getEndTimestampStatus("");
+			lockTime = Getter.getLockTime("");
+			hasLockTime = Getter.getLockTimeStatus("");
+			endTime = Getter.getEndTime("");
+			hasEndTime = Getter.getEndTimeStatus("");
 
 		} catch (SQLException e) {
 			log.fatal("Could not load module plan setting from database: " + e.toString());
