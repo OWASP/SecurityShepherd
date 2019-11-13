@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import utils.CountdownHandler;
+import utils.InvalidCountdownStateException;
 
 /**
  * Used to add information to the Database <br/>
@@ -801,10 +802,23 @@ public class Setter {
 
 		String result = null;
 		
-		if (CountdownHandler.isOpen())
+		boolean isOpen;
+		Boolean givePoints;
+
+		try {
+			isOpen = CountdownHandler.isOpen();
+			givePoints = CountdownHandler.isRunning();
+		} catch (InvalidCountdownStateException e1) {
+			String message="Countdown handler is in an invalid state.";
+
+			log.error(message);
+			throw new RuntimeException(message);
+		}
+		
+		if (isOpen)
 		{
 
-			Boolean givePoints = CountdownHandler.isRunning();
+			
 
 			Connection conn = Database.getCoreConnection(ApplicationRoot);
 			try {
@@ -815,7 +829,7 @@ public class Setter {
 				callstmnt.setInt(3, before);
 				callstmnt.setInt(4, after);
 				callstmnt.setInt(5, difficulty);
-				callstmnt.setBoolean(6, CountdownHandler.isRunning()); // Only give points if CTF is running
+				callstmnt.setBoolean(6, givePoints); // Only give points if CTF is running
 				callstmnt.setString(7, extra);
 				log.debug("Executing userUpdateResult");
 				callstmnt.execute();

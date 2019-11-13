@@ -52,7 +52,7 @@ public class TestCountdownHandler {
 
 		assertEquals(testTime, CountdownHandler.getStartTime());
 	}
-	
+
 	@Test
 	public void countdownHandler_SetCorrectLockTime() {
 		LocalDateTime testTime = LocalDateTime.now();
@@ -97,37 +97,36 @@ public class TestCountdownHandler {
 
 	@Test
 	public void countdownHandler_compareStartTime() {
-		
+
 		LocalDateTime testTime = LocalDateTime.now().minusMinutes(5);
-		
+
 		CountdownHandler.setStartTime(testTime);
 		assertTrue(CountdownHandler.isStarted());
 		CountdownHandler.disableStartTime();
 		assertFalse(CountdownHandler.isStarted());
-		
+
 		testTime = LocalDateTime.now().minusYears(5);
-		
+
 		CountdownHandler.setStartTime(testTime);
 		assertTrue(CountdownHandler.isStarted());
 		CountdownHandler.disableStartTime();
 		assertFalse(CountdownHandler.isStarted());
-		
+
 		testTime = LocalDateTime.now().plusMinutes(5);
-		
+
 		CountdownHandler.setStartTime(testTime);
 		assertFalse(CountdownHandler.isStarted());
 		testTime = LocalDateTime.now().plusYears(5);
 		CountdownHandler.setStartTime(testTime);
-		assertFalse(CountdownHandler.isStarted());		
-		
+		assertFalse(CountdownHandler.isStarted());
+
 	}
 
-	
 	@Test
 	public void countdownHandler_compareLockTime() {
-		
+
 		LocalDateTime testTime = LocalDateTime.now().minusMinutes(5);
-		
+
 		CountdownHandler.setLockTime(testTime);
 		assertTrue(CountdownHandler.isLocked());
 		CountdownHandler.disableLockTime();
@@ -138,46 +137,45 @@ public class TestCountdownHandler {
 		assertTrue(CountdownHandler.isLocked());
 		CountdownHandler.disableLockTime();
 		assertFalse(CountdownHandler.isLocked());
-		
+
 		testTime = LocalDateTime.now().plusMinutes(5);
-		
+
 		CountdownHandler.setLockTime(testTime);
 		assertFalse(CountdownHandler.isLocked());
 		testTime = LocalDateTime.now().plusYears(5);
 		CountdownHandler.setLockTime(testTime);
-		assertFalse(CountdownHandler.isLocked());		
-		
+		assertFalse(CountdownHandler.isLocked());
+
 	}
 
 	@Test
 	public void countdownHandler_compareEndTime() {
-		
+
 		LocalDateTime testTime = LocalDateTime.now().minusMinutes(5);
 
 		CountdownHandler.setEndTime(testTime);
 		assertTrue(CountdownHandler.hasEnded());
 		CountdownHandler.disableEndTime();
 		assertFalse(CountdownHandler.hasEnded());
-	
+
 		testTime = LocalDateTime.now().minusYears(5);
 		CountdownHandler.setEndTime(testTime);
 		assertTrue(CountdownHandler.hasEnded());
 		CountdownHandler.disableEndTime();
 		assertFalse(CountdownHandler.hasEnded());
-		
+
 		testTime = LocalDateTime.now().plusMinutes(5);
 
 		CountdownHandler.setEndTime(testTime);
 		assertFalse(CountdownHandler.hasEnded());
 		testTime = LocalDateTime.now().plusYears(5);
 		CountdownHandler.setEndTime(testTime);
-		assertFalse(CountdownHandler.hasEnded());		
-		
+		assertFalse(CountdownHandler.hasEnded());
+
 	}
 
-
 	@Test
-	public void countdownHandler_TestIsOpen() {
+	public void countdownHandler_TestIsOpen() throws InvalidCountdownStateException {
 
 		LocalDateTime longPastTime = LocalDateTime.now().minusMinutes(10);
 		LocalDateTime shortPastTime = LocalDateTime.now().minusMinutes(5);
@@ -225,20 +223,20 @@ public class TestCountdownHandler {
 		assertTrue(CountdownHandler.isOpen());
 
 	}
-	
-	@SuppressWarnings("unused")
+
+	@Test
 	public void countdownHandler_TestIsOpenStartAfterEndInvalid() {
 
 		LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
 		CountdownHandler.setStartTime(testTime.plusMinutes(5));
 		CountdownHandler.setEndTime(testTime.minusMinutes(5));
-		
+
 		assertThrows(InvalidCountdownStateException.class, () -> CountdownHandler.isOpen());
-		
+
 	}
-	
-	@SuppressWarnings("unused")
+
+	@Test
 	public void countdownHandler_TestIsOpenStartAfterLockInvalid() {
 
 		LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
@@ -247,25 +245,23 @@ public class TestCountdownHandler {
 		CountdownHandler.setLockTime(testTime.minusMinutes(5));
 
 		assertThrows(InvalidCountdownStateException.class, () -> CountdownHandler.isOpen());
-		
+
 	}
-	
-	@SuppressWarnings("unused")
+
+	@Test
 	public void countdownHandler_TestIsOpenLockAfterEndInvalid() {
 
 		LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
 		CountdownHandler.setLockTime(testTime.plusMinutes(5));
 		CountdownHandler.setEndTime(testTime.minusMinutes(5));
-		
+
 		assertThrows(InvalidCountdownStateException.class, () -> CountdownHandler.isOpen());
 
-		
 	}
-	
-	
+
 	@Test
-	public void countdownHandler_TestIsRunning() {
+	public void countdownHandler_TestIsRunning() throws InvalidCountdownStateException {
 
 		LocalDateTime longPastTime = LocalDateTime.now().minusMinutes(10);
 		LocalDateTime shortPastTime = LocalDateTime.now().minusMinutes(5);
@@ -307,43 +303,103 @@ public class TestCountdownHandler {
 		assertFalse(CountdownHandler.isRunning());
 		CountdownHandler.disableEndTime();
 		assertTrue(CountdownHandler.isRunning());
-		
+
 	}
 
-	@SuppressWarnings("unused")
+	@Test
 	public void countdownHandler_TestIsRunningStartAfterEndInvalid() {
 
 		LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
 		CountdownHandler.setStartTime(testTime.plusMinutes(5));
 		CountdownHandler.setEndTime(testTime.minusMinutes(5));
-		
+
 		assertThrows(InvalidCountdownStateException.class, () -> CountdownHandler.isRunning());
-		
+
 	}
-	
-	@SuppressWarnings("unused")
+
+	@Test
 	public void countdownHandler_TestIsRunningStartAfterLockInvalid() {
 
 		LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
 		CountdownHandler.setStartTime(testTime.plusMinutes(5));
 		CountdownHandler.setLockTime(testTime.minusMinutes(5));
-		
+
 		assertThrows(InvalidCountdownStateException.class, () -> CountdownHandler.isRunning());
-		
+
 	}
 
-	@SuppressWarnings("unused")
+	@Test
 	public void countdownHandler_TestIsRunningLockAfterEndInvalid() {
 
 		LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
 		CountdownHandler.setLockTime(testTime.plusMinutes(5));
 		CountdownHandler.setEndTime(testTime.minusMinutes(5));
-		
+
 		assertThrows(InvalidCountdownStateException.class, () -> CountdownHandler.isRunning());
 
 	}
-	
+
+	@Test
+	public void countdownHandler_TestIsRunningEqualTimes() throws InvalidCountdownStateException {
+
+		// These equal-time edge cases should work even though they don't make much
+		// sense...
+		LocalDateTime longPastTime = LocalDateTime.now().minusMinutes(10);
+		LocalDateTime shortPastTime = LocalDateTime.now().minusMinutes(5);
+		LocalDateTime shortFutureTime = LocalDateTime.now().plusMinutes(5);
+		LocalDateTime longFutureTime = LocalDateTime.now().plusMinutes(10);
+
+		CountdownHandler.setStartTime(longPastTime);
+		CountdownHandler.setLockTime(longPastTime);
+		CountdownHandler.setEndTime(longFutureTime);
+
+		CountdownHandler.isRunning();
+
+		CountdownHandler.setStartTime(longPastTime);
+		CountdownHandler.setLockTime(shortFutureTime);
+		CountdownHandler.setEndTime(shortFutureTime);
+
+		CountdownHandler.isRunning();
+
+		CountdownHandler.setStartTime(shortPastTime);
+		CountdownHandler.setLockTime(shortPastTime);
+		CountdownHandler.setEndTime(shortPastTime);
+
+		CountdownHandler.isRunning();
+
+	}
+
+	@Test
+	public void countdownHandler_TestIsOpenEqualTimes() throws InvalidCountdownStateException {
+
+		// These equal-time edge cases should work even though they don't make much
+		// sense...
+		LocalDateTime longPastTime = LocalDateTime.now().minusMinutes(10);
+		LocalDateTime shortPastTime = LocalDateTime.now().minusMinutes(5);
+		LocalDateTime shortFutureTime = LocalDateTime.now().plusMinutes(5);
+		LocalDateTime longFutureTime = LocalDateTime.now().plusMinutes(10);
+
+		CountdownHandler.setStartTime(longPastTime);
+		CountdownHandler.setLockTime(longPastTime);
+		CountdownHandler.setEndTime(longFutureTime);
+
+		CountdownHandler.isOpen();
+
+		CountdownHandler.setStartTime(longPastTime);
+		CountdownHandler.setLockTime(shortFutureTime);
+		CountdownHandler.setEndTime(shortFutureTime);
+
+		CountdownHandler.isOpen();
+
+		CountdownHandler.setStartTime(shortPastTime);
+		CountdownHandler.setLockTime(shortPastTime);
+		CountdownHandler.setEndTime(shortPastTime);
+
+		CountdownHandler.isOpen();
+
+	}
+
 }

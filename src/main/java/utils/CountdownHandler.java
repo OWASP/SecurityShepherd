@@ -41,33 +41,65 @@ public class CountdownHandler {
 
 	private static boolean isLoaded = false;
 
-	public static boolean isOpen() {
+	private static boolean validate() throws InvalidCountdownStateException {
+
+		if (hasStartTime && hasLockTime) {
+			if (startTime.isAfter(lockTime)) {
+				throw new InvalidCountdownStateException("Start time must be before or equal to lock time");
+			}
+		}
+
+		if (hasStartTime && hasEndTime) {
+			if (startTime.isAfter(endTime)) {
+				throw new InvalidCountdownStateException("Start time must be before or equal to lock time");
+			}
+		}
+
+		if (hasLockTime && hasEndTime) {
+			if (lockTime.isAfter(endTime)) {
+				throw new InvalidCountdownStateException("Start time must be before or equal to lock time");
+			}
+		}
+
+		return true;
+
+	}
+
+	public static boolean isOpen() throws InvalidCountdownStateException {
+
+		// CTF is open if it has started, isn't locked and hasn't ended
+		
+		validate();
+		
 		return isStarted() && !isLocked() && !hasEnded();
 	}
-	
-	public static boolean isRunning() {
-		loadCountdowns();
+
+	public static boolean isRunning() throws InvalidCountdownStateException {
 		
-		return hasLockTime && lockTime.isBefore(LocalDateTime.now());
+		// CTF is running if it has started, hasn't ended, but ignores lock state
+
+		validate();
+
+		return isStarted() && !hasEnded();
 	}
 
 	public static boolean isStarted() {
 		loadCountdowns();
-		
-		if(hasStartTime) {
-			
+
+		if (hasStartTime) {
+
 			// Start timer enabled, only return true if timer has passed
 			return startTime.isBefore(LocalDateTime.now());
 		} else {
-			
+
 			// Start timer disabled, always say it's started
 			return true;
-		}		
+		}
 	}
-	
+
 	public static boolean isLocked() {
 		loadCountdowns();
-		
+
 		return hasLockTime && lockTime.isBefore(LocalDateTime.now());
 	}
 
@@ -86,7 +118,7 @@ public class CountdownHandler {
 		loadCountdowns();
 		return hasStartTime;
 	}
-	
+
 	public static LocalDateTime getLockTime() {
 		loadCountdowns();
 		return lockTime;
@@ -117,7 +149,7 @@ public class CountdownHandler {
 
 		saveCountdowns();
 	}
-	
+
 	public static void enableStartTime() {
 		if (!isLoaded) {
 			loadCountdowns();
@@ -137,7 +169,7 @@ public class CountdownHandler {
 
 		saveCountdowns();
 	}
-	
+
 	public static void setLockTime(LocalDateTime theLockTime) {
 		if (!isLoaded) {
 			loadCountdowns();
