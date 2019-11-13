@@ -119,9 +119,9 @@ else
 		<h1 class="title"><fmt:message key="getStarted.text.lets_start" /></h1>
 		<div class="entry">
 			<p>
-				<% if(ModulePlan.openFloor) { %>
+				<% if(ModulePlan.isOpenFloor()) { %>
 					<fmt:message key="getStarted.text.moduleInfo.openFloor" />
-				<% } else if (ModulePlan.incrementalFloor) { %>
+				<% } else if (ModulePlan.isIncrementalFloor()) { %>
 					<fmt:message key="getStarted.text.moduleInfo.incrementalFloor" />
 				<% } else {%>
 					<fmt:message key="getStarted.text.moduleInfo" />

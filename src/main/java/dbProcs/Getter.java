@@ -789,7 +789,7 @@ public class Getter {
 		String result = new String();
 		Connection conn = Database.getCoreConnection(applicationRoot);
 		try {
-			log.debug("Preparing userUpdateResult call");
+			log.debug("Preparing moduleFeedback call");
 			CallableStatement callstmnt = conn.prepareCall("call moduleFeedback(?)");
 			callstmnt.setString(1, moduleId);
 			log.debug("Executing moduleFeedback");

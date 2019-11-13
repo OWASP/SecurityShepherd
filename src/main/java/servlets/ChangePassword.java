@@ -94,6 +94,7 @@ public class ChangePassword extends HttpServlet
 							log.error("Incorrect Password");
 							ses.setAttribute("errorMessage", "Incorrect Password... Don't lock yourself out!");
 							response.sendRedirect("index.jsp");
+							return;
 						}
 					}
 					else

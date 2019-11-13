@@ -113,7 +113,7 @@ public class SetTournamentModeIT {
 				String responseBody = doThePost(csrfToken);
 				if (responseBody.isEmpty()) {
 					log.debug("Expected Empty Result Recieved");
-					if (ModulePlan.isTournyFloor()) {
+					if (ModulePlan.isTournamentFloor()) {
 						String message = "Floor Plan Changed to Tournament after what should have been a failed request";
 						log.fatal(message);
 						fail(message);
@@ -154,7 +154,7 @@ public class SetTournamentModeIT {
 				String responseBody = doThePost(csrfToken);
 				if (responseBody.contains("Tournament Floor Plan Enabled")) {
 					log.debug("Tournament Mode enabled");
-					if (!ModulePlan.isTournyFloor()) {
+					if (!ModulePlan.isTournamentFloor()) {
 						String message = "Tournament Mode was not actually Enabled";
 						log.fatal(message);
 						fail(message);
@@ -199,7 +199,7 @@ public class SetTournamentModeIT {
 				String responseBody = doThePost("wrongToken");
 				if (responseBody.contains("Error Occurred")) {
 					log.debug("CSRF Error Occurred");
-					if (ModulePlan.isTournyFloor()) {
+					if (ModulePlan.isTournamentFloor()) {
 						String message = "Tournament Mode was enabled after what should have been a failed request";
 						log.fatal(message);
 						fail(message);

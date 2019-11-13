@@ -48,7 +48,7 @@ public class ModulePlan {
 		return openFloor;
 	}
 
-	public static boolean isTournyFloor() {
+	public static boolean isTournamentFloor() {
 		loadModuleLayout();
 		return tournamentFloor;
 	}
@@ -74,7 +74,7 @@ public class ModulePlan {
 
 	}
 
-	public static void setTournyFloor() {
+	public static void setTournamentFloor() {
 		if (!isLoaded) {
 			loadModuleLayout();
 		}

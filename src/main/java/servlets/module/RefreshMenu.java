@@ -95,7 +95,7 @@ public class RefreshMenu extends HttpServlet
 					}
 					else
 					{
-						if (ModulePlan.isTournyFloor())
+						if (ModulePlan.isTournamentFloor())
 							log.fatal("Could not Pick ModulePlan to use (All False). Using Tournament Instead");
 						log.debug("Returning Tournament Floor Menu");
 						out.write(Getter.getTournamentModules(ApplicationRoot, userId, locale)

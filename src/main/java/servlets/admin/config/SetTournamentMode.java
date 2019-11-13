@@ -60,7 +60,7 @@ public class SetTournamentMode extends HttpServlet
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			if(Validate.validateTokens(tokenCookie, tokenParmeter) )
 			{
-				ModulePlan.setTournyFloor();
+				ModulePlan.setTournamentFloor();
 				log.debug("Tournament Mode enabled");
 				out.write("<h3 class='title'>Tournament Floor Plan Enabled</h3>" +
 				"<p>Security Shepherd Users are now using the tournament floor plan. Refresh your page to see these changes in your browser.</p>");

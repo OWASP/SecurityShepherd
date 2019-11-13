@@ -1301,11 +1301,13 @@ public class SetterTest {
 
 		Setter.setLockTime(applicationRoot, LocalDateTime.parse("2018-11-03T12:45:30"));
 
-		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));
+		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));				
 		
 		Setter.setLockTime(applicationRoot, LocalDateTime.parse("2118-11-03T12:45:30"));
 
 		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2118-11-03T12:45:30"));
+		
+		
 		
 	}
 	

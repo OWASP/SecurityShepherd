@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import utils.CountdownHandler;
 
 /**
  * Used to add information to the Database <br/>
@@ -798,17 +799,24 @@ public class Setter {
 			int before, int after, int difficulty) {
 		log.debug("*** Setter.updatePlayerResult ***");
 
+		Boolean isLocked = CountdownHandler.isLocked();
+		
+		Boolean hasEnded = CountdownHandler.hasEnded();
+
+		Boolean givePoints = !isLocked && !hasEnded;
+
 		String result = null;
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try {
 			log.debug("Preparing userUpdateResult call");
-			CallableStatement callstmnt = conn.prepareCall("call userUpdateResult(?, ?, ?, ?, ?, ?)");
+			CallableStatement callstmnt = conn.prepareCall("call userUpdateResult(?, ?, ?, ?, ?, ?, ?)");
 			callstmnt.setString(1, moduleId);
 			callstmnt.setString(2, userId);
 			callstmnt.setInt(3, before);
 			callstmnt.setInt(4, after);
 			callstmnt.setInt(5, difficulty);
-			callstmnt.setString(6, extra);
+			callstmnt.setBoolean(6, givePoints);
+			callstmnt.setString(7, extra);
 			log.debug("Executing userUpdateResult");
 			callstmnt.execute();
 			// User Executed. Now Get the Level Name Langauge Key
@@ -1090,7 +1098,8 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting player cheat setting");
-		PreparedStatement moduleLayoutSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		PreparedStatement moduleLayoutSetting = conn
+				.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		moduleLayoutSetting.setString(1, theModuleLayout);
 		moduleLayoutSetting.setString(2, "modulelayout");
 
@@ -1117,8 +1126,8 @@ public class Setter {
 		getFeedbackSetting.setBoolean(1, theFeebackStatus);
 		getFeedbackSetting.setString(2, "enableFeedback");
 
-		int updateResult=getFeedbackSetting.executeUpdate();
-		
+		int updateResult = getFeedbackSetting.executeUpdate();
+
 		if (updateResult == 1) {
 			result = true;
 		} else {
@@ -1139,7 +1148,8 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting registration status setting");
-		PreparedStatement setRegistrationSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		PreparedStatement setRegistrationSetting = conn
+				.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		setRegistrationSetting.setBoolean(1, theRegistrationStatus);
 		setRegistrationSetting.setString(2, "openRegistration");
 
@@ -1191,7 +1201,8 @@ public class Setter {
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 		log.debug("Setting scoreboard class setting");
-		PreparedStatement scoreboardClassSetting = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		PreparedStatement scoreboardClassSetting = conn
+				.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		scoreboardClassSetting.setString(1, theScoreboardClass);
 		scoreboardClassSetting.setString(2, "scoreboardClass");
 
@@ -1205,6 +1216,7 @@ public class Setter {
 		log.debug("*** END setScoreboardClass ***");
 		return result;
 	}
+
 	public static boolean setLockTimeStatus(String ApplicationRoot, boolean theLockTimeStatus) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setLockTimeStatus ***");
@@ -1227,7 +1239,7 @@ public class Setter {
 		log.debug("*** END setLockTimeStatus ***");
 		return result;
 	}
-	
+
 	public static boolean setLockTime(String ApplicationRoot, LocalDateTime theLockTime) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setLockTime ***");
@@ -1249,7 +1261,8 @@ public class Setter {
 		Database.closeConnection(conn);
 		log.debug("*** END setLockTime ***");
 		return result;
-	}	
+	}
+
 	public static boolean setEndTimeStatus(String ApplicationRoot, boolean theEndTimeStatus) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setEndTimeStatus ***");
@@ -1272,7 +1285,7 @@ public class Setter {
 		log.debug("*** END theEndTimeStatus ***");
 		return result;
 	}
-	
+
 	public static boolean setEndTime(String ApplicationRoot, LocalDateTime theEndTime) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setEndTime ***");

@@ -41,14 +41,14 @@ public class CountdownHandler {
 
 	public static boolean isLocked() {
 		loadCountdowns();
-
-		return lockTime.isBefore(LocalDateTime.now());
+		
+		return hasLockTime && lockTime.isBefore(LocalDateTime.now());
 	}
 
 	public static boolean hasEnded() {
 		loadCountdowns();
 
-		return endTime.isBefore(LocalDateTime.now());
+		return hasEndTime && endTime.isBefore(LocalDateTime.now());
 	}
 
 	public static LocalDateTime getLockTime() {
