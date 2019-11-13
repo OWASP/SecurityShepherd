@@ -799,33 +799,37 @@ public class Setter {
 			int before, int after, int difficulty) {
 		log.debug("*** Setter.updatePlayerResult ***");
 
-		Boolean isLocked = CountdownHandler.isLocked();
-		
-		Boolean hasEnded = CountdownHandler.hasEnded();
-
-		Boolean givePoints = !isLocked && !hasEnded;
-
 		String result = null;
-		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try {
-			log.debug("Preparing userUpdateResult call");
-			CallableStatement callstmnt = conn.prepareCall("call userUpdateResult(?, ?, ?, ?, ?, ?, ?)");
-			callstmnt.setString(1, moduleId);
-			callstmnt.setString(2, userId);
-			callstmnt.setInt(3, before);
-			callstmnt.setInt(4, after);
-			callstmnt.setInt(5, difficulty);
-			callstmnt.setBoolean(6, givePoints);
-			callstmnt.setString(7, extra);
-			log.debug("Executing userUpdateResult");
-			callstmnt.execute();
-			// User Executed. Now Get the Level Name Langauge Key
-			result = Getter.getModuleNameLocaleKey(ApplicationRoot, moduleId);
-		} catch (SQLException e) {
-			log.error("userUpdateResult Failure: " + e.toString());
-			result = null;
+		
+		if (CountdownHandler.isOpen())
+		{
+
+			Boolean givePoints = CountdownHandler.isRunning();
+
+			Connection conn = Database.getCoreConnection(ApplicationRoot);
+			try {
+				log.debug("Preparing userUpdateResult call");
+				CallableStatement callstmnt = conn.prepareCall("call userUpdateResult(?, ?, ?, ?, ?, ?, ?)");
+				callstmnt.setString(1, moduleId);
+				callstmnt.setString(2, userId);
+				callstmnt.setInt(3, before);
+				callstmnt.setInt(4, after);
+				callstmnt.setInt(5, difficulty);
+				callstmnt.setBoolean(6, CountdownHandler.isRunning()); // Only give points if CTF is running
+				callstmnt.setString(7, extra);
+				log.debug("Executing userUpdateResult");
+				callstmnt.execute();
+				// User Executed. Now Get the Level Name Langauge Key
+				result = Getter.getModuleNameLocaleKey(ApplicationRoot, moduleId);
+			} catch (SQLException e) {
+				log.error("userUpdateResult Failure: " + e.toString());
+				result = null;
+			}
+			Database.closeConnection(conn);
+		} else {
+			log.error("Error: Can't allow results to be stored when CTF isn't running");
+			result=null;
 		}
-		Database.closeConnection(conn);
 		log.debug("*** END updatePlayerResult ***");
 		return result;
 	}
@@ -1217,6 +1221,52 @@ public class Setter {
 		return result;
 	}
 
+	public static boolean setStartTimeStatus(String ApplicationRoot, boolean theStartTimeStatus) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setStartTimeStatus ***");
+		log.debug("theLockTimeStatus = " + theStartTimeStatus);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting start time setting");
+		PreparedStatement lockTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		lockTimeStatement.setBoolean(1, theStartTimeStatus);
+		lockTimeStatement.setString(2, "hasStartTime");
+
+		if (lockTimeStatement.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set start time status to " + theStartTimeStatus);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setStartTimeStatus ***");
+		return result;
+	}
+
+	public static boolean setStartTime(String ApplicationRoot, LocalDateTime theStartTime) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setStartTime ***");
+		log.debug("theLockTime = " + theStartTime);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting start time");
+		PreparedStatement lockTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		lockTimeStatement.setString(1, theStartTime.toString());
+		lockTimeStatement.setString(2, "startTime");
+
+		if (lockTimeStatement.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set start time to " + theStartTime);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setStartTime ***");
+		return result;
+	}
+
 	public static boolean setLockTimeStatus(String ApplicationRoot, boolean theLockTimeStatus) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setLockTimeStatus ***");
@@ -1232,7 +1282,7 @@ public class Setter {
 		if (lockTimeStatement.executeUpdate() == 1) {
 			result = true;
 		} else {
-			throw new RuntimeException("Could not set lock timestamp status to " + theLockTimeStatus);
+			throw new RuntimeException("Could not set lock time status to " + theLockTimeStatus);
 		}
 
 		Database.closeConnection(conn);
@@ -1247,7 +1297,7 @@ public class Setter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting lock timestamp");
+		log.debug("Setting lock time");
 		PreparedStatement lockTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		lockTimeStatement.setString(1, theLockTime.toString());
 		lockTimeStatement.setString(2, "lockTime");
@@ -1255,7 +1305,7 @@ public class Setter {
 		if (lockTimeStatement.executeUpdate() == 1) {
 			result = true;
 		} else {
-			throw new RuntimeException("Could not set lock timestamp to " + theLockTime);
+			throw new RuntimeException("Could not set lock time to " + theLockTime);
 		}
 
 		Database.closeConnection(conn);
@@ -1270,7 +1320,7 @@ public class Setter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting end timestamp setting");
+		log.debug("Setting end time setting");
 		PreparedStatement lockTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		lockTimeStatement.setBoolean(1, theEndTimeStatus);
 		lockTimeStatement.setString(2, "hasEndTime");
@@ -1278,7 +1328,7 @@ public class Setter {
 		if (lockTimeStatement.executeUpdate() == 1) {
 			result = true;
 		} else {
-			throw new RuntimeException("Could not set end timestamp status to " + theEndTimeStatus);
+			throw new RuntimeException("Could not set end time status to " + theEndTimeStatus);
 		}
 
 		Database.closeConnection(conn);
@@ -1293,7 +1343,7 @@ public class Setter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting end timestamp");
+		log.debug("Setting end time");
 		PreparedStatement endTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		endTimeStatement.setString(1, theEndTime.toString());
 		endTimeStatement.setString(2, "endTime");
@@ -1301,7 +1351,7 @@ public class Setter {
 		if (endTimeStatement.executeUpdate() == 1) {
 			result = true;
 		} else {
-			throw new RuntimeException("Could not set end timestamp to " + theEndTime);
+			throw new RuntimeException("Could not set end time to " + theEndTime);
 		}
 
 		Database.closeConnection(conn);

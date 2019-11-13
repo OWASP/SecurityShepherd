@@ -2359,13 +2359,63 @@ public class Getter {
 		return theScoreboardClass;
 	}
 
+	public static Boolean getStartTimeStatus(String ApplicationRoot) throws SQLException {
+		Boolean theStartTimeStatus = null;
+		log.debug("*** Getter.getStartTimeStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Getting start time setting");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "hasStartTime");
+
+		ResultSet timestampResult = callstmt.executeQuery();
+
+		timestampResult.next();
+
+		theStartTimeStatus = timestampResult.getBoolean(1);
+
+		log.debug("Value found: " + theStartTimeStatus);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getStartTimeStatus ***");
+		return theStartTimeStatus;
+	}
+
+	public static LocalDateTime getStartTime(String ApplicationRoot) throws SQLException {
+		LocalDateTime theStartTimeStatus = null;
+		log.debug("*** Getter.getStartTimeStatus ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Getting start time");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "startTime");
+
+		ResultSet timestampResult = callstmt.executeQuery();
+
+		timestampResult.next();
+
+		String dateTimeString = timestampResult.getString(1);
+
+		log.debug("Value found: " + dateTimeString);
+
+		theStartTimeStatus = LocalDateTime.parse(dateTimeString);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getStartTime ***");
+		return theStartTimeStatus;
+	}
+
 	public static Boolean getLockTimeStatus(String ApplicationRoot) throws SQLException {
 		Boolean theLockTimeStatus = null;
 		log.debug("*** Getter.getLockTimeStatus ***");
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Getting timestamp setting");
+		log.debug("Getting lock time setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "hasLockTime");
@@ -2389,7 +2439,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Getting timestamp setting");
+		log.debug("Getting lock time");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "lockTime");
@@ -2398,24 +2448,24 @@ public class Getter {
 
 		timestampResult.next();
 
-		String dateTimeString=timestampResult.getString(1);
+		String dateTimeString = timestampResult.getString(1);
 
 		log.debug("Value found: " + dateTimeString);
-		
+
 		theLockTimeStatus = LocalDateTime.parse(dateTimeString);
 
 		Database.closeConnection(conn);
 		log.debug("*** END getLockTime ***");
 		return theLockTimeStatus;
 	}
-	
+
 	public static Boolean getEndTimeStatus(String ApplicationRoot) throws SQLException {
 		Boolean theEndTimeStatus = null;
 		log.debug("*** Getter.getEndTimeStatus ***");
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Getting timestamp setting");
+		log.debug("Getting end time setting");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "hasEndTime");
@@ -2439,7 +2489,7 @@ public class Getter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Getting timestamp setting");
+		log.debug("Getting end time");
 		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
 		callstmt.setString(1, "endTime");
@@ -2448,10 +2498,10 @@ public class Getter {
 
 		timestampResult.next();
 
-		String dateTimeString=timestampResult.getString(1);
+		String dateTimeString = timestampResult.getString(1);
 
 		log.debug("Value found: " + dateTimeString);
-		
+
 		theEndTimeStatus = LocalDateTime.parse(dateTimeString);
 
 		Database.closeConnection(conn);

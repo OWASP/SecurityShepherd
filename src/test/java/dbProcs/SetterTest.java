@@ -1282,6 +1282,32 @@ public class SetterTest {
 	}
 
 	@Test
+	public void testSetStartTimeStatus() throws SQLException {
+
+		Setter.setStartTimeStatus(applicationRoot, false);
+		Setter.setStartTimeStatus(applicationRoot, true);
+		
+		assertTrue(Getter.getStartTimeStatus(applicationRoot));
+
+		Setter.setStartTimeStatus(applicationRoot, true);
+		Setter.setStartTimeStatus(applicationRoot, false);
+		
+		assertFalse(Getter.getStartTimeStatus(applicationRoot));
+		
+	}
+	
+	@Test
+	public void testSetStartTime() throws SQLException {
+
+		Setter.setStartTime(applicationRoot, LocalDateTime.parse("2018-11-03T12:45:30"));
+		assertEquals(Getter.getStartTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));				
+		
+		Setter.setStartTime(applicationRoot, LocalDateTime.parse("2118-11-03T12:45:30"));
+		assertEquals(Getter.getStartTime(applicationRoot), LocalDateTime.parse("2118-11-03T12:45:30"));
+		
+	}
+	
+	@Test
 	public void testSetLockTimeStatus() throws SQLException {
 
 		Setter.setLockTimeStatus(applicationRoot, false);
@@ -1300,14 +1326,10 @@ public class SetterTest {
 	public void testSetLockTime() throws SQLException {
 
 		Setter.setLockTime(applicationRoot, LocalDateTime.parse("2018-11-03T12:45:30"));
-
 		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));				
 		
 		Setter.setLockTime(applicationRoot, LocalDateTime.parse("2118-11-03T12:45:30"));
-
 		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2118-11-03T12:45:30"));
-		
-		
 		
 	}
 	

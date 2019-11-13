@@ -1544,6 +1544,8 @@ INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('enableFeedback', fal
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('openRegistration', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('scoreboardStatus', 'open');
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('scoreboardClass', '');
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('hasStartTime', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('startTime', '2019-01-01T12:00:00');
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('hasLockTime', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('lockTime', '2020-01-01T12:00:00');
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('hasEndTime', false);

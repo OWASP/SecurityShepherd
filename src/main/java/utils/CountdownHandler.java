@@ -32,6 +32,8 @@ import dbProcs.Setter;
 public class CountdownHandler {
 	private static org.apache.log4j.Logger log = Logger.getLogger(CountdownHandler.class);
 
+	private static LocalDateTime startTime;
+	private static boolean hasStartTime = false;
 	private static LocalDateTime lockTime;
 	private static boolean hasLockTime = false;
 	private static LocalDateTime endTime;
@@ -39,6 +41,30 @@ public class CountdownHandler {
 
 	private static boolean isLoaded = false;
 
+	public static boolean isOpen() {
+		return isStarted() && !isLocked() && !hasEnded();
+	}
+	
+	public static boolean isRunning() {
+		loadCountdowns();
+		
+		return hasLockTime && lockTime.isBefore(LocalDateTime.now());
+	}
+
+	public static boolean isStarted() {
+		loadCountdowns();
+		
+		if(hasStartTime) {
+			
+			// Start timer enabled, only return true if timer has passed
+			return startTime.isBefore(LocalDateTime.now());
+		} else {
+			
+			// Start timer disabled, always say it's started
+			return true;
+		}		
+	}
+	
 	public static boolean isLocked() {
 		loadCountdowns();
 		
@@ -51,6 +77,16 @@ public class CountdownHandler {
 		return hasEndTime && endTime.isBefore(LocalDateTime.now());
 	}
 
+	public static LocalDateTime getStartTime() {
+		loadCountdowns();
+		return startTime;
+	}
+
+	public static boolean hasStartTime() {
+		loadCountdowns();
+		return hasStartTime;
+	}
+	
 	public static LocalDateTime getLockTime() {
 		loadCountdowns();
 		return lockTime;
@@ -71,6 +107,37 @@ public class CountdownHandler {
 		return hasEndTime;
 	}
 
+	public static void setStartTime(LocalDateTime theStartTime) {
+		if (!isLoaded) {
+			loadCountdowns();
+		}
+
+		hasStartTime = true;
+		startTime = theStartTime;
+
+		saveCountdowns();
+	}
+	
+	public static void enableStartTime() {
+		if (!isLoaded) {
+			loadCountdowns();
+		}
+
+		hasStartTime = true;
+
+		saveCountdowns();
+	}
+
+	public static void disableStartTime() {
+		if (!isLoaded) {
+			loadCountdowns();
+		}
+
+		hasStartTime = false;
+
+		saveCountdowns();
+	}
+	
 	public static void setLockTime(LocalDateTime theLockTime) {
 		if (!isLoaded) {
 			loadCountdowns();
@@ -138,6 +205,8 @@ public class CountdownHandler {
 
 			if (isLoaded) {
 
+				Setter.setLockTime("", startTime);
+				Setter.setLockTimeStatus("", hasStartTime);
 				Setter.setLockTime("", lockTime);
 				Setter.setLockTimeStatus("", hasLockTime);
 				Setter.setEndTime("", endTime);
@@ -155,6 +224,8 @@ public class CountdownHandler {
 
 		try {
 
+			lockTime = Getter.getStartTime("");
+			hasLockTime = Getter.getStartTimeStatus("");
 			lockTime = Getter.getLockTime("");
 			hasLockTime = Getter.getLockTimeStatus("");
 			endTime = Getter.getEndTime("");
