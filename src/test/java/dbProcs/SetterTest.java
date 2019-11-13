@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -21,7 +20,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import testUtils.TestProperties;
-import utils.InstallationException;
 import utils.ScoreboardStatus;
 
 public class SetterTest {

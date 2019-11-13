@@ -17,7 +17,6 @@ import org.springframework.mock.web.MockServletConfig;
 
 import testUtils.TestProperties;
 import utils.FeedbackStatus;
-import utils.InstallationException;
 
 public class EnableFeedbackIT {
 	private static org.apache.log4j.Logger log = Logger.getLogger(EnableFeedbackIT.class);

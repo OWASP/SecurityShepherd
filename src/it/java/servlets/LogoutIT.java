@@ -17,7 +17,6 @@ import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.GetterTest;
 import testUtils.TestProperties;
-import utils.InstallationException;
 
 public class LogoutIT
 {

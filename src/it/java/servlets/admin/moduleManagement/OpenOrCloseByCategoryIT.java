@@ -17,7 +17,6 @@ import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.Setter;
 import testUtils.TestProperties;
-import utils.InstallationException;
 
 public class OpenOrCloseByCategoryIT {
 	private static org.apache.log4j.Logger log = Logger.getLogger(OpenOrCloseByCategoryIT.class);

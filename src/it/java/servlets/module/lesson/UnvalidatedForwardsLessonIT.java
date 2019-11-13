@@ -13,10 +13,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
-import testUtils.TestProperties;
-import utils.InstallationException;
 import dbProcs.GetterTest;
 import dbProcs.Setter;
+import testUtils.TestProperties;
 
 public class UnvalidatedForwardsLessonIT
 {

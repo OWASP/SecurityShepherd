@@ -18,7 +18,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
 import testUtils.TestProperties;
-import utils.InstallationException;
 import utils.ModulePlan;
 import dbProcs.Setter;
 

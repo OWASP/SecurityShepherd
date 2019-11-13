@@ -19,7 +19,6 @@ import dbProcs.Getter;
 import dbProcs.GetterTest;
 import dbProcs.Setter;
 import testUtils.TestProperties;
-import utils.InstallationException;
 
 public class LoginIT
 {

@@ -16,7 +16,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
 import testUtils.TestProperties;
-import utils.InstallationException;
 
 /**
  * This class just tests the servlet code. The Setter code is better tested in

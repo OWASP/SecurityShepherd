@@ -19,7 +19,6 @@ import org.springframework.mock.web.MockServletConfig;
 
 import testUtils.TestProperties;
 import utils.CheatSheetStatus;
-import utils.InstallationException;
 
 public class DisableCheatsIT {
 	private static org.apache.log4j.Logger log = Logger.getLogger(DisableCheatsIT.class);

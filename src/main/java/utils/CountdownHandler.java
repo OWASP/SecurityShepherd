@@ -43,6 +43,10 @@ public class CountdownHandler {
 
 	private static boolean validate() throws InvalidCountdownStateException {
 
+		if (!isLoaded) {
+			loadCountdowns();
+		}
+
 		if (hasStartTime && hasLockTime) {
 			if (startTime.isAfter(lockTime)) {
 				throw new InvalidCountdownStateException("Start time must be before or equal to lock time");
@@ -51,13 +55,13 @@ public class CountdownHandler {
 
 		if (hasStartTime && hasEndTime) {
 			if (startTime.isAfter(endTime)) {
-				throw new InvalidCountdownStateException("Start time must be before or equal to lock time");
+				throw new InvalidCountdownStateException("Start time must be before or equal to end time");
 			}
 		}
 
 		if (hasLockTime && hasEndTime) {
 			if (lockTime.isAfter(endTime)) {
-				throw new InvalidCountdownStateException("Start time must be before or equal to lock time");
+				throw new InvalidCountdownStateException("Lock time must be before or equal to end time");
 			}
 		}
 
@@ -68,14 +72,14 @@ public class CountdownHandler {
 	public static boolean isOpen() throws InvalidCountdownStateException {
 
 		// CTF is open if it has started, isn't locked and hasn't ended
-		
+
 		validate();
-		
+
 		return isStarted() && !isLocked() && !hasEnded();
 	}
 
 	public static boolean isRunning() throws InvalidCountdownStateException {
-		
+
 		// CTF is running if it has started, hasn't ended, but ignores lock state
 
 		validate();
@@ -84,7 +88,9 @@ public class CountdownHandler {
 	}
 
 	public static boolean isStarted() {
-		loadCountdowns();
+		if (!isLoaded) {
+			loadCountdowns();
+		}
 
 		if (hasStartTime) {
 
@@ -98,44 +104,58 @@ public class CountdownHandler {
 	}
 
 	public static boolean isLocked() {
-		loadCountdowns();
-
+		if (!isLoaded) {
+			loadCountdowns();
+		}
 		return hasLockTime && lockTime.isBefore(LocalDateTime.now());
 	}
 
 	public static boolean hasEnded() {
-		loadCountdowns();
-
+		if (!isLoaded) {
+			loadCountdowns();
+		}
 		return hasEndTime && endTime.isBefore(LocalDateTime.now());
 	}
 
 	public static LocalDateTime getStartTime() {
-		loadCountdowns();
+		if (!isLoaded) {
+			loadCountdowns();
+		}
 		return startTime;
 	}
 
 	public static boolean hasStartTime() {
-		loadCountdowns();
+		if (!isLoaded) {
+			loadCountdowns();
+		}
 		return hasStartTime;
 	}
 
 	public static LocalDateTime getLockTime() {
-		loadCountdowns();
+		if (!isLoaded) {
+			loadCountdowns();
+		}
 		return lockTime;
 	}
 
 	public static boolean hasLockTime() {
-		loadCountdowns();
+		if (!isLoaded) {
+			loadCountdowns();
+		}
 		return hasLockTime;
 	}
 
 	public static LocalDateTime getEndTime() {
-		loadCountdowns();
+		if (!isLoaded) {
+			loadCountdowns();
+		}
 		return endTime;
 	}
 
 	public static boolean hasEndTime() {
-		loadCountdowns();
+		if (!isLoaded) {
+			loadCountdowns();
+		}
 		return hasEndTime;
 	}
 
