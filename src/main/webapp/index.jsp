@@ -299,6 +299,104 @@ if (request.getSession() != null)
 								$('#theSidebarWrapper').removeClass('sidebarWrapperAlwaysOpen').addClass("sidebarWrapper");
 							});
 						</script>
+						<div id="startTimer">
+							<!-- Countdown to start time -->
+							<div id="startDays"></div>
+							<div id="startHours"></div>
+							<div id="startMinutes"></div>
+							<div id="startSeconds"></div>
+						</div>
+						<div id="lockTimer">
+							<!-- Countdown to lock time -->
+							<div id="lockDays"></div>
+							<div id="lockHours"></div>
+							<div id="lockMinutes"></div>
+							<div id="lockSeconds"></div>
+						</div>
+						<div id="endTimer">
+							<!-- Countdown to end time -->
+							<div id="endDays"></div>
+							<div id="endHours"></div>
+							<div id="endMinutes"></div>
+							<div id="endSeconds"></div>
+						</div>
+						<script>
+						function makeTimer(prefix, endTime) {
+					
+							var endDateTime = new Date(endTime);			
+							endDateTime = (Date.parse(endTime) / 1000);
+
+							var now = new Date();
+							now = (Date.parse(now) / 1000);
+
+							var timeLeft = endDateTime - now;
+							
+							if(timeLeft < 0) {
+
+								$("#" + prefix + "Days").html();
+								$("#" + prefix + "Hours").html();
+								$("#" + prefix + "Minutes").html();
+								$("#" + prefix + "Seconds").html();
+								
+								return;
+							}
+
+							var days = Math.floor(timeLeft / 86400); 
+							var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
+							var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600 )) / 60);
+							var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+				  
+							if (days > "0") {
+								$("#" + prefix + "Days").html(days + "<span>Days</span>");
+							} else {
+								$("#" + prefix + "Days").html();								
+							}
+							
+							if (hours > "0") {
+								if (hours < "10") { 
+									hours = "0" + hours; 
+								}
+								$("#" + prefix + "Hours").html(hours + "<span>Hours</span>");
+							} else {
+								$("#" + prefix + "Hours").html();
+							}
+							
+							if (minutes > "0") {
+								if (minutes < "10") { 
+									minutes = "0" + minutes; 
+								}
+								$("#" + prefix + "Minutes").html(minutes + "<span>Minutes</span>");
+							} else {
+								$("#" + prefix + "Minutes").html();								
+							}
+							
+							if (seconds > "0") {
+								if (seconds < "10") { 
+									seconds = "0" + seconds; 
+								}
+								$("#" + prefix + "Seconds").html(seconds + "<span>Seconds</span>");		
+							} else {
+								$("#" + prefix + "Seconds").html();		
+
+							}
+							}
+							
+							<% if (CountdownHandler.hasStartTime()) { %>
+							setInterval(function() { makeTimer("start", "<% CountdownHandler.getStartTime(); %>"); }, 1000);
+							<% 
+							}
+							
+							if (CountdownHandler.hasLockTime()) { %>
+							setInterval(function() { makeTimer("start", "<% CountdownHandler.getLockTime(); %>"); }, 1000);
+							<% 
+							}
+							
+							if (CountdownHandler.hasEndTime()) { %>
+							setInterval(function() { makeTimer("start", "<% CountdownHandler.getEndTime(); %>"); }, 1000);
+							<% 
+							} %>
+							
+						</script>
 					</ul>
 					<!-- <fmt:message key="generic.text.commentMessage.1" /> 
 					<fmt:message key="generic.text.commentMessage.2" /> 
@@ -1103,19 +1201,19 @@ if (request.getSession() != null)
 		<fmt:message key="generic.text.commentMessage.2" /> 
 		<fmt:message key="generic.text.commentMessage.3" /> 
 		<fmt:message key="generic.text.commentMessage.4" /> -->
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
-	<% } %>
+	<%
+		if (Analytics.googleAnalyticsOn) {
+	%><%=Analytics.googleAnalyticsScript%>
+	<%
+		}
+	%>
 </body>
 </html>
 <%
+	} else {
+			response.sendRedirect("login.jsp");
 		}
-	else
-	{
+	} else {
 		response.sendRedirect("login.jsp");
 	}
-}
-else
-{
-	response.sendRedirect("login.jsp");
-}
 %>

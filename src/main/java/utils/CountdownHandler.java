@@ -276,8 +276,8 @@ public class CountdownHandler {
 
 		try {
 
-			lockTime = Getter.getStartTime("");
-			hasLockTime = Getter.getStartTimeStatus("");
+			startTime = Getter.getStartTime("");
+			hasStartTime = Getter.getStartTimeStatus("");
 			lockTime = Getter.getLockTime("");
 			hasLockTime = Getter.getLockTimeStatus("");
 			endTime = Getter.getEndTime("");
