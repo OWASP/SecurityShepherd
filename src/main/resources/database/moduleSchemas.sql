@@ -29,7 +29,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `SqlInjLesson`;
-CREATE SCHEMA IF NOT EXISTS `SqlInjLesson` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlInjLesson` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlInjLesson` ;
 
 -- -----------------------------------------------------
@@ -69,7 +69,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `SqlChalEmail` ;
-CREATE SCHEMA IF NOT EXISTS `SqlChalEmail` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalEmail` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlChalEmail` ;
 
 -- -----------------------------------------------------
@@ -107,7 +107,7 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
-CREATE SCHEMA IF NOT EXISTS `SqlChalOne` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalOne` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlChalOne` ;
 
 -- -----------------------------------------------------
@@ -147,7 +147,7 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
-CREATE SCHEMA IF NOT EXISTS `SqlChalThree` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalThree` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlChalThree` ;
 
 -- -----------------------------------------------------
@@ -189,7 +189,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalTwo` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalTwo` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalTwo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalTwo` ;
 
 -- -----------------------------------------------------
@@ -226,7 +226,7 @@ COMMIT;
 -- BrokenAuthAndSessMangChalThree
 -- ======================================================
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalThree` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalThree` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalThree` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalThree`;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -297,7 +297,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `directObjectRefChalOne` ;
-CREATE SCHEMA IF NOT EXISTS `directObjectRefChalOne` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `directObjectRefChalOne` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `directObjectRefChalOne` ;
 
 -- -----------------------------------------------------
@@ -339,7 +339,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `directObjectRefChalTwo` ;
-CREATE SCHEMA IF NOT EXISTS `directObjectRefChalTwo` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `directObjectRefChalTwo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `directObjectRefChalTwo` ;
 
 -- -----------------------------------------------------
@@ -529,7 +529,7 @@ CREATE TABLE IF NOT EXISTS `SqlChalSix`.`users` (
   `userName` VARCHAR(45) NOT NULL,
   `userPin` VARCHAR(16) NOT NULL,
   `userQuestion` VARCHAR(128) NOT NULL,
-  `userAnswer` VARCHAR(256) NOT NULL,
+  `userAnswer` VARCHAR(191) NOT NULL,
   `userAge` VARCHAR(16) NOT NULL,
   PRIMARY KEY (`idusers`))
 ENGINE = InnoDB;
@@ -545,7 +545,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 START TRANSACTION;
 USE `SqlChalSix`;
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (1, 'George', '8367', 'What is your favourite Flower', 'A Red Rose', '23');
-INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (2, 'Brendan', '4685', 'What is the answer to this level?', '17f999a8b3fbfde54124d6e94b256a264652e5087b14622e1644c884f8a33f82', '98');
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (2, 'Brendan', '4685', 'What is the answer to this level?', '17f999a8b3fbfde54124d6e94b191a264652e5087b14622e1644c884f8a33f82', '98');
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (3, 'Sean', '1254', 'Your favourite Viking', 'Thor', '25');
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (4, 'Anthony', '7844', 'What game do I suck at?', 'All of the games', '84');
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (5, 'Owen', '4648', 'Favourite Sandwhich Topping', 'Peanutbutter', '33');
@@ -573,7 +573,7 @@ USE `csrfChallengeEnumTokens` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `csrfChallengeEnumTokens`.`csrfTokens` (
   `userId` VARCHAR(64) NOT NULL,
-  `csrfTokenscol` VARCHAR(256) NULL,
+  `csrfTokenscol` VARCHAR(191) NULL,
   PRIMARY KEY (`userId`))
 ENGINE = InnoDB;
 
@@ -596,7 +596,7 @@ USE `csrfChallengeFour` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `csrfChallengeFour`.`csrfTokens` (
   `userId` VARCHAR(64) NOT NULL,
-  `csrfTokenscol` VARCHAR(256) NULL,
+  `csrfTokenscol` VARCHAR(191) NULL,
   PRIMARY KEY (`userId`))
 ENGINE = InnoDB;
 
@@ -607,7 +607,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalFive` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalFive` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalFive` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalFive`;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -679,7 +679,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalSix` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSix` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSix` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalSix` ;
 
 -- -----------------------------------------------------
@@ -690,7 +690,7 @@ CREATE  TABLE IF NOT EXISTS `BrokenAuthAndSessMangChalSix`.`users` (
   `userName` VARCHAR(32) NOT NULL ,
   `userPassword` VARCHAR(128) NOT NULL ,
   `userAddress` VARCHAR(128) NOT NULL ,
-  `secretQuestion` VARCHAR(256) NOT NULL ,
+  `secretQuestion` VARCHAR(191) NOT NULL ,
   `secretAnswer` VARCHAR(128) NOT NULL, 
   PRIMARY KEY (`userId`) )
 ENGINE = InnoDB;
@@ -729,7 +729,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalSeven` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSeven` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSeven` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalSeven` ;
 
 -- -----------------------------------------------------
@@ -740,7 +740,7 @@ CREATE  TABLE IF NOT EXISTS `BrokenAuthAndSessMangChalSeven`.`users` (
   `userName` VARCHAR(32) NOT NULL ,
   `userPassword` VARCHAR(128) NOT NULL ,
   `userAddress` VARCHAR(128) NOT NULL ,
-  `secretQuestion` VARCHAR(256) NOT NULL ,
+  `secretQuestion` VARCHAR(191) NOT NULL ,
   `secretAnswer` VARCHAR(128) NOT NULL, 
   PRIMARY KEY (`userId`) )
 ENGINE = InnoDB;
@@ -850,7 +850,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `UrlAccessThree` ;
-CREATE SCHEMA IF NOT EXISTS `UrlAccessThree` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `UrlAccessThree` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `UrlAccessThree` ;
 
 -- -----------------------------------------------------
@@ -902,7 +902,7 @@ COMMIT;
 -- -----------------------------------------------------
 
 DROP SCHEMA IF EXISTS `sqlInjectSeven` ;
-CREATE SCHEMA IF NOT EXISTS `sqlInjectSeven` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `sqlInjectSeven` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `sqlInjectSeven`;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -999,7 +999,7 @@ DECLARE tokenExists INT;
 COMMIT;
 SELECT count(token) FROM `securityMisconfigStealToken`.`tokens` WHERE userId = theUserId INTO tokenExists;
 IF (tokenExists < 1) THEN
-	INSERT INTO tokens (userId, token) VALUES (theUserId, SHA2(CONCAT(RAND(), now()), 256));
+	INSERT INTO tokens (userId, token) VALUES (theUserId, SHA2(CONCAT(RAND(), now()), 191));
 	COMMIT;
 END IF;
 SELECT token FROM tokens WHERE userId = theUserId;
@@ -1043,7 +1043,7 @@ USE `directObjectBank` ;
 CREATE TABLE IF NOT EXISTS `directObjectBank`.`bankAccounts` (
   `account_number` INT NOT NULL AUTO_INCREMENT,
   `account_holder` VARCHAR(45) NOT NULL,
-  `account_password` VARCHAR(256) NOT NULL,
+  `account_password` VARCHAR(191) NOT NULL,
   `account_balance` FLOAT NOT NULL DEFAULT 5,
   PRIMARY KEY (`account_number`), 
   UNIQUE INDEX `account_holder_UNIQUE` (`account_holder` ASC))
@@ -1066,10 +1066,10 @@ COMMIT;
 -- BankAuth Procedure
 USE `directObjectBank`;
 -- DELIMITER $$
-CREATE PROCEDURE `directObjectBank`.`bankAuth` (IN theUserId VARCHAR(45), thePass VARCHAR(256))
+CREATE PROCEDURE `directObjectBank`.`bankAuth` (IN theUserId VARCHAR(45), thePass VARCHAR(191))
 BEGIN
 COMMIT;
-SELECT account_number, account_holder FROM `directObjectBank`.`bankAccounts` WHERE account_holder = theUserId AND account_password = SHA2(thePass, 256);
+SELECT account_number, account_holder FROM `directObjectBank`.`bankAccounts` WHERE account_holder = theUserId AND account_password = SHA2(thePass, 191);
 END
 ;
 -- $$
@@ -1111,10 +1111,10 @@ END
 -- createAccount Procedure
 USE `directObjectBank`;
 -- DELIMITER $$
-CREATE PROCEDURE `directObjectBank`.`createAccount` (IN accountHolder VARCHAR(45), IN accountPassword VARCHAR(256))
+CREATE PROCEDURE `directObjectBank`.`createAccount` (IN accountHolder VARCHAR(45), IN accountPassword VARCHAR(191))
 BEGIN
 COMMIT;
-INSERT INTO `directObjectBank`.`bankAccounts` (`account_holder`, `account_password`, `account_balance`) VALUES (accountHolder, SHA2(accountPassword, 256), 0);
+INSERT INTO `directObjectBank`.`bankAccounts` (`account_holder`, `account_password`, `account_balance`) VALUES (accountHolder, SHA2(accountPassword, 191), 0);
 COMMIT;
 END
 ;
@@ -1133,7 +1133,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `SqlChalStoredProc` ;
-CREATE SCHEMA IF NOT EXISTS `SqlChalStoredProc` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalStoredProc` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlChalStoredProc` ;
 
 -- -----------------------------------------------------
@@ -1189,7 +1189,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `SqlPoorEscape` ;
-CREATE SCHEMA IF NOT EXISTS `SqlPoorEscape` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlPoorEscape` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlPoorEscape` ;
 
 -- -----------------------------------------------------
