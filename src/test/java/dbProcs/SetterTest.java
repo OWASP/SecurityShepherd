@@ -603,7 +603,7 @@ public class SetterTest {
 		}
 
 	}
-
+	
 	@Test
 	public void testUpdatePasswordAdmin() {
 		log.debug("Testing update Password");
