@@ -131,18 +131,18 @@ public class Database {
 				password = FileInputProperties.readfile(props, "databasePassword");
 			} catch (PropertyNotFoundException e) {
 				// props file didn't contain this property
-				log.fatal("Did not find db properties file!");
+				String message="Error loading properties file: " + e.toString();
+				log.fatal(message);
 
-				throw new RuntimeException(e);
+				throw new RuntimeException(message);
 			}
 
 			try {
 				dbOptions = FileInputProperties.readfile(props, "databaseOptions");
 			} catch (PropertyNotFoundException e) {
-				// TODO Auto-generated catch block
-				log.debug("Did not find database options, defaulting to empty");
+				log.debug("Did not find database options, defaulting to useUnicode=true&character_set_server=utf8mb4");
 
-				dbOptions="";
+				dbOptions="useUnicode=true&character_set_server=utf8mb4";
 			}
 		} catch (FileNotFoundException e) {
 			// challenge db props file doesn't exist

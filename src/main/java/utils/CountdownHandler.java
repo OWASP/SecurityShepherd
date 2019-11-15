@@ -68,6 +68,33 @@ public class CountdownHandler {
 		return true;
 
 	}
+	
+	public static boolean willStart() throws InvalidCountdownStateException {
+
+		// Returns true if there is a start time but the CTF hasn't started yet
+
+		validate();
+
+		return hasStartTime() && !isRunning();
+	}
+
+	public static boolean willLock() throws InvalidCountdownStateException {
+
+		// Returns true if CTF has started and there is a lock time that hasn't happened yet 
+
+		validate();
+
+		return isStarted() && hasLockTime() && isOpen();
+	}
+	
+	public static boolean willEnd() throws InvalidCountdownStateException {
+
+		// Return true if CTF it is locked or started, has an end timer that hasn't happened yet
+
+		validate();
+
+		return isRunning() && hasEndTime() && !hasEnded();
+	}
 
 	public static boolean isOpen() throws InvalidCountdownStateException {
 

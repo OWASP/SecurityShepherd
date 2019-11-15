@@ -301,6 +301,7 @@ if (request.getSession() != null)
 						</script>
 						<div id="startTimer">
 							<!-- Countdown to start time -->
+							<div id="startMessage"></div>
 							<div id="startDays"></div>
 							<div id="startHours"></div>
 							<div id="startMinutes"></div>
@@ -308,6 +309,7 @@ if (request.getSession() != null)
 						</div>
 						<div id="lockTimer">
 							<!-- Countdown to lock time -->
+							<div id="lockMessage"></div>
 							<div id="lockDays"></div>
 							<div id="lockHours"></div>
 							<div id="lockMinutes"></div>
@@ -315,13 +317,14 @@ if (request.getSession() != null)
 						</div>
 						<div id="endTimer">
 							<!-- Countdown to end time -->
+							<div id="endMessage"></div>
 							<div id="endDays"></div>
 							<div id="endHours"></div>
 							<div id="endMinutes"></div>
 							<div id="endSeconds"></div>
 						</div>
 						<script>
-						function makeTimer(prefix, endTime) {
+						function makeTimer(prefix, endTime, message) {
 					
 							var endDateTime = new Date(endTime);			
 							endDateTime = (Date.parse(endTime) / 1000);
@@ -332,7 +335,8 @@ if (request.getSession() != null)
 							var timeLeft = endDateTime - now;
 							
 							if(timeLeft < 0) {
-
+								
+								$("#" + prefix + "Message").html();
 								$("#" + prefix + "Days").html();
 								$("#" + prefix + "Hours").html();
 								$("#" + prefix + "Minutes").html();
@@ -341,6 +345,8 @@ if (request.getSession() != null)
 								return;
 							}
 
+							$("#" + prefix + "Message").html(message);
+							
 							var days = Math.floor(timeLeft / 86400); 
 							var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
 							var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600 )) / 60);
@@ -381,18 +387,18 @@ if (request.getSession() != null)
 							}
 							}
 							
-							<% if (CountdownHandler.hasStartTime()) { %>
-							setInterval(function() { makeTimer("start", "<% CountdownHandler.getStartTime(); %>"); }, 1000);
+							<% if (CountdownHandler.willStart()) { %>
+							setInterval(function() { makeTimer("start", "<% out.print(CountdownHandler.getStartTime()); %>", "CTF will start in "); }, 1000);
 							<% 
 							}
 							
-							if (CountdownHandler.hasLockTime()) { %>
-							setInterval(function() { makeTimer("start", "<% CountdownHandler.getLockTime(); %>"); }, 1000);
+							if (CountdownHandler.willLock()) { %>
+							setInterval(function() { makeTimer("lock", "<% out.print(CountdownHandler.getLockTime()); %>"); }, 1000);
 							<% 
 							}
 							
-							if (CountdownHandler.hasEndTime()) { %>
-							setInterval(function() { makeTimer("start", "<% CountdownHandler.getEndTime(); %>"); }, 1000);
+							if (CountdownHandler.willEnd()) { %>
+							setInterval(function() { makeTimer("end", "<% out.print(CountdownHandler.getEndTime()); %>"); }, 1000);
 							<% 
 							} %>
 							
@@ -1031,8 +1037,7 @@ if (request.getSession() != null)
 					url: "getCheat",
 					data: {
 						moduleId: theModuleId,
-						csrfToken: "<%=csrfToken%>
-		"
+						csrfToken: "<%=csrfToken%>"
 									},
 									async : false
 								});
