@@ -16,13 +16,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.owasp.encoder.Encode;
 
-import utils.CheatSheetStatus;
+import dbProcs.Getter;
 import utils.CountdownHandler;
 import utils.InvalidCountdownStateException;
 import utils.ModulePlan;
 import utils.ShepherdLogManager;
 import utils.Validate;
-import dbProcs.Getter;
 
 /**
  * Class used to return a fresh incremental menu upon completion of a module in
