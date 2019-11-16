@@ -88,8 +88,6 @@ public class GetModule extends HttpServlet {
 					if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
 						isAdmin = true;
 					}
-				} else {
-					out.write("<img src='css/images/loggedOutSheep.jpg'/>");
 				}
 
 				String ApplicationRoot = getServletContext().getRealPath("");

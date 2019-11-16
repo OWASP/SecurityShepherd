@@ -221,7 +221,7 @@ if (request.getSession() != null)
 									<fmt:message key="generic.text.cheat" />
 								</div></a>
 						</div>
-						<% } %>
+						<% } if (CountdownHandler.isRunning() || (userRole.compareTo("admin") == 0) ) { %>
 						<div id="levelListDiv">
 							<div id="sideMenuWrapper">
 								<% if(ModulePlan.isOpenFloor()) { %>
@@ -249,6 +249,7 @@ if (request.getSession() != null)
 							} //End of Module List Output %>
 							</div>
 						</div>
+						<% } %>
 						<div id="menuRefreshLoadingDiv"></div>
 						<div>
 							<input id="searchModules" class="moduleSearchBox" type="search"
@@ -393,12 +394,12 @@ if (request.getSession() != null)
 							}
 							
 							if (CountdownHandler.willLock()) { %>
-							setInterval(function() { makeTimer("lock", "<% out.print(CountdownHandler.getLockTime()); %>"); }, 1000);
+							setInterval(function() { makeTimer("lock", "<% out.print(CountdownHandler.getLockTime()); %>", "Points available for "); }, 1000);
 							<% 
 							}
 							
 							if (CountdownHandler.willEnd()) { %>
-							setInterval(function() { makeTimer("end", "<% out.print(CountdownHandler.getEndTime()); %>"); }, 1000);
+							setInterval(function() { makeTimer("end", "<% out.print(CountdownHandler.getEndTime()); %>", "CTF ends in "); }, 1000);
 							<% 
 							} %>
 							

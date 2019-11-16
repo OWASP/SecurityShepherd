@@ -94,8 +94,6 @@ public class RefreshMenu extends HttpServlet {
 				if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
 					isAdmin = true;
 				}
-			} else {
-				out.write("<img src='css/images/loggedOutSheep.jpg'/>");
 			}
 
 			// Check if ctf has started/ended

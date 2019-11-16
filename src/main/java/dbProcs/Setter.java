@@ -803,11 +803,11 @@ public class Setter {
 		String result = null;
 		
 		boolean isOpen;
-		Boolean givePoints;
+		Boolean isRunning;
 
 		try {
 			isOpen = CountdownHandler.isOpen();
-			givePoints = CountdownHandler.isRunning();
+			isRunning = CountdownHandler.isRunning();
 		} catch (InvalidCountdownStateException e1) {
 			String message="Countdown handler is in an invalid state.";
 
@@ -815,10 +815,8 @@ public class Setter {
 			throw new RuntimeException(message);
 		}
 		
-		if (isOpen)
+		if (isRunning)
 		{
-
-			
 
 			Connection conn = Database.getCoreConnection(ApplicationRoot);
 			try {
@@ -829,7 +827,7 @@ public class Setter {
 				callstmnt.setInt(3, before);
 				callstmnt.setInt(4, after);
 				callstmnt.setInt(5, difficulty);
-				callstmnt.setBoolean(6, givePoints); // Only give points if CTF is running
+				callstmnt.setBoolean(6, isOpen); // Only give points if CTF is open
 				callstmnt.setString(7, extra);
 				log.debug("Executing userUpdateResult");
 				callstmnt.execute();

@@ -808,6 +808,9 @@ DECLARE bronzeMedalInfo INT;
 DECLARE medalRow INT;
 COMMIT;
 
+SELECT NOW() FROM DUAL
+    INTO theDate;
+    
 IF (givePoints) THEN
 	-- Does this Module/class combo exist in the DB?
 	SELECT classId FROM users WHERE userid = theUserId INTO theClassId;
@@ -820,8 +823,7 @@ IF (givePoints) THEN
 	  INSERT INTO medals (classId, moduleId) VALUES (theClassId, theModuleId);
 	END IF;
 	COMMIT;
-	SELECT NOW() FROM DUAL
-	    INTO theDate;
+
 	-- Get current bonus and decrement the bonus value
 	SELECT 0 FROM DUAL INTO totalScore;
 	
@@ -1550,9 +1552,7 @@ INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('hasLockTime', false)
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('lockTime', '2020-01-01T12:00:00');
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('hasEndTime', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('endTime', '2020-02-01T12:00:00');
-
-
-
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('enableTranslations', true);
 
 COMMIT;
 

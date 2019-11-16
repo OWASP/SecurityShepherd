@@ -93,7 +93,7 @@ public class CountdownHandler {
 
 		validate();
 
-		return isRunning() && hasEndTime() && !hasEnded();
+		return !willLock () && isRunning() && hasEndTime() && !hasEnded();
 	}
 
 	public static boolean isOpen() throws InvalidCountdownStateException {
