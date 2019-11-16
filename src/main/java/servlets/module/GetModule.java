@@ -80,7 +80,7 @@ public class GetModule extends HttpServlet {
 					log.error(message);
 					throw new RuntimeException(e);
 				}
-				
+
 				if (Validate.validateAdminSession(ses, tokenCookie, tokenParmeter)) {
 					ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
 							ses.getAttribute("userName").toString());
@@ -117,12 +117,11 @@ public class GetModule extends HttpServlet {
 					if (!isRunning && !isAdmin) {
 						// CTF isn't running and user isn't admin
 						log.debug("CTF isn't running, access denied");
-						out.write("blockedMessage.jsp");
-
+						out.write("../blockedMessage.jsp");
 
 					} else if (ModuleBlock.blockerEnabled && ModuleBlock.blockerId.compareTo(moduleId) == 0) {
 						log.debug("Blocker Detected; Returning Message");
-						out.write("blockedMessage.jsp");
+						out.write("../blockedMessage.jsp");
 					} else {
 						String theHash = Encode
 								.forHtmlAttribute(Getter.getModuleAddress(ApplicationRoot, moduleId, userId));
