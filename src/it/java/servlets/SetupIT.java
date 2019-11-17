@@ -1,22 +1,20 @@
 package servlets;
 
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+
 import javax.servlet.ServletException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.junit.Before;
 import org.junit.After;
-
-import org.junit.Test;
 import org.junit.Ignore;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
+import org.junit.Test;
 import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.Constants;
@@ -24,21 +22,10 @@ import testUtils.TestProperties;
 
 public class SetupIT {
 	private static org.apache.log4j.Logger log = Logger.getLogger(SetupIT.class);
-	private static String applicationRoot = new String();
-	private MockHttpServletRequest request;
-	private MockHttpServletResponse response;
-	private StringBuffer MYSQL_DB_PROP = new StringBuffer();
 
 	/**
 	 * Initialize directories
 	 */
-
-	@Before
-	public void setup() {
-		log.debug("Setting Up Blank Request and Response");
-		request = new MockHttpServletRequest();
-		response = new MockHttpServletResponse();
-	}
 
 	@After
 	public void tearDown() throws IOException {
@@ -51,12 +38,7 @@ public class SetupIT {
 	private void removeDatabaseProps() {
 		FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 	}
-
-	private void ensureDatabaseProps() throws IOException {
-		FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
-		FileUtils.write(new File(Constants.MYSQL_DB_PROP), MYSQL_DB_PROP.toString(), StandardCharsets.UTF_8);
-	}
-
+	
 	@Ignore @Test
 	public void testNoCoreDatabase() {
 		

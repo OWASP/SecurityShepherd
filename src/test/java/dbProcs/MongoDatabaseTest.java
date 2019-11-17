@@ -1,16 +1,5 @@
 package dbProcs;
 
-import com.github.fakemongo.Fongo;
-import com.mongodb.DB;
-import com.mongodb.FongoDB;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import org.apache.log4j.Logger;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import testUtils.TestProperties;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -19,13 +8,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import com.github.fakemongo.Fongo;
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+
+import testUtils.TestProperties;
+
 public class MongoDatabaseTest {
 
     private static Fongo fongo = new Fongo("Unit Test");
     private static MongoClient mongoClient;
-    private static FongoDB fakeDB;
     private static String TEST_PATH = "mongo_challenge_test";
-    private static String TEST_DB = "shepherdTest";
 
     private static org.apache.log4j.Logger log = Logger.getLogger(MongoDatabaseTest.class);
 
@@ -34,7 +33,6 @@ public class MongoDatabaseTest {
     {
 		TestProperties.createMysqlResource();
 
-        fakeDB = fongo.getDB(TEST_DB);
         mongoClient = fongo.getMongo();
         TestProperties.setTestPropertiesFileDirectory(log);
     }

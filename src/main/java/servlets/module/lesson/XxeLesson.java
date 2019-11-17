@@ -124,8 +124,7 @@ public class XxeLesson
         Document doc;
         String result = null;
 
-        XmlDocumentBuilder db = new XmlDocumentBuilder();
-        DocumentBuilder dBuilder = db.xmlDocBuilder(false, true, true, true, true, true);
+        DocumentBuilder dBuilder = XmlDocumentBuilder.xmlDocBuilder(false, true, true, true, true, true);
         InputSource is = new InputSource(xmlEmail);
 
         try {

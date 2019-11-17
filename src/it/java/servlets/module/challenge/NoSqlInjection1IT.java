@@ -1,8 +1,13 @@
 package servlets.module.challenge;
 
+import static org.junit.Assert.fail;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+
 import org.apache.log4j.Logger;
-import dbProcs.GetterTest;
-import dbProcs.Setter;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,15 +16,10 @@ import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
+
+import dbProcs.GetterTest;
+import dbProcs.Setter;
 import testUtils.TestProperties;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import static org.junit.Assert.fail;
 
 public class NoSqlInjection1IT extends Mockito {
 
@@ -29,8 +29,6 @@ public class NoSqlInjection1IT extends Mockito {
 	private static String NOSQL_ATTACK = "';return(true);var a='a";
 
 	private static org.apache.log4j.Logger log = Logger.getLogger(NoSqlInjection1IT.class);
-	private ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.injection.nosql",
-			new Locale(LANG));
 
 	@Mock
 	private MockHttpServletRequest request;

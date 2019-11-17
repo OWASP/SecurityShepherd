@@ -343,7 +343,7 @@ public class Validate {
 			lang = "";
 		}
 		// log.debug("lang submitted: " + lang);
-		if (lang != null || !lang.isEmpty()) {
+		if (lang != null) {
 			if (lang.matches(".[a-z]{2}-[A-Z]{2}$"))
 				result = lang;
 		}
