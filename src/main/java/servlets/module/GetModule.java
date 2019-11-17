@@ -93,15 +93,14 @@ public class GetModule extends HttpServlet {
 				String ApplicationRoot = getServletContext().getRealPath("");
 
 				log.debug("Getting Parameters");
-				String moduleId = null;
-				try {
-					moduleId = (String) request.getParameter("moduleId");
-				} catch (NullPointerException e) {
-					log.error("Could not retrieve moduleID from request parameters.");
-					moduleId = null;
-				}
+				String moduleId = request.getParameter("moduleId");
 
-				log.debug("moduleId = " + moduleId.toString());
+				if(moduleId == null) {
+					log.error("Null module ID provided, exiting");
+					return;
+				}
+				
+				log.debug("moduleId = " + moduleId);
 
 				log.debug("Getting session parameters");
 				String userId = (String) ses.getAttribute("userStamp");
@@ -147,7 +146,6 @@ public class GetModule extends HttpServlet {
 				log.debug("CSRF Tokens did not match");
 			}
 		} else
-
 		{
 			log.error("Invalid Session Detected");
 			out.write("css/images/loggedOutSheep.jpg");
