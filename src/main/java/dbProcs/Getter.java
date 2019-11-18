@@ -1740,7 +1740,6 @@ public class Getter {
 			ResultSet resultSet = callstmt.executeQuery();
 			result = resultSet;
 			resultSet.next();
-			Database.closeConnection(conn);
 
 		} catch (SQLException e) {
 			log.error("Could not execute query: " + e.toString());
@@ -2244,7 +2243,6 @@ public class Getter {
 			log.debug("Gathering adminGetAll ResultSet");
 			result = callstmt.executeQuery();
 			log.debug("Returning Result Set from adminGetAll");
-			Database.closeConnection(conn);
 
 		} catch (SQLException e) {
 			log.error("Could not execute query: " + e.toString());
