@@ -1,15 +1,15 @@
 package dbProcs;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
+
+import utils.PropertyNotFoundException;
 
 /**
  * Used to create database connections using the FileInputProperties.readfile
@@ -50,8 +50,9 @@ public class Database {
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-
-		if (dbOptions.length() > 0) {
+		
+		if (dbOptions.length() > 0)
+		{
 			connectionURL += "?" + dbOptions;
 		}
 
@@ -86,153 +87,148 @@ public class Database {
 	 *                        connection. this is filtered for path traversal
 	 *                        attacks
 	 * @return A connection to the secure database server
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 * @throws SQLException
 	 */
-	public static Connection getChallengeConnection(String ApplicationRoot, String path) throws SQLException {
+	public static Connection getChallengeConnection(String ApplicationRoot, String path) {
 		// Some over paranoid input validation never hurts.
 		path = path.replaceAll("\\.", "").replaceAll("/", "");
 		log.debug("Path = " + path);
-
 		Connection conn = null;
-		Properties prop = new Properties();
 
 		// Pull Driver and DB URL out of database.properties
+		String props = Constants.MYSQL_DB_PROP;
 
-		String mysql_props = Constants.MYSQL_DB_PROP;
+		String connectionURL = "";
+		String driverType = "";
+		String dbOptions = "";
+		String username = "";
+		String password = "";
 
-		try (InputStream mysql_input = new FileInputStream(mysql_props)) {
-
-			prop.load(mysql_input);
-
-		} catch (IOException e) {
-			log.error("Could not load properties file: " + e.toString());
+		try {
+			connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
+			driverType = FileInputProperties.readfile(props, "DriverType");
+		} catch (FileNotFoundException e) {
+			// db props file doesn't exist
+			log.fatal("Did not find db properties file!");
 			throw new RuntimeException(e);
-		}
-
-		String errorBase = "Missing property :";
-
-		String connectionURL = prop.getProperty("databaseConnectionURL");
-		if (connectionURL == null) {
-			throw new RuntimeException(errorBase + "connectionURL");
-		}
-
-		String driverType = prop.getProperty("DriverType");
-		if (driverType == null) {
-			throw new RuntimeException(errorBase + "DriverType");
+		} catch (IOException e) {
+			
+			throw new RuntimeException(e);
+		} catch (PropertyNotFoundException e) {
+			// props file didn't contain this property
+			throw new RuntimeException(e);
 		}
 
 		// Pull DB Schema, Schema User name and Schema Password from level specific
 		// properties File
 
-		String challenge_props = new File(Database.class.getResource("/challenges/" + path + ".properties").getFile())
-				.getAbsolutePath();
-
+		props = new File(Database.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
 		log.debug("Level Properties File = " + path + ".properties");
+		// Add DB Schema to the end of the connectionURL
+		try {
+			try {
+				connectionURL += FileInputProperties.readfile(props, "databaseConnectionURL");
+				username = FileInputProperties.readfile(props, "databaseUsername");
+				password = FileInputProperties.readfile(props, "databasePassword");
+			} catch (PropertyNotFoundException e) {
+				// props file didn't contain this property
+				String message="Error loading properties file: " + e.toString();
+				log.fatal(message);
 
-		try (InputStream mysql_input = new FileInputStream(challenge_props)) {
+				throw new RuntimeException(message);
+			}
 
-			prop.load(mysql_input);
+			try {
+				dbOptions = FileInputProperties.readfile(props, "databaseOptions");
+			} catch (PropertyNotFoundException e) {
+				log.debug("Did not find database options, defaulting to useUnicode=true&character_set_server=utf8mb4");
 
+				dbOptions="useUnicode=true&character_set_server=utf8mb4";
+			}
+		} catch (FileNotFoundException e) {
+			// challenge db props file doesn't exist
+			// throw e;
+			throw new RuntimeException(e);
 		} catch (IOException e) {
-			log.error("Could not load properties file: " + e.toString());
 			throw new RuntimeException(e);
 		}
-		String challenge_connectionURL = prop.getProperty("databaseConnectionURL");
-		if (challenge_connectionURL == null) {
-			throw new RuntimeException(errorBase + "connectionURL");
-		}
-		String dbOptions = prop.getProperty("databaseOptions");
-		if (dbOptions == null) {
-			log.debug("Did not find database options, defaulting to useUnicode=true&character_set_server=utf8mb4");
+		
+		
 
-			dbOptions = "useUnicode=true&character_set_server=utf8mb4";
-		}
-		String username = prop.getProperty("databaseUsername");
-		if (username == null) {
-			throw new RuntimeException(errorBase + "databaseUsername");
-		}
-		String password = prop.getProperty("databasePassword");
-		if (password == null) {
-			throw new RuntimeException(errorBase + "databasePassword");
-		}
+		// log.debug("Connection URL: " + connectionURL);
 
-		connectionURL += challenge_connectionURL;
-
-		conn = getConnection(driverType, connectionURL, dbOptions, username, password);
+		try {
+			conn = getConnection(driverType, connectionURL, dbOptions, username, password);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 
 		return conn;
 	}
 
-	public static Connection getCoreConnection() throws SQLException, IOException {
+	public static Connection getCoreConnection() {
 		Connection conn = getCoreConnection("");
 
 		return conn;
 	}
 
 	/**
-	 * @throws IOException Returns connection to core schema in database
+	 * Returns connection to core schema in database
 	 * 
-	 * @param ApplicationRoot @return Connection to core schema with admin
-	 *                        privileges @throws FileNotFoundException @throws
-	 *                        SQLException @throws
+	 * @param ApplicationRoot
+	 * @return Connection to core schema with admin privileges
 	 * @throws FileNotFoundException
 	 * @throws SQLException
-	 * @throws RuntimeException
 	 */
-	public static Connection getCoreConnection(String ApplicationRoot) throws SQLException {
+	public static Connection getCoreConnection(String ApplicationRoot) {
 		Connection conn = null;
-		Properties prop = new Properties();
 
 		// Pull Driver and DB URL out of database.properties
 
-		String mysql_props = Constants.MYSQL_DB_PROP;
+		String props = Constants.MYSQL_DB_PROP;
 
-		try (InputStream mysql_input = new FileInputStream(mysql_props)) {
+		String connectionURL = "";
+		String driverType = "";
+		String dbOptions = "";
+		String username = "";
+		String password = "";
 
-			prop.load(mysql_input);
+		try {
 
+			try {
+				connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
+				connectionURL += FileInputProperties.readfile(props, "databaseSchema");
+				dbOptions = FileInputProperties.readfile(props, "databaseOptions");
+				driverType = FileInputProperties.readfile(props, "DriverType");
+				username = FileInputProperties.readfile(props, "databaseUsername");
+				password = FileInputProperties.readfile(props, "databasePassword");
+
+			} catch (PropertyNotFoundException e) {
+				log.fatal("Could not find requested parameter in props file: " + e.toString());
+				throw new RuntimeException(e);
+				
+			}
+			
+		} catch (FileNotFoundException e) {
+			// db props file doesn't exist
+			log.fatal("Could not find db props file!");
+			throw new RuntimeException(e);
+			
 		} catch (IOException e) {
-			log.error("Could not load properties file: " + e.toString());
+			log.fatal("Could not open db props file!");
 			throw new RuntimeException(e);
 		}
-		
-		String errorBase = "Missing property :";
 
-		String connectionURL = prop.getProperty("databaseConnectionURL");
-		if (connectionURL == null) {
-			throw new RuntimeException(errorBase + "connectionURL");
-		}
-		String databaseSchema = prop.getProperty("databaseSchema");
-		if (databaseSchema == null) {
-			throw new RuntimeException(errorBase + "databaseSchema");
-		}
-		String dbOptions = prop.getProperty("databaseOptions");
-		if (dbOptions == null) {
-			throw new RuntimeException(errorBase + "databaseOptions");
-		}
-		String driverType = prop.getProperty("DriverType");
-		if (driverType == null) {
-			throw new RuntimeException(errorBase + "DriverType");
-		}
-		String username = prop.getProperty("databaseUsername");
-		if (username == null) {
-			throw new RuntimeException(errorBase + "databaseUsername");
-		}
-		String password = prop.getProperty("databasePassword");
-		if (password == null) {
-			throw new RuntimeException(errorBase + "databasePassword");
-		}
+		try {
+			conn = getConnection(driverType, connectionURL, dbOptions, username, password);
+		} catch (SQLException e) {
 
-		connectionURL += databaseSchema;
-
-		conn = getConnection(driverType, connectionURL, dbOptions, username, password);
+			throw new RuntimeException(e);
+		}
 
 		return conn;
 	}
 
-	public static Connection getDatabaseConnection(String ApplicationRoot) throws SQLException, IOException {
+	public static Connection getDatabaseConnection(String ApplicationRoot) throws SQLException, FileNotFoundException {
 		return getDatabaseConnection(ApplicationRoot, false);
 	}
 
@@ -243,50 +239,43 @@ public class Database {
 	 * @param ApplicationRoot The running context of the application.
 	 * @return A connection to the secure database server
 	 * @throws SQLException
-	 * @throws IOException
-	 * @throws RuntimeException
+	 * @throws FileNotFoundException
 	 */
 	public static Connection getDatabaseConnection(String ApplicationRoot, boolean allowMulti)
-			throws SQLException, IOException {
+			throws SQLException, FileNotFoundException {
 		Connection conn = null;
 
-		Properties prop = new Properties();
+		String props = Constants.MYSQL_DB_PROP;
 
-		// Pull Driver and DB URL out of database.properties
+		String connectionURL = "";
+		String driverType = "";
+		String dbOptions = "";
+		String username = "";
+		String password = "";
 
-		String mysql_props = Constants.MYSQL_DB_PROP;
+		try {
+			
+			try {
+				connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
+				driverType = FileInputProperties.readfile(props, "DriverType");
+				dbOptions = FileInputProperties.readfile(props, "databaseOptions");
+				username = FileInputProperties.readfile(props, "databaseUsername");
+				password = FileInputProperties.readfile(props, "databasePassword");
+			} catch (PropertyNotFoundException e) {
+				log.fatal("Could not find requested parameter in props file: " + e.toString());
+				throw new RuntimeException(e);
+			}
 
-		try (InputStream mysql_input = new FileInputStream(mysql_props)) {
-
-			prop.load(mysql_input);
-
-		}
-
-		String errorBase = "Missing property :";
-
-		String connectionURL = prop.getProperty("databaseConnectionURL");
-		if (connectionURL == null) {
-			throw new RuntimeException(errorBase + "connectionURL");
-		}
-		String dbOptions = prop.getProperty("databaseOptions");
-		if (dbOptions == null) {
-			throw new RuntimeException(errorBase + "databaseOptions");
-		}
-		String driverType = prop.getProperty("DriverType");
-		if (driverType == null) {
-			throw new RuntimeException(errorBase + "DriverType");
-		}
-		String username = prop.getProperty("databaseUsername");
-		if (username == null) {
-			throw new RuntimeException(errorBase + "databaseUsername");
-		}
-		String password = prop.getProperty("databasePassword");
-		if (password == null) {
-			throw new RuntimeException(errorBase + "databasePassword");
+		} catch (FileNotFoundException e) {
+			// db props file doesn't exist
+			throw e;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
 		if (allowMulti) {
-			if (dbOptions.length() > 0) {
+			if (dbOptions.length() > 0)
+			{
 				dbOptions += "&";
 			}
 			dbOptions += "allowMultiQueries=yes";
@@ -303,68 +292,60 @@ public class Database {
 	 * 
 	 * @param ApplicationRoot The running context of the application.
 	 * @return A connection to the secure database server
+	 * @throws FileNotFoundException
 	 * @throws SQLException
-	 * @throws IOException
 	 */
-	public static Connection getSqlInjLessonConnection(String ApplicationRoot) throws SQLException, IOException {
+	public static Connection getSqlInjLessonConnection(String ApplicationRoot)
+			throws FileNotFoundException, SQLException {
 		Connection conn = null;
 
-		Properties prop = new Properties();
-
 		// Pull Driver and DB URL out of database.properties
+		String props = Constants.MYSQL_DB_PROP;
 
-		String mysql_props = Constants.MYSQL_DB_PROP;
+		String connectionURL = "";
+		String driverType = "";
+		String username = "";
+		String password = "";
 
-		try (InputStream mysql_input = new FileInputStream(mysql_props)) {
+		try {
 
-			prop.load(mysql_input);
 
-		}
+			try {
+				connectionURL = FileInputProperties.readfile(props, "databaseConnectionURL");
+				driverType = FileInputProperties.readfile(props, "DriverType");
 
-		String errorBase = "Missing property :";
+			} catch (PropertyNotFoundException e) {
+				log.fatal("Could not find requested parameter in props file: " + e.toString());
+				throw new RuntimeException(e);
+			}
 
-		String connectionURL = prop.getProperty("databaseConnectionURL");
-		if (connectionURL == null) {
-			throw new RuntimeException(errorBase + "connectionURL");
-		}
-		String dbOptions = prop.getProperty("databaseOptions");
-		if (dbOptions == null) {
-			throw new RuntimeException(errorBase + "databaseOptions");
-		}
-		String driverType = prop.getProperty("DriverType");
-		if (driverType == null) {
-			throw new RuntimeException(errorBase + "DriverType");
-		}
-		String username = prop.getProperty("databaseUsername");
-		if (username == null) {
-			throw new RuntimeException(errorBase + "databaseUsername");
-		}
-		String password = prop.getProperty("databasePassword");
-		if (password == null) {
-			throw new RuntimeException(errorBase + "databasePassword");
+		} catch (FileNotFoundException e) {
+			// db props file doesn't exist
+			throw e;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
 		// Pull Schema, User name and Password from SqlInjLesson.properties
-		String sql_inj_props = ApplicationRoot + "/WEB-INF/classes/lessons/SqlInjLesson.properties";
+		props = ApplicationRoot + "/WEB-INF/classes/lessons/SqlInjLesson.properties";
 
-		try (InputStream sql_inj_input = new FileInputStream(sql_inj_props)) {
+		try {
+			
+			try {
+				connectionURL += FileInputProperties.readfile(props, "databaseConnectionURL");
+				username = FileInputProperties.readfile(props, "databaseUsername");
+				password = FileInputProperties.readfile(props, "databasePassword");
+			} catch (PropertyNotFoundException e) {
+				log.fatal("Could not find requested parameter in props file: " + e.toString());
+				throw new RuntimeException(e);
+			}
+			
 
-			prop.load(sql_inj_input);
-
-		}
-
-		connectionURL = prop.getProperty("databaseConnectionURL");
-		if (connectionURL == null) {
-			throw new RuntimeException(errorBase + "connectionURL");
-		}
-
-		username = prop.getProperty("databaseUsername");
-		if (username == null) {
-			throw new RuntimeException(errorBase + "databaseUsername");
-		}
-		password = prop.getProperty("databasePassword");
-		if (password == null) {
-			throw new RuntimeException(errorBase + "databasePassword");
+		} catch (FileNotFoundException e) {
+			// sql injection lesson file does not exist
+			throw e;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
 		conn = getConnection(driverType, connectionURL, "", username, password);

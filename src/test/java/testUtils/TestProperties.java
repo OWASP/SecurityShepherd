@@ -4,16 +4,13 @@ import static org.junit.Assert.fail;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 import javax.servlet.ServletException;
 
@@ -25,6 +22,7 @@ import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.Constants;
 import dbProcs.Database;
+import dbProcs.FileInputProperties;
 import dbProcs.Getter;
 import dbProcs.Setter;
 import servlets.Login;
@@ -57,41 +55,23 @@ public class TestProperties {
 	public static void createFileSystemKey(org.apache.log4j.Logger log, String fileProp, String solutionProp)
 			throws InstallationException {
 
-		String userDir = System.getProperty("user.dir");
-		String propFile = userDir + "/src/main/resources/fileSystemKeys.properties";
-
-		Properties prop = new Properties();
-
-		// Pull Driver and DB URL out of database.properties
-
-		try (InputStream mysql_input = new FileInputStream(propFile)) {
-
-			prop.load(mysql_input);
-
-		} catch (IOException e) {
-			log.error("Could not load properties file: " + e.toString());
-			throw new RuntimeException(e);
-		}
-
-		String errorBase = "Missing property :";
-
-		String filename = prop.getProperty(fileProp);
-		if (filename == null) {
-			throw new RuntimeException(errorBase + fileProp);
-		}
-		String solution = prop.getProperty(solutionProp);
-		if (solution == null) {
-			throw new RuntimeException(errorBase + solutionProp);
-		}
-
 		File lessonFile = null;
+		String propFile;
+		String filename;
+		String solution;
+		String userDir;
 
-		lessonFile = new File(filename);
 		try {
+			userDir = System.getProperty("user.dir");
+			propFile = userDir + "/src/main/resources/fileSystemKeys.properties";
+			filename = FileInputProperties.readfile(propFile, fileProp);
+			solution = FileInputProperties.readfile(propFile, solutionProp);
+
+			lessonFile = new File(filename);
 			FileUtils.write(lessonFile, solution, "UTF-8");
-		} catch (IOException e) {
-			log.error("Can't write to lesson file " + lessonFile + ": " + e.toString());
-			throw new RuntimeException(e);
+
+		} catch (Exception e) {
+			throw new InstallationException(e);
 		}
 
 	}

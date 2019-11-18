@@ -40,6 +40,11 @@
 		}
 	}
 
+	//Try talking to the database to force an early error if there's some db problem so we see error messages before trying to log in
+
+	Connection conn = Database.getCoreConnection();
+	conn.close();
+
 	String url = (request.getRequestURL()).toString();
 	if (url.contains("login.jsp")) {
 		url = url.substring(0, url.lastIndexOf("/") + 1);

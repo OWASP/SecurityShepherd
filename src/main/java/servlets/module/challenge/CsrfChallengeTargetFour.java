@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -162,24 +161,20 @@ public class CsrfChallengeTargetFour extends HttpServlet
 	{
 		log.debug("*** CSRF4.validCsrfToken ***");
 		boolean result = false;
-		Connection conn;
-	
+		Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeFour");
 		try
 		{		
-			conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeFour");
-
 			PreparedStatement prepstmt = conn.prepareStatement("SELECT count(csrfTokenscol) FROM csrfTokens WHERE csrfTokenscol = ?");
 			prepstmt.setString(1, csrfToken);
 			ResultSet rs = prepstmt.executeQuery();
 			result = rs.next(); //If there is a row then the CSRF token was in the DB. Therefore CSRF Validated
-			Database.closeConnection(conn);
-
 		}
-		catch(SQLException e)
+		catch(Exception e)
 		{
 			log.error("CSRF4 Token Check Failure: " + e.toString());
 			result = false;
 		}
+		Database.closeConnection(conn);
 		log.debug("*** END CSRF4.validCsrfToken ***");
 		return result;
 	}

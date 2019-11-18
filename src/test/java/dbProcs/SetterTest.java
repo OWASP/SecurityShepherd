@@ -720,7 +720,7 @@ public class SetterTest {
 	}
 
 	@Test
-	public void testUpdateUserRole() throws SQLException {
+	public void testUpdateUserRole() {
 		String userName = new String("WasUserNowAdmin");
 		String currentRole = new String();
 		String newRole = new String();
