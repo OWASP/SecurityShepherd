@@ -1,8 +1,9 @@
 package servlets;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -14,6 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -22,19 +24,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mongodb.MongoClient;
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
-
-import dbProcs.Constants;
-import dbProcs.Database;
-import dbProcs.FileInputProperties;
-import dbProcs.MongoDatabase;
-import dbProcs.Setter;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import com.mongodb.MongoClient;
+
+import dbProcs.Constants;
+import dbProcs.Database;
+import dbProcs.MongoDatabase;
+import dbProcs.Setter;
 import servlets.module.lesson.XxeLesson;
-import utils.PropertyNotFoundException;
 import utils.Validate;
 
 public class Setup extends HttpServlet {
@@ -44,6 +43,8 @@ public class Setup extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+		Properties prop = new Properties();
+
 		ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
 		request.setCharacterEncoding("UTF-8");
@@ -70,12 +71,18 @@ public class Setup extends HttpServlet {
 		String mongodbPort = request.getParameter("mport");
 		String nosqlprops = new File(Database.class.getResource("/challenges/NoSqlInjection1.properties").getFile())
 				.getAbsolutePath();
-		String mongodbName;
-		try {
-			mongodbName = FileInputProperties.readfile(nosqlprops, "databaseName");
-		} catch (PropertyNotFoundException e) {
-			log.fatal("Could not find requested parameter in props file: " + e.toString());
-			throw new RuntimeException(e);
+
+		try (InputStream mongo_input = new FileInputStream(nosqlprops)) {
+
+			prop.load(mongo_input);
+
+		}
+
+		String mongodbName = prop.getProperty("databaseName");
+		if (mongodbName == null) {
+			String message = "Could not find databaseName in nosql properties file";
+			log.fatal(message);
+			throw new RuntimeException(message);
 		}
 
 		log.debug("Starting database setup...");
@@ -236,27 +243,12 @@ public class Setup extends HttpServlet {
 	public static boolean isInstalled() {
 		boolean isInstalled = false;
 
-		try (Connection coreConnection = Database.getDatabaseConnection(null)) {
-			if (coreConnection == null) {
-				isInstalled = false;
-			} else {
+		try (Connection coreConnection = Database.getCoreConnection(null)) {
+			if (coreConnection != null) {
 				isInstalled = true;
 			}
-		} catch (FileNotFoundException e) {
-			// DB properties file not found, we're not installed
-			log.fatal("Database properties file not found, assuming not installed: " + e.toString());
-
-		} catch (CommunicationsException e) {
-			// Could not connect to database, but db props exist so we'll assume installed
-			// TODO: Display helpful error message to user
-			log.fatal("Cannot connect to database: " + e.toString());
-			isInstalled = true;
-
 		} catch (SQLException e) {
-			// Some other database error occurred, bail out
-			log.fatal("Cannot connect to database: " + e.toString());
-			isInstalled = false;
-			throw new RuntimeException(e);
+			log.debug("isInstalled ran into error " + e.toString() + ", assuming not installed.");
 		}
 
 		if (!isInstalled) {

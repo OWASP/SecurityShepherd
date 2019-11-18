@@ -5,7 +5,6 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
@@ -39,7 +38,7 @@ public class MongoDatabaseTest {
 
     @Test
     @DisplayName("Should Return Type MongoCredentials")
-    public void getMongoChallengeCredentials_ShouldReturnTypeMongoCredentials() throws FileNotFoundException
+    public void getMongoChallengeCredentials_ShouldReturnTypeMongoCredentials() throws IOException
     {
         assertThat(MongoDatabase.getMongoChallengeCredentials(null, TEST_PATH),
                 instanceOf(MongoCredential.class));
@@ -47,7 +46,7 @@ public class MongoDatabaseTest {
 
     @Test
     @DisplayName("Should read properties file for mongo challenge credentials")
-    public void getMongoChallengeCredentials_ShouldReadPropertiesFileForCreds() throws FileNotFoundException
+    public void getMongoChallengeCredentials_ShouldReadPropertiesFileForCreds() throws IOException
     {
         MongoCredential creds = MongoDatabase.getMongoChallengeCredentials(null, TEST_PATH);
 

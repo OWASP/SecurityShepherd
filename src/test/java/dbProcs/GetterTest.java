@@ -340,7 +340,8 @@ public class GetterTest {
 
 	}
 
-	@Test @Ignore
+	@Test
+	@Ignore
 	public void testAuthUserCorrectEmojiUsername() {
 		// Here is a very non-latin username
 		String userName = new String("😃😅😍💩👍‌𝑓ᶃ我璃မ္ယက္‌");
@@ -2198,8 +2199,9 @@ public class GetterTest {
 					log.debug(numberOfWebLevelsClosed + " web levels detected");
 					int mobileDbModuleCount = 0;
 					int webDbModuleCount = 0;
-					Connection conn = Database.getCoreConnection(applicationRoot);
 					try {
+						Connection conn = Database.getCoreConnection(applicationRoot);
+
 						log.debug("Getting Number of Mobile Levels From DB");
 						PreparedStatement prepStatement = conn.prepareStatement("SELECT COUNT(*) FROM modules WHERE "
 								+ Setter.mobileModuleCategoryHardcodedWhereClause);
@@ -2215,11 +2217,12 @@ public class GetterTest {
 						resultSet.next();
 						webDbModuleCount = resultSet.getInt(1);
 						resultSet.close();
+						Database.closeConnection(conn);
+
 					} catch (SQLException e) {
 						log.debug("Could not query DB Failure: " + e.toString());
 						fail("Failed to Query DB For Module Count");
 					}
-					Database.closeConnection(conn);
 					if (mobileDbModuleCount != numberOfMobileLevelsOpen) {
 						fail("There are " + numberOfMobileLevelsOpen + " mobile levels in open list, but there are "
 								+ mobileDbModuleCount + " in the DB");
@@ -2811,8 +2814,8 @@ public class GetterTest {
 		if (user == null || user[0].isEmpty()) {
 			TestProperties.failAndPrint("Test Failed. Initial SSO auth did not succeed");
 		}
-		
-		String userID=user[0];
+
+		String userID = user[0];
 
 		if (!Setter.suspendUser(applicationRoot, userID, 10)) {
 			fail("Could not suspend User");
