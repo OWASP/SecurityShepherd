@@ -197,7 +197,7 @@ public class Database {
 			log.error("Could not load properties file: " + e.toString());
 			throw new RuntimeException(e);
 		}
-		
+
 		String errorBase = "Missing property :";
 
 		String connectionURL = prop.getProperty("databaseConnectionURL");
@@ -311,8 +311,6 @@ public class Database {
 
 		Properties prop = new Properties();
 
-		// Pull Driver and DB URL out of database.properties
-
 		String mysql_props = Constants.MYSQL_DB_PROP;
 
 		try (InputStream mysql_input = new FileInputStream(mysql_props)) {
@@ -335,14 +333,6 @@ public class Database {
 		if (driverType == null) {
 			throw new RuntimeException(errorBase + "DriverType");
 		}
-		String username = prop.getProperty("databaseUsername");
-		if (username == null) {
-			throw new RuntimeException(errorBase + "databaseUsername");
-		}
-		String password = prop.getProperty("databasePassword");
-		if (password == null) {
-			throw new RuntimeException(errorBase + "databasePassword");
-		}
 
 		// Pull Schema, User name and Password from SqlInjLesson.properties
 		String sql_inj_props = ApplicationRoot + "/WEB-INF/classes/lessons/SqlInjLesson.properties";
@@ -353,21 +343,20 @@ public class Database {
 
 		}
 
-		connectionURL = prop.getProperty("databaseConnectionURL");
-		if (connectionURL == null) {
-			throw new RuntimeException(errorBase + "connectionURL");
+		String injection_URL = prop.getProperty("databaseConnectionURL");
+		if (injection_URL == null) {
+			throw new RuntimeException(errorBase + "SQL injection connectionURL");
 		}
-
-		username = prop.getProperty("databaseUsername");
+		String username = prop.getProperty("databaseUsername");
 		if (username == null) {
-			throw new RuntimeException(errorBase + "databaseUsername");
+			throw new RuntimeException(errorBase + "SQL injection databaseUsername");
 		}
-		password = prop.getProperty("databasePassword");
+		String password = prop.getProperty("databasePassword");
 		if (password == null) {
-			throw new RuntimeException(errorBase + "databasePassword");
+			throw new RuntimeException(errorBase + "SQL injection databasePassword");
 		}
 
-		conn = getConnection(driverType, connectionURL, "", username, password);
+		conn = getConnection(driverType, connectionURL + injection_URL, dbOptions, username, password);
 
 		return conn;
 	}
