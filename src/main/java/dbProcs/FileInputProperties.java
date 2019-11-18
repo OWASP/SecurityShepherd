@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 /** 
  * Locates the database Properties File for Database manipulation methods. This file contains the application sign on credentials for the database.	
  * <br/><br/>

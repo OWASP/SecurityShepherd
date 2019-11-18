@@ -2,8 +2,10 @@ package servlets;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -43,7 +45,6 @@ public class Setup extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-		Properties prop = new Properties();
 
 		ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
@@ -53,176 +54,272 @@ public class Setup extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		String htmlOutput = "";
 		boolean success = false;
+		boolean validateInput = true;
+		boolean saveMysqlProperties = false;
+		boolean hasDBFile = false;
 
-		// Parameters From Form
 		String dbHost = request.getParameter("dbhost");
 		String dbPort = request.getParameter("dbport");
 		String dbUser = request.getParameter("dbuser");
 		String dbPass = request.getParameter("dbpass");
-		String dbAuth = request.getParameter("dbauth");
-		String dbOptions = "";
+
+		String dbOptions;
+		String connectionURL;
+		String driverType;
+
 		String dbOverride = request.getParameter("dboverride");
 
-		String connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
-		dbOptions = "useUnicode=true&character_set_server=utf8mb4";
-		String driverType = "org.gjt.mm.mysql.Driver";
+		Properties mysql_props = Setup.getDBProps();
+		Properties mongo_props = new Properties();
 
-		String mongodbHost = request.getParameter("mhost");
-		String mongodbPort = request.getParameter("mport");
-		String nosqlprops = new File(Database.class.getResource("/challenges/NoSqlInjection1.properties").getFile())
-				.getAbsolutePath();
+		hasDBFile = (mysql_props != null);
 
-		try (InputStream mongo_input = new FileInputStream(nosqlprops)) {
+		if (hasDBFile) {
+			// Db auth file exists, try to load from it
 
-			prop.load(mongo_input);
+			if (!dbHost.isEmpty() || !dbPort.isEmpty()) {
+				// One of db host and db port are missing, we can't handle this situation!
 
-		}
+				htmlOutput += "If you override db host and db port, both must be entered!";
+				validateInput = false;
+				connectionURL = "";
+			} else if (dbHost.isEmpty() || dbPort.isEmpty()) {
+				// Both db host and db port are missing, good, load from props file instead
+				connectionURL = mysql_props.getProperty("databaseConnectionURL");
+				String databaseSchema = mysql_props.getProperty("databaseSchema");
 
-		String mongodbName = prop.getProperty("databaseName");
-		if (mongodbName == null) {
-			String message = "Could not find databaseName in nosql properties file";
-			log.fatal(message);
-			throw new RuntimeException(message);
-		}
+				if (connectionURL == null || databaseSchema == null) {
+					// Nothing useful given in user input or from properties file, bail out.
+					validateInput = false;
+				} 
+			} else {
+				// Override db properties from request parameters
+				connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
 
-		log.debug("Starting database setup...");
+				// Store the overridden data in properties file
+				saveMysqlProperties = true;
+			}
 
-		String auth = "";
-
-		String enableMongoChallenge = request.getParameter("enableMongoChallenge");
-
-		String enableUnsafeLevels = request.getParameter("unsafeLevels");
-
-		StringBuffer dbProp = new StringBuffer();
-		dbProp.append("databaseConnectionURL=" + connectionURL);
-		dbProp.append("\n");
-		dbProp.append("DriverType=" + driverType);
-		dbProp.append("\n");
-		dbProp.append("databaseOptions=" + dbOptions);
-		dbProp.append("\n");
-		dbProp.append("databaseSchema=core");
-		dbProp.append("\n");
-		dbProp.append("databaseUsername=" + dbUser);
-		dbProp.append("\n");
-		dbProp.append("databasePassword=" + dbPass);
-		dbProp.append("\n");
-
-		// Mongo DB properties
-		StringBuffer mongoProp = new StringBuffer();
-		mongoProp.append("connectionHost=" + mongodbHost);
-		mongoProp.append("\n");
-		mongoProp.append("connectionPort=" + mongodbPort);
-		mongoProp.append("\n");
-		mongoProp.append("databaseName=" + mongodbName);
-		mongoProp.append("\n");
-		mongoProp.append("connectTimeout=10000");
-		mongoProp.append("\n");
-		mongoProp.append("socketTimeout=0");
-		mongoProp.append("\n");
-		mongoProp.append("serverSelectionTimeout=30000");
-		mongoProp.append("\n");
-
-		try {
-			auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
-		} catch (NoSuchFileException e) {
-			// Auth file could not be found.
-			htmlOutput += "Auth file could not be found";
-			log.error("Auth file could not be found: " + e.toString());
-
-		}
-
-		if (auth == "") {
-			// No auth loaded, could be because user never reloaded setup page after an
-			// error. Generate it again
-			log.debug("Generating auth file");
-
-			generateAuth();
-		}
-
-		if (!auth.equals(dbAuth)) {
-			log.debug("Invalid auth supplied");
-
-			// The supplied auth data was incorrect
-			htmlOutput += bundle.getString("generic.text.setup.authentication.failed");
-			log.error("Authorization mismatch: " + auth + " does not equal " + dbAuth);
-
+			dbOptions = mysql_props.getProperty("databaseOptions");
+			if (dbOptions == null) {
+				dbOptions = "useUnicode=true&character_set_server=utf8mb4";
+			}
+			driverType = mysql_props.getProperty("DriverType");
+			if (driverType == null) {
+				driverType = "org.gjt.mm.mysql.Driver";
+			}
+			if (dbUser.isEmpty()) {
+				dbUser = mysql_props.getProperty("databaseUsername");
+				if (dbUser == null) {
+					validateInput = false;
+				}
+			}
+			if (dbPass.isEmpty()) {
+				dbPass = mysql_props.getProperty("databasePassword");
+				if (dbPass == null) {
+					validateInput = false;
+				}
+			}
 		} else {
-			// Test the user's entered database properties
-			Boolean connectionSuccess = false;
-			log.debug("Attempting to connect to database");
+			connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
+			driverType = "org.gjt.mm.mysql.Driver";
+			dbOptions = "useUnicode=true&character_set_server=utf8mb4";
+			validateInput = true;
+			saveMysqlProperties = true;
 
-			try {
-				Connection conn = Database.getConnection(driverType, connectionURL, dbOptions, dbUser, dbPass);
-				Database.closeConnection(conn);
-				connectionSuccess = true;
-				log.debug("Database connection successful");
+		}
 
-			} catch (SQLException e) {
-				htmlOutput += bundle.getString("generic.text.setup.connection.failed") + e.getMessage();
+		if (!validateInput) {
+			htmlOutput += "Data validation failed.";
+			success = false;
+		} else {
 
-				log.error("DB connection error: " + e.toString());
-				connectionSuccess = false;
+			String dbAuth = request.getParameter("dbauth");
+
+			String mongodbHost = request.getParameter("mhost");
+			String mongodbPort = request.getParameter("mport");
+			String nosqlprops = new File(Database.class.getResource("/challenges/NoSqlInjection1.properties").getFile())
+					.getAbsolutePath();
+
+			try (InputStream mongo_input = new FileInputStream(nosqlprops)) {
+
+				mongo_props.load(mongo_input);
 
 			}
 
-			if (!connectionSuccess) {
-				htmlOutput += bundle.getString("generic.text.setup.connection.failed");
-			} else {
-				// Write the user's entered mysql database properties to file
-				Files.write(Paths.get(Constants.MYSQL_DB_PROP), dbProp.toString().getBytes(),
-						StandardOpenOption.CREATE);
-				try {
-					if (dbOverride.equalsIgnoreCase("override")) {
-						executeSqlScript();
-						htmlOutput = bundle.getString("generic.text.setup.success") + " "
-								+ bundle.getString("generic.text.setup.success.overwrittendb");
-					} else if (dbOverride.equalsIgnoreCase("upgrade")) {
-						executeUpdateScript();
-						htmlOutput = bundle.getString("generic.text.setup.success") + " "
-								+ bundle.getString("generic.text.setup.success.updatedb");
-					} else {
-						htmlOutput = bundle.getString("generic.text.setup.success");
-					}
-					success = true;
-				} catch (SQLException e) {
-					htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
-					log.error(bundle.getString("generic.text.setup.failed") + ": " + e.getMessage());
-					FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
-				}
-				// Clean up File as it is not needed anymore. Will Cause a new one to be
-				// generated next time too
-				removeAuthFile();
+			String mongodbName = mongo_props.getProperty("databaseName");
+			if (mongodbName == null) {
+				String message = "Could not find databaseName in nosql properties file";
+				log.fatal(message);
+				throw new RuntimeException(message);
+			}
 
-				if (enableMongoChallenge.equalsIgnoreCase("enable")) {
-					if (!Validate.isValidPortNumber(mongodbPort)) {
-						htmlOutput = bundle.getString("generic.text.setup.error.valid.port");
-						FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+			log.debug("Starting database setup...");
+
+			String auth = "";
+
+			String enableMongoChallenge = request.getParameter("enableMongoChallenge");
+
+			String enableUnsafeLevels = request.getParameter("unsafeLevels");
+
+			// Mongo DB properties
+			StringBuffer mongoProp = new StringBuffer();
+			mongoProp.append("connectionHost=" + mongodbHost);
+			mongoProp.append("\n");
+			mongoProp.append("connectionPort=" + mongodbPort);
+			mongoProp.append("\n");
+			mongoProp.append("databaseName=" + mongodbName);
+			mongoProp.append("\n");
+			mongoProp.append("connectTimeout=10000");
+			mongoProp.append("\n");
+			mongoProp.append("socketTimeout=0");
+			mongoProp.append("\n");
+			mongoProp.append("serverSelectionTimeout=30000");
+			mongoProp.append("\n");
+
+			try {
+				auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
+			} catch (NoSuchFileException e) {
+				// Auth file could not be found.
+				htmlOutput += "Auth file could not be found";
+				log.error("Auth file could not be found: " + e.toString());
+
+			}
+
+			if (auth == "") {
+				// No auth loaded, could be because user never reloaded setup page after an
+				// error. Generate it again
+				log.debug("Generating auth file");
+
+				generateAuth();
+			}
+
+			if (!auth.equals(dbAuth)) {
+				log.debug("Invalid auth supplied");
+
+				// The supplied auth data was incorrect
+				htmlOutput += bundle.getString("generic.text.setup.authentication.failed");
+				log.error("Authorization mismatch: " + auth + " does not equal " + dbAuth);
+
+			} else {
+				// Test the user's entered database properties
+				Boolean connectionSuccess = false;
+				log.debug("Attempting to connect to database");
+
+				try {
+					Connection conn = Database.getConnection(driverType, connectionURL, dbOptions, dbUser, dbPass);
+					Database.closeConnection(conn);
+					connectionSuccess = true;
+					log.debug("Database connection successful");
+
+				} catch (SQLException e) {
+					htmlOutput += bundle.getString("generic.text.setup.connection.failed") + e.getMessage();
+
+					log.error("DB connection error: " + e.toString());
+					connectionSuccess = false;
+
+				}
+
+				if (!connectionSuccess) {
+					htmlOutput += bundle.getString("generic.text.setup.connection.failed");
+				} else {
+					// Write the user's entered mysql database properties to file
+
+					if (saveMysqlProperties) {
+
+						try (OutputStream mysql_output = new FileOutputStream(Constants.MYSQL_DB_PROP)) {
+
+							mysql_props = new Properties();
+
+							mysql_props.setProperty("databaseConnectionURL", connectionURL);
+							mysql_props.setProperty("DriverType", driverType);
+							mysql_props.setProperty("databaseOptions", dbOptions);
+							mysql_props.setProperty("databaseSchema", "core");
+							mysql_props.setProperty("databaseUsername", dbUser);
+							mysql_props.setProperty("databasePassword", dbPass);
+
+							// save properties to project root folder
+							mysql_props.store(mysql_output, null);
+							success = true;
+
+						} catch (IOException e) {
+
+							success = false;
+
+							htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
+
+							log.error("Could not save mysql properties file: " + e.toString());
+						}
+
 					} else {
-						Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(),
-								StandardOpenOption.CREATE);
-						if (MongoDatabase.getMongoDbConnection(null).listDatabaseNames() == null) {
-							htmlOutput = bundle.getString("generic.text.setup.connection.mongo.failed");
+						success = true;
+					}
+
+					if (success) {
+						// Writing db file succeeded
+
+						try {
+							if (dbOverride.equalsIgnoreCase("override")) {
+								executeSqlScript();
+								htmlOutput = bundle.getString("generic.text.setup.success") + " "
+										+ bundle.getString("generic.text.setup.success.overwrittendb");
+							} else if (dbOverride.equalsIgnoreCase("upgrade")) {
+								executeUpdateScript();
+								htmlOutput = bundle.getString("generic.text.setup.success") + " "
+										+ bundle.getString("generic.text.setup.success.updatedb");
+							} else {
+								htmlOutput = bundle.getString("generic.text.setup.success");
+							}
+							success = true;
+						} catch (SQLException e) {
+							htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
+							log.error(bundle.getString("generic.text.setup.failed") + ": " + e.getMessage());
+							if (!hasDBFile) {
+								FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+							}
+						}
+						// Clean up File as it is not needed anymore. Will Cause a new one to be
+						// generated next time too
+						removeAuthFile();
+					}
+
+					if (enableMongoChallenge.equalsIgnoreCase("enable")) {
+						if (!Validate.isValidPortNumber(mongodbPort)) {
+							htmlOutput = bundle.getString("generic.text.setup.error.valid.port");
 							FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 						} else {
-							try {
-								executeMongoScript();
-							} catch (IOException e) {
-								htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
+							Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(),
+									StandardOpenOption.CREATE);
+							if (MongoDatabase.getMongoDbConnection(null).listDatabaseNames() == null) {
+								htmlOutput = bundle.getString("generic.text.setup.connection.mongo.failed");
+								if (!hasDBFile) {
+									FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+								}
+							} else {
+								try {
+									executeMongoScript();
+								} catch (IOException e) {
+									htmlOutput = bundle.getString("generic.text.setup.failed") + ": " + e.getMessage();
+									if (!hasDBFile) {
+										FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+									}
+								}
+							}
+						}
+					}
+
+					if (enableUnsafeLevels.equalsIgnoreCase("enable")) {
+						openUnsafeLevels();
+						if (!executeCreateChallengeFile()) {
+							htmlOutput = bundle.getString("generic.text.setup.file.failed");
+							if (!hasDBFile) {
 								FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 							}
 						}
 					}
 				}
 
-				if (enableUnsafeLevels.equalsIgnoreCase("enable")) {
-					openUnsafeLevels();
-					if (!executeCreateChallengeFile()) {
-						htmlOutput = bundle.getString("generic.text.setup.file.failed");
-						FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
-					}
-				}
 			}
-
 		}
 		if (success) {
 			htmlOutput = "<h2 class=\"title\" id=\"login_title\">"
@@ -230,8 +327,9 @@ public class Setup extends HttpServlet {
 					+ bundle.getString("generic.text.setup.response.success.redirecting") + "</p>";
 		} else {
 			log.error("Could not create database...");
-
-			FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+			if (!hasDBFile) {
+				FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+			}
 			htmlOutput = "<h2 class=\"title\" id=\"login_title\">"
 					+ bundle.getString("generic.text.setup.response.failed") + "</h2><p>" + htmlOutput + "</p>";
 		}
@@ -243,12 +341,17 @@ public class Setup extends HttpServlet {
 	public static boolean isInstalled() {
 		boolean isInstalled = false;
 
-		try (Connection coreConnection = Database.getCoreConnection(null)) {
-			if (coreConnection != null) {
-				isInstalled = true;
+		Properties prop = getDBProps();
+
+		if (prop != null) {
+
+			try (Connection coreConnection = Database.getCoreConnection(null)) {
+				if (coreConnection != null) {
+					isInstalled = true;
+				}
+			} catch (SQLException e) {
+				log.info("isInstalled got SQL exception " + e.toString() + ", assuming not installed.");
 			}
-		} catch (SQLException e) {
-			log.debug("isInstalled ran into error " + e.toString() + ", assuming not installed.");
 		}
 
 		if (!isInstalled) {
@@ -256,6 +359,27 @@ public class Setup extends HttpServlet {
 		}
 
 		return isInstalled;
+	}
+
+	public static Properties getDBProps() {
+
+		Properties prop = new Properties();
+
+		// Pull Driver and DB URL out of database.properties
+
+		String mysql_props = Constants.MYSQL_DB_PROP;
+
+		try (InputStream mysql_input = new FileInputStream(mysql_props)) {
+
+			prop.load(mysql_input);
+
+			return prop;
+
+		} catch (IOException e) {
+			log.info("Could not load properties file, assuming doesn't exist: " + e.toString());
+			return null;
+		}
+
 	}
 
 	private static void generateAuth() {
