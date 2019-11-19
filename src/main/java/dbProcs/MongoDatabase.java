@@ -77,15 +77,11 @@ public class MongoDatabase {
 
 		}
 
-		String errorBase = "Missing property :";
+		String errorBase = "Missing property: ";
 
 		String dbname = prop.getProperty("databaseName");
 		if (dbname == null) {
 			throw new RuntimeException(errorBase + "databaseName");
-		}
-		String driverType = prop.getProperty("DriverType");
-		if (driverType == null) {
-			throw new RuntimeException(errorBase + "DriverType");
 		}
 		String username = prop.getProperty("databaseUsername");
 		if (username == null) {
