@@ -315,11 +315,11 @@ public class Getter {
 			try {
 				if (defaultClass.isEmpty()) {
 					log.debug("Adding player to database, with null classId");
-					userCreated = Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName);
+					userCreated = Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName, userRole);
 				} else // defaultClass is not empty, so It must be set to a class!
 				{
 					log.debug("Adding player to database, to class " + defaultClass);
-					userCreated = Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName);
+					userCreated = Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName, userRole);
 				}
 
 			} catch (SQLException e) {
@@ -419,7 +419,7 @@ public class Getter {
 			throw new RuntimeException(message);
 		}
 
-		log.debug("User '" + userName + "' has logged in via SSO");
+		log.debug("User '" + userName + "' has logged in via SSO" + " with role " + userRole);
 
 		result[0] = userID;
 		result[1] = userName; // userName

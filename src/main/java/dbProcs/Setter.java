@@ -1024,7 +1024,7 @@ public class Setter {
 
 	}
 
-	public static boolean userCreateSSO(String ApplicationRoot, String classId, String userName, String ssoName)
+	public static boolean userCreateSSO(String ApplicationRoot, String classId, String userName, String ssoName, String userRole)
 			throws SQLException {
 		boolean result = false;
 
@@ -1043,7 +1043,7 @@ public class Setter {
 			callstmt.setString(1, classId);
 			callstmt.setString(2, userName);
 			callstmt.setString(3, "DISABLED");
-			callstmt.setString(4, "player"); // We always set to player, this field is ignored when SSO users log in
+			callstmt.setString(4, userRole); // We always set to player, this field is ignored when SSO users log in
 			callstmt.setString(5, ssoName);
 			callstmt.setString(6, ""); // userAddress
 			callstmt.setString(7, "saml"); // login type

@@ -148,17 +148,6 @@ public class ACS extends HttpServlet {
 
 								log.debug("Saml unpack properties file loaded, unpacking saml data");
 
-								Collection<String> keys = attributes.keySet();
-								for(String name :keys){
-									log.debug("<tr><td>" + name + "</td><td>");
-									List<String> values = attributes.get(name);
-									for(String value :values) {
-										log.debug("<li>" + value + "</li>");
-									}
-									
-									log.debug("</td></tr>");
-								}
-								
 								// Get id and name from SAML data
 
 								String ssoNameKey = prop.getProperty("sso.saml.ssoName");
@@ -177,8 +166,6 @@ public class ACS extends HttpServlet {
 
 								List<String> affiliations = attributes.get(affiliationKey);
 
-
-								
 								String adminAffiliation = prop.getProperty("sso.saml.adminAffiliation");
 								String playerAffiliation = prop.getProperty("sso.saml.playerAffiliation");
 
@@ -210,12 +197,11 @@ public class ACS extends HttpServlet {
 									ssoValid = true;
 								} else {
 									ssoValid = false;
-									
-									errorMessage += "Authorization failed. Please ensure that you are a member of one of the following groups: " ;
-									
+
+									errorMessage += "Authorization failed. Please ensure that you are a member of one of the following groups: ";
+
 									for (String affiliation : adminAffiliations) {
 										errorMessage += affiliation + ", ";
-
 									}
 
 									for (String affiliation : playerAffiliations) {
@@ -276,7 +262,11 @@ public class ACS extends HttpServlet {
 							Cookie token = new Cookie("token", Hash.randomString());
 							if (request.getRequestURL().toString().startsWith("https"))// If Requested over HTTPs
 								token.setSecure(true);
+
+							// We must set the path because the ACS servlet is in a subdir...
+							token.setPath("/");
 							response.addCookie(token);
+
 							mustRedirect = true;
 
 							// Removing user from kick list. If they were on it before, their suspension
