@@ -68,6 +68,21 @@ public class Logout extends HttpServlet {
 			Object tokenParmeter = request.getParameter("csrfToken");
 			if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
 
+				// Remove Everything
+				ses.removeAttribute("userStamp");
+				ses.removeAttribute("userName");
+				ses.removeAttribute("userRole");
+
+				// Invalidate Session on server
+				ses.invalidate();
+				ses = request.getSession(true);
+
+				// Remove cookie
+				Cookie emptyCookie = new Cookie("token", "");
+				emptyCookie.setPath("/");
+				response.addCookie(emptyCookie);
+				log.debug("User Logged Out");
+				
 				if (LoginMethod.isSaml()) {
 
 					Auth auth;
@@ -110,19 +125,7 @@ public class Logout extends HttpServlet {
 					}
 
 				} else {
-					// Remove Everything
-					ses.removeAttribute("userStamp");
-					ses.removeAttribute("userName");
-					ses.removeAttribute("userRole");
 
-					// Invalidate Session on server
-					ses.invalidate();
-					ses = request.getSession(true);
-
-					// Remove cookie
-					Cookie emptyCookie = new Cookie("token", "");
-					response.addCookie(emptyCookie);
-					log.debug("User Logged Out");
 					response.sendRedirect("login.jsp");
 				}
 
