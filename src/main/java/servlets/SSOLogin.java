@@ -36,7 +36,7 @@ import utils.ShepherdLogManager;
 public class SSOLogin extends HttpServlet {
 
 	private static final long serialVersionUID = 1488140446224058032L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(Login.class);
+	private static org.apache.log4j.Logger log = Logger.getLogger(SSOLogin.class);
 
 	/**
 	 * Redirects user to index.jsp
@@ -56,12 +56,9 @@ public class SSOLogin extends HttpServlet {
 		try {
 			auth = new Auth(request, response);
 			auth.login();
-		} catch (SettingsException e) {
+		} catch (SettingsException | Error e) {
 			log.error("Caught exception when initializing SSO: " + e.toString());
 			throw new RuntimeException(e);
-		} catch (Error e) {
-			log.error("Caught exception when initializing SSO: " + e.toString());
-			throw new RuntimeException(e);			
 		}
 
 		log.debug("**** End servlets.SSOLogin ***");	}

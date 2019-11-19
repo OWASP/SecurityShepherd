@@ -84,6 +84,13 @@
 						<fmt:message key="generic.text.login" />
 					</h1>
 					<%
+					if (!loginFailed.isEmpty()) {
+					%>
+					<p>
+						<strong><font color="red"><%=loginFailed%></font></strong>
+					</p>
+					<%
+						}
 						if (LoginMethod.isLogin()) {
 					%>
 					<p id="login-info">
@@ -97,13 +104,7 @@
 					</p>
 					<%
 						}
-							if (!loginFailed.isEmpty()) {
-					%>
-					<p>
-						<strong><font color="red"><%=loginFailed%></font></strong>
-					</p>
-					<%
-						}
+							
 					%>
 					<form name="loginForm" method="POST" action="login">
 						<table>

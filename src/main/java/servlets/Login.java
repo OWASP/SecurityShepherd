@@ -115,12 +115,11 @@ public class Login extends HttpServlet {
 				}
 
 				// Removing user from kick list. If they were on it before, their suspension
-				// must have ended if they DB authentication Succeeded
+				// must have ended if DB authentication Succeeded
 				UserKicker.removeFromKicklist(user[1]);
 			}
 
 			if (mustRedirect) {
-
 				response.sendRedirect("index.jsp");
 				return;
 			} else {

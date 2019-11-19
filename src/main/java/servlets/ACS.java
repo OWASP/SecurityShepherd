@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -59,7 +61,7 @@ public class ACS extends HttpServlet {
 		Object language = ses.getAttribute("lang");
 
 		String errorMessage = new String();
-		
+
 		request.setCharacterEncoding("UTF-8");
 
 		response.setContentType("text/plain");
@@ -69,6 +71,7 @@ public class ACS extends HttpServlet {
 		log.debug("Servlet root = " + ApplicationRoot);
 
 		boolean mustRedirect = false;
+		boolean ssoValid = false;
 
 		// Start SAML processing
 
@@ -96,15 +99,14 @@ public class ACS extends HttpServlet {
 
 			errorMessage += "Not authenticated";
 			ses.setAttribute("loginFailed", errorMessage);
-			response.sendRedirect("login.jsp");
-			return;
+			response.sendRedirect("../login.jsp");
+
 		} else {
 			log.debug("User authenticated");
 			List<String> errors = auth.getErrors();
 			if (!errors.isEmpty()) {
 				errorMessage += StringUtils.join(errors, ", ");
 				log.debug("SAML errors found: " + StringUtils.join(errors, ", "));
-
 			} else {
 				Map<String, List<String>> attributes = auth.getAttributes();
 				String nameId = auth.getNameId();
@@ -146,6 +148,17 @@ public class ACS extends HttpServlet {
 
 								log.debug("Saml unpack properties file loaded, unpacking saml data");
 
+								Collection<String> keys = attributes.keySet();
+								for(String name :keys){
+									log.debug("<tr><td>" + name + "</td><td>");
+									List<String> values = attributes.get(name);
+									for(String value :values) {
+										log.debug("<li>" + value + "</li>");
+									}
+									
+									log.debug("</td></tr>");
+								}
+								
 								// Get id and name from SAML data
 
 								String ssoNameKey = prop.getProperty("sso.saml.ssoName");
@@ -162,19 +175,55 @@ public class ACS extends HttpServlet {
 
 								String affiliationKey = prop.getProperty("sso.saml.affiliation");
 
-								String affiliation = attributes.get(affiliationKey).get(0);
+								List<String> affiliations = attributes.get(affiliationKey);
 
-								log.debug("affiliation = " + affiliation);
 
+								
 								String adminAffiliation = prop.getProperty("sso.saml.adminAffiliation");
+								String playerAffiliation = prop.getProperty("sso.saml.playerAffiliation");
 
-								if (affiliation.equalsIgnoreCase(adminAffiliation)) {
-									userRole = "admin";
-								} else {
-									userRole = "player";
+								List<String> adminAffiliations = Arrays.asList(adminAffiliation.split(",[ ]*"));
+								List<String> playerAffiliations = Arrays.asList(playerAffiliation.split(",[ ]*"));
+
+								boolean foundAdmin = false;
+								boolean foundPlayer = false;
+
+								for (String affiliation : adminAffiliations) {
+									if (affiliations.contains(affiliation)) {
+										foundAdmin = true;
+									}
 								}
 
-								log.debug("userRole= " + userRole);
+								if (!foundAdmin) {
+									for (String affiliation : playerAffiliations) {
+										if (affiliations.contains(affiliation)) {
+											foundPlayer = true;
+										}
+									}
+								}
+
+								if (foundAdmin) {
+									userRole = "admin";
+									ssoValid = true;
+								} else if (foundPlayer) {
+									userRole = "player";
+									ssoValid = true;
+								} else {
+									ssoValid = false;
+									
+									errorMessage += "Authorization failed. Please ensure that you are a member of one of the following groups: " ;
+									
+									for (String affiliation : adminAffiliations) {
+										errorMessage += affiliation + ", ";
+
+									}
+
+									for (String affiliation : playerAffiliations) {
+										errorMessage += affiliation + ", ";
+									}
+								}
+
+								log.debug("userRole = " + userRole);
 
 							}
 						} else {
@@ -191,57 +240,61 @@ public class ACS extends HttpServlet {
 
 					}
 
-					if (ssoName == null || userName == null || userRole == null) {
-						String errorMsg = "Unknown error occured when unpacking SAML properties";
+					if (ssoValid) {
 
-						log.error(errorMsg);
-						throw new RuntimeException(errorMsg);
-					}
+						if (ssoName == null || userName == null || userRole == null) {
+							String errorMsg = "Unknown error occured when unpacking SAML properties";
 
-					log.debug("Saml userdata loaded, calling authUserSSO");
-
-					String user[] = Getter.authUserSSO(ApplicationRoot, null, userName, ssoName, userRole);
-
-					if (user != null && !user[0].isEmpty()) {
-
-						// Kill Session and Create a new one with user logged in
-						log.debug("Creating new session for " + user[2] + " " + user[1]);
-						ses.invalidate();
-						ses = request.getSession(true);
-						ses.setAttribute("userStamp", user[0]);
-						ses.setAttribute("userName", user[1]);
-						ses.setAttribute("userRole", user[2]);
-						ses.setAttribute("lang", language);
-						log.debug("userClassId = " + user[4]);
-
-						ses.setAttribute("userClass", user[4]);
-
-						if (user[5].equalsIgnoreCase("true")) {
-							log.debug("Temporary Username Detected, user will be prompted to change");
-							ses.setAttribute("ChangeUsername", "true");
+							log.error(errorMsg);
+							throw new RuntimeException(errorMsg);
 						}
 
-						log.debug("Setting CSRF cookie");
-						Cookie token = new Cookie("token", Hash.randomString());
-						if (request.getRequestURL().toString().startsWith("https"))// If Requested over HTTPs
-							token.setSecure(true);
-						response.addCookie(token);
-						mustRedirect = true;
+						log.debug("Saml userdata loaded, calling authUserSSO");
 
-						// Removing user from kick list. If they were on it before, their suspension
-						// must have ended if their authentication Succeeded
-						UserKicker.removeFromKicklist(user[1]);
+						String user[] = Getter.authUserSSO(ApplicationRoot, null, userName, ssoName, userRole);
+
+						if (user != null && !user[0].isEmpty()) {
+
+							// Kill Session and Create a new one with user logged in
+							log.debug("Creating new session for " + user[2] + " " + user[1]);
+							ses.invalidate();
+							ses = request.getSession(true);
+							ses.setAttribute("userStamp", user[0]);
+							ses.setAttribute("userName", user[1]);
+							ses.setAttribute("userRole", user[2]);
+							ses.setAttribute("lang", language);
+							log.debug("userClassId = " + user[4]);
+
+							ses.setAttribute("userClass", user[4]);
+
+							if (user[5].equalsIgnoreCase("true")) {
+								log.debug("Temporary Username Detected, user will be prompted to change");
+								ses.setAttribute("ChangeUsername", "true");
+							}
+
+							log.debug("Setting CSRF cookie");
+							Cookie token = new Cookie("token", Hash.randomString());
+							if (request.getRequestURL().toString().startsWith("https"))// If Requested over HTTPs
+								token.setSecure(true);
+							response.addCookie(token);
+							mustRedirect = true;
+
+							// Removing user from kick list. If they were on it before, their suspension
+							// must have ended if their authentication Succeeded
+							UserKicker.removeFromKicklist(user[1]);
+						}
+
+						if (mustRedirect) {
+							response.sendRedirect("../index.jsp");
+						} else {
+							ssoValid = false;
+						}
 					}
 
-					if (mustRedirect) {
-
-						response.sendRedirect("index.jsp");
-						return;
-
-					} else {
+					if (!ssoValid) {
 						log.debug("Could not authenticate");
 
-						errorMessage += "Invalid User name or Password.";
+						errorMessage += "SSO login failed.";
 						ses.setAttribute("loginFailed", errorMessage);
 						// Lagging Response
 						try {
@@ -249,10 +302,8 @@ public class ACS extends HttpServlet {
 						} catch (InterruptedException ex) {
 							Thread.currentThread().interrupt();
 						}
-						response.sendRedirect("login.jsp");
-						return;
+						response.sendRedirect("../login.jsp");
 					}
-
 				}
 			}
 		}
@@ -265,6 +316,6 @@ public class ACS extends HttpServlet {
 	 * Redirects user to index.jsp
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("../index.jsp");
 	}
 }

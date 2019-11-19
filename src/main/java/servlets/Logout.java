@@ -79,27 +79,6 @@ public class Logout extends HttpServlet {
 						throw new RuntimeException("SAML error : " + e.toString());
 					}
 
-					try {
-						auth.processSLO();
-					} catch (Exception e) {
-						String message = "SAML logout error : " + e.toString();
-						log.error(message);
-						throw new RuntimeException(message);
-
-					}
-
-					List<String> errors = auth.getErrors();
-					
-					if(!errors.isEmpty())
-					{
-						
-						// A logout error occurred
-						String message = "SAML logout returned error : " + StringUtils.join(errors, ", ") ;
-						log.error(message);
-						throw new RuntimeException(message);
-						
-					}
-
 					String nameId = null;
 					if (ses.getAttribute("nameId") != null) {
 						nameId = ses.getAttribute("nameId").toString();
@@ -130,19 +109,23 @@ public class Logout extends HttpServlet {
 
 					}
 
+				} else {
+					// Remove Everything
+					ses.removeAttribute("userStamp");
+					ses.removeAttribute("userName");
+					ses.removeAttribute("userRole");
+
+					// Invalidate Session on server
+					ses.invalidate();
+					ses = request.getSession(true);
+
+					// Remove cookie
+					Cookie emptyCookie = new Cookie("token", "");
+					response.addCookie(emptyCookie);
+					log.debug("User Logged Out");
+					response.sendRedirect("login.jsp");
 				}
-				// Remove Everything
-				ses.removeAttribute("userStamp");
-				ses.removeAttribute("userName");
-				ses.removeAttribute("userRole");
-				// Invalid Session on server
-				ses.invalidate();
-				ses = request.getSession(true);
-				// Remove cookie
-				Cookie emptyCookie = new Cookie("token", "");
-				response.addCookie(emptyCookie);
-				log.debug("User Logged Out");
-				response.sendRedirect("login.jsp");
+
 			} else {
 				log.error("CSRF Attack Detected");
 				response.sendRedirect("index.jsp");

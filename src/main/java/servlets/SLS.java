@@ -17,6 +17,7 @@ import com.onelogin.saml2.Auth;
 import com.onelogin.saml2.exception.Error;
 import com.onelogin.saml2.exception.SettingsException;
 
+import utils.LoginMethod;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -51,7 +52,7 @@ public class SLS extends HttpServlet {
 	 * 
 	 * @param csrfToken
 	 */
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Setting IpAddress To Log and taking header for original IP if forwarded from
 		// proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
@@ -65,49 +66,52 @@ public class SLS extends HttpServlet {
 			Cookie tokenCookie = Validate.getToken(request.getCookies());
 			Object tokenParmeter = request.getParameter("csrfToken");
 
-			Auth auth;
-			try {
-				auth = new Auth(request, response);
-			} catch (SettingsException e) {
-				throw new RuntimeException("SAML not configured: " + e.toString());
-			} catch (Error e) {
-				throw new RuntimeException("SAML error : " + e.toString());
-			}
+			if (LoginMethod.isSaml()) {
 
-			try {
-				auth.processSLO();
-			} catch (Exception e) {
-				throw new RuntimeException("SAML error when processing response: " + e.toString());
-			}
+				Auth auth;
+				try {
+					auth = new Auth(request, response);
+				} catch (SettingsException e) {
+					throw new RuntimeException("SAML not configured: " + e.toString());
+				} catch (Error e) {
+					throw new RuntimeException("SAML error : " + e.toString());
+				}
 
-			List<String> errors = auth.getErrors();
+				try {
+					auth.processSLO();
+				} catch (Exception e) {
+					throw new RuntimeException("SAML error when processing response: " + e.toString());
+				}
 
-			if (errors.isEmpty()) {
-				log.debug("SSO Logout completed");
-			} else {
-				log.debug("Error when performing SSO Logout: " + StringUtils.join(errors, ", "));
-			}
+				List<String> errors = auth.getErrors();
 
-			if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
-				// Remove Everything
-				ses.removeAttribute("userStamp");
-				ses.removeAttribute("userName");
-				ses.removeAttribute("userRole");
-				// Invalid Session on server
-				ses.invalidate();
-				ses = request.getSession(true);
-				// Remove cookie
-				Cookie emptyCookie = new Cookie("token", "");
-				response.addCookie(emptyCookie);
-				log.debug("User Logged Out");
-				response.sendRedirect("login.jsp");
-			} else {
-				log.error("CSRF Attack Detected");
-				response.sendRedirect("index.jsp");
+				if (errors.isEmpty()) {
+					log.debug("SSO Logout completed");
+				} else {
+					log.debug("Error when performing SSO Logout: " + StringUtils.join(errors, ", "));
+				}
+
+				if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
+					// Remove Everything
+					ses.removeAttribute("userStamp");
+					ses.removeAttribute("userName");
+					ses.removeAttribute("userRole");
+					// Invalid Session on server
+					ses.invalidate();
+					ses = request.getSession(true);
+					// Remove cookie
+					Cookie emptyCookie = new Cookie("token", "");
+					response.addCookie(emptyCookie);
+					log.debug("User Logged Out");
+					response.sendRedirect("../login.jsp");
+				} else {
+					log.error("CSRF Attack Detected");
+					response.sendRedirect("../index.jsp");
+				}
 			}
 		} else {
 			log.error("SLS Function Called with no valid session");
-			response.sendRedirect("login.jsp");
+			response.sendRedirect("../login.jsp");
 		}
 		log.debug("*** END SLS ***");
 	}
