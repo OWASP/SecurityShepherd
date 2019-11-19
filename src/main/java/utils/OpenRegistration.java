@@ -36,14 +36,16 @@ public class OpenRegistration {
 	private static boolean isLoaded = false;
 
 	public static boolean isEnabled() {
-		loadRegistrationStatus();
-
+		if (!isLoaded) {
+			loadRegistrationStatus();
+		}
 		return enabled;
 	}
 
 	public static boolean isDisabled() {
-		loadRegistrationStatus();
-
+		if (!isLoaded) {
+			loadRegistrationStatus();
+		}
 		return !enabled;
 	}
 
