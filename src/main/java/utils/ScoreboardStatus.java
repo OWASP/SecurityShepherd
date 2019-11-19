@@ -32,7 +32,9 @@ public class ScoreboardStatus {
 	 * @return
 	 */
 	public static boolean canSeeScoreboard(String userRole) {
-		loadScoreboardStatus();
+		if (!isLoaded) {
+			loadScoreboardStatus();
+		}
 		boolean authorised = true;
 		if (adminOnlyScoreboard) {
 			authorised = userRole.equalsIgnoreCase("admin");
@@ -50,13 +52,17 @@ public class ScoreboardStatus {
 	 * @return Boolean Value
 	 */
 	public static boolean getClassSpecificScoreboard() {
-		loadScoreboardStatus();
+		if (!isLoaded) {
+			loadScoreboardStatus();
+		}
 
 		return classSpecificScoreboard;
 	}
 
 	public static String getScoreboardClass() {
-		loadScoreboardStatus();
+		if (!isLoaded) {
+			loadScoreboardStatus();
+		}
 
 		return scoreboardClass;
 	}
@@ -67,7 +73,9 @@ public class ScoreboardStatus {
 	 * @return
 	 */
 	public static boolean isScoreboardEnabled() {
-		loadScoreboardStatus();
+		if (!isLoaded) {
+			loadScoreboardStatus();
+		}
 
 		return scoreboardEnabled;
 	}
@@ -78,7 +86,9 @@ public class ScoreboardStatus {
 	 * @return True if class specific scoreboard is enabled. Otherwise False
 	 */
 	public static boolean isClassSpecificScoreboard() {
-		loadScoreboardStatus();
+		if (!isLoaded) {
+			loadScoreboardStatus();
+		}
 
 		return classSpecificScoreboard;
 	}
@@ -89,7 +99,10 @@ public class ScoreboardStatus {
 	 * @return True if scoreboard is public. Otherwise False
 	 */
 	public static boolean isPublicScoreboard() {
-		loadScoreboardStatus();
+		if (!isLoaded) {
+			loadScoreboardStatus();
+		}
+
 
 		return publicScoreboard;
 	}
