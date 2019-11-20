@@ -36,24 +36,32 @@
 		// validateSession ensures a valid session, and valid role credentials
 		// Also, if tokenCookie != null, then the page is good to continue loading
 		if (Validate.validateSession(ses) && tokenCookie != null || ScoreboardStatus.isPublicScoreboard()) {
-			//Log User Name
-
-			String userName = (String) ses.getAttribute("userName");
-
-			if (userName == null) {
-				ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
-						"Scoreboard accessed by an unauthorized user");
-			} else {
-				ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
-						"Scoreboard accessed by: " + userName.toString(), userName);
-			}
 
 			// Getting Session Variables
 
 			String userRole = (String) ses.getAttribute("userRole");
 			boolean canSeeScoreboard = true;
-			if (userRole != null) {
-				canSeeScoreboard = ScoreboardStatus.canSeeScoreboard(userRole);
+
+			canSeeScoreboard = ScoreboardStatus.canSeeScoreboard(userRole);
+
+			//Log User Name
+
+			String userName = (String) ses.getAttribute("userName");
+
+			if (userName == null) {
+				if (canSeeScoreboard) {
+
+					ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
+							"Scoreboard accessed while not logged in");
+					
+				} else {
+
+					ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
+							"Scoreboard accessed by an unauthorized user");
+				}
+			} else {
+				ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
+						"Scoreboard accessed by: " + userName.toString(), userName);
 			}
 
 			//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
@@ -278,9 +286,7 @@
 				//Kick off Scoreboard
 				poll();
 
-				<%
-				if (tokenCookie != null) {
-			%>
+				<%if (tokenCookie != null) {%>
 				
 				function whereistandToggle(){
 					if ($('#whereistand-chk')[0].checked)
@@ -300,12 +306,8 @@
 						var s = Number($('#userplace-<%=ses.getAttribute("userStamp").toString()%>')
 						.parent().parent().css('top').replace(/\D/g, ''));
 				var h = $(window).height() / 2;
-				
-				<%
-					}
-				%>
-
-				if (s > h) {
+	<%}%>
+		if (s > h) {
 					var d = s - h;
 					window.scrollBy(0, d);
 				}

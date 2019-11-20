@@ -37,6 +37,9 @@ public class ScoreboardStatus {
 		}
 		boolean authorised = true;
 		if (adminOnlyScoreboard) {
+			if (userRole == null) {
+				return false;
+			}
 			authorised = userRole.equalsIgnoreCase("admin");
 		} else if (publicScoreboard) {
 			// Scoreboard is public, always allow scoreboard to be shown, even to

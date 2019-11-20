@@ -398,7 +398,7 @@ if (request.getSession() != null)
 							<% 
 							}
 							
-							if (CountdownHandler.willEnd()) { %>
+							if (CountdownHandler.willLock() || CountdownHandler.willEnd()) { %>
 							setInterval(function() { makeTimer("end", "<% out.print(CountdownHandler.getEndTime()); %>", "CTF ends in "); }, 1000);
 							<% 
 							} %>
@@ -1038,7 +1038,8 @@ if (request.getSession() != null)
 					url: "getCheat",
 					data: {
 						moduleId: theModuleId,
-						csrfToken: "<%=csrfToken%>"
+						csrfToken: "<%=csrfToken%>
+		"
 									},
 									async : false
 								});

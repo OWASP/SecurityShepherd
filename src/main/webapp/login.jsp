@@ -84,7 +84,15 @@
 						<fmt:message key="generic.text.login" />
 					</h1>
 					<%
-					if (!loginFailed.isEmpty()) {
+					if (ScoreboardStatus.isPublicScoreboard()) {
+						%>
+
+						<p id="scoreboard_link">
+							<fmt:message key="login.text.scoreboard" />
+						</p>
+						<%
+							}
+						if (!loginFailed.isEmpty()) {
 					%>
 					<p>
 						<strong><font color="red"><%=loginFailed%></font></strong>
@@ -103,8 +111,7 @@
 						<fmt:message key="login.text.regInfo" />
 					</p>
 					<%
-						}
-							
+							}
 					%>
 					<form name="loginForm" method="POST" action="login">
 						<table>
