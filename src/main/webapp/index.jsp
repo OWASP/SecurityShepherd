@@ -1038,8 +1038,7 @@ if (request.getSession() != null)
 					url: "getCheat",
 					data: {
 						moduleId: theModuleId,
-						csrfToken: "<%=csrfToken%>
-		"
+						csrfToken: "<%=csrfToken%>"
 									},
 									async : false
 								});

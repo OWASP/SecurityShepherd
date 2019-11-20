@@ -148,7 +148,7 @@ public class BrokenCrypto4 extends HttpServlet {
 
 			} catch (Exception e) {
 				log.debug("Didn't complete order: " + e.toString());
-				htmlOutput += "<p>" + bundle.getString("insecureCyrptoStorage.4.orderFailed") + "</p>";
+				htmlOutput += "<p>" + bundle.getString("insecureCryptoStorage.4.orderFailed") + "</p>";
 			}
 			try {
 				Thread.sleep(1000);

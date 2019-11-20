@@ -87,7 +87,7 @@ String levelName = "Insecure Cryptographic Storage Challenge 2";
 			theKey = "kpoisaijdieyjaf";
 			var theAlphabet =   "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz";
 
-			// <%= bundle.getString("insecureCyrptoStorage.2.commentedCode.1") %>
+			// <%= bundle.getString("insecureCryptoStorage.2.commentedCode.1") %>
 			theKey = theKey.toUpperCase();
 			var theKeysLength = theKey.length;
 			var i;
@@ -102,7 +102,7 @@ String levelName = "Insecure Cryptographic Storage Challenge 2";
 			theKey = adjustedKey;
 			theKeysLength = theKey.length;
 
-			// <%= bundle.getString("insecureCyrptoStorage.2.commentedCode.2") %>
+			// <%= bundle.getString("insecureCryptoStorage.2.commentedCode.2") %>
 			var inputLength = input.length;
 			var output = "";
 			var theKeysCurrentIndex = 0;
@@ -126,7 +126,7 @@ String levelName = "Insecure Cryptographic Storage Challenge 2";
 				theKeysCurrentIndex =(theKeysCurrentIndex + 1) % theKeysLength;
 			}
 			
-			// <%= bundle.getString("insecureCyrptoStorage.2.commentedCode.3") %>
+			// <%= bundle.getString("insecureCryptoStorage.2.commentedCode.3") %>
 			$("#resultDiv").hide("fast", function(){
 				if(output == "DwsDagmwhziArpmogWaSmmckwhMoEsmgmxlivpDttfjbjdxqBwxbKbCwgwgUyam")
 					$('#resultDiv').html("<p>Yeah, that's correct</p>");
@@ -134,7 +134,7 @@ String levelName = "Insecure Cryptographic Storage Challenge 2";
 					$('#resultDiv').html("<p>No, that's not correct</p>");
 				$("#resultDiv").show("slow");
 			});
-			// <%= bundle.getString("insecureCyrptoStorage.2.commentedCode.4") %>
+			// <%= bundle.getString("insecureCryptoStorage.2.commentedCode.4") %>
 			/*
 			$("#resultDiv").hide("fast", function(){
 					$('#resultDiv').html("Encrypted Output: " + output);

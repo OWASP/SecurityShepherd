@@ -172,12 +172,12 @@ public class BrokenCryptoHomeMadeIT {
 				log.fatal(message);
 				fail(message);
 			} else if (!servletResponse
-					.contains(bundle.getString("insecureCyrptoStorage.homemade.badanswer.warning"))) {
+					.contains(bundle.getString("insecureCryptoStorage.homemade.badanswer.warning"))) {
 				String message = new String("Invalid Solution did not return Wrong Answer Response");
 				log.fatal(message);
 				fail(message);
 			} else if (!servletResponse
-					.contains(bundle.getString("insecureCyrptoStorage.homemade.badanswer.notLockedOut"))) {
+					.contains(bundle.getString("insecureCryptoStorage.homemade.badanswer.notLockedOut"))) {
 				String message = new String("Response Did not contain a 'You are not locked out yet' message");
 				log.fatal(message);
 				fail(message);
@@ -212,13 +212,13 @@ public class BrokenCryptoHomeMadeIT {
 				log.fatal(message);
 				fail(message);
 			} else if (servletResponse
-					.contains(bundle.getString("insecureCyrptoStorage.homemade.badanswer.notLockedOut"))) {
+					.contains(bundle.getString("insecureCryptoStorage.homemade.badanswer.notLockedOut"))) {
 				String message = new String(
 						"Response contained a 'You are not locked out yet' message when we should be locked out");
 				log.fatal(message);
 				fail(message);
 			} else if (!servletResponse
-					.contains(bundle.getString("insecureCyrptoStorage.homemade.badanswer.lockedOut"))) {
+					.contains(bundle.getString("insecureCryptoStorage.homemade.badanswer.lockedOut"))) {
 				String message = new String(
 						"Response Did not contain a 'You are locked out' message when we should be locked out");
 				log.fatal(message);
@@ -319,7 +319,7 @@ public class BrokenCryptoHomeMadeIT {
 				String message = new String("Valid Key Returned Funky Error");
 				log.fatal(message);
 				fail(message);
-			} else if (!servletResponse.contains(bundle.getString("insecureCyrptoStorage.homemade.nameTooShort"))) {
+			} else if (!servletResponse.contains(bundle.getString("insecureCryptoStorage.homemade.nameTooShort"))) {
 				String message = new String("Response did not contain Name Too Short Error");
 				log.fatal(message);
 				fail(message);

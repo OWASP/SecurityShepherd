@@ -67,11 +67,11 @@ if (request.getSession() != null)
 		<div id="contentDiv">
 			<h2 class="title"><%= i18nLevelName %></h2>
 			<p> 
-				<%= bundle.getString("insecureCyrptoStorage.4.whatToDo") %>
+				<%= bundle.getString("insecureCryptoStorage.4.whatToDo") %>
 				<br/>
 				<br/>
-				<h3 class="title"><%= bundle.getString("insecureCyrptoStorage.4.shop") %></h3>
-				<p><%= bundle.getString("insecureCyrptoStorage.4.shop.message.1") %> <a>PleaseTakeAFruit</a> <%= bundle.getString("insecureCryptoStorage.4.shop.message.2") %> <a>FruitForFree</a> <%= bundle.getString("insecureCryptoStorage.4.shop.message.3") %></p>
+				<h3 class="title"><%= bundle.getString("insecureCryptoStorage.4.shop") %></h3>
+				<p><%= bundle.getString("insecureCryptoStorage.4.shop.message.1") %> <a>PleaseTakeAFruit</a> <%= bundle.getString("insecureCryptoStorage.4.shop.message.2") %> <a>FruitForFree</a> <%= bundle.getString("insecureCryptoStorage.4.shop.message.3") %></p>
 				<br />
 				<br />
 				<form id="leForm" action="javascript:;">
@@ -107,13 +107,13 @@ if (request.getSession() != null)
 						<td><input type="text" style="width: 50px" value="0" id="numberOfPineapples" autocomplete="off"/>
 					</tr>
 					</table>
-					<p><%= bundle.getString("insecureCyrptoStorage.4.shop.howToShop") %></p>
+					<p><%= bundle.getString("insecureCryptoStorage.4.shop.howToShop") %></p>
 					<table>
-					<tr><td><%= bundle.getString("insecureCyrptoStorage.4.shop.couponCode") %></td><td><input type="text" id="couponCode" autocomplete="off"/></td></tr>
+					<tr><td><%= bundle.getString("insecureCryptoStorage.4.shop.couponCode") %></td><td><input type="text" id="couponCode" autocomplete="off"/></td></tr>
 					<tr><td colspons = 2>			
 						<div id="submitButton">
-						<input type="submit" value="<%= bundle.getString("insecureCyrptoStorage.4.shop.submit") %>"/></div>
-						<p style="display: none;" id="loadingSign"><%= bundle.getString("insecureCyrptoStorage.loading") %></p>
+						<input type="submit" value="<%= bundle.getString("insecureCryptoStorage.4.shop.submit") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("insecureCryptoStorage.loading") %></p>
 					</td></tr>
 					</table>
 				</form>

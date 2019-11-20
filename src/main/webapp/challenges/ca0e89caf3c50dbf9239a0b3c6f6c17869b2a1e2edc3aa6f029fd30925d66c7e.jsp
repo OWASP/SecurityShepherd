@@ -160,8 +160,7 @@
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> <%=bundle.getString("error.occurred")%>
-		: "
+						$("#resultsDiv").html("<p> <%=bundle.getString("error.occurred")%>: "
 													+ ajaxCall.status + " "
 													+ ajaxCall.statusText
 													+ "</p>");
