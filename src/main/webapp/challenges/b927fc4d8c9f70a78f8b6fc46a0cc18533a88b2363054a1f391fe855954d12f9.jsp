@@ -71,40 +71,40 @@ if (request.getSession() != null)
 				<br/>
 				<br/>
 				<h3 class="title"><%= bundle.getString("insecureCyrptoStorage.4.shop") %></h3>
-				<p><%= bundle.getString("insecureCyrptoStorage.4.shop.message.1") %> <a>PleaseTakeARage</a> <%= bundle.getString("insecureCyrptoStorage.4.shop.message.2") %> <a>RageMemeForFree</a> <%= bundle.getString("insecureCyrptoStorage.4.shop.message.3") %></p>
+				<p><%= bundle.getString("insecureCyrptoStorage.4.shop.message.1") %> <a>PleaseTakeAFruit</a> <%= bundle.getString("insecureCryptoStorage.4.shop.message.2") %> <a>FruitForFree</a> <%= bundle.getString("insecureCryptoStorage.4.shop.message.3") %></p>
 				<br />
 				<br />
 				<form id="leForm" action="javascript:;">
 					<table>
 					<!-- Header -->
 					<tr>
-						<th><%= bundle.getString("insecureCyrptoStorage.4.shop.picture") %></th>
-						<th><%= bundle.getString("insecureCyrptoStorage.4.shop.cost") %></th>
-						<th><%= bundle.getString("insecureCyrptoStorage.4.shop.quantity") %></th>
+						<th><%= bundle.getString("insecureCryptoStorage.4.shop.picture") %></th>
+						<th><%= bundle.getString("insecureCryptoStorage.4.shop.cost") %></th>
+						<th><%= bundle.getString("insecureCryptoStorage.4.shop.quantity") %></th>
 					</tr>
-					<!-- Rage Row -->
+					<!-- Apple Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/rage.png"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/apple.jpg"/></td>
 						<td>$45</td>
-						<td><input type="text" style="width: 40px" value="0" id="numberOfRage" autocomplete="off"/>
+						<td><input type="text" style="width: 50px" value="0" id="numberOfApples" autocomplete="off"/>
 					</tr>
-					<!-- NotBad Row -->
+					<!-- Banana Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/notbad.jpeg"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/banana.jpg"/></td>
 						<td>$15</td>
-						<td><input type="text" style="width: 40px" value="0" id="numberOfNotBad" autocomplete="off"/>
+						<td><input type="text" style="width: 50px" value="0" id="numberOfBananas" autocomplete="off"/>
 					</tr>
-					<!-- Troll Row -->
+					<!-- Oranges Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/troll.png"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/orange.jpg"/></td>
 						<td>$3000</td>
-						<td><input type="text" style="width: 40px" value="0" id="numberOfTroll" autocomplete="off"/>
+						<td><input type="text" style="width: 50px" value="0" id="numberOfOranges" autocomplete="off"/>
 					</tr>
-					<!-- MeGusta Row -->
+					<!-- Pineapples Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/megusta.png"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/pineapple.png"/></td>
 						<td>$30</td>
-						<td><input type="text" style="width: 40px" value="0" id="numberOfMegusta" autocomplete="off"/>
+						<td><input type="text" style="width: 50px" value="0" id="numberOfPineapples" autocomplete="off"/>
 					</tr>
 					</table>
 					<p><%= bundle.getString("insecureCyrptoStorage.4.shop.howToShop") %></p>
@@ -123,10 +123,10 @@ if (request.getSession() != null)
 		</div>
 		<script>
 			$("#leForm").submit(function(){
-				var theMegustaAmount = $("#numberOfMegusta").val();
-				var theTrollAmount = $("#numberOfTroll").val();
-				var theRageAmount = $("#numberOfRage").val();
-				var theNotBadAmount = $("#numberOfNotBad").val();
+				var thePineappleAmount = $("#numberOfPineapples").val();
+				var theOrangeAmount = $("#numberOfOranges").val();
+				var theAppleAmount = $("#numberOfApples").val();
+				var theBananaAmount = $("#numberOfBananas").val();
 				var theCouponCode = $("#couponCode").val();
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
@@ -135,10 +135,10 @@ if (request.getSession() != null)
 						type: "POST",
 						url: "<%= levelHash %>",
 						data: {
-							megustaAmount: theMegustaAmount, 
-							trollAmount: theTrollAmount,
-							rageAmount: theRageAmount, 
-							notBadAmount: theNotBadAmount,
+							pineappleAmount: thePineappleAmount, 
+							orangeAmount: theOrangeAmount,
+							appleAmount: theAppleAmount, 
+							bananaAmount: theBananaAmount,
 							couponCode: theCouponCode
 						},
 						async: false
@@ -149,7 +149,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> <%= bundle.getString("insecureCyrptoStorage.errorOccurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("insecureCryptoStorage.errorOccurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

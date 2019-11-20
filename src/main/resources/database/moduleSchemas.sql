@@ -433,10 +433,10 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `SQLiC5Shop`;
-INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'MeGusta', 30);
-INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Troll', 3000);
-INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Rage', 45);
-INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'NotBad', 15);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'Pineapple', 30);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Orange', 3000);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Apple', 45);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'Banana', 15);
 
 COMMIT;
 
@@ -445,12 +445,12 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `SQLiC5Shop`;
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeARage', 3);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'RageMemeForFree', 3);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeATroll', 2);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffTroll', 2);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeANotBad', 4);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffNotBad', 4);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeAFruit', 3);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'FruitForFree', 3);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeAnOrange', 2);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffOranges', 2);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeABanana', 4);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffBananas', 4);
 
 COMMIT;
 
@@ -819,10 +819,10 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `CryptShop`;
-INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'MeGusta', 30);
-INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Troll', 3000);
-INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Rage', 45);
-INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'NotBad', 15);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'Pineapple', 30);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Orange', 3000);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Apple', 45);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'Banana', 15);
 
 COMMIT;
 
@@ -831,12 +831,12 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `CryptShop`;
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeARage', 3);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'RageMemeForFree', 3);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeATroll', 2);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffTroll', 2);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeANotBad', 4);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffNotBad', 4);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeAFruit', 3);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'FruitForFree', 3);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeAnOrange', 2);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffOranges', 2);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeABanana', 4);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffBananas', 4);
 INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (432197, 100, 'e!c!3etZoumo@Stu4rU176', 2);
 COMMIT;
 
