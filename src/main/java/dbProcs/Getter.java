@@ -292,10 +292,9 @@ public class Getter {
 
 		try {
 			if (userResult.next()) {
+				// User found if a row is in the database
 				userFound = true;
-				log.debug("User Found"); // User found if a row is in the database, this line will not work if the
-											// result
-				// set is empty
+				log.debug("User Found");
 			} else {
 				userFound = false;
 			}
@@ -855,7 +854,7 @@ public class Getter {
 						+ "<table>";
 			else // If empty, Blank output
 				result = new String();
-			
+
 			Database.closeConnection(conn);
 
 		} catch (SQLException e) {
@@ -950,7 +949,7 @@ public class Getter {
 			// This is the script for menu interaction
 			output += "<script>applyMenuButtonActionsCtfMode('" + Encode.forHtml(csrfToken) + "', \""
 					+ Encode.forHtml(bundle.getString("generic.text.sorryError")) + "\");</script>";
-			
+
 			Database.closeConnection(conn);
 
 		} catch (Exception e) {
@@ -1040,7 +1039,7 @@ public class Getter {
 				// output += "</ul></li>"; //Commented Out to prevent Search Box being pushed
 				// into Footer
 			}
-			
+
 			Database.closeConnection(conn);
 
 		} catch (Exception e) {
@@ -1200,7 +1199,7 @@ public class Getter {
 				result = json.toString();
 			else
 				result = new String();
-			
+
 			Database.closeConnection(conn);
 
 		} catch (SQLException e) {
@@ -1786,7 +1785,7 @@ public class Getter {
 				result = "<table><tr><th>Player</th><th>Progress</th></tr>" + result + "</table>";
 			else
 				result = new String();
-			
+
 			Database.closeConnection(conn);
 
 		} catch (SQLException e) {
