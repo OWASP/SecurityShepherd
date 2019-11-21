@@ -904,7 +904,8 @@ public class Setter {
 		log.debug("*** Setter.updateUserPoints ***");
 
 		boolean result = false;
-		try {		Connection conn = Database.getCoreConnection(ApplicationRoot);
+		try {
+			Connection conn = Database.getCoreConnection(ApplicationRoot);
 
 			log.debug("Preparing updateUserPoints call");
 			CallableStatement callstmnt = conn
@@ -1024,9 +1025,9 @@ public class Setter {
 
 	}
 
-	public static boolean userCreateSSO(String ApplicationRoot, String classId, String userName, String ssoName, String userRole)
-			throws SQLException {
-		boolean result = false;
+	public static String userCreateSSO(String ApplicationRoot, String classId, String userName, String ssoName,
+			String userRole) throws SQLException {
+		String result = null;
 
 		log.debug("*** Setter.userCreateSSO ***");
 		log.debug("classId = " + classId);
@@ -1035,15 +1036,63 @@ public class Setter {
 		// We don't log passwords
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		String newUsername=userName;
+
+		try {
+
+			log.debug("Checking for duplicate usernames");
+
+			boolean isDuplicate = true;
+
+			
+			while (isDuplicate) {
+				int duplicateCounter=0;
+				
+				CallableStatement callstmt = conn.prepareCall("SELECT ssoName FROM `users` WHERE userName = ?");
+
+				callstmt.setString(1, newUsername);
+
+				ResultSet checkDuplicate = callstmt.executeQuery();
+				log.debug("Opening result set");
+
+				if (checkDuplicate.next()) {
+					// Found a duplicate user, sigh
+					isDuplicate = true;
+					duplicateCounter++;
+					
+					newUsername=userName + String.valueOf(duplicateCounter);
+					
+					log.debug("Duplicate username found, changing to " + newUsername);
+					
+					
+				} else {
+					isDuplicate = false;
+				}
+				
+				if (duplicateCounter > 10000) {
+					String message = "Bailing out of the de-duplicate loop at " + String.valueOf(duplicateCounter);
+					log.error(message);
+					throw new RuntimeException(message);
+				}
+				
+				
+			}
+
+		} catch (SQLException e) {
+			log.fatal("Failed to check for duplicate usernames: " + e.toString());
+			throw new SQLException(e);
+		}
+
 		try {
 
 			log.debug("Executing userCreate procedure on Database");
 
 			CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			callstmt.setString(1, classId);
-			callstmt.setString(2, userName);
+			callstmt.setString(2, newUsername);
 			callstmt.setString(3, "DISABLED");
-			callstmt.setString(4, userRole); // We always set to player, this field is ignored when SSO users log in
+			callstmt.setString(4, userRole);
 			callstmt.setString(5, ssoName);
 			callstmt.setString(6, ""); // userAddress
 			callstmt.setString(7, "saml"); // login type
@@ -1058,10 +1107,10 @@ public class Setter {
 			if (registerAttempt.getString(1) == null) {
 				// Registration success
 				log.debug("Register Success");
-				result = true;
+				result = newUsername;
 			} else {
 				// Registration failure
-				result = false;
+				result = null;
 				log.debug("ResultSet contained -> " + registerAttempt.getString(1));
 				throw new SQLException(registerAttempt.getString(1));
 			}
