@@ -1037,7 +1037,7 @@ public class Setter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		String newUsername=userName;
+		String newUsername = userName;
 
 		try {
 
@@ -1045,10 +1045,9 @@ public class Setter {
 
 			boolean isDuplicate = true;
 
-			
 			while (isDuplicate) {
-				int duplicateCounter=0;
-				
+				int duplicateCounter = 0;
+
 				CallableStatement callstmt = conn.prepareCall("SELECT ssoName FROM `users` WHERE userName = ?");
 
 				callstmt.setString(1, newUsername);
@@ -1060,23 +1059,22 @@ public class Setter {
 					// Found a duplicate user, sigh
 					isDuplicate = true;
 					duplicateCounter++;
-					
-					newUsername=userName + String.valueOf(duplicateCounter);
-					
-					log.debug("Duplicate username found, changing to " + newUsername);
-					
-					
+
+					newUsername = userName + String.valueOf(duplicateCounter);
+
+					log.debug("Duplicate username found, changing to " + newUsername + " counter "
+							+ String.valueOf(duplicateCounter));
+
 				} else {
 					isDuplicate = false;
 				}
-				
-				if (duplicateCounter > 10000) {
+
+				if (duplicateCounter > 500) {
 					String message = "Bailing out of the de-duplicate loop at " + String.valueOf(duplicateCounter);
 					log.error(message);
 					throw new RuntimeException(message);
 				}
-				
-				
+
 			}
 
 		} catch (SQLException e) {

@@ -2811,7 +2811,7 @@ public class GetterTest {
 		String ssoName1 = new String("ssotestuser1@example.com");
 		String ssoName2 = new String("ssotestuser2@example.com");
 		String ssoName3 = new String("ssotestuser3@example.com");
-		
+		String ssoName4 = new String("ssotestuser3@example.com");
 
 		String user[] = Getter.authUserSSO(applicationRoot, "", userName, ssoName1, "player");
 		if (user == null || user[0].isEmpty()) {
@@ -2819,22 +2819,29 @@ public class GetterTest {
 		} else {
 			log.debug("First SSO User logged in.");
 		}
-		
+
 		user = Getter.authUserSSO(applicationRoot, "", userName, ssoName2, "player");
 		if (user == null || user[0].isEmpty()) {
 			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
 		} else {
 			log.debug("Second SSO User logged in as " + user[1]);
 		}
-		
+
 		user = Getter.authUserSSO(applicationRoot, "", userName, ssoName3, "player");
 		if (user == null || user[0].isEmpty()) {
 			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
 		} else {
 			log.debug("Third SSO User logged in as " + user[1]);
 		}
+
+		user = Getter.authUserSSO(applicationRoot, "", userName, ssoName4, "player");
+		if (user == null || user[0].isEmpty()) {
+			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
+		} else {
+			log.debug("Fourth SSO User logged in as " + user[1]);
+		}
 	}
-	
+
 	@Test
 	public void testSSOAuthSuspended() {
 		String userName = new String("SSOSuspendedUser Lastname");
