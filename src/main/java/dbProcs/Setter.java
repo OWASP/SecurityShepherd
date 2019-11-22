@@ -1045,8 +1045,9 @@ public class Setter {
 
 			boolean isDuplicate = true;
 
+			int duplicateCounter = 0;
+			
 			while (isDuplicate) {
-				int duplicateCounter = 0;
 
 				CallableStatement callstmt = conn.prepareCall("SELECT ssoName FROM `users` WHERE userName = ?");
 

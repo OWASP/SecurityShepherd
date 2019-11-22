@@ -2807,17 +2807,19 @@ public class GetterTest {
 
 	@Test
 	public void testSSOAuthDuplicateUsername() {
-		String userName = new String("SSODuplicateser Lastname");
+		String userName = new String("SSODuplicateuser Lastname");
 		String ssoName1 = new String("ssotestuser1@example.com");
 		String ssoName2 = new String("ssotestuser2@example.com");
 		String ssoName3 = new String("ssotestuser3@example.com");
-		String ssoName4 = new String("ssotestuser3@example.com");
+		String ssoName4 = new String("ssotestuser4@example.com");
+		String ssoName5 = new String("ssotestuser5@example.com");
+		String ssoName6 = new String("ssotestuser6@example.com");
 
 		String user[] = Getter.authUserSSO(applicationRoot, "", userName, ssoName1, "player");
 		if (user == null || user[0].isEmpty()) {
 			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
 		} else {
-			log.debug("First SSO User logged in.");
+			log.debug("First SSO User logged in as " + user[1]);
 		}
 
 		user = Getter.authUserSSO(applicationRoot, "", userName, ssoName2, "player");
@@ -2839,6 +2841,20 @@ public class GetterTest {
 			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
 		} else {
 			log.debug("Fourth SSO User logged in as " + user[1]);
+		}
+		
+		user = Getter.authUserSSO(applicationRoot, "", userName, ssoName5, "player");
+		if (user == null || user[0].isEmpty()) {
+			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
+		} else {
+			log.debug("Fifth SSO User logged in as " + user[1]);
+		}
+		
+		user = Getter.authUserSSO(applicationRoot, "", userName, ssoName6, "player");
+		if (user == null || user[0].isEmpty()) {
+			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
+		} else {
+			log.debug("Sixth SSO User logged in as " + user[1]);
 		}
 	}
 
