@@ -58,9 +58,11 @@ public class GetJsonScore extends HttpServlet {
 		// proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		// log.debug("*** servlets.GetJsonScore ***");
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
+
 		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
-		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 		if (Validate.validateSession(ses)) {
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
