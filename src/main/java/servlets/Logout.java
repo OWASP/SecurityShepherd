@@ -58,6 +58,7 @@ public class Logout extends HttpServlet {
 		// proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("**** servlets.Logout ***");
+		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 		if (Validate.validateSession(ses)) {

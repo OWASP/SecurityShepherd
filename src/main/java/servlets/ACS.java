@@ -56,6 +56,8 @@ public class ACS extends HttpServlet {
 
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("**** servlets.ACS ***");
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 
 		Object language = ses.getAttribute("lang");
