@@ -376,7 +376,7 @@ public class Getter {
 		// Find the generated userID and username by asking the database
 		try {
 			callstmt = conn.prepareCall(
-					"SELECT userId, userName, tempUsername FROM `users` WHERE ssoName = ? AND loginType='saml'");
+					"SELECT userId, userName, classID, tempUsername FROM `users` WHERE ssoName = ? AND loginType='saml'");
 
 		} catch (SQLException e) {
 			log.fatal("Could create call statement: " + e.toString());
@@ -422,7 +422,8 @@ public class Getter {
 		try {
 			userID = userResult.getString(1);
 			userName = userResult.getString(2);
-			isTempUsername = userResult.getBoolean(3);
+			classId = userResult.getString(3); // classId
+			isTempUsername = userResult.getBoolean(4);
 		} catch (SQLException e) {
 			String message = "Could find userID for userName " + userName + " with ssoName " + ssoName + " via SSO: "
 					+ e.toString();

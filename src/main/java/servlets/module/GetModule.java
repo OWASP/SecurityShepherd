@@ -57,7 +57,8 @@ public class GetModule extends HttpServlet {
 		// proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& servlets.module.GetModule &&&");
-
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);

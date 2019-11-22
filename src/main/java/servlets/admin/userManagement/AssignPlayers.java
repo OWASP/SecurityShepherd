@@ -56,6 +56,7 @@ public class AssignPlayers extends HttpServlet
 		log.debug("*** servlets.Admin.AssignPlayers ***");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 		Cookie tokenCookie = Validate.getToken(request.getCookies());
