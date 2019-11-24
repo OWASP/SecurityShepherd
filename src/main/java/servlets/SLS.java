@@ -43,7 +43,7 @@ import utils.Validate;
  *
  */
 public class SLS extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -5824919455464886874L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(SLS.class);
 
 	/**

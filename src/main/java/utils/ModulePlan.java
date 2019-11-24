@@ -39,17 +39,24 @@ public class ModulePlan {
 	private static boolean isLoaded = false;
 
 	public static boolean isIncrementalFloor() {
-		loadModuleLayout();
+		if (!isLoaded) {
+			loadModuleLayout();
+		}
 		return incrementalFloor;
 	}
 
 	public static boolean isOpenFloor() {
-		loadModuleLayout();
+		if (!isLoaded) {
+			loadModuleLayout();
+		}
 		return openFloor;
 	}
 
 	public static boolean isTournamentFloor() {
-		loadModuleLayout();
+		if (!isLoaded) {
+			loadModuleLayout();
+		}
+		;
 		return tournamentFloor;
 	}
 
@@ -87,7 +94,9 @@ public class ModulePlan {
 
 	public static String currentMode() {
 		String result = new String();
-		loadModuleLayout();
+		if (!isLoaded) {
+			loadModuleLayout();
+		}
 		if (openFloor)
 			result = "Open Floor";
 		else if (incrementalFloor)
