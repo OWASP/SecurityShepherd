@@ -68,22 +68,30 @@ public class CheatSheetStatus {
 	}
 
 	public static boolean getStatusForAll() {
-		loadCheatStatus();
+		if (!isLoaded) {
+			loadCheatStatus();
+		}
 		return adminEnabled && playerEnabled;
 	}
 
 	public static boolean isEnabledForAdminsOnly() {
-		loadCheatStatus();
+		if (!isLoaded) {
+			loadCheatStatus();
+		}
 		return !playerEnabled && adminEnabled;
 	}
 
 	public static boolean isEnabledForPlayers() {
-		loadCheatStatus();
+		if (!isLoaded) {
+			loadCheatStatus();
+		}
 		return playerEnabled;
 	}
 
 	public static boolean isEnabledAtAll() {
-		loadCheatStatus();
+		if (!isLoaded) {
+			loadCheatStatus();
+		}
 		return adminEnabled || playerEnabled;
 	}
 
