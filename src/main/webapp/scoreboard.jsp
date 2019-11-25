@@ -35,7 +35,7 @@
 		}
 		// validateSession ensures a valid session, and valid role credentials
 		// Also, if tokenCookie != null, then the page is good to continue loading
-		if (Validate.validateSession(ses) && tokenCookie != null || ScoreboardStatus.isPublicScoreboard()) {
+		if ((Validate.validateSession(ses) && tokenCookie != null) || ScoreboardStatus.isPublicScoreboard()) {
 
 			// Getting Session Variables
 

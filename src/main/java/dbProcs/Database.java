@@ -115,12 +115,23 @@ public class Database {
 
 		String connectionURL = prop.getProperty("databaseConnectionURL");
 		if (connectionURL == null) {
-			throw new RuntimeException(errorBase + "connectionURL");
+			String message=errorBase + "connectionURL";
+			log.fatal(message);
+			throw new RuntimeException(message);
 		}
 
+		if(connectionURL.contains("?")) {
+			// Check for old-style challenge properties files that put options in connection url
+			String message="Connection URL cannot contain options!";
+			log.fatal(message);
+			throw new RuntimeException(message);
+		}
+		
 		String driverType = prop.getProperty("DriverType");
 		if (driverType == null) {
-			throw new RuntimeException(errorBase + "DriverType");
+			String message=errorBase + "DriverType";
+			log.fatal(message);
+			throw new RuntimeException(message);
 		}
 
 		// Pull DB Schema, Schema User name and Schema Password from level specific
