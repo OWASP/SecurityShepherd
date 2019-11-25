@@ -684,6 +684,7 @@ public class Getter {
 			resultSet.next();
 			result[0] = resultSet.getString(1);// Name
 			result[1] = resultSet.getString(2);// Year
+			
 		} catch (SQLException e) {
 			log.error("Could not execute query: " + e.toString());
 			result = null;

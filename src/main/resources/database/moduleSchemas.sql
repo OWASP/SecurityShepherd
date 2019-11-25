@@ -1114,7 +1114,7 @@ USE `directObjectBank`;
 CREATE PROCEDURE `directObjectBank`.`createAccount` (IN accountHolder VARCHAR(45), IN accountPassword VARCHAR(191))
 BEGIN
 COMMIT;
-INSERT INTO `directObjectBank`.`bankAccounts` (`account_holder`, `account_password`, `account_balance`) VALUES (accountHolder, SHA2(accountPassword, 191), 0);
+INSERT INTO `directObjectBank`.`bankAccounts` (`account_holder`, `account_password`, `account_balance`) VALUES (accountHolder, SHA2(accountPassword, 256), 0);
 COMMIT;
 END
 ;
