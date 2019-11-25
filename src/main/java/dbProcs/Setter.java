@@ -1467,5 +1467,28 @@ public class Setter {
 		log.debug("*** END setEndTime ***");
 		return result;
 	}
+	
+	public static boolean setDefaultClass(String ApplicationRoot, String theDefaultClass) throws SQLException {
+		boolean result = false;
+		log.debug("*** Setter.setDefaultClass ***");
+		log.debug("theLockTime = " + theDefaultClass);
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Setting end time");
+		PreparedStatement endTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+		endTimeStatement.setString(1, theDefaultClass);
+		endTimeStatement.setString(2, "defaultClass");
+
+		if (endTimeStatement.executeUpdate() == 1) {
+			result = true;
+		} else {
+			throw new RuntimeException("Could not set default class to " + theDefaultClass);
+		}
+
+		Database.closeConnection(conn);
+		log.debug("*** END setDefaultClass ***");
+		return result;
+	}
 
 }

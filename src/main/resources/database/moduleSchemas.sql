@@ -1059,7 +1059,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `directObjectBank`;
-INSERT INTO `directObjectBank`.`bankAccounts` (`account_number`, `account_holder`, `account_password`, `account_balance`) VALUES (0, 'Mr. Banks', 'SignInImpossibleBecauseNotHashed', 10000000);
+INSERT INTO `directObjectBank`.`bankAccounts` (`account_number`, `account_holder`, `account_password`, `account_balance`) VALUES (0, 'Mr. Banks', 'SignInImpossibleBecauseNotHashed', 10000000000);
 
 COMMIT;
 

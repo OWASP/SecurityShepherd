@@ -2613,5 +2613,29 @@ public class Getter {
 		log.debug("*** END getEndTime ***");
 		return theEndTimeStatus;
 	}
+	
+	public static String getDefaultClass(String ApplicationRoot) throws SQLException {
+		String theDefaultClass = null;
+		log.debug("*** Getter.getDefaultClass ***");
+
+		Connection conn = Database.getCoreConnection(ApplicationRoot);
+
+		log.debug("Getting default class");
+		PreparedStatement callstmt = conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+
+		callstmt.setString(1, "defaultClass");
+
+		ResultSet classResult = callstmt.executeQuery();
+
+		classResult.next();
+
+		theDefaultClass = classResult.getString(1);
+
+		log.debug("Value found: " + theDefaultClass);
+
+		Database.closeConnection(conn);
+		log.debug("*** END getDefaultClass ***");
+		return theDefaultClass;
+	}
 
 }

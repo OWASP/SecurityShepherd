@@ -1553,6 +1553,7 @@ INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('lockTime', '2020-01-
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('hasEndTime', false);
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('endTime', '2020-02-01T12:00:00');
 INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('enableTranslations', true);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('defaultClass', '');
 
 COMMIT;
 
