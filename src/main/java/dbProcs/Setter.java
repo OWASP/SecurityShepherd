@@ -1475,7 +1475,7 @@ public class Setter {
 
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-		log.debug("Setting end time");
+		log.debug("Setting default class");
 		PreparedStatement endTimeStatement = conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
 		endTimeStatement.setString(1, theDefaultClass);
 		endTimeStatement.setString(2, "defaultClass");
