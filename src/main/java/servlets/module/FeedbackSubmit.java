@@ -126,8 +126,8 @@ public class FeedbackSubmit extends HttpServlet
 							//User has submitted a string. Lets see if it matches a freshly computed Key
 							storedResult = Hash.generateUserSolutionKeyOnly(Getter.getModuleResult(ApplicationRoot, moduleId), userName);
 							validKey = storedResult.compareTo(solutionKey) == 0;
-							log.debug("Submitted Key: " + storedResult);
-							log.debug("Expected Key : " + solutionKey);
+							log.debug("Submitted Key: " + solutionKey);
+							log.debug("Expected Key : " + storedResult);
 						}
 						if(validKey)
 						{
