@@ -117,6 +117,15 @@ public class Register extends HttpServlet {
 					if (basicValidation && userValidate) {
 						// Data is good, Add user
 						// Any Class Set to Add them to?
+						if (!isLoaded) {
+							try {
+								defaultClass = Getter.getDefaultClass("");
+								isLoaded = true;
+							} catch (SQLException e) {
+								log.fatal("Could not load default class: " + e.toString());
+								throw new RuntimeException(e);
+							}
+						}
 						if (defaultClass.isEmpty()) {
 							log.debug("Adding player to database, with null classId");
 							Setter.userCreate(ApplicationRoot, null, userName, passWord, "player", userAddress, false);
@@ -170,6 +179,7 @@ public class Register extends HttpServlet {
 		if (!isLoaded) {
 			try {
 				defaultClass = Getter.getDefaultClass("");
+				isLoaded = true;
 			} catch (SQLException e) {
 				log.fatal("Could not load default class: " + e.toString());
 				throw new RuntimeException(e);
