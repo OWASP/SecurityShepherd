@@ -999,7 +999,7 @@ DECLARE tokenExists INT;
 COMMIT;
 SELECT count(token) FROM `securityMisconfigStealToken`.`tokens` WHERE userId = theUserId INTO tokenExists;
 IF (tokenExists < 1) THEN
-	INSERT INTO tokens (userId, token) VALUES (theUserId, SHA2(CONCAT(RAND(), now()), 191));
+	INSERT INTO tokens (userId, token) VALUES (theUserId, SHA2(CONCAT(RAND(), now()), 256));
 	COMMIT;
 END IF;
 SELECT token FROM tokens WHERE userId = theUserId;
@@ -1069,7 +1069,7 @@ USE `directObjectBank`;
 CREATE PROCEDURE `directObjectBank`.`bankAuth` (IN theUserId VARCHAR(45), thePass VARCHAR(191))
 BEGIN
 COMMIT;
-SELECT account_number, account_holder FROM `directObjectBank`.`bankAccounts` WHERE account_holder = theUserId AND account_password = SHA2(thePass, 191);
+SELECT account_number, account_holder FROM `directObjectBank`.`bankAccounts` WHERE account_holder = theUserId AND account_password = SHA2(thePass, 256);
 END
 ;
 -- $$
