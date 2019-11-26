@@ -50,25 +50,22 @@ public class GetJsonScore extends HttpServlet {
 	 * class. This will require a complex client page to parse the returned JSON
 	 * information to make a very pretty score board
 	 * 
-	 * @param classId
-	 * @param csrfToken
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Setting IpAddress To Log and taking header for original IP if forwarded from
 		// proxy
 
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		// log.debug("*** servlets.GetJsonScore ***");
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
 
 		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
-		boolean loggedIn=Validate.validateSession(ses);
+		boolean loggedIn = Validate.validateSession(ses);
 		if (loggedIn || ScoreboardStatus.isPublicScoreboard()) {
-			
-			if(loggedIn) {
+
+			if (loggedIn) {
 				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
 						ses.getAttribute("userName").toString());
 				log.debug("Scoreboard accessed by " + ses.getAttribute("userName").toString());
@@ -79,7 +76,8 @@ public class GetJsonScore extends HttpServlet {
 			Cookie tokenCookie = Validate.getToken(request.getCookies());
 			Object tokenParmeter = request.getParameter("csrfToken");
 			String scoreboardClass = new String();
-			if (Validate.validateTokens(tokenCookie, tokenParmeter) && canSeeScoreboard) {
+			if ((Validate.validateTokens(tokenCookie, tokenParmeter) && canSeeScoreboard)
+					|| ScoreboardStatus.isPublicScoreboard()) {
 				// What Class to List?
 				if (ScoreboardStatus.getClassSpecificScoreboard()) {
 					if (ses.getAttribute("userRole").toString().compareTo("admin") == 0) {
@@ -97,8 +95,7 @@ public class GetJsonScore extends HttpServlet {
 				}
 				String applicationRoot = getServletContext().getRealPath("");
 				String jsonOutput = Getter.getJsonScore(applicationRoot, scoreboardClass);
-				if (jsonOutput.isEmpty())
-					jsonOutput = "ERROR: No Scoreboard Data Right Now";
+
 				out.write(jsonOutput);
 			} else {
 				if (!canSeeScoreboard)
@@ -110,7 +107,6 @@ public class GetJsonScore extends HttpServlet {
 			log.debug("Unauthenticated Scoreboard Request");
 			out.write("ERROR: You are logged out. Please refresh the page");
 		}
-		// log.debug("*** END servlets.GetJsonScore ***");
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
