@@ -56,6 +56,7 @@ public class GetJsonScore extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Setting IpAddress To Log and taking header for original IP if forwarded from
 		// proxy
+
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		// log.debug("*** servlets.GetJsonScore ***");
 		response.setCharacterEncoding("UTF-8");
@@ -64,10 +65,16 @@ public class GetJsonScore extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
-		if (Validate.validateSession(ses)) {
-			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
-					ses.getAttribute("userName").toString());
-			log.debug("Scoreboard accessed by " + ses.getAttribute("userName").toString());
+		boolean loggedIn=Validate.validateSession(ses);
+		if (loggedIn || ScoreboardStatus.isPublicScoreboard()) {
+			
+			if(loggedIn) {
+				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
+						ses.getAttribute("userName").toString());
+				log.debug("Scoreboard accessed by " + ses.getAttribute("userName").toString());
+			} else {
+				log.debug("Scoreboard accessed by someone not logged in.");
+			}
 			boolean canSeeScoreboard = ScoreboardStatus.canSeeScoreboard((String) ses.getAttribute("userRole"));
 			Cookie tokenCookie = Validate.getToken(request.getCookies());
 			Object tokenParmeter = request.getParameter("csrfToken");

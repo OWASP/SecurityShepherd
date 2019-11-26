@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java"
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java"
 	import="dbProcs.Getter, utils.*,org.owasp.encoder.Encode" errorPage=""%>
 
 <%
@@ -53,7 +54,7 @@
 
 					ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
 							"Scoreboard accessed while not logged in");
-					
+
 				} else {
 
 					ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"),
@@ -211,7 +212,7 @@
 									        width: o[i].scale+"%"
 									    }, 1300 );
 									}
-									<%if (tokenCookie != null) {%>
+									<%if (userName != null) {%>
 							// Different color for current user
 									$('#userbar-<%=ses.getAttribute("userStamp").toString()%>').css('background-color', 'green');
 									
@@ -219,7 +220,7 @@
 								}
 								sort();
 
-								<%if (tokenCookie != null) {%>
+								<%if (userName != null) {%>
 								// Show/hide Where I stand button
 								if ($('#userbar-<%=ses.getAttribute("userStamp").toString()%>').length == 0)
 									$("#whereistand-div").hide();
@@ -286,15 +287,19 @@
 				//Kick off Scoreboard
 				poll();
 
-				<%if (tokenCookie != null) {%>
+				<%if (userName != null) { %>
 				
-				function whereistandToggle(){
+				function whereistandToggle() {
 					if ($('#whereistand-chk')[0].checked)
+						{
 						setInterval(function() {
 							whereistandRefresh();
-							}, 1000);
-					else
+							}, 
+							1000);
+						}
+					else{
 						window.scrollTo(0, 0);
+					}
 				}
 
 				function whereistandRefresh() {
@@ -303,16 +308,15 @@
 						console.log('User is on place ' + place);
 						window.scrollTo(0, $('#header').height());
 
-						var s = Number($('#userplace-<%=ses.getAttribute("userStamp").toString()%>')
-						.parent().parent().css('top').replace(/\D/g, ''));
-				var h = $(window).height() / 2;
-	<%}%>
-		if (s > h) {
-					var d = s - h;
-					window.scrollBy(0, d);
+						var s = Number($('#userplace-<%=ses.getAttribute("userStamp").toString()%>').parent().parent().css('top').replace(/\D/g, ''));
+						var h = $(window).height() / 2;
+						if (s > h) {
+							var d = s - h;
+							window.scrollBy(0, d);
+						}
+						}
 				}
-			}
-		}
+				<% } %>
 	</script>
 	<%
 		}
