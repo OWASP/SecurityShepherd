@@ -545,7 +545,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 START TRANSACTION;
 USE `SqlChalSix`;
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (1, 'George', '8367', 'What is your favourite Flower', 'A Red Rose', '23');
-INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (2, 'Brendan', '4685', 'What is the answer to this level?', '17f999a8b3fbfde54124d6e94b191a264652e5087b14622e1644c884f8a33f82', '98');
+INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (2, 'Brendan', '4685', 'What is the answer to this level?', '17f999a8b3fbfde54124d6e94b256a264652e5087b14622e1644c884f8a33f82', '98');
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (3, 'Sean', '1254', 'Your favourite Viking', 'Thor', '25');
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (4, 'Anthony', '7844', 'What game do I suck at?', 'All of the games', '84');
 INSERT INTO `SqlChalSix`.`users` (`idusers`, `userName`, `userPin`, `userQuestion`, `userAnswer`, `userAge`) VALUES (5, 'Owen', '4648', 'Favourite Sandwhich Topping', 'Peanutbutter', '33');
