@@ -26,6 +26,7 @@ jobs:
       - sudo apt-get -y install libargon2-0
       - mvn -Pdocker validate
    -  stage: deploy
+      if: fork = false
       name: Deploy to Dockerhub
       dist: bionic
       language: generic
