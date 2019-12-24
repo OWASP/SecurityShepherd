@@ -1,37 +1,46 @@
 jobs:
-  include:
-    - stage: build
+   include:
+   -  stage: build
       language: java
+      dist: bionic
       script:
-        - mvn clean install -Pdocker -DskipTests -B
-        - docker-compose build
+      - sudo apt-get -y install libargon2-0
+      - mvn clean install -Pdocker -DskipTests -B
+      - docker-compose build
       services: docker
-    - stage: unit-test
+   -  stage: unit-test
       services: mysql
       language: java
-      script: "mvn test -B"
-    - stage: integration-test
-      services: 
-        - mysql
-        - docker
-      language: java
-      script: "mvn verify -DskipUTs=true -DmongoDocker -B"
+      dist: bionic
+      script: mvn test -B
       before_install:
-        - mvn -Pdocker validate
-    - stage: deploy
-      name: "Deploy to Dockerhub"
+      - sudo apt-get -y install libargon2-0
+   -  stage: integration-test
+      services:
+      - mysql
+      - docker
+      dist: bionic
+      language: java
+      script: mvn verify -DskipUTs=true -DmongoDocker -B
+      before_install:
+      - sudo apt-get -y install libargon2-0
+      - mvn -Pdocker validate
+   -  stage: deploy
+      if: fork = false
+      name: Deploy to Dockerhub
+      dist: bionic
       language: generic
       provider: script
       skip_cleanup: true
-      script: skip
       services: docker
       before_install:
-        - mvn install -Pdocker -DskipTests
-        - docker-compose build web
+      - sudo apt-get -y install libargon2-0
+      - mvn install -Pdocker -DskipTests
+      - docker-compose build web
       script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
 stages:
-  - build
-  - unit-test
-  - integration-test
-  - name: deploy
-    if: branch IN (master, dev) AND type = push
+- build
+- unit-test
+- integration-test
+-  name: deploy
+   if: branch IN (master, dev) AND type = push

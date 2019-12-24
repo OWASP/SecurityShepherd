@@ -127,7 +127,7 @@ public class Validate
 	   boolean result = true;
 	   try 
 	   {
-		  log.debug("About to crash");
+		  log.debug("Validating email");
 	      InternetAddress emailAddr = new InternetAddress(email);
 	      log.debug("Did we crash");
 	      emailAddr.validate();
@@ -164,8 +164,14 @@ public class Validate
 	 */
 	public static boolean isValidUser(String userName, String passWord)
 	{
-		boolean result = false;
-		result = userName.length() > 2 && passWord.length() > 7 && userName.length() <= 32 && passWord.length() <= 512;
+		int userLength=userName.length();
+		int passLength=passWord.length();
+		
+		boolean userOK=userLength > 2 && userLength <= 32;
+		boolean passOK=passLength > 7 && passLength <= 512;
+		
+		boolean result = userOK && passOK;
+		
 		if (!result)
 		{
 			log.debug("Invalid Data detected in Validate.isValidUser()");
@@ -363,9 +369,9 @@ public class Validate
 		{
 			lang = ses.getAttribute("lang").toString();
 			//log.debug("lang submitted: " + lang);
-			if(lang != null)
+			if(lang != null || !lang.isEmpty())
 			{
-				if (!lang.isEmpty())
+				if (lang.matches(".[a-z]{2}-[A-Z]{2}$"))
 					result = lang;
 			}
 			//log.debug("lang set to: " + result);

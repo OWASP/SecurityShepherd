@@ -13,8 +13,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 import utils.InstallationException;
-import utils.Validate;
-
 import java.util.Locale;
 import java.util.ResourceBundle;
 
