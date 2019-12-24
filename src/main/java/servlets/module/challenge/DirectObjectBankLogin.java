@@ -225,6 +225,7 @@ public class DirectObjectBankLogin extends HttpServlet
 		float toReturn = 0;
 		try 
 		{
+			
 			callstmt = conn.prepareCall("CALL currentFunds(?)");
 			callstmt.setString(1, accountNumber);
 			ResultSet rs = callstmt.executeQuery();

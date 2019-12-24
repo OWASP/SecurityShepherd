@@ -163,7 +163,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 		boolean result = false;
 		Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeFour");
 		try
-		{
+		{		
 			PreparedStatement prepstmt = conn.prepareStatement("SELECT count(csrfTokenscol) FROM csrfTokens WHERE csrfTokenscol = ?");
 			prepstmt.setString(1, csrfToken);
 			ResultSet rs = prepstmt.executeQuery();

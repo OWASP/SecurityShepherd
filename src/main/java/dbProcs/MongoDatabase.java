@@ -1,10 +1,14 @@
 package dbProcs;
 
 import com.mongodb.*;
+
+import utils.PropertyNotFoundException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -54,8 +58,9 @@ public class MongoDatabase {
      * @param ApplicationRoot The running context of the application.
      * @param path The path to the properties file to use for this connection (filtered for path traversal attacks)
      * @return A MongoDb Collection
+     * @throws FileNotFoundException 
      */
-    public static MongoCredential getMongoChallengeCredentials(String ApplicationRoot, String path)
+    public static MongoCredential getMongoChallengeCredentials(String ApplicationRoot, String path) throws FileNotFoundException
     {
         //Some over paranoid input validation never hurts.
         path = path.replaceAll("\\.", "").replaceAll("/", "");
@@ -67,12 +72,23 @@ public class MongoDatabase {
         props = new File(MongoDatabase.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
         log.debug("Level Properties File = " + path + ".properties");
 
-        String username = FileInputProperties.readfile(props, "databaseUsername");
-        log.debug("Username for Mongo level: " + username);
-        char[] password = FileInputProperties.readfile(props, "databasePassword").toCharArray();
-        log.debug("Password for Mongo level read");
-        String dbname = FileInputProperties.readfile(props, "databaseName");
-        log.debug("Mongo database name: " + dbname);
+		String username = "";
+		char[] password = null;
+		String dbname = "";
+		
+		try {
+			username = FileInputProperties.readfile(props, "databaseUsername");
+			log.debug("Username for Mongo level: " + username);
+			password = FileInputProperties.readfile(props, "databasePassword").toCharArray();
+			log.debug("Password for Mongo level read");
+			dbname = FileInputProperties.readfile(props, "databaseName");
+			log.debug("Mongo database name: " + dbname);
+		} catch (FileNotFoundException e) {
+			// db props file doesn't exist
+			throw e;
+		} catch (IOException | PropertyNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 
         credential = MongoCredential.createScramSha1Credential(username, dbname, password);
 
@@ -93,9 +109,14 @@ public class MongoDatabase {
         props = new File(Database.class.getResource("/challenges/" + path + ".properties").getFile()).getAbsolutePath();
 
         log.debug("Properties File: " + props);
-        String dbCollectionName = FileInputProperties.readfile(props, "databaseCollection");
+		String dbCollectionName;
+		try {
+			dbCollectionName = FileInputProperties.readfile(props, "databaseCollection");
+		} catch (IOException | PropertyNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 
-        return  dbCollectionName;
+		return dbCollectionName;
 
     }
 
@@ -105,36 +126,58 @@ public class MongoDatabase {
      */
     public static MongoClient getMongoDbConnection(String ApplicationRoot){
 
-        //Mongo DB URL from mongo.properties
-        String props = Constants.MONGO_DB_PROP;
-        MongoClient mongoClient = null;
+		// Mongo DB URL from mongo.properties
+		String props = Constants.MONGO_DB_PROP;
 
-        // Properties file for mongodb
-        String connectionHost = FileInputProperties.readfile(props, "connectionHost");
-        String connectionPort = FileInputProperties.readfile(props, "connectionPort");
-        String connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
-        String socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
-        String serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
+		// Properties file for mongodb
+		String connectionHost = "";
+		String connectionPort = "";
+		String connectTimeout = "";
+		String socketTimeout = "";
+		String serverSelectionTimeout = "";
+		
+		try {
 
-        MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
-        optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
-        optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
-        optionsBuilder.serverSelectionTimeout(Integer.parseInt(serverSelectionTimeout));
-        MongoClientOptions mongoOptions = optionsBuilder.build();
+			connectionHost = FileInputProperties.readfile(props, "connectionHost");
+			connectionPort = FileInputProperties.readfile(props, "connectionPort");
+			connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
+			socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
+			serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
+		} catch (IOException | PropertyNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 
-        try
-        {
-            mongoClient = new MongoClient(new ServerAddress(connectionHost, Integer.parseInt(connectionPort)),
-                    mongoOptions);
-        }
-        catch (NumberFormatException e){ log.fatal("The port in the properties file is not a number: " + e); return null;}
-        catch (MongoSocketOpenException e){log.fatal("Mongo Doesn't seem to be running: " + e);e.printStackTrace();  return null;}
-        catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e);  return null;}
-        catch (MongoException e){log.fatal("Something went wrong with Mongo: " + e);e.printStackTrace();  return null;}
-        catch (Exception e){log.fatal("Something went wrong: " + e);e.printStackTrace();  return null;}
+		MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
+		optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
+		optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
+		optionsBuilder.serverSelectionTimeout(Integer.parseInt(serverSelectionTimeout));
+		MongoClientOptions mongoOptions = optionsBuilder.build();
 
-        log.debug("Mongo Client: " + mongoClient);
-        return mongoClient;
+		try (MongoClient mongoClient = new MongoClient(
+				new ServerAddress(connectionHost, Integer.parseInt(connectionPort)), mongoOptions)) {
+			
+			log.debug("Mongo Client: " + mongoClient);
+			return mongoClient;
+			
+		} catch (NumberFormatException e) {
+			log.fatal("The port in the properties file is not a number: " + e);
+			throw new RuntimeException(e);
+
+		} catch (MongoSocketOpenException e) {
+			log.fatal("Mongo Doesn't seem to be running: " + e);
+			e.printStackTrace();
+			throw new RuntimeException(e);
+
+		} catch (MongoSocketException e) {
+			log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
+			throw new RuntimeException(e);
+
+		} catch (MongoException e) {
+			log.fatal("Something went wrong with Mongo: " + e);
+			throw new RuntimeException(e);
+
+		}
+
     }
 
 
@@ -149,15 +192,27 @@ public class MongoDatabase {
         String props = Constants.MONGO_DB_PROP;
         MongoClient mongoClient = null;
 
-        // Properties file for all of mongo
-        String connectionHost = FileInputProperties.readfile(props, "connectionHost");
-        String connectionPort = FileInputProperties.readfile(props, "connectionPort");
-        String connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
-        String socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
-        String serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
+		// Properties file for all of mongo
 
-        MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
-        optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
+		String connectionHost = "";
+		String connectionPort = "";
+		String connectTimeout = "";
+		String socketTimeout = "";
+		String serverSelectionTimeout = "";
+
+		try {
+
+			connectionHost = FileInputProperties.readfile(props, "connectionHost");
+			connectionPort = FileInputProperties.readfile(props, "connectionPort");
+			connectTimeout = FileInputProperties.readfile(props, "connectTimeout");
+			socketTimeout = FileInputProperties.readfile(props, "socketTimeout");
+			serverSelectionTimeout = FileInputProperties.readfile(props, "serverSelectionTimeout");
+		} catch (IOException | PropertyNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+
+		MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
+		optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
         optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
         optionsBuilder.serverSelectionTimeout(Integer.parseInt(serverSelectionTimeout));
         MongoClientOptions mongoOptions = optionsBuilder.build();
@@ -171,11 +226,29 @@ public class MongoDatabase {
             log.debug("Connection Port: " + Integer.parseInt(connectionPort));
             log.debug("Connection Creds: " + Arrays.asList(credential));
         }
-        catch (NumberFormatException e){ log.fatal("The port in the properties file is not a number: " + e); }
-        catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
-        catch (MongoTimeoutException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
-        catch (MongoException e){ log.fatal("Something went wrong with Mongo: " + e); e.printStackTrace(); }
-        catch (Exception e){log.fatal("Something went wrong: " + e); e.printStackTrace(); }
+		catch (NumberFormatException e) {
+			log.fatal("The port in the properties file is not a number: " + e);
+			throw new RuntimeException(e); 
+
+		} catch (MongoSocketException e) {
+			log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
+			throw new RuntimeException(e); 
+
+		} catch (MongoTimeoutException e) {
+			log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
+			throw new RuntimeException(e); 
+
+		} catch (MongoException e) {
+			log.fatal("Something went wrong with Mongo: " + e);
+			e.printStackTrace();
+			throw new RuntimeException(e); 
+
+		} catch (Exception e) {
+			log.fatal("Something went wrong: " + e);
+			e.printStackTrace();
+			throw new RuntimeException(e); 
+
+		}
 
         log.debug("Mongo Client: " + mongoClient);
 
@@ -191,14 +264,27 @@ public class MongoDatabase {
     {
         String props = Constants.MONGO_DB_PROP;
         DB mongoDb = null;
-        String dbname = FileInputProperties.readfile(props, "databaseName");
+        String dbname;
+		try {
+			dbname = FileInputProperties.readfile(props, "databaseName");
+		} catch (IOException | PropertyNotFoundException e) {
+			throw new RuntimeException(e); 
+
+		}
         try {
             mongoDb = mongoClient.getDB(dbname);
         }
-        catch (MongoSocketException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
-        catch (MongoTimeoutException e) { log.fatal("Unable to get Mongodb connection (Is it on?): " + e); }
-        catch (MongoException e){ log.fatal("Something went wrong with Mongo: " + e); e.printStackTrace(); }
-        catch (Exception e){log.fatal("Something went wrong: " + e); e.printStackTrace(); }
+		catch (MongoSocketException e) {
+			log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
+		} catch (MongoTimeoutException e) {
+			log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
+		} catch (MongoException e) {
+			log.fatal("Something went wrong with Mongo: " + e);
+			e.printStackTrace();
+		} catch (Exception e) {
+			log.fatal("Something went wrong: " + e);
+			e.printStackTrace();
+		}
 
         return mongoDb;
     }
