@@ -3,9 +3,13 @@ package servlets;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -165,8 +169,26 @@ public class Setup extends HttpServlet {
 		boolean isInstalled;
 		Connection coreConnection = Database.getDatabaseConnection(null);
 		if (coreConnection == null) {
-			isInstalled = false;
-			generateAuth();
+			if (isHerokuEnv()){
+				try
+				{
+					writeHerokuDbProps();
+					log.info("Heroku database properties written to: " + Constants.DBPROP);
+					log.info("Files in conf: " + Files.list(Paths.get(Constants.CATALINA_CONF)));
+				}
+				catch(URISyntaxException e){
+					log.fatal(e);
+				}
+				catch (IOException e){
+					log.fatal(e);
+				}
+				isInstalled = true;
+			}
+			else{
+				isInstalled = false;
+				generateAuth();
+			}
+
 		} else {
 			isInstalled = true;
 		}
@@ -179,18 +201,15 @@ public class Setup extends HttpServlet {
 		Path herokuHome = Paths.get("/app");
 		Path herokuJdkVersion = Paths.get("/app/.jdk/version.txt");
 		String heroku = "heroku";
+		String writtenTo = herokuHome.toString();
 
 		try {
+			String versionInfo = new String(Files.readAllBytes(herokuJdkVersion), Charset.forName("UTF-8"));
+
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
-				if(Files.exists(herokuJdkVersion, LinkOption.NOFOLLOW_LINKS)){
-					byte[] content = Files.readAllBytes(herokuJdkVersion);
-					if(new String(content).contains(heroku))
-						Files.write(Paths.get(herokuHome + File.separator + "SecurityShepherd.auth"), randomUUID.toString().getBytes(), StandardOpenOption.CREATE);
-				}
-				else
-					Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(), StandardOpenOption.CREATE);
-				log.info("genrated UUID " + randomUUID + " in " + Constants.SETUP_AUTH);
+				Files.write(Paths.get(herokuHome + File.separator + "SecurityShepherd.auth"), randomUUID.toString().getBytes(), StandardOpenOption.CREATE);
+				log.info("genrated UUID " + randomUUID + " in " + writtenTo);
 			}
 		} catch (IOException e) {
 			log.fatal("Unable to generate auth");
@@ -277,4 +296,43 @@ public class Setup extends HttpServlet {
 	private synchronized Boolean executeCreateChallengeFile() {
 		return XxeLesson.createXxeLessonSolutionFile();
 	}
+
+	/*
+	*
+	*
+	 */
+	private static boolean isHerokuEnv(){
+
+		return Files.exists(Paths.get("/app/.jdk/version.txt"));
+
+	}
+
+	/*
+
+	 */
+	public static void writeHerokuDbProps() throws URISyntaxException, IOException {
+
+		URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+		String dbUser = dbUri.getUserInfo().split(":")[0];
+		String dbPass = dbUri.getUserInfo().split(":")[1];
+
+		StringBuffer dbProp = new StringBuffer();
+		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+		dbProp.append("\n");
+		dbProp.append("DriverType=org.gjt.mm.mysql.Driver");
+		dbProp.append("\n");
+		dbProp.append("databaseSchema=core");
+		dbProp.append("\n");
+		dbProp.append("databaseUsername=" + dbUser);
+		dbProp.append("\n");
+		dbProp.append("databasePassword=" + dbPass);
+		dbProp.append("\n");
+
+		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+		Files.write(Paths.get("conf"), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+
+	}
+
+
 }
