@@ -352,7 +352,7 @@ public class Validate
 	
 	/**
 	 * Function that will check if a valid language is set. if not, returns en (English)
-	 * @param lang Session Language Parameter
+	 * @param ses Session Language Parameter
 	 * @return en by default, or the valid setting found in the submitted lang
 	 */
 	public static String validateLanguage(HttpSession ses)
@@ -537,5 +537,24 @@ public class Validate
 		if (!result)
 			log.error("URL Doesn't end with a forward slash. Very likely wrong");
 		return result; 
+	}
+
+	/**
+	 * Validates that a port number supplied is a valid port number
+	 * @param portNum String to validate
+	 * @return Boolean value reflecting if valid or not
+	 */
+	public static boolean isValidPortNumber(String portNum){
+		try {
+			Integer validPort = Integer.valueOf(portNum);
+			if (validPort  < 1 || validPort > 65535 ){
+				log.fatal("Value: " + portNum + "is not a valid port number");
+				return false;
+			}
+		}catch (NumberFormatException e){
+			log.fatal("Value: " + portNum + "is not a valid port number");
+			return false;
+		}
+		return true;
 	}
 }

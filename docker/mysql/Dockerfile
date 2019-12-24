@@ -1,15 +1,23 @@
-FROM mysql:5.5
+ARG MYSQL_VERSION
+FROM mysql:${MYSQL_VERSION}
+
+ENV RUN_USER mysql
+ENV RUN_GROUP mysql
+ENV MYSQL_HOME "/etc/mysql"
+
+RUN chown -R ${RUN_USER}:${RUN_GROUP} ${MYSQL_HOME}
+RUN chown -R ${RUN_USER}:${RUN_GROUP} "/docker-entrypoint-initdb.d"
+
+USER ${RUN_USER}
 
 ARG MYSQL_ROOT_PASSWORD=$MYSQL_PASS
 ARG CONTAINER_TOMCAT
 ARG DOCKER_NETWORK_NAME
 
-COPY coreSchema.sql /docker-entrypoint-initdb.d/coreSchema.sql
-COPY moduleSchemas.sql /docker-entrypoint-initdb.d/moduleSchemas.sql
+COPY target/coreSchema.sql /docker-entrypoint-initdb.d/coreSchema.sql
+COPY target/moduleSchemas.sql /docker-entrypoint-initdb.d/moduleSchemas.sql
 
 RUN sed -i 's/@'\''localhost'\''/@'\'''"$CONTAINER_TOMCAT"'.'"$DOCKER_NETWORK_NAME"''\''/g' /docker-entrypoint-initdb.d/moduleSchemas.sql
-# For 3.1 Closing NoSQL level
-RUN sed -i '/d7eaeaa1cc4f218abd86d14eefa183a0f8eb6298/d' /docker-entrypoint-initdb.d/coreSchema.sql
 
 RUN mkdir -p /etc/mysql/conf.d \
 	&& { \

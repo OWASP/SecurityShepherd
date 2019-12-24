@@ -3,12 +3,13 @@ package servlets;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -19,11 +20,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mongodb.MongoClient;
+import dbProcs.Constants;
+import dbProcs.Database;
+import dbProcs.FileInputProperties;
+import dbProcs.MongoDatabase;
+import dbProcs.Setter;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-import dbProcs.Constants;
-import dbProcs.Database;
+import servlets.module.lesson.XxeLesson;
 import utils.InstallationException;
 import utils.Validate;
 
@@ -39,7 +45,7 @@ public class Setup extends HttpServlet {
 		
 		//Output Stuff
 		PrintWriter out = response.getWriter();
-		String htmlOutput = new String();
+		String htmlOutput;
 		boolean success = false;
 		try 
 		{
@@ -51,7 +57,14 @@ public class Setup extends HttpServlet {
 			String dbAuth = request.getParameter("dbauth");
 			String dbOverride = request.getParameter("dboverride");
 
+			String mongodbHost = request.getParameter("mhost");
+			String mongodbPort = request.getParameter("mport");
+			String nosqlprops = new File(Database.class.getResource("/challenges/NoSqlInjection1.properties").getFile()).getAbsolutePath();
+			String mongodbName = FileInputProperties.readfile(nosqlprops, "databaseName");
 			String auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
+			String enableMongoChallenge = request.getParameter("enableMongoChallenge");
+
+			String enableUnsafeLevels = request.getParameter("unsafeLevels");
 
 			StringBuffer dbProp = new StringBuffer();
 			dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbHost + ":" + dbPort + "/");
@@ -65,13 +78,56 @@ public class Setup extends HttpServlet {
 			dbProp.append("databasePassword=" + dbPass);
 			dbProp.append("\n");
 
+			//Mongo DB properties
+			StringBuffer mongoProp = new StringBuffer();
+			mongoProp.append("connectionHost=" + mongodbHost);
+			mongoProp.append("\n");
+			mongoProp.append("connectionPort=" + mongodbPort);
+			mongoProp.append("\n");
+			mongoProp.append("databaseName=" + mongodbName);
+			mongoProp.append("\n");
+			mongoProp.append("connectTimeout=10000");
+			mongoProp.append("\n");
+			mongoProp.append("socketTimeout=0");
+			mongoProp.append("\n");
+			mongoProp.append("serverSelectionTimeout=30000");
+			mongoProp.append("\n");
+
+
 			if (!auth.equals(dbAuth)) {
 				htmlOutput = bundle.getString("generic.text.setup.authentication.failed");
-			} else {
-				Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);	
+			}
+			else {
+				Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+
+				if(enableMongoChallenge.equalsIgnoreCase("enable")){
+					if(!Validate.isValidPortNumber(mongodbPort)){
+						htmlOutput = bundle.getString("generic.text.setup.error.valid.port");
+                        FileUtils.deleteQuietly(new File(Constants.DBPROP));
+					}
+					else {
+						Files.write(Paths.get(Constants.MONGO_DB_PROP), mongoProp.toString().getBytes(), StandardOpenOption.CREATE);
+						if (MongoDatabase.getMongoDbConnection(null).listDatabaseNames() == null) {
+							htmlOutput = bundle.getString("generic.text.setup.connection.mongo.failed");
+                            FileUtils.deleteQuietly(new File(Constants.DBPROP));
+						}
+						else {
+                            executeMongoScript();
+                        }
+					}
+				}
+
+				if(enableUnsafeLevels.equalsIgnoreCase("enable")){
+					openUnsafeLevels();
+					if (!executeCreateChallengeFile()){
+						htmlOutput = bundle.getString("generic.text.setup.file.failed");
+                        FileUtils.deleteQuietly(new File(Constants.DBPROP));
+					}
+				}
 				if (Database.getDatabaseConnection(null) == null) {
 					htmlOutput = bundle.getString("generic.text.setup.connection.failed");
-				} else {
+				}
+				else {
 					try {
 						if (dbOverride.equalsIgnoreCase("overide")) {
 							executeSqlScript();
@@ -96,13 +152,14 @@ public class Setup extends HttpServlet {
 			if(success) {
 				htmlOutput = "<h2 class=\"title\" id=\"login_title\">"+bundle.getString("generic.text.setup.response.success")+"</h2><p>"+htmlOutput+" "+bundle.getString("generic.text.setup.response.success.redirecting")+"</p>";
 			} else {
+				FileUtils.deleteQuietly(new File(Constants.DBPROP));
 				htmlOutput = "<h2 class=\"title\" id=\"login_title\">"+bundle.getString("generic.text.setup.response.failed")+"</h2><p>"+htmlOutput+"</p>";
 			}
 			out.write(htmlOutput);
 		}
 		catch (Exception e)
 		{
-			out.write(errors.getString("error.funky"));
+			out.write(errors.getString("error.funky") + ": " + e.getMessage());
 			log.fatal("Unexpected database config creation error: " + e.toString());
 		}
 		out.close();
@@ -112,8 +169,26 @@ public class Setup extends HttpServlet {
 		boolean isInstalled;
 		Connection coreConnection = Database.getDatabaseConnection(null);
 		if (coreConnection == null) {
-			isInstalled = false;
-			generateAuth();
+			if (isHerokuEnv()){
+				try
+				{
+					writeHerokuDbProps();
+					log.info("Heroku database properties written to: " + Constants.DBPROP);
+					log.info("Files in conf: " + Files.list(Paths.get(Constants.CATALINA_CONF)));
+				}
+				catch(URISyntaxException e){
+					log.fatal(e);
+				}
+				catch (IOException e){
+					log.fatal(e);
+				}
+				isInstalled = true;
+			}
+			else{
+				isInstalled = false;
+				generateAuth();
+			}
+
 		} else {
 			isInstalled = true;
 		}
@@ -122,11 +197,19 @@ public class Setup extends HttpServlet {
 	}
 
 	private static void generateAuth() {
+
+		Path herokuHome = Paths.get("/app");
+		Path herokuJdkVersion = Paths.get("/app/.jdk/version.txt");
+		String heroku = "heroku";
+		String writtenTo = herokuHome.toString();
+
 		try {
+			String versionInfo = new String(Files.readAllBytes(herokuJdkVersion), Charset.forName("UTF-8"));
+
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
-				Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(), StandardOpenOption.CREATE);
-				log.info("genrated UUID " + randomUUID + " in " + Constants.SETUP_AUTH);
+				Files.write(Paths.get(herokuHome + File.separator + "SecurityShepherd.auth"), randomUUID.toString().getBytes(), StandardOpenOption.CREATE);
+				log.info("genrated UUID " + randomUUID + " in " + writtenTo);
 			}
 		} catch (IOException e) {
 			log.fatal("Unable to generate auth");
@@ -162,6 +245,30 @@ public class Setup extends HttpServlet {
 			e.printStackTrace();
 			throw new InstallationException(e);
 		}
+
+	}
+
+	private synchronized void executeMongoScript() throws InstallationException {
+
+		MongoClient mongoConnection = null;
+
+		try
+		{
+			File file = new File(getClass().getClassLoader().getResource("/mongodb/moduleSchemas.js").getFile());
+			mongoConnection = MongoDatabase.getMongoDbConnection(null);
+			MongoDatabase.executeMongoScript(file, mongoConnection);
+		}
+		catch (Exception e)
+		{
+			log.fatal(e);
+			e.printStackTrace();
+			throw new InstallationException(e);
+		}
+		finally
+		{
+			MongoDatabase.closeConnection(mongoConnection);
+		}
+
 	}
 
 	private synchronized void executeUpdateScript() throws InstallationException {
@@ -180,4 +287,52 @@ public class Setup extends HttpServlet {
 			throw new InstallationException(e);
 		}
 	}
+
+	private synchronized void openUnsafeLevels(){
+		String ApplicationRoot = getServletContext().getRealPath("");
+		Setter.openAllModules(ApplicationRoot, true);
+	}
+
+	private synchronized Boolean executeCreateChallengeFile() {
+		return XxeLesson.createXxeLessonSolutionFile();
+	}
+
+	/*
+	*
+	*
+	 */
+	private static boolean isHerokuEnv(){
+
+		return Files.exists(Paths.get("/app/.jdk/version.txt"));
+
+	}
+
+	/*
+
+	 */
+	public static void writeHerokuDbProps() throws URISyntaxException, IOException {
+
+		URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+		String dbUser = dbUri.getUserInfo().split(":")[0];
+		String dbPass = dbUri.getUserInfo().split(":")[1];
+
+		StringBuffer dbProp = new StringBuffer();
+		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+		dbProp.append("\n");
+		dbProp.append("DriverType=org.gjt.mm.mysql.Driver");
+		dbProp.append("\n");
+		dbProp.append("databaseSchema=core");
+		dbProp.append("\n");
+		dbProp.append("databaseUsername=" + dbUser);
+		dbProp.append("\n");
+		dbProp.append("databasePassword=" + dbPass);
+		dbProp.append("\n");
+
+		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+		Files.write(Paths.get("conf"), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+
+	}
+
+
 }

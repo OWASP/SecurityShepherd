@@ -149,6 +149,11 @@ public class SqlInjection5 extends HttpServlet
 					htmlOutput += "<br><br>" + bundle.getString("response.trollsFreeSolution")+ "<a><b>" + Encode.forHtml(levelSolution) + "</b></a>";
 				}
 			}
+			catch (IllegalArgumentException e)
+			{
+				log.debug("Didn't complete order: " + e.toString());
+				htmlOutput += "<p>" + bundle.getString("response.invalidAmount")+ "</p>";
+			}
 			catch(Exception e)
 			{
 				log.debug("Didn't complete order: " + e.toString());
@@ -170,9 +175,11 @@ public class SqlInjection5 extends HttpServlet
 		}
 	}
 	
-	private static int validateAmount (int amount)
+	private static int validateAmount (int amount) throws IllegalArgumentException
 	{
-		if(amount < 0 || amount > 9000)
+		if(amount > 9000)
+			throw new IllegalArgumentException();
+		if (amount < 0)
 			amount = 0;
 		return amount;
 	}

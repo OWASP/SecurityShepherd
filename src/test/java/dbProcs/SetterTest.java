@@ -96,7 +96,7 @@ public class SetterTest
 			if(GetterTest.verifyTestUser(applicationRoot, userName, userName))
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				if(!Setter.openAllModules(applicationRoot))
+				if(!Setter.openAllModules(applicationRoot, false) && !Setter.openAllModules(applicationRoot, true))
 				{
 					fail("Could not mark all modules as open");
 				}
@@ -216,7 +216,7 @@ public class SetterTest
 	@Test
 	public void testOpenOnlyWebCategories() 
 	{
-		if(!Setter.openOnlyWebCategories(applicationRoot))
+		if(!Setter.openOnlyWebCategories(applicationRoot, 0))
 			fail("Could not Open Only Web Categories");
 	}
 	
@@ -231,7 +231,7 @@ public class SetterTest
 			if(GetterTest.verifyTestUser(applicationRoot, userName, userName))
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
-				if(!Setter.openAllModules(applicationRoot))
+				if(!Setter.openAllModules(applicationRoot, false) && !Setter.openAllModules(applicationRoot, true))
 				{
 					fail("Could not mark all modules as open");
 				}
@@ -426,7 +426,7 @@ public class SetterTest
 	public void testSetModuleCategoryStatusClosed()
 	{
 		String moduleCategory = new String("Injection");
-		if(!Setter.openAllModules(applicationRoot))
+		if(!Setter.openAllModules(applicationRoot, false) && !Setter.openAllModules(applicationRoot, true))
 			fail("Could not Mark all modules as open");
 		else if (!Setter.setModuleCategoryStatusOpen(applicationRoot, moduleCategory, "closed"))
 			fail("Could not close module Category");
@@ -459,7 +459,7 @@ public class SetterTest
 	public void testSetModuleStatusClosed()
 	{
 		String moduleId = new String("853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5"); //CSRF 7
-		if(!Setter.openAllModules(applicationRoot))
+		if(!Setter.openAllModules(applicationRoot, false))
 			fail("Could not Mark all modules as open");
 		else if (!Setter.setModuleStatusClosed(applicationRoot, moduleId))
 			fail("Could not close CSRF 7 Module");
@@ -539,7 +539,7 @@ public class SetterTest
 			if(GetterTest.verifyTestUser(applicationRoot, userName, userName, classId))
 			{
 				//Open all Modules First so that the Module Can Be Opened
-				if(!Setter.openAllModules(applicationRoot))
+				if(!Setter.openAllModules(applicationRoot, false))
 				{
 					fail("Could not open all modules");
 				}
@@ -1015,7 +1015,7 @@ public class SetterTest
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				String otherUserId = Getter.getUserIdFromName(applicationRoot, otherUserName);
-				if(!Setter.openAllModules(applicationRoot))
+				if(!Setter.openAllModules(applicationRoot, false))
 				{
 					fail("Could not mark all modules as open");
 				}
