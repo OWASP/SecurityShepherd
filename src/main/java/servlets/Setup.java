@@ -4,13 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
@@ -221,7 +220,24 @@ public class Setup extends HttpServlet {
 
 		try (Connection coreConnection = Database.getDatabaseConnection(null)) {
 			if (coreConnection == null) {
+        			if (isHerokuEnv()){
+				try
+				{
+					writeHerokuDbProps();
+					log.info("Heroku database properties written to: " + Constants.DBPROP);
+					log.info("Files in conf: " + Files.list(Paths.get(Constants.CATALINA_CONF)));
+				}
+				catch(URISyntaxException e){
+					log.fatal(e);
+				}
+				catch (IOException e){
+					log.fatal(e);
+				}
+				isInstalled = true;
+			}
+       else{
 				isInstalled = false;
+        }
 
 			} else {
 				isInstalled = true;
@@ -251,7 +267,15 @@ public class Setup extends HttpServlet {
 	}
 
 	private static void generateAuth() {
+
+		Path herokuHome = Paths.get("/app");
+		Path herokuJdkVersion = Paths.get("/app/.jdk/version.txt");
+		String heroku = "heroku";
+		String writtenTo = herokuHome.toString();
+
 		try {
+			String versionInfo = new String(Files.readAllBytes(herokuJdkVersion), Charset.forName("UTF-8"));
+
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
 				Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(),
@@ -326,4 +350,43 @@ public class Setup extends HttpServlet {
 	private synchronized Boolean executeCreateChallengeFile() {
 		return XxeLesson.createXxeLessonSolutionFile();
 	}
+
+	/*
+	*
+	*
+	 */
+	private static boolean isHerokuEnv(){
+
+		return Files.exists(Paths.get("/app/.jdk/version.txt"));
+
+	}
+
+	/*
+
+	 */
+	public static void writeHerokuDbProps() throws URISyntaxException, IOException {
+
+		URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+		String dbUser = dbUri.getUserInfo().split(":")[0];
+		String dbPass = dbUri.getUserInfo().split(":")[1];
+
+		StringBuffer dbProp = new StringBuffer();
+		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+		dbProp.append("\n");
+		dbProp.append("DriverType=org.gjt.mm.mysql.Driver");
+		dbProp.append("\n");
+		dbProp.append("databaseSchema=core");
+		dbProp.append("\n");
+		dbProp.append("databaseUsername=" + dbUser);
+		dbProp.append("\n");
+		dbProp.append("databasePassword=" + dbPass);
+		dbProp.append("\n");
+
+		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+		Files.write(Paths.get("conf"), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+
+	}
+
+
 }
