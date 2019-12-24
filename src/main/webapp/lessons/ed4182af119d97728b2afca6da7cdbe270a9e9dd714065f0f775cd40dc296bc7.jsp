@@ -2,60 +2,65 @@
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
-String levelHash = new String("ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7");
-//Translation Stuff
-Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.csrf." + levelHash, locale);
-//Used more than once translations
-String translatedLevelName = bundle.getString("title.question.csrf");
+	/**
+	 * This file is part of the Security Shepherd Project.
+	 *
+	 * The Security Shepherd project is free software: you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation, either version 3 of the License, or
+	 * (at your option) any later version.<br/>
+	 *
+	 * The Security Shepherd project is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.<br/>
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
+	 *
+	 * @author Mark Denihan
+	 */
 
-/**
- * This file is part of the Security Shepherd Project.
- *
- * The Security Shepherd project is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
- *
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
- *
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author Mark Denihan
- */
+	final String LEVEL_NAME = "CSRF Lesson";
+	final String LEVEL_HASH = "ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7";
 
- String levelName = new String("CSRF Lesson");
+	//Translation Stuff
+	Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+	ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.csrf." + LEVEL_HASH, locale);
+	//Used more than once translations
+	String translatedLevelName = bundle.getString("title.question.csrf");
 
- ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
- if (request.getSession() != null)
- {
- 	HttpSession ses = request.getSession();
- 	//Getting CSRF Token from client
- 	Cookie tokenCookie = null;
- 	try
- 	{
- 		tokenCookie = Validate.getToken(request.getCookies());
- 	}
- 	catch(Exception htmlE)
- 	{
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
- 	}
- 	// validateSession ensures a valid session, and valid role credentials
- 	// If tokenCookie == null, then the page is not going to continue loading
- 	if (Validate.validateSession(ses) && tokenCookie != null)
- 	{
- 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
- 		//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
- 		
- 		String csrfToken = Encode.forHtml(tokenCookie.getValue());
-		// Getting Session Variables
-		String hex = (String) ses.getAttribute("userName");
-		String falseId = new Integer(hex.getBytes().hashCode() + hex.substring(0, hex.length() / 2).hashCode()).toString();
-		ses.setAttribute("falseId", falseId);
+	ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
+	String owaspMoreInfo = 	generic.getString("module.generic.owasp.more.info");
+	String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
+	String owaspUrlAttack = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.attack.csrf");
+
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME + " Accessed");
+	if (request.getSession() != null)
+	{
+	    HttpSession ses = request.getSession();
+	    //Getting CSRF Token from client
+		Cookie tokenCookie = null;
+		try
+		{
+			tokenCookie = Validate.getToken(request.getCookies());
+		}
+		catch(Exception htmlE)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME +".jsp: tokenCookie Error:" + htmlE.toString());
+		}
+		// validateSession ensures a valid session, and valid role credentials
+		// If tokenCookie == null, then the page is not going to continue loading
+		if (Validate.validateSession(ses) && tokenCookie != null)
+		{
+			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), LEVEL_NAME + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
+			//The org.owasp.encoder.Encode class should be used to encode any softcoded data. This should be performed everywhere for safety
+
+			String csrfToken = Encode.forHtml(tokenCookie.getValue());
+			// Getting Session Variables
+			String hex = (String) ses.getAttribute("userName");
+			String falseId = new Integer(hex.getBytes().hashCode() + hex.substring(0, hex.length() / 2).hashCode()).toString();
+			ses.setAttribute("falseId", falseId);
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -87,8 +92,11 @@ String translatedLevelName = bundle.getString("title.question.csrf");
 					<br />
 					<br />
 					<%= bundle.getString("paragraph.info5") %>
-					<br />
-					<br />
+					<br/>
+					<br/>
+					<%= owaspMoreInfo %> <a href="<%= owaspUrlAttack %>" target="_blank"> <%= owaspGuideTo %> CSRF </a>
+					<br/>
+					<br/>
 					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
 				</div>
 				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
@@ -130,7 +138,7 @@ String translatedLevelName = bundle.getString("title.question.csrf");
 				$("#resultsDiv").hide("slow", function(){
 					var ajaxCall = $.ajax({
 						type: "POST",
-						url: "<%= levelHash %>",
+						url: "<%= LEVEL_HASH %>",
 						data: {
 							messageForAdmin: theMessageForAdmin,
 							csrfToken: "<%= csrfToken %>"

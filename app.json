@@ -1,0 +1,6 @@
+{
+  "name": "OWASP Security Shepherd",
+  "description": "Web and mobile application security training platform",
+  "repository": "https://github.com/OWASP/SecurityShepherd",
+  "keywords": ["owasp", "security", "shepherd", "vulnerable"]
+}

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import dbProcs.FileInputProperties;
 import org.apache.commons.io.FileUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -43,6 +44,34 @@ public class TestProperties
 			throw new InstallationException(e);
 		}
 	}
+
+
+	public static void createFileSystemKey(org.apache.log4j.Logger log, String fileProp, String solutionProp) throws InstallationException
+	{
+
+		File lessonFile = null;
+		String propFile;
+		String filename;
+		String solution;
+		String userDir;
+
+		try
+		{
+			userDir = System.getProperty("user.dir");
+			propFile = userDir+"/src/main/resources/fileSystemKeys.properties";
+			filename = FileInputProperties.readfile(propFile, fileProp);
+			solution = FileInputProperties.readfile(propFile, solutionProp);
+
+			lessonFile = new File(filename);
+			FileUtils.write(lessonFile, solution, "UTF-8");
+
+		}
+		catch (Exception e)
+		{
+			throw new InstallationException(e);
+		}
+
+	}
 	
 	/**
 	 * Bit of a Hack to get JUnits to run inside of
@@ -65,7 +94,10 @@ public class TestProperties
 	 * @param theClass Class of the User
 	 * @throws Exception If the process fails, an exception will be thrown
 	 */
-	public static void loginDoPost(org.apache.log4j.Logger log, MockHttpServletRequest request, MockHttpServletResponse response, String userName, String password, String theClass, String lang) throws Exception
+	public static void loginDoPost(org.apache.log4j.Logger log, MockHttpServletRequest request,
+								   MockHttpServletResponse response,
+								   String userName, String password,
+								   String theClass, String lang) throws Exception
 	{
 		try
 		{
@@ -86,6 +118,10 @@ public class TestProperties
 
 			if(response.getStatus() != expectedResponseCode)
 				throw new Exception("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
+			else if(response.getHeader("Location").endsWith("login.jsp"))
+			{
+				log.debug("User \"" + userName + "\" is unauthenticated");
+			}
 			else
 			{
 				log.debug("302 OK Detected");
@@ -310,7 +346,7 @@ public class TestProperties
 			{
 				String userId = Getter.getUserIdFromName(applicationRoot, userName);
 				//Open all Modules First so that the Module Can Be Opened
-				if(Setter.openAllModules(applicationRoot))
+				if(Setter.openAllModules(applicationRoot, false) && Setter.openAllModules(applicationRoot, true))
 				{
 					//Simulate user Opening Level
 					if(!Getter.getModuleAddress(applicationRoot, moduleId, userId).isEmpty())

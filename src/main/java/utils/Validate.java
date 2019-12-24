@@ -127,7 +127,7 @@ public class Validate
 	   boolean result = true;
 	   try 
 	   {
-		  log.debug("About to crash");
+		  log.debug("Validating email");
 	      InternetAddress emailAddr = new InternetAddress(email);
 	      log.debug("Did we crash");
 	      emailAddr.validate();
@@ -164,8 +164,14 @@ public class Validate
 	 */
 	public static boolean isValidUser(String userName, String passWord)
 	{
-		boolean result = false;
-		result = userName.length() > 2 && passWord.length() > 7 && userName.length() <= 32 && passWord.length() <= 512;
+		int userLength=userName.length();
+		int passLength=passWord.length();
+		
+		boolean userOK=userLength > 2 && userLength <= 32;
+		boolean passOK=passLength > 7 && passLength <= 512;
+		
+		boolean result = userOK && passOK;
+		
 		if (!result)
 		{
 			log.debug("Invalid Data detected in Validate.isValidUser()");
@@ -352,7 +358,7 @@ public class Validate
 	
 	/**
 	 * Function that will check if a valid language is set. if not, returns en (English)
-	 * @param lang Session Language Parameter
+	 * @param ses Session Language Parameter
 	 * @return en by default, or the valid setting found in the submitted lang
 	 */
 	public static String validateLanguage(HttpSession ses)
@@ -363,9 +369,9 @@ public class Validate
 		{
 			lang = ses.getAttribute("lang").toString();
 			//log.debug("lang submitted: " + lang);
-			if(lang != null)
+			if(lang != null || !lang.isEmpty())
 			{
-				if (!lang.isEmpty())
+				if (lang.matches(".[a-z]{2}-[A-Z]{2}$"))
 					result = lang;
 			}
 			//log.debug("lang set to: " + result);
@@ -537,5 +543,24 @@ public class Validate
 		if (!result)
 			log.error("URL Doesn't end with a forward slash. Very likely wrong");
 		return result; 
+	}
+
+	/**
+	 * Validates that a port number supplied is a valid port number
+	 * @param portNum String to validate
+	 * @return Boolean value reflecting if valid or not
+	 */
+	public static boolean isValidPortNumber(String portNum){
+		try {
+			Integer validPort = Integer.valueOf(portNum);
+			if (validPort  < 1 || validPort > 65535 ){
+				log.fatal("Value: " + portNum + "is not a valid port number");
+				return false;
+			}
+		}catch (NumberFormatException e){
+			log.fatal("Value: " + portNum + "is not a valid port number");
+			return false;
+		}
+		return true;
 	}
 }

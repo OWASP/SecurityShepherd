@@ -1,3 +1,46 @@
-language: java
-services:
-  - mysql
+jobs:
+   include:
+   -  stage: build
+      language: java
+      dist: bionic
+      script:
+      - sudo apt-get -y install libargon2-0
+      - mvn clean install -Pdocker -DskipTests -B
+      - docker-compose build
+      services: docker
+   -  stage: unit-test
+      services: mysql
+      language: java
+      dist: bionic
+      script: mvn test -B
+      before_install:
+      - sudo apt-get -y install libargon2-0
+   -  stage: integration-test
+      services:
+      - mysql
+      - docker
+      dist: bionic
+      language: java
+      script: mvn verify -DskipUTs=true -DmongoDocker -B
+      before_install:
+      - sudo apt-get -y install libargon2-0
+      - mvn -Pdocker validate
+   -  stage: deploy
+      if: fork = false
+      name: Deploy to Dockerhub
+      dist: bionic
+      language: generic
+      provider: script
+      skip_cleanup: true
+      services: docker
+      before_install:
+      - sudo apt-get -y install libargon2-0
+      - mvn install -Pdocker -DskipTests
+      - docker-compose build web
+      script: bash docker/scripts/deploy-dockerhub.sh $TRAVIS_BRANCH
+stages:
+- build
+- unit-test
+- integration-test
+-  name: deploy
+   if: branch IN (master, dev) AND type = push

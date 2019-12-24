@@ -1,7 +1,7 @@
 <%@page import="dbProcs.Constants"%>
 <%@page import="servlets.Setup"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
-	language="java" import="utils.*, org.owasp.encoder.Encode" errorPage=""%>
+	language="java" import="utils.*, org.owasp.encoder.Encode"%>
 <%@ include file="translation.jsp"%>
 
 <%
@@ -125,7 +125,7 @@ if (Setup.isInstalled()) {
 								<label for="dboverride"><fmt:message key="generic.text.setup.overridedb" /></label> </div>
 							<div class="col-75">
 								<select id="dboverride" name="dboverride">
-									<option value="overide"><fmt:message key="generic.text.setup.wipe" /></option>
+									<option value="override"><fmt:message key="generic.text.setup.wipe" /></option>
 									<option value="upgrade"><fmt:message key="generic.text.setup.upgrade" /></option>
 									<option value="false"><fmt:message key="generic.text.setup.dontwipe" /></option>
 								</select>
@@ -139,6 +139,89 @@ if (Setup.isInstalled()) {
 								<input type="text" id="dbauth" name="dbauth" placeholder="Token from Server File System..." required>
 							</div>
 						</div>
+						<!-- MongoDb / NoSQL level -->
+						<script>
+							function uncheck() {
+								$('#enableMongoChallenge').removeAttr('checked');
+							}
+
+							$(document).ready(function () {
+								$('#enableMongoChallenge').change(function () {
+									if (this.checked)
+									{
+										$('#showHideDiv').fadeIn('slow');
+										$('#enableMongoChallenge').val("enable");
+										$("#mhost").prop('required',true);
+										$("#mport").prop('required',true);
+									}
+									else{
+										$('#showHideDiv').fadeOut('slow');
+										$('#enableMongoChallenge').val("off");
+										$("#mhost").prop('required',false);
+										$("#mport").prop('required',false);
+										}
+								});
+							});
+						</script>
+						<div class="row">
+							<div class="col-25">
+								<span><fmt:message key="generic.text.setup.enable.mongodb"/></span>
+							</div>
+							<div class="col-75">
+								<input type="checkbox" id="enableMongoChallenge" name="enableMongoChallenge" value="">
+							</div>
+						</div>
+						<div id="showHideDiv" style="display: none">
+							<div class="row">
+								<div class="col-25">
+									<label for="mhost">MongoDb <fmt:message key="generic.text.setup.host" /></label>
+								</div>
+								<div class="col-75">
+									<input type="text" id="mhost" name="mhost" placeholder="Mongo Host..." >
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-25">
+									<label for="mport">MongoDb <fmt:message key="generic.text.setup.port" /></label>
+								</div>
+								<div class="col-75">
+									<input type="text" id="mport" name="mport" placeholder="Mongo Port..." >
+								</div>
+							</div>
+						</div>
+
+						<script>
+                            function uncheckUnfafe() {
+                                $('#unsafeLevels').removeAttr('checked');
+                            }
+
+                            $(document).ready(function () {
+                                $('#unsafeLevels').change(function () {
+                                    if (this.checked)
+                                    {
+                                        $('#showHideWarning').fadeIn('slow');
+                                        $('#unsafeLevels').val("enable");
+                                    }
+                                    else{
+                                        $('#showHideWarning').fadeOut('slow');
+                                        $('#unsafeLevels').val("disable");
+                                    }
+                                });
+                            });
+						</script>
+
+						<div class="row">
+							<div class="col-25">
+								<label for="mhost"><fmt:message key="generic.text.setup.enable.unsafe"/></label>
+							</div>
+							<div class="col-75">
+								<input type="checkbox" id="unsafeLevels" name="unsafeLevels" value="">
+								<span id="showHideWarning" style="display: none">
+									<fmt:message key="generic.text.setup.enable.unsafe.warn" />
+								</span>
+							</div>
+						</div>
+
 						<div class="row">
 							<input type="submit" id="submitButton" value="<fmt:message key="generic.text.submit" />">
 						</div>
@@ -174,6 +257,10 @@ if (Setup.isInstalled()) {
 			var thedbpass = $("#dbpass").val();
 			var thedboverride = $("#dboverride").val();
 			var thedbauth = $("#dbauth").val();
+			var enableMongo = $("#enableMongoChallenge").val();
+			var themhost = $("#mhost").val();
+			var themport = $("#mport").val();
+			var unsafeLevels = $("#unsafeLevels").val();
 			if(thedbauth != null)
 			{
 				$("#submitLoading").slideDown("fast");
@@ -189,7 +276,11 @@ if (Setup.isInstalled()) {
 							dbuser: thedbuser,
 							dbpass: thedbpass,
 							dboverride: thedboverride,
-							dbauth: thedbauth
+							dbauth: thedbauth,
+							enableMongoChallenge: enableMongo,
+							mhost: themhost,
+							mport: themport,
+                            unsafeLevels: unsafeLevels
 						},
 						async: false
 					});

@@ -3,3 +3,6 @@
 /.project
 /bin/
 /.settings/
+.settings/
+docker/*/*.sql
+docker/*/*.sql-e

@@ -14,13 +14,23 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
+
+
 	<error-page>
-		<error-code>500</error-code>
-		<location>/serverError.html</location>
+		<error-code>403</error-code>
+		<location>/serverError.jsp</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/lostSheep.html</location>
+		<location>/lostSheep.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/serverError.jsp</location>
+	</error-page>
+	<error-page> 
+		<exception-type>java.lang.Exception</exception-type> 
+		<location>/serverError.jsp</location>
 	</error-page>
 
 	<env-entry>
@@ -444,6 +454,15 @@
 	<servlet-mapping>
 		<servlet-name>/changeVulnerableAppRoot</servlet-name>
 		<url-pattern>/changeVulnerableAppRoot</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a</servlet-name>
+		<servlet-class>servlets.module.lesson.XxeLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a</servlet-name>
+		<url-pattern>/lessons/57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -1210,6 +1229,15 @@
 	<servlet-mapping>
 		<servlet-name>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</servlet-name>
 		<url-pattern>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</servlet-name>
+		<servlet-class>servlets.module.challenge.BrokenCryptoHomeMade</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</servlet-name>
+		<url-pattern>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</url-pattern>
 	</servlet-mapping>
 
 	<filter>

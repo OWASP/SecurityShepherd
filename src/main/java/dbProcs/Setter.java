@@ -12,6 +12,9 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
+
 /**
  * Used to add information to the Database
  * <br/><br/>
@@ -33,7 +36,29 @@ import org.apache.log4j.Logger;
  */
 public class Setter 
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(Setter.class);	
+	private static org.apache.log4j.Logger log = Logger.getLogger(Setter.class);
+
+	//TODO - Replace this with a new mobile/web/etc attribute in the modules table
+	final public static String webModuleCategoryHardcodedWhereClause = new String("moduleCategory = 'CSRF'"
+			+ " OR moduleCategory = 'Failure to Restrict URL Access'"
+			+ " OR moduleCategory = 'Injection'"
+			+ " OR moduleCategory = 'Insecure Cryptographic Storage'"
+			+ " OR moduleCategory = 'Insecure Direct Object References'"
+			+ " OR moduleCategory = 'Poor Data Validation'"
+			+ " OR moduleCategory = 'Security Misconfigurations'"
+			+ " OR moduleCategory = 'Session Management'"
+			+ " OR moduleCategory = 'Unvalidated Redirects and Forwards'"
+			+ " OR moduleCategory = 'XSS'");
+	final public static String mobileModuleCategoryHardcodedWhereClause = new String(""
+			+ "moduleCategory = 'Mobile Broken Crypto'"
+			+ " OR moduleCategory = 'Mobile Content Provider'"
+			+ " OR moduleCategory = 'Mobile Data Leakage'"
+			+ " OR moduleCategory = 'Mobile Injection'"
+			+ " OR moduleCategory = 'Mobile Insecure Data Storage'"
+			+ " OR moduleCategory = 'Mobile Poor Authentication'"
+			+ " OR moduleCategory = 'Mobile Reverse Engineering'"
+			+ " OR moduleCategory = 'Mobile Security Decisions via Untrusted Input'");
+
 	/**
 	 * Database procedure just adds this. So this method just prepares the statement
 	 * @param ApplicationRoot
@@ -69,7 +94,6 @@ public class Setter
 	/**
 	 * This method sets every module status to Closed.
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifier of the module that is been set to open status
 	 * @return Boolean result depicting success of statement
 	 */
 	public static boolean closeAllModules (String ApplicationRoot)
@@ -127,19 +151,28 @@ public class Setter
 	/**
 	 * This method sets every module status to Open.
 	 * @param ApplicationRoot Current running director of the application
-	 * @param moduleId The identifier of the module that is been set to open status
+	 * @param unsafe set whether to open all safe modules or all modules that are unsafe
 	 * @return Boolean result depicting success of statement
 	 */
-	public static boolean openAllModules (String ApplicationRoot)
+	public static boolean openAllModules (String ApplicationRoot, boolean unsafe)
 	{
 		log.debug("*** Setter.openAllModules ***");
 		boolean result = false;
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
-			PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open'");
-			callstmt.execute();
-			log.debug("All modules Set to open");
+			if (unsafe){
+				PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE isUnsafe = 1");
+				callstmt.execute();
+				log.debug("All unsafe modules set to open");
+			}
+			else
+			{
+				PreparedStatement callstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE isUnsafe = 0");
+				callstmt.execute();
+				log.debug("All safe modules set to open");
+			}
+
 			result = true;
 		}
 		catch (SQLException e)
@@ -150,28 +183,6 @@ public class Setter
 		log.debug("*** END setModuleStatusOpen ***");
 		return result;
 	}
-	
-	//TODO - Replace this with a new mobile/web/etc attribute in the modules table
-	final public static String webModuleCategoryHardcodedWhereClause = new String(""
-			+ "moduleCategory = 'CSRF'"
-			+ " OR moduleCategory = 'Failure to Restrict URL Access'"
-			+ " OR moduleCategory = 'Injection'"
-			+ " OR moduleCategory = 'Insecure Cryptographic Storage'"
-			+ " OR moduleCategory = 'Insecure Direct Object References'"
-			+ " OR moduleCategory = 'Poor Data Validation'"
-			+ " OR moduleCategory = 'Security Misconfigurations'"
-			+ " OR moduleCategory = 'Session Management'"
-			+ " OR moduleCategory = 'Unvalidated Redirects and Forwards'"
-			+ " OR moduleCategory = 'XSS'");
-	final public static String mobileModuleCategoryHardcodedWhereClause = new String(""
-			+ "moduleCategory = 'Mobile Broken Crypto'"
-			+ " OR moduleCategory = 'Mobile Content Provider'"
-			+ " OR moduleCategory = 'Mobile Data Leakage'"
-			+ " OR moduleCategory = 'Mobile Injection'"
-			+ " OR moduleCategory = 'Mobile Insecure Data Storage'"
-			+ " OR moduleCategory = 'Mobile Poor Authentication'"
-			+ " OR moduleCategory = 'Mobile Reverse Engineering'"
-			+ " OR moduleCategory = 'Mobile Security Decisions via Untrusted Input'");
 	
 	/**
 	 * This is used to only open Mobile category levels
@@ -205,16 +216,18 @@ public class Setter
 	/**
 	 * This is used to only open Mobile category levels
 	 * @param ApplicationRoot Used to locate database properties file
+	 * @param unsafe Used to track if the level is deemed unsafe or safe
 	 * @return
 	 */
-	public static boolean openOnlyWebCategories (String ApplicationRoot)
+	public static boolean openOnlyWebCategories (String ApplicationRoot, int unsafe)
 	{
 		log.debug("*** Setter.openOnlyWebCategories ***");
 		boolean result = false;
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
-			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE " + webModuleCategoryHardcodedWhereClause);
+			PreparedStatement prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE "
+					+ "(" + webModuleCategoryHardcodedWhereClause + ")" + " AND isUnsafe = " + unsafe);
 			prepstmt.execute();
 			log.debug("Web Levels have been opened");
 			prepstmt = conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed' WHERE " + mobileModuleCategoryHardcodedWhereClause);
@@ -272,6 +285,9 @@ public class Setter
 	 */
 	public static boolean setCoreDatabaseInfo(String applicationRoot, String url, String userName, String password)
 	{
+		
+		userName=userName.toLowerCase();
+		
 		try 
 		{
 			//Update Database Settings
@@ -628,22 +644,48 @@ public class Setter
 		log.debug("*** Setter.updatePassword ***");
 		
 		boolean result = false;
+				
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
-		try
+
+		log.debug("Checking current password");
+		String user[] = Getter.authUser(ApplicationRoot, userName, currentPassword);
+
+		if(user == null || user[0].isEmpty()) 
 		{
+			// Wrong password
+			log.debug("Current password incorrect!");
+			return false;
+		}
+		if (user != null && !user[0].isEmpty()) 
+		{
+			// Correct password, proceed
+			log.debug("Hashing password");
+
+			Argon2 argon2 = Argon2Factory.create();
+
+			String newHash = argon2.hash(10, 65536, 1, newPassword.toCharArray());
+			// TODO: wipe password from memory after hashing
+
 			log.debug("Preparing userPasswordChange call");
-			CallableStatement callstmnt = conn.prepareCall("call userPasswordChange(?, ?, ?)");
-			callstmnt.setString(1, userName);
-			callstmnt.setString(2, currentPassword);
-			callstmnt.setString(3, newPassword);
-			log.debug("Executing userPasswordChange");
-			callstmnt.execute();
-			result = true;
+			CallableStatement callstmnt;
+			try {
+				callstmnt = conn.prepareCall("call userPasswordChange(?, ?)");
+				callstmnt.setString(1, userName);
+
+				callstmnt.setString(2, newHash);
+				log.debug("Executing userPasswordChange");
+				callstmnt.execute();
+				result = true;
+			} catch (SQLException e) {
+				log.debug("Could not update password: " + e.toString());
+				throw new RuntimeException(e);
+			}
+
+		} else {
+			log.debug("Could not verify password!");
+			return false;
 		}
-		catch(SQLException e)
-		{
-			log.error("updatePassword Failure: " + e.toString());
-		}
+
 		Database.closeConnection(conn);
 		log.debug("*** END updatePassword ***");
 		return result;
@@ -664,10 +706,16 @@ public class Setter
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
+			log.debug("Hashing password");
+
+			Argon2 argon2 = Argon2Factory.create();
+
+			String newHash = argon2.hash(10, 65536, 1, newPassword.toCharArray());
+			
 			log.debug("Preparing userPasswordChangeAdmin call");
 			CallableStatement callstmnt = conn.prepareCall("call userPasswordChangeAdmin(?, ?)");
 			callstmnt.setString(1, userId);
-			callstmnt.setString(2, newPassword);
+			callstmnt.setString(2, newHash);
 			log.debug("Executing userPasswordChangeAdmin");
 			callstmnt.execute();
 			result = true;
@@ -871,19 +919,28 @@ public class Setter
 	throws SQLException
 	{
 		boolean result = false;
+		
 		log.debug("*** Setter.userCreate ***");
 		log.debug("classId = " + classId);
-		log.debug("userName" + userName);
-		log.debug("userRole" + userRole);
-		log.debug("userAddress" + userAddress);
+		log.debug("userName = " + userName);
+		// We don't log passwords
+		log.debug("userRole = " + userRole);
+		log.debug("userAddress = " + userAddress);
 		Connection conn = Database.getCoreConnection(ApplicationRoot);
 		try
 		{
+			log.debug("Hashing password");
+			
+			Argon2 argon2 = Argon2Factory.create();
+
+		    String hash = argon2.hash(10, 65536, 1, userPass.toCharArray());
+		    // TODO: wipe password from memory after hashing
+		    			
 			log.debug("Executing userCreate procedure on Database");
 			CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?)");
 			callstmt.setString(1, classId);
 			callstmt.setString(2, userName);
-			callstmt.setString(3, userPass);
+			callstmt.setString(3, hash);
 			callstmt.setString(4, userRole);
 			callstmt.setString(5, userAddress);
 			callstmt.setBoolean(6, tempPass);
