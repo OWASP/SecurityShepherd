@@ -2,5 +2,7 @@
   "name": "OWASP Security Shepherd",
   "description": "Web and mobile application security training platform",
   "repository": "https://github.com/OWASP/SecurityShepherd",
-  "keywords": ["owasp", "security", "shepherd", "vulnerable"]
+  "keywords": ["owasp", "security", "shepherd", "vulnerable"],
+  "env": {"WAR_DIR" : {"description": "Directory of expanded WAR", "value": "/app/target/webapp"}},
+  "addons": [{"plan": "cleardb:ignite", "as": "MYSQL"}, {"plan" : "mongolab:sandbox", "as": "MONGODB"}]
 }
