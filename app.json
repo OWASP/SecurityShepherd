@@ -6,4 +6,3 @@
   "env": {"WAR_DIR" : {"description": "Directory of expanded WAR", "value": "/app/target/webapp"}},
   "addons": [{"plan": "cleardb:ignite", "as": "MYSQL"}, {"plan" : "mongolab:sandbox", "as": "MONGODB"}]
 }
-

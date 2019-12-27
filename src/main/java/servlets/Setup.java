@@ -312,7 +312,7 @@ public class Setup extends HttpServlet {
 	 */
 	public static void writeHerokuDbProps() throws URISyntaxException, IOException {
 
-		URI dbUri = new URI(System.getenv("DATABASE_URL"));
+		URI dbUri = new URI(System.getenv("MYSQL_URL"));
 
 		String dbUser = dbUri.getUserInfo().split(":")[0];
 		String dbPass = dbUri.getUserInfo().split(":")[1];
