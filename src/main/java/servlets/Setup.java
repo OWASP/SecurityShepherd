@@ -220,24 +220,20 @@ public class Setup extends HttpServlet {
 
 		try (Connection coreConnection = Database.getDatabaseConnection(null)) {
 			if (coreConnection == null) {
-        			if (isHerokuEnv()){
-				try
-				{
-					writeHerokuDbProps();
-					log.info("Heroku database properties written to: " + Constants.DBPROP);
-					log.info("Files in conf: " + Files.list(Paths.get(Constants.CATALINA_CONF)));
-				}
-				catch(URISyntaxException e){
-					log.fatal(e);
-				}
-				catch (IOException e){
-					log.fatal(e);
-				}
+				if (isHerokuEnv()){
+					try {
+						writeHerokuDbProps();
+					}
+					catch(URISyntaxException e){
+						log.fatal(e);
+					}
+					catch (IOException e){
+						log.fatal(e);
+					}
 				isInstalled = true;
-			}
-       else{
-				isInstalled = false;
-        }
+				} else {
+					isInstalled = false;
+        		}
 
 			} else {
 				isInstalled = true;
@@ -395,6 +391,7 @@ public class Setup extends HttpServlet {
 		
 		Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+		log.info("Created Heroku DB props" + new File(Constants.DBPROP).getAbsolutePath());
 	}
 
 
