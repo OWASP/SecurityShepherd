@@ -363,6 +363,9 @@ public class Setup extends HttpServlet {
 	 */
 	private static boolean isHerokuEnv(){
 
+	    log.info("IT'S A HEROKU ENVIRONMENT");
+	    log.info("Conf File Loc: " + new File(Constants.CATALINA_CONF).getAbsoluteFile());
+
 		return Files.exists(Paths.get("/app/.jdk/version.txt"));
 
 	}
