@@ -220,30 +220,12 @@ public class Setup extends HttpServlet {
 
 		try (Connection coreConnection = Database.getDatabaseConnection(null)) {
 			if (coreConnection == null) {
-				if (isHerokuEnv()){
-					try {
-						writeHerokuDbProps();
-						isInstalled = true;
-					}
-					catch(URISyntaxException e){
-						log.fatal(e);
-					}
-					catch (IOException e){
-						log.fatal(e);
-					}
-				isInstalled = true;
-				} else {
-					isInstalled = false;
-        		}
-
+			    isInstalled = false;
 			} else {
 				isInstalled = true;
 			}
 		} catch (FileNotFoundException e) {
 			// DB properties file not found, we're not installed
-            log.info(Constants.CATALINA_BASE);
-            log.info(Constants.CATALINA_CONF);
-            log.info(Constants.SETUP_AUTH);
 			log.fatal("Database properties file not found, assuming not installed: " + e.toString());
 
 		} catch (CommunicationsException e) {
@@ -271,12 +253,6 @@ public class Setup extends HttpServlet {
 		log.info("Generating auth file: " + Constants.SETUP_AUTH);
 
 		try {
-			if (!Files.exists((Paths.get(Constants.CATALINA_BASE)))) {
-				log.info("Creating Catalina Base");
-				Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
-				Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
-			}
-
 
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
@@ -382,6 +358,12 @@ public class Setup extends HttpServlet {
 
 	 */
 	public static void writeHerokuDbProps() throws URISyntaxException, IOException {
+
+        if (!Files.exists((Paths.get(Constants.CATALINA_BASE)))) {
+            log.info("Creating Catalina Base");
+            Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
+            Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
+        }
 
 		URI dbUri = new URI(System.getenv("MYSQL_URL"));
 

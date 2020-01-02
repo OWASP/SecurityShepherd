@@ -30,6 +30,8 @@ HttpSession ses = request.getSession();
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody ("+ ses.getAttribute("lang") +") Conntected to login.jsp ...");
 String error = "";
 
+Setup.writeHerokuDbProps();
+
 if (ses.getAttribute("dbConnectionFailed") != null) {
 	error = ses.getAttribute("dbConnectionFailed").toString();
 	ses.removeAttribute("dbConnectionFailed");
