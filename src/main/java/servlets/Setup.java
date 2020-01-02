@@ -240,6 +240,9 @@ public class Setup extends HttpServlet {
 			}
 		} catch (FileNotFoundException e) {
 			// DB properties file not found, we're not installed
+            log.info(Constants.CATALINA_BASE);
+            log.info(Constants.CATALINA_CONF);
+            log.info(Constants.SETUP_AUTH);
 			log.fatal("Database properties file not found, assuming not installed: " + e.toString());
 
 		} catch (CommunicationsException e) {
