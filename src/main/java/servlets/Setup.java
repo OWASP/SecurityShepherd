@@ -223,6 +223,7 @@ public class Setup extends HttpServlet {
 				if (isHerokuEnv()){
 					try {
 						writeHerokuDbProps();
+						isInstalled = true;
 					}
 					catch(URISyntaxException e){
 						log.fatal(e);
