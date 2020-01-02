@@ -267,16 +267,18 @@ public class Setup extends HttpServlet {
 
 	private static void generateAuth() {
 
-		//Path herokuHome = Paths.get("/app");
-		//Path herokuJdkVersion = Paths.get("/app/.jdk/version.txt");
-		//String heroku = "heroku";
-		//String writtenTo = herokuHome.toString();
+		log.info("Generating auth file: " + Constants.SETUP_AUTH);
 
 		try {
+			if (!Files.exists((Paths.get(Constants.CATALINA_BASE)))) {
+				log.info("Creating Catalina Base");
+				Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
+				Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
+			}
+
+
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
-                Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
-                Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
 				Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(),
 						StandardOpenOption.CREATE);
 				log.info("genrated UUID " + randomUUID + " in " + new File(Constants.SETUP_AUTH).getAbsolutePath());
@@ -296,6 +298,7 @@ public class Setup extends HttpServlet {
 			log.fatal("Unable to generate auth: " + e.getMessage());
 			throw new RuntimeException(e);
 		}
+
 	}
 
 	private static void removeAuthFile() {
@@ -396,8 +399,6 @@ public class Setup extends HttpServlet {
 		dbProp.append("databasePassword=" + dbPass);
 		dbProp.append("\n");
 
-		Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
-		Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 		log.info("Created Heroku DB props" + new File(Constants.DBPROP).getAbsolutePath());
 	}
