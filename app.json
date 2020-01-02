@@ -3,6 +3,7 @@
   "description": "Web and mobile application security training platform",
   "repository": "https://github.com/OWASP/SecurityShepherd",
   "keywords": ["owasp", "security", "shepherd", "vulnerable"],
-  "env": {"WAR_DIR" : {"description": "Directory of expanded WAR", "value": "/app/target/owaspSecurityShepherd"}},
+  "env": {"WAR_DIR" : {"description": "Directory of expanded WAR", "value": "/app/target/owaspSecurityShepherd"},
+          "CATALINA_HOME": {"description": "catalina home", "value": "/app/target/tomcat.$PORT"}},
   "addons": [{"plan": "cleardb:ignite", "as": "MYSQL"}, {"plan" : "mongolab:sandbox", "as": "MONGODB"}]
 }
