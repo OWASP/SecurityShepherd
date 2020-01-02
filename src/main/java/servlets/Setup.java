@@ -272,7 +272,8 @@ public class Setup extends HttpServlet {
 		try {
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
-				Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
+                Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
+                Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
 				Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(),
 						StandardOpenOption.CREATE);
 				log.info("genrated UUID " + randomUUID + " in " + new File(Constants.SETUP_AUTH).getAbsolutePath());
@@ -391,7 +392,8 @@ public class Setup extends HttpServlet {
 		dbProp.append("\n");
 		dbProp.append("databasePassword=" + dbPass);
 		dbProp.append("\n");
-		
+
+		Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
 		Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 		log.info("Created Heroku DB props" + new File(Constants.DBPROP).getAbsolutePath());
