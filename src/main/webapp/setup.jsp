@@ -2,6 +2,7 @@
 <%@page import="servlets.Setup"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	language="java" import="utils.*, org.owasp.encoder.Encode"%>
+<%@ page import="java.io.IOException" %>
 <%@ include file="translation.jsp"%>
 
 <%
@@ -30,7 +31,10 @@ HttpSession ses = request.getSession();
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody ("+ ses.getAttribute("lang") +") Conntected to login.jsp ...");
 String error = "";
 
-Setup.writeHerokuDbProps();
+if (Setup.isHerokuEnv()) {
+	Setup.writeHerokuDbProps();
+}
+
 
 if (ses.getAttribute("dbConnectionFailed") != null) {
 	error = ses.getAttribute("dbConnectionFailed").toString();

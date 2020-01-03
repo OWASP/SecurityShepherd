@@ -250,7 +250,7 @@ public class Setup extends HttpServlet {
 
 	private static void generateAuth() {
 
-		log.info("Generating auth file: " + Constants.SETUP_AUTH);
+		createDirtoryStructure();
 
 		try {
 
@@ -341,11 +341,34 @@ public class Setup extends HttpServlet {
 		return XxeLesson.createXxeLessonSolutionFile();
 	}
 
+
+	private static void createDirtoryStructure(){
+
+		try
+		{
+			if (!Files.exists((Paths.get(Constants.CATALINA_BASE))))
+			{
+				log.info("Creating Catalina Base in: " + Constants.CATALINA_BASE);
+				Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
+			}
+			else if (!Files.exists(Paths.get(Constants.CATALINA_CONF))){
+				log.info("Creating Catalina conf in: " + Constants.CATALINA_CONF);
+				Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
+			}
+			else
+				log.info("Directory Structure " + Constants.CATALINA_CONF + " already exists. Nothing to do.");
+		} catch(IOException e){
+			log.fatal("Error createing directory structure " + e.getMessage());
+			throw new RuntimeException(e);
+		}
+	}
+
+
 	/*
 	*
 	*
 	 */
-	private static boolean isHerokuEnv(){
+	public static boolean isHerokuEnv(){
 
 	    log.info("IT'S A HEROKU ENVIRONMENT");
 	    log.info("Conf File Loc: " + new File(Constants.CATALINA_CONF).getAbsoluteFile());
@@ -359,11 +382,7 @@ public class Setup extends HttpServlet {
 	 */
 	public static void writeHerokuDbProps() throws URISyntaxException, IOException {
 
-        if (!Files.exists((Paths.get(Constants.CATALINA_BASE)))) {
-            log.info("Creating Catalina Base");
-            Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
-            Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
-        }
+		createDirtoryStructure();
 
 		URI dbUri = new URI(System.getenv("MYSQL_URL"));
 
