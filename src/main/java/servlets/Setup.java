@@ -249,6 +249,9 @@ public class Setup extends HttpServlet {
 	}
 
 	private static void generateAuth() {
+
+	    createDirectoryStructure();
+
 		try {
 
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
@@ -352,7 +355,7 @@ public class Setup extends HttpServlet {
 	}
 
 
-	public synchronized void createDirectoryStructure(){
+	private static synchronized void createDirectoryStructure(){
 
 		try
 		{
