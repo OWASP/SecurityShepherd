@@ -260,17 +260,6 @@ public class Setup extends HttpServlet {
 						StandardOpenOption.CREATE);
 				log.info("genrated UUID " + randomUUID + " in " + new File(Constants.SETUP_AUTH).getAbsolutePath());
 			}
-			/*
-			String versionInfo = new String(Files.readAllBytes(herokuJdkVersion), Charset.forName("UTF-8"));
-
-			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
-				UUID randomUUID = UUID.randomUUID();
-				Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
-				Files.write(Paths.get(Constants.SETUP_AUTH), randomUUID.toString().getBytes(),
-						StandardOpenOption.CREATE);
-				log.info("genrated UUID " + randomUUID + " in " + Constants.SETUP_AUTH);
-			}
-			*/
 		} catch (IOException e) {
 			log.fatal("Unable to generate auth: " + e.getMessage());
 			throw new RuntimeException(e);
@@ -286,14 +275,29 @@ public class Setup extends HttpServlet {
 		}
 	}
 
-	private synchronized void executeSqlScript() throws IOException, SQLException, URISyntaxException {
+	private synchronized void executeSqlScript() throws IOException, SQLException {
+
+		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
+		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
+
+		Connection databaseConnection = Database.getDatabaseConnection(null, true);
+		Statement psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
+
+		file = new File(getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
+		data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
+
+	}
+
+	private synchronized void executeSqlScript(String dbName) throws IOException, SQLException {
 
 		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
 		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 		if (isHerokuEnv()){
-            URI dbUri = new URI(System.getenv("MYSQL_URL"));
-		    data.replaceAll("core",  dbUri.getPath());
-        }
+			data.replaceAll("core", dbName);
+		}
 
 		Connection databaseConnection = Database.getDatabaseConnection(null, true);
 		Statement psProcToexecute = databaseConnection.createStatement();
@@ -406,7 +410,7 @@ public class Setup extends HttpServlet {
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 		log.info("Created Heroku Db properties file: " + new File(Constants.DBPROP).getAbsolutePath());
         try {
-            executeSqlScript();
+            executeSqlScript(dbUri.getPath());
             log.info("Created Security Shepherd Database in " + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
         } catch (SQLException e) {
             e.printStackTrace();
