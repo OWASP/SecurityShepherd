@@ -402,7 +402,7 @@ public class Setup extends HttpServlet {
 		dbProp.append("\n");
 		dbProp.append("DriverType=org.gjt.mm.mysql.Driver");
 		dbProp.append("\n");
-		dbProp.append("databaseSchema=" + dbUri.getPath());
+		dbProp.append("databaseSchema=" + dbName);
 		dbProp.append("\n");
 		dbProp.append("databaseUsername=" + dbUser);
 		dbProp.append("\n");
