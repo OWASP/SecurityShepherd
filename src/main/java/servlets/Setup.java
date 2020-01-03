@@ -370,17 +370,15 @@ public class Setup extends HttpServlet {
 	 */
 	public static boolean isHerokuEnv(){
 
-	    log.info("IT'S A HEROKU ENVIRONMENT");
-	    log.info("Conf File Loc: " + new File(Constants.CATALINA_CONF).getAbsoluteFile());
-
 		return Files.exists(Paths.get("/app/.jdk/version.txt"));
-
 	}
 
 	/*
 
 	 */
 	public static void writeHerokuDbProps() throws URISyntaxException, IOException {
+
+		log.info("Configuring Security Shepherd for a Heroku Environment");
 
 		createDirtoryStructure();
 
@@ -390,11 +388,11 @@ public class Setup extends HttpServlet {
 		String dbPass = dbUri.getUserInfo().split(":")[1];
 
 		StringBuffer dbProp = new StringBuffer();
-		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost() + ':' + dbUri.getPort());
 		dbProp.append("\n");
 		dbProp.append("DriverType=org.gjt.mm.mysql.Driver");
 		dbProp.append("\n");
-		dbProp.append("databaseSchema=core");
+		dbProp.append("databaseSchema=" + dbUri.getPath());
 		dbProp.append("\n");
 		dbProp.append("databaseUsername=" + dbUser);
 		dbProp.append("\n");
@@ -402,7 +400,9 @@ public class Setup extends HttpServlet {
 		dbProp.append("\n");
 
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
-		log.info("Created Heroku DB props" + new File(Constants.DBPROP).getAbsolutePath());
+		log.info("Created Heroku Db properties file: " + new File(Constants.DBPROP).getAbsolutePath());
+		executeSqlScript();
+		log.info("Created Security Shepherd Database in " + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
 	}
 
 
