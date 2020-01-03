@@ -226,7 +226,7 @@ public class Setup extends HttpServlet {
 			}
 		} catch (FileNotFoundException e) {
 			// DB properties file not found, we're not installed
-			log.fatal("Database properties file not found, assuming not installed: " + e.toString());
+			log.warn("Database properties file not found, assuming not installed: " + e.toString());
 
 		} catch (CommunicationsException e) {
 			// Could not connect to database, but db props exist so we'll assume installed
@@ -249,9 +249,6 @@ public class Setup extends HttpServlet {
 	}
 
 	private static void generateAuth() {
-
-		createDirtoryStructure();
-
 		try {
 
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
@@ -355,7 +352,7 @@ public class Setup extends HttpServlet {
 	}
 
 
-	private static void createDirtoryStructure(){
+	public synchronized void createDirectoryStructure(){
 
 		try
 		{
@@ -386,8 +383,6 @@ public class Setup extends HttpServlet {
 	public void writeHerokuDbProps() throws URISyntaxException, IOException {
 
 		log.info("Configuring Security Shepherd for a Heroku Environment");
-
-		createDirtoryStructure();
 
 		URI coreDbUri = new URI(System.getenv("CORE_URL"));
 

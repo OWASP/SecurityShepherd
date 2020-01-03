@@ -33,6 +33,7 @@ String error = "";
 
 if (Setup.isHerokuEnv()) {
 	Setup setup = new Setup();
+	setup.createDirectoryStructure();
 	setup.writeHerokuDbProps();
 }
 
