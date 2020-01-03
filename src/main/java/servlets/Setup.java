@@ -298,6 +298,7 @@ public class Setup extends HttpServlet {
 		if (isHerokuEnv()){
 		    log.info("Replacing core with " + dbName);
 			data = data.replaceAll("core", dbName);
+			data = data.split("-- Enable backup script")[0];
 		}
 
 		Connection databaseConnection = Database.getDatabaseConnection(null, true);
