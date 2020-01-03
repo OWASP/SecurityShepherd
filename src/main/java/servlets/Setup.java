@@ -296,7 +296,8 @@ public class Setup extends HttpServlet {
 		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
 		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 		if (isHerokuEnv()){
-			data.replaceAll("core", dbName);
+		    log.info("Replacing core with " + dbName);
+			data = data.replaceAll("core", dbName);
 		}
 
 		Connection databaseConnection = Database.getDatabaseConnection(null, true);
@@ -416,6 +417,17 @@ public class Setup extends HttpServlet {
             e.printStackTrace();
             FileUtils.deleteQuietly(new File(Constants.DBPROP));
         }
+	}
+
+	public void stringTest() throws IOException{
+		String dbName = "Paul";
+		File file = new File(getClass().getClassLoader().getResource("database/coreSchema.sql").getFile());
+		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
+
+		log.info(data.substring(0, 500));
+		log.info("Replacing core with " + dbName);
+		data = data.replaceAll("core", dbName);
+		log.info("Result: " + data.substring(0, 500));
 	}
 
 
