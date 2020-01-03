@@ -376,7 +376,7 @@ public class Setup extends HttpServlet {
 	/*
 
 	 */
-	public static void writeHerokuDbProps() throws URISyntaxException, IOException {
+	public void writeHerokuDbProps() throws URISyntaxException, IOException, SQLException {
 
 		log.info("Configuring Security Shepherd for a Heroku Environment");
 

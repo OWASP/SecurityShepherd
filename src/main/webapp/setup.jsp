@@ -32,7 +32,8 @@ ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwar
 String error = "";
 
 if (Setup.isHerokuEnv()) {
-	Setup.writeHerokuDbProps();
+	Setup setup = new Setup();
+	setup.writeHerokuDbProps();
 }
 
 
