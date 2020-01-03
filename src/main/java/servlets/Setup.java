@@ -305,11 +305,12 @@ public class Setup extends HttpServlet {
 		Statement psProcToexecute = databaseConnection.createStatement();
 		psProcToexecute.executeUpdate(data);
 
+		/*
 		file = new File(getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
 		data = FileUtils.readFileToString(file, Charset.defaultCharset());
 		psProcToexecute = databaseConnection.createStatement();
 		psProcToexecute.executeUpdate(data);
-
+        */
 	}
 
 	private synchronized void executeMongoScript() throws IOException  {
