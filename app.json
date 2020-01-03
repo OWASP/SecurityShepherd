@@ -4,5 +4,9 @@
   "repository": "https://github.com/OWASP/SecurityShepherd",
   "keywords": ["owasp", "security", "shepherd", "vulnerable"],
   "env": {"WAR_DIR" : {"description": "Directory of expanded WAR", "value": "/app/target/owaspSecurityShepherd"}},
-  "addons": [{"plan": "cleardb:ignite", "as": "MYSQL"}, {"plan" : "mongolab:sandbox", "as": "MONGODB"}]
+  "addons": [
+    {"plan": "cleardb:ignite", "as": "CORE"},
+    {"plan": "cleardb:ignite", "as": "BACKUP"},
+    {"plan" : "mongolab:sandbox", "as": "MONGODB"}
+  ]
 }

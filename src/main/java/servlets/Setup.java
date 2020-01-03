@@ -291,14 +291,15 @@ public class Setup extends HttpServlet {
 
 	}
 
-	private synchronized void executeSqlScript(String dbName) throws IOException, SQLException {
+	private synchronized void executeSqlScript(String coreDbName, String backupDbName) throws IOException, SQLException {
 
 		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
 		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 		if (isHerokuEnv()){
-		    log.info("Replacing core with " + dbName);
-			data = data.replaceAll("core", dbName);
-			data = data.split("-- Enable backup script")[0];
+		    log.info("Replacing core with " + coreDbName);
+			data = data.replaceAll("core", coreDbName);
+			data = data.replaceAll("backup", backupDbName);
+			//data = data.split("-- Enable backup script")[0];
 		}
 
 		Connection databaseConnection = Database.getDatabaseConnection(null, true);
@@ -381,7 +382,7 @@ public class Setup extends HttpServlet {
 	 */
 	public static boolean isHerokuEnv(){
 
-		return Files.exists(Paths.get("/app/.jdk/version.txt"));
+		return Files.exists(Paths.get("/app/.heroku/bin/heroku-metrics-agent.jar"));
 	}
 
 	/*
@@ -393,18 +394,21 @@ public class Setup extends HttpServlet {
 
 		createDirtoryStructure();
 
-		URI dbUri = new URI(System.getenv("MYSQL_URL"));
+		URI coreDbUri = new URI(System.getenv("CORE_URL"));
+        URI backupDbUri = new URI(System.getenv("BACKUP_URL"));
 
-		String dbUser = dbUri.getUserInfo().split(":")[0];
-		String dbPass = dbUri.getUserInfo().split(":")[1];
-		String dbName = dbUri.getPath().substring(1);
+		String dbUser = coreDbUri.getUserInfo().split(":")[0];
+		String dbPass = coreDbUri.getUserInfo().split(":")[1];
+		String coreDbName = coreDbUri.getPath().substring(1);
+
+		String backupDbName = backupDbUri.getPath().substring(1);
 
 		StringBuffer dbProp = new StringBuffer();
-		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost() + "/");
+		dbProp.append("databaseConnectionURL=jdbc:mysql://" + coreDbUri.getHost() + "/");
 		dbProp.append("\n");
 		dbProp.append("DriverType=org.gjt.mm.mysql.Driver");
 		dbProp.append("\n");
-		dbProp.append("databaseSchema=" + dbName);
+		dbProp.append("databaseSchema=" + coreDbName);
 		dbProp.append("\n");
 		dbProp.append("databaseUsername=" + dbUser);
 		dbProp.append("\n");
@@ -414,8 +418,8 @@ public class Setup extends HttpServlet {
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 		log.info("Created Heroku Db properties file: " + new File(Constants.DBPROP).getAbsolutePath());
         try {
-            executeSqlScript(dbName);
-            log.info("Created Security Shepherd Database in " + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+            executeSqlScript(coreDbName, backupDbName);
+            log.info("Created Security Shepherd Database in " + coreDbUri.getHost() + ':' + coreDbUri.getPort() + coreDbUri.getPath());
         } catch (SQLException e) {
             e.printStackTrace();
             FileUtils.deleteQuietly(new File(Constants.DBPROP));
