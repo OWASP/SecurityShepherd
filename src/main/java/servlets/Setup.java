@@ -286,10 +286,14 @@ public class Setup extends HttpServlet {
 		}
 	}
 
-	private synchronized void executeSqlScript() throws IOException, SQLException {
+	private synchronized void executeSqlScript() throws IOException, SQLException, URISyntaxException {
 
 		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
 		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		if (isHerokuEnv()){
+            URI dbUri = new URI(System.getenv("MYSQL_URL"));
+		    data.replaceAll("core",  dbUri.getPath());
+        }
 
 		Connection databaseConnection = Database.getDatabaseConnection(null, true);
 		Statement psProcToexecute = databaseConnection.createStatement();
@@ -376,7 +380,7 @@ public class Setup extends HttpServlet {
 	/*
 
 	 */
-	public void writeHerokuDbProps() throws URISyntaxException, IOException, SQLException {
+	public void writeHerokuDbProps() throws URISyntaxException, IOException {
 
 		log.info("Configuring Security Shepherd for a Heroku Environment");
 
@@ -401,8 +405,13 @@ public class Setup extends HttpServlet {
 
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 		log.info("Created Heroku Db properties file: " + new File(Constants.DBPROP).getAbsolutePath());
-		executeSqlScript();
-		log.info("Created Security Shepherd Database in " + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+        try {
+            executeSqlScript();
+            log.info("Created Security Shepherd Database in " + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            FileUtils.deleteQuietly(new File(Constants.DBPROP));
+        }
 	}
 
 
