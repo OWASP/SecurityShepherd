@@ -291,15 +291,15 @@ public class Setup extends HttpServlet {
 
 	}
 
-	private synchronized void executeSqlScript(String coreDbName, String backupDbName) throws IOException, SQLException {
+	private synchronized void executeSqlScript(String coreDbName) throws IOException, SQLException {
 
 		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
 		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 		if (isHerokuEnv()){
 		    log.info("Replacing core with " + coreDbName);
 			data = data.replaceAll("core", coreDbName);
-			data = data.replaceAll("backup", backupDbName);
-			//data = data.split("-- Enable backup script")[0];
+			//data = data.replaceAll("backup", backupDbName);
+			data = data.split("-- Enable backup script")[0];
 		}
 
 		Connection databaseConnection = Database.getDatabaseConnection(null, true);
@@ -311,7 +311,8 @@ public class Setup extends HttpServlet {
 		data = FileUtils.readFileToString(file, Charset.defaultCharset());
 		psProcToexecute = databaseConnection.createStatement();
 		psProcToexecute.executeUpdate(data);
-        */
+		*/
+
 	}
 
 	private synchronized void executeMongoScript() throws IOException  {
@@ -376,18 +377,12 @@ public class Setup extends HttpServlet {
 	}
 
 
-	/*
-	*
-	*
-	 */
 	public static boolean isHerokuEnv(){
 
 		return Files.exists(Paths.get("/app/.heroku/bin/heroku-metrics-agent.jar"));
 	}
 
-	/*
 
-	 */
 	public void writeHerokuDbProps() throws URISyntaxException, IOException {
 
 		log.info("Configuring Security Shepherd for a Heroku Environment");
@@ -395,13 +390,10 @@ public class Setup extends HttpServlet {
 		createDirtoryStructure();
 
 		URI coreDbUri = new URI(System.getenv("CORE_URL"));
-        URI backupDbUri = new URI(System.getenv("BACKUP_URL"));
 
 		String dbUser = coreDbUri.getUserInfo().split(":")[0];
 		String dbPass = coreDbUri.getUserInfo().split(":")[1];
 		String coreDbName = coreDbUri.getPath().substring(1);
-
-		String backupDbName = backupDbUri.getPath().substring(1);
 
 		StringBuffer dbProp = new StringBuffer();
 		dbProp.append("databaseConnectionURL=jdbc:mysql://" + coreDbUri.getHost() + "/");
@@ -418,7 +410,7 @@ public class Setup extends HttpServlet {
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 		log.info("Created Heroku Db properties file: " + new File(Constants.DBPROP).getAbsolutePath());
         try {
-            executeSqlScript(coreDbName, backupDbName);
+            executeSqlScript(coreDbName);
             log.info("Created Security Shepherd Database in " + coreDbUri.getHost() + ':' + coreDbUri.getPort() + coreDbUri.getPath());
         } catch (SQLException e) {
             e.printStackTrace();
