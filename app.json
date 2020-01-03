@@ -6,7 +6,6 @@
   "env": {"WAR_DIR" : {"description": "Directory of expanded WAR", "value": "/app/target/owaspSecurityShepherd"}},
   "addons": [
     {"plan": "cleardb:ignite", "as": "CORE"},
-    {"plan": "cleardb:ignite", "as": "BACKUP"},
     {"plan" : "mongolab:sandbox", "as": "MONGODB"}
   ]
 }
