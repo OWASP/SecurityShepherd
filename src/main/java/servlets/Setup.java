@@ -395,6 +395,7 @@ public class Setup extends HttpServlet {
 
 		String dbUser = dbUri.getUserInfo().split(":")[0];
 		String dbPass = dbUri.getUserInfo().split(":")[1];
+		String dbName = dbUri.getPath().substring(1);
 
 		StringBuffer dbProp = new StringBuffer();
 		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost());
@@ -411,7 +412,7 @@ public class Setup extends HttpServlet {
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 		log.info("Created Heroku Db properties file: " + new File(Constants.DBPROP).getAbsolutePath());
         try {
-            executeSqlScript(dbUri.getPath());
+            executeSqlScript(dbName);
             log.info("Created Security Shepherd Database in " + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -419,16 +420,7 @@ public class Setup extends HttpServlet {
         }
 	}
 
-	public void stringTest() throws IOException{
-		String dbName = "Paul";
-		File file = new File(getClass().getClassLoader().getResource("database/coreSchema.sql").getFile());
-		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
-		log.info(data.substring(0, 500));
-		log.info("Replacing core with " + dbName);
-		data = data.replaceAll("core", dbName);
-		log.info("Result: " + data.substring(0, 500));
-	}
 
 
 }
