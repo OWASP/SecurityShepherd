@@ -388,7 +388,7 @@ public class Setup extends HttpServlet {
 		String dbPass = dbUri.getUserInfo().split(":")[1];
 
 		StringBuffer dbProp = new StringBuffer();
-		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost() + ':' + dbUri.getPort());
+		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost());
 		dbProp.append("\n");
 		dbProp.append("DriverType=org.gjt.mm.mysql.Driver");
 		dbProp.append("\n");
