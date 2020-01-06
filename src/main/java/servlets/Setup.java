@@ -254,8 +254,6 @@ public class Setup extends HttpServlet {
 	}
 
 	private static void generateAuth() {
-
-
 		try {
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
@@ -290,6 +288,30 @@ public class Setup extends HttpServlet {
 		data = FileUtils.readFileToString(file, Charset.defaultCharset());
 		psProcToexecute = databaseConnection.createStatement();
 		psProcToexecute.executeUpdate(data);
+
+	}
+
+	private synchronized void executeSqlScript(String coreDbName) throws IOException, SQLException {
+
+		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
+		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		if (isHerokuEnv()){
+			log.info("Replacing core with " + coreDbName);
+			data = data.replaceAll("core", coreDbName);
+			//data = data.replaceAll("backup", backupDbName);
+			data = data.split("-- Enable backup script")[0];
+		}
+
+		Connection databaseConnection = Database.getDatabaseConnection(null, true);
+		Statement psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
+
+		/*
+		file = new File(getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
+		data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
+		*/
 
 	}
 
@@ -332,32 +354,28 @@ public class Setup extends HttpServlet {
 		return XxeLesson.createXxeLessonSolutionFile();
 	}
 
-	/*
-	*
-	*
-	 */
-	private static boolean isHerokuEnv(){
+	public static boolean isHerokuEnv(){
 
-		return Files.exists(Paths.get("/app/.jdk/version.txt"));
-
+		return Files.exists(Paths.get("/app/.heroku/bin/heroku-metrics-agent.jar"));
 	}
 
-	/*
 
-	 */
-	public static void writeHerokuDbProps() throws URISyntaxException, IOException {
+	public void writeHerokuDbProps() throws URISyntaxException, IOException {
 
-		URI dbUri = new URI(System.getenv("MYSQL_URL"));
+		log.info("Configuring Security Shepherd for a Heroku Environment");
 
-		String dbUser = dbUri.getUserInfo().split(":")[0];
-		String dbPass = dbUri.getUserInfo().split(":")[1];
+		URI coreDbUri = new URI(System.getenv("CORE_URL"));
+
+		String dbUser = coreDbUri.getUserInfo().split(":")[0];
+		String dbPass = coreDbUri.getUserInfo().split(":")[1];
+		String coreDbName = coreDbUri.getPath().substring(1);
 
 		StringBuffer dbProp = new StringBuffer();
-		dbProp.append("databaseConnectionURL=jdbc:mysql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+		dbProp.append("databaseConnectionURL=jdbc:mysql://" + coreDbUri.getHost() + "/");
 		dbProp.append("\n");
 		dbProp.append("DriverType=org.gjt.mm.mysql.Driver");
 		dbProp.append("\n");
-		dbProp.append("databaseSchema=core");
+		dbProp.append("databaseSchema=" + coreDbName);
 		dbProp.append("\n");
 		dbProp.append("databaseUsername=" + dbUser);
 		dbProp.append("\n");
@@ -365,8 +383,14 @@ public class Setup extends HttpServlet {
 		dbProp.append("\n");
 
 		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
-		Files.write(Paths.get("conf"), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
-
+		log.info("Created Heroku Db properties file: " + new File(Constants.DBPROP).getAbsolutePath());
+		try {
+			executeSqlScript(coreDbName);
+			log.info("Created Security Shepherd Database in " + coreDbUri.getHost() + ':' + coreDbUri.getPort() + coreDbUri.getPath());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			FileUtils.deleteQuietly(new File(Constants.DBPROP));
+		}
 	}
 
 
