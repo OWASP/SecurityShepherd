@@ -254,6 +254,9 @@ public class Setup extends HttpServlet {
 	}
 
 	private static void generateAuth() {
+
+		createDirectoryStructure();
+
 		try {
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
@@ -352,6 +355,27 @@ public class Setup extends HttpServlet {
 
 	private synchronized Boolean executeCreateChallengeFile() {
 		return XxeLesson.createXxeLessonSolutionFile();
+	}
+
+	private static synchronized void createDirectoryStructure(){
+
+		try
+		{
+			if (!Files.exists((Paths.get(Constants.CATALINA_BASE))))
+			{
+				log.info("Creating Catalina Base in: " + Constants.CATALINA_BASE);
+				Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
+			}
+			else if (!Files.exists(Paths.get(Constants.CATALINA_CONF))){
+				log.info("Creating Catalina conf in: " + Constants.CATALINA_CONF);
+				Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
+			}
+			else
+				log.info("Directory Structure " + Constants.CATALINA_CONF + " already exists. Nothing to do.");
+		} catch(IOException e){
+			log.fatal("Error createing directory structure " + e.getMessage());
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static boolean isHerokuEnv(){
