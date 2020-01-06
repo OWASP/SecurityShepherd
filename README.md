@@ -4,7 +4,7 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 
 [![Build Status](https://travis-ci.com/OWASP/SecurityShepherd.svg?branch=dev)](https://travis-ci.com/OWASP/SecurityShepherd)
   
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?button-url=https%3A%2F%2Fgithub.com%2FOWASP%2FSecurityShepherd%2Ftree%2Fdev%2523504-heroku%26template%3Dhttps%3A%2F%2Fgithub.com%2FOWASP%2FSecurityShepherd%2Ftree%2Fdev%2523504-heroku)  
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
   
 # Where can I download Security Shepherd?
 
