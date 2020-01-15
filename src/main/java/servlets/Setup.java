@@ -13,7 +13,6 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
@@ -301,20 +300,12 @@ public class Setup extends HttpServlet {
 		if (isHerokuEnv()){
 			log.info("Replacing core with " + coreDbName);
 			data = data.replaceAll("core", coreDbName);
-			//data = data.replaceAll("backup", backupDbName);
 			data = data.split("-- Enable backup script")[0];
 		}
 
 		Connection databaseConnection = Database.getDatabaseConnection(null, true);
 		Statement psProcToexecute = databaseConnection.createStatement();
 		psProcToexecute.executeUpdate(data);
-
-		/*
-		file = new File(getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
-		data = FileUtils.readFileToString(file, Charset.defaultCharset());
-		psProcToexecute = databaseConnection.createStatement();
-		psProcToexecute.executeUpdate(data);
-		*/
 
 	}
 
@@ -373,7 +364,7 @@ public class Setup extends HttpServlet {
 			else
 				log.info("Directory Structure " + Constants.CATALINA_CONF + " already exists. Nothing to do.");
 		} catch(IOException e){
-			log.fatal("Error createing directory structure " + e.getMessage());
+			log.fatal("Error creating directory structure " + e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}
@@ -388,7 +379,7 @@ public class Setup extends HttpServlet {
 
 		log.info("Configuring Security Shepherd for a Heroku Environment");
 
-		URI coreDbUri = new URI(System.getenv("CORE_URL"));
+		URI coreDbUri = new URI(System.getenv("HEROKU_CORE_URL"));
 
 		String dbUser = coreDbUri.getUserInfo().split(":")[0];
 		String dbPass = coreDbUri.getUserInfo().split(":")[1];
