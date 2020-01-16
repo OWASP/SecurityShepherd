@@ -42,7 +42,7 @@ public class ChangeUserPassword extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(ChangeUserPassword.class);
-	private static String functionName = new String("Player Password Update");
+	private static String functionName = new String("User Password Update");
 	
 	public void doPost (HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException
@@ -63,6 +63,7 @@ public class ChangeUserPassword extends HttpServlet
 			{
 				boolean notNull = false;
 				boolean validPlayer = false;
+				boolean validAdmin = false;
 				boolean validPassword = false;
 				try
 				{
@@ -70,23 +71,31 @@ public class ChangeUserPassword extends HttpServlet
 					
 					log.debug("Getting Parameters");
 					String player = (String)request.getParameter("player");
-					log.debug("player = " + player.toString());
+					String admin = (String)request.getParameter("admin");
 					String newPassword = (String)request.getParameter("password");
-					log.debug("newPass = " + newPassword);
 					
-					//Validation
-					notNull = (player != null) && (newPassword != null);
-					if(notNull)
-					{
-							validPlayer = Getter.findPlayerById(ApplicationRoot, player);
-							validPassword = Validate.isValidPassword(newPassword);
+					// Validation
+					if (player != null && newPassword != null) {
+						log.debug("player = " + player.toString());
+						log.debug("newPass = " + newPassword);
+						validPlayer = Getter.findPlayerById(ApplicationRoot, player);
+						validPassword = Validate.isValidPassword(newPassword);
+						notNull = true;
+					} else if (admin != null && newPassword != null) {
+						log.debug("admin = " + admin.toString());
+						log.debug("newPass = " + newPassword);
+						validAdmin = Getter.findAdminById(ApplicationRoot, admin);
+						validPassword = Validate.isValidPassword(newPassword);
+						notNull = true;
 					}
-					if(notNull && validPlayer && validPassword)
+
+					String reponseMessage = "";
+					// Change Password
+					if (notNull && validPlayer && validPassword)
 					{
 						//Data is good, Add user
 						log.debug("Updating Player Password");
-						String reponseMessage = new String();
-						if(Setter.updatePasswordAdmin(ApplicationRoot, player, newPassword))
+						if (Setter.updatePasswordAdmin(ApplicationRoot, player, newPassword))
 						{
 							String userName = new String(Getter.getUserName(ApplicationRoot, player));
 							reponseMessage += "<a>" + Encode.forHtml(userName) + "</a>'s password has been updated. They will have to change it upon sign in.<br>";
@@ -99,9 +108,22 @@ public class ChangeUserPassword extends HttpServlet
 								"<p>" +
 								reponseMessage +
 								"<p>");
-					}
-					else
-					{
+					} else if (notNull && validAdmin && validPassword) {
+						log.debug("Updating Admin Password");
+						if (Setter.updatePasswordAdmin(ApplicationRoot, admin, newPassword))
+						{
+							String userName = new String(Getter.getUserName(ApplicationRoot, admin));
+							reponseMessage += "<a>" + Encode.forHtml(userName) + "</a>'s password has been updated. They will have to change it upon sign in.<br>";
+						}
+						else
+						{
+							reponseMessage += "<font color='red'>User Password could not be updated. Please try again.</font><br/>";
+						}
+						out.print("<h3 class=\"title\">" + functionName + " Result</h3>" +
+								"<p>" +
+								reponseMessage +
+								"<p>");
+					} else {
 						//Validation Error Responses
 						String errorMessage = "An Error Occurred: ";
 						if(!notNull)
