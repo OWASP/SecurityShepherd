@@ -2,7 +2,9 @@ pipeline {
     agent none
     stages {
         stage('SecurityScan') {
-            agent none
+            agent {
+                none
+            }
             steps {
                 sh 'docker -ti run kondukto/kondukto-cli --help'
             }
