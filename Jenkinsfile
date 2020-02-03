@@ -1,17 +1,21 @@
 pipeline {
-  agent any
-  stages {
-    stage('SecScan') {
-      steps {
-        sh 'docker run kondukto/kondukto-cli --help'
-      }
+    agent none
+    stages {
+        stage('SecurityScan') {
+            agent {
+                docker { image 'kondukto/kondukto-cli:dev' }
+            }
+            steps {
+                sh 'kdt help'
+            }
+        }
+        stage('Build') {
+            agent {
+                docker { image 'maven:3-alpine' }
+            }
+            steps {
+                sh 'mvn -Pdocker clean install -DskipTests'
+            }
+        }
     }
-
-    stage('Build') {
-      steps {
-        sh 'docker run -v $HOME/.m2:/root/.m2 maven:3-alpine mvn -P clean install -DskipTest'
-      }
-    }
-
-  }
 }
