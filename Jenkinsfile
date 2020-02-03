@@ -12,5 +12,11 @@ pipeline {
       }
     }
 
+    stage('') {
+      steps {
+        sh 'mvn -Pdocker clean install -DskipTests'
+      }
+    }
+
   }
 }
