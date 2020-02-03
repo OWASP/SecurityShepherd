@@ -6,7 +6,7 @@ pipeline {
                 docker { image 'kondukto/kondukto-cli:dev' }
             }
             steps {
-                sh '--help'
+                sh 'kdt --help'
             }
         }
         stage('Build') {
