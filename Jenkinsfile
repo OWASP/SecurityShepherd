@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('SecScan') {
       steps {
-        sh 'docker run -ti kondukto/kondukto-cli --help'
+        sh 'docker run kondukto/kondukto-cli --help'
       }
     }
 
