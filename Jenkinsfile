@@ -9,7 +9,7 @@ pipeline {
 
     stage('Build') {
       steps {
-        sh 'docker run -ti -v $HOME/.m2:/root/.m2 maven:3-alpine mvn -Pdocker clean install -DskipTest'
+        sh 'docker run -v $HOME/.m2:/root/.m2 maven:3-alpine mvn -Pdocker clean install -DskipTest'
       }
     }
 
