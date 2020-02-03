@@ -4,7 +4,7 @@ pipeline {
     stage('SecurityScan') {
       agent {
         docker {
-          image 'kondukto/kondukto-cli:latest'
+          image 'kondukto/kondukto-cli'
         }
 
       }
