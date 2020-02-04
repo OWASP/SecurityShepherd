@@ -1,10 +1,7 @@
 pipeline {
-  agent none
+  agent any
   stages {
      stage('Prepare Environment') {
-      agent {
-        any
-      }
       steps {
         sh 'rm -rf SecurityShepherd_master'
       }
