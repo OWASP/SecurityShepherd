@@ -3,6 +3,8 @@ pipeline {
   stages {
      stage('Prepare Environment') {
       steps {
+        sh 'pwd'
+        sh 'ls'
         sh 'rm -rf SecurityShepherd_master'
       }
     }
