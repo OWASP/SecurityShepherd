@@ -1,6 +1,14 @@
 pipeline {
   agent none
   stages {
+     stage('Prepare Environment') {
+      agent {
+        any
+      }
+      steps {
+        sh 'rm -rf SecurityShepherd_master'
+      }
+    }
     stage('SecurityScan') {
       agent {
         docker {
