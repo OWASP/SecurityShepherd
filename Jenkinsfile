@@ -35,16 +35,12 @@ pipeline {
     }
     
         stage('Deploy') {
-      agent {
-        docker {
-          image 'tomcat:8.5.50-jdk11-openjdk'
-          args '-v /var/lib/jenkins/workspace/SecurityShepherd_master/deploy:/usr/local/tomcat/webapps -p 9999:8080'
-        }
+                steps {
+        sh 'docker run -v /var/lib/jenkins/workspace/SecurityShepherd_master@2/deploy:/usr/local/tomcat/webapps -p 9999:8080 tomcat:8.5'
+      }
+           
+            
 
-      }
-      steps {
-        sh 'pwd'
-      }
     }
 
   }
