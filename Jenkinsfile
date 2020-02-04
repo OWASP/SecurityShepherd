@@ -36,7 +36,7 @@ pipeline {
     
         stage('Deploy') {
                 steps {
-        sh 'docker run -v /var/lib/jenkins/workspace/SecurityShepherd_master@2/deploy:/usr/local/tomcat/webapps -p 9999:8080 tomcat:8.5'
+        sh 'docker run -v -d /var/lib/jenkins/workspace/SecurityShepherd_master@2/deploy:/usr/local/tomcat/webapps -p 9999:8080 tomcat:8.5'
       }
            
             
