@@ -23,7 +23,7 @@ pipeline {
       steps {
         sh 'mvn package -DskipTests'
         sh 'mkdir deploy'
-        sh 'cp /var/lib/jenkins/workspace/SecurityShepherd_master/target/owaspSecurityShepherd.war ../deploy/secshape.war'
+        sh 'cp /var/lib/jenkins/workspace/SecurityShepherd_master/target/owaspSecurityShepherd.war deploy/secshape.war'
       }
     }
     
