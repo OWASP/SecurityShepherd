@@ -17,7 +17,7 @@ pipeline {
 
       }
       steps {
-        sh 'kdt scan -p SecuritySheppard -t findsecbugs'
+        sh 'kdt scan -p SecurityShepard -t findsecbugs'
       }
     }
 
@@ -30,7 +30,7 @@ pipeline {
 
       }
       steps {
-        sh 'kdt scan -p SecuritySheppard -t dependencycheck'
+        sh 'kdt scan -p SecurityShepard -t dependencycheck'
       }
     }
     
