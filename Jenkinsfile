@@ -8,18 +8,32 @@ pipeline {
         sh 'rm -rf SecurityShepherd_master*'
       }
     }
-    stage('SecurityScan') {
+    stage('SecurityScan - SAST') {
       agent {
         docker {
           image 'kondukto/kondukto-cli:dev'
+          args '-e KONDUKTO_HOST=http://192.168.1.38:8088 -e KONDUKTO_TOKEN=U1U2dlA4SmhFN1BaTFc3ZkRhVVVBTzNEakNtQlBNV3cweHlsaDB2Z284N0ROOURxRE9iUmJ1WlFRT0Jk'
         }
 
       }
       steps {
-        sh 'kdt --help'
+        sh 'kdt scan -p SecuritySheppard -t findsecbugs'
       }
     }
 
+    stage('SecurityScan - SCA') {
+      agent {
+        docker {
+          image 'kondukto/kondukto-cli:dev'
+          args '-e KONDUKTO_HOST=http://192.168.1.38:8088 -e KONDUKTO_TOKEN=U1U2dlA4SmhFN1BaTFc3ZkRhVVVBTzNEakNtQlBNV3cweHlsaDB2Z284N0ROOURxRE9iUmJ1WlFRT0Jk'
+        }
+
+      }
+      steps {
+        sh 'kdt scan -p SecuritySheppard -t dependencycheck'
+      }
+    }
+    
     stage('Build') {
       agent {
         docker {
