@@ -29,13 +29,14 @@ pipeline {
       }
       steps {
         sh 'mvn package -DskipTests'
-        sh 'sudo mkdir /var/lib/jenkins/workspace/deploy'
-        sh 'sudo cp /var/lib/jenkins/workspace/SecurityShepherd_master@2/target/owaspSecurityShepherd.war /var/lib/jenkins/workspace/deploy/secshape.war'
+        
       }
     }
     
         stage('Deploy') {
                 steps {
+                sh 'mkdir deploy'
+                sh 'sudo cp /var/lib/jenkins/workspace/SecurityShepherd_master@2/target/owaspSecurityShepherd.war /var/lib/jenkins/workspace/deploy/secshape.war'
                 sh 'docker run -v -d /var/lib/jenkins/workspace/deploy:/usr/local/tomcat/webapps -p 9999:8080 tomcat:8.5'
       }
            
