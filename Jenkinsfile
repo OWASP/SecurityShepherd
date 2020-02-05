@@ -36,7 +36,8 @@ pipeline {
         stage('Deploy') {
                 steps {
                 sh 'sudo cp /var/lib/jenkins/workspace/SecurityShepherd_master@2/target/owaspSecurityShepherd.war /var/lib/jenkins/workspace/deploy/secshape.war'
-                sh 'docker run -d -v /var/lib/jenkins/workspace/deploy:/usr/local/tomcat/webapps -p 9999:8080 tomcat:8.5'
+                sh 'docker rm sechape --force || true' 
+                sh 'docker run --name secshape -d -v /var/lib/jenkins/workspace/deploy:/usr/local/tomcat/webapps -p 9999:8080 tomcat:8.5'
       }
            
             
