@@ -5,7 +5,6 @@ pipeline {
      stage('Prepare Environment') {
       steps {
         sh 'cd ..'
-        sh 'ls'
         sh 'rm -rf SecurityShepherd_master*'
       }
     }
