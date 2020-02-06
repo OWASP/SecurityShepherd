@@ -1,4 +1,4 @@
-def KonduktoAddress = "http://192.168.1.38:8088"
+def konduktoAddress = "http://192.168.1.38:8088"
 pipeline {
   agent any
   stages {
