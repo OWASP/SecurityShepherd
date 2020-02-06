@@ -13,7 +13,7 @@ pipeline {
       agent {
         docker {
           image 'kondukto/kondukto-cli:dev'
-          args '-e KONDUKTO_HOST=${KonduktoAddress} -e KONDUKTO_TOKEN=U1U2dlA4SmhFN1BaTFc3ZkRhVVVBTzNEakNtQlBNV3cweHlsaDB2Z284N0ROOURxRE9iUmJ1WlFRT0Jk'
+          args '-e KONDUKTO_HOST=${konduktoAddress} -e KONDUKTO_TOKEN=U1U2dlA4SmhFN1BaTFc3ZkRhVVVBTzNEakNtQlBNV3cweHlsaDB2Z284N0ROOURxRE9iUmJ1WlFRT0Jk'
         }
 
       }
