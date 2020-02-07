@@ -12,7 +12,7 @@ pipeline {
       agent {
         docker {
           image 'kondukto/kondukto-cli:dev'
-          args '-v /var/lib/jenkins/workspace/SecurityShepherd_master@2:/fortify -e KONDUKTO_HOST=${konduktoAddress} -e KONDUKTO_TOKEN=U1U2dlA4SmhFN1BaTFc3ZkRhVVVBTzNEakNtQlBNV3cweHlsaDB2Z284N0ROOURxRE9iUmJ1WlFRT0Jk'
+          args '-v /var/lib/jenkins/workspace/SecurityShepherd_master:/fortify -e KONDUKTO_HOST=${konduktoAddress} -e KONDUKTO_TOKEN=U1U2dlA4SmhFN1BaTFc3ZkRhVVVBTzNEakNtQlBNV3cweHlsaDB2Z284N0ROOURxRE9iUmJ1WlFRT0Jk'
         }
       }
       steps {
