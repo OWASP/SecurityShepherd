@@ -20,7 +20,7 @@ pipeline {
       }
     }
 
-    stage('SecurityScan - SCA') {
+    /*stage('SecurityScan - SCA') {
       agent {
         docker {
           image 'kondukto/kondukto-cli:dev'
@@ -32,7 +32,7 @@ pipeline {
         sh 'kdt scan -p SecurityShepard -t dependencycheck'
       }
     }
-    
+    */
     stage('Build') {
       agent {
         docker {
