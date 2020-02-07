@@ -9,8 +9,8 @@ pipeline {
     }
      stage('Fortify Build') {
       steps {
-        sh 'sudo sourceanalyzer -v -b 123456 src/*'
-        sh 'sudo sourceanalyzer -v -b 123456 -scan -f results.fpr'
+        sh 'sudo /opt/Fortify/Fortify_SCA_and_Apps_19.2.0/bin/sourceanalyzer -v -b 123456 src/*'
+        sh 'sudo /opt/Fortify/Fortify_SCA_and_Apps_19.2.0/bin/sourceanalyzer -v -b 123456 -scan -f results.fpr'
         sh 'sudo cp /var/lib/jenkins/workspace/SecurityShepherd_master@2/results.fpr /var/lib/jenkins/workspace/deploy/results.fpr  '
       }
     }
