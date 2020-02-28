@@ -33,6 +33,7 @@ import dbProcs.Setter;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import servlets.module.challenge.XxeChallenge1;
 import servlets.module.lesson.XxeLesson;
 import utils.PropertyNotFoundException;
 import utils.Validate;
@@ -324,6 +325,9 @@ public class Setup extends HttpServlet {
 	}
 
 	private synchronized Boolean executeCreateChallengeFile() {
-		return XxeLesson.createXxeLessonSolutionFile();
+		if (XxeLesson.createXxeLessonSolutionFile() && XxeChallenge1.createXxeChallenge1SolutionFile())
+			return true;
+
+		return false;
 	}
 }

@@ -4,15 +4,18 @@ import dbProcs.FileInputProperties;
 import dbProcs.Getter;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.owasp.encoder.Encode;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import utils.ShepherdLogManager;
 import utils.Validate;
+import utils.XmlDocumentBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
+import javax.xml.parsers.DocumentBuilder;
 import java.io.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -37,10 +40,10 @@ import java.util.ResourceBundle;
  *
  * @author ismisepaul
  */
-public class XxeChallenge1
+public class XxeChallenge1Xml
         extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static Logger log = Logger.getLogger(XxeChallenge1.class);
+    private static Logger log = Logger.getLogger(XxeChallenge1Xml.class);
     private static final String LEVEL_NAME = "XXE Challenge 1";
     private static final String LEVEL_HASH = "ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123e";
 
@@ -74,8 +77,8 @@ public class XxeChallenge1
                     Object tokenHeader = request.getHeader("csrfToken").toString();
 
                     if (Validate.validateTokens(tokenCookie, tokenHeader)) {
-                        InputStream json = request.getInputStream();
-                        String emailAddr = readJson(json);
+                        InputStream xml = request.getInputStream();
+                        String emailAddr = readXml(xml);
                         log.debug("Email Addr: " + emailAddr);
 
                         String htmlOutput = new String();
@@ -112,24 +115,25 @@ public class XxeChallenge1
         log.debug("End of " + LEVEL_NAME + " Servlet");
     }
 
-    public static String readJson(InputStream jsonEmail) {
-        String result;
+    public static String readXml(InputStream xmlEmail) {
 
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = null;
-        try
-        {
-            jsonObject = (JSONObject)jsonParser.parse(
-                    new InputStreamReader(jsonEmail, "UTF-8"));
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        } catch (ParseException e)
-        {
-            e.printStackTrace();
+        Document doc;
+        String result = null;
+
+        XmlDocumentBuilder db = new XmlDocumentBuilder();
+        DocumentBuilder dBuilder = db.xmlDocBuilder(false, true, true, true, true, true);
+        InputSource is = new InputSource(xmlEmail);
+
+        try {
+            doc = dBuilder.parse(is);
+            Element root = doc.getDocumentElement();
+            result = root.getTextContent();
+            return Encode.forHtml(result.toString());
+        } catch (SAXException e) {
+            log.error(e.toString());
+        } catch (IOException e) {
+            log.error(e.toString());
         }
-
-        result = jsonObject.get("email").toString();
 
         return result;
     }
