@@ -144,7 +144,7 @@
                     request.setRequestHeader("csrfToken", "<%= csrfToken %>");//don't forget the "" around the Java variable or JS will try convert
                 },
                 contentType: "application/xml",
-                url: "<%= LEVEL_HASH %>",
+                url: "<%= LEVEL_HASH %>0",
                 data: "<?xml version=\"1.0\"?><email>"+ theEmailAddr +"</email>",
                 async: false
             });
