@@ -2,9 +2,10 @@ ARG TOMCAT_DOCKER_VERSION
 FROM tomcat:${TOMCAT_DOCKER_VERSION}
 
 ENV RUN_USER tomcat
-ENV RUN_GROUP tomcat
 
-RUN addgroup -S ${RUN_GROUP} && adduser -S ${RUN_USER} -G ${RUN_GROUP} --home ${CATALINA_HOME}
+RUN apt-get -qq update && apt-get install -y patch
+
+RUN adduser --system --group ${RUN_USER} --home ${CATALINA_HOME}
 RUN chown -R ${RUN_USER}:${RUN_GROUP} $CATALINA_HOME
 USER ${RUN_USER}
 

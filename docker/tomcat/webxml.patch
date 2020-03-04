@@ -1,9 +1,9 @@
---- web.xml
-+++ webhttps.xml
-@@ -4695,5 +4695,14 @@
-         <welcome-file>index.htm</welcome-file>
+--- web.xml	2020-02-05 22:30:11.000000000 +0000
++++ web.https.xml	2020-03-04 17:57:02.908058480 +0000
+@@ -4728,4 +4728,14 @@
          <welcome-file>index.jsp</welcome-file>
      </welcome-file-list>
+
 +    <security-constraint>
 +        <web-resource-collection>
 +                <web-resource-name>Entire Application</web-resource-name>
@@ -13,5 +13,5 @@
 +                <transport-guarantee>CONFIDENTIAL</transport-guarantee>
 +        </user-data-constraint>
 +    </security-constraint>
-
++
  </web-app>
