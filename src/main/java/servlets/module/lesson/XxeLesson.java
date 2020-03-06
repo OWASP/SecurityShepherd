@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Cross Site Scripting Lesson
+ * XXE Lesson
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * <p>
