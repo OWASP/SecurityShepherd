@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.owasp.encoder.Encode;
 
 import dbProcs.Setter;
 import utils.ShepherdLogManager;
@@ -64,7 +65,7 @@ public class ChangeUsername extends HttpServlet {
 			if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
 				log.debug("Getting Parameters");
 				String userName = (String) ses.getAttribute("userName");
-				String newUsername = (String) request.getParameter("newUsername");
+				String newUsername = Encode.forHtml((String) request.getParameter("newUsername"));
 				String ApplicationRoot = getServletContext().getRealPath("");
 				log.debug("New username: " + newUsername);
 
