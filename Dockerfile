@@ -2,9 +2,10 @@ ARG TOMCAT_DOCKER_VERSION
 FROM tomcat:${TOMCAT_DOCKER_VERSION}
 
 ENV RUN_USER tomcat
-ENV RUN_GROUP tomcat
 
-RUN addgroup -S ${RUN_GROUP} && adduser -S ${RUN_USER} -G ${RUN_GROUP} --home ${CATALINA_HOME}
+RUN apt-get -qq update && apt-get install -y patch
+
+RUN adduser --system --group ${RUN_USER} --home ${CATALINA_HOME}
 RUN chown -R ${RUN_USER}:${RUN_GROUP} $CATALINA_HOME
 USER ${RUN_USER}
 
@@ -36,7 +37,7 @@ COPY target/owaspSecurityShepherd.war /usr/local/tomcat/webapps/ROOT.war
 COPY target/docker/tomcat/$TLS_KEYSTORE_FILE /usr/local/tomcat/conf/$TLS_KEYSTORE_FILE
 
 COPY docker/tomcat/serverxml.patch /usr/local/tomcat/conf/serverxml.patch
-RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS"\/>/keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'"\/>/g' /usr/local/tomcat/conf/serverxml.patch &&\
+RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS">/keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'">/g' /usr/local/tomcat/conf/serverxml.patch &&\
     sed -i 's/redirectPort="HTTPS_PORT" \/>/redirectPort="'"$HTTPS_PORT"'" \/>/g' /usr/local/tomcat/conf/serverxml.patch &&\
     patch /usr/local/tomcat/conf/server.xml /usr/local/tomcat/conf/serverxml.patch
 
