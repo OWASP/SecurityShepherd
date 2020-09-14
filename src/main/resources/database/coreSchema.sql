@@ -19,8 +19,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`class` (
   `className` VARCHAR(32) NOT NULL UNIQUE,
   `classYear` VARCHAR(5) NOT NULL ,
   PRIMARY KEY (`classId`) )
-ENGINE = InnoDB;
-
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`users`
@@ -29,12 +29,15 @@ CREATE  TABLE IF NOT EXISTS `core`.`users` (
   `userId` VARCHAR(64) NOT NULL ,
   `classId` VARCHAR(64) NULL ,
   `userName` VARCHAR(32) NOT NULL ,
-  `userPass` VARCHAR(512) NOT NULL ,
+  `userPass` VARCHAR(191) NOT NULL ,
   `userRole` VARCHAR(32) NOT NULL ,
+  `ssoName` VARCHAR(191) ,
   `badLoginCount` INT NOT NULL DEFAULT 0 ,
   `suspendedUntil` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00' ,
   `userAddress` VARCHAR(128) NULL ,
+  `loginType` VARCHAR(32) NULL ,
   `tempPassword` TINYINT(1)  NULL DEFAULT FALSE ,
+  `tempUsername` TINYINT(1)  NULL DEFAULT FALSE ,
   `userScore` INT NOT NULL DEFAULT 0 ,
   `goldMedalCount` INT NOT NULL DEFAULT 0 ,
   `silverMedalCount` INT NOT NULL DEFAULT 0 ,
@@ -43,13 +46,14 @@ CREATE  TABLE IF NOT EXISTS `core`.`users` (
   PRIMARY KEY (`userId`) ,
   INDEX `classId` (`classId` ASC) ,
   UNIQUE INDEX `userName_UNIQUE` (`userName` ASC) ,
+  UNIQUE INDEX `ssoName_UNIQUE` (`ssoName` ASC) ,
   CONSTRAINT `classId`
     FOREIGN KEY (`classId` )
     REFERENCES `core`.`class` (`classId` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`modules`
@@ -69,7 +73,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`modules` (
   `hardcodedKey` TINYINT(1) NOT NULL DEFAULT TRUE,
   `isUnsafe`  TINYINT(1) NOT NULL DEFAULT TRUE,
   PRIMARY KEY (`moduleId`) )
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`medals`
@@ -94,8 +99,8 @@ CREATE TABLE IF NOT EXISTS `core`.`medals` (
     REFERENCES `core`.`modules` (`moduleId` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`results`
@@ -124,8 +129,8 @@ CREATE  TABLE IF NOT EXISTS `core`.`results` (
     REFERENCES `core`.`modules` (`moduleId` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `core`.`cheatsheet`
@@ -145,7 +150,6 @@ CREATE  TABLE IF NOT EXISTS `core`.`cheatsheet` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
-
 -- -----------------------------------------------------
 -- Table `core`.`sequence`
 -- -----------------------------------------------------
@@ -153,7 +157,18 @@ CREATE  TABLE IF NOT EXISTS `core`.`sequence` (
   `tableName` VARCHAR(32) NOT NULL ,
   `currVal` BIGINT(20) NOT NULL DEFAULT 282475249 ,
   PRIMARY KEY (`tableName`) )
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+
+-- -----------------------------------------------------
+-- Table `core`.`settings`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `core`.`settings` (
+  `setting` VARCHAR(64) NOT NULL ,
+  `value` VARCHAR(64) NOT NULL ,
+  PRIMARY KEY (`setting`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 SELECT "Creating Procedures" FROM DUAL;
 
@@ -301,7 +316,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userCreate` (IN theClassId VARCHAR(64), IN theUserName VARCHAR(32), IN theUserPass VARCHAR(512), IN theUserRole VARCHAR(32), IN theUserAddress VARCHAR(128), tempPass BOOLEAN)
+CREATE PROCEDURE `core`.`userCreate` (IN theClassId VARCHAR(64), IN theUserName VARCHAR(32), IN theUserPass VARCHAR(191), IN theUserRole VARCHAR(32), IN theSSOName VARCHAR(32), IN theUserAddress VARCHAR(128), IN theLoginType VARCHAR(32), theTempPassword BOOLEAN, theTempUsername BOOLEAN)
 BEGIN
     DECLARE theId VARCHAR(64);
     DECLARE theClassCount INT;
@@ -336,16 +351,22 @@ BEGIN
                 userName,
                 userPass,
                 userRole,
+                ssoName,
                 userAddress,
-                tempPassword
+                loginType,
+                tempPassword,
+                tempUsername
             ) VALUES (
                 theId,
                 theClassId,
                 theUserName,
                 theUserPass,
                 theUserRole,
+                theSSOName,
                 theUserAddress,
-                tempPass
+                theLoginType,
+                theTempPassword,
+                theTempUsername
             );
         COMMIT;
         SELECT null FROM DUAL;
@@ -381,7 +402,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userPasswordChange` (IN theUserName VARCHAR(32), IN newHash VARCHAR(512))
+CREATE PROCEDURE `core`.`userPasswordChange` (IN theUserName VARCHAR(32), IN newHash VARCHAR(191))
 BEGIN
 DECLARE theDate DATETIME;
 COMMIT;
@@ -403,7 +424,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userPasswordChangeAdmin` (IN theUserId VARCHAR(64), IN newHash VARCHAR(512))
+CREATE PROCEDURE `core`.`userPasswordChangeAdmin` (IN theUserId VARCHAR(64), IN newHash VARCHAR(191))
 BEGIN
 DECLARE theDate DATETIME;
 COMMIT;
@@ -773,7 +794,7 @@ END
 
 USE `core`;
 -- DELIMITER $$
-CREATE PROCEDURE `core`.`userUpdateResult` (IN theModuleId VARCHAR(64), IN theUserId VARCHAR(64), IN theBefore INT, IN theAfter INT, IN theDifficulty INT, IN theAdditionalInfo LONGTEXT)
+CREATE PROCEDURE `core`.`userUpdateResult` (IN theModuleId VARCHAR(64), IN theUserId VARCHAR(64), IN theBefore INT, IN theAfter INT, IN theDifficulty INT, IN givePoints BOOLEAN, IN theAdditionalInfo LONGTEXT)
 BEGIN
 DECLARE theDate TIMESTAMP;
 DECLARE theClassId VARCHAR(64);
@@ -787,120 +808,130 @@ DECLARE bronzeMedalInfo INT;
 DECLARE medalRow INT;
 COMMIT;
 
--- Does this Module/class combo exist in the DB?
-SELECT classId FROM users WHERE userid = theUserId INTO theClassId;
-IF (theClassId IS NULL) THEN
-  SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId IS NULL INTO medalRow;
-ELSE
-  SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId INTO medalRow;
-END IF;
-IF (medalRow < 1) THEN
-  INSERT INTO medals (classId, moduleId) VALUES (theClassId, theModuleId);
-END IF;
-COMMIT;
 SELECT NOW() FROM DUAL
     INTO theDate;
--- Get current bonus and decrement the bonus value
-SELECT 0 FROM DUAL INTO totalScore;
-
-IF (theClassId IS NULL) THEN
-  SELECT scoreBonus FROM medals WHERE moduleId = theModuleId AND classId IS NULL INTO theBonus;
-ELSE
-  SELECT scoreBonus FROM medals WHERE moduleId = theModuleId AND classId = theClassId INTO theBonus;
-END IF;
-IF (theBonus > 0) THEN
-    SELECT (totalScore + theBonus) FROM DUAL
-        INTO totalScore;
-    IF (theClassId IS NULL) THEN
-      UPDATE medals SET scoreBonus = scoreBonus - 1 WHERE moduleId = theModuleId AND classId IS NULL;
-    ELSE
-      UPDATE medals SET scoreBonus = scoreBonus - 1 WHERE moduleId = theModuleId AND classId = theClassId;
-    END IF;
-    COMMIT;
-END IF;
-
--- Medal Available?
-IF (theClassId IS NULL) THEN
-  SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND (goldMedalAvailable = TRUE OR silverMedalAvailable = TRUE OR bronzeMedalAvailable = TRUE) AND classId IS NULL INTO medalInfo;
-ELSE
-  SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId AND (goldMedalAvailable = TRUE OR silverMedalAvailable = TRUE OR bronzeMedalAvailable = TRUE) INTO medalInfo;
-END IF;
-COMMIT;
-
-IF (medalInfo > 0) THEN
-  IF (theClassId IS NULL) THEN
-    SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND goldMedalAvailable = TRUE AND classId IS NULL INTO goldMedalInfo;
-  ELSE
-    SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId AND goldMedalAvailable = TRUE INTO goldMedalInfo;
-  END IF;
-  IF (goldMedalInfo > 0) THEN
-    UPDATE users SET goldMedalCount = goldMedalCount + 1 WHERE userId = theUserId;
-    IF (theClassId IS NULL) THEN
-      UPDATE medals SET goldMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId IS NULL;
-    ELSE
-      UPDATE medals SET goldMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId = theClassId;
-    END IF;
-    COMMIT;
-  ELSE
-    IF (theClassId IS NULL) THEN
-      SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND silverMedalAvailable = TRUE AND classId IS NULL INTO silverMedalInfo;
-    ELSE
-      SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId AND silverMedalAvailable = TRUE INTO silverMedalInfo;
-    END IF;
-    IF (silverMedalInfo > 0) THEN
-      UPDATE users SET silverMedalCount = silverMedalCount + 1 WHERE userId = theUserId;
-      IF (theClassId IS NULL) THEN
-        UPDATE medals SET silverMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId IS NULL;
-      ELSE
-        UPDATE medals SET silverMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId = theClassId;
-      END IF;
-      COMMIT;
-    ELSE
-      IF (theClassId IS NULL) THEN
-        SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND bronzeMedalAvailable = TRUE AND classId IS NULL INTO bronzeMedalInfo;
-      ELSE
-        SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId AND bronzeMedalAvailable = TRUE INTO bronzeMedalInfo;
-      END IF;
-      IF (bronzeMedalInfo > 0) THEN
-        UPDATE users SET bronzeMedalCount = bronzeMedalCount + 1 WHERE userId = theUserId;
-        IF (theClassId IS NULL) THEN
-          UPDATE medals SET bronzeMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId IS NULL;
-        ELSE
-          UPDATE medals SET bronzeMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId = theClassId;
-        END IF;
-        COMMIT;
-      END IF;
-    END IF;
-  END IF;
-END IF;
-
--- Get the type of Medal the user might have earned
-IF (medalInfo <= 0) THEN
-	SELECT "none" FROM DUAL INTO theMedalEarned;
-ELSE
-	IF (goldMedalInfo > 0) THEN
-		SELECT "gold" FROM DUAL INTO theMedalEarned;
+    
+IF (givePoints) THEN
+	-- Does this Module/class combo exist in the DB?
+	SELECT classId FROM users WHERE userid = theUserId INTO theClassId;
+	IF (theClassId IS NULL) THEN
+	  SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId IS NULL INTO medalRow;
 	ELSE
-		IF (silverMedalInfo > 0) THEN
-			SELECT "silver" FROM DUAL INTO theMedalEarned;
+	  SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId INTO medalRow;
+	END IF;
+	IF (medalRow < 1) THEN
+	  INSERT INTO medals (classId, moduleId) VALUES (theClassId, theModuleId);
+	END IF;
+	COMMIT;
+
+	-- Get current bonus and decrement the bonus value
+	SELECT 0 FROM DUAL INTO totalScore;
+	
+	IF (theClassId IS NULL) THEN
+	  SELECT scoreBonus FROM medals WHERE moduleId = theModuleId AND classId IS NULL INTO theBonus;
+	ELSE
+	  SELECT scoreBonus FROM medals WHERE moduleId = theModuleId AND classId = theClassId INTO theBonus;
+	END IF;
+	IF (theBonus > 0) THEN
+	    SELECT (totalScore + theBonus) FROM DUAL
+	        INTO totalScore;
+	    IF (theClassId IS NULL) THEN
+	      UPDATE medals SET scoreBonus = scoreBonus - 1 WHERE moduleId = theModuleId AND classId IS NULL;
+	    ELSE
+	      UPDATE medals SET scoreBonus = scoreBonus - 1 WHERE moduleId = theModuleId AND classId = theClassId;
+	    END IF;
+	    COMMIT;
+	END IF;
+	
+	-- Medal Available?
+	IF (theClassId IS NULL) THEN
+	  SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND (goldMedalAvailable = TRUE OR silverMedalAvailable = TRUE OR bronzeMedalAvailable = TRUE) AND classId IS NULL INTO medalInfo;
+	ELSE
+	  SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId AND (goldMedalAvailable = TRUE OR silverMedalAvailable = TRUE OR bronzeMedalAvailable = TRUE) INTO medalInfo;
+	END IF;
+	COMMIT;
+	
+	IF (medalInfo > 0) THEN
+	  IF (theClassId IS NULL) THEN
+	    SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND goldMedalAvailable = TRUE AND classId IS NULL INTO goldMedalInfo;
+	  ELSE
+	    SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId AND goldMedalAvailable = TRUE INTO goldMedalInfo;
+	  END IF;
+	  IF (goldMedalInfo > 0) THEN
+	    UPDATE users SET goldMedalCount = goldMedalCount + 1 WHERE userId = theUserId;
+	    IF (theClassId IS NULL) THEN
+	      UPDATE medals SET goldMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId IS NULL;
+	    ELSE
+	      UPDATE medals SET goldMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId = theClassId;
+	    END IF;
+	    COMMIT;
+	  ELSE
+	    IF (theClassId IS NULL) THEN
+	      SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND silverMedalAvailable = TRUE AND classId IS NULL INTO silverMedalInfo;
+	    ELSE
+	      SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId AND silverMedalAvailable = TRUE INTO silverMedalInfo;
+	    END IF;
+	    IF (silverMedalInfo > 0) THEN
+	      UPDATE users SET silverMedalCount = silverMedalCount + 1 WHERE userId = theUserId;
+	      IF (theClassId IS NULL) THEN
+	        UPDATE medals SET silverMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId IS NULL;
+	      ELSE
+	        UPDATE medals SET silverMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId = theClassId;
+	      END IF;
+	      COMMIT;
+	    ELSE
+	      IF (theClassId IS NULL) THEN
+	        SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND bronzeMedalAvailable = TRUE AND classId IS NULL INTO bronzeMedalInfo;
+	      ELSE
+	        SELECT count(moduleId) FROM medals WHERE moduleId = theModuleId AND classId = theClassId AND bronzeMedalAvailable = TRUE INTO bronzeMedalInfo;
+	      END IF;
+	      IF (bronzeMedalInfo > 0) THEN
+	        UPDATE users SET bronzeMedalCount = bronzeMedalCount + 1 WHERE userId = theUserId;
+	        IF (theClassId IS NULL) THEN
+	          UPDATE medals SET bronzeMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId IS NULL;
+	        ELSE
+	          UPDATE medals SET bronzeMedalAvailable = FALSE WHERE moduleId = theModuleId AND classId = theClassId;
+	        END IF;
+	        COMMIT;
+	      END IF;
+	    END IF;
+	  END IF;
+	END IF;
+
+	-- Get the type of Medal the user might have earned
+	IF (medalInfo <= 0) THEN
+		SELECT "none" FROM DUAL INTO theMedalEarned;
+	ELSE
+		IF (goldMedalInfo > 0) THEN
+			SELECT "gold" FROM DUAL INTO theMedalEarned;
 		ELSE
-			IF (bronzeMedalInfo > 0) THEN
-				SELECT "bronze" FROM DUAL INTO theMedalEarned;
+			IF (silverMedalInfo > 0) THEN
+				SELECT "silver" FROM DUAL INTO theMedalEarned;
+			ELSE
+				IF (bronzeMedalInfo > 0) THEN
+					SELECT "bronze" FROM DUAL INTO theMedalEarned;
+				END IF;
 			END IF;
 		END IF;
 	END IF;
+	
+	-- Get the Score value for the level
+	SELECT (totalScore + scoreValue) FROM modules
+	    WHERE moduleId = theModuleId
+	    INTO totalScore;
+	
+	-- Update users score
+	UPDATE users SET
+	    userScore = userScore + totalScore
+	    WHERE userId = theUserId;
+	COMMIT;
+	
+ELSE
+	-- Don't award points or medals, just record module as completed
+	SET totalScore=0;
+	SELECT "none" FROM DUAL INTO theMedalEarned;
+	
 END IF;
-
--- Get the Score value for the level
-SELECT (totalScore + scoreValue) FROM modules
-    WHERE moduleId = theModuleId
-    INTO totalScore;
-
--- Update users score
-UPDATE users SET
-    userScore = userScore + totalScore
-    WHERE userId = theUserId;
-COMMIT;
 
 -- Update result row
 UPDATE results SET
@@ -1504,6 +1535,29 @@ INSERT INTO `core`.`sequence` (`tableName`, `currVal`) VALUES ('modules', '28247
 COMMIT;
 
 -- -----------------------------------------------------
+SELECT "Data for table `core`.`settings`" FROM DUAL;
+-- -----------------------------------------------------
+SET AUTOCOMMIT=0;
+USE `core`;
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('adminCheatsEnabled', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('playerCheatsEnabled', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('moduleLayout', 'ctf');
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('enableFeedback', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('openRegistration', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('scoreboardStatus', 'open');
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('scoreboardClass', '');
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('hasStartTime', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('startTime', '2019-01-01T12:00:00');
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('hasLockTime', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('lockTime', '2020-01-01T12:00:00');
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('hasEndTime', false);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('endTime', '2020-02-01T12:00:00');
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('enableTranslations', true);
+INSERT INTO `core`.`settings` (`setting`, `value`) VALUES ('defaultClass', '');
+
+COMMIT;
+
+-- -----------------------------------------------------
 SELECT "Inserting Data for table `core`.`modules`" FROM DUAL;
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;
@@ -1683,7 +1737,7 @@ COMMIT;
 
 -- Default admin user
 
-call userCreate(null, 'admin', '$argon2i$v=19$m=65536,t=10,p=1$7oxgR8QkdOd4tsHFieFKrw$eOy0TCxhY1bQIAbLQcLr9Sz2+4q9DhPTz1frsytgtTk', 'admin', 'admin@securityShepherd.org', true);
+call userCreate(null, 'admin', '$argon2i$v=19$m=65536,t=10,p=1$7oxgR8QkdOd4tsHFieFKrw$eOy0TCxhY1bQIAbLQcLr9Sz2+4q9DhPTz1frsytgtTk', 'admin', null, 'admin@securityShepherd.org', 'login', true, false);
 
 -- Enable backup script
 
@@ -1735,7 +1789,7 @@ CREATE  TABLE IF NOT EXISTS `backup`.`users` (
   `userId` VARCHAR(64) NOT NULL ,
   `classId` VARCHAR(64) NULL ,
   `userName` VARCHAR(32) NOT NULL ,
-  `userPass` VARCHAR(512) NOT NULL ,
+  `userPass` VARCHAR(191) NOT NULL ,
   `userRole` VARCHAR(32) NOT NULL ,
   `badLoginCount` INT NOT NULL DEFAULT 0 ,
   `suspendedUntil` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00' ,

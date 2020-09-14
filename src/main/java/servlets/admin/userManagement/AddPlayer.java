@@ -60,6 +60,7 @@ public class AddPlayer extends HttpServlet
 		log.debug("*** servlets.Admin.addPlayer ***");
 		PrintWriter out = response.getWriter();  
 		out.print(getServletInfo());
+		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
 		Cookie tokenCookie = Validate.getToken(request.getCookies());
 		Object tokenParmeter = request.getParameter("csrfToken");

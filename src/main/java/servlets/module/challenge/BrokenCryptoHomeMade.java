@@ -148,22 +148,22 @@ public class BrokenCryptoHomeMade extends HttpServlet
 								{
 									log.debug("Expected: " + expectedSolution);
 									log.debug("Got     : " + submittedSolution);
-									htmlOutput = "<h2 class='title'>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer") + "</h2><p>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer.warning") + "</p>";
+									htmlOutput = "<h2 class='title'>" + bundle.getString("insecureCryptoStorage.homemade.badanswer") + "</h2><p>" + bundle.getString("insecureCryptoStorage.homemade.badanswer.warning") + "</p>";
 									homemadebadanswers++;
 									if(homemadebadanswers >= 5)
 									{
-										htmlOutput += "<p>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer.lockedOut") + "</p>";
+										htmlOutput += "<p>" + bundle.getString("insecureCryptoStorage.homemade.badanswer.lockedOut") + "</p>";
 									}
 									else
 									{
-										htmlOutput += "<p>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer.notLockedOut") + "</p>";
+										htmlOutput += "<p>" + bundle.getString("insecureCryptoStorage.homemade.badanswer.notLockedOut") + "</p>";
 										ses.setAttribute("homemadebadanswers", homemadebadanswers);
 									}
 								}
 							}
 							else
 							{
-								htmlOutput += "<h2 class='title'>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer") + "</h2><p>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer.lockedOut") + "</p>";
+								htmlOutput += "<h2 class='title'>" + bundle.getString("insecureCryptoStorage.homemade.badanswer") + "</h2><p>" + bundle.getString("insecureCryptoStorage.homemade.badanswer.lockedOut") + "</p>";
 							}
 						}
 						catch(Exception e)
@@ -211,7 +211,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 							}
 							if(name.length() < 4)
 							{
-								htmlOutput = bundle.getString("insecureCyrptoStorage.homemade.nameTooShort");
+								htmlOutput = bundle.getString("insecureCryptoStorage.homemade.nameTooShort");
 							}
 							else
 							{

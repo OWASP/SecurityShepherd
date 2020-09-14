@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>owaspSecurityShepherd</groupId>
@@ -15,11 +16,16 @@
 	</properties>
 
 	<dependencies>
-<dependency>
-    <groupId>de.mkammerer</groupId>
-    <artifactId>argon2-jvm</artifactId>
-    <version>2.2</version>
-</dependency>
+		<dependency>
+			<groupId>com.onelogin</groupId>
+			<artifactId>java-saml</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.mkammerer</groupId>
+			<artifactId>argon2-jvm</artifactId>
+			<version>2.2</version>
+    </dependency>
 		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -147,12 +153,12 @@
 			<scope>test</scope>
 		</dependency>
 
-        <dependency>
-            <groupId>com.github.fakemongo</groupId>
-            <artifactId>fongo</artifactId>
-            <version>2.0.6</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>com.github.fakemongo</groupId>
+			<artifactId>fongo</artifactId>
+			<version>2.0.6</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
@@ -214,7 +220,7 @@
 									<directory>${basedir}/docker/</directory>
 									<includes>
 										<include>mysql/target/**</include>
-                                        <include>mongo/target/**</include>
+										<include>mongo/target/**</include>
 									</includes>
 									<followSymlinks>false</followSymlinks>
 								</fileset>
@@ -318,51 +324,51 @@
 			</activation>
 			<build>
 				<plugins>
-				<plugin>
-					<groupId>io.fabric8</groupId>
-					<artifactId>docker-maven-plugin</artifactId>
-					<version>0.26.0</version>
-					<executions>
-						<execution>
-							<id>start</id>
-							<phase>pre-integration-test</phase>
-							<goals>
-								<goal>build</goal>
-								<goal>start</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>stop</id>
-							<phase>post-integration-test</phase>
-							<goals>
-								<goal>stop</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<images>
-							<image>
-								<name>mongo:${MONGODB_VERSION}</name>
-								<build>
-									<dockerFile>${project.basedir}/docker/mongo/Dockerfile</dockerFile >
-								</build>
-								<run>
-									<ports>
-										<port>27017:27017</port>
-									</ports>
-									<wait>
-										<!-- Check for this URL to return a 200 return code .... -->
-										<log>waiting for connections on port 27017</log>
-										<time>120000</time>
-									</wait>
-								</run>
-							</image>
-						</images>
-					</configuration>
-				</plugin>
-			</plugins>
-		</build>
-	</profile>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>0.26.0</version>
+						<executions>
+							<execution>
+								<id>start</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>build</goal>
+									<goal>start</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>stop</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<images>
+								<image>
+									<name>mongo:${MONGODB_VERSION}</name>
+									<build>
+										<dockerFile>${project.basedir}/docker/mongo/Dockerfile</dockerFile>
+									</build>
+									<run>
+										<ports>
+											<port>27017:27017</port>
+										</ports>
+										<wait>
+											<!-- Check for this URL to return a 200 return code .... -->
+											<log>waiting for connections on port 27017</log>
+											<time>120000</time>
+										</wait>
+									</run>
+								</image>
+							</images>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 
 	</profiles>
 
@@ -460,7 +466,7 @@
 				<executions>
 					<execution>
 						<id>integration-tests</id>
-                        <phase>integration-test</phase>
+						<phase>integration-test</phase>
 						<goals>
 							<goal>integration-test</goal>
 							<goal>verify</goal>
