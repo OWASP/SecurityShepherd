@@ -82,29 +82,29 @@ if (request.getSession() != null)
 						<th><%= bundle.getString("challenge.form.cost") %></th>
 						<th><%= bundle.getString("challenge.form.quantity") %></th>
 					</tr>
-					<!-- Rage Row -->
+					<!-- Apple Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/rage.png"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/apple.jpg"/></td>
 						<td><%= bundle.getString("challenge.form.45") %></td>
-						<td><input type="text" style="width: 40px" value="0" id="numberOfRage" autocomplete="off"/>
+						<td><input type="text" style="width: 50px" value="0" id="numberOfApples" autocomplete="off"/>
 					</tr>
-					<!-- NotBad Row -->
+					<!-- Banana Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/notbad.jpeg"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/banana.jpg"/></td>
 						<td><%= bundle.getString("challenge.form.15") %></td>
-						<td><input type="text" style="width: 40px" value="0" id="numberOfNotBad" autocomplete="off"/>
+						<td><input type="text" style="width: 50px" value="0" id="numberOfBananas" autocomplete="off"/>
 					</tr>
-					<!-- Troll Row -->
+					<!-- Orange Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/troll.png"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/orange.jpg"/></td>
 						<td><%= bundle.getString("challenge.form.3000") %></td>
-						<td><input type="text" style="width: 40px" value="0" id="numberOfTroll" autocomplete="off"/>
+						<td><input type="text" style="width: 50px" value="0" id="numberOfOranges" autocomplete="off"/>
 					</tr>
-					<!-- MeGusta Row -->
+					<!-- Pineapple Row -->
 					<tr>
-						<td><img width="50px" height="50px" src="<%= levelHash %>/megusta.png"/></td>
+						<td><img width="50px" height="50px" src="<%= levelHash %>/pineapple.png"/></td>
 						<td><%= bundle.getString("challenge.form.30") %></td>
-						<td><input type="text" style="width: 40px" value="0" id="numberOfMegusta" autocomplete="off"/>
+						<td><input type="text" style="width: 50px" value="0" id="numberOfPineapples" autocomplete="off"/>
 					</tr>
 					</table>
 					<%= bundle.getString("challenge.form.pleaseSelect") %>
@@ -123,10 +123,10 @@ if (request.getSession() != null)
 		</div>
 		<script>
 			$("#leForm").submit(function(){
-				var theMegustaAmount = $("#numberOfMegusta").val();
-				var theTrollAmount = $("#numberOfTroll").val();
-				var theRageAmount = $("#numberOfRage").val();
-				var theNotBadAmount = $("#numberOfNotBad").val();
+				var thePineappleAmount = $("#numberOfPineapples").val();
+				var theOrangeAmount = $("#numberOfOranges").val();
+				var theAppleAmount = $("#numberOfApples").val();
+				var theBananaAmount = $("#numberOfBananas").val();
 				var theCouponCode = $("#couponCode").val();
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
@@ -135,10 +135,10 @@ if (request.getSession() != null)
 						type: "POST",
 						url: "<%= levelHash %>",
 						data: {
-							megustaAmount: theMegustaAmount,
-							trollAmount: theTrollAmount,
-							rageAmount: theRageAmount,
-							notBadAmount: theNotBadAmount,
+							pineappleAmount: thePineappleAmount, 
+							orangeAmount: theOrangeAmount,
+							appleAmount: theAppleAmount, 
+							bananaAmount: theBananaAmount,
 							couponCode: theCouponCode
 						},
 						async: false

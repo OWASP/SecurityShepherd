@@ -25,7 +25,8 @@ public class SetupFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
-		
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
 		String requestURL = req.getRequestURL().toString();
 		String pageName = FilenameUtils.getBaseName(requestURL);
 		
