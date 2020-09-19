@@ -50,9 +50,8 @@ public class OneTimePad {
 	   * Decrypts  the supplied string value using the default key
 	   * @param hash The cipher text to be decrypted
 	   * @return The plain text revealed from the decryption
-	   * @throws Exception Throws illegal state Exception
 	   */
-	  public static String decrypt(String hash) throws Exception 
+	  public static String decrypt(String hash) 
 	  {
 	    try 
 	    {
@@ -69,9 +68,8 @@ public class OneTimePad {
 	   * @param hash The cipher text to be decrypted
 	   * @param key The encryption key
 	   * @return The plain text revealed from the decryption
-	   * @throws Exception Throws illegal state Exception
 	   */
-	  public static String decrypt(String hash, String key) throws Exception 
+	  public static String decrypt(String hash, String key) 
 	  {
 	    try 
 	    {
