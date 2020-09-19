@@ -32,7 +32,7 @@ ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.insecureCrypto
 //Used more than once translations
 String i18nLevelName = bundle.getString("insecureCryptoStorage.3.challengename");
 //Level blurb can be writen here in HTML OR go into the HTML body and write it there. Nobody will update this but you
-String levelBlurb = bundle.getString("insecureCyrptoStorage.3.whatToDo");
+String levelBlurb = bundle.getString("insecureCryptoStorage.3.whatToDo");
 
 //Logs the IP, Forwarded IP that acceeded this level with the level name in the debug for convience. If you want to log more stuff in the JSP use this as an example
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
@@ -75,21 +75,21 @@ if (request.getSession() != null)
 				<form id="leForm" action="javascript:;">
 					<table>
 					<tr><td>
-						<%= bundle.getString("insecureCyrptoStorage.3.ciphertextToDecrypt") %>
+						<%= bundle.getString("insecureCryptoStorage.3.ciphertextToDecrypt") %>
 					</td><td>
 						<input type="text" width="130px" id="userInput" autocomplete="off">
 					</td></tr>
 					<tr><td colspan="2">			
 						<div id="submitButton">
-						<input type="submit" value="<%= bundle.getString("insecureCyrptoStorage.decrypt") %>"/></div>
-						<p style="display: none;" id="loadingSign"><%= bundle.getString("insecureCyrptoStorage.loading") %></p>
+						<input type="submit" value="<%= bundle.getString("insecureCryptoStorage.decrypt") %>"/></div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("insecureCryptoStorage.loading") %></p>
 					</td></tr>
 					</table>
 				</form>
 				
 				<div id="resultsDiv">
-					<h2 class="title"><%= bundle.getString("insecureCyrptoStorage.3.ciphertextExample") %></h2>
-					<p><%= bundle.getString("insecureCyrptoStorage.3.tryDecryptThis") %> IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==</p>
+					<h2 class="title"><%= bundle.getString("insecureCryptoStorage.3.ciphertextExample") %></h2>
+					<p><%= bundle.getString("insecureCryptoStorage.3.tryDecryptThis") %> IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==</p>
 				</div>
 			</p>
 		</div>
@@ -113,7 +113,7 @@ if (request.getSession() != null)
 					}
 					else
 					{
-						$("#resultsDiv").html("<p> <%= bundle.getString("insecureCyrptoStorage.errorOccurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
+						$("#resultsDiv").html("<p> <%= bundle.getString("insecureCryptoStorage.errorOccurred") %>: " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 					}
 					$("#resultsDiv").show("slow", function(){
 						$("#loadingSign").hide("fast", function(){

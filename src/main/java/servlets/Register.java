@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,86 +12,92 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import dbProcs.Getter;
 import dbProcs.Setter;
 import utils.OpenRegistration;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
 /**
- * Control class for the Registration process.
- * <br/><br/>
+ * Control class for the Registration process. <br/>
+ * <br/>
  * This file is part of the Security Shepherd Project.
  * 
- * The Security Shepherd project is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
+ * The Security Shepherd project is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.<br/>
  * 
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
+ * The Security Shepherd project is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.<br/>
  * 
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * You should have received a copy of the GNU General Public License along with
+ * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
+ * 
  * @author Mark Denihan
  *
  */
-public class Register extends HttpServlet
-{
-	private static final long serialVersionUID = 1L;
+public class Register extends HttpServlet {
+	private static final long serialVersionUID = -2558345286276614261L;
 	private static org.apache.log4j.Logger log = Logger.getLogger(Register.class);
 	private static String defaultClass = new String();
+	private static boolean isLoaded = false;
+
 	/**
-	 * Initiated by register.jsp. If successful a player is added to the system, otherwise there is no change.
-	 * Adding the player to the database is handled by the dbProcs.Setter class. Email is stored for future application expansion
-	 * This function will request requests if the application's registration functionality has been marked as closed by administration.
-	 * @param userName User's User Name
-	 * @param passWord User's Password
+	 * Initiated by register.jsp. If successful a player is added to the system,
+	 * otherwise there is no change. Adding the player to the database is handled by
+	 * the dbProcs.Setter class. Email is stored for future application expansion
+	 * This function will request requests if the application's registration
+	 * functionality has been marked as closed by administration.
+	 * 
+	 * @param userName        User's User Name
+	 * @param passWord        User's Password
 	 * @param passWordConfirm Password Confirmation
-	 * @param userAddress User's Email
-	 * @param userAddressCnf User's Email Confirmation
-	*/
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
-	throws ServletException, IOException
-	{
-		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
+	 * @param userAddress     User's Email
+	 * @param userAddressCnf  User's Email Confirmation
+	 */
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Setting IpAddress To Log and taking header for original IP if forwarded from
+		// proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("**** servlets.Register ***");
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
 		out.print(getServletInfo());
-		if(OpenRegistration.isEnabled())
-		{
+		if (OpenRegistration.isEnabled()) {
 			HttpSession ses = request.getSession(true);
 			boolean notNull = false;
 			boolean notEmpty = false;
 			boolean validPasswords = false;
 			boolean validAddress = false;
 			boolean userValidate = false;
-			try
-			{
+			try {
 				log.debug("Getting ApplicationRoot");
 				String ApplicationRoot = getServletContext().getRealPath("");
-				log.debug("Servlet root = " + ApplicationRoot );
-				
+				log.debug("Servlet root = " + ApplicationRoot);
+
+				request.setCharacterEncoding("UTF-8");
+
 				log.debug("Ensuring not a CSRF");
-				String paramToken = (String)request.getParameter("csrfToken");
-				String sessToken = (String)ses.getAttribute("csrfToken");
-				if(paramToken.compareTo(sessToken) == 0)
-				{
+				String paramToken = (String) request.getParameter("csrfToken");
+				String sessToken = (String) ses.getAttribute("csrfToken");
+				if (paramToken.compareTo(sessToken) == 0) {
 					log.debug("Getting Registration Parameters");
-					String userName = (String)request.getParameter("userName");
+					String userName = (String) request.getParameter("userName");
 					log.debug("userName = " + userName);
-					String passWord = (String)request.getParameter("passWord");
+					String passWord = (String) request.getParameter("passWord");
 					log.debug("passWord retrieved");
-					String passWordConfirm = (String)request.getParameter("passWordConfirm");
+					String passWordConfirm = (String) request.getParameter("passWordConfirm");
 					log.debug("passWordConfirm retrieved");
-					String userAddress = (String)request.getParameter("userAddress");
+					String userAddress = (String) request.getParameter("userAddress");
 					log.debug("userAddress = " + userAddress);
-					String userAddressCnf = (String)request.getParameter("userAddressCnf");
+					String userAddressCnf = (String) request.getParameter("userAddressCnf");
 					log.debug("userAddressCnf = " + userAddressCnf);
-					
-					//Validation
+
+					// Validation
 					log.debug("Checking for nulls");
 					notNull = (userName != null && passWord != null);
 					log.debug("Ensuring strings are not empty");
@@ -100,91 +107,96 @@ public class Register extends HttpServlet
 					log.debug("Validating addresses");
 					validAddress = userAddress.compareTo(userAddressCnf) == 0;
 					validAddress = (Validate.isValidEmailAddress(userAddress) && validAddress);
-					if(!validAddress)
+					if (!validAddress)
 						userAddress = new String();
 					boolean basicValidation = validPasswords && notNull && notEmpty;
-					if(basicValidation && !validAddress)
+					if (basicValidation && !validAddress)
 						userValidate = (Validate.isValidUser(userName, passWord));
 					else
 						userValidate = (Validate.isValidUser(userName, passWord, userAddress));
-					if(basicValidation && userValidate)
-					{
-						//Data is good, Add user
-						//Any Class Set to Add them to?
-						if(defaultClass.isEmpty())
-						{
+					if (basicValidation && userValidate) {
+						// Data is good, Add user
+						// Any Class Set to Add them to?
+						if (!isLoaded) {
+							try {
+								defaultClass = Getter.getDefaultClass("");
+								isLoaded = true;
+							} catch (SQLException e) {
+								log.fatal("Could not load default class: " + e.toString());
+								throw new RuntimeException(e);
+							}
+						}
+						if (defaultClass.isEmpty()) {
 							log.debug("Adding player to database, with null classId");
 							Setter.userCreate(ApplicationRoot, null, userName, passWord, "player", userAddress, false);
-						}
-						else //defaultClass is not empty, so It must be set to a class!
+						} else // defaultClass is not empty, so It must be set to a class!
 						{
 							log.debug("Adding player to database, to class " + defaultClass);
-							Setter.userCreate(ApplicationRoot, defaultClass, userName, passWord, "player", userAddress, false);
+							Setter.userCreate(ApplicationRoot, defaultClass, userName, passWord, "player", userAddress,
+									false);
 						}
 						response.sendRedirect("login.jsp");
-					}
-					else
-					{
-						//Validation Error Responses
-						if(!notNull || !notEmpty)
-						{
+					} else {
+						// Validation Error Responses
+						if (!notNull || !notEmpty) {
 							log.error("Null values detected");
 							ses.setAttribute("errorMessage", "Invalid Request. Please try again");
-						}
-						else if(!validPasswords)
-						{
+						} else if (!validPasswords) {
 							log.error("Passwords did not match");
 							ses.setAttribute("errorMessage", "Password fields did not match");
-						}
-						else if(!validAddress)
-						{
+						} else if (!validAddress) {
 							log.error("Invalid Addresses Detected");
 							ses.setAttribute("errorMessage", "Invalid Request. Please try again");
-						}
-						else if(!userValidate)
-						{
+						} else if (!userValidate) {
 							log.error("Invalid Addresses Detected");
 							ses.setAttribute("errorMessage", "");
 						}
 						response.sendRedirect("register.jsp");
 					}
-				}
-				else
-				{
+				} else {
 					log.debug("paramToken = " + paramToken);
 					log.debug("sessToken = " + sessToken);
 				}
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				log.error("Registration Error: " + e.toString());
 				ses.setAttribute("errorMessage", "An error Occurred. Please try again");
 				response.sendRedirect("register.jsp");
 			}
-		}
-		else
-		{
+		} else {
 			out.write("Registration is not open");
 		}
 		log.debug("*** Register END ***");
 	}
-	
+
 	/**
 	 * Redirects to index.jsp
 	 */
-	public void doGet (HttpServletRequest request, HttpServletResponse response) 
-	throws ServletException, IOException
-	{
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.sendRedirect("index.jsp");
 	}
-	
-	public static String getDefaultClass ()
-	{
+
+	public static String getDefaultClass() {
+		if (!isLoaded) {
+			try {
+				defaultClass = Getter.getDefaultClass("");
+				isLoaded = true;
+			} catch (SQLException e) {
+				log.fatal("Could not load default class: " + e.toString());
+				throw new RuntimeException(e);
+			}
+		}
+
 		return defaultClass;
 	}
-	
-	public static void setDefaultClass (String newDefaultClass)
-	{
-		defaultClass = newDefaultClass;
+
+	public static void setDefaultClass(String theDefaultClass) {
+		defaultClass = theDefaultClass;
+		try {
+			Setter.setDefaultClass("", theDefaultClass);
+		} catch (SQLException e) {
+			log.fatal("Could not save default class: " + e.toString());
+			throw new RuntimeException(e);
+		}
+		isLoaded = true;
 	}
 }

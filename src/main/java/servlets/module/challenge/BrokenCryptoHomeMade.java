@@ -148,22 +148,22 @@ public class BrokenCryptoHomeMade extends HttpServlet
 								{
 									log.debug("Expected: " + expectedSolution);
 									log.debug("Got     : " + submittedSolution);
-									htmlOutput = "<h2 class='title'>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer") + "</h2><p>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer.warning") + "</p>";
+									htmlOutput = "<h2 class='title'>" + bundle.getString("insecureCryptoStorage.homemade.badanswer") + "</h2><p>" + bundle.getString("insecureCryptoStorage.homemade.badanswer.warning") + "</p>";
 									homemadebadanswers++;
 									if(homemadebadanswers >= 5)
 									{
-										htmlOutput += "<p>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer.lockedOut") + "</p>";
+										htmlOutput += "<p>" + bundle.getString("insecureCryptoStorage.homemade.badanswer.lockedOut") + "</p>";
 									}
 									else
 									{
-										htmlOutput += "<p>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer.notLockedOut") + "</p>";
+										htmlOutput += "<p>" + bundle.getString("insecureCryptoStorage.homemade.badanswer.notLockedOut") + "</p>";
 										ses.setAttribute("homemadebadanswers", homemadebadanswers);
 									}
 								}
 							}
 							else
 							{
-								htmlOutput += "<h2 class='title'>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer") + "</h2><p>" + bundle.getString("insecureCyrptoStorage.homemade.badanswer.lockedOut") + "</p>";
+								htmlOutput += "<h2 class='title'>" + bundle.getString("insecureCryptoStorage.homemade.badanswer") + "</h2><p>" + bundle.getString("insecureCryptoStorage.homemade.badanswer.lockedOut") + "</p>";
 							}
 						}
 						catch(Exception e)
@@ -211,7 +211,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 							}
 							if(name.length() < 4)
 							{
-								htmlOutput = bundle.getString("insecureCyrptoStorage.homemade.nameTooShort");
+								htmlOutput = bundle.getString("insecureCryptoStorage.homemade.nameTooShort");
 							}
 							else
 							{
@@ -248,7 +248,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 	
 	/**
 	 * Merges current server encryption key with user name based encryption key to create user specific key
-	 * @param userName
+	 * @param userNameKey
 	 * @return
 	 */
 	private static String createUserSpecificEncryptionKey (String userNameKey) throws Exception 
@@ -398,15 +398,13 @@ public class BrokenCryptoHomeMade extends HttpServlet
 				String forLog = BrokenCryptoHomeMade.encrypt(key, baseKey + getCurrentSalt());
 				toReturn = "<script>prepTooltips();prepClipboardEvents();</script>"
 						+ "<div class='input-group'>" +
-								"<textarea id='theKey' rows=2 style='height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:65%'>"+forLog+"</textarea>" +
+								"<textarea id='theKey"+baseKey+"' rows=2 style='height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:65%'>"+forLog+"</textarea>" +
 								"<span class='input-group-button'>" +
-									"<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey' style='height: 30px;'>" +
+									"<button class='btn' type='button' data-clipboard-shepherd data-clipboard-target='#theKey"+baseKey+"' style='height: 30px;'>" +
 										"<img src='../js/clipboard-js/clippy.svg' width='14' alt='Copy to clipboard'>" +
 									"</button>" +
 								"</span><p>&nbsp;</p>"
 						+ "</div>";
-
-
 				log.debug("Returning: " + forLog);
 			} 
 			catch (Exception e) 

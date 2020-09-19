@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 
@@ -14,13 +15,28 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<page-encoding>UTF-8</page-encoding>
+		</jsp-property-group>
+	</jsp-config>
+
 	<error-page>
-		<error-code>500</error-code>
-		<location>/serverError.html</location>
+		<error-code>403</error-code>
+		<location>/serverError.jsp</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/lostSheep.html</location>
+		<location>/lostSheep.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/serverError.jsp</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/serverError.jsp</location>
 	</error-page>
 
 	<env-entry>
@@ -48,6 +64,42 @@
 	</servlet-mapping>
 
 	<servlet>
+             <servlet-name>/ssologin</servlet-name>
+                <servlet-class>servlets.SSOLogin</servlet-class>
+    </servlet>
+        <servlet-mapping>
+                <servlet-name>/ssologin</servlet-name>
+                <url-pattern>/saml/dologin</url-pattern>
+        </servlet-mapping>
+
+        <servlet>
+                <servlet-name>/ssometadata</servlet-name>
+                <servlet-class>servlets.SSOMetadata</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>/ssometadata</servlet-name>
+                <url-pattern>/saml/metadata.xml</url-pattern>
+        </servlet-mapping>
+
+        <servlet>
+                <servlet-name>/acs</servlet-name>
+                <servlet-class>servlets.ACS</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>/acs</servlet-name>
+                <url-pattern>/saml/acs</url-pattern>
+        </servlet-mapping>
+
+ 		<servlet>
+                <servlet-name>/sls</servlet-name>
+                <servlet-class>servlets.SLS</servlet-class>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>/sls</servlet-name>
+                <url-pattern>/saml/sls</url-pattern>
+        </servlet-mapping>
+
+	<servlet>
 		<servlet-name>/mobileLogin</servlet-name>
 		<servlet-class>servlets.MobileLogin</servlet-class>
 	</servlet>
@@ -55,7 +107,6 @@
 		<servlet-name>/mobileLogin</servlet-name>
 		<url-pattern>/mobileLogin</url-pattern>
 	</servlet-mapping>
-
 
 	<servlet>
 		<servlet-name>/register</servlet-name>
@@ -94,6 +145,15 @@
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>/usernameChange</servlet-name>
+		<servlet-class>servlets.ChangeUsername</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/usernameChange</servlet-name>
+		<url-pattern>/usernameChange</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>/createNewAdmin</servlet-name>
 		<servlet-class>servlets.admin.userManagement.CreateNewAdmin</servlet-class>
 	</servlet>
@@ -121,12 +181,12 @@
 	</servlet-mapping>
 
 	<servlet>
-	  <servlet-name>/deletePlayers</servlet-name>
-	  <servlet-class>servlets.admin.userManagement.DeletePlayers</servlet-class>
+		<servlet-name>/deletePlayers</servlet-name>
+		<servlet-class>servlets.admin.userManagement.DeletePlayers</servlet-class>
 	</servlet>
 	<servlet-mapping>
-	      <servlet-name>/deletePlayers</servlet-name>
-	      <url-pattern>/deletePlayers</url-pattern>
+		<servlet-name>/deletePlayers</servlet-name>
+		<url-pattern>/deletePlayers</url-pattern>
 	</servlet-mapping>
 
 
@@ -444,6 +504,15 @@
 	<servlet-mapping>
 		<servlet-name>/changeVulnerableAppRoot</servlet-name>
 		<url-pattern>/changeVulnerableAppRoot</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/lessons/57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a</servlet-name>
+		<servlet-class>servlets.module.lesson.XxeLesson</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/lessons/57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a</servlet-name>
+		<url-pattern>/lessons/57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -1210,6 +1279,15 @@
 	<servlet-mapping>
 		<servlet-name>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</servlet-name>
 		<url-pattern>/challenges/7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</servlet-name>
+		<servlet-class>servlets.module.challenge.BrokenCryptoHomeMade</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</servlet-name>
+		<url-pattern>/challenges/9e5ed059b23632c8801d95621fa52071b2eb211d8c044dde6d2f4b89874a7bc4</url-pattern>
 	</servlet-mapping>
 
 	<filter>

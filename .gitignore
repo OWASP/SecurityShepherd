@@ -3,3 +3,8 @@
 /.project
 /bin/
 /.settings/
+.settings/
+docker/*/*.sql
+docker/*/*.sql-esrc
+src/main/resources/onelogin.saml.properties
+src/main/resources/sso.properties

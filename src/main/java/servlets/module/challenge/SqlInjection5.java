@@ -71,26 +71,26 @@ public class SqlInjection5 extends HttpServlet
 			
 			try
 			{
-				int megustaAmount = validateAmount(Integer.parseInt(request.getParameter("megustaAmount")));
-				log.debug("megustaAmount - " + megustaAmount);
-				int trollAmount = validateAmount(Integer.parseInt(request.getParameter("trollAmount")));
-				log.debug("trollAmount - " + trollAmount);
-				int rageAmount = validateAmount(Integer.parseInt(request.getParameter("rageAmount")));
-				log.debug("rageAmount - " + rageAmount);
-				int notBadAmount = validateAmount(Integer.parseInt(request.getParameter("notBadAmount")));
-				log.debug("notBadAmount - " + notBadAmount);
+				int pineappleAmount = validateAmount(Integer.parseInt(request.getParameter("pineappleAmount")));
+				log.debug("pineappleAmount - " + pineappleAmount);
+				int orangeAmount = validateAmount(Integer.parseInt(request.getParameter("orangeAmount")));
+				log.debug("orangeAmount - " + orangeAmount);
+				int appleAmount = validateAmount(Integer.parseInt(request.getParameter("appleAmount")));
+				log.debug("appleAmount - " + appleAmount);
+				int bananaAmount = validateAmount(Integer.parseInt(request.getParameter("bananaAmount")));
+				log.debug("bananaAmount - " + bananaAmount);
 				String couponCode = request.getParameter("couponCode");
 				log.debug("couponCode - " + couponCode);
 				
 				//Working out costs
-				int megustaCost = megustaAmount * 30;
-				int trollCost = trollAmount * 3000;
-				int rageCost = rageAmount * 45;
-				int notBadCost = notBadAmount * 15;
-				int perCentOffMegusta = 0; // Will search for coupons in DB and update this int
-				int perCentOffTroll = 0; // Will search for coupons in DB and update this int
-				int perCentOffRage = 0; // Will search for coupons in DB and update this int
-				int perCentOffNotBad = 0; // Will search for coupons in DB and update this int
+				int pineappleCost = pineappleAmount * 30;
+				int orangeCost = orangeAmount * 3000;
+				int appleCost = appleAmount * 45;
+				int bananaCost = bananaAmount * 15;
+				int perCentOffPineapple = 0; // Will search for coupons in DB and update this int
+				int perCentOffOrange = 0; // Will search for coupons in DB and update this int
+				int perCentOffApple = 0; // Will search for coupons in DB and update this int
+				int perCentOffBanana = 0; // Will search for coupons in DB and update this int
 				
 				htmlOutput = new String();
 				Connection conn = Database.getChallengeConnection(applicationRoot, "SqlInjectionChallenge5Shop");
@@ -104,25 +104,25 @@ public class SqlInjection5 extends HttpServlet
 				{
 					if(coupons.next())
 					{
-						if(coupons.getInt(1) == 1) // MeGusta
+						if(coupons.getInt(1) == 1) // Pineapple
 						{
-							log.debug("Found coupon for %" + coupons.getInt(2) + " off MeGusta");
-							perCentOffMegusta = coupons.getInt(2);
+							log.debug("Found coupon for %" + coupons.getInt(2) + " off Pineapple");
+							perCentOffPineapple = coupons.getInt(2);
 						}
-						else if (coupons.getInt(1) == 2) // Troll
+						else if (coupons.getInt(1) == 2) // Orange
 						{
-							log.debug("Found coupon for %" + coupons.getInt(2) + " off Troll");
-							perCentOffTroll = coupons.getInt(2);
+							log.debug("Found coupon for %" + coupons.getInt(2) + " off Orange");
+							perCentOffOrange = coupons.getInt(2);
 						}
-						else if (coupons.getInt(1) == 3) // Rage
+						else if (coupons.getInt(1) == 3) // Apple
 						{
-							log.debug("Found coupon for %" + coupons.getInt(2) + " off Rage");
-							perCentOffRage = coupons.getInt(2);
+							log.debug("Found coupon for %" + coupons.getInt(2) + " off Apple");
+							perCentOffApple = coupons.getInt(2);
 						}
-						else if (coupons.getInt(1) == 4) // NotBad
+						else if (coupons.getInt(1) == 4) // Banana
 						{
-							log.debug("Found coupon for %" + coupons.getInt(2) + " off NotBad");
-							perCentOffNotBad = coupons.getInt(2);
+							log.debug("Found coupon for %" + coupons.getInt(2) + " off Banana");
+							perCentOffBanana = coupons.getInt(2);
 						}
 						
 					}
@@ -134,19 +134,19 @@ public class SqlInjection5 extends HttpServlet
 				conn.close();
 				
 				//Work Out Final Cost
-				megustaCost = megustaCost - (megustaCost * (perCentOffMegusta/100));
-				rageCost = rageCost - (rageCost * (perCentOffRage/100));
-				notBadCost = notBadCost - (notBadCost * (perCentOffNotBad/100));
-				trollCost = trollCost - (trollCost * (perCentOffTroll/100));
-				int finalCost = megustaCost + rageCost + notBadCost + trollCost;
+				pineappleCost = pineappleCost - (pineappleCost * (perCentOffPineapple/100));
+				appleCost = appleCost - (appleCost * (perCentOffApple/100));
+				bananaCost = bananaCost - (bananaCost * (perCentOffBanana/100));
+				orangeCost = orangeCost - (orangeCost * (perCentOffOrange/100));
+				int finalCost = pineappleCost + appleCost + bananaCost + orangeCost;
 				
 				//Output Order
 				htmlOutput = "<h3>" + bundle.getString("response.orderComplete")+ "</h3>"
 						+ "" + bundle.getString("response.orderComplete.p1")+ "<br/><br/>"
 						+ "" + bundle.getString("response.orderComplete.p2")+ "<a><strong>$" + finalCost + "</strong></a>";
-				if (trollAmount > 0 && trollCost == 0)
+				if (orangeAmount > 0 && orangeCost == 0)
 				{
-					htmlOutput += "<br><br>" + bundle.getString("response.trollsFreeSolution")+ "<a><b>" + Encode.forHtml(levelSolution) + "</b></a>";
+					htmlOutput += "<br><br>" + bundle.getString("response.orangesFreeSolution")+ "<a><b>" + Encode.forHtml(levelSolution) + "</b></a>";
 				}
 			}
 			catch(Exception e)
@@ -170,9 +170,11 @@ public class SqlInjection5 extends HttpServlet
 		}
 	}
 	
-	private static int validateAmount (int amount)
+	private static int validateAmount (int amount) throws IllegalArgumentException
 	{
-		if(amount < 0 || amount > 9000)
+		if(amount > 9000)
+			throw new IllegalArgumentException();
+		if (amount < 0)
 			amount = 0;
 		return amount;
 	}

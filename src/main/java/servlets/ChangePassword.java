@@ -56,6 +56,8 @@ public class ChangePassword extends HttpServlet
 		log.debug("*** servlets.ChangePassword ***");
 		try
 		{
+			response.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding("UTF-8");
 			HttpSession ses = request.getSession(true);
 			if(Validate.validateSession(ses))
 			{
@@ -93,6 +95,7 @@ public class ChangePassword extends HttpServlet
 							log.error("Incorrect Password");
 							ses.setAttribute("errorMessage", "Incorrect Password... Don't lock yourself out!");
 							response.sendRedirect("index.jsp");
+							return;
 						}
 					}
 					else

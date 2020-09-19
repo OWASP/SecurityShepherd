@@ -1,12 +1,8 @@
 package dbProcs;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import org.apache.log4j.Logger;
+import java.io.InputStream;
+import java.util.Properties;
 
 /** 
  * Locates the database Properties File for Database manipulation methods. This file contains the application sign on credentials for the database.	
@@ -29,60 +25,13 @@ import org.apache.log4j.Logger;
  */
 public class FileInputProperties 
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(FileInputProperties.class);
-	
-	/**
-	 * Reads the properties file for a specific property and returns it as a string.
-	 * @param filename The file to read
-	 * @param Property The name of the property to be found
-	 * @return The value of the specified property to be found
-	 */
-	@SuppressWarnings("deprecation")
-	public static String readfile(String filename, String Property) 
-	{
-		//log.debug("Debug: Properties filename: "+filename);
-		File file = new File(filename);
-		String temp = "";
-	    String result = "NO RESULT";
-	    FileInputStream fis = null;
-	    BufferedInputStream bis = null;
-	    DataInputStream dis = null;
-	    try 
-	    {
-		  //log.debug("Debug: Looking for Property: "+Property);
-	      fis = new FileInputStream(file);
-	      bis = new BufferedInputStream(fis);
-	      dis = new DataInputStream(bis);
-	      boolean bool = false;
-	      while (dis.available() != 0) 
-	      {
-	        temp = dis.readLine();
-	        if(temp.contains(Property))
-	        {
-	        	result = temp.substring(Property.length()+1, temp.length());
-	        	//log.debug("Debug: Property Found: "+result);
-	        	bool = true;
-	        }
-	      }
-	      if(!bool)
-	      {
-	    	  log.debug("Debug: Property not found: "+Property);
-	  	  }
-	      fis.close();
-	      bis.close();
-	      dis.close();
-	
-	    } 
-	    catch (FileNotFoundException e) 
-	    {
-	    	log.error("Error: Properties filename: "+filename+" can not be found: " + e.getMessage());
-	    	result = result +  e.toString();
-	    } 
-	    catch (IOException e) 
-	    {
-	    	log.error("Error: Properties filename: "+filename+" can not be opened: " + e.getMessage());
-	    	result = result + e.toString();
-	    }
-	    return result;
-	  }
+		
+	public static String readPropFileClassLoader(String filename, String property) throws IOException{
+
+		InputStream input = FileInputProperties.class.getClassLoader().getResourceAsStream(filename);
+		Properties prop = new Properties();
+		prop.load(input);
+
+		return prop.getProperty(property);
+	}
 }

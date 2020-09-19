@@ -29,7 +29,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `SqlInjLesson`;
-CREATE SCHEMA IF NOT EXISTS `SqlInjLesson` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlInjLesson` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlInjLesson` ;
 
 -- -----------------------------------------------------
@@ -69,7 +69,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `SqlChalEmail` ;
-CREATE SCHEMA IF NOT EXISTS `SqlChalEmail` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalEmail` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlChalEmail` ;
 
 -- -----------------------------------------------------
@@ -107,7 +107,7 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
-CREATE SCHEMA IF NOT EXISTS `SqlChalOne` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalOne` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlChalOne` ;
 
 -- -----------------------------------------------------
@@ -147,7 +147,7 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
-CREATE SCHEMA IF NOT EXISTS `SqlChalThree` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalThree` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlChalThree` ;
 
 -- -----------------------------------------------------
@@ -189,7 +189,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalTwo` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalTwo` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalTwo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalTwo` ;
 
 -- -----------------------------------------------------
@@ -226,7 +226,7 @@ COMMIT;
 -- BrokenAuthAndSessMangChalThree
 -- ======================================================
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalThree` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalThree` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalThree` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalThree`;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -297,7 +297,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `directObjectRefChalOne` ;
-CREATE SCHEMA IF NOT EXISTS `directObjectRefChalOne` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `directObjectRefChalOne` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `directObjectRefChalOne` ;
 
 -- -----------------------------------------------------
@@ -339,7 +339,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `directObjectRefChalTwo` ;
-CREATE SCHEMA IF NOT EXISTS `directObjectRefChalTwo` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `directObjectRefChalTwo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `directObjectRefChalTwo` ;
 
 -- -----------------------------------------------------
@@ -433,10 +433,10 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `SQLiC5Shop`;
-INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'MeGusta', 30);
-INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Troll', 3000);
-INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Rage', 45);
-INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'NotBad', 15);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'Pineapple', 30);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Orange', 3000);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Apple', 45);
+INSERT INTO `SQLiC5Shop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'Banana', 15);
 
 COMMIT;
 
@@ -445,12 +445,12 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `SQLiC5Shop`;
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeARage', 3);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'RageMemeForFree', 3);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeATroll', 2);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffTroll', 2);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeANotBad', 4);
-INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffNotBad', 4);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeAFruit', 3);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'FruitForFree', 3);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeAnOrange', 2);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffOranges', 2);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeABanana', 4);
+INSERT INTO `SQLiC5Shop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffBananas', 4);
 
 COMMIT;
 
@@ -529,7 +529,7 @@ CREATE TABLE IF NOT EXISTS `SqlChalSix`.`users` (
   `userName` VARCHAR(45) NOT NULL,
   `userPin` VARCHAR(16) NOT NULL,
   `userQuestion` VARCHAR(128) NOT NULL,
-  `userAnswer` VARCHAR(256) NOT NULL,
+  `userAnswer` VARCHAR(191) NOT NULL,
   `userAge` VARCHAR(16) NOT NULL,
   PRIMARY KEY (`idusers`))
 ENGINE = InnoDB;
@@ -573,7 +573,7 @@ USE `csrfChallengeEnumTokens` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `csrfChallengeEnumTokens`.`csrfTokens` (
   `userId` VARCHAR(64) NOT NULL,
-  `csrfTokenscol` VARCHAR(256) NULL,
+  `csrfTokenscol` VARCHAR(191) NULL,
   PRIMARY KEY (`userId`))
 ENGINE = InnoDB;
 
@@ -596,7 +596,7 @@ USE `csrfChallengeFour` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `csrfChallengeFour`.`csrfTokens` (
   `userId` VARCHAR(64) NOT NULL,
-  `csrfTokenscol` VARCHAR(256) NULL,
+  `csrfTokenscol` VARCHAR(191) NULL,
   PRIMARY KEY (`userId`))
 ENGINE = InnoDB;
 
@@ -607,7 +607,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalFive` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalFive` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalFive` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalFive`;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -679,7 +679,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalSix` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSix` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSix` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalSix` ;
 
 -- -----------------------------------------------------
@@ -690,7 +690,7 @@ CREATE  TABLE IF NOT EXISTS `BrokenAuthAndSessMangChalSix`.`users` (
   `userName` VARCHAR(32) NOT NULL ,
   `userPassword` VARCHAR(128) NOT NULL ,
   `userAddress` VARCHAR(128) NOT NULL ,
-  `secretQuestion` VARCHAR(256) NOT NULL ,
+  `secretQuestion` VARCHAR(191) NOT NULL ,
   `secretAnswer` VARCHAR(128) NOT NULL, 
   PRIMARY KEY (`userId`) )
 ENGINE = InnoDB;
@@ -729,7 +729,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `BrokenAuthAndSessMangChalSeven` ;
-CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSeven` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `BrokenAuthAndSessMangChalSeven` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `BrokenAuthAndSessMangChalSeven` ;
 
 -- -----------------------------------------------------
@@ -740,7 +740,7 @@ CREATE  TABLE IF NOT EXISTS `BrokenAuthAndSessMangChalSeven`.`users` (
   `userName` VARCHAR(32) NOT NULL ,
   `userPassword` VARCHAR(128) NOT NULL ,
   `userAddress` VARCHAR(128) NOT NULL ,
-  `secretQuestion` VARCHAR(256) NOT NULL ,
+  `secretQuestion` VARCHAR(191) NOT NULL ,
   `secretAnswer` VARCHAR(128) NOT NULL, 
   PRIMARY KEY (`userId`) )
 ENGINE = InnoDB;
@@ -819,10 +819,10 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `CryptShop`;
-INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'MeGusta', 30);
-INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Troll', 3000);
-INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Rage', 45);
-INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'NotBad', 15);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (1, 'Pineapple', 30);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (2, 'Orange', 3000);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (3, 'Apple', 45);
+INSERT INTO `CryptShop`.`items` (`itemId`, `itemName`, `itemCost`) VALUES (4, 'Banana', 15);
 
 COMMIT;
 
@@ -831,12 +831,12 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `CryptShop`;
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeARage', 3);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'RageMemeForFree', 3);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeATroll', 2);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffTroll', 2);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeANotBad', 4);
-INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffNotBad', 4);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (1, 100, 'PleaseTakeAFruit', 3);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (2, 100, 'FruitForFree', 3);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (3, 10, 'PleaseTakeAnOrange', 2);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (4, 50, 'HalfOffOranges', 2);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (5, 10, 'PleaseTakeABanana', 4);
+INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (6, 50, 'HalfOffBananas', 4);
 INSERT INTO `CryptShop`.`coupons` (`couponId`, `perCentOff`, `couponCode`, `itemId`) VALUES (432197, 100, 'e!c!3etZoumo@Stu4rU176', 2);
 COMMIT;
 
@@ -850,7 +850,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `UrlAccessThree` ;
-CREATE SCHEMA IF NOT EXISTS `UrlAccessThree` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `UrlAccessThree` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `UrlAccessThree` ;
 
 -- -----------------------------------------------------
@@ -902,7 +902,7 @@ COMMIT;
 -- -----------------------------------------------------
 
 DROP SCHEMA IF EXISTS `sqlInjectSeven` ;
-CREATE SCHEMA IF NOT EXISTS `sqlInjectSeven` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `sqlInjectSeven` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `sqlInjectSeven`;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -1043,7 +1043,7 @@ USE `directObjectBank` ;
 CREATE TABLE IF NOT EXISTS `directObjectBank`.`bankAccounts` (
   `account_number` INT NOT NULL AUTO_INCREMENT,
   `account_holder` VARCHAR(45) NOT NULL,
-  `account_password` VARCHAR(256) NOT NULL,
+  `account_password` VARCHAR(191) NOT NULL,
   `account_balance` FLOAT NOT NULL DEFAULT 5,
   PRIMARY KEY (`account_number`), 
   UNIQUE INDEX `account_holder_UNIQUE` (`account_holder` ASC))
@@ -1059,14 +1059,14 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `directObjectBank`;
-INSERT INTO `directObjectBank`.`bankAccounts` (`account_number`, `account_holder`, `account_password`, `account_balance`) VALUES (0, 'Mr. Banks', 'SignInImpossibleBecauseNotHashed', 10000000);
+INSERT INTO `directObjectBank`.`bankAccounts` (`account_number`, `account_holder`, `account_password`, `account_balance`) VALUES (0, 'Mr. Banks', 'SignInImpossibleBecauseNotHashed', 10000000000);
 
 COMMIT;
 
 -- BankAuth Procedure
 USE `directObjectBank`;
 -- DELIMITER $$
-CREATE PROCEDURE `directObjectBank`.`bankAuth` (IN theUserId VARCHAR(45), thePass VARCHAR(256))
+CREATE PROCEDURE `directObjectBank`.`bankAuth` (IN theUserId VARCHAR(45), thePass VARCHAR(191))
 BEGIN
 COMMIT;
 SELECT account_number, account_holder FROM `directObjectBank`.`bankAccounts` WHERE account_holder = theUserId AND account_password = SHA2(thePass, 256);
@@ -1111,7 +1111,7 @@ END
 -- createAccount Procedure
 USE `directObjectBank`;
 -- DELIMITER $$
-CREATE PROCEDURE `directObjectBank`.`createAccount` (IN accountHolder VARCHAR(45), IN accountPassword VARCHAR(256))
+CREATE PROCEDURE `directObjectBank`.`createAccount` (IN accountHolder VARCHAR(45), IN accountPassword VARCHAR(191))
 BEGIN
 COMMIT;
 INSERT INTO `directObjectBank`.`bankAccounts` (`account_holder`, `account_password`, `account_balance`) VALUES (accountHolder, SHA2(accountPassword, 256), 0);
@@ -1133,7 +1133,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `SqlChalStoredProc` ;
-CREATE SCHEMA IF NOT EXISTS `SqlChalStoredProc` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlChalStoredProc` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlChalStoredProc` ;
 
 -- -----------------------------------------------------
@@ -1189,7 +1189,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 DROP SCHEMA IF EXISTS `SqlPoorEscape` ;
-CREATE SCHEMA IF NOT EXISTS `SqlPoorEscape` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+CREATE SCHEMA IF NOT EXISTS `SqlPoorEscape` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 USE `SqlPoorEscape` ;
 
 -- -----------------------------------------------------
