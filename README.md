@@ -49,7 +49,7 @@ Note: Environment variables can be configured in dotenv ```.env``` file in the r
 ### Heroku (Beta)
 Note that none of the levels that interact with a separate database are working e.g. SQL injection levels. Also the backup database is not created.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ismisepaul/SecurityShepherd)
 
 # How do I setup Security Shepherd?
 We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.
