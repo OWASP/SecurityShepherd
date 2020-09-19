@@ -401,7 +401,7 @@ public class TestProperties {
 	 * @throws IOException
 	 */
 	public static void createMysqlResource() throws IOException {
-		createMysqlResource("localhost", 3306, "core", "root", "");
+		createMysqlResource("127.0.0.1", 3306, "core", "root", "");
 	}
 
 	/**
