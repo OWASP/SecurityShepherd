@@ -536,14 +536,14 @@ public class Setup extends HttpServlet {
 		dbProp.append("databasePassword=" + dbPass);
 		dbProp.append("\n");
 
-		Files.write(Paths.get(Constants.DBPROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
-		log.info("Created Heroku Db properties file: " + new File(Constants.DBPROP).getAbsolutePath());
+		Files.write(Paths.get(Constants.MYSQL_DB_PROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+		log.info("Created Heroku Db properties file: " + new File(Constants.MYSQL_DB_PROP).getAbsolutePath());
 		try {
 			executeSqlScript(coreDbName);
 			log.info("Created Security Shepherd Database in " + coreDbUri.getHost() + ':' + coreDbUri.getPort() + coreDbUri.getPath());
 		} catch (SQLException e) {
 			e.printStackTrace();
-			FileUtils.deleteQuietly(new File(Constants.DBPROP));
+			FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 		}
 	}
 
