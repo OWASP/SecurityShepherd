@@ -535,6 +535,8 @@ public class Setup extends HttpServlet {
 		dbProp.append("\n");
 		dbProp.append("databasePassword=" + dbPass);
 		dbProp.append("\n");
+		dbProp.append("databaseOptions=useUnicode=true&character_set_server=utf8mb4");
+		dbProp.append("\n");
 
 		Files.write(Paths.get(Constants.MYSQL_DB_PROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
 		log.info("Created Heroku Db properties file: " + new File(Constants.MYSQL_DB_PROP).getAbsolutePath());
