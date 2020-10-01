@@ -1,0 +1,74 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: shepherd-build-app
+spec:
+  params:
+    - name: image_tomcat
+      type: string
+    - name: container_tomcat
+      type: string
+    - name: tomcat_docker_version
+      type: string
+    - name: mysql_user
+      type: string
+    - name: mysql_pass
+      type: string
+    - name: container_mysql
+      type: string
+    - name: container_mongo
+      type: string
+    - name: tls_keystore_file
+      type: string
+    - name: tls_keystore_pass
+      type: string
+    - name: alias
+      type: string
+    - name: https_port
+      type: string
+  workspaces:
+    - name: source
+      description: SecurityShepherd build directory
+      mountPath: /SecurityShepherd
+  steps:
+    - name: build-environment
+      image: ubuntu
+      script: |
+        mvn -Pdocker clean install -DskipTests
+      env:
+        - name: "IMAGE_TOMCAT"
+          value: "$(params.image_tomcat)"
+        - name: "CONTAINER_TOMCAT"
+          value: "$(params.container_comcat)"
+---
+apiVersion: tektop.dev/v1beta1
+kind: Taskrun
+metadata:
+  name: shepherd-build-image-run
+spec:
+  taskRef:
+    name: shepherd-build-image
+  params:
+    - name: image_tomcat
+      value: owasp/security-shepherd
+    - name: container_tomcat
+      value: secshep_tomcat
+    - name: tomcat_docker_version
+      value: 8.5.51-jdk8-openjdk
+    - name: mysql_user
+      value: root
+    - name: mysql_pass
+      value: CowSaysMoo
+    - name: container_mysql
+      value: secshep_mysql
+    - name: container_mongo
+      value: secshep_mongo
+    - name: tls_keystore_file
+      value: shepherdKeystore.p12
+    - name: tls_keystore_pass
+      value: CowSaysMoo
+    - name: alias
+      value: tomcat
+    - name: https_port
+      value: 443
+

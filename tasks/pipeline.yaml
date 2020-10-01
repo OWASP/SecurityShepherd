@@ -1,0 +1,58 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: security-shepherd-build
+spec:
+  tasks:
+    - name: fetch-repo
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-data
+      params:
+        - name: url
+          value: $(params.repo-url)
+        - name: revision
+          value: $(params.branch-name)
+    - name: build-app
+      taskRef:
+        name: shepherd-build-app
+      runAfter: ["fetch-repo"]
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: build-image
+      taskRef:
+        name: shepherd-build-image
+      runAfter: ["build-app"]
+    - name: init-mongo
+      taskRef:
+        name: shepherd-init-mongo
+      runAfter: ["build-app"]
+    - name: init-mysql
+      taskRef:
+        name: shepherd-init-mysql
+      runAfter: ["build-app"]
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: security-shepherd-build-run
+spec:
+  pipelineRef:
+    name: security-shepherd-build
+  workspaces:
+    - name: shared-data
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+  params:
+    - name: repo-url
+      value: https://github.com/OWASP/SecurityShepherd.git
+    - branch-name:
+      value: dev

@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: notify-slack
+spec:
+  params:
+    - name: channel
+      type: string
+    - name: username
+      type: string
+    - name: message
+      type: string
+    - name: hook
+      type: string
+  steps:
+    - name: notify
+      image: curlimages/curl:latest
+      script: |
+        curl -X POST \
+        --data-urlencode 'payload={"channel": "$(params.channel)", "username": "$(params.username)", "text": "$(params.message)"}' \
+        $(params.hook)
