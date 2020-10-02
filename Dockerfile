@@ -29,7 +29,7 @@ ARG TLS_KEYSTORE_PASS
 ARG ALIAS
 ARG HTTPS_PORT
 
-RUN printf "databaseConnectionURL=$MYSQL_URI/\nDriverType=$DB_DRIVER\ndatabaseSchema=$DB_SCHEMA\ndatabaseUsername=$MYSQL_USER\ndatabasePassword=$MYSQL_PASS\n" >> $PROPS_MYSQL
+RUN printf "databaseConnectionURL=$MYSQL_URI/\nDriverType=$DB_DRIVER\ndatabaseSchema=$DB_SCHEMA\ndatabaseUsername=$MYSQL_USER\ndatabasePassword=$MYSQL_PASS\ndatabaseOptions=useUnicode=true&character_set_server=utf8mb4\n" >> $PROPS_MYSQL
 RUN printf "connectionHost=$MONGO_HOST\nconnectionPort=$MONGO_PORT\ndatabaseName=shepherdGames\nconnectTimeout=$MONGO_CONN_TIMEOUT\nsocketTimeout=$MONGO_SOCK_TIMEOUT\nserverSelectionTimeout=$MONGO_SVR_TIMEOUT"  >> $PROPS_MONGO
 
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
