@@ -12,8 +12,18 @@ import utils.ShepherdLogManager;
 import utils.Validate;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
-import java.io.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -40,7 +50,7 @@ import java.util.ResourceBundle;
 public class XxeChallenge1
         extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static Logger log = Logger.getLogger(XxeChallenge1.class);
+    private static final Logger log = Logger.getLogger(XxeChallenge1.class);
     private static final String LEVEL_NAME = "XXE Challenge 1";
     private static final String LEVEL_HASH = "ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123e";
 
@@ -75,7 +85,8 @@ public class XxeChallenge1
 
                     if (Validate.validateTokens(tokenCookie, tokenHeader)) {
                         InputStream json = request.getInputStream();
-                        String emailAddr = readJson(json);
+                        String emailAddr = readJson(json, errors);
+                        emailAddr = Encode.forHtml(emailAddr);
                         log.debug("Email Addr: " + emailAddr);
 
                         String htmlOutput = new String();
@@ -112,26 +123,25 @@ public class XxeChallenge1
         log.debug("End of " + LEVEL_NAME + " Servlet");
     }
 
-    public static String readJson(InputStream jsonEmail) {
+    public static String readJson(InputStream jsonEmail, ResourceBundle errors) {
         String result;
 
         JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = null;
+        JSONObject jsonObject;
         try
         {
             jsonObject = (JSONObject)jsonParser.parse(
-                    new InputStreamReader(jsonEmail, "UTF-8"));
-        } catch (IOException e)
-        {
+                    new InputStreamReader(jsonEmail, StandardCharsets.UTF_8));
+            result = jsonObject.get("email").toString();
+            return result;
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (ParseException e)
-        {
+        } catch (ParseException e) {
             e.printStackTrace();
+            return errors.getString("error.funky");
         }
 
-        result = jsonObject.get("email").toString();
-
-        return result;
+        return null;
     }
 
     /**
