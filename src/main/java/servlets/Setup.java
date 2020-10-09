@@ -35,6 +35,8 @@ import dbProcs.Constants;
 import dbProcs.Database;
 import dbProcs.MongoDatabase;
 import dbProcs.Setter;
+
+import servlets.module.challenge.XxeChallenge1;
 import servlets.module.lesson.XxeLesson;
 import utils.Validate;
 
@@ -50,7 +52,7 @@ public class Setup extends HttpServlet {
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
-		
+
 		// Output Stuff
 		PrintWriter out = response.getWriter();
 		String htmlOutput = "";
@@ -59,6 +61,7 @@ public class Setup extends HttpServlet {
 		boolean saveMysqlProperties = false;
 		boolean hasDBFile = false;
 
+		// Parameters From Form
 		String dbHost = request.getParameter("dbhost");
 		String dbPort = request.getParameter("dbport");
 		String dbUser = request.getParameter("dbuser");
@@ -92,7 +95,7 @@ public class Setup extends HttpServlet {
 				if (connectionURL == null || databaseSchema == null) {
 					// Nothing useful given in user input or from properties file, bail out.
 					validateInput = false;
-				} 
+				}
 			} else {
 				// Override db properties from request parameters
 				connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
@@ -462,6 +465,9 @@ public class Setup extends HttpServlet {
 	}
 
 	private synchronized Boolean executeCreateChallengeFile() {
-		return XxeLesson.createXxeLessonSolutionFile();
+		if (XxeLesson.createXxeLessonSolutionFile() && XxeChallenge1.createXxeChallenge1SolutionFile())
+			return true;
+
+		return false;
 	}
 }

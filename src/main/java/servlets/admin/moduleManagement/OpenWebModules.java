@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import dbProcs.Setter;
+import servlets.module.challenge.XxeChallenge1;
 import servlets.module.lesson.XxeLesson;
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -57,6 +58,7 @@ public class OpenWebModules extends HttpServlet
 						Setter.openOnlyWebCategories(ApplicationRoot, 0);
 						Setter.openOnlyWebCategories(ApplicationRoot, 1);
 						XxeLesson.createXxeLessonSolutionFile();
+						XxeChallenge1.createXxeChallenge1SolutionFile();
 						htmlOutput = "<p style='color:red'>[WARNING] Server is vulnerable. Unsafe levels open!<p>"
 								+ "<h3 class='title'>Only Web Levels Are Now Open (including unsafe levels)</h3>"
 								+ "<p>All of the Security Shepherd Web Application Security levels are now open! All other categories have been closed.</p>";

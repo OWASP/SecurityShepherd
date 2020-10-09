@@ -31,8 +31,8 @@ import utils.Validate;
 import utils.XmlDocumentBuilder;
 
 /**
- * Cross Site Scripting Lesson <br/>
- * <br/>
+ * XXE Lesson
+ * <br/><br/>
  * This file is part of the Security Shepherd Project.
  * <p>
  * The Security Shepherd project is free software: you can redistribute it
