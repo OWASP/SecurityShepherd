@@ -145,7 +145,7 @@ public class XssFilter
 	}
 	
 	/**
-	 * Filters for javascript triggers 3 times before stopping and breaks HTML encodings
+	 * Filters for javascript triggers twice before stopping and breaks HTML encodings
 	 * @param input
 	 * @return
 	 */
@@ -156,7 +156,7 @@ public class XssFilter
 		input = input.replaceAll("script", "scr.pt");
 		for(int h = 0; h < FindXSS.javascriptTriggers.length; h++)
 		{
-			for(int i = 0; i <= 3; i++)
+			for(int i = 0; i <= 1; i++)
 				input = input.replaceAll(FindXSS.javascriptTriggers[h], "");
 		}
 		return screwHtmlEncodings(input);

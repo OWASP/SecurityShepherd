@@ -86,7 +86,7 @@ if (request.getSession() != null) //Session If
 					<br>
 					
 					<!-- Tournament Mode Section -->
-					<div id="tournament" <% if(ModulePlan.isTournyFloor()) { %>style="display: none;"<% } %>>
+					<div id="tournament" <%if(ModulePlan.isTournamentFloor()) {%>style="display: none;"<% } %>>
 						<h2 class="title">Enable Tournament Mode</h2>
 						<p>
 							When Shepherd has been deployed in the Tournament Mode, a user can access any level that is marked as open by the admin. Modules are sorted into difficulty bands, from least to most difficult. This layout is ideal when Shepherd is being utilised as an open application security competition.

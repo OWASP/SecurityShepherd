@@ -55,12 +55,12 @@ public class EnableCheats extends HttpServlet
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
 		Cookie tokenCookie = Validate.getToken(request.getCookies());
-		Object tokenParmeter = request.getParameter("csrfToken");
-		if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
+		Object tokenParameter = request.getParameter("csrfToken");
+		if(Validate.validateAdminSession(ses, tokenCookie, tokenParameter))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug("Current User: " + ses.getAttribute("userName").toString());
-			if(Validate.validateTokens(tokenCookie, tokenParmeter))
+			if(Validate.validateTokens(tokenCookie, tokenParameter))
 			{
 				//Enable for all or for admins?
 				String enableFor = Validate.validateParameter(request.getParameter("enableForAll"), 16);

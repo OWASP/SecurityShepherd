@@ -16,15 +16,15 @@ jobs:
       services:
       - mysql
       - docker
-      dist: bionic
       language: java
+      dist: bionic
       script: mvn verify -DskipUTs=true -DmongoDocker -B
       before_install:
       - mvn -Pdocker validate
+      - sudo apt-get -y install libargon2-0
    -  stage: deploy
       if: fork = false
       name: Deploy to Dockerhub
-      dist: bionic
       language: generic
       provider: script
       skip_cleanup: true

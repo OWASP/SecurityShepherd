@@ -22,13 +22,17 @@ package utils;
  * @author Mark
  */
 
-public class PropertyNotFoundException extends Exception {
+public class InvalidCountdownStateException extends Exception {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3392656589975536908L;
+	private static final long serialVersionUID = 3421841348651773178L;
 
-	public PropertyNotFoundException(String errorMessage) {
+	/**
+	 * 
+	 */
+
+	public InvalidCountdownStateException(String errorMessage) {
 		super(errorMessage);
 	}
 }

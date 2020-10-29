@@ -2,6 +2,9 @@ package servlets;
 
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -14,7 +17,6 @@ import org.springframework.mock.web.MockServletConfig;
 
 import dbProcs.GetterTest;
 import testUtils.TestProperties;
-import utils.InstallationException;
 
 public class LogoutIT
 {
@@ -28,19 +30,13 @@ public class LogoutIT
 	 * Creates DB or Restores DB to Factory Defaults before running tests
 	 */
 	@BeforeClass
-	public static void resetDatabase() 
-	{
+	public static void resetDatabase() throws IOException, SQLException {
 		TestProperties.setTestPropertiesFileDirectory(log);
-		try 
-		{
-			TestProperties.executeSql(log);
-		} 
-		catch (InstallationException e) 
-		{
-			String message = new String("Could not create DB: " + e.toString());
-			log.fatal(message);
-			fail(message);
-		}
+
+		TestProperties.createMysqlResource();
+
+		TestProperties.executeSql(log);
+
 	}
     
     @Before

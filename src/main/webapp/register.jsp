@@ -21,7 +21,7 @@
  * 
  * @author Mark Denihan
  */
-if(OpenRegistration.isEnabled())
+if(OpenRegistration.isEnabled() && LoginMethod.isLogin())
 {
 HttpSession ses = request.getSession();
 if(request.getSession() != null)
@@ -240,7 +240,7 @@ else
 {
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Sombody is trying to register (Registration is Closed)");
 %>
-Registration is not available currently
+New account registration is disabled.
 <%
 }
 %>
