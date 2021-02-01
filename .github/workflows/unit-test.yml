@@ -1,4 +1,4 @@
-name: Unit Test
+name: Java and Mysql Intergration Tests
 
 on: [push]
 
@@ -20,7 +20,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Start MYSQL
+      - name: Start MYSQL Server
         run: sudo service mysql start
+      - name: Configure MYSQL
+        run: mysqladmin -u root -p 'root' password ''
       - name: Unit Tests
-        run: mvn test -B
+        run: mvn test -E -B
