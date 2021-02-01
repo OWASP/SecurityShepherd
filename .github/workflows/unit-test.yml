@@ -22,8 +22,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Start MYSQL Server
-        run: sudo service mysql start
       - name: Test MYSQL
         run: mysql --port 3306 -u root -p -e 'CREATE DATABASE IF NOT EXISTS core;'
       - name: Unit Tests
