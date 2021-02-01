@@ -11,7 +11,7 @@ jobs:
             env:
                 MYSQL_ALLOW_EMPTY_PASSWORD: yes
                 MYSQL_DATABASE: core
-                MYSQL_PASSWORD: ''
+                MYSQL_PASSWORD: CowSaysMoo
             ports:
                 - 3306
             options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -24,6 +24,6 @@ jobs:
       - name: Start MYSQL Server
         run: sudo service mysql start
       - name: Test MYSQL
-        run: mysql --port 3306 -u root -p -e 'CREATE DATABASE IF NOT EXISTS core;'
+        run: mysql --port 3306 -u root -p CowSaysMoo -e 'CREATE DATABASE IF NOT EXISTS core;'
       - name: Unit Tests
         run: mvn test -E -B
