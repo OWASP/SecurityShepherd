@@ -22,7 +22,26 @@ jobs:
           java-version: 1.8
       - name: Start MYSQL Server
         run: sudo service mysql start
-      - name: Configure MYSQL
-        run: mysqladmin -u root -p 'root' password ''
+      - name: Test MYSQL
+        run: mysql --port 3306 -u root -p -e 'CREATE DATABASE IF NOT EXISTS core;'
       - name: Unit Tests
         run: mvn test -E -B
+
+test:
+  name: Test
+  needs: install
+  services:
+    mysql:
+      image: mysql:8.0
+      ports:
+        - '8888:3306'
+      env:
+        MYSQL_ROOT_PASSWORD: rootpass
+        MYSQL_DATABASE: test
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@master
+      with:
+        node-version: '10.x'
+    - run: '
