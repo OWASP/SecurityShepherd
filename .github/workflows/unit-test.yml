@@ -9,12 +9,10 @@ jobs:
         mysql:
             image: mysql:5.5
             env:
-              MYSQL_ALLOW_EMPTY_PASSWORD: yes
-              MYSQL_USER: root
-              MYSQL_PASSWORD:
-              MYSQL_DATABASE: core
+                MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                MYSQL_DATABASE: core
             ports:
-              - 3306:3306
+                - 3306
             options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v2
@@ -22,6 +20,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Start MYSQL Server
+        run: sudo service mysql start
       - name: Test MYSQL
         run: mysql --port 3306 -u root -p -e 'CREATE DATABASE IF NOT EXISTS core;'
       - name: Unit Tests
