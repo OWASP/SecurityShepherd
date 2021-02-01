@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: setCoreDatabase.jsp *************************");
@@ -50,29 +52,39 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 String csrfToken = Encode.forHtml(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<h1 class="title">Core Database Server Info</h1>
-	<p>
-		If you are using a non-standard database configuration for Security Shepherd, you will need to specify the following information for your core database.
-	</p>
-	
-	<br/>
-	<br/>
-	<div id="badData" style="display: none;"></div>
-	<div id="theStep">
+<h1 class="title">Core Database Server Info</h1>
+<p>If you are using a non-standard database configuration for
+	Security Shepherd, you will need to specify the following information
+	for your core database.</p>
+
+<br />
+<br />
+<div id="badData" style="display: none;"></div>
+<div id="theStep">
 	<form action="javascript:;" id="leForm">
 		<table align="center">
-			<tr><td><p>Database URL:</p></td><td><input type="text" id="databaseURL" value=""/></td></tr>
-			<tr><td><p>Username:</p></td><td><input type="text" id="databaseUsername" /></td></tr>
-			<tr><td><p>Password:</p></td><td><input type="password" id="databasePassword" /></td></tr>
-			<tr><td colspan="2" align="center">
-				<input type="submit" id="submitButton" value="Set Core Database Data"/>
-			</td></tr>
+			<tr>
+				<td><p>Database URL:</p></td>
+				<td><input type="text" id="databaseURL" value="" /></td>
+			</tr>
+			<tr>
+				<td><p>Username:</p></td>
+				<td><input type="text" id="databaseUsername" /></td>
+			</tr>
+			<tr>
+				<td><p>Password:</p></td>
+				<td><input type="password" id="databasePassword" /></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center"><input type="submit"
+					id="submitButton" value="Set Core Database Data" /></td>
+			</tr>
 		</table>
 	</form>
-	<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
+	<div id="loadingSign" style="display: none;" class="menuButton">Loading...</div>
 	<div id="resultsDiv" class="informationBox" style="display: none;"></div>
-	</div>
-	<script>
+</div>
+<script>
 	$("#leForm").submit(function(){
 		$("#badData").hide("fast");
 		$("#resultsDiv").hide("fast");
@@ -113,8 +125,9 @@ String ApplicationRoot = getServletContext().getRealPath("");
 		});
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {

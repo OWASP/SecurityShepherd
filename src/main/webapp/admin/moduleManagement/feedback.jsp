@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: feedback.jsp *************************");
@@ -50,30 +52,34 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 String csrfToken = Encode.forHtmlAttribute(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Get Module Feedback</h1>
-		<div class="entry">
+<div id="formDiv" class="post">
+	<h1 class="title">Get Module Feedback</h1>
+	<div class="entry">
+		<div id="badData"></div>
+		<form id="theForm" action="javascript:;">
+			<p>Select the module you would like to see the feedback from</p>
 			<div id="badData"></div>
-			<form id="theForm" action="javascript:;">
-					<p>Select the module you would like to see the feedback from</p>
-					<div id="badData"></div>
-					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<table align="center">
-						<tr>
-							<td>
-								<select id="theModule" style="width: 300px">
-									<option></option>
-									<%= Getter.getModulesInOptionTags(ApplicationRoot) %>
-								</select>
-							</td>
-						</tr>
-						<tr><td align="center">
-							<div id="submitButton"><input type="submit" value="Get Feedback"/></div>
-							<div id="loadingSign" style="display: none;"><p>Loading...</p></div> 
-						</td></tr>
-					</table>
-					<div id="resultDiv"></div>
-					<script>					
+			<input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+			<table align="center">
+				<tr>
+					<td><select id="theModule" style="width: 300px">
+							<option></option>
+							<%= Getter.getModulesInOptionTags(ApplicationRoot) %>
+					</select></td>
+				</tr>
+				<tr>
+					<td align="center">
+						<div id="submitButton">
+							<input type="submit" value="Get Feedback" />
+						</div>
+						<div id="loadingSign" style="display: none;">
+							<p>Loading...</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div id="resultDiv"></div>
+			<script>					
 					$("#theForm").submit(function(){
 						var theCsrfToken = $('#csrfToken').val();
 						var theModule = $("#theModule").val();
@@ -107,11 +113,12 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						});
 					});
 					</script>
-					<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-			</form>
-		</div>
+			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+			<% } %>
+		</form>
 	</div>
-	<%
+</div>
+<%
 }
 else
 {

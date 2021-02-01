@@ -1,6 +1,1 @@
-{"data":
-   [
-     {"user":"Sean", "test": "test"},
-   
-   ]
- }
+{"data": [ {"user":"Sean", "test": "test"}, ] }

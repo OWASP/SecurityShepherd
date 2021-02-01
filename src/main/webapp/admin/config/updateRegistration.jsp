@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: updateRegistration.jsp *************************");
@@ -50,36 +52,49 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 String csrfToken = Encode.forHtmlAttribute(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	
-	<div id="formDiv" class="post">
-		<h1 class="title"><div id="displayTitle" style="display: inline;"><% if (OpenRegistration.isEnabled()) { %>Close<% } else { %>Open<% } %></div> Registration</h1>
-		<div class="entry">
-			<form id="theForm" action="javascript:;">
-				<div id="toggleDiv">
-					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<div id="closeDiv" <% if (!OpenRegistration.isEnabled()) {%>style="display: none;"<% } %>>
-						<p>This function will close the registration functionality. This will prevent users from visiting registration pages and will block requests made to Registration Servlets.</p>
-						<table align="center">
-							<tr><td colspan="2" align="center">
-								<input type="submit" id="submitButton" value="Close Registration"/>
-							</td></tr>
-						</table>
-					</div>
-					<div id="openDiv" <% if (OpenRegistration.isEnabled()) {%>style="display: none;"<% } %>>
-						<p>This function will open the registration functionality. Users will have to refresh the login page to see the link pointing to the Shepherd registration page.</p>
-						<table align="center">
-							<tr><td colspan="2" align="center">
-								<input type="submit" id="submitButton" value="Open Registration"/>
-							</td></tr>
-						</table>
-					</div>
+
+<div id="formDiv" class="post">
+	<h1 class="title">
+		<div id="displayTitle" style="display: inline;">
+			<% if (OpenRegistration.isEnabled()) { %>Close<% } else { %>Open<% } %>
+		</div>
+		Registration
+	</h1>
+	<div class="entry">
+		<form id="theForm" action="javascript:;">
+			<div id="toggleDiv">
+				<input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+				<div id="closeDiv" <% if (!OpenRegistration.isEnabled()) {%>
+					style="display: none;" <% } %>>
+					<p>This function will close the registration functionality.
+						This will prevent users from visiting registration pages and will
+						block requests made to Registration Servlets.</p>
+					<table align="center">
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								id="submitButton" value="Close Registration" /></td>
+						</tr>
+					</table>
 				</div>
-				<br />
-				<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-				<div id="resultDiv" style="display:none;" class="informationBox"></div>
-				<div id="badData"></div>
-			</form>
-			<script>					
+				<div id="openDiv" <% if (OpenRegistration.isEnabled()) {%>
+					style="display: none;" <% } %>>
+					<p>This function will open the registration functionality.
+						Users will have to refresh the login page to see the link pointing
+						to the Shepherd registration page.</p>
+					<table align="center">
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								id="submitButton" value="Open Registration" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<br />
+			<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+			<div id="resultDiv" style="display: none;" class="informationBox"></div>
+			<div id="badData"></div>
+		</form>
+		<script>					
 				$("#theForm").submit(function(){
 					//Get Data
 					var theCsrfToken = $('#csrfToken').val();
@@ -134,10 +149,11 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					});
 				});
 			</script>
-			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-		</div>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+		<% } %>
 	</div>
-	<%
+</div>
+<%
 }
 else
 {

@@ -1,5 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*,org.owasp.encoder.Encode" errorPage="" %>
-<%@ include file="translation.jsp" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*,org.owasp.encoder.Encode" errorPage=""%>
+<%@ include file="translation.jsp"%>
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: register.jsp *************************");
 
@@ -81,77 +82,123 @@ if(ses.getAttribute("errorMessage") != null)
 <head>
 <title><fmt:message key="generic.text.ssRegister" /></title>
 
-<link href="css/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="css/theCss.css" rel="stylesheet" type="text/css"
+	media="screen" />
 </head>
 <body>
-<script type="text/javascript" src="js/jquery.js"></script>
-<div id="wrapper">
-<jsp:include page="translation-select.jsp" />
-<!-- start header -->
-<div id="header">
-	<h1>Security Shepherd</h1>
-</div>
-<!-- end header -->
-<!-- start page -->
-<div id="page">
-	<!-- start content -->
-	<div id="content">
-		<div class="post" id="registerDiv">
-			<h1 class="title"><fmt:message key="generic.text.register" /></h1>
-			<%
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<div id="wrapper">
+		<jsp:include page="translation-select.jsp" />
+		<!-- start header -->
+		<div id="header">
+			<h1>Security Shepherd</h1>
+		</div>
+		<!-- end header -->
+		<!-- start page -->
+		<div id="page">
+			<!-- start content -->
+			<div id="content">
+				<div class="post" id="registerDiv">
+					<h1 class="title">
+						<fmt:message key="generic.text.register" />
+					</h1>
+					<%
 				if(!errorMessage.isEmpty()) {
 			%>
-				<p><strong><font color="red"><%=errorMessage%></font></strong></p>
-			<%
+					<p>
+						<strong><font color="red"><%=errorMessage%></font></strong>
+					</p>
+					<%
 				}
 			%>
-			<div id="badData"></div>
-			<form id="leForm" action="javascript:;">
-				<div align="center">
-				<br/>
-				<table>
-					<tr><td><p><fmt:message key="generic.text.username" /><font color="red"><small>* </small></font>:</p></td><td><input type="text" id="userName" value="<%=userName%>" minlength="3" maxlength="32" required/></td></tr>
-					<tr><td><p><fmt:message key="generic.text.password" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWord" autocomplete="OFF" minlength="8" maxlength="512" required/></td></tr>
-					<tr><td><p><fmt:message key="generic.text.confirmPasswd" /><font color="red"><small>* </small></font>:</p></td><td><input type="password" id="passWordConfirm" autocomplete="OFF" minlength="8" maxlength="512" required/></td></tr>
-					<tr><td><p><fmt:message key="generic.text.emailAddr" />:</p></td><td><input type="email" id="userAddress" value="<%=userAddress%>" maxlength="128"/></td></tr>
-					<tr><td><p><fmt:message key="generic.text.confirmEmailAddr" />:</p></td><td><input type="email" id="userAddressCnf" maxlength="128"/></td></tr>
-				</table>
-				
-				<br/>
-				<div style="width: 400px; border-color:#A878EF; border-style:dashed; background-color: #D4D4D4;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;" align="justify">
-					<center><big style="color:#A878EF;">SHEPHERD DISCLAIMER</big></center>
-					<br/>
-					<br/>
-					The Security Shepherd project is for educational purposes only. 
-					Do not attempt to use these techniques without authorization. 
-					If you are caught engaging in unauthorized hacking, 
-					most companies will take legal action. 
-					Claiming that you were doing security research 
-					will not protect you. 
-					<br/><br/>
-					Security Shepherd is a safe playground 
-					for you to improve your web application security skills
-					and only encourages white hat or ethical hacking behaviour. 
-					<br/>
+					<div id="badData"></div>
+					<form id="leForm" action="javascript:;">
+						<div align="center">
+							<br />
+							<table>
+								<tr>
+									<td><p>
+											<fmt:message key="generic.text.username" />
+											<font color="red"><small>* </small></font>:
+										</p></td>
+									<td><input type="text" id="userName" value="<%=userName%>"
+										minlength="3" maxlength="32" required /></td>
+								</tr>
+								<tr>
+									<td><p>
+											<fmt:message key="generic.text.password" />
+											<font color="red"><small>* </small></font>:
+										</p></td>
+									<td><input type="password" id="passWord"
+										autocomplete="OFF" minlength="8" maxlength="512" required /></td>
+								</tr>
+								<tr>
+									<td><p>
+											<fmt:message key="generic.text.confirmPasswd" />
+											<font color="red"><small>* </small></font>:
+										</p></td>
+									<td><input type="password" id="passWordConfirm"
+										autocomplete="OFF" minlength="8" maxlength="512" required /></td>
+								</tr>
+								<tr>
+									<td><p>
+											<fmt:message key="generic.text.emailAddr" />
+											:
+										</p></td>
+									<td><input type="email" id="userAddress"
+										value="<%=userAddress%>" maxlength="128" /></td>
+								</tr>
+								<tr>
+									<td><p>
+											<fmt:message key="generic.text.confirmEmailAddr" />
+											:
+										</p></td>
+									<td><input type="email" id="userAddressCnf"
+										maxlength="128" /></td>
+								</tr>
+							</table>
+
+							<br />
+							<div
+								style="width: 400px; border-color: #A878EF; border-style: dashed; background-color: #D4D4D4; padding-top: 5px; padding-bottom: 5px; padding-right: 5px; padding-left: 5px;"
+								align="justify">
+								<center>
+									<big style="color: #A878EF;">SHEPHERD DISCLAIMER</big>
+								</center>
+								<br /> <br /> The Security Shepherd project is for educational
+								purposes only. Do not attempt to use these techniques without
+								authorization. If you are caught engaging in unauthorized
+								hacking, most companies will take legal action. Claiming that
+								you were doing security research will not protect you. <br />
+								<br /> Security Shepherd is a safe playground for you to improve
+								your web application security skills and only encourages white
+								hat or ethical hacking behaviour. <br />
+							</div>
+							<br />
+							<center>
+								<input style="width: 350px; height: 50px;" type="submit"
+									name="submit" value="Sign me up!" />
+							</center>
+
+						</div>
+					</form>
 				</div>
-				<br/>
-				<center>
-					<input style="width:350px; height: 50px;" type="submit" name="submit" value="Sign me up!" />
-				</center>
-				
+				<div id="resultDiv"></div>
+				<div id="loadingSign" style="display: none">
+					<p>
+					<h2 class="title">Enrolling Now</h2>
+					<p>Please wait as you are enrolled for your Security Shepherd
+						account.</p>
+					</p>
 				</div>
-			</form>
+			</div>
+			<!-- end content -->
+			<!-- start sidebar -->
+			<!-- end sidebar -->
 		</div>
-		<div id="resultDiv"></div>
-		<div id="loadingSign" style="display: none"><p><h2 class="title">Enrolling Now</h2><p>Please wait as you are enrolled for your Security Shepherd account.</p></p></div>
 	</div>
-	<!-- end content -->
-	<!-- start sidebar -->
-	<!-- end sidebar -->
-</div>
-</div>
-<!-- end page -->
-<script>
+	<!-- end page -->
+	<script>
 	jQuery.fn.center = function () 
 	{
 		this.css("position","absolute");
@@ -231,7 +278,8 @@ if(ses.getAttribute("errorMessage") != null)
 		}
 	});
 </script>
-<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

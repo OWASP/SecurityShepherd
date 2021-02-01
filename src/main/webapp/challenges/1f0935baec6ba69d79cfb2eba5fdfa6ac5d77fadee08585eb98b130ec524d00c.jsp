@@ -1,5 +1,8 @@
 <%@page import="servlets.module.challenge.DirectObjectBankLogin"%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, servlets.module.challenge.DirectObjectBankLogin" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java"
+	import="utils.*, servlets.module.challenge.DirectObjectBankLogin"
+	errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
@@ -62,62 +65,87 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= levelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= levelName %></h2>
-			<p> 
-				<%= bundle.getString("challenge.whatToDo") %>
-				<br/>
-				<br/>
-				<h1 class='title'><%= bundle.getString("insecureBank.title") %></h1>
-				<p><%= bundle.getString("insecureBank.message") %></p>
-				<div id="unauthDiv" <% if(bankSessionDetected){ %> style="display: none;" <% } %>>
-					<h2 class="title"><%= bundle.getString("insecureBank.signInNow") %></h2>
-					<p><%= bundle.getString("insecureBank.signInNow.message") %></p>
-					<div id="loginFormDiv">
-						<form id="loginForm" action="javascript:;">
-							<table>
-								<tr><td><%= bundle.getString("loginForm.holder") %> </td><td><input type="text" id="loginAccountHolder" autocomplete="off"></td></tr>
-								<tr><td><%= bundle.getString("loginForm.password") %> </td><td><input type="password" id="loginAccountPassword" autocomplete="off"></td></tr>
-								<tr><td colspan="2"><input type="submit" value="<%= bundle.getString("loginForm.signIn") %>"></td></tr>
-							</table>
-						</form>
-					</div>
-					<p style="display: none;" id="loginLoadingSign"><%= bundle.getString("form.loading") %></p>
-					<div id="loginResultsDiv"></div>
-					<br>
-					<br>
-					<h2 class="title"><%= bundle.getString("register.makeAccount") %></h2>
-					<p><%= bundle.getString("register.makeAccount.message") %></p>
-					<div id="registrationFormDiv">
-						<form id="registrationForm" action="javascript:;">
-							<table>
-								<tr><td><%= bundle.getString("loginForm.holder") %> </td><td><input type="text" id="registrationAccountHolder" autocomplete="off"></td></tr>
-								<tr><td><%= bundle.getString("loginForm.password") %> </td><td><input type="password" id="registrationAccountPassword" autocomplete="off"></td></tr>
-								<tr><td colspan="2"><input type="submit" value="<%= bundle.getString("register.createAccount") %>"></td></tr>
-							</table>
-						</form>
-					</div>
-					<p style="display: none;" id="registrationLoadingSign"><%= bundle.getString("form.loading") %></p>
-					<div id="registrationResultsDiv"></div>
-				</div>
-				<div id="authenticatedDiv" <% if(!bankSessionDetected){ %> style="display: none;"<% } %>>
-				<% if(bankSessionDetected){ %>
-					<%= DirectObjectBankLogin.bankForm(currentBankAccountNumber, getServletContext().getRealPath(""), ses) %>
-				<% } %>
-				</div>
-			</p>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= levelName %></h2>
+		<p>
+			<%= bundle.getString("challenge.whatToDo") %>
+			<br /> <br />
+		<h1 class='title'><%= bundle.getString("insecureBank.title") %></h1>
+		<p><%= bundle.getString("insecureBank.message") %></p>
+		<div id="unauthDiv" <% if(bankSessionDetected){ %>
+			style="display: none;" <% } %>>
+			<h2 class="title"><%= bundle.getString("insecureBank.signInNow") %></h2>
+			<p><%= bundle.getString("insecureBank.signInNow.message") %></p>
+			<div id="loginFormDiv">
+				<form id="loginForm" action="javascript:;">
+					<table>
+						<tr>
+							<td><%= bundle.getString("loginForm.holder") %></td>
+							<td><input type="text" id="loginAccountHolder"
+								autocomplete="off"></td>
+						</tr>
+						<tr>
+							<td><%= bundle.getString("loginForm.password") %></td>
+							<td><input type="password" id="loginAccountPassword"
+								autocomplete="off"></td>
+						</tr>
+						<tr>
+							<td colspan="2"><input type="submit"
+								value="<%= bundle.getString("loginForm.signIn") %>"></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<p style="display: none;" id="loginLoadingSign"><%= bundle.getString("form.loading") %></p>
+			<div id="loginResultsDiv"></div>
+			<br> <br>
+			<h2 class="title"><%= bundle.getString("register.makeAccount") %></h2>
+			<p><%= bundle.getString("register.makeAccount.message") %></p>
+			<div id="registrationFormDiv">
+				<form id="registrationForm" action="javascript:;">
+					<table>
+						<tr>
+							<td><%= bundle.getString("loginForm.holder") %></td>
+							<td><input type="text" id="registrationAccountHolder"
+								autocomplete="off"></td>
+						</tr>
+						<tr>
+							<td><%= bundle.getString("loginForm.password") %></td>
+							<td><input type="password" id="registrationAccountPassword"
+								autocomplete="off"></td>
+						</tr>
+						<tr>
+							<td colspan="2"><input type="submit"
+								value="<%= bundle.getString("register.createAccount") %>"></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<p style="display: none;" id="registrationLoadingSign"><%= bundle.getString("form.loading") %></p>
+			<div id="registrationResultsDiv"></div>
 		</div>
-		<script>
+		<div id="authenticatedDiv" <% if(!bankSessionDetected){ %>
+			style="display: none;" <% } %>>
+			<% if(bankSessionDetected){ %>
+			<%= DirectObjectBankLogin.bankForm(currentBankAccountNumber, getServletContext().getRealPath(""), ses) %>
+			<% } %>
+		</div>
+		</p>
+	</div>
+	<script>
 			$("#loginForm").submit(function(){
 				var theAccountHolder = $("#loginAccountHolder").val();
 				var theAccountPass = $("#loginAccountPassword").val();
@@ -311,7 +339,8 @@ if (request.getSession() != null)
 				console.log("Logout Function Complete");
 			}
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

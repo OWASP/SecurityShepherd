@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BrokenCrypto2</string>
-    <string name="action_settings">Settings</string>
-    <string name="message1">pjsxWD82Ui6+p7BdgYS8V3Ft5ibZ6RdDCFa9v1NRvXfzgITN75kIMucd1XK2267q</string>
-    <string name="message2">IUChs+E0CvK0scbx4ZhDg3EMMPNyMSCDJc2ClW27IiPvDCHP/c+yWj+51TA/E6DznpueQPzdJK0=</string>
-    <string name="message3">C1q645b4hIo=</string>
+	<string name="app_name">BrokenCrypto2</string>
+	<string name="action_settings">Settings</string>
+	<string name="message1">pjsxWD82Ui6+p7BdgYS8V3Ft5ibZ6RdDCFa9v1NRvXfzgITN75kIMucd1XK2267q</string>
+	<string name="message2">IUChs+E0CvK0scbx4ZhDg3EMMPNyMSCDJc2ClW27IiPvDCHP/c+yWj+51TA/E6DznpueQPzdJK0=</string>
+	<string name="message3">C1q645b4hIo=</string>
 
 
 </resources>

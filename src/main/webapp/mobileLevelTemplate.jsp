@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, org.owasp.encoder.Encode" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*, org.owasp.encoder.Encode" errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 
@@ -47,24 +48,24 @@ catch (Exception e)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= i18nLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
-	</script> 
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= i18nLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
+</script>
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= i18nLevelName %>template</h2>
-			<p> 
-				
-				<%= bundle.getString("paragraph.info.1") %>
-				<br/>
-					
-				<br/>
-				<% /* IF you need a form - Present it like this */ %>
-				<%
+	<div id="contentDiv">
+		<h2 class="title"><%= i18nLevelName %>template
+		</h2>
+		<p>
+
+			<%= bundle.getString("paragraph.info.1") %>
+			<br /> <br />
+			<% /* IF you need a form - Present it like this */ %>
+			<%
 				/*
 				<br />
 				<br />
@@ -82,10 +83,10 @@ catch (Exception e)
 				<div id="resultsDiv"></div>
 				*/
 				%>
-			</p>
-		</div>
-		<% /*If you need to call the Server Do it like this */ %>
-		<%
+		</p>
+	</div>
+	<% /*If you need to call the Server Do it like this */ %>
+	<%
 		/*
 		<script>
 			$("#leForm").submit(function(){
@@ -121,6 +122,7 @@ catch (Exception e)
 		</script>
 		*/
 		%>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
