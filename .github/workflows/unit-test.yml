@@ -21,6 +21,6 @@ jobs:
         with:
           java-version: 1.8
       - name: Start MYSQL
-        run: service mysql start
+        run: sudo service mysql start
       - name: Unit Tests
         run: mvn test -B
