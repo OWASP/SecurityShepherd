@@ -1,7 +1,7 @@
 name: Intergration Tests
 on: push
 jobs:
-  build:
+  intergration-tests:
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -18,13 +18,13 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Enable MYSQL
+      - name: Enable MYSQL Server
         run:
           sudo systemctl enable mysql.service
-      - name: Start MYSQL
+      - name: Start MYSQL Server
         run: |
           sudo /etc/init.d/mysql start
-      - name: Test MYSQL
+      - name: Test MYSQL Server
         run: mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS test;'
-      - name: Intergration Tests
-        run: mvn test -B
+      - name: Java and MYSQL Intergration Tests
+        run: mvn test -B -e -X

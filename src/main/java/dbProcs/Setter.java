@@ -391,6 +391,7 @@ public class Setter {
 			callstmnt = conn.prepareStatement(whatToDo);
 			callstmnt.setString(1, csrfToken);
 			callstmnt.setString(2, userId);
+			log.debug("Executing: " + whatToDo);
 			callstmnt.execute();
 			result = true;
 			callstmnt.close();
