@@ -98,7 +98,7 @@ public class TestProperties {
 
 	/**
 	 * Bit of a Hack to get JUnits to run inside of
-	 * 
+	 *
 	 * @param log
 	 */
 	public static void setTestPropertiesFileDirectory(org.apache.log4j.Logger log) {
@@ -113,7 +113,7 @@ public class TestProperties {
 	/**
 	 * Method to simulate login servlet interaction. Can't seem to recyle the method
 	 * in LoginTest with the MockRequests
-	 * 
+	 *
 	 * @param userName User to Sign in
 	 * @param password User Password to use to Sign in
 	 * @param theClass Class of the User
@@ -163,14 +163,14 @@ public class TestProperties {
 	/**
 	 * This method will sign in as a User, or create the user and sign in as them.
 	 * If this fails it will throw an Exception
-	 * 
+	 *
 	 * @param applicationRoot Context of running application
 	 * @param userName        The user name of the user you want to create or sign
 	 *                        in as
 	 * @param password        The password of the user you want to create or sign in
 	 *                        as
 	 * @return Boolean value depicting if the user exists and can be authenticated
-	 * 
+	 *
 	 */
 	public static boolean verifyTestUser(org.apache.log4j.Logger log, String applicationRoot, String userName,
 			String password) throws SQLException {
@@ -195,7 +195,7 @@ public class TestProperties {
 	/**
 	 * This method will sign in as a User, or create the user and sign in as them.
 	 * If this fails it will throw an Exception
-	 * 
+	 *
 	 * @param applicationRoot Context of running application
 	 * @param userName        The user name of the user you want to create or sign
 	 *                        in as
@@ -228,7 +228,7 @@ public class TestProperties {
 	/**
 	 * This method will sign in as a User, or create the user and sign in as them.
 	 * If this fails it will throw an Exception
-	 * 
+	 *
 	 * @param applicationRoot Context of running application
 	 * @param userName        The user name of the user you want to create or sign
 	 *                        in as
@@ -260,14 +260,14 @@ public class TestProperties {
 	/**
 	 * This method will sign in as an admin, or create the admin and sign in as
 	 * them. If this fails it will throw an Exception
-	 * 
+	 *
 	 * @param applicationRoot Context of running application
 	 * @param userName        The user name of the user you want to create or sign
 	 *                        in as
 	 * @param password        The password of the user you want to create or sign in
 	 *                        as
 	 * @return Boolean value depicting if the user exists and can be authenticated
-	 * 
+	 *
 	 */
 	public static boolean verifyTestAdmin(org.apache.log4j.Logger log, String applicationRoot, String userName,
 			String password) throws SQLException {
@@ -292,7 +292,7 @@ public class TestProperties {
 	/**
 	 * Searches for class based on class name. If nothing is found, the class is
 	 * created and the new class Id is returned
-	 * 
+	 *
 	 * @param className Name of the class you wish to search / create
 	 * @return The Identifier of the class owning the name submitted
 	 */
@@ -322,7 +322,7 @@ public class TestProperties {
 	/**
 	 * This method will login/create a PLAYER, open all modules, Collect the Module
 	 * Adddress and Mark the moduleId as complete
-	 * 
+	 *
 	 * @param log             Logger
 	 * @param userName        Username to complete level with
 	 * @param userPass        Password to complete level with
@@ -397,16 +397,16 @@ public class TestProperties {
 
 	/**
 	 * Create a mysql database properties file
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public static void createMysqlResource() throws IOException {
-		createMysqlResource("localhost", 3306, "core", "root", "");
+		createMysqlResource("localhost", 8888, "core", "root", "password");
 	}
 
 	/**
 	 * Delete the mysql database properties file
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public static void deleteMysqlResource() {
@@ -445,7 +445,7 @@ public class TestProperties {
 
 	/**
 	 * Create a mongo database properties file
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public static void createMongoResource() throws IOException {
@@ -454,7 +454,7 @@ public class TestProperties {
 
 	/**
 	 * Delete the mongo database properties file
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public static void deleteMongoResource() {
