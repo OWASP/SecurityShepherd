@@ -27,6 +27,6 @@ jobs:
         run: |
           sudo /etc/init.d/mysql start
       - name: Test MYSQL
-        run: mysql --port 3306 -u 'root' -ppassword -e 'CREATE DATABASE IF NOT EXISTS core;'
+        run: mysql -h 127.0.0.1 --port 3306 -u 'root' -ppassword -e 'CREATE DATABASE IF NOT EXISTS core;'
       - name: Unit Tests
         run: mvn test -E -B
