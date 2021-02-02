@@ -1,4 +1,4 @@
-name: MYSQL
+name: Intergration Tests
 on: push
 jobs:
   build:
@@ -8,7 +8,7 @@ jobs:
         image: mysql:5.5
         env:
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: test
+          MYSQL_DATABASE: core
         ports:
             - '8888:3306'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -26,3 +26,5 @@ jobs:
           sudo /etc/init.d/mysql start
       - name: Test MYSQL
         run: mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS test;'
+      - name: Intergration Tests
+        run: mvn test -B
