@@ -12,7 +12,7 @@ jobs:
                 MYSQL_DATABASE: core
                 MYSQL_ROOT_PASSWORD: password
             ports:
-                - 13306:3306
+                - 3306
             options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v2
@@ -23,8 +23,8 @@ jobs:
       - name: Start MYSQL
         run:
           sudo systemctl enable mysql.service
-          sudo systemctl start mysql.service
+          sudo service mysql start
       - name: Test MYSQL
-        run: mysql --port 13306 -u 'root' -ppassword -e 'CREATE DATABASE IF NOT EXISTS core;'
+        run: mysql --port 3306 -u 'root' -ppassword -e 'CREATE DATABASE IF NOT EXISTS core;'
       - name: Unit Tests
         run: mvn test -E -B
