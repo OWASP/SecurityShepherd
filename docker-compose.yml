@@ -3,6 +3,8 @@ services:
   db:
     image: ${IMAGE_MYSQL}
     container_name: ${CONTAINER_MYSQL}
+    volumes:
+    - data:/var/lib/mysql
     env_file:
       - .env
     build:
@@ -25,6 +27,8 @@ services:
   web:
     image: ${IMAGE_TOMCAT}
     container_name: ${CONTAINER_TOMCAT}
+    volumes:
+    - conf:/usr/local/tomcat/conf
     env_file:
       - .env
     build:
@@ -48,3 +52,6 @@ services:
       - $HTTPS_PORT:8443
     depends_on:
       - db
+volumes:
+  data:
+  conf:
