@@ -20,10 +20,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Start MYSQL
+      - name: Enable MYSQL
         run:
           sudo systemctl enable mysql.service
-          sudo service mysql start
+      - name: Start MYSQL
+        run: |
+          sudo /etc/init.d/mysql start
       - name: Test MYSQL
         run: mysql --port 3306 -u 'root' -ppassword -e 'CREATE DATABASE IF NOT EXISTS core;'
       - name: Unit Tests
