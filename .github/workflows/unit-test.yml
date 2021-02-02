@@ -10,7 +10,7 @@ jobs:
             image: mysql:5.5
             env:
                 MYSQL_DATABASE: core
-                MYSQL_ROOT_PASSWORD: root
+                MYSQL_ROOT_PASSWORD: password
             ports:
                 - 13306:3306
             options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -21,6 +21,6 @@ jobs:
         with:
           java-version: 1.8
       - name: Test MYSQL
-        run: mysql --port 13306 -u 'root' -p 'password' -e 'CREATE DATABASE IF NOT EXISTS core;'
+        run: mysql --port 13306 -u 'root' -ppassword -e 'CREATE DATABASE IF NOT EXISTS core;'
       - name: Unit Tests
         run: mvn test -E -B
