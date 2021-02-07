@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: changeLevelLayout.jsp *************************");
@@ -49,55 +51,73 @@ if (request.getSession() != null) //Session If
 		
 		String csrfToken = Encode.forHtmlAttribute(tokenCookie.getValue());
 %>
-			<div id="formDiv" class="post">
-				<h1 class="title">Current Mode: <div id="currentModeTitle" style="display: inline;"><%= ModulePlan.currentMode() %></div></h1>
-				<div class="entry">
-					<p>
-						You can change the layout in which modules are presented to players. Use the following functions to change the current Shepherd Mode.
-					</p>
-					<div id="resultDiv" style="display: none" class="informationBox"></div>
-					<div id="badData" style="display: none"></div>
-					
-					<!-- CTF Mode Section -->
-					<div id="ctfDiv" <% if(ModulePlan.isIncrementalFloor()) { %>style="display: none;"<% } %>>
-						<h2 class="title">Enable CTF Mode</h2>
-						<p>
-							When Shepherd has been deployed in the CTF mode, a user can only access one uncompleted module at a time. The first module presented to the user is the easiest in Security Shepherd, which has not been marked as closed by the administrator. 
-							The levels increase slowly in difficulty and jump from one topic to another. This layout is the recommended setting when using Security Shepherd for a competitive training scenario.
-						</p>
-						<a href="javascript:;" style="text-decoration: none;" id="enableCtfMode" title="Enable CTF Mode">
-							<div class="menuButton">Enable CTF Mode</div>
-						</a>
-					</div>
-					<div id="ctfLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-					<br>
-					
-					<!-- Open Floor Mode Section -->
-					<div id="openFloor" <% if(ModulePlan.isOpenFloor()) { %>style="display: none;"<% } %>>
-						<h2 class="title">Enable Open Floor Mode</h2>
-						<p>
-							When Shepherd has been deployed in the Open Floor mode, a user can access any level that is marked as open by the admin. Modules are sorted into their Security Risk Categories, and the lessons are presented first. This layout is ideal for users wishing to explore security risks.
-						</p>
-						<a href="javascript:;" style="text-decoration: none;" id="enableOpenFloorMode" title="Enable Open Floor Mode">
-							<div class="menuButton">Enable Open Floor Mode</div>
-						</a>
-					</div>
-					<div id="openFloorLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-					<br>
-					
-					<!-- Tournament Mode Section -->
-					<div id="tournament" <%if(ModulePlan.isTournamentFloor()) {%>style="display: none;"<% } %>>
-						<h2 class="title">Enable Tournament Mode</h2>
-						<p>
-							When Shepherd has been deployed in the Tournament Mode, a user can access any level that is marked as open by the admin. Modules are sorted into difficulty bands, from least to most difficult. This layout is ideal when Shepherd is being utilised as an open application security competition.
-						</p>	
-						<a href="javascript:;" style="text-decoration: none;" id="enableTournamentMode" title="Enable Tournament Mode">
-							<div class="menuButton">Enable Tournament Mode</div>
-						</a>
-					</div>
-					<div id="tournamentLoadingDiv" style="display:none;" class="menuButton">Loading...</div>
-					<br>
-					<script>
+<div id="formDiv" class="post">
+	<h1 class="title">
+		Current Mode:
+		<div id="currentModeTitle" style="display: inline;"><%= ModulePlan.currentMode() %></div>
+	</h1>
+	<div class="entry">
+		<p>You can change the layout in which modules are presented to
+			players. Use the following functions to change the current Shepherd
+			Mode.</p>
+		<div id="resultDiv" style="display: none" class="informationBox"></div>
+		<div id="badData" style="display: none"></div>
+
+		<!-- CTF Mode Section -->
+		<div id="ctfDiv" <% if(ModulePlan.isIncrementalFloor()) { %>
+			style="display: none;" <% } %>>
+			<h2 class="title">Enable CTF Mode</h2>
+			<p>When Shepherd has been deployed in the CTF mode, a user can
+				only access one uncompleted module at a time. The first module
+				presented to the user is the easiest in Security Shepherd, which has
+				not been marked as closed by the administrator. The levels increase
+				slowly in difficulty and jump from one topic to another. This layout
+				is the recommended setting when using Security Shepherd for a
+				competitive training scenario.</p>
+			<a href="javascript:;" style="text-decoration: none;"
+				id="enableCtfMode" title="Enable CTF Mode">
+				<div class="menuButton">Enable CTF Mode</div>
+			</a>
+		</div>
+		<div id="ctfLoadingDiv" style="display: none;" class="menuButton">Loading...</div>
+		<br>
+
+		<!-- Open Floor Mode Section -->
+		<div id="openFloor" <% if(ModulePlan.isOpenFloor()) { %>
+			style="display: none;" <% } %>>
+			<h2 class="title">Enable Open Floor Mode</h2>
+			<p>When Shepherd has been deployed in the Open Floor mode, a user
+				can access any level that is marked as open by the admin. Modules
+				are sorted into their Security Risk Categories, and the lessons are
+				presented first. This layout is ideal for users wishing to explore
+				security risks.</p>
+			<a href="javascript:;" style="text-decoration: none;"
+				id="enableOpenFloorMode" title="Enable Open Floor Mode">
+				<div class="menuButton">Enable Open Floor Mode</div>
+			</a>
+		</div>
+		<div id="openFloorLoadingDiv" style="display: none;"
+			class="menuButton">Loading...</div>
+		<br>
+
+		<!-- Tournament Mode Section -->
+		<div id="tournament" <%if(ModulePlan.isTournamentFloor()) {%>
+			style="display: none;" <% } %>>
+			<h2 class="title">Enable Tournament Mode</h2>
+			<p>When Shepherd has been deployed in the Tournament Mode, a user
+				can access any level that is marked as open by the admin. Modules
+				are sorted into difficulty bands, from least to most difficult. This
+				layout is ideal when Shepherd is being utilised as an open
+				application security competition.</p>
+			<a href="javascript:;" style="text-decoration: none;"
+				id="enableTournamentMode" title="Enable Tournament Mode">
+				<div class="menuButton">Enable Tournament Mode</div>
+			</a>
+		</div>
+		<div id="tournamentLoadingDiv" style="display: none;"
+			class="menuButton">Loading...</div>
+		<br>
+		<script>
 					var theCsrfToken = "<%= csrfToken %>";
 					var theRefreshError = "Could not Refresh Menu";
 					
@@ -246,10 +266,11 @@ if (request.getSession() != null) //Session If
 						});
 					});
 					</script>
-					<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-				</div>
-			</div>
-	<% 
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+		<% } %>
+	</div>
+</div>
+<% 
 	} //Valid Session If
 	else
 	{

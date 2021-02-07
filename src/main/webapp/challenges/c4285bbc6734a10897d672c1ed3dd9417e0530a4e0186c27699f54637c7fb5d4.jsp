@@ -1,5 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="servlets.module.challenge.SecurityMisconfigStealTokens, java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
-<%@ page import="java.util.Locale, java.util.ResourceBundle" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java"
+	import="servlets.module.challenge.SecurityMisconfigStealTokens, java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
  * Security Misconfiguration Cookie Challenge
@@ -78,41 +81,47 @@ String i18nLevelName = bundle.getString("securityMisconfig.stealTokens.challenge
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= i18nLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= i18nLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= i18nLevelName %></h2>
-			<p> 
-				<%= bundle.getString("securityMisconfig.stealTokens.description") %>
-				<br/>
-				<br/>
-				<img height="25px" width="25px" style="display: block;" alt="<%= bundle.getString("securityMisconfig.stealTokens.whyThisImageIsHere") %>" title="<%= bundle.getString("securityMisconfig.stealTokens.whyThisImageIsHere") %>" src="<%= Encode.forHtmlAttribute(challengeUrl) %>">
-				<br/>
-				<br/>
-				<%= bundle.getString("securityMisconfig.stealTokens.haveSomebodyOnYourNetwork") %>
-				<br/>
-				<br/>
-				<%= bundle.getString("securityMisconfig.stealTokens.stealTokenThenDoThis") %>
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>
-						<div id="submitButton"><input type="submit" value="<%= bundle.getString("form.securityMisconfig.stealTokens.submit") %>"/></div>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= i18nLevelName %></h2>
+		<p>
+			<%= bundle.getString("securityMisconfig.stealTokens.description") %>
+			<br /> <br /> <img height="25px" width="25px" style="display: block;"
+				alt="<%= bundle.getString("securityMisconfig.stealTokens.whyThisImageIsHere") %>"
+				title="<%= bundle.getString("securityMisconfig.stealTokens.whyThisImageIsHere") %>"
+				src="<%= Encode.forHtmlAttribute(challengeUrl) %>"> <br /> <br />
+			<%= bundle.getString("securityMisconfig.stealTokens.haveSomebodyOnYourNetwork") %>
+			<br /> <br />
+			<%= bundle.getString("securityMisconfig.stealTokens.stealTokenThenDoThis") %>
+		<form id="leForm" action="javascript:;">
+			<table>
+				<tr>
+					<td>
+						<div id="submitButton">
+							<input type="submit"
+								value="<%= bundle.getString("form.securityMisconfig.stealTokens.submit") %>" />
+						</div>
 						<p style="display: none;" id="loadingSign"><%= bundle.getString("form.challenge.loading") %></p>
-					</td></tr>
-					</table>
-				</form>
-				<div id="resultsDiv"></div>
-			</p>
-		</div>
-		<script>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div id="resultsDiv"></div>
+		</p>
+	</div>
+	<script>
 			$("#leForm").submit(function(){
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
@@ -142,7 +151,8 @@ String i18nLevelName = bundle.getString("securityMisconfig.stealTokens.challenge
 				});
 			});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

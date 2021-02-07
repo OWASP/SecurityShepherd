@@ -1,4 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
@@ -53,26 +56,29 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= i18nLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= i18nLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= i18nLevelName %></h2>
-			<p> 
-				<%= bundle.getString("insecureCryptoStorage.1.whatToDo") %>
-				<br/>
-				<br/>
-				<a>Ymj wjxzqy pjd ktw ymnx qjxxts nx ymj ktqqtbnsl xywnsl; rdqtajqdmtwxjwzssnslymwtzlmymjknjqibmjwjfwjdtzltnslbnymdtzwgnlf</a>
-			</p>
-		</div>
-		<script>			
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= i18nLevelName %></h2>
+		<p>
+			<%= bundle.getString("insecureCryptoStorage.1.whatToDo") %>
+			<br /> <br /> <a>Ymj wjxzqy pjd ktw ymnx qjxxts nx ymj ktqqtbnsl
+				xywnsl;
+				rdqtajqdmtwxjwzssnslymwtzlmymjknjqibmjwjfwjdtzltnslbnymdtzwgnlf</a>
+		</p>
+	</div>
+	<script>			
 			$('#hideLesson').click(function(){
 				$("#lessonIntro").hide("slow", function(){
 					$("#showLesson").show("fast");
@@ -85,7 +91,8 @@
 				});
 			});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

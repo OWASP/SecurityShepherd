@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*, servlets.admin.userManagement.GetPlayersByClass" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*, servlets.admin.userManagement.GetPlayersByClass"
+	errorPage=""%>
 
 <%
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: addPlayers.jsp *************************");
@@ -65,18 +67,18 @@ catch(SQLException e)
 	showClasses = false;
 }
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Delete Player</h1>
-		<div class="entry">
-			<form id="theForm" action="javascript:;">
-				<p>Use this function to delete players</p>
-				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
-				<div id="deletePlayerDiv">
-					<table align="center">
-						<tr>
-							<td colspan="2">
-								<p>Pick the class of the player you wish to delete</p>
-								<center>
+<div id="formDiv" class="post">
+	<h1 class="title">Delete Player</h1>
+	<div class="entry">
+		<form id="theForm" action="javascript:;">
+			<p>Use this function to delete players</p>
+			<input type="hidden" id="csrfToken" value="<%=csrfToken%>" />
+			<div id="deletePlayerDiv">
+				<table align="center">
+					<tr>
+						<td colspan="2">
+							<p>Pick the class of the player you wish to delete</p>
+							<center>
 								<select id="selectClass" style="width: 300px;">
 									<option value="">Unassigned Players</option>
 									<%
@@ -89,8 +91,8 @@ catch(SQLException e)
 													String classId = Encode.forHtmlAttribute(classList.getString(1));
 													String classYearName = Encode.forHtml(classList.getString(3)) + " " + Encode.forHtml(classList.getString(2));
 													%>
-													<option value="<%=classId%>"><%=classYearName%></option>
-													<%
+									<option value="<%=classId%>"><%=classYearName%></option>
+									<%
 												}
 												while(classList.next());
 												classList.first();
@@ -103,36 +105,36 @@ catch(SQLException e)
 										}
 									%>
 								</select>
+							</center>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<p>Select the player that you want to delete</p>
+							<div id="playerSelect">
+								<center>
+									<select id='playerId' style='width: 300px;'>
+										<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
+									</select>
 								</center>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<p>Select the player that you want to delete</p>
-								<div id="playerSelect">	
-									<center>
-										<select id='playerId' style='width: 300px;'>
-											<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
-										</select>
-									</center>
-								</div>
-								<br>
-							</td>
-						</tr>
-						<tr><td colspan="2" align="center">
-							<input type="submit" id="submitButton" value="Delete Player"/>
-						</td></tr>
-					</table>
-				</div>
-			</form>
-		</div>
-		<br>
-		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-		<div id="resultDiv" style="display:none;" class="informationBox"></div>
-		<div id="badData"></div>
+							</div> <br>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center"><input type="submit"
+							id="submitButton" value="Delete Player" /></td>
+					</tr>
+				</table>
+			</div>
+		</form>
 	</div>
-	
-	<script>
+	<br>
+	<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+	<div id="resultDiv" style="display: none;" class="informationBox"></div>
+	<div id="badData"></div>
+</div>
+
+<script>
 		$("#selectClass").change(function () {
 			var theCsrfToken = $('#csrfToken').val();
 			var ajaxCall = $.ajax({
@@ -222,7 +224,8 @@ catch(SQLException e)
 		});
 	</script>
 
-<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
 <%
 }
 else

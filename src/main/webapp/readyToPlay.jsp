@@ -1,6 +1,7 @@
-<%@ page import="org.owasp.encoder.Encode, utils.ShepherdLogManager" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"  language="java" import="utils.*" errorPage="" %>
-<%@ include file="translation.jsp" %>
+<%@ page import="org.owasp.encoder.Encode, utils.ShepherdLogManager"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*" errorPage=""%>
+<%@ include file="translation.jsp"%>
 <%
 /**
  * This file assigns the tracking cookie for the exposed server
@@ -45,18 +46,24 @@
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title><fmt:message key="readyToPlay.title.readyToPlay" /></title>
-	<link href="css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title><fmt:message key="readyToPlay.title.readyToPlay" /></title>
+<link href="css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
+	media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="js/jquery.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="readyToPlay.title.enteredGame" /></h2>
-			<p> <fmt:message key="readyToPlay.text.info.enteredGame" /> </p>
-			<%= Analytics.sponsorshipMessage(new Locale(Validate.validateLanguage(request.getSession()))) %>
-			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-		</div>
+	<div id="contentDiv">
+		<h2 class="title">
+			<fmt:message key="readyToPlay.title.enteredGame" />
+		</h2>
+		<p>
+			<fmt:message key="readyToPlay.text.info.enteredGame" />
+		</p>
+		<%= Analytics.sponsorshipMessage(new Locale(Validate.validateLanguage(request.getSession()))) %>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+		<% } %>
+	</div>
 </body>
 </html>
 <%

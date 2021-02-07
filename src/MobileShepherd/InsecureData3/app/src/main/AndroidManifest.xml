@@ -1,41 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mobshep.insecuredata3" >
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.mobshep.insecuredata3">
 
-    <permission
-        android:name="com.mobshep.IDS3.START_ACTIVITY"
-        android:icon="@mipmap/ic_launcher"
-        android:logo="@mipmap/ic_launcher"
-        android:protectionLevel="dangerous" >
-    </permission>
+	<permission android:name="com.mobshep.IDS3.START_ACTIVITY"
+		android:icon="@mipmap/ic_launcher" android:logo="@mipmap/ic_launcher"
+		android:protectionLevel="dangerous">
+	</permission>
 
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+	<application android:allowBackup="true"
+		android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
+		android:theme="@style/AppTheme">
+		<activity android:name=".MainActivity"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
 
-        <activity
-            android:name=".LoggedIn"
-            android:label="@string/app_name"
-            android:permission="com.app.mobshep.IDS3.START_ACTIVITY">
-            <intent-filter>
-                <action android:name=".LoggedIn" />
+		<activity android:name=".LoggedIn"
+			android:label="@string/app_name"
+			android:permission="com.app.mobshep.IDS3.START_ACTIVITY">
+			<intent-filter>
+				<action android:name=".LoggedIn" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
 
-    </application>
+	</application>
 
 </manifest>

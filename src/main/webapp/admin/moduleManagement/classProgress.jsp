@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: classProgress.jsp *************************");
@@ -61,20 +63,19 @@ catch(SQLException e)
 	showClasses = false;
 }
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Get Progress</h1>
-		<div class="entry">
+<div id="formDiv" class="post">
+	<h1 class="title">Get Progress</h1>
+	<div class="entry">
+		<div id="badData"></div>
+		<form id="theForm" action="javascript:;">
+			<p>Select the class you would like to see the progress of</p>
 			<div id="badData"></div>
-			<form id="theForm" action="javascript:;">
-					<p>Select the class you would like to see the progress of</p>
-					<div id="badData"></div>
-					<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
-					<table align="center">
-						<tr>
-							<td>
-							<select id="classId">
-								<option value=""></option>
-								<%
+			<input type="hidden" id="csrfToken" value="<%=csrfToken%>" />
+			<table align="center">
+				<tr>
+					<td><select id="classId">
+							<option value=""></option>
+							<%
 									if(showClasses)
 														{
 															try
@@ -84,8 +85,8 @@ catch(SQLException e)
 																	String classId = Encode.forHtmlAttribute(classList.getString(1));
 																	String classYearName = Encode.forHtml(classList.getString(3)) + " " + Encode.forHtml(classList.getString(2));
 								%>
-												<option value="<%=classId%>"><%=classYearName%></option>
-											<%
+							<option value="<%=classId%>"><%=classYearName%></option>
+							<%
 												}
 																			while(classList.next());
 																		}
@@ -96,18 +97,21 @@ catch(SQLException e)
 																		}
 																	}
 											%>
-							</select>
-							</td>
-						</tr>
-						<tr><td align="center">
-							<div id="submitButton"><input type="submit" value="Get Progress"/></div>
-							<div id="loadingSign" style="display: none;"><p>Loading...</p></div> 
-						</td></tr>
-					</table>
-					<div id="resultDiv">
-					
-					</div>
-					<script>					
+					</select></td>
+				</tr>
+				<tr>
+					<td align="center">
+						<div id="submitButton">
+							<input type="submit" value="Get Progress" />
+						</div>
+						<div id="loadingSign" style="display: none;">
+							<p>Loading...</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div id="resultDiv"></div>
+			<script>					
 					$("#theForm").submit(function(){
 						var theCsrfToken = $('#csrfToken').val();
 						var theClass = $("#classId").val();
@@ -141,11 +145,12 @@ catch(SQLException e)
 						});
 					});
 					</script>
-					<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-			</form>
-		</div>
+			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+			<% } %>
+		</form>
 	</div>
-	<%
+</div>
+<%
 }
 else
 {

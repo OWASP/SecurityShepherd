@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*, servlets.admin.userManagement.DowngradeAdmin" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*, servlets.admin.userManagement.DowngradeAdmin"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: downgradeAdmins.jsp *************************");
@@ -65,22 +67,22 @@ catch(SQLException e)
 	showAdmins = false;
 }
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Downgrade Admin</h1>
-		<div id="downgradeDiv" class="entry">
-			<form id="theForm" action="javascript:;">
-				<p>Please select the admin that you would like to downgrade to player</p>
-				<div id="badData"></div>
-				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
-				<table align="center">
-					<tr>
-						<td>
-							<p>Admins:</p>
-						</td>
-						<td>
-							<select id="selectClass">
-								<option value="">Select admin...</option>
-								<%
+<div id="formDiv" class="post">
+	<h1 class="title">Downgrade Admin</h1>
+	<div id="downgradeDiv" class="entry">
+		<form id="theForm" action="javascript:;">
+			<p>Please select the admin that you would like to downgrade to
+				player</p>
+			<div id="badData"></div>
+			<input type="hidden" id="csrfToken" value="<%=csrfToken%>" />
+			<table align="center">
+				<tr>
+					<td>
+						<p>Admins:</p>
+					</td>
+					<td><select id="selectClass">
+							<option value="">Select admin...</option>
+							<%
 									if(showAdmins)
 														{
 															try
@@ -90,8 +92,8 @@ catch(SQLException e)
 																	String adminId = Encode.forHtml(classList.getString(1));
 																	String classYearName = Encode.forHtml(classList.getString(3)) + " " + Encode.forHtml(classList.getString(2));
 								%>
-												<option value="<%=adminId%>"><%=classYearName%></option>
-											<%
+							<option value="<%=adminId%>"><%=classYearName%></option>
+							<%
 												}
 																			while(classList.next());
 																			classList.first();
@@ -103,21 +105,21 @@ catch(SQLException e)
 																		}
 																	}
 											%>
-							</select>
-						</td>
-					</tr>
-					<tr><td colspan="2" align="center">
-						<input type="submit" id="submitButton" value="Downgrade Admin"/>
-					</td></tr>
-				</table>
-			</form>
-		</div>
-		<br>
-		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-		<div id="resultDiv" style="display:none;" class="informationBox"></div>
-		<div id="badData"></div>
+					</select></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="submit"
+						id="submitButton" value="Downgrade Admin" /></td>
+				</tr>
+			</table>
+		</form>
 	</div>
-	<script>
+	<br>
+	<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+	<div id="resultDiv" style="display: none;" class="informationBox"></div>
+	<div id="badData"></div>
+</div>
+<script>
 	$("#theForm").submit(function(){
 		//Get Data
 		var theCsrfToken = $('#csrfToken').val();
@@ -170,8 +172,9 @@ catch(SQLException e)
 		}
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {

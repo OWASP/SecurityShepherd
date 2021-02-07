@@ -1,4 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
@@ -55,45 +58,59 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= i18nChallengeName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= i18nChallengeName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= i18nChallengeName %></h2>
-			<p> 
-				<%= bundle.getString("challenge.whatToDo") %>
-				<br />
-				<br />
-				<center>
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr></td>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= i18nChallengeName %></h2>
+		<p>
+			<%= bundle.getString("challenge.whatToDo") %>
+			<br /> <br />
+		<center>
+			<form id="leForm" action="javascript:;">
+				<table>
+					<tr>
+						</td>
 						<select id='userId' style='width: 300px;' multiple>
-							<option value="c81e728d9d4c2f636f067f89cc14862c">Paul Bourke</option>
-							<option value="eccbc87e4b5ce2fe28308fd9f2a7baf3">Will Bailey</option>
-							<option value="e4da3b7fbbce2345d7772b0674a318d5">Orla Cleary</option>
-							<option value="8f14e45fceea167a5a36dedd4bea2543">Ronan Fitzpatrick</option>
-							<option value="6512bd43d9caa6e02c990b0a82652dca">Pat McKenana</option>
+							<option value="c81e728d9d4c2f636f067f89cc14862c">Paul
+								Bourke</option>
+							<option value="eccbc87e4b5ce2fe28308fd9f2a7baf3">Will
+								Bailey</option>
+							<option value="e4da3b7fbbce2345d7772b0674a318d5">Orla
+								Cleary</option>
+							<option value="8f14e45fceea167a5a36dedd4bea2543">Ronan
+								Fitzpatrick</option>
+							<option value="6512bd43d9caa6e02c990b0a82652dca">Pat
+								McKenana</option>
 						</select>
-					</td></tr>
-					<tr><td>
-						<div id="submitButton"><input style='width: 300px;' type="submit" value="<%= bundle.getString("challenge.showProfile") %>"/></div>
-						<p style="display: none; text-align: center;" id="loadingSign"><%= bundle.getString("challenge.loading") %></p>
-					</td></tr>
-					</table>
-				</form>
-				</center>
-				<div id="resultsDiv"></div>
-			</p>
-		</div>
-		<script>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div id="submitButton">
+								<input style='width: 300px;' type="submit"
+									value="<%= bundle.getString("challenge.showProfile") %>" />
+							</div>
+							<p style="display: none; text-align: center;" id="loadingSign"><%= bundle.getString("challenge.loading") %></p>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</center>
+		<div id="resultsDiv"></div>
+		</p>
+	</div>
+	<script>
 			$("#leForm").submit(function(){
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
@@ -123,7 +140,8 @@
 				});
 			});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <% 

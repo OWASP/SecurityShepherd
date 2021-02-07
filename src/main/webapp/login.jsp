@@ -87,10 +87,10 @@
 					if (ScoreboardStatus.isPublicScoreboard()) {
 						%>
 
-						<p id="scoreboard_link">
-							<fmt:message key="login.text.scoreboard" />
-						</p>
-						<%
+					<p id="scoreboard_link">
+						<fmt:message key="login.text.scoreboard" />
+					</p>
+					<%
 							}
 						if (!loginFailed.isEmpty()) {
 					%>

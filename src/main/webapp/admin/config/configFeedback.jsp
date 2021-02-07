@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: configFeedback.jsp *************************");
@@ -50,33 +52,45 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 	String csrfToken = Encode.forHtml(tokenCookie.getValue());
 	String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<h1 class="title">Configure Feedback</h1>
-	<p>You can configure Shepherd to force users to submit a feedback form before the module is marked as complete. This is used both to facilitate project improvements based on feedback submitted and for system administrators to collect "Reports of Understanding" from their students.
-	If you would like to submit the collected feedback to the Security Shepherd Project Development Team, please follow the steps <a href="https://github.com/markdenihan/owaspSecurityShepherd/wiki/How-to-Submit-Shepherd-DB-Stored-User-Feedback">found here</a>.</p>
-	
-	<!-- Enable Feedback Section -->
-	<div id="enableFeedback" <% if(FeedbackStatus.isEnabled()) {%>style="display: none;"<% } %>>
-		<h2 class="title">Enable Feedback</h2>
-		<p>Enable feedback to force users to submit feedback on each module before they can complete them</p>
-		<a href="javascript:;" style="text-decoration: none;" id="enableFeedback" title="Enable Feedback">
-			<div class="menuButton">Enable Feedback</div>
-		</a>
-		<br>
-	</div>
-	
-	<!-- Disable feedback Section -->
-	<div id="disableFeedback" <% if(FeedbackStatus.isDisabled()) {%>style="display: none;"<% } %>>
-		<h2 class="title">Disable Feedback</h2>
-		<p>Disable feedback to allow users to complete modules without having to submit a feedback form</p>
-		<a href="javascript:;" style="text-decoration: none;" id="disableFeedback" title="Disable Feedback">
-			<div class="menuButton">Disable Feedback</div>
-		</a>
-		<br>
-	</div>
-	<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-	<div id="resultDiv" class="informationBox" style="display:none;"></div>
-	<div id="badData" style="display:none;"></div>
-	<script>
+<h1 class="title">Configure Feedback</h1>
+<p>
+	You can configure Shepherd to force users to submit a feedback form
+	before the module is marked as complete. This is used both to
+	facilitate project improvements based on feedback submitted and for
+	system administrators to collect "Reports of Understanding" from their
+	students. If you would like to submit the collected feedback to the
+	Security Shepherd Project Development Team, please follow the steps <a
+		href="https://github.com/markdenihan/owaspSecurityShepherd/wiki/How-to-Submit-Shepherd-DB-Stored-User-Feedback">found
+		here</a>.
+</p>
+
+<!-- Enable Feedback Section -->
+<div id="enableFeedback" <% if(FeedbackStatus.isEnabled()) {%>
+	style="display: none;" <% } %>>
+	<h2 class="title">Enable Feedback</h2>
+	<p>Enable feedback to force users to submit feedback on each module
+		before they can complete them</p>
+	<a href="javascript:;" style="text-decoration: none;"
+		id="enableFeedback" title="Enable Feedback">
+		<div class="menuButton">Enable Feedback</div>
+	</a> <br>
+</div>
+
+<!-- Disable feedback Section -->
+<div id="disableFeedback" <% if(FeedbackStatus.isDisabled()) {%>
+	style="display: none;" <% } %>>
+	<h2 class="title">Disable Feedback</h2>
+	<p>Disable feedback to allow users to complete modules without
+		having to submit a feedback form</p>
+	<a href="javascript:;" style="text-decoration: none;"
+		id="disableFeedback" title="Disable Feedback">
+		<div class="menuButton">Disable Feedback</div>
+	</a> <br>
+</div>
+<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+<div id="resultDiv" class="informationBox" style="display: none;"></div>
+<div id="badData" style="display: none;"></div>
+<script>
 	var theCsrfToken = "<%= csrfToken %>";
 	$("#enableFeedback").click(function(){
 		$("#loadingDiv").show("fast");
@@ -140,8 +154,9 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		});
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {

@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*" errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 
@@ -56,40 +57,50 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= translatedLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= translatedLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= translatedLevelName %></h2>
-			<p> 				
-				<%= bundle.getString("challenge.description") %>
-				<br/>
-				<br/>
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>			
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= translatedLevelName %></h2>
+		<p>
+			<%= bundle.getString("challenge.description") %>
+			<br /> <br />
+		<form id="leForm" action="javascript:;">
+			<table>
+				<tr>
+					<td>
 						<div id="submitButton">
-						<input type="submit" value="<%= bundle.getString("challenge.form.getInfo") %>"/></div>
+							<input type="submit"
+								value="<%= bundle.getString("challenge.form.getInfo") %>" />
+						</div>
 						<p style="display: none;" id="loadingSign"><%= bundle.getString("sign.loading") %></p>
-						<div style="display: none;" id="hintButton"><input type="button" value="<%= bundle.getString("sign.hint") %>" id="theHintButton"/></div>
-					</td></tr>
-					</table>
-				</form>
-				
-				<div id="resultsDiv"></div>
-			</p>
-		</div>
-		<script>
+						<div style="display: none;" id="hintButton">
+							<input type="button" value="<%= bundle.getString("sign.hint") %>"
+								id="theHintButton" />
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
+
+		<div id="resultsDiv"></div>
+		</p>
+	</div>
+	<script>
 			eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('$("#A").f(3(){$("#8").5("9");$("#7").4("1");$("#2").5("1",3(){e 0=$.h({i:"j",b:"v",c:{u:"t",},d:g});m(0.6==k){$("#2").a(0.s)}q{$("#2").a("<p> l r n: "+0.6+" "+0.o+"</p>")}$("#2").4("1",3(){$("#7").5("9",3(){$("#8").4("1")})})})});$("#w").f(3(){$("#8").5("9");$("#7").4("1");$("#2").5("1",3(){e 0=$.h({i:"j",b:"x",c:{y:"z",},d:g});m(0.6==k){$("#2").a(0.s)}q{$("#2").a("<p> l r n: "+0.6+" "+0.o+"</p>")}$("#2").4("1",3(){$("#7").5("9",3(){$("#8").4("1")})})})});',37,37,'ajaxCall|slow|resultsDiv|function|show|hide|status|loadingSign|submitButton|fast|html|url|data|async|var|submit|false|ajax|type|POST|200|An|if|Occurred|statusText||else|Error|responseText|sOdjh318UD8ismcoa98smcj21dmdoaoIS9|guestData|278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fa|leAdministratorFormOfAwesomeness|278fa30ee727b74b9a2522a5ca3bf993087de5a0ac72adff216002abf79146fahghghmin|adminData|youAreAnAdminOfAwesomenessWoopWoop|leForm'.split('|'),0,{}))
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <% 	

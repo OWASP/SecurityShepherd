@@ -1,5 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
-<%@ page import="java.util.Locale, java.util.ResourceBundle" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*" errorPage=""%>
+<%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 // Broken Authentication and Session Management Challenge Five
 
@@ -54,66 +55,77 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= i18nLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= i18nLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= i18nLevelName %></h2>
-			<p> 
-				<%= bundle.getString("challenge.description") %>
-				<br />
-				<form id="leForm" action="javascript:;">
-					<div id="resultsDiv">
-						<table>
-							<tr><td>
-								<%= bundle.getString("challenge.form.userName") %>
-							</td><td>
-								<input type="text" id="subUserName"/>
-							</td></tr>
-							<tr><td>
-								<%= bundle.getString("challenge.form.password") %>
-							</td><td>
-								<input type="password" id="subUserPassword"/>
-							</td></tr>
-							<tr><td colspan="2">
-								<div id="submitButton"><input type="submit" value="<%= bundle.getString("challenge.form.signIn") %>"/></div>
-							</td></tr>
-						</table>
-					</div>
-					<input type="button" id="showUserControl" value="<%= bundle.getString("challenge.form.forgotPassword") %>"/>
-				</form>
-				<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.form.loading") %></p>
-				<br/>
-				<div id="userControl" style="display: none;">
-					<form id="leForm2" action="javascript:;">
-						<h2 class='title'><%= bundle.getString("change.header") %></h2>
-						<p>
-						<%= bundle.getString("change.whatToDo") %>
-						</p>
-						<table>
-							<tr><td>
-								<%= bundle.getString("challenge.form.userName") %>
-							</td><td>
-								<input type="text" id="userToReset"/>
-							</td></tr>
-							<tr><td colspan="2">
-								<div id="resetSubmit"><input type="submit" value="<%= bundle.getString("change.form.sendEmail") %>"/></div>
-								<p style="display: none;" id="resetLoadingSign"><%= bundle.getString("challenge.form.loading") %></p>
-							</td></tr>
-						</table>
-					</form>
-					<div id="resultsDiv2"></div>
-				</div>
-			</p>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= i18nLevelName %></h2>
+		<p>
+			<%= bundle.getString("challenge.description") %>
+			<br />
+		<form id="leForm" action="javascript:;">
+			<div id="resultsDiv">
+				<table>
+					<tr>
+						<td><%= bundle.getString("challenge.form.userName") %></td>
+						<td><input type="text" id="subUserName" /></td>
+					</tr>
+					<tr>
+						<td><%= bundle.getString("challenge.form.password") %></td>
+						<td><input type="password" id="subUserPassword" /></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div id="submitButton">
+								<input type="submit"
+									value="<%= bundle.getString("challenge.form.signIn") %>" />
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<input type="button" id="showUserControl"
+				value="<%= bundle.getString("challenge.form.forgotPassword") %>" />
+		</form>
+		<p style="display: none;" id="loadingSign"><%= bundle.getString("challenge.form.loading") %></p>
+		<br />
+		<div id="userControl" style="display: none;">
+			<form id="leForm2" action="javascript:;">
+				<h2 class='title'><%= bundle.getString("change.header") %></h2>
+				<p>
+					<%= bundle.getString("change.whatToDo") %>
+				</p>
+				<table>
+					<tr>
+						<td><%= bundle.getString("challenge.form.userName") %></td>
+						<td><input type="text" id="userToReset" /></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div id="resetSubmit">
+								<input type="submit"
+									value="<%= bundle.getString("change.form.sendEmail") %>" />
+							</div>
+							<p style="display: none;" id="resetLoadingSign"><%= bundle.getString("challenge.form.loading") %></p>
+						</td>
+					</tr>
+				</table>
+			</form>
+			<div id="resultsDiv2"></div>
 		</div>
-		<script>
+		</p>
+	</div>
+	<script>
 			$("#leForm").submit(function(){
 				var theSubName = $("#subUserName").val();
 				var theSubPassword = $("#subUserPassword").val();
@@ -215,7 +227,8 @@ if (request.getSession() != null)
 				});
 			});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <% 

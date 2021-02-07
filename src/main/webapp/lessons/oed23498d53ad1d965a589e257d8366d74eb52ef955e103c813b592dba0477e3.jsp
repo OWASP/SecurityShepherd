@@ -1,4 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
@@ -60,45 +63,46 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= translatedLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= translatedLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= translatedLevelName %></h2>
-			<p>
-				<div id="lessonIntro">
-					<%= bundle.getString("paragraph.info1") %>
-					<br/>
-					<br/>
-					<%= bundle.getString("paragraph.info2") %>
-					<br/>
-					<br/>
-			<%= owaspMoreInfo %> <a href="<%= owaspUrlAttack %>" target="_blank"> <%= owaspGuideTo %> Failure to Restrict URL Access </a>
-			<br/>
-			<br/>
-					<input type="button" value="<%= bundle.getString("button.hideLesson") %>" id="hideLesson"/>
-				</div>
-
-				<input type="button" value="<%= bundle.getString("button.showLesson") %>" id="showLesson"  style="display: none;"/>
-				<br/>
-				<br/>
-				<%= bundle.getString("challenge.description") %>
-				<div id="hiddenDiv" style="display: none;">
-					<!-- <%= bundle.getString("challenge.adminComment") %> -->
-					<a href="adminOnly/resultKey.jsp">
-						<%= bundle.getString("challenge.adminLink") %>
-					</a>
-				</div>
-			</p>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= translatedLevelName %></h2>
+		<p>
+		<div id="lessonIntro">
+			<%= bundle.getString("paragraph.info1") %>
+			<br /> <br />
+			<%= bundle.getString("paragraph.info2") %>
+			<br /> <br />
+			<%= owaspMoreInfo %>
+			<a href="<%= owaspUrlAttack %>" target="_blank"> <%= owaspGuideTo %>
+				Failure to Restrict URL Access
+			</a> <br /> <br /> <input type="button"
+				value="<%= bundle.getString("button.hideLesson") %>" id="hideLesson" />
 		</div>
-		<script>
+
+		<input type="button"
+			value="<%= bundle.getString("button.showLesson") %>" id="showLesson"
+			style="display: none;" /> <br /> <br />
+		<%= bundle.getString("challenge.description") %>
+		<div id="hiddenDiv" style="display: none;">
+			<!-- <%= bundle.getString("challenge.adminComment") %> -->
+			<a href="adminOnly/resultKey.jsp"> <%= bundle.getString("challenge.adminLink") %>
+			</a>
+		</div>
+		</p>
+	</div>
+	<script>
 			$('#hideLesson').click(function(){
 				$("#lessonIntro").hide("slow", function(){
 					$("#showLesson").show("fast");
@@ -111,7 +115,8 @@
 				});
 			});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

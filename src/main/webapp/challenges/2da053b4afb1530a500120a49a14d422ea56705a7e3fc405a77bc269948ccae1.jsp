@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*" errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
@@ -58,42 +59,52 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= i18nLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= i18nLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= i18nLevelName %></h2>
-			<p> 
-				<%= levelBlurb %>
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>
-						<%= bundle.getString("insecureCryptoStorage.3.ciphertextToDecrypt") %>
-					</td><td>
-						<input type="text" width="130px" id="userInput" autocomplete="off">
-					</td></tr>
-					<tr><td colspan="2">			
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= i18nLevelName %></h2>
+		<p>
+			<%= levelBlurb %>
+		<form id="leForm" action="javascript:;">
+			<table>
+				<tr>
+					<td><%= bundle.getString("insecureCryptoStorage.3.ciphertextToDecrypt") %>
+					</td>
+					<td><input type="text" width="130px" id="userInput"
+						autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td colspan="2">
 						<div id="submitButton">
-						<input type="submit" value="<%= bundle.getString("insecureCryptoStorage.decrypt") %>"/></div>
+							<input type="submit"
+								value="<%= bundle.getString("insecureCryptoStorage.decrypt") %>" />
+						</div>
 						<p style="display: none;" id="loadingSign"><%= bundle.getString("insecureCryptoStorage.loading") %></p>
-					</td></tr>
-					</table>
-				</form>
-				
-				<div id="resultsDiv">
-					<h2 class="title"><%= bundle.getString("insecureCryptoStorage.3.ciphertextExample") %></h2>
-					<p><%= bundle.getString("insecureCryptoStorage.3.tryDecryptThis") %> IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==</p>
-				</div>
+					</td>
+				</tr>
+			</table>
+		</form>
+
+		<div id="resultsDiv">
+			<h2 class="title"><%= bundle.getString("insecureCryptoStorage.3.ciphertextExample") %></h2>
+			<p><%= bundle.getString("insecureCryptoStorage.3.tryDecryptThis") %>
+				IAAAAEkQBhEVBwpDHAFJGhYHSBYEGgocAw==
 			</p>
 		</div>
-		<script>
+		</p>
+	</div>
+	<script>
 			$("#leForm").submit(function(){
 				var theUserInput = $("#userInput").val();
 				$("#submitButton").hide("fast");
@@ -123,7 +134,8 @@ if (request.getSession() != null)
 				});
 			});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

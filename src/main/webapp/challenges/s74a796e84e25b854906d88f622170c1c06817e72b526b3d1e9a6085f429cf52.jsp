@@ -1,4 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
@@ -63,67 +66,76 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= bundle.getString("title.csrf1") %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= bundle.getString("title.csrf1") %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= bundle.getString("title.csrf1") %></h2>
-			<p> 
-				<%= bundle.getString("challenge.intro") %>
-				<br/>
-				<br/>
-				<a> GET /user/csrfchallengeone/plusplus?userid=<%= bundle.getString("challenge.userIdExample") %> </a>
-				<br/>
-				<br/>
-				<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.1") %>&nbsp;<%= bundle.getString("challenge.userIdExample") %>&nbsp;<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.2") %>&nbsp;<%= bundle.getString("challenge.yourIdIs") %> <a><%= userId %></a><%= bundle.getString("challenge.yourIdIs.1") %>
-				<br/>
-				<br/>
-				<%= bundle.getString("challenge.useForumForImg") %>
-				<%
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= bundle.getString("title.csrf1") %></h2>
+		<p>
+			<%= bundle.getString("challenge.intro") %>
+			<br /> <br /> <a> GET /user/csrfchallengeone/plusplus?userid=<%= bundle.getString("challenge.userIdExample") %>
+			</a> <br /> <br />
+			<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.1") %>&nbsp;<%= bundle.getString("challenge.userIdExample") %>&nbsp;<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.2") %>&nbsp;<%= bundle.getString("challenge.yourIdIs") %>
+			<a><%= userId %></a><%= bundle.getString("challenge.yourIdIs.1") %>
+			<br /> <br />
+			<%= bundle.getString("challenge.useForumForImg") %>
+			<%
 					if(ModulePlan.isIncrementalFloor())
 					{
 					%>
-						<%= bundle.getString("challenge.firstUser.get") %>
-					<%
+			<%= bundle.getString("challenge.firstUser.get") %>
+			<%
 					}
 				%>
-				<% 
+			<% 
 				String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, levelHash);	
 				if (Getter.isCsrfLevelComplete(ApplicationRoot, moduleId, userId)) 
 				{ %>
-					<h2 class='title'><%= bundle.getString("result.challengeCompleted") %></h2>
-					<p>
-					<%= bundle.getString("result.congratsTheKeyIs") %>
-					<b> <a><%= Hash.generateUserSolution(Getter.getModuleResult(ApplicationRoot, moduleId), (String)ses.getAttribute("userName")) %></a></b><br/><br/>
-				<% } %>
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>
-					<%= bundle.getString("forum.img.whatToDo") %>
-					</td></tr>
-					<tr><td>
-						<input style="width: 400px;" id="myMessage" type="text"/>
-					</td></tr>
-					<tr><td>
-						<div id="submitButton"><input type="submit" value="<%= bundle.getString("forum.postMessage") %>"/></div>
+		
+		<h2 class='title'><%= bundle.getString("result.challengeCompleted") %></h2>
+		<p>
+			<%= bundle.getString("result.congratsTheKeyIs") %>
+			<b> <a><%= Hash.generateUserSolution(Getter.getModuleResult(ApplicationRoot, moduleId), (String)ses.getAttribute("userName")) %></a></b><br />
+			<br />
+			<% } %>
+		
+		<form id="leForm" action="javascript:;">
+			<table>
+				<tr>
+					<td><%= bundle.getString("forum.img.whatToDo") %></td>
+				</tr>
+				<tr>
+					<td><input style="width: 400px;" id="myMessage" type="text" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div id="submitButton">
+							<input type="submit"
+								value="<%= bundle.getString("forum.postMessage") %>" />
+						</div>
 						<p style="display: none;" id="loadingSign"><%= bundle.getString("forum.loading") %></p>
-					</td></tr>
-					</table>
-				</form>
-				
-				<div id="resultsDiv">
-					<%= Getter.getCsrfForumWithImg(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, levelHash), bundle) %>
-				</div>
-			</p>
+					</td>
+				</tr>
+			</table>
+		</form>
+
+		<div id="resultsDiv">
+			<%= Getter.getCsrfForumWithImg(ApplicationRoot, userClass, Getter.getModuleIdFromHash(ApplicationRoot, levelHash), bundle) %>
 		</div>
-		<script>
+		</p>
+	</div>
+	<script>
 			$("#leForm").submit(function(){
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
@@ -155,7 +167,8 @@
 				});
 			});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

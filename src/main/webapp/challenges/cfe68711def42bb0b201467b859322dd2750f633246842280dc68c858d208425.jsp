@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*" errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
@@ -56,26 +57,28 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= levelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= levelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= LevelName %></h2>
-			<p> 
-				<%= paragraph1 %>				
-				<br/>
-				<br/>
-				<%= mobile.getString("mobileBlurb.vmLink.1") + " CSInjection2.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
-				
-				<% /* IF you need a form - Present it like this */ %>
-				<%
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= LevelName %></h2>
+		<p>
+			<%= paragraph1 %>
+			<br /> <br />
+			<%= mobile.getString("mobileBlurb.vmLink.1") + " CSInjection2.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
+
+			<% /* IF you need a form - Present it like this */ %>
+			<%
 				/*
 				<br />
 				<br />
@@ -93,10 +96,10 @@ if (request.getSession() != null)
 				<div id="resultsDiv"></div>
 				*/
 				%>
-			</p>
-		</div>
-		<% /*If you need to call the Server Do it like this */ %>
-		<%
+		</p>
+	</div>
+	<% /*If you need to call the Server Do it like this */ %>
+	<%
 		/*
 		<script>
 			$("#leForm").submit(function(){
@@ -132,7 +135,8 @@ if (request.getSession() != null)
 		</script>
 		*/
 		%>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <% 

@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage=""%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*" errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
@@ -56,34 +57,34 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= translatedLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= translatedLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
 	<div id="contentDiv">
 		<p>
-			<h2 class="title"><%= translatedLevelName  %></h2>
-			<p> 
-				<div id="lessonIntro">
-					<%= bundle.getString("paragraph.info") %> 
-					<br/>
-					</br> 
-					</br> 
-					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
-				</div>
-				<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="showLesson"  style="display: none;"/>
-				<br/>
-				<br>
-				<br/>
-				<%= mobile.getString("mobileBlurb.vmLink.1") + " PoorAuthentication.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
-			</p>
-			<script>
+		<h2 class="title"><%= translatedLevelName  %></h2>
+		<p>
+		<div id="lessonIntro">
+			<%= bundle.getString("paragraph.info") %>
+			<br /> </br> </br> <input type="button"
+				value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
+		</div>
+		<input type="button"
+			value="<%= bundle.getString("button.hideIntro") %>" id="showLesson"
+			style="display: none;" /> <br /> <br> <br />
+		<%= mobile.getString("mobileBlurb.vmLink.1") + " PoorAuthentication.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
+		</p>
+		<script>
 				$('#hideLesson').click(function(){
 					$("#lessonIntro").hide("slow", function(){
 						$("#showLesson").show("fast");
@@ -96,7 +97,8 @@ if (request.getSession() != null)
 					});
 				});
 			</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+		<% } %>
 		</p>
 	</div>
 </body>

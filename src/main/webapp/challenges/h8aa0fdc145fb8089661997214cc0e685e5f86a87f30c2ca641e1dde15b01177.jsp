@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java" import="utils.*" errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
@@ -52,35 +53,39 @@ String levelName = "Insecure Cryptographic Storage Challenge 2";
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= i18nLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= i18nLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= i18nLevelName %></h2>
-			<p> 
-				<%= bundle.getString("insecureCryptoStorage.2.whatToDo") %>
-				<br/>
-				<br/>
-				<form id="leForm" action="javascript:;">
-				<table>
-					<tr><td>
-						<input type="text" id="resultKeyAttempt" style="width: 300px;"/></><input type="submit" value="<%= bundle.getString("insecureCryptoStorage.2.checkKey") %>"/>
-					</td></tr>
-				</table>
-				</form>
-				<br/>
-				<br/>
-				<div id="resultDiv"></div>
-			</p>
-		</div>
-		<script>			
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= i18nLevelName %></h2>
+		<p>
+			<%= bundle.getString("insecureCryptoStorage.2.whatToDo") %>
+			<br /> <br />
+		<form id="leForm" action="javascript:;">
+			<table>
+				<tr>
+					<td><input type="text" id="resultKeyAttempt"
+						style="width: 300px;" /></><input type="submit"
+						value="<%= bundle.getString("insecureCryptoStorage.2.checkKey") %>" />
+					</td>
+				</tr>
+			</table>
+		</form>
+		<br /> <br />
+		<div id="resultDiv"></div>
+		</p>
+	</div>
+	<script>			
 		$("#leForm").submit(function(){
 			// <%= bundle.getString("insecureCryptoStorage.2.hint") %>
 			var input = $("#resultKeyAttempt").val();
@@ -143,7 +148,8 @@ String levelName = "Insecure Cryptographic Storage Challenge 2";
 			*/
 		});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

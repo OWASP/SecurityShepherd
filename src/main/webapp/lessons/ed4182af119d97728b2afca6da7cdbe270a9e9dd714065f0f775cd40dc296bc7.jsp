@@ -1,4 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 
 <%
@@ -65,72 +68,75 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%= translatedLevelName %></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%= translatedLevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><%= translatedLevelName %></h2>
-			<p>
-				<div id="lessonIntro">
-					<%= bundle.getString("paragraph.info1") %>
-					<br />
-					<br />
-					<%= bundle.getString("paragraph.info2") %>
-					<br />
-					<br />
-					<%= bundle.getString("paragraph.info3") %>
-					<br />
-					<br />
-					<%= bundle.getString("paragraph.info4") %>
-					<br />
-					<br />
-					<%= bundle.getString("paragraph.info5") %>
-					<br/>
-					<br/>
-					<%= owaspMoreInfo %> <a href="<%= owaspUrlAttack %>" target="_blank"> <%= owaspGuideTo %> CSRF </a>
-					<br/>
-					<br/>
-					<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
-				</div>
-				<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson"  style="display: none;"/>
-				<br />
-				<br />
-				<%= bundle.getString("paragraph.info6") %>
-				<br/>
-				<br/>
-				GET <a href="<%= Encode.forHtml("../root/grantComplete/csrfLesson?userId=exampleId") %>">/root/grantComplete/csrfLesson?userId=exampleId </a>
-				<br />
-				<%= bundle.getString("paragraph.info7") %>: <a><%= falseId %></a>
-				<br />
-				<br />
-				<br />
-				<h2 class="title"><%= bundle.getString("challenge.title") %></h2>
-				<form id="leForm" action="javascript:;">
-					<table>
-					<tr><td>
-						<%= bundle.getString("challenge.description") %>
-					</td></tr>
-					<tr><td>
-						<input style="width: 400px;" id="messageForAdmin" type="text"/>
-					</td></tr>
-					<tr><td>
-						<div id="submitButton"><input type="submit" value="<%= bundle.getString("button.sendMessage") %>"/></div>
-						<p style="display: none;" id="loadingSign"><%= bundle.getString("generic.loading") %>...</p>
-					</td></tr>
-					</table>
-				</form>
-
-				<div id="resultsDiv"></div>
-			</p>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= translatedLevelName %></h2>
+		<p>
+		<div id="lessonIntro">
+			<%= bundle.getString("paragraph.info1") %>
+			<br /> <br />
+			<%= bundle.getString("paragraph.info2") %>
+			<br /> <br />
+			<%= bundle.getString("paragraph.info3") %>
+			<br /> <br />
+			<%= bundle.getString("paragraph.info4") %>
+			<br /> <br />
+			<%= bundle.getString("paragraph.info5") %>
+			<br /> <br />
+			<%= owaspMoreInfo %>
+			<a href="<%= owaspUrlAttack %>" target="_blank"> <%= owaspGuideTo %>
+				CSRF
+			</a> <br /> <br /> <input type="button"
+				value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
 		</div>
-		<script>
+		<input type="button"
+			value="<%= bundle.getString("button.showIntro") %>" id="showLesson"
+			style="display: none;" /> <br /> <br />
+		<%= bundle.getString("paragraph.info6") %>
+		<br /> <br /> GET <a
+			href="<%= Encode.forHtml("../root/grantComplete/csrfLesson?userId=exampleId") %>">/root/grantComplete/csrfLesson?userId=exampleId
+		</a> <br />
+		<%= bundle.getString("paragraph.info7") %>: <a><%= falseId %></a> <br />
+		<br /> <br />
+		<h2 class="title"><%= bundle.getString("challenge.title") %></h2>
+		<form id="leForm" action="javascript:;">
+			<table>
+				<tr>
+					<td><%= bundle.getString("challenge.description") %></td>
+				</tr>
+				<tr>
+					<td><input style="width: 400px;" id="messageForAdmin"
+						type="text" /></td>
+				</tr>
+				<tr>
+					<td>
+						<div id="submitButton">
+							<input type="submit"
+								value="<%= bundle.getString("button.sendMessage") %>" />
+						</div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("generic.loading") %>...
+						</p>
+					</td>
+				</tr>
+			</table>
+		</form>
+
+		<div id="resultsDiv"></div>
+		</p>
+	</div>
+	<script>
 			$("#leForm").submit(function(){
 				$("#submitButton").hide("fast");
 				$("#loadingSign").show("slow");
@@ -173,7 +179,8 @@
 				});
 			});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

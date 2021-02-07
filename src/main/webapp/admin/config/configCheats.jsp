@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: configCheats.jsp *************************");
@@ -50,35 +52,44 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 	String csrfToken = Encode.forHtml(tokenCookie.getValue());
 	String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<h1 class="title">Configure Cheat Sheets</h1>
-	<p>The Security Shepherd Application is capable of presenting users with &quot;Cheat Sheets&quot; that will instruct the reader on how to complete a specific module. These cheats are disabled by default, but can be enabled for administrators or all players. Once enabled, as you open Security Shepherd modules, a cheat button will appear in the left hand menu. Click this button to reveal the cheat sheet for the currently open module.</p>
-	
-	<!-- Enable Cheats Section -->
-	<div id="enableCheats" <% if(CheatSheetStatus.isEnabledAtAll()) {%>style="display: none;"<% } %>>
-		<h2 class="title">Enable Cheat Sheets</h2>
-		<p>Enable cheat sheets for administrators or all users.</p>
-		<a href="javascript:;" style="text-decoration: none;" id="enableCheatsAdmin" title="Enable Cheats for Administrators">
-			<div class="menuButton">Enable Cheat Sheets for Administrators</div>
-		</a>
-		<a href="javascript:;" style="text-decoration: none;" id="enableCheatsAll" title="Enable Cheats for All Users">
-			<div class="menuButton">Enable Cheat Sheets for All Users</div>
-		</a>
-		<br>
-	</div>
-	
-	<!-- Disable Cheats Section -->
-	<div id="disableCheats" <% if(!CheatSheetStatus.isEnabledAtAll()) {%>style="display: none;"<% } %>>
-		<h2 class="title">Disable Cheat Sheets</h2>
-		<p>Are you sure that you want to disable cheat sheets for all users?</p>
-		<a href="javascript:;" style="text-decoration: none;" id="disableCheats" title="Disable Cheats">
-			<div class="menuButton">Disable Cheat Sheets</div>
-		</a>
-		<br>
-	</div>
-	<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-	<div id="resultDiv" class="informationBox" style="display:none;"></div>
-	<div id="badData" style="display:none;"></div>
-	<script>
+<h1 class="title">Configure Cheat Sheets</h1>
+<p>The Security Shepherd Application is capable of presenting users
+	with &quot;Cheat Sheets&quot; that will instruct the reader on how to
+	complete a specific module. These cheats are disabled by default, but
+	can be enabled for administrators or all players. Once enabled, as you
+	open Security Shepherd modules, a cheat button will appear in the left
+	hand menu. Click this button to reveal the cheat sheet for the
+	currently open module.</p>
+
+<!-- Enable Cheats Section -->
+<div id="enableCheats" <% if(CheatSheetStatus.isEnabledAtAll()) {%>
+	style="display: none;" <% } %>>
+	<h2 class="title">Enable Cheat Sheets</h2>
+	<p>Enable cheat sheets for administrators or all users.</p>
+	<a href="javascript:;" style="text-decoration: none;"
+		id="enableCheatsAdmin" title="Enable Cheats for Administrators">
+		<div class="menuButton">Enable Cheat Sheets for Administrators</div>
+	</a> <a href="javascript:;" style="text-decoration: none;"
+		id="enableCheatsAll" title="Enable Cheats for All Users">
+		<div class="menuButton">Enable Cheat Sheets for All Users</div>
+	</a> <br>
+</div>
+
+<!-- Disable Cheats Section -->
+<div id="disableCheats" <% if(!CheatSheetStatus.isEnabledAtAll()) {%>
+	style="display: none;" <% } %>>
+	<h2 class="title">Disable Cheat Sheets</h2>
+	<p>Are you sure that you want to disable cheat sheets for all
+		users?</p>
+	<a href="javascript:;" style="text-decoration: none;"
+		id="disableCheats" title="Disable Cheats">
+		<div class="menuButton">Disable Cheat Sheets</div>
+	</a> <br>
+</div>
+<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+<div id="resultDiv" class="informationBox" style="display: none;"></div>
+<div id="badData" style="display: none;"></div>
+<script>
 	var theCsrfToken = "<%= csrfToken %>";
 	
 	$("#enableCheatsAdmin").click(function(){
@@ -176,8 +187,9 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		});
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {

@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: openCloseByCategory.jsp *************************");
@@ -50,32 +52,34 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 String csrfToken = Encode.forHtmlAttribute(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Open and Close Levels</h1>
-		<div class="entry">
-			<form id="theForm" action="javascript:;">
-				<p>Use this form to open and close levels by entire categories. Levels that are closed will not appear in any level listings.</p>
-				<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-				<div id="submitButton" align="center">
-					<div>
-						<table>
-						<tr><td colspan="2">
-						<%= Getter.getOpenCloseCategoryMenu(ApplicationRoot) %>
-						</td></tr>
-						<tr><td>
-						<input type="submit" value="Close Categories">
-						</td><td>
-						<input type="button" id="openCategories" value="Open Categories">
-						</td></tr>
-						</table>
-					</div>
+<div id="formDiv" class="post">
+	<h1 class="title">Open and Close Levels</h1>
+	<div class="entry">
+		<form id="theForm" action="javascript:;">
+			<p>Use this form to open and close levels by entire categories.
+				Levels that are closed will not appear in any level listings.</p>
+			<input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+			<div id="submitButton" align="center">
+				<div>
+					<table>
+						<tr>
+							<td colspan="2"><%= Getter.getOpenCloseCategoryMenu(ApplicationRoot) %>
+							</td>
+						</tr>
+						<tr>
+							<td><input type="submit" value="Close Categories"></td>
+							<td><input type="button" id="openCategories"
+								value="Open Categories"></td>
+						</tr>
+					</table>
 				</div>
-			</form>
-			<br>
-			<div id="resultDiv" style="display:none;" class="informationBox"></div>
-			<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-			<div id="badData"></div>
-			<script>					
+			</div>
+		</form>
+		<br>
+		<div id="resultDiv" style="display: none;" class="informationBox"></div>
+		<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+		<div id="badData"></div>
+		<script>					
 			$("#theForm").submit(function(){
 				//Get Data
 				var toDo = $("#toDo").val();
@@ -161,10 +165,11 @@ String ApplicationRoot = getServletContext().getRealPath("");
 				var theRefreshError = "Could not Refresh Menu";
 			});
 			</script>
-			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-		</div>
+		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+		<% } %>
 	</div>
-	<%
+</div>
+<%
 }
 else
 {
