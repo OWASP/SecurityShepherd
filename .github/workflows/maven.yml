@@ -1,11 +1,10 @@
-# This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+# This workflow will build a Java project with Maven and then scan with the WhiteSource Unified Agent for effective vulnerabilities.
 
-name: Java CI with Maven
+name: Whitesource Prioritize Java with Maven
 
 on:
   push:
-    branches: [ gh-workflows ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -34,4 +33,3 @@ jobs:
         export WS_MAVEN_RESOLVEDEPENDENCIES=true
         export WS_MAVEN_AGGREGATEMODULES=true
         java -jar wss-unified-agent.jar -appPath ./target/owaspSecurityShepherd.war -d ./ -apikey $APIKEY -project GitHub-Workflow -product WS-Examples
-
