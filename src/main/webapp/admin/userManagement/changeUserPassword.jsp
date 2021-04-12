@@ -54,6 +54,7 @@ String userRole = Encode.forHtml(ses.getAttribute("userRole").toString());
 String userId = Encode.forHtml(ses.getAttribute("userStamp").toString());
 String ApplicationRoot = getServletContext().getRealPath("");
 boolean showClasses = false;
+boolean showAdmins = false;
 
 ResultSet classList = Getter.getClassInfo(ApplicationRoot);
 try
@@ -65,9 +66,20 @@ catch(SQLException e)
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
 	showClasses = false;
 }
+
+ResultSet adminList = Getter.getAdmins(ApplicationRoot);
+try
+{
+	showAdmins = adminList.next();
+}
+catch(SQLException e)
+{
+	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Could not open classList: " + e.toString());
+	showAdmins = false;
+}
 %>
 	<div id="formDiv" class="post">
-		<h1 class="title">Change Player Password</h1>
+		<h1 class="title">Change User Password</h1>
 		<div id="resetPasswordDiv" class="entry">
 			<form id="theForm" action="javascript:;">
 				<p>You can use this function to update a users password. This password will be temporary, and they will be forced to change it upon sign in.</p>
@@ -123,6 +135,47 @@ catch(SQLException e)
 					<tr><td>New Password:</td><td><input type="password" style='width: 300px' id="newPassword"/></td></tr>
 					<tr><td colspan="2" align="center">
 						<input type="submit" id="submitButton" value="Update Player Password"/>
+					</td></tr>
+				</table>
+				<br>
+				<table align="center">
+					<tr>
+						<td colspan="2">
+							<p>Pick the admin account whose password you want to reset here</p>
+							<center>
+							<select id="adminSelect">
+								<option value="">Select admin...</option>
+								<%
+									if(showAdmins)
+									{
+										try
+										{
+											do
+											{
+												String adminId = Encode.forHtml(adminList.getString(1));
+												String classYearName = Encode.forHtml(adminList.getString(3)) + " " + Encode.forHtml(adminList.getString(2));
+								%>
+								<option value="<%=adminId%>"><%=classYearName%></option>
+								<%
+											}
+											while(adminList.next());
+											adminList.first();
+										}
+										catch(SQLException e)
+										{
+											ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating adminList: " + e.toString());
+											showAdmins = false;
+										}
+									}
+								%>
+							</select>
+							</center>
+						</td>
+					</tr>
+					<br>
+					<tr><td>New Password:</td><td><input type="password" style='width: 300px' id="adminPassword"/></td></tr>
+					<tr><td colspan="2" align="center">
+						<input type="button" id="resetAdmin" value="Update Admin Password"/>
 					</td></tr>
 				</table>
 			</form>
@@ -195,6 +248,56 @@ catch(SQLException e)
 					url: "changeUserPassword",
 					data: {
 						player: thePlayers,
+						password: theNewPassword,
+						csrfToken: theCsrfToken
+					},
+					async: false
+				});
+				$("#loadingDiv").hide("fast", function(){
+					if(ajaxCall.status == 200)
+					{
+						//Now output Result Div and Show
+						$("#resultDiv").html(ajaxCall.responseText);
+						$("#resultDiv").show("fast");
+					}
+					else
+					{
+						$("#badData").html("<div id='errorAlert'><p> Sorry but there was an error: " + ajaxCall.status + " " + ajaxCall.statusText + "</p></div>");
+						$("#badData").show("slow");
+					}
+					$("#resetPasswordDiv").slideDown("slow");
+				});
+			});
+		}
+	});
+
+	$("#resetAdmin").click(function(){
+		//Get Data
+		var theCsrfToken = $('#csrfToken').val();
+		var theNewPassword = $('#adminPassword').val();
+		var theAdmin = $("#adminSelect option:selected").val();
+		//Validation
+		if (theAdmin == null)
+		{
+			$('#badData').html("<p><strong><font color='red'>Please select an admin to update.</font></strong></p>");
+		}
+		else if (theNewPassword.length < 8)
+		{
+			$('#badData').html("<p><strong><font color='red'>Password must be at least 8 characters long.</font></strong></p>");
+		}
+		else
+		{
+			//Hide&Show Stuff
+			$("#loadingDiv").show("fast");
+			$("#badData").hide("fast");
+			$("#resultDiv").hide("fast");
+			$("#resetPasswordDiv").slideUp("fast", function(){
+				//The Ajax Operation
+				var ajaxCall = $.ajax({
+					type: "POST",
+					url: "changeUserPassword",
+					data: {
+						admin: theAdmin,
 						password: theNewPassword,
 						csrfToken: theCsrfToken
 					},
