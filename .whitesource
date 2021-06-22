@@ -3,13 +3,14 @@
     "configMode": "AUTO",
 	"configExternalURL": "",
 	"projectToken": "",
-	"baseBranches": []
+	"baseBranches": [],
+	"enableIaC": true
   },
   "checkRunSettings": {
     "displayMode": "diff",
     "vulnerableCheckRunConclusionLevel": "failure"
   },
   "issueSettings": {
-    "minSeverityLevel": "LOW"
+    "minSeverityLevel": "Medium"
   }
 }
