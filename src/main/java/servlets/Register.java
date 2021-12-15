@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
@@ -41,7 +42,7 @@ import utils.Validate;
  */
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = -2558345286276614261L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Register.class);
+	private static Logger log = LogManager.getLogger(Register.class);
 	private static String defaultClass = new String();
 	private static boolean isLoaded = false;
 

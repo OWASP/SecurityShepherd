@@ -3,6 +3,7 @@ package utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -30,7 +31,7 @@ public class LoginMethod {
 	private static boolean isSaml = false;
 	private static boolean isSet = false;
 
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(LoginMethod.class);
+	private static Logger log = LogManager.getLogger(LoginMethod.class);
 
 	public static boolean isSaml() {
 

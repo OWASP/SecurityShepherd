@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
@@ -43,7 +44,7 @@ import utils.XssFilter;
 public class XssChallengeFive extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(XssChallengeFive.class);
+	private static Logger log = LogManager.getLogger(XssChallengeFive.class);
 	private static final String levelHash = "f37d45f597832cdc6e91358dca3f53039d4489c94df2ee280d6203b389dd5671";
 	private static String levelName = "XSS Challenge 5";
 	/**

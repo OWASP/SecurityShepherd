@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.OpenRegistration;
@@ -39,7 +40,7 @@ import utils.Validate;
 public class ToggleRegistration extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ToggleRegistration.class);
+	private static Logger log = LogManager.getLogger(ToggleRegistration.class);
 	/**
 	 * This method when called by an administrator toggles the availability of the registraion functionality,
 	 * This is actually performed by the OpenRegistration.toggle() method.

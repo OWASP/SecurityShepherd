@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.CountdownHandler;
@@ -40,7 +41,7 @@ import utils.Validate;
  */
 public class SetCountdown extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SetCountdown.class);
+	private static Logger log = LogManager.getLogger(SetCountdown.class);
 
 	/**
 	 * If this functionality is validly called by an administrator, the cheat sheets

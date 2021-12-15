@@ -2,6 +2,7 @@ package utils;
 
 import java.sql.SQLException;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
@@ -29,7 +30,7 @@ import dbProcs.Setter;
  *
  */
 public class OpenRegistration {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(OpenRegistration.class);
+	private static Logger log = LogManager.getLogger(OpenRegistration.class);
 
 	private static boolean enabled = false;
 

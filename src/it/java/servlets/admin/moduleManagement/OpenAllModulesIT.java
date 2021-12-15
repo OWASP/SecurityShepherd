@@ -1,5 +1,6 @@
 package servlets.admin.moduleManagement;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -21,7 +22,7 @@ import static org.junit.Assert.*;
 
 public class OpenAllModulesIT {
 
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(OpenAllModulesIT.class);
+	private static Logger log = LogManager.getLogger(OpenAllModulesIT.class);
 	private static final String LANGUAGE_CODE = "en_GB";
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

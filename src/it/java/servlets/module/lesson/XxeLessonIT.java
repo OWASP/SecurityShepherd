@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +27,7 @@ import utils.InstallationException;
 
 public class XxeLessonIT {
 	private static final String LANGUAGE_CODE = "en_GB";
-	private static org.apache.logging.log4j.Logger log= LogManager.getLogger(XxeLessonIT.class);
+	private static Logger log = LogManager.getLogger(XxeLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

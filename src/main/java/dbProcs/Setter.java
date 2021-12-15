@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import de.mkammerer.argon2.Argon2;
@@ -39,7 +40,7 @@ import utils.InvalidCountdownStateException;
  * @author Mark
  */
 public class Setter {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Setter.class);
+	private static Logger log = LogManager.getLogger(Setter.class);
 
 	// TODO - Replace this with a new mobile/web/etc attribute in the modules table
 	final public static String webModuleCategoryHardcodedWhereClause = new String("moduleCategory = 'CSRF'"

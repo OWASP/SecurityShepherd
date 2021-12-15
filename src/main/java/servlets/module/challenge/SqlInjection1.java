@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -47,7 +48,7 @@ public class SqlInjection1 extends HttpServlet
 {
 	//SQL Challenge 1
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SqlInjection1.class);
+	private static Logger log = LogManager.getLogger(SqlInjection1.class);
 	private static String levelName = "SQL Injection Challenge 1";
 	public static String levelHash = "e1e109444bf5d7ae3d67b816538613e64f7d0f51c432a164efc8418513711b0a";
 	// private static String levelResult = ""; //Stored in vulnerable DB. Not user Specific

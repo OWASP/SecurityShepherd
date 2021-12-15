@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -20,7 +21,7 @@ import dbProcs.Setter;
 public class PoorValidationLessonIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(PoorValidationLessonIT.class);
+	private static Logger log = LogManager.getLogger(PoorValidationLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;

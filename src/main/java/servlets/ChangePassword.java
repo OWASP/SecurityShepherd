@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
@@ -40,7 +41,7 @@ import utils.Validate;
 public class ChangePassword extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ChangePassword.class);
+	private static Logger log = LogManager.getLogger(ChangePassword.class);
 	/**
 	 * Initiated by index.jsp, getStarted.jsp. This changes a users password. If the user gets it wrong 3 times in a row, they'll be locked out (This is handed by database)
 	 * @param csrfToken

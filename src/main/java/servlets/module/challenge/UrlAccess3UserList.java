@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -52,7 +53,7 @@ import utils.Validate;
 public class UrlAccess3UserList extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(UrlAccess3UserList.class);
+	private static Logger log = LogManager.getLogger(UrlAccess3UserList.class);
 	private static String levelName = "URL Access 3 (UserList)";
 
 	public void doPost (HttpServletRequest request, HttpServletResponse response)

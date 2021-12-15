@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.codec.binary.Base64;
 import org.owasp.encoder.Encode;
@@ -51,7 +52,7 @@ import dbProcs.Getter;
 public class SessionManagement6SecretQuestion extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SessionManagement6SecretQuestion.class);
+	private static Logger log = LogManager.getLogger(SessionManagement6SecretQuestion.class);
 	private static String levelName = "Session Management Challenge Six (Secret Question)";
 	private static String levelHash = "b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316ece";
 	/**

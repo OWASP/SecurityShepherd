@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
@@ -39,7 +40,7 @@ import dbProcs.Getter;
 public class GetProgress extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(GetFeedback.class);
+	private static Logger log = LogManager.getLogger(GetFeedback.class);
 	/**
 	 * Used to return an administrator with the current progress of each player in a class
 	 * @param classId

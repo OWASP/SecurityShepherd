@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 
@@ -22,7 +23,7 @@ import utils.Validate;
 public class Levels extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Levels.class);
+	private static Logger log = LogManager.getLogger(Levels.class);
 
 	/**
 	 * Get request just returns if the session can access the scoreboard or not

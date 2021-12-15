@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import com.onelogin.saml2.Auth;
@@ -50,7 +51,7 @@ import dbProcs.Getter;
  */
 public class ACS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ACS.class);
+	private static Logger log = LogManager.getLogger(ACS.class);
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

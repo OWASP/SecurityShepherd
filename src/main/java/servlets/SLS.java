@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import com.onelogin.saml2.Auth;
@@ -44,7 +45,7 @@ import utils.Validate;
  */
 public class SLS extends HttpServlet {
     private static final long serialVersionUID = -5824919455464886874L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SLS.class);
+	private static Logger log = LogManager.getLogger(SLS.class);
 
 	/**
 	 * Initiated in index.jsp. Invalidates session and Security Shepherd tokens are

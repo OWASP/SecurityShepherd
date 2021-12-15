@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.codec.binary.Base64;
 
@@ -47,7 +48,7 @@ public class SessionManagement3ChangePassword extends HttpServlet
 {
 
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SessionManagement3ChangePassword.class);
+	private static Logger log = LogManager.getLogger(SessionManagement3ChangePassword.class);
 	private static String levelName = "Session Management Challenge Three (Change Password)";
 	public static String levelHash = "b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a";
 	// private static String levelResult = ""; //This Servlet does not return a result

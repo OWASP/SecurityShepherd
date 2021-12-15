@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
@@ -41,7 +42,7 @@ import dbProcs.Setter;
 public class CsrfChallengeTargetThree extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CsrfChallengeTargetThree.class);
+	private static Logger log = LogManager.getLogger(CsrfChallengeTargetThree.class);
 	private static String levelName = "CSRF 3 Target";
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Three as complete.

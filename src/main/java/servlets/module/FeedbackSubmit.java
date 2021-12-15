@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.jsoup.parser.Parser;
 import org.owasp.encoder.Encode;
@@ -43,7 +44,7 @@ import dbProcs.Setter;
 public class FeedbackSubmit extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SolutionSubmit.class);
+	private static Logger log = LogManager.getLogger(SolutionSubmit.class);
 	/**
 	 * Initiated by a dynamic form returned by servlets.module.SolutionSubmit.doPost()
 	 * this method checks the existence of the submitted module identifier before ensuring that the submission is correct.

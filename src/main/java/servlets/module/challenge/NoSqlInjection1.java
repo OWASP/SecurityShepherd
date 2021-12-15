@@ -23,6 +23,7 @@ import com.mongodb.MongoSocketException;
 import com.mongodb.MongoTimeoutException;
 
 import dbProcs.MongoDatabase;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -56,7 +57,7 @@ import static dbProcs.MongoDatabase.getMongoDbConnection;
 public class NoSqlInjection1 extends HttpServlet {
 	// Sql Challenge 3
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(NoSqlInjection1.class);
+	private static Logger log = LogManager.getLogger(NoSqlInjection1.class);
 	private static String levelName = "NoSQL Injection Challenge One";
 	public static String levelHash = "d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66";
 

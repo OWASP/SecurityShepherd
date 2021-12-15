@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import servlets.admin.moduleManagement.GetFeedback;
@@ -43,7 +44,7 @@ import dbProcs.Getter;
 public class GetJsonScore extends HttpServlet {
 
 	private static final long serialVersionUID = -6168706954346341697L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(GetFeedback.class);
+	private static Logger log = LogManager.getLogger(GetFeedback.class);
 
 	/**
 	 * Used to return an administrator with the current progress of each player in a

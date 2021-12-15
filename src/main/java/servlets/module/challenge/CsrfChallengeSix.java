@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
@@ -42,7 +43,7 @@ import dbProcs.Setter;
 public class CsrfChallengeSix extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CsrfChallengeSix.class);
+	private static Logger log = LogManager.getLogger(CsrfChallengeSix.class);
 	private static final String levelHash = "2fff41105149e507c75b5a54e558470469d7024929cf78d570cd16c03bee3569";
 	private static String levelName = "CSRF Challenge 6";
 	/**

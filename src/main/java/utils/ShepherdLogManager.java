@@ -1,11 +1,12 @@
 package utils;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.ThreadContext;
 
 public class ShepherdLogManager
 {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ShepherdLogManager.class);
+	private static Logger log = LogManager.getLogger(ShepherdLogManager.class);
 
 	public static void setRequestIp (String theIp)
 	{
@@ -18,15 +19,15 @@ public class ShepherdLogManager
 		log.debug(theMessage);
 	}
 
-	public static void setRequestIp (Object theIp, String theForwardedIp)
+	public static void setRequestIp (String theIp, String theForwardedIp)
 	{
 		if (theForwardedIp != null && !theForwardedIp.isEmpty()) //If string is not null and not empty set normal message
-			ThreadContext.put("RemoteAddress", theIp.toString() + " from " + theForwardedIp);
+			ThreadContext.put("RemoteAddress", theIp + " from " + theForwardedIp);
 		else //No Forward Header detected so Log that
-			ThreadContext.put("RemoteAddress", theIp.toString() + " from ?.?.?.?");
+			ThreadContext.put("RemoteAddress", theIp + " from ?.?.?.?");
 	}
 
-	public static void logEvent(Object theIp, String theForwardedIp, String theMessage)
+	public static void logEvent(String theIp, String theForwardedIp, String theMessage)
 	{
 		setRequestIp(theIp, theForwardedIp);
 		log.debug(theMessage);
@@ -39,7 +40,7 @@ public class ShepherdLogManager
 	 * @param theMessage
 	 * @param theUser
 	 */
-	public static void logEvent(Object theIp, String theForwardedIp, String theMessage, Object theUser)
+	public static void logEvent(String theIp, String theForwardedIp, String theMessage, Object theUser)
 	{
 		String userName = new String();
 		if(theUser != null)
@@ -56,12 +57,12 @@ public class ShepherdLogManager
 	 * @param theForwardedIp
 	 * @param theUser
 	 */
-	public static void setRequestIp (Object theIp, String theForwardedIp, String userName)
+	public static void setRequestIp (String theIp, String theForwardedIp, String userName)
 	{
 
 		if (theForwardedIp != null && !theForwardedIp.isEmpty()) //If string is not null and not empty set normal message
-			ThreadContext.put("RemoteAddress", userName + " at " + theIp.toString() + " from " + theForwardedIp);
+			ThreadContext.put("RemoteAddress", userName + " at " + theIp + " from " + theForwardedIp);
 		else //No Forward Header detected so Log that
-			ThreadContext.put("RemoteAddress", userName + " at " + theIp.toString() + " from ?.?.?.?");
+			ThreadContext.put("RemoteAddress", userName + " at " + theIp + " from ?.?.?.?");
 	}
 }

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
@@ -44,7 +45,7 @@ import utils.XssFilter;
 public class XssChallengeTwo extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(XssChallengeTwo.class);
+	private static Logger log = LogManager.getLogger(XssChallengeTwo.class);
 	private static String levelName = "Cross Site Scripting Challenge Two";
 	private static String levelHash = "t227357536888e807ff0f0eff751d6034bafe48954575c3a6563cb47a85b1e888";
 	/**

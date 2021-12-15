@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.Hash;
@@ -49,7 +50,7 @@ public class BrokenCrypto4 extends HttpServlet {
 	private static final String levelHash = new String(
 			"b927fc4d8c9f70a78f8b6fc46a0cc18533a88b2363054a1f391fe855954d12f9");
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(BrokenCrypto4.class);
+	private static Logger log = LogManager.getLogger(BrokenCrypto4.class);
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Setting IpAddress To Log and taking header for original IP if forwarded from

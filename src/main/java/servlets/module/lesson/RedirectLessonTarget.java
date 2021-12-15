@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
@@ -39,7 +40,7 @@ import utils.Validate;
 public class RedirectLessonTarget extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(RedirectLessonTarget.class);
+	private static Logger log = LogManager.getLogger(RedirectLessonTarget.class);
 
 	public void doGet (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException

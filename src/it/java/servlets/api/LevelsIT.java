@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ import dbProcs.Setter;
 
 public class LevelsIT {
 	private static String lang = "en_GB";
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(LevelsIT.class);
+	private static Logger log = LogManager.getLogger(LevelsIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
