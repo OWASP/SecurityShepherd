@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -49,7 +51,7 @@ public class SqlInjection7 extends HttpServlet
 	private static final String levelName = "SQLi C7";
 	private static String levelHash = "8c2dd7e9818e5c6a9f8562feefa002dc0e455f0e92c8a46ab0cf519b1547eced";
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SqlInjection7.class);
+	private static Logger log = LogManager.getLogger(SqlInjection7.class);
 
 	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException

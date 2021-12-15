@@ -2,12 +2,13 @@ package utils;
 
 import java.io.BufferedReader;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.json.JSONArray;
 
 public class GetJson
 {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(GetJson.class);
+	private static Logger log = LogManager.getLogger(GetJson.class);
 	public static JSONArray getJssonArrayFromPost (BufferedReader reader)
 	{
 		StringBuffer jb = new StringBuffer();

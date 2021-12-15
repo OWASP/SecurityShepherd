@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
@@ -40,7 +41,7 @@ import dbProcs.Getter;
 public class EnableModuleBlock extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(EnableModuleBlock.class);
+	private static Logger log = LogManager.getLogger(EnableModuleBlock.class);
 	/**
 	 * Used to set a limit to the progress a player can make in a CTF environment
 	 * @param moduleId The identifier of the module that is locked, preventing the user from continuing in the game

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.codec.binary.Base64;
 import org.owasp.encoder.Encode;
@@ -51,7 +52,7 @@ import dbProcs.Getter;
 public class SessionManagement7SecretQuestion extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SessionManagement7SecretQuestion.class);
+	private static Logger log = LogManager.getLogger(SessionManagement7SecretQuestion.class);
 	private static String levelName = "Session Management Challenge 7 (Secret Question)";
 	private static String levelHash = "269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80";
 	//To catch most requests before calling the DB, the in comming Answers must be one of the following flowers

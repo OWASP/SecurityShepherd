@@ -3,6 +3,7 @@ package servlets.module.challenge;
 import dbProcs.FileInputProperties;
 import dbProcs.GetterTest;
 import dbProcs.Setter;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +28,7 @@ import static org.junit.Assert.fail;
 
 public class XxeChallenge1IT {
     private static final String LANGUAGE_CODE = "en_GB";
-    private static org.apache.logging.log4j.Logger log = LogManager.getLogger(XxeChallenge1IT.class);
+    private static Logger log = LogManager.getLogger(XxeChallenge1IT.class);
     private static String applicationRoot = new String();
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;

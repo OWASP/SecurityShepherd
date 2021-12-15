@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,7 @@ import testUtils.TestProperties;
  * @author Cosmin Craciun credit to Mark Denihan
  */
 public class DeletePlayersIT {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(DeletePlayersIT.class);
+	private static Logger log = LogManager.getLogger(DeletePlayersIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

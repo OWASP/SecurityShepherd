@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -45,7 +46,7 @@ import utils.Validate;
 public class UrlAccess1 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(UrlAccess1.class);
+	private static Logger log = LogManager.getLogger(UrlAccess1.class);
 	private static String levelName = "URL Access 1 (User)";
 	/**
 	 * This class is the User Level Function Call that works correctly from the level's view without manipulation

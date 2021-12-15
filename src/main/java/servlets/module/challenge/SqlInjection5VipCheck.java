@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -47,7 +48,7 @@ public class SqlInjection5VipCheck extends HttpServlet
 {
 	private static final String levelName = "SQLi C5 VIPCouponCheck";
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SqlInjection5VipCheck.class);
+	private static Logger log = LogManager.getLogger(SqlInjection5VipCheck.class);
 
 	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException

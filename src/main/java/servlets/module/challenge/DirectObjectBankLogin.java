@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -47,7 +48,7 @@ import dbProcs.Database;
 public class DirectObjectBankLogin extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(DirectObjectBankLogin.class);
+	private static Logger log = LogManager.getLogger(DirectObjectBankLogin.class);
 	private static String levelName = "Insecure Direct Object Bank Challenge";
 	public static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
 	private static String levelResult = "4a1df02af317270f844b56edc0c29a09f3dd39faad3e2a23393606769b2dfa35";

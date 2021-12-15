@@ -7,6 +7,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -31,7 +32,7 @@ import org.apache.logging.log4j.LogManager;
  *
  */
 public class Validate {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Validate.class);
+	private static Logger log = LogManager.getLogger(Validate.class);
 
 	/**
 	 * Finds JSession token from user's cookies[], validates and returns.

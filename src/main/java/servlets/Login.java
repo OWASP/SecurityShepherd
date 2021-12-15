@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.Hash;
@@ -40,7 +41,7 @@ import dbProcs.Getter;
  */
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Login.class);
+	private static Logger log = LogManager.getLogger(Login.class);
 
 	/**
 	 * Initiated by login.jsp. Once this post request has been completely processed,

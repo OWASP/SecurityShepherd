@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -48,7 +49,7 @@ import dbProcs.Setter;
  */
 public class SolutionSubmit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SolutionSubmit.class);
+	private static Logger log = LogManager.getLogger(SolutionSubmit.class);
 
 	/**
 	 * Initiated by a dynamic form in index.jsp this method checks the existence of

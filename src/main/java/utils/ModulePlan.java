@@ -2,6 +2,7 @@ package utils;
 
 import java.sql.SQLException;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
@@ -30,7 +31,7 @@ import dbProcs.Setter;
  *
  */
 public class ModulePlan {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ModulePlan.class);
+	private static Logger log = LogManager.getLogger(ModulePlan.class);
 
 	private static boolean openFloor = false;
 	private static boolean incrementalFloor = true;

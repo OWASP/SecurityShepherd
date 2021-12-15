@@ -1,5 +1,6 @@
 package utils;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -28,7 +29,7 @@ import javax.xml.parsers.ParserConfigurationException; // catching unsupported f
  */
 public class XmlDocumentBuilder {
 
-    private static org.apache.logging.log4j.Logger log = LogManager.getLogger(XmlDocumentBuilder.class);
+    private static Logger log = LogManager.getLogger(XmlDocumentBuilder.class);
 
     public static DocumentBuilder xmlDocBuilder(Boolean disallow_doctype_decl, Boolean external_general_entities,
                                                        Boolean external_parameter_entities, Boolean load_external_dtd,

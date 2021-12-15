@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -48,7 +49,7 @@ public class ModuleServletTemplate
 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ModuleServletTemplate.class);
+	private static Logger log = LogManager.getLogger(ModuleServletTemplate.class);
 	private static String levelName = "Level Name Here";
 	public static String levelHash = "Level Hash Here";
 	private static String levelResult = ""; // Put the Level Result Key here only if the level is not hardcoded in the database or mobile application

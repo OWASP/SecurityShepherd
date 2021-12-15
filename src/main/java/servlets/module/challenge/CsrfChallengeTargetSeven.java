@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.Hash;
@@ -45,7 +46,7 @@ public class CsrfChallengeTargetSeven extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static String moduleHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CsrfChallengeTargetSeven.class);
+	private static Logger log = LogManager.getLogger(CsrfChallengeTargetSeven.class);
 	private static String levelName = "CSRF Seven Target";
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Two as complete.

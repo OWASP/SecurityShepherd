@@ -1,5 +1,6 @@
 package testUtils;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertNotNull;
 
 public class TestXmlDocumentBuilder {
-    private static org.apache.logging.log4j.Logger log = LogManager.getLogger(TestXmlDocumentBuilder.class);
+    private static Logger log = LogManager.getLogger(TestXmlDocumentBuilder.class);
 
     @BeforeAll
     public static void initAll()

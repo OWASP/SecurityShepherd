@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,7 +33,7 @@ import utils.ScoreboardStatus;
  *
  */
 public class GetterTest {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(GetterTest.class);
+	private static Logger log = LogManager.getLogger(GetterTest.class);
 	private static String lang = new String("en_GB");
 	private static Locale locale = new Locale(lang);
 	private static String applicationRoot = new String();

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -44,7 +45,7 @@ import utils.ScoreboardStatus;
  * @author Mark
  */
 public class Getter {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Getter.class);
+	private static Logger log = LogManager.getLogger(Getter.class);
 	/**
 	 * Used for scoreboards / progress bars
 	 */

@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Random;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,7 +24,7 @@ import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
 public class SetterTest {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SetterTest.class);
+	private static Logger log = LogManager.getLogger(SetterTest.class);
 	private static String applicationRoot = new String();
 
 	/**

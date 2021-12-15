@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import com.onelogin.saml2.Auth;
@@ -36,7 +37,7 @@ import utils.ShepherdLogManager;
 public class SSOLogin extends HttpServlet {
 
 	private static final long serialVersionUID = 1488140446224058032L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SSOLogin.class);
+	private static Logger log = LogManager.getLogger(SSOLogin.class);
 
 	/**
 	 * Redirects user to index.jsp

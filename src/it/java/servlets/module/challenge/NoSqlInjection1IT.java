@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -28,7 +29,7 @@ public class NoSqlInjection1IT extends Mockito {
 	private static String LANG = "en_GB";
 	private static String NOSQL_ATTACK = "';return(true);var a='a";
 
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(NoSqlInjection1IT.class);
+	private static Logger log = LogManager.getLogger(NoSqlInjection1IT.class);
 
 	@Mock
 	private MockHttpServletRequest request;

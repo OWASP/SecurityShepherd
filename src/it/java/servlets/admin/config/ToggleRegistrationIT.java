@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,7 +20,7 @@ import testUtils.TestProperties;
 import utils.OpenRegistration;
 
 public class ToggleRegistrationIT {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ToggleRegistrationIT.class);
+	private static Logger log = LogManager.getLogger(ToggleRegistrationIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

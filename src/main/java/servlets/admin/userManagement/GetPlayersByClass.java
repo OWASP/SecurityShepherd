@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -42,7 +43,7 @@ import dbProcs.Getter;
 public class GetPlayersByClass extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(GetPlayersByClass.class);
+	private static Logger log = LogManager.getLogger(GetPlayersByClass.class);
 
 	/**
 	 * Initiated by assignPlayers.jsp. This servlet returns options for inside html select

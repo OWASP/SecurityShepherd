@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -41,7 +42,7 @@ import dbProcs.Setter;
 public class CreateNewAdmin extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CreateNewAdmin.class);
+	private static Logger log = LogManager.getLogger(CreateNewAdmin.class);
 	/**
 	 * Initiated by createNewAdmin.jsp. This method adds administrators to the system if valid data is submitted, otherwise no admin will be added to the database.
 	 * Email is gathered for future functionality. Adding of the player to the core database is handed by Setter.playerCreate

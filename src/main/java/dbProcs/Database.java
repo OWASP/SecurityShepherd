@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -34,7 +35,7 @@ import org.apache.logging.log4j.LogManager;
  * @author Mark
  */
 public class Database {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Database.class);
+	private static Logger log = LogManager.getLogger(Database.class);
 
 	/**
 	 * This method is used by the application to open an connection to the database

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
@@ -44,7 +45,7 @@ import dbProcs.Database;
 public class DirectObjectBankRegistration extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(DirectObjectBankRegistration.class);
+	private static Logger log = LogManager.getLogger(DirectObjectBankRegistration.class);
 	private static String levelName = "Insecure Direct Object Bank Challenge (Register)";
 	public static String levelHash = "1f0935baec6ba69d79cfb2eba5fdfa6ac5d77fadee08585eb98b130ec524d00c";
 	/**

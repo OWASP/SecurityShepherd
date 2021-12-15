@@ -3,6 +3,7 @@ package utils;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
@@ -30,7 +31,7 @@ import dbProcs.Setter;
  *
  */
 public class CountdownHandler {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CountdownHandler.class);
+	private static Logger log = LogManager.getLogger(CountdownHandler.class);
 
 	private static LocalDateTime startTime;
 	private static boolean hasStartTime = false;

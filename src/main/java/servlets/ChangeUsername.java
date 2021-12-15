@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -38,7 +39,7 @@ import utils.Validate;
  */
 public class ChangeUsername extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ChangeUsername.class);
+	private static Logger log = LogManager.getLogger(ChangeUsername.class);
 
 	/**
 	 * Initiated by index.jsp, getStarted.jsp. This changes a users username.

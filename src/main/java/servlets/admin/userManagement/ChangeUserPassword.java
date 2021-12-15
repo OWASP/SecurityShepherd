@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -41,7 +42,7 @@ import dbProcs.Setter;
 public class ChangeUserPassword extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ChangeUserPassword.class);
+	private static Logger log = LogManager.getLogger(ChangeUserPassword.class);
 	private static String functionName = new String("Player Password Update");
 
 	public void doPost (HttpServletRequest request, HttpServletResponse response)

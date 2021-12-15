@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
@@ -48,7 +49,7 @@ public class SqlInjection5 extends HttpServlet
 	public static String levelHash = "8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62";
 	private static String levelSolution = "343f2e424d5d7a2eff7f9ee5a5a72fd97d5a19ef7bff3ef2953e033ea32dd7ee";
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SqlInjection5.class);
+	private static Logger log = LogManager.getLogger(SqlInjection5.class);
 
 	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException

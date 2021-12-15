@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
@@ -42,7 +43,7 @@ import dbProcs.Setter;
 public class CsrfChallengeJSON extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CsrfChallengeJSON.class);
+	private static Logger log = LogManager.getLogger(CsrfChallengeJSON.class);
 	private static String levelName = "Cross Site Request Forgery Challenge NEW";
 	private static String levelHash = "2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb";
 	/**

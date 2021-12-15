@@ -3,6 +3,7 @@ package servlets.module.challenge;
 import dbProcs.FileInputProperties;
 import dbProcs.Getter;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -50,7 +51,7 @@ import java.util.ResourceBundle;
 public class XxeChallenge1
         extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(XxeChallenge1.class);
+    private static final Logger log = LogManager.getLogger(XxeChallenge1.class);
     private static final String LEVEL_NAME = "XXE Challenge 1";
     private static final String LEVEL_HASH = "ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123e";
 

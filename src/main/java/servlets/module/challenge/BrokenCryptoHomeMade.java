@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
@@ -57,7 +58,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 	public static String userNameKey = randomKeyLengthString();
 	private static String serverEncryptionKey = randomKeyLengthString();
 	private static String encryptionKeySalt = randomKeyLengthString();
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(BrokenCryptoHomeMade.class);
+	private static Logger log = LogManager.getLogger(BrokenCryptoHomeMade.class);
 	public static List<List<String>> challenges = new ArrayList<List<String>>();
 	public static boolean initDone = false;
 

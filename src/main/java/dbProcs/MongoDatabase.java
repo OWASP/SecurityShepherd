@@ -3,6 +3,7 @@ package dbProcs;
 import com.mongodb.*;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
@@ -36,7 +37,7 @@ import java.util.Properties;
 
 public class MongoDatabase {
 
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(MongoDatabase.class);
+	private static Logger log = LogManager.getLogger(MongoDatabase.class);
 
 	/**
 	 * Method to close a MongoDb connection

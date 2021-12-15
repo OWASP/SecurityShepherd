@@ -3,6 +3,7 @@ package utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -12,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
  */
 public class UserKicker
 {
-	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(UserKicker.class);
+	private static Logger log = LogManager.getLogger(UserKicker.class);
 	private static List<String> kickTheseUsers = new ArrayList<String>();
 
 	/**
