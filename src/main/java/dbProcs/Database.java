@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Used to create database connections using the FileInputProperties.readfile
@@ -30,15 +30,15 @@ import org.apache.log4j.Logger;
  *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Mark
  */
 public class Database {
-	private static org.apache.log4j.Logger log = Logger.getLogger(Database.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Database.class);
 
 	/**
 	 * This method is used by the application to open an connection to the database
-	 * 
+	 *
 	 * @param conn The connection to close
 	 * @throws SQLException
 	 */
@@ -63,7 +63,7 @@ public class Database {
 	/**
 	 * This method is used by the application to close an open connection to a
 	 * database server
-	 * 
+	 *
 	 * @param conn The connection to close
 	 */
 	public static void closeConnection(Connection conn) {
@@ -80,7 +80,7 @@ public class Database {
 	/**
 	 * This method is used by the application to get a connection to the secure
 	 * database sever based on the input path to a specific properties file.
-	 * 
+	 *
 	 * @param ApplicationRoot The running context of the application.
 	 * @param path            The path to the properties file to use for this
 	 *                        connection. this is filtered for path traversal
@@ -126,7 +126,7 @@ public class Database {
 			log.fatal(message);
 			throw new RuntimeException(message);
 		}
-		
+
 		String driverType = prop.getProperty("DriverType");
 		if (driverType == null) {
 			String message=errorBase + "DriverType";
@@ -184,7 +184,7 @@ public class Database {
 
 	/**
 	 * @throws IOException Returns connection to core schema in database
-	 * 
+	 *
 	 * @param ApplicationRoot @return Connection to core schema with admin
 	 *                        privileges @throws FileNotFoundException @throws
 	 *                        SQLException @throws
@@ -250,7 +250,7 @@ public class Database {
 	/**
 	 * This method is used by the application to get a connection to the secure
 	 * database sever
-	 * 
+	 *
 	 * @param ApplicationRoot The running context of the application.
 	 * @return A connection to the secure database server
 	 * @throws SQLException
@@ -311,7 +311,7 @@ public class Database {
 	/**
 	 * This method is used by the application to get a connection to the secure
 	 * database sever's SQL injection Lesson schema
-	 * 
+	 *
 	 * @param ApplicationRoot The running context of the application.
 	 * @return A connection to the secure database server
 	 * @throws SQLException

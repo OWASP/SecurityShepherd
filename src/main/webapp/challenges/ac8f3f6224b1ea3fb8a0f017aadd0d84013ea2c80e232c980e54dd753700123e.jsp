@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java"
          import="utils.*, org.owasp.encoder.Encode" errorPage="" %>
 <%@ page import="java.util.Locale, java.util.ResourceBundle" %>
-<%@ page import="org.apache.log4j.Logger" %>
+<%@ page import="org.apache.logging.log4j.LogManager" %>
 <%@ page import="dbProcs.FileInputProperties" %>
 <%
     /**
@@ -28,7 +28,7 @@
     final String LEVEL_HASH = "ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123e";
 
     Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-    //Logger log = Logger.getLogger(this.getClass());
+    //org.apache.logging.log4j.Logger log = LogManager.getLogger(this.getClass());
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.injection." + LEVEL_HASH, locale);
     //Used more than once translations
     String i18nLevelName = bundle.getString("challenge.challengeName");

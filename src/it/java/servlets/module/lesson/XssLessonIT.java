@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import dbProcs.Setter;
 public class XssLessonIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(XssLessonIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(XssLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
@@ -37,7 +37,7 @@ public class XssLessonIT
 		TestProperties.executeSql(log);
 
 	}
-    
+
     @Before
 	public void setup()
 	{
@@ -108,7 +108,7 @@ public class XssLessonIT
 				request.setCookies(response.getCookies());
 				String xssString = "<script>alert(1)</script>";
 				String servletResponse = getModuleDoPost(xssString, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -134,7 +134,7 @@ public class XssLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelValidAnswerImgTags()
 	{
@@ -161,7 +161,7 @@ public class XssLessonIT
 				request.setCookies(response.getCookies());
 				String xssString = "<img src='#' onerror='alert(1)'>";
 				String servletResponse = getModuleDoPost(xssString, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -187,7 +187,7 @@ public class XssLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelValidAnsweriFrameTags()
 	{
@@ -214,7 +214,7 @@ public class XssLessonIT
 				request.setCookies(response.getCookies());
 				String xssString = "<iframe src='javascript:alert(1);//'></iframe>";
 				String servletResponse = getModuleDoPost(xssString, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -240,7 +240,7 @@ public class XssLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelValidAnswerAnchorTags()
 	{
@@ -267,7 +267,7 @@ public class XssLessonIT
 				request.setCookies(response.getCookies());
 				String xssString = "<a href='javascript:alert(1);//'>click me</a>";
 				String servletResponse = getModuleDoPost(xssString, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -293,7 +293,7 @@ public class XssLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidAnswer()
 	{
@@ -320,7 +320,7 @@ public class XssLessonIT
 				request.setCookies(response.getCookies());
 				String xssString = "<p>NotXSSAtAll</p>";
 				String servletResponse = getModuleDoPost(xssString, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -331,7 +331,7 @@ public class XssLessonIT
 					String message = new String("Invalid Solution Returnedd Result Key");
 					log.fatal(message);
 					fail(message);
-				} 
+				}
 				if(!servletResponse.contains(xssString))
 				{
 					String message = new String("Xss String Not Reflected in Response");
@@ -346,7 +346,7 @@ public class XssLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidAnswerIncompleteScript()
 	{
@@ -373,7 +373,7 @@ public class XssLessonIT
 				request.setCookies(response.getCookies());
 				String xssString = "<script>alert(1)";
 				String servletResponse = getModuleDoPost(xssString, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -384,7 +384,7 @@ public class XssLessonIT
 					String message = new String("Invalid Solution Returnedd Result Key");
 					log.fatal(message);
 					fail(message);
-				} 
+				}
 				if(!servletResponse.contains(xssString))
 				{
 					String message = new String("Xss String Not Reflected in Response");
@@ -399,7 +399,7 @@ public class XssLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidCsrfToken()
 	{
@@ -426,7 +426,7 @@ public class XssLessonIT
 				request.setCookies(response.getCookies());
 				String xssString = "<script>alert(1)";
 				String servletResponse = getModuleDoPost(xssString, "wrongCsrfToken", 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -437,7 +437,7 @@ public class XssLessonIT
 					String message = new String("Invalid Solution Returnedd Result Key");
 					log.fatal(message);
 					fail(message);
-				} 
+				}
 				if(servletResponse.contains(xssString))
 				{
 					String message = new String("Xss String Reflected in Response with bad CSRF Token");
@@ -458,7 +458,7 @@ public class XssLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelNoAuth()
 	{
@@ -466,7 +466,7 @@ public class XssLessonIT
 		{
 			request.getSession().setAttribute("lang", lang);
 			String servletResponse = getModuleDoPost("Anything", "Anything", 200); //Mock response is 200 for Unauthenticated response for some reason
-			if(servletResponse.contains("You must be getting funky")) 
+			if(servletResponse.contains("You must be getting funky"))
 			{
 				String message = new String("General 'Funky' Error Detected");
 				log.fatal(message);
@@ -477,7 +477,7 @@ public class XssLessonIT
 				String message = new String("Did not get 'Unauthenticated' Response");
 				log.fatal(message);
 				fail(message);
-			} 
+			}
 			else if(servletResponse.contains("Results")) //This string is in all possible responses except unauthenticated
 			{
 				String message = new String("Appears that an Unauthticated Response Worked");

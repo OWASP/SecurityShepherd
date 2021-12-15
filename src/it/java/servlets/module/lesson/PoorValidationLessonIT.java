@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import dbProcs.Setter;
 public class PoorValidationLessonIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(PoorValidationLessonIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(PoorValidationLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
@@ -37,7 +37,7 @@ public class PoorValidationLessonIT
 		TestProperties.executeSql(log);
 
 	}
-    
+
     @Before
 	public void setup()
 	{
@@ -81,7 +81,7 @@ public class PoorValidationLessonIT
 		}
 		return null;
 	}
-	
+
 	@Test
 	public void testLevelValidAnswer()
 	{
@@ -108,7 +108,7 @@ public class PoorValidationLessonIT
 				request.setCookies(response.getCookies());
 				String submittedUserData = "-1";
 				String servletResponse = getModuleDoPost(submittedUserData, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -128,7 +128,7 @@ public class PoorValidationLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidAnswer()
 	{
@@ -155,7 +155,7 @@ public class PoorValidationLessonIT
 				request.setCookies(response.getCookies());
 				String submittedUserData = "1";
 				String servletResponse = getModuleDoPost(submittedUserData, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -166,7 +166,7 @@ public class PoorValidationLessonIT
 					String message = new String("Valid Solution returned Result Key");
 					log.fatal(message);
 					fail(message);
-				} 
+				}
 				else if(!servletResponse.contains("Valid Number Submitted"))
 				{
 					String message = new String("Unexpected Lesson Response");
@@ -181,8 +181,8 @@ public class PoorValidationLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testLevelNoAuth()
 	{
@@ -192,7 +192,7 @@ public class PoorValidationLessonIT
 			String csrfToken = "wrong";
 			String submittedUserData = "1";
 			String servletResponse = getModuleDoPost(submittedUserData, csrfToken, 200); //Mock response is 200 for Unauthenticated response for some reason
-			if(servletResponse.contains("You must be getting funky")) 
+			if(servletResponse.contains("You must be getting funky"))
 			{
 				String message = new String("General 'Funky' Error Detected");
 				log.fatal(message);
@@ -203,7 +203,7 @@ public class PoorValidationLessonIT
 				String message = new String("Did not get 'Unauthenticated' Response");
 				log.fatal(message);
 				fail(message);
-			} 
+			}
 		}
 		catch(Exception e)
 		{

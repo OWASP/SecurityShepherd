@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -23,7 +23,7 @@ import dbProcs.Setter;
 
 public class LevelsIT {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(LevelsIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(LevelsIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
@@ -60,7 +60,7 @@ public class LevelsIT {
 
 	/**
 	 * Method to Simulate the interaction with the getModule servlet.
-	 * 
+	 *
 	 * @param moduleId  The ID of the Module to Search For
 	 * @param csrfToken The CSRF Token of the User
 	 * @return The Content of the Response (Which is supposed to be the location of

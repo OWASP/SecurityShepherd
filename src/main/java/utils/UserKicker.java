@@ -3,18 +3,18 @@ package utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Used to help application kick users that have been suspended
  * @author Mark Denihan
  *
  */
-public class UserKicker 
+public class UserKicker
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(UserKicker.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(UserKicker.class);
 	private static List<String> kickTheseUsers = new ArrayList<String>();
-	
+
 	/**
 	 * Add's a specific user to the kick list
 	 * @param userName The user name to kick
@@ -24,7 +24,7 @@ public class UserKicker
 		log.debug("Adding " + userName + " to kick list");
 		kickTheseUsers.add(userName);
 	}
-	
+
 	/**
 	 * Tells you if a user is on the kick list
 	 * @param userName User to search the list for
@@ -46,7 +46,7 @@ public class UserKicker
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Removes a user from the kick list. Should be used after user has been kicked
 	 * @param userName Username of the user to remove from kick list

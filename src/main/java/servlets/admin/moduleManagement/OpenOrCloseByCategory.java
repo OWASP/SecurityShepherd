@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 import dbProcs.Setter;
@@ -20,21 +20,21 @@ import utils.Validate;
 public class OpenOrCloseByCategory extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(OpenOrCloseByCategory.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(OpenOrCloseByCategory.class);
 	/**
 	 * Controller class used to specify what modules to mark as closed/open
 	 * @param toOpen Array of moduleId's to open
 	 * @param toClose Array of moduleId's to close
 	 * @param csrfToken The csrf protection token for this function
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& servlets.module.OpenOrCloseByCategory &&&");
 		String htmlOutput = new String();
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
 		Cookie tokenCookie = Validate.getToken(request.getCookies());

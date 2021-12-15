@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -22,11 +22,11 @@ import testUtils.TestProperties;
 /**
  * This class just tests the servlet code. The Setter code is better tested in
  * the SetterTest test's
- * 
+ *
  * @author Cosmin Craciun credit to Mark Denihan
  */
 public class DeletePlayersIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(DeletePlayersIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(DeletePlayersIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import testUtils.TestProperties;
 public class UnvalidatedForwardsLessonIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(UnvalidatedForwardsLessonIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(UnvalidatedForwardsLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
@@ -37,7 +37,7 @@ public class UnvalidatedForwardsLessonIT
 		TestProperties.executeSql(log);
 
 	}
-    
+
     @Before
 	public void setup()
 	{
@@ -114,7 +114,7 @@ public class UnvalidatedForwardsLessonIT
 				request.getSession().setAttribute("tempId", falseIdTestValue); //Test Value
 				String messageForAdmin = new String(httpsBase+redriectUrlPath+httpsBase+targetUrlPath+falseIdTestValue);
 				String servletResponse = getModuleDoPost(messageForAdmin, csrfToken);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -125,7 +125,7 @@ public class UnvalidatedForwardsLessonIT
 					String message = new String("Valid Solution did not yeild Result Key");
 					log.fatal(message);
 					fail(message);
-				} 
+				}
 			}
 		}
 		catch(Exception e)
@@ -134,7 +134,7 @@ public class UnvalidatedForwardsLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidSecondUrlAnswer()
 	{
@@ -166,7 +166,7 @@ public class UnvalidatedForwardsLessonIT
 				request.getSession().setAttribute("tempId", falseIdTestValue); //Test Value
 				String messageForAdmin = new String(httpsBase+redriectUrlPath+httpsBase+targetUrlPath+falseIdTestValue);
 				String servletResponse = getModuleDoPost(messageForAdmin, csrfToken);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -192,7 +192,7 @@ public class UnvalidatedForwardsLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidFirstUrlQueryAnswer()
 	{
@@ -224,7 +224,7 @@ public class UnvalidatedForwardsLessonIT
 				request.getSession().setAttribute("tempId", falseIdTestValue); //Test Value
 				String messageForAdmin = new String(httpsBase+redriectUrlPath+httpsBase+targetUrlPath+falseIdTestValue);
 				String servletResponse = getModuleDoPost(messageForAdmin, csrfToken);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -250,7 +250,7 @@ public class UnvalidatedForwardsLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidFirstUrlAnswer()
 	{
@@ -282,7 +282,7 @@ public class UnvalidatedForwardsLessonIT
 				request.getSession().setAttribute("tempId", falseIdTestValue); //Test Value
 				String messageForAdmin = new String(httpsBase+redriectUrlPath+httpsBase+targetUrlPath+falseIdTestValue);
 				String servletResponse = getModuleDoPost(messageForAdmin, csrfToken);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -308,7 +308,7 @@ public class UnvalidatedForwardsLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidTempId()
 	{
@@ -340,7 +340,7 @@ public class UnvalidatedForwardsLessonIT
 				request.getSession().setAttribute("tempId", "differentValue"); //Test Value
 				String messageForAdmin = new String(httpsBase+redriectUrlPath+httpsBase+targetUrlPath+falseIdTestValue);
 				String servletResponse = getModuleDoPost(messageForAdmin, csrfToken);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -366,7 +366,7 @@ public class UnvalidatedForwardsLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidUrl()
 	{
@@ -394,7 +394,7 @@ public class UnvalidatedForwardsLessonIT
 				request.getSession().setAttribute("tempId", "anything"); //Test Value
 				String messageForAdmin = new String("ftp:notavalidURLatall");
 				String servletResponse = getModuleDoPost(messageForAdmin, csrfToken);
-				if(!servletResponse.contains("You must be getting funky")) 
+				if(!servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error NOT Detected");
 					log.fatal(message);

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 
 import dbProcs.Getter;
@@ -22,15 +22,15 @@ import utils.Validate;
 public class Levels extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(Levels.class);
-	
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Levels.class);
+
 	/**
 	 * Get request just returns if the session can access the scoreboard or not
 	 */
-	public void doGet (HttpServletRequest request, HttpServletResponse response) 
+	public void doGet (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
-		PrintWriter out = response.getWriter(); 
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
 		Locale locale = new Locale(Validate.validateLanguage(ses));
@@ -57,8 +57,8 @@ public class Levels extends HttpServlet
 			theModules = Getter.getModulesJson(userId, floor, locale);
 			response.setContentType("application/json");
 			out.write(theModules.toJSONString());
-		} 
-		else 
+		}
+		else
 		{
 			if(!validSession)
 			{
@@ -72,5 +72,5 @@ public class Levels extends HttpServlet
 			}
 		}
 	}
-	
+
 }

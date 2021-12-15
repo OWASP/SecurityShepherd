@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class MongoDatabaseTest {
     private static MongoClient mongoClient;
     private static String TEST_PATH = "mongo_challenge_test";
 
-    private static org.apache.log4j.Logger log = Logger.getLogger(MongoDatabaseTest.class);
+    private static org.apache.logging.log4j.Logger log = LogManager.getLogger(MongoDatabaseTest.class);
 
     @BeforeAll
     public static void initAll() throws IOException

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 
@@ -27,19 +27,19 @@ import dbProcs.Database;
  * SQL Injection Challenge Two - Does not use user specific keys
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
@@ -47,22 +47,22 @@ public class SqlInjectionEmail extends HttpServlet
 {
 	//SQL Challenge One
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjectionEmail.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SqlInjectionEmail.class);
 	private static String levelName = "SQL Injection Challenge Two";
 	public static String levelHash = "ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b";
 	// private static String levelResult = ""; // Stored in Vulnerable DB. Not user Specific
 	/**
-	 * This function is used to make a call to a database and process its results. The call made to the database is secured using an insufficient privilege. 
+	 * This function is used to make a call to a database and process its results. The call made to the database is secured using an insufficient privilege.
 	 * Players must overcome this filter to complete the module
 	 * @param userIdentity Used to filter database results
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
-		
+
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
@@ -71,10 +71,10 @@ public class SqlInjectionEmail extends HttpServlet
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-			PrintWriter out = response.getWriter();  
+			PrintWriter out = response.getWriter();
 			out.print(getServletInfo());
 			String htmlOutput = new String();
-			
+
 			try
 			{
 				String userIdentity = request.getParameter("userIdentity");
@@ -84,23 +84,23 @@ public class SqlInjectionEmail extends HttpServlet
 					log.debug("Filtered to " + userIdentity);
 					String ApplicationRoot = getServletContext().getRealPath("");
 					log.debug("Servlet root = " + ApplicationRoot );
-					
+
 					log.debug("Getting Connection to Database");
 					Connection conn = Database.getChallengeConnection(ApplicationRoot, "SqlChallengeEmail");
 					Statement stmt = conn.createStatement();
 					log.debug("Gathering result set");
 					ResultSet resultSet = stmt.executeQuery("SELECT * FROM customers WHERE customerAddress = '" + userIdentity + "'");
-					
+
 					int i = 0;
 					htmlOutput = "<h2 class='title'>" + bundle.getString("response.searchResults")+ "</h2>";
 					htmlOutput += "<table><tr><th>"+ bundle.getString("response.table.name") +"</th><th>"+ bundle.getString("response.table.address") +"</th><th>"+ bundle.getString("response.table.comment") +"</th></tr>";
-					
+
 					log.debug("Opening Result Set from query");
 					while(resultSet.next())
 					{
 						log.debug("Adding Customer " + resultSet.getString(2));
 						htmlOutput += "<tr><td>"
-							+ Encode.forHtml(resultSet.getString(2)) + "</td><td>" 
+							+ Encode.forHtml(resultSet.getString(2)) + "</td><td>"
 							+ Encode.forHtml(resultSet.getString(3)) + "</td><td>"
 							+ Encode.forHtml(resultSet.getString(4)) + "</td></tr>";
 						i++;

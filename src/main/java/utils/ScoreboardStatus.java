@@ -2,7 +2,7 @@ package utils;
 
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
@@ -15,7 +15,7 @@ import dbProcs.Setter;
  */
 public class ScoreboardStatus {
 
-	private static org.apache.log4j.Logger log = Logger.getLogger(ScoreboardStatus.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(ScoreboardStatus.class);
 
 	private static boolean scoreboardEnabled = true;
 	private static String scoreboardClass = new String();

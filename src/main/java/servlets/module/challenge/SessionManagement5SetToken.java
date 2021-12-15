@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 
@@ -52,7 +52,7 @@ import dbProcs.Database;
 public class SessionManagement5SetToken extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement5SetToken.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SessionManagement5SetToken.class);
 	private static String levelName = "SessionManagement5SetToken";
 	public static String levelHash = SessionManagement5.levelHash;
 	/**

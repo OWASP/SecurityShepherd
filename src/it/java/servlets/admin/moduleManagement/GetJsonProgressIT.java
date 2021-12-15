@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,12 +20,12 @@ import testUtils.TestProperties;
 /**
  * This class just tests the servlet code. The Setter code is better tested in
  * the GetterTest test's
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class GetJsonProgressIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(GetJsonProgressIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(GetJsonProgressIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
@@ -33,7 +33,7 @@ public class GetJsonProgressIT {
 
 	/**
 	 * Creates DB or Restores DB to Factory Defaults before running tests
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java"
          import="utils.*, org.owasp.encoder.Encode" errorPage="" %>
 <%@ page import="java.util.Locale, java.util.ResourceBundle" %>
-<%@ page import="org.apache.log4j.Logger" %>
+<%@ page import="org.apache.logging.log4j.LogManager" %>
 <%@ page import="dbProcs.FileInputProperties" %>
 <%
     /**
@@ -28,7 +28,7 @@
     final String LEVEL_HASH = "57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a";
 
     Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-    //Logger log = Logger.getLogger(this.getClass());
+    //org.apache.logging.log4j.Logger log = LogManager.getLogger(this.getClass());
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.xxe." + LEVEL_HASH, locale);
     //Used more than once translations
     String i18nLevelName = bundle.getString("title.question.xxe");

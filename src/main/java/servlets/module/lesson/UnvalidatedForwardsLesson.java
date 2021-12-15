@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 
@@ -27,49 +27,49 @@ import dbProcs.Getter;
  * Unvalidated Redirects and Forwards Lesson
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
 public class UnvalidatedForwardsLesson extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(UnvalidatedForwardsLesson.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(UnvalidatedForwardsLesson.class);
 	private static String levelName = "Unvalidated Redirects and Forwards Lesson";
 	private static String levelHash = "f15f2766c971e16e68aa26043e6016a0a7f6879283c873d9476a8e7e94ea736f";
-	
+
 	/**
 	 * User submission is parsed for a valid URL. This is then used to construct a URL object. This URL object is then checked to ensure a valid attack
 	 * @param tempId User's session stored temporary id
 	 * @param messageForAdmin Users lesson submission
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug(levelName +" Servlet Accessed");
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
-		
+
 
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.unvalidatedRedirect", locale);
-		
+
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -127,15 +127,15 @@ public class UnvalidatedForwardsLesson extends HttpServlet
 						validAttack = false;
 						messageForAdmin = "";
 						htmlOutput="Invalid URL";
-					}				
-					
+					}
+
 					if(validSolution && validAttack)
 					{
 						htmlOutput = "<h2 class='title'>" + bundle.getString("result.wellDone") + "</h2>" +
 								"<p>" + bundle.getString("result.youDidIt") + "<br />" +
 								bundle.getString("result.resultKey") + " <a>" +
 									Hash.generateUserSolution(
-											Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash), 
+											Getter.getModuleResultFromHash(getServletContext().getRealPath(""), levelHash),
 											(String)ses.getAttribute("userName"))
 								+"</a>";
 					}

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.codec.binary.Base64;
 import org.owasp.encoder.Encode;
 
@@ -32,26 +32,26 @@ import dbProcs.Getter;
  * Does not return result key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
 public class SessionManagement6SecretQuestion extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement6SecretQuestion.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SessionManagement6SecretQuestion.class);
 	private static String levelName = "Session Management Challenge Six (Secret Question)";
 	private static String levelHash = "b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316ece";
 	/**
@@ -59,25 +59,25 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 	 * @param subEmail Sub schema user email to search DB with
 	 * @param subAnswer Sub schema user secret answer to check against the DB
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
-		
+
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement6", locale);
-		
+
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-			PrintWriter out = response.getWriter();  
+			PrintWriter out = response.getWriter();
 			out.print(getServletInfo());
-			
+
 			String htmlOutput = new String();
 			log.debug(levelName + " Servlet accessed");
 			try
@@ -89,7 +89,7 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 				Object ansObj = request.getParameter("subAnswer");
 				String subAns = Validate.validateParameter(ansObj, 128);
 				log.debug("subAnswer = " + subAns);
-				
+
 				String ApplicationRoot = getServletContext().getRealPath("");
 				try
 				{
@@ -147,31 +147,31 @@ public class SessionManagement6SecretQuestion extends HttpServlet
 			log.error(levelName + " servlet accessed with no session");
 		}
 	}
-	
+
 	/**
 	 * A user submits an email address to get that user's Secret QUestion. This is vulnerable to SQL injection
 	 * @param subEmail Sub schema user email to search DB with
 	 */
-	public void doGet (HttpServletRequest request, HttpServletResponse response) 
+	public void doGet (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		String levelName = "Session Management Challenge Six (Get Question)";
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
-		
+
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement6", locale);
-		
+
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-			PrintWriter out = response.getWriter();  
+			PrintWriter out = response.getWriter();
 			out.print(getServletInfo());
-			
+
 			String htmlOutput = new String();
 			log.debug(levelName + " Servlet accessed");
 			try

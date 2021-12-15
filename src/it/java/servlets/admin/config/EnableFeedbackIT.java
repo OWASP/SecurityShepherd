@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import testUtils.TestProperties;
 import utils.FeedbackStatus;
 
 public class EnableFeedbackIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(EnableFeedbackIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(EnableFeedbackIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

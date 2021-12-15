@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import utils.Hash;
 import utils.LoginMethod;
@@ -21,26 +21,26 @@ import dbProcs.Getter;
  * Control class for the authentication procedure. <br/>
  * <br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(Login.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Login.class);
 
 	/**
 	 * Initiated by login.jsp. Once this post request has been completely processed,
@@ -49,7 +49,7 @@ public class Login extends HttpServlet {
 	 * the credentials submitted and determines if they are correct. If they are
 	 * correct, a session is prepared for the user and they are assigned a CSRF
 	 * token.
-	 * 
+	 *
 	 * @param login User's User Name
 	 * @param pwd   User's Password
 	 */
@@ -71,12 +71,12 @@ public class Login extends HttpServlet {
 			boolean mustRedirect = false;
 
 			if (!LoginMethod.isLogin()) {
-					
+
 				// Password logins disabled, redirect to SSO login.
 				response.sendRedirect("ssologin");
 				return;
 			}
-			
+
 			// session is not new, try to set credentials
 			p_login = nvl(p_login, (String) ses.getAttribute("login"));
 			p_pwd = nvl(p_pwd, (String) ses.getAttribute("password"));

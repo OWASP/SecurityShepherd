@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.http.Cookie;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import dbProcs.Setter;
 public class SessionManagementLessonIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagementLessonIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SessionManagementLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
@@ -39,7 +39,7 @@ public class SessionManagementLessonIT
 		TestProperties.executeSql(log);
 
 	}
-    
+
     @Before
 	public void setup()
 	{
@@ -82,7 +82,7 @@ public class SessionManagementLessonIT
 		}
 		return null;
 	}
-	
+
 	@Test
 	public void testLevelValidAnswer()
 	{
@@ -108,7 +108,7 @@ public class SessionManagementLessonIT
 			{
 				request.setCookies(response.getCookies());
 				String servletResponse = getModuleDoPost("lessonComplete", 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -128,7 +128,7 @@ public class SessionManagementLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidAnswer()
 	{
@@ -154,7 +154,7 @@ public class SessionManagementLessonIT
 			{
 				request.setCookies(response.getCookies());
 				String servletResponse = getModuleDoPost("lessonNotComplete", 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -174,8 +174,8 @@ public class SessionManagementLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testLevelNoAuth()
 	{
@@ -183,7 +183,7 @@ public class SessionManagementLessonIT
 		{
 			request.getSession().setAttribute("lang", lang);
 			String servletResponse = getModuleDoPost("lessonComplete", 200); //Mock response is 200 for Unauthenticated response for some reason
-			if(servletResponse.contains("You must be getting funky")) 
+			if(servletResponse.contains("You must be getting funky"))
 			{
 				String message = new String("General 'Funky' Error Detected");
 				log.fatal(message);
@@ -194,7 +194,7 @@ public class SessionManagementLessonIT
 				String message = new String("Did not get 'Are you signed in' Response");
 				log.fatal(message);
 				fail(message);
-			} 
+			}
 		}
 		catch(Exception e)
 		{

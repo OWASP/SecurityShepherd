@@ -2,19 +2,19 @@ package utils;
 
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
  * This class holds the status of weather feedback is enabled or not
- * 
+ *
  * @author Mark
  *
  */
 public class FeedbackStatus {
-	private static org.apache.log4j.Logger log = Logger.getLogger(FeedbackStatus.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(FeedbackStatus.class);
 
 	private static boolean enabled = false;
 

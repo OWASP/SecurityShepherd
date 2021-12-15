@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
 import utils.Hash;
@@ -30,22 +30,22 @@ import utils.Validate;
 
 /**
  * This level is based on the bug reported against shepherds previous method of creating user specific keys. The old mechanism is used here and can be broken to create keys by finding out the server secrets
- * 
+ *
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- * 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
+ *
  * @author Mark Denihan
  *
  */
@@ -57,13 +57,13 @@ public class BrokenCryptoHomeMade extends HttpServlet
 	public static String userNameKey = randomKeyLengthString();
 	private static String serverEncryptionKey = randomKeyLengthString();
 	private static String encryptionKeySalt = randomKeyLengthString();
-	private static org.apache.log4j.Logger log = Logger.getLogger(BrokenCryptoHomeMade.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(BrokenCryptoHomeMade.class);
 	public static List<List<String>> challenges = new ArrayList<List<String>>();
 	public static boolean initDone = false;
-	
+
 	public static void initLists()
 	{
-		
+
 		ArrayList<String> challenge = new ArrayList<String>();
 		if(!initDone)
 		{
@@ -89,8 +89,8 @@ public class BrokenCryptoHomeMade extends HttpServlet
 			challenges.add(challenge);
 		}
 	}
-	
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 			{
 				initLists();
@@ -98,7 +98,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 				HttpSession ses = request.getSession(true);
 				String htmlOutput = new String();
-				PrintWriter out = response.getWriter();  
+				PrintWriter out = response.getWriter();
 				if(Validate.validateSession(ses))
 				{
 					ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -117,7 +117,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 							{
 								ses.setAttribute("homemadebadanswers", 0);
 							}
-							
+
 							int homemadebadanswers;
 							try
 							{
@@ -180,8 +180,8 @@ public class BrokenCryptoHomeMade extends HttpServlet
 				out.write(htmlOutput);
 				out.close();
 			}
-	
-	public void doGet (HttpServletRequest request, HttpServletResponse response) 
+
+	public void doGet (HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 			{
 				initLists();
@@ -189,7 +189,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 				HttpSession ses = request.getSession(true);
 				String htmlOutput = new String();
-				PrintWriter out = response.getWriter();  
+				PrintWriter out = response.getWriter();
 				if(Validate.validateSession(ses))
 				{
 					ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
@@ -245,13 +245,13 @@ public class BrokenCryptoHomeMade extends HttpServlet
 				out.write(htmlOutput);
 				out.close();
 			}
-	
+
 	/**
 	 * Merges current server encryption key with user name based encryption key to create user specific key
 	 * @param userNameKey
 	 * @return
 	 */
-	private static String createUserSpecificEncryptionKey (String userNameKey) throws Exception 
+	private static String createUserSpecificEncryptionKey (String userNameKey) throws Exception
 	{
 		if(userNameKey.length() != 16)
 			throw new Exception("User Name key must be 16 bytes long");
@@ -266,7 +266,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 			return new String(userKey, Charset.forName("US-ASCII"));
 		}
 	}
-	
+
 	/**
 	 * Decrypts data using specific key and ciphertext
 	 * @param key Encryption Key (Must be 16 Bytes)
@@ -275,7 +275,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 	 * @throws GeneralSecurityException
 	 */
 	public static String decrypt(String key, String encrypted)
-	throws GeneralSecurityException 
+	throws GeneralSecurityException
 	{
 		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
 		if (raw.length != 16)
@@ -288,9 +288,9 @@ public class BrokenCryptoHomeMade extends HttpServlet
 		byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
 		return new String(original, Charset.forName("US-ASCII"));
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Specifically decrypts encrypted user names
 	 * @param encyptedUserName Encrypted user name
@@ -299,20 +299,20 @@ public class BrokenCryptoHomeMade extends HttpServlet
 	public static String decryptUserName (String encyptedUserName)
 	{
 		String decryptedUserName = new String();
-		try 
+		try
 		{
 			decryptedUserName = decrypt(userNameKey, encyptedUserName);
 			log.debug("Decrypted user-name to: " + decryptedUserName);
-		} 
+		}
 		catch (GeneralSecurityException e)
 		{
 			log.error("Could not decrypt user name: " + e.toString());
 		}
 		return decryptedUserName;
 	}
-	
+
 	public static String decryptUserSpecificSolution(String userNameKey, String encryptedSolution)
-		throws GeneralSecurityException, Exception 
+		throws GeneralSecurityException, Exception
 	{
 		try
 		{
@@ -333,7 +333,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 			throw new Exception("Decryption Failure: Could not Craft User Key or Ciphertext was Bad");
 		}
 	}
-	
+
 	/**
 	 * Encrypts plain text into cipher text based on encryption key
 	 * @param key Encryption Key (Must be 16 Bytes)
@@ -342,10 +342,10 @@ public class BrokenCryptoHomeMade extends HttpServlet
 	 * @throws GeneralSecurityException
 	 */
 	public static String encrypt(String key, String value)
-	throws GeneralSecurityException 
+	throws GeneralSecurityException
 	{
 		byte[] raw = key.getBytes(Charset.forName("US-ASCII"));
-		if (raw.length != 16) 
+		if (raw.length != 16)
 		{
 			throw new IllegalArgumentException("Invalid key size.");
 		}
@@ -354,7 +354,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
 		return Base64.encodeBase64String(cipher.doFinal(value.getBytes(Charset.forName("US-ASCII"))));
 	}
-	
+
 	public static String randomKeyLengthString()
 	{
 		String result = new String();
@@ -380,7 +380,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Generates user specific solution based on the user name provided and server side encryption keys
 	 * @param baseKey The stored result key for the module
@@ -392,7 +392,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 		log.debug("Generating key for " + userSalt);
 		String toReturn = "Key Should be here! Please refresh the home page and try again!";
 
-			try 
+			try
 			{
 				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
 				String forLog = BrokenCryptoHomeMade.encrypt(key, baseKey + getCurrentSalt());
@@ -406,34 +406,34 @@ public class BrokenCryptoHomeMade extends HttpServlet
 								"</span><p>&nbsp;</p>"
 						+ "</div>";
 				log.debug("Returning: " + forLog);
-			} 
-			catch (Exception e) 
-			{ 
+			}
+			catch (Exception e)
+			{
 				log.error("Encrypt Failure: " + e.toString());
 				toReturn = "Key Should be here! Please refresh the home page and try again!";;
 			}
 		return toReturn;
 	}
-	
+
 	public static String generateUserSolutionKeyOnly(String baseKey, String userSalt)
 	{
 		log.debug("Generating key for " + userSalt);
 		String forLog = "Key Should be here! Please refresh the home page and try again!";
 
-			try 
+			try
 			{
 				String key = createUserSpecificEncryptionKey(Validate.validateEncryptionKey(userSalt));
 				forLog = BrokenCryptoHomeMade.encrypt(key, baseKey + getCurrentSalt());
 
 				log.debug("Returning: " + forLog);
-			} 
-			catch (Exception e) 
-			{ 
+			}
+			catch (Exception e)
+			{
 				log.error("Encrypt Failure: " + e.toString());
 			}
 		return forLog;
 	}
-	
+
 	/**
 	 * This is used when encrypting/decrypting the salt. If this is bypassed characters can be lost in encryption process.
 	 * @return

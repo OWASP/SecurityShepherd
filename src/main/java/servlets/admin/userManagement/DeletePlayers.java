@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 import dbProcs.Getter;
@@ -23,38 +23,38 @@ import utils.UserKicker;
  * The delete players server side functionality is hanled by this control class
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Cosmin Craciun
  *
  */
 public class DeletePlayers extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(DeletePlayers.class);
-	
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(DeletePlayers.class);
+
 	/** Initiated by deletePlayers.jsp.
 	 * Deletion of player from Core Database is handed by Setter.deleteUser
 	 * @param player Player ID to be deleted
 	 * @param csrfToken
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 						throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.UserManagement.DeletePlayers ***");
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		HttpSession ses = request.getSession(true);
 		Cookie tokenCookie = Validate.getToken(request.getCookies());
@@ -71,11 +71,11 @@ public class DeletePlayers extends HttpServlet{
 					log.debug("Getting ApplicationRoot");
 					String ApplicationRoot = getServletContext().getRealPath("");
 					log.debug("Servlet root = " + ApplicationRoot );
-					
+
 					log.debug("Getting Parameters");
 					String player = request.getParameter("player");
 					log.debug("player = " + player);
-					
+
 					//Validation
 					notNull = (player != null);
 					if(notNull)
@@ -99,7 +99,7 @@ public class DeletePlayers extends HttpServlet{
 						{
 							reponseMessage += "<font color='red'>User could not be deleted. Please try again.</font><br/>";
 						}
-						
+
 						out.print("<h3 class=\"title\">Player Deletion Result</h3>" +
 								"<p>" +
 								reponseMessage +
