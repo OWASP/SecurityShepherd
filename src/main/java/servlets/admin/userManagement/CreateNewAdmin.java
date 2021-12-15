@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 
@@ -22,26 +22,26 @@ import dbProcs.Setter;
  * The control class of the Create New Administrator functionality.
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
 public class CreateNewAdmin extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(CreateNewAdmin.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CreateNewAdmin.class);
 	/**
 	 * Initiated by createNewAdmin.jsp. This method adds administrators to the system if valid data is submitted, otherwise no admin will be added to the database.
 	 * Email is gathered for future functionality. Adding of the player to the core database is handed by Setter.playerCreate
@@ -52,14 +52,14 @@ public class CreateNewAdmin extends HttpServlet
 	 * @param userAddressCnf User's Email Confirmation
 	 * @param csrfToken
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.createNewAdmin ***");
-		
-		PrintWriter out = response.getWriter();  
+
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
@@ -80,7 +80,7 @@ public class CreateNewAdmin extends HttpServlet
 					log.debug("Getting ApplicationRoot");
 					String ApplicationRoot = getServletContext().getRealPath("");
 					log.debug("Servlet root = " + ApplicationRoot );
-					
+
 					log.debug("Getting Parameters");
 					String userName = (String)request.getParameter("userName");
 					log.debug("userName = " + userName);
@@ -92,7 +92,7 @@ public class CreateNewAdmin extends HttpServlet
 					log.debug("userAddress = " + userAddress);
 					String userAddressCnf = Validate.validateParameter(request.getParameter("userAddressCnf"), 128);
 					log.debug("userAddressCnf = " + userAddressCnf);
-					
+
 					//Validation
 					log.debug("String Casting should have set off any null alarms... Checking again anyway");
 					notNull = (userName != null && passWord != null);

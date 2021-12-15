@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -27,12 +27,12 @@ import utils.ScoreboardStatus;
  * Class is targeted to test all of the methods found in the
  * src/dbprocs/Getter.java class, but does include some coverage of other
  * classes, such as Setter.java and Database.java
- * 
+ *
  * @author mark
  *
  */
 public class GetterTest {
-	private static org.apache.log4j.Logger log = Logger.getLogger(GetterTest.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(GetterTest.class);
 	private static String lang = new String("en_GB");
 	private static Locale locale = new Locale(lang);
 	private static String applicationRoot = new String();
@@ -54,7 +54,7 @@ public class GetterTest {
 	/**
 	 * Searches for class based on class name. If nothing is found, the class is
 	 * created and the new class Id is returned
-	 * 
+	 *
 	 * @param className Name of the class you wish to search / create
 	 * @return The Identifier of the class owning the name submitted
 	 * @throws SQLException
@@ -84,7 +84,7 @@ public class GetterTest {
 	/**
 	 * Searches for class based on class name. If nothing is found, the class is
 	 * created and the new class Id is returned
-	 * 
+	 *
 	 * @param className Name of the class you wish to search / create
 	 * @return The Identifier of the class owning the name submitted
 	 * @throws SQLException
@@ -115,7 +115,7 @@ public class GetterTest {
 	 * This method will sign in as an admin, or create the admin and sign in as
 	 * them. If this fails it will throw an Exception. This function will pass if
 	 * correct user credentials are passed as well
-	 * 
+	 *
 	 * @param applicationRoot Context of running application
 	 * @param userName        The user name of the admin you want to create or sign
 	 *                        in as
@@ -147,7 +147,7 @@ public class GetterTest {
 	/**
 	 * This method will sign in as a User, or create the user and sign in as them.
 	 * If this fails it will throw an Exception
-	 * 
+	 *
 	 * @param applicationRoot Context of running application
 	 * @param userName        The user name of the user you want to create or sign
 	 *                        in as
@@ -179,7 +179,7 @@ public class GetterTest {
 	 * This method will sign in as a User, or create the user and sign in as them.
 	 * If this fails it will throw an Exception. They will be added to the submitted
 	 * class
-	 * 
+	 *
 	 * @param applicationRoot Context of running application
 	 * @param userName        The user name of the user you want to create or sign
 	 *                        in as
@@ -2842,14 +2842,14 @@ public class GetterTest {
 		} else {
 			log.debug("Fourth SSO User logged in as " + user[1]);
 		}
-		
+
 		user = Getter.authUserSSO(applicationRoot, "", userName, ssoName5, "player");
 		if (user == null || user[0].isEmpty()) {
 			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");
 		} else {
 			log.debug("Fifth SSO User logged in as " + user[1]);
 		}
-		
+
 		user = Getter.authUserSSO(applicationRoot, "", userName, ssoName6, "player");
 		if (user == null || user[0].isEmpty()) {
 			TestProperties.failAndPrint("Test Failed. SSO auth did not succeed");

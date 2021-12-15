@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import dbProcs.Setter;
 public class SecurityMisconfigLessonIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(SecurityMisconfigLessonIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SecurityMisconfigLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
@@ -37,7 +37,7 @@ public class SecurityMisconfigLessonIT
 		TestProperties.executeSql(log);
 
 	}
-    
+
     @Before
 	public void setup()
 	{
@@ -81,7 +81,7 @@ public class SecurityMisconfigLessonIT
 		}
 		return null;
 	}
-	
+
 	@Test
 	public void testLevelValidAnswer()
 	{
@@ -109,7 +109,7 @@ public class SecurityMisconfigLessonIT
 				String submittedUserName = "admin";
 				String submittedUserPass = "password";
 				String servletResponse = getModuleDoPost(submittedUserName, submittedUserPass, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -129,7 +129,7 @@ public class SecurityMisconfigLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidPasswordAnswer()
 	{
@@ -157,7 +157,7 @@ public class SecurityMisconfigLessonIT
 				String submittedUserName = "admin";
 				String submittedUserPass = "wrongpassword";
 				String servletResponse = getModuleDoPost(submittedUserName, submittedUserPass, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -177,7 +177,7 @@ public class SecurityMisconfigLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidUserAnswer()
 	{
@@ -205,7 +205,7 @@ public class SecurityMisconfigLessonIT
 				String submittedUserName = "notanadmin";
 				String submittedUserPass = "password";
 				String servletResponse = getModuleDoPost(submittedUserName, submittedUserPass, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -225,8 +225,8 @@ public class SecurityMisconfigLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testLevelNoAuth()
 	{
@@ -236,7 +236,7 @@ public class SecurityMisconfigLessonIT
 			String submittedUserName = "notanadmin";
 			String submittedUserPass = "password";
 			String servletResponse = getModuleDoPost(submittedUserName, submittedUserPass, 200); //Mock response is 200 for Unauthenticated response for some reason
-			if(servletResponse.contains("You must be getting funky")) 
+			if(servletResponse.contains("You must be getting funky"))
 			{
 				String message = new String("General 'Funky' Error Detected");
 				log.fatal(message);
@@ -247,7 +247,7 @@ public class SecurityMisconfigLessonIT
 				String message = new String("Did not get 'Are you signed in' Response");
 				log.fatal(message);
 				fail(message);
-			} 
+			}
 		}
 		catch(Exception e)
 		{

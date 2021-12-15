@@ -7,7 +7,7 @@ import java.security.SecureRandom;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Class used for miscellaneous Hash use <br/>
@@ -26,18 +26,18 @@ import org.apache.log4j.Logger;
  *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class Hash {
-	private static org.apache.log4j.Logger log = Logger.getLogger(Hash.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Hash.class);
 	private static byte[] serverEncryptionKey = randomKeyBytes();
 
 	/**
 	 * Generates HMAC with servers random encryption key on user name concatenated
 	 * with level's base result key in a user friendly HTML form
-	 * 
+	 *
 	 * @param baseKey  The stored result key for the module
 	 * @param userSalt Something specific to the user (User name)
 	 * @return User Specific Solution in a user friendly HTML form
@@ -60,7 +60,7 @@ public class Hash {
 	/**
 	 * Generates HMAC with servers random encryption key on user name concatenated
 	 * with level's base result key
-	 * 
+	 *
 	 * @param baseKey  The stored result key for the module
 	 * @param userSalt Something specific to the user (User name)
 	 * @return User Specific Solution Key
@@ -111,14 +111,14 @@ public class Hash {
 
 	/**
 	 * Creates a psedorandom string
-	 * 
+	 *
 	 * @return Random String
 	 */
 	public static String randomString() {
 		String result = new String();
 
 		byte byteArray[] = new byte[16];
-		
+
 		SecureRandom psn1=null;
 
 		try {
@@ -127,7 +127,7 @@ public class Hash {
 			log.error("Could not find SHA1PRNG: " + e.toString());
 			throw new RuntimeException(e);
 		}
-		
+
 		psn1.setSeed(psn1.nextLong());
 		psn1.nextBytes(byteArray);
 		BigInteger bigInt = new BigInteger(byteArray);

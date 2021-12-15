@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -30,19 +30,19 @@ import dbProcs.Setter;
  * Weak Nonce Variety can be broken
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
@@ -50,26 +50,26 @@ public class CsrfChallengeTargetFour extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static String moduleHash = "84118752e6cd78fecc3563ba2873d944aacb7b72f28693a23f9949ac310648b5";
-	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeTargetFour.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CsrfChallengeTargetFour.class);
 	private static String levelName = "CSRF Target 4";
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Two as complete.
 	 * @param userId User identifier to be incremented
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug(levelName + " Servlet");
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
-		
+
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle csrfGenerics = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
-		
+
 		String storedToken = new String();
 		try
 		{
@@ -100,7 +100,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 				String csrfToken = request.getParameter("csrfToken").trim();
 				log.debug("csrfToken Submitted - '" + csrfToken + "'");
 				log.debug("storedCsrf Token is - '" + storedToken + "'");
-				
+
 				if(!userId.equals(plusId))
 				{
 					if(validCsrfToken(ApplicationRoot, csrfToken)) // Poor CSRF Validation Method
@@ -111,7 +111,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 						if(attackerName != null)
 						{
 							log.debug(userName + " is been CSRF'd by " + attackerName);
-							
+
 							log.debug("Attempting to Increment ");
 							String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, moduleHash);
 							result = Setter.updateCsrfCounter(ApplicationRoot, moduleId, plusId);
@@ -130,7 +130,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 				{
 					log.debug("User " + userId + " is attacking themselves");
 				}
-				
+
 				if(result)
 				{
 					out.write(csrfGenerics.getString("target.incrementSuccess"));
@@ -151,7 +151,7 @@ public class CsrfChallengeTargetFour extends HttpServlet
 				log.fatal(levelName + " - " + e.toString());
 		}
 	}
-	
+
 	/**
 	 * CSRF Validator that checks if user submitted CSRF token is in the DB. This function does not filter the CSRF table for CSRF tokens belonging to the user submitting the request. It will return true as long as the token exists in the database, regardless of who owns the token
 	 * @param ApplicationRoot Running context of the application
@@ -163,9 +163,9 @@ public class CsrfChallengeTargetFour extends HttpServlet
 		log.debug("*** CSRF4.validCsrfToken ***");
 		boolean result = false;
 		Connection conn;
-	
+
 		try
-		{		
+		{
 			conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeFour");
 
 			PreparedStatement prepstmt = conn.prepareStatement("SELECT count(csrfTokenscol) FROM csrfTokens WHERE csrfTokenscol = ?");

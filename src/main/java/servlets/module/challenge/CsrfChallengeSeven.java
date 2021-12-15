@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -42,7 +42,7 @@ import dbProcs.Setter;
 public class CsrfChallengeSeven extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeSeven.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CsrfChallengeSeven.class);
 	private static final String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
 	private static String levelName = "CSRF Challenge 7";
 	/**

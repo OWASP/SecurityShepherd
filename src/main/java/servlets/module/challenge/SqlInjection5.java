@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 
@@ -24,21 +24,21 @@ import dbProcs.Database;
 /**
  * Level : SQL Injection 5
  * <br><br>
- * 
+ *
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
@@ -48,15 +48,15 @@ public class SqlInjection5 extends HttpServlet
 	public static String levelHash = "8edf0a8ed891e6fef1b650935a6c46b03379a0eebab36afcd1d9076f65d4ce62";
 	private static String levelSolution = "343f2e424d5d7a2eff7f9ee5a5a72fd97d5a19ef7bff3ef2953e033ea32dd7ee";
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjection5.class);
-	
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SqlInjection5.class);
+
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
-		
+
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sqli.sqli5", locale);
@@ -64,11 +64,11 @@ public class SqlInjection5 extends HttpServlet
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-			PrintWriter out = response.getWriter();  
+			PrintWriter out = response.getWriter();
 			out.print(getServletInfo());
 			String htmlOutput = new String();
 			String applicationRoot = getServletContext().getRealPath("");
-			
+
 			try
 			{
 				int pineappleAmount = validateAmount(Integer.parseInt(request.getParameter("pineappleAmount")));
@@ -81,7 +81,7 @@ public class SqlInjection5 extends HttpServlet
 				log.debug("bananaAmount - " + bananaAmount);
 				String couponCode = request.getParameter("couponCode");
 				log.debug("couponCode - " + couponCode);
-				
+
 				//Working out costs
 				int pineappleCost = pineappleAmount * 30;
 				int orangeCost = orangeAmount * 3000;
@@ -91,7 +91,7 @@ public class SqlInjection5 extends HttpServlet
 				int perCentOffOrange = 0; // Will search for coupons in DB and update this int
 				int perCentOffApple = 0; // Will search for coupons in DB and update this int
 				int perCentOffBanana = 0; // Will search for coupons in DB and update this int
-				
+
 				htmlOutput = new String();
 				Connection conn = Database.getChallengeConnection(applicationRoot, "SqlInjectionChallenge5Shop");
 				log.debug("Looking for Coupons");
@@ -124,7 +124,7 @@ public class SqlInjection5 extends HttpServlet
 							log.debug("Found coupon for %" + coupons.getInt(2) + " off Banana");
 							perCentOffBanana = coupons.getInt(2);
 						}
-						
+
 					}
 				}
 				catch(Exception e)
@@ -132,14 +132,14 @@ public class SqlInjection5 extends HttpServlet
 					log.debug("Could Not Find Coupon: " + e.toString());
 				}
 				conn.close();
-				
+
 				//Work Out Final Cost
 				pineappleCost = pineappleCost - (pineappleCost * (perCentOffPineapple/100));
 				appleCost = appleCost - (appleCost * (perCentOffApple/100));
 				bananaCost = bananaCost - (bananaCost * (perCentOffBanana/100));
 				orangeCost = orangeCost - (orangeCost * (perCentOffOrange/100));
 				int finalCost = pineappleCost + appleCost + bananaCost + orangeCost;
-				
+
 				//Output Order
 				htmlOutput = "<h3>" + bundle.getString("response.orderComplete")+ "</h3>"
 						+ "" + bundle.getString("response.orderComplete.p1")+ "<br/><br/>"
@@ -169,7 +169,7 @@ public class SqlInjection5 extends HttpServlet
 			log.error(levelName + " servlet accessed with no session");
 		}
 	}
-	
+
 	private static int validateAmount (int amount) throws IllegalArgumentException
 	{
 		if(amount > 9000)

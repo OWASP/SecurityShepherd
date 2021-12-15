@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 import utils.CountdownHandler;
@@ -29,33 +29,33 @@ import dbProcs.Setter;
  * correct solution <br/>
  * <br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class SolutionSubmit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SolutionSubmit.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SolutionSubmit.class);
 
 	/**
 	 * Initiated by a dynamic form in index.jsp this method checks the existence of
 	 * the submitted module identifier before ensuring that the submission is
 	 * correct If the submission is found to be valid then the user is returned with
 	 * a feedback form.
-	 * 
+	 *
 	 * @param mouleId     The identifier of the module that the solution is been
 	 *                    submitted for
 	 * @param solutionKey The solution key for the proposed module
@@ -217,7 +217,7 @@ public class SolutionSubmit extends HttpServlet {
 	 * input submitted by the user when initiating the doPost() method. This data
 	 * will have to be re-assessed when it is used to submit feedback as the user
 	 * has an opportunity to modify the parameters they are sending.
-	 * 
+	 *
 	 * @param moduleId  The identifier of the module been completed
 	 * @param csrfToken
 	 * @param theKey    The submitted and valid solution key for the module been

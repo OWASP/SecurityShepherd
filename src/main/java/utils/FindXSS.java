@@ -12,32 +12,32 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.tidy.Tidy;
 
 /**
  * Class is responsible for finding valid XSS and CSRF attacks in user submissions
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
 public class FindXSS
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(FindXSS.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(FindXSS.class);
 	/**
 	 * Method used to detect valid java script in a user submission. Specifically the presence of a script that will execute an alert command.
 	 * Script tag, URI java script and java script triggers vectors are all including in this detection method.
@@ -46,24 +46,24 @@ public class FindXSS
 	 */
 
 	public static String[] javascriptTriggers = {
-		"onabort", "onbeforecopy", "onbeforecut", "onbeforepaste", "oncopy", "oncut", 
-		"oninput", "onkeydown", "onkeypress", "onkeyup", "onpaste", "onbeforeunload", 
-		"onhaschange", "onload", "onoffline", "ononline", "onreadystatechange", 
-		"onreadystatechange", "onstop", "onunload", "onreset", "onsubmit", "onclick", 
-		"oncontextmenu", "ondblclick", "onlosecapture", "onmouseenter", "onmousedown", 
+		"onabort", "onbeforecopy", "onbeforecut", "onbeforepaste", "oncopy", "oncut",
+		"oninput", "onkeydown", "onkeypress", "onkeyup", "onpaste", "onbeforeunload",
+		"onhaschange", "onload", "onoffline", "ononline", "onreadystatechange",
+		"onreadystatechange", "onstop", "onunload", "onreset", "onsubmit", "onclick",
+		"oncontextmenu", "ondblclick", "onlosecapture", "onmouseenter", "onmousedown",
 		"onmouseleave", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onmousewheel",
 		"onscroll", "onmove", "onmoveend", "onmovestart", "ondrag", "ondragenter", "ondragleave",
 		"ondragover", "ondragstart", "ondrop", "onresize", "onresizeend", "onresizestart",
 		"onactivate", "onbeforeactivate", "onbeforedeactivate", "onbeforeeditfocus", "onblur",
-		"ondeactivate", "onfocus", "onfocusin", "onfocusout", "oncontrolselect", "onselect", 
-		"onselectionchange", "onselectstart", "onafterprint", "onbeforeprint", "onhelp", 
-		"onerror", "onerrorupdate", "onafterupdate", "onbeforeupdate", "oncellchange", 
+		"ondeactivate", "onfocus", "onfocusin", "onfocusout", "oncontrolselect", "onselect",
+		"onselectionchange", "onselectstart", "onafterprint", "onbeforeprint", "onhelp",
+		"onerror", "onerrorupdate", "onafterupdate", "onbeforeupdate", "oncellchange",
 		"ondataavailable", "ondatasetchanged", "ondatasetcomplete", "onrowenter", "onrowexit",
-		"onrowsdelete", "onrowsinserted", "onbounce", "onfinish", "onstart", "onchange", "onwheel", 
+		"onrowsdelete", "onrowsinserted", "onbounce", "onfinish", "onstart", "onchange", "onwheel",
 		"onfilterchange", "onpropertychange", "onsearch", "onmessage", "formaction", "textinput",
 		"onhashchange", "onpagehide", "onpageshow", "onpopstate", "onstorage", "oninvalid", "ondragend",
-		"oncanplay", "oncanplaythrough", "oncuechange", "ondurationchange", "onemptied", "onended", 
-		"onloadeddata", "onloadedmetadata", "onloadstart", "onpause", "onplay", "onplaying", "onprogress", 
+		"oncanplay", "oncanplaythrough", "oncuechange", "ondurationchange", "onemptied", "onended",
+		"onloadeddata", "onloadedmetadata", "onloadstart", "onpause", "onplay", "onplaying", "onprogress",
 		"onratechange", "onseeked", "onseeking", "onstalled", "onsuspend", "ontimeupdate", "onvolumechange",
 		"onwaiting", "onshow", "ontoggle"};
 	public static String[] uriAttributes = {
@@ -72,7 +72,7 @@ public class FindXSS
 	public static String[] colons = {
 			":", "&#x3a", "&#x3a;", "&#58", "&#58;"
 	};
-	
+
 	/**
 	 * Method used to validate GET request CSRF attacks embeded in IMG tags.
 	 * @param messageForAdmin
@@ -181,14 +181,14 @@ public class FindXSS
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Searches for URL that contains CSRF attack string without user ID expected. Returns true if it is valid based on parameters submitted
 	 * @param theUrl The Entire URL containing the attack
 	 * @param csrfAttackPath The path the CSRF vulnerable function should be in
 	 * @return boolean value depicting if the attack is valid or not
 	 */
-	public static boolean findCsrfAttackUrl (String theUrl, String csrfAttackPath) 
+	public static boolean findCsrfAttackUrl (String theUrl, String csrfAttackPath)
 	{
 		boolean validAttack = false;
 		try
@@ -214,7 +214,7 @@ public class FindXSS
 		}
 		return validAttack;
 	}
-	
+
 	/**
 	 * Searches for URL that contains CSRF attack string. Returns true if it is valid based on parameters submitted
 	 * @param theUrl The Entire URL containing the attack
@@ -223,7 +223,7 @@ public class FindXSS
 	 * @param userIdParameterValue The user ID parameter value expected
 	 * @return boolean value depicting if the attack is valid or not
 	 */
-	public static boolean findCsrfAttackUrl (String theUrl, String csrfAttackPath, String userIdParameterName, String userIdParameterValue ) 
+	public static boolean findCsrfAttackUrl (String theUrl, String csrfAttackPath, String userIdParameterName, String userIdParameterValue )
 	{
 		boolean validAttack = false;
 		try
@@ -260,7 +260,7 @@ public class FindXSS
 		}
 		return validAttack;
 	}
-	
+
 	/**
 	 * Forms XSS Input for XHTML before Searching with Shepherd XSS Detector
 	 * @param xssString Untrusted User Input
@@ -270,7 +270,7 @@ public class FindXSS
 	{
 		boolean xssDetected = false;
 		log.debug("String to Search: " + xssString);
-		
+
 		//Need to tidy submitted string, similar to how a browser would when it interprets it
 		Tidy tidy = new Tidy();
 		tidy.setXHTML(true);
@@ -290,11 +290,11 @@ public class FindXSS
 			log.error("Could not Cloud Tidy Input/Output Streams: " + e.toString());
 		}
 		// log.debug("String Tidied To: " + tidyHtml);
-		
+
 		//Now to Parse it and narrow down to the Body of the output
 		Document parsedHtml = Jsoup.parseBodyFragment(tidyHtml);
 		Element htmlBody = parsedHtml.body();
-		
+
 		//Now We're in Search Territory. Three main Stages
 		//Stage One: Detect <script> tags
 		Elements scriptTags = htmlBody.getElementsByTag("script");
@@ -316,7 +316,7 @@ public class FindXSS
 			Elements elements = htmlBody.getAllElements();
 			for(Element element: elements)
 			{
-				//Stage Two: Look for URI attributes. 
+				//Stage Two: Look for URI attributes.
 				//Don't really care if they're in the correct element, the vector would have worked if they had it in the right one.
 				//This way we'll return true on elements that newly support URI attributes in browsers
 				for(int i = 0; i < uriAttributes.length && !xssDetected; i++)
@@ -330,7 +330,7 @@ public class FindXSS
 						if(uriAttributeValue.contains("&"))
 						{
 							log.debug("HTML Encoded URI attriute detected");
-							
+
 							uriAttributeValue = Parser.unescapeEntities(uriAttributeValue, false);
 							log.debug("Decoded Attribute = " + uriAttributeValue);
 						}
@@ -374,7 +374,7 @@ public class FindXSS
 				{
 					break;
 				}
-			}			
+			}
 		}
 		return xssDetected;
 	}

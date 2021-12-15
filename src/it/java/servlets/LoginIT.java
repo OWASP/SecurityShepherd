@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,11 +23,11 @@ import testUtils.TestProperties;
 public class LoginIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(LoginIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(LoginIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-	
+
     /**
 	 * Creates DB or Restores DB to Factory Defaults before running tests
 	 */
@@ -40,15 +40,15 @@ public class LoginIT
 		TestProperties.executeSql(log);
 
 	}
-    
+
 	@Before
-	public void setup() 
+	public void setup()
 	{
 		log.debug("Setting Up Blank Request and Response");
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
 	}
-	
+
 	@Test
 	public void testUserLogin()
 	{
@@ -76,7 +76,7 @@ public class LoginIT
 					log.debug("Csrf Token Value: " + csrfToken);
 					log.debug("Unit Test Passed");
 				}
-			}	
+			}
 		}
 		catch(Exception e)
 		{
@@ -84,7 +84,7 @@ public class LoginIT
 			fail("Could not Complete testUserLogin");
 		}
 	}
-	
+
 	@Test
 	public void testUserLoginWithChangedPass()
 	{
@@ -153,7 +153,7 @@ public class LoginIT
 			fail("Could not Complete testUserLogin");
 		}
 	}
-	
+
 	@Test
 	public void testUserLoginWithTempPass()
 	{
@@ -224,7 +224,7 @@ public class LoginIT
 			fail("Could not Complete testUserLogin");
 		}
 	}
-	
+
 	@Test
 	public void testAdminLogin()
 	{
@@ -251,7 +251,7 @@ public class LoginIT
 			fail("Could not Complete testUserLogin");
 		}
 	}
-	
+
 	@Test
 	public void testUserLoginWithBadPass()
 	{
@@ -282,7 +282,7 @@ public class LoginIT
 			fail("Could not Complete testUserLoginWithBadPass");
 		}
 	}
-	
+
 	@Test
 	public void testUserLoginWithNullUser()
 	{
@@ -313,7 +313,7 @@ public class LoginIT
 			fail("Could not Complete testUserLoginWithNullUser");
 		}
 	}
-	
+
 	@Test
 	public void testUserLoginWithSqli()
 	{
@@ -344,7 +344,7 @@ public class LoginIT
 			fail("Could not Complete testUserLoginWithNullUser");
 		}
 	}
-	
+
 	@Test
 	public void testUserLoginWithSqliName()
 	{
@@ -375,7 +375,7 @@ public class LoginIT
 			fail("Could not Complete testUserLoginWithNullUser");
 		}
 	}
-	
+
 	@Test
 	public void testLoginDoGet()
 	{
@@ -389,20 +389,20 @@ public class LoginIT
 			fail("Could not Complete testLoginDoGet");
 		}
 	}
-	
+
 	public void loginDoGet() throws Exception
 	{
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating Login Servlet Instance");
 			Login servlet = new Login();
 			servlet.init(new MockServletConfig("Login"));
-			
+
 			log.debug("Running doPost");
 			servlet.doGet(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
 			else
@@ -421,27 +421,27 @@ public class LoginIT
 			throw e;
 		}
 	}
-	
+
 	public void loginDoPost(String userName, String password, String theClass) throws Exception
 	{
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating Login Servlet Instance");
 			Login servlet = new Login();
 			servlet.init(new MockServletConfig("Login"));
-			
+
 			//Setup Servlet Parameters and Attributes
 			log.debug("Setting Up Params and Atrributes");
 			request.addParameter("login", userName);
 			request.addParameter("pwd", password);
 			request.getSession().setAttribute("lang", lang);
-			
-			
+
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
 			else

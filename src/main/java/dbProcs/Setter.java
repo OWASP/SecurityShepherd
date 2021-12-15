@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
@@ -22,24 +22,24 @@ import utils.InvalidCountdownStateException;
  * Used to add information to the Database <br/>
  * <br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Mark
  */
 public class Setter {
-	private static org.apache.log4j.Logger log = Logger.getLogger(Setter.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(Setter.class);
 
 	// TODO - Replace this with a new mobile/web/etc attribute in the modules table
 	final public static String webModuleCategoryHardcodedWhereClause = new String("moduleCategory = 'CSRF'"
@@ -57,7 +57,7 @@ public class Setter {
 
 	/**
 	 * Database procedure just adds this. So this method just prepares the statement
-	 * 
+	 *
 	 * @param ApplicationRoot
 	 * @param className       Class name
 	 * @param classYear       Year of the class in YY/YY. eg 11/12
@@ -88,7 +88,7 @@ public class Setter {
 
 	/**
 	 * This method sets every module status to Closed.
-	 * 
+	 *
 	 * @param ApplicationRoot Current running director of the application
 	 * @return Boolean result depicting success of statement
 	 */
@@ -114,7 +114,7 @@ public class Setter {
 	/**
 	 * Used to increment bad submission counter in DB. DB will handle point
 	 * deductions once the counter hits 40
-	 * 
+	 *
 	 * @param ApplicationRoot application running context
 	 * @param userId          user identifier to increment
 	 * @return False if the statement fails to execute
@@ -144,7 +144,7 @@ public class Setter {
 
 	/**
 	 * This method sets every module status to Open.
-	 * 
+	 *
 	 * @param ApplicationRoot Current running director of the application
 	 * @param unsafe          set whether to open all safe modules or all modules
 	 *                        that are unsafe
@@ -180,7 +180,7 @@ public class Setter {
 
 	/**
 	 * This is used to only open Mobile category levels
-	 * 
+	 *
 	 * @param ApplicationRoot Used to locate database properties file
 	 * @return
 	 */
@@ -210,7 +210,7 @@ public class Setter {
 
 	/**
 	 * This is used to only open Mobile category levels
-	 * 
+	 *
 	 * @param ApplicationRoot Used to locate database properties file
 	 * @param unsafe          Used to track if the level is deemed unsafe or safe
 	 * @return
@@ -241,7 +241,7 @@ public class Setter {
 
 	/**
 	 * Resets user bad submission counter to 0
-	 * 
+	 *
 	 * @param ApplicationRoot Application's running context
 	 * @param userId          User Identifier to reset
 	 * @return
@@ -272,7 +272,7 @@ public class Setter {
 	/**
 	 * This method converts the default database properties file at
 	 * applicationRoot/WEB-INF/site.properties
-	 * 
+	 *
 	 * @param applicationRoot The directory that the server is actually in
 	 * @param url             The Url of the core Database
 	 * @param userName        The user name of the database user
@@ -308,7 +308,7 @@ public class Setter {
 	 * This method is used to store a CSRF Token for a specific user in the
 	 * csrfChallengeSeven DB Schema. May not necessarily be a new CSRF token after
 	 * running
-	 * 
+	 *
 	 * @param userId          User Identifier
 	 * @param csrfToken       CSRF Token to add to the csrfChallengeFour DB Schema
 	 * @param ApplicationRoot Running context of the application
@@ -355,7 +355,7 @@ public class Setter {
 	/**
 	 * This method is used to store a CSRF Token for a specific user in the
 	 * csrfChallengeSix DB Schema
-	 * 
+	 *
 	 * @param userId          User Identifier
 	 * @param csrfToken       CSRF Token to add to the csrfChallengeSix DB Schema
 	 * @param ApplicationRoot Running context of the application
@@ -405,7 +405,7 @@ public class Setter {
 	/**
 	 * This method is used to set the status of all modules in a category to open or
 	 * closed.
-	 * 
+	 *
 	 * @param ApplicationRoot Used to locate database properties file
 	 * @param moduleCategory  The module category to open or closed
 	 * @param openOrClosed    What to set the module status to. Can only be "open"
@@ -438,7 +438,7 @@ public class Setter {
 	/**
 	 * This method sets the module status to Closed. This information is absorbed by
 	 * the Tournament Floor Plan
-	 * 
+	 *
 	 * @param ApplicationRoot Current running director of the application
 	 * @param moduleId        The identifier of the module that is been set to
 	 *                        closed status
@@ -469,7 +469,7 @@ public class Setter {
 	/**
 	 * This method sets the module status to Open. This information is absorbed by
 	 * the Tournament Floor Plan
-	 * 
+	 *
 	 * @param ApplicationRoot Current running director of the application
 	 * @param moduleId        The identifier of the module that is been set to open
 	 *                        status
@@ -500,7 +500,7 @@ public class Setter {
 	/**
 	 * Used by CSRF levels to store their CSRF attack string, that will be displayed
 	 * in a CSRF forum for the class the user is in
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param message         The String they want to store
 	 * @param userId          The identifier of the user in which to store the
@@ -535,7 +535,7 @@ public class Setter {
 	/**
 	 * Sets user to suspended in the database for a specific amount of time. This
 	 * prevents them from signing into the application
-	 * 
+	 *
 	 * @param ApplicationRoot Running context of application
 	 * @param userId          User Identifier of the to be suspended user
 	 * @param numberOfMinutes Amount of minutes to suspend user
@@ -567,7 +567,7 @@ public class Setter {
 
 	/**
 	 * Revokes a suspension that may have been applied to a user
-	 * 
+	 *
 	 * @param ApplicationRoot Running context of application
 	 * @param userId          The Identifier of the user that will be released from
 	 *                        suspension
@@ -598,7 +598,7 @@ public class Setter {
 
 	/**
 	 * Used to increment a users CSRF counter for CSRF levels.
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application.
 	 * @param moduleId        The identifier of the module to increment the counter
 	 *                        of
@@ -726,7 +726,7 @@ public class Setter {
 
 	/**
 	 * Updates a player's password without needing the current password
-	 * 
+	 *
 	 * @param ApplicationRoot Running context of the applicaiton
 	 * @param userId          The user id of the user to update
 	 * @param newPassword     The new password to assign to the user
@@ -763,7 +763,7 @@ public class Setter {
 
 	/**
 	 * Updates a PLAYER's class identifier
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param classId         New class to be assigned to
 	 * @param playerId        Player to be assigned to new class
@@ -796,7 +796,7 @@ public class Setter {
 
 	/**
 	 * Updates a PLAYER's class identifier to null
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param playerId        The identifier of the player to be assigned to class
 	 *                        NULL
@@ -828,7 +828,7 @@ public class Setter {
 
 	/**
 	 * Updates a users result of a specific module
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId        Identifier of the module the user is completing
 	 * @param userId          Identifier of the user completing the module
@@ -894,7 +894,7 @@ public class Setter {
 
 	/**
 	 * Adds or Subtracts points from a user.
-	 * 
+	 *
 	 * @param ApplicationRoot Running context of application
 	 * @param userId          Identifier of user to update
 	 * @param points          Positive or Negative number of points to update by
@@ -926,7 +926,7 @@ public class Setter {
 
 	/**
 	 * Updates a USER's role
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param playerId        The identifier of the player to update
 	 * @param newRole         Must be "player" or "admin"
@@ -959,7 +959,7 @@ public class Setter {
 
 	/**
 	 * Used by many functions to create players or admins
-	 * 
+	 *
 	 * @param ApplicationRoot
 	 * @param classId         Cannot be null, relationship depending
 	 * @param userName        Cannot be null
@@ -1046,7 +1046,7 @@ public class Setter {
 			boolean isDuplicate = true;
 
 			int duplicateCounter = 0;
-			
+
 			while (isDuplicate) {
 
 				CallableStatement callstmt = conn.prepareCall("SELECT ssoName FROM `users` WHERE userName = ?");
@@ -1467,7 +1467,7 @@ public class Setter {
 		log.debug("*** END setEndTime ***");
 		return result;
 	}
-	
+
 	public static boolean setDefaultClass(String ApplicationRoot, String theDefaultClass) throws SQLException {
 		boolean result = false;
 		log.debug("*** Setter.setDefaultClass ***");

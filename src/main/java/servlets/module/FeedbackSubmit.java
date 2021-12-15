@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.jsoup.parser.Parser;
 import org.owasp.encoder.Encode;
 
@@ -24,28 +24,28 @@ import dbProcs.Setter;
  * Marks modules as completed and stores feedback
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
-public class FeedbackSubmit extends HttpServlet 
+public class FeedbackSubmit extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SolutionSubmit.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SolutionSubmit.class);
 	/**
-	 * Initiated by a dynamic form returned by servlets.module.SolutionSubmit.doPost() 
+	 * Initiated by a dynamic form returned by servlets.module.SolutionSubmit.doPost()
 	 * this method checks the existence of the submitted module identifier before ensuring that the submission is correct.
 	 * If the module solution submission is found to be valid then the feedback submitted is stored, marking the module as completed for the user
 	 * If the submission is found to be valid then the user is returned with a feedback form.
@@ -57,15 +57,15 @@ public class FeedbackSubmit extends HttpServlet
 	 * @param additionalInfo Additional Feedback information
 	 * @param csrfToken
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& servlets.module.FeedbackSubmit &&&");
-		
+
 		String htmlOutput = new String();
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
@@ -82,12 +82,12 @@ public class FeedbackSubmit extends HttpServlet
 				try
 				{
 					String ApplicationRoot = getServletContext().getRealPath("");
-					
+
 					log.debug("Getting Parameters");
 					String moduleId = (String)request.getParameter("moduleId");;
 					log.debug("moduleId = " + moduleId.toString());
-					
-					
+
+
 					String solutionKey = Parser.unescapeEntities((String)request.getParameter("solutionKey"), false);
 					log.debug("solutionKey = " + solutionKey.toString());
 					int before = Integer.parseInt(Validate.validateParameter(request.getParameter("before"), 1));
@@ -98,12 +98,12 @@ public class FeedbackSubmit extends HttpServlet
 					log.debug("difficulty = " + difficulty);
 					String additionalInfo = Validate.validateParameter(request.getParameter("extra"), 5012);
 					log.debug("additionalInfo = " + additionalInfo);
-					
+
 					log.debug("Getting session parameters");
 					String userId = (String)ses.getAttribute("userStamp");
 					String userName = (String)ses.getAttribute("userName");
 					log.debug("userId = " + userId);
-					
+
 					//Validation
 					notNull = (moduleId != null && solutionKey != null);
 					if(notNull)
@@ -135,7 +135,7 @@ public class FeedbackSubmit extends HttpServlet
 							String hasNotCompletedBefore = Getter.checkPlayerResult(ApplicationRoot, moduleId, userId);
 							if(hasNotCompletedBefore != null)
 							{
-								//Marking module complete by user 
+								//Marking module complete by user
 								String result = Setter.updatePlayerResult(ApplicationRoot, moduleId, userId, additionalInfo, before, after, difficulty);
 								if(result != null)
 								{
@@ -172,7 +172,7 @@ public class FeedbackSubmit extends HttpServlet
 									"<p><font color=\"red\">" +
 									"Incorrect Solution Key Submitted.<br><br>You have limited amounts of incorrect key submissions before you will loose 10% of your points. Contact the OWASP Security Shepherd if you think you have found the correct key but it is failing you." +
 									"</font></p>");
-							
+
 							log.error("Invoking Bad Submission procedure...");
 							Setter.incrementBadSubmission(ApplicationRoot, userId);
 							log.error(userName + " has been warned and potentially has lost points");
@@ -192,7 +192,7 @@ public class FeedbackSubmit extends HttpServlet
 							log.error("Module not found");
 							errorMessage += "Module Not Found. Please try again";
 						}
-						else 
+						else
 						{
 							log.fatal("Module Not Open");
 							errorMessage += "Module Not Open. Please try a level that is marked as open. ";
@@ -231,7 +231,7 @@ public class FeedbackSubmit extends HttpServlet
 		out.write(htmlOutput);
 		log.debug("&&& END SolutionSubmit &&&");
 	}
-	
+
 	public static String refreshMenuScript(String csrfToken, String localError)
 	{
 		return "<script>refreshSideMenu(\"" + csrfToken + "\", \"" + localError + "\")</script>";

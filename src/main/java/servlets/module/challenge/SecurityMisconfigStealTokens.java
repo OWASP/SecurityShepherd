@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -27,19 +27,19 @@ import dbProcs.Database;
  * Security Misconfiguration Steal Tokens
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
@@ -47,14 +47,14 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 {
 	//Security Misconfiguration Challenge
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SecurityMisconfigStealTokens.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(SecurityMisconfigStealTokens.class);
 	private static String levelName = "Security Misconfig Cookie Flags Servlet";
 	public static String levelHash = "c4285bbc6734a10897d672c1ed3dd9417e0530a4e0186c27699f54637c7fb5d4";
 	private static String levelResult = "92755de2ebb012e689caf8bfec629b1e237d23438427499b6bf0d7933f1b8215"; // Base Key. User is given user specific key
 	/**
 	 * This servlet will return the key to complete as long as the cookie submitted is valid and does not belong to the user making the request
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
@@ -66,16 +66,16 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 			Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 			ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 			ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.securityMisconfig.stealTokens", locale);
-			
+
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-			PrintWriter out = response.getWriter();  
+			PrintWriter out = response.getWriter();
 			out.print(getServletInfo());
 			String htmlOutput = new String();
 			try
 			{
 				String applicationRoot = getServletContext().getRealPath("");
-				
+
 				String userId = ses.getAttribute("userStamp").toString();
 				String userActualCookie = getUserToken(userId, applicationRoot);
 				//Getting Submitted Cookie
@@ -91,15 +91,15 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 					}
 				}
 				String cookieValue = theToken.getValue();
-				
+
 				log.debug("User Submitted Cookie: " + cookieValue);
 				log.debug("Stored Cookie Value  : " + userActualCookie);
-				
+
 				if(cookieValue.compareTo(userActualCookie) == 0)
 				{
 					//User is using their own Cookie: Not Complete
 					htmlOutput = new String("<h2 class='title'>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete") + "</h2>"
-							+ "<p>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete.message") + "<p>");					
+							+ "<p>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete.message") + "<p>");
 				}
 				else
 				{
@@ -119,7 +119,7 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 					else
 					{
 						htmlOutput = new String("<h2 class='title'>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete") + "</h2>"
-								+ "<p>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete.yourToken") + "<p>");					
+								+ "<p>" + bundle.getString("securityMisconfig.servlet.stealTokens.notComplete.yourToken") + "<p>");
 					}
 				}
 			}
@@ -136,7 +136,7 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 			log.error(levelName + " servlet accessed with no session");
 		}
 	}
-	
+
 	/**
 	 * Method that will return a users token. If the user does not have a token, this will set one.
 	 * @param userId User Identifier to search for
@@ -149,7 +149,7 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 		String userToken = new String();
 		log.debug("Getting user token with id: " + userId);
 		Connection conn = Database.getChallengeConnection(applicationRoot, "SecurityMisconfigStealToken");
-		try 
+		try
 		{
 			CallableStatement getTokenCs = conn.prepareCall("call getToken(?)");
 			getTokenCs.setString(1, userId);
@@ -165,8 +165,8 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 				throw new SQLException("No results from getToken Call. Empty Result Set");
 			}
 			tokenRs.close();
-		} 
-		catch (SQLException e) 
+		}
+		catch (SQLException e)
 		{
 			log.error("Could not get user SecurityMisconfigStealToken token: " + e.toString());
 			throw e;
@@ -176,7 +176,7 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 			log.debug("Found token: " + userToken);
 		return userToken;
 	}
-	
+
 	/**
 	 * Method to validate if a token exists in the database which does not belong to the user submitting the request
 	 * @param userId The ID of the user submitting the request
@@ -190,7 +190,7 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 		boolean validToken = false;
 		log.debug("Checking token:" + token);
 		Connection conn = Database.getChallengeConnection(applicationRoot, "SecurityMisconfigStealToken");
-		try 
+		try
 		{
 			CallableStatement validateTokenCs = conn.prepareCall("call validToken(?, ?)");
 			validateTokenCs.setString(1, userId);
@@ -211,8 +211,8 @@ public class SecurityMisconfigStealTokens extends HttpServlet
 				throw new SQLException("No results from validToken Call. Empty Result Set");
 			}
 			tokenRs.close();
-		} 
-		catch (SQLException e) 
+		}
+		catch (SQLException e)
 		{
 			log.error("Could not verify token: " + e.toString());
 			throw e;

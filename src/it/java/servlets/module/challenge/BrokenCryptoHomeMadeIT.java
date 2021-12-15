@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import dbProcs.Setter;
 
 public class BrokenCryptoHomeMadeIT {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(BrokenCryptoHomeMadeIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(BrokenCryptoHomeMadeIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
@@ -332,9 +332,9 @@ public class BrokenCryptoHomeMadeIT {
 	public void testLevelNoAuthPost() throws ServletException, IOException {
 
 		request.getSession().setAttribute("lang", lang);
-		String servletResponse = moduleDoPost("Anything", "Anything", 200); 
+		String servletResponse = moduleDoPost("Anything", "Anything", 200);
 		// Mock response is 200 for	Unauthenticated response for some  reason
-		
+
 		if (!servletResponse.isEmpty()) {
 			String message = new String("Expected Blank Response for Unauthenticated Call. Got Data Back");
 			log.fatal(message);

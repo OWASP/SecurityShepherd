@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import dbProcs.Setter;
 public class DirectObjectLessonIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(DirectObjectLessonIT.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(DirectObjectLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
@@ -37,7 +37,7 @@ public class DirectObjectLessonIT
 		TestProperties.executeSql(log);
 
 	}
-    
+
     @Before
 	public void setup()
 	{
@@ -81,7 +81,7 @@ public class DirectObjectLessonIT
 		}
 		return null;
 	}
-	
+
 	@Test
 	public void testLevelValidAnswer()
 	{
@@ -108,7 +108,7 @@ public class DirectObjectLessonIT
 				request.setCookies(response.getCookies());
 				String submitedUserName = "admin";
 				String servletResponse = getModuleDoPost(submitedUserName, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -119,7 +119,7 @@ public class DirectObjectLessonIT
 					String message = new String("Valid Solution did not yeild Result Key");
 					log.fatal(message);
 					fail(message);
-				} 
+				}
 				else if(!servletResponse.contains("User")) //This string is in all possible responses except unauthenticated
 				{
 					String message = new String("Unexpected Lesson Response");
@@ -134,7 +134,7 @@ public class DirectObjectLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidAnswer()
 	{
@@ -161,7 +161,7 @@ public class DirectObjectLessonIT
 				request.setCookies(response.getCookies());
 				String submitedUserName = "wrong";
 				String servletResponse = getModuleDoPost(submitedUserName, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -172,7 +172,7 @@ public class DirectObjectLessonIT
 					String message = new String("Invalid Solution yielded Result Key");
 					log.fatal(message);
 					fail(message);
-				} 
+				}
 				else if(!servletResponse.contains("User")) //This string is in all possible responses except unauthenticated
 				{
 					String message = new String("Unexpected Lesson Response");
@@ -187,7 +187,7 @@ public class DirectObjectLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelExpectedInvalidAnswer()
 	{
@@ -214,7 +214,7 @@ public class DirectObjectLessonIT
 				request.setCookies(response.getCookies());
 				String submitedUserName = "guest";
 				String servletResponse = getModuleDoPost(submitedUserName, csrfToken, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -225,7 +225,7 @@ public class DirectObjectLessonIT
 					String message = new String("Did not get 'Guest' Response");
 					log.fatal(message);
 					fail(message);
-				} 
+				}
 				else if(!servletResponse.contains("User")) //This string is in all possible responses except unauthenticated
 				{
 					String message = new String("Unexpected Lesson Response");
@@ -240,7 +240,7 @@ public class DirectObjectLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelNoAuth()
 	{
@@ -250,7 +250,7 @@ public class DirectObjectLessonIT
 			String csrfToken = "wrong";
 			String submitedUserName = "guest";
 			String servletResponse = getModuleDoPost(submitedUserName, csrfToken, 200); //Mock response is 200 for Unauthenticated response for some reason
-			if(servletResponse.contains("You must be getting funky")) 
+			if(servletResponse.contains("You must be getting funky"))
 			{
 				String message = new String("General 'Funky' Error Detected");
 				log.fatal(message);
@@ -261,7 +261,7 @@ public class DirectObjectLessonIT
 				String message = new String("Did not get 'Unauthenticated' Response");
 				log.fatal(message);
 				fail(message);
-			} 
+			}
 			else if(servletResponse.contains("User")) //This string is in all possible responses except unauthenticated
 			{
 				String message = new String("Appears that an Unauthticated Response Worked");

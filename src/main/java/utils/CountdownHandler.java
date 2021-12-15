@@ -3,34 +3,34 @@ package utils;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
- * 
+ *
  * <br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class CountdownHandler {
-	private static org.apache.log4j.Logger log = Logger.getLogger(CountdownHandler.class);
+	private static org.apache.logging.log4j.Logger log = LogManager.getLogger(CountdownHandler.class);
 
 	private static LocalDateTime startTime;
 	private static boolean hasStartTime = false;
@@ -68,7 +68,7 @@ public class CountdownHandler {
 		return true;
 
 	}
-	
+
 	public static boolean willStart() throws InvalidCountdownStateException {
 
 		// Returns true if there is a start time but the CTF hasn't started yet
@@ -80,13 +80,13 @@ public class CountdownHandler {
 
 	public static boolean willLock() throws InvalidCountdownStateException {
 
-		// Returns true if CTF has started and there is a lock time that hasn't happened yet 
+		// Returns true if CTF has started and there is a lock time that hasn't happened yet
 
 		validate();
 
 		return isStarted() && hasLockTime() && isOpen();
 	}
-	
+
 	public static boolean willEnd() throws InvalidCountdownStateException {
 
 		// Return true if CTF it is locked or started, has an end timer that hasn't happened yet
