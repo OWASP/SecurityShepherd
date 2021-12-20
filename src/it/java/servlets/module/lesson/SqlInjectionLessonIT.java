@@ -21,7 +21,7 @@ import dbProcs.Setter;
 public class SqlInjectionLessonIT
 {
 	private static String lang = "en_GB";
-	private static Logger log = LogManager.getLogger(SqlInjectionLessonIT.class);
+	private static final Logger log = LogManager.getLogger(SqlInjectionLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;

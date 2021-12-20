@@ -42,7 +42,7 @@ import utils.Validate;
 public class ChangeCoreDatabase extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(ChangeCoreDatabase.class);
+	private static final Logger log = LogManager.getLogger(ChangeCoreDatabase.class);
 
 	/**
 	 * If this method is called by a valid administrator the site.properties file that contains the database information required to make a connection is updated

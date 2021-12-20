@@ -26,7 +26,7 @@ public class MongoDatabaseTest {
     private static MongoClient mongoClient;
     private static String TEST_PATH = "mongo_challenge_test";
 
-    private static Logger log = LogManager.getLogger(MongoDatabaseTest.class);
+    private static final Logger log = LogManager.getLogger(MongoDatabaseTest.class);
 
     @BeforeAll
     public static void initAll() throws IOException

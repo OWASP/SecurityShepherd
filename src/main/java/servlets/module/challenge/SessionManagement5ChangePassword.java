@@ -50,7 +50,7 @@ public class SessionManagement5ChangePassword extends HttpServlet
 {
 
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SessionManagement5ChangePassword.class);
+	private static final Logger log = LogManager.getLogger(SessionManagement5ChangePassword.class);
 	private static String levelName = "Session Management Challenge Five (Change Password)";
 	// private static String levelResult = ""; //This Servlet does not return a result
 	/**

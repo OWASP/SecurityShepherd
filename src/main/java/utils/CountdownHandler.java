@@ -31,7 +31,7 @@ import dbProcs.Setter;
  *
  */
 public class CountdownHandler {
-	private static Logger log = LogManager.getLogger(CountdownHandler.class);
+	private static final Logger log = LogManager.getLogger(CountdownHandler.class);
 
 	private static LocalDateTime startTime;
 	private static boolean hasStartTime = false;

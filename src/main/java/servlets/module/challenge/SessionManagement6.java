@@ -50,7 +50,7 @@ import dbProcs.Getter;
 public class SessionManagement6 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SessionManagement6.class);
+	private static final Logger log = LogManager.getLogger(SessionManagement6.class);
 	private static String levelName = "Session Management Challenge Six";
 	public static String levelHash = "b5e1020e3742cf2c0880d4098146c4dde25ebd8ceab51807bad88ff47c316ece";
 	/**

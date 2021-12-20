@@ -20,7 +20,7 @@ import utils.Validate;
 public class OpenMobileModules extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(OpenMobileModules.class);
+	private static final Logger log = LogManager.getLogger(OpenMobileModules.class);
 	/**
 	 * Control class used to open all modules when called by an administrator
 	 * @param csrfToken The csrf protection token for this funciton

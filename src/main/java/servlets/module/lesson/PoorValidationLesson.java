@@ -41,7 +41,7 @@ import utils.Validate;
 public class PoorValidationLesson extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(PoorValidationLesson.class);
+	private static final Logger log = LogManager.getLogger(PoorValidationLesson.class);
 	private static String levelName = "Poor Validation Lesson";
 	public static String levelhash = "4d8d50a458ca5f1f7e2506dd5557ae1f7da21282795d0ed86c55fefe41eb874f";
 	private static String levelResult = "6680b08b175c9f3d521764b41349fcbd3c0ad0a76655a10d42372ebccdfdb4bb";

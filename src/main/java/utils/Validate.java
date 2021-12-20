@@ -32,7 +32,7 @@ import org.apache.logging.log4j.LogManager;
  *
  */
 public class Validate {
-	private static Logger log = LogManager.getLogger(Validate.class);
+	private static final Logger log = LogManager.getLogger(Validate.class);
 
 	/**
 	 * Finds JSession token from user's cookies[], validates and returns.

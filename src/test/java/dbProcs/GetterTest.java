@@ -33,7 +33,7 @@ import utils.ScoreboardStatus;
  *
  */
 public class GetterTest {
-	private static Logger log = LogManager.getLogger(GetterTest.class);
+	private static final Logger log = LogManager.getLogger(GetterTest.class);
 	private static String lang = new String("en_GB");
 	private static Locale locale = new Locale(lang);
 	private static String applicationRoot = new String();

@@ -48,7 +48,7 @@ public class SqlInjectionEmail extends HttpServlet
 {
 	//SQL Challenge One
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SqlInjectionEmail.class);
+	private static final Logger log = LogManager.getLogger(SqlInjectionEmail.class);
 	private static String levelName = "SQL Injection Challenge Two";
 	public static String levelHash = "ffd39cb26727f34cbf9fce3e82b9d703404e99cdef54d2aa745f497abe070b";
 	// private static String levelResult = ""; // Stored in Vulnerable DB. Not user Specific

@@ -45,7 +45,7 @@ import utils.Validate;
  */
 public class SLS extends HttpServlet {
     private static final long serialVersionUID = -5824919455464886874L;
-	private static Logger log = LogManager.getLogger(SLS.class);
+	private static final Logger log = LogManager.getLogger(SLS.class);
 
 	/**
 	 * Initiated in index.jsp. Invalidates session and Security Shepherd tokens are

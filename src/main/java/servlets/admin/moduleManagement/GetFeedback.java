@@ -40,7 +40,7 @@ import utils.Validate;
 public class GetFeedback extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(GetFeedback.class);
+	private static final Logger log = LogManager.getLogger(GetFeedback.class);
 	/**
 	 * This class validates it's input and returns the user with the feedback for a specific module.
 	 * @param moduleId

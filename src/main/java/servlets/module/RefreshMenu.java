@@ -48,7 +48,7 @@ import utils.Validate;
  */
 public class RefreshMenu extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(GetModule.class);
+	private static final Logger log = LogManager.getLogger(GetModule.class);
 
 	/**
 	 * This servlet returns a fresh version of the module menu bar. This is used

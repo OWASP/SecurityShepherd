@@ -43,7 +43,7 @@ import utils.Validate;
 public class DirectObjectLesson extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(DirectObjectLesson.class);
+	private static final Logger log = LogManager.getLogger(DirectObjectLesson.class);
 	private static String levelName = "Insecure Direct Object Lesson";
 	public static String levelhash = "fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100";
 	private static String levelResult = "59e571b1e59441e76e0c85e5b49";

@@ -21,7 +21,7 @@ import utils.Validate;
 public class OpenOrCloseByCategory extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(OpenOrCloseByCategory.class);
+	private static final Logger log = LogManager.getLogger(OpenOrCloseByCategory.class);
 	/**
 	 * Controller class used to specify what modules to mark as closed/open
 	 * @param toOpen Array of moduleId's to open

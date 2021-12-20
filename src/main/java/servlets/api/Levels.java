@@ -23,7 +23,7 @@ import utils.Validate;
 public class Levels extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(Levels.class);
+	private static final Logger log = LogManager.getLogger(Levels.class);
 
 	/**
 	 * Get request just returns if the session can access the scoreboard or not

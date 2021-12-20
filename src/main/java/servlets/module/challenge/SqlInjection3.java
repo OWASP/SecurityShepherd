@@ -49,7 +49,7 @@ public class SqlInjection3 extends HttpServlet
 {
 	//Sql Challenge 3
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SqlInjection3.class);
+	private static final Logger log = LogManager.getLogger(SqlInjection3.class);
 	private static String levelName = "SQL Injection Challenge Three";
 	public static String levelHash = "b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6";
 	// private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific

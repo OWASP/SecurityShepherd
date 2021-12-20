@@ -24,7 +24,7 @@ import dbProcs.Setter;
 
 public class BrokenCryptoHomeMadeIT {
 	private static String lang = "en_GB";
-	private static Logger log = LogManager.getLogger(BrokenCryptoHomeMadeIT.class);
+	private static final Logger log = LogManager.getLogger(BrokenCryptoHomeMadeIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

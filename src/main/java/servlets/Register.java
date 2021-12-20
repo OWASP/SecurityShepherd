@@ -42,7 +42,7 @@ import utils.Validate;
  */
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = -2558345286276614261L;
-	private static Logger log = LogManager.getLogger(Register.class);
+	private static final Logger log = LogManager.getLogger(Register.class);
 	private static String defaultClass = new String();
 	private static boolean isLoaded = false;
 

@@ -18,7 +18,7 @@ import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
 public class EnableScoreboardIT {
-	private static Logger log = LogManager.getLogger(EnableScoreboardIT.class);
+	private static final Logger log = LogManager.getLogger(EnableScoreboardIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

@@ -43,7 +43,7 @@ import utils.Validate;
 public class SessionManagement8 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SessionManagement8.class);
+	private static final Logger log = LogManager.getLogger(SessionManagement8.class);
 	private static String levelName = "Session Management Challenge Eight";
 	private static String levelHash = "714d8601c303bbef8b5cabab60b1060ac41f0d96f53b6ea54705bb1ea4316334";
 	/**

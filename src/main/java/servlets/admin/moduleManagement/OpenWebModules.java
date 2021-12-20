@@ -22,7 +22,7 @@ import utils.Validate;
 public class OpenWebModules extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(OpenWebModules.class);
+	private static final Logger log = LogManager.getLogger(OpenWebModules.class);
 	/**
 	 * Control class used to open all Only Web Categories when called by an administrator
 	 * @param request the HTTP Request

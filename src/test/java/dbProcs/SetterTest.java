@@ -24,7 +24,7 @@ import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
 public class SetterTest {
-	private static Logger log = LogManager.getLogger(SetterTest.class);
+	private static final Logger log = LogManager.getLogger(SetterTest.class);
 	private static String applicationRoot = new String();
 
 	/**

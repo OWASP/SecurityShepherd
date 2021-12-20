@@ -21,7 +21,7 @@ import dbProcs.Setter;
 public class XssLessonIT
 {
 	private static String lang = "en_GB";
-	private static Logger log = LogManager.getLogger(XssLessonIT.class);
+	private static final Logger log = LogManager.getLogger(XssLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;

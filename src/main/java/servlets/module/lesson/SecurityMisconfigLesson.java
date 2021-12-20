@@ -43,7 +43,7 @@ import utils.Validate;
 public class SecurityMisconfigLesson extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SecurityMisconfigLesson.class);
+	private static final Logger log = LogManager.getLogger(SecurityMisconfigLesson.class);
 	private static String levelName = "Security Misconfig Lesson";
 	public static String levelhash = "fe04648f43cdf2d523ecf1675f1ade2cde04a7a2e9a7f1a80dbb6dc9f717c833";
 	private static String levelResult = "55b34717d014a5a355f6eced4386878fab0b2793e1d1dbfd23e6262cd510ea96";

@@ -31,7 +31,7 @@ import dbProcs.Setter;
  *
  */
 public class ModulePlan {
-	private static Logger log = LogManager.getLogger(ModulePlan.class);
+	private static final Logger log = LogManager.getLogger(ModulePlan.class);
 
 	private static boolean openFloor = false;
 	private static boolean incrementalFloor = true;

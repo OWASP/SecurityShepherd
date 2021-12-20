@@ -32,7 +32,7 @@ import dbProcs.Setter;
  */
 public class CheatSheetStatus {
 
-	private static Logger log = LogManager.getLogger(CheatSheetStatus.class);
+	private static final Logger log = LogManager.getLogger(CheatSheetStatus.class);
 
 	private static boolean adminEnabled = false;
 	private static boolean playerEnabled = false;

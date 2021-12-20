@@ -40,7 +40,7 @@ import utils.Validate;
 public class DisableCheats extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(DisableCheats.class);
+	private static final Logger log = LogManager.getLogger(DisableCheats.class);
 
 	/**
 	 * If this functionality is validly called by an administrator, the cheat sheets will become or remain unavailable.

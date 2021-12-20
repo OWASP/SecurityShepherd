@@ -30,7 +30,7 @@ import dbProcs.Setter;
  *
  */
 public class OpenRegistration {
-	private static Logger log = LogManager.getLogger(OpenRegistration.class);
+	private static final Logger log = LogManager.getLogger(OpenRegistration.class);
 
 	private static boolean enabled = false;
 

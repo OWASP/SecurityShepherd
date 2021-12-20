@@ -40,7 +40,7 @@ import utils.InvalidCountdownStateException;
  * @author Mark
  */
 public class Setter {
-	private static Logger log = LogManager.getLogger(Setter.class);
+	private static final Logger log = LogManager.getLogger(Setter.class);
 
 	// TODO - Replace this with a new mobile/web/etc attribute in the modules table
 	final public static String webModuleCategoryHardcodedWhereClause = new String("moduleCategory = 'CSRF'"

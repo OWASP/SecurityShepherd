@@ -6,7 +6,7 @@ import org.apache.logging.log4j.ThreadContext;
 
 public class ShepherdLogManager
 {
-	private static Logger log = LogManager.getLogger(ShepherdLogManager.class);
+	private static final Logger log = LogManager.getLogger(ShepherdLogManager.class);
 
 	public static void setRequestIp (String theIp)
 	{
@@ -55,7 +55,6 @@ public class ShepherdLogManager
 	 * Sets IP of request and preceeds it with the username of the logged in user
 	 * @param theIp
 	 * @param theForwardedIp
-	 * @param theUser
 	 */
 	public static void setRequestIp (String theIp, String theForwardedIp, String userName)
 	{

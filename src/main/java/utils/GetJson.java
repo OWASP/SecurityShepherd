@@ -8,7 +8,7 @@ import org.json.JSONArray;
 
 public class GetJson
 {
-	private static Logger log = LogManager.getLogger(GetJson.class);
+	private static final Logger log = LogManager.getLogger(GetJson.class);
 	public static JSONArray getJssonArrayFromPost (BufferedReader reader)
 	{
 		StringBuffer jb = new StringBuffer();

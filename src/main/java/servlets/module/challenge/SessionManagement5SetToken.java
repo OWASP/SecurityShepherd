@@ -53,7 +53,7 @@ import dbProcs.Database;
 public class SessionManagement5SetToken extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SessionManagement5SetToken.class);
+	private static final Logger log = LogManager.getLogger(SessionManagement5SetToken.class);
 	private static String levelName = "SessionManagement5SetToken";
 	public static String levelHash = SessionManagement5.levelHash;
 	/**

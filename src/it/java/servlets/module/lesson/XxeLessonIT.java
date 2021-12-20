@@ -27,7 +27,7 @@ import utils.InstallationException;
 
 public class XxeLessonIT {
 	private static final String LANGUAGE_CODE = "en_GB";
-	private static Logger log = LogManager.getLogger(XxeLessonIT.class);
+	private static final Logger log = LogManager.getLogger(XxeLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

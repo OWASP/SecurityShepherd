@@ -37,7 +37,7 @@ import utils.ShepherdLogManager;
 public class SSOLogin extends HttpServlet {
 
 	private static final long serialVersionUID = 1488140446224058032L;
-	private static Logger log = LogManager.getLogger(SSOLogin.class);
+	private static final Logger log = LogManager.getLogger(SSOLogin.class);
 
 	/**
 	 * Redirects user to index.jsp

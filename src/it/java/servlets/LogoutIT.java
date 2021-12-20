@@ -22,7 +22,7 @@ import testUtils.TestProperties;
 public class LogoutIT
 {
 	private static String lang = "en_GB";
-	private static Logger log = LogManager.getLogger(LogoutIT.class);
+	private static final Logger log = LogManager.getLogger(LogoutIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;

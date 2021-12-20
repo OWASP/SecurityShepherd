@@ -43,7 +43,7 @@ import utils.Validate;
 public class BrokenCrypto3 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(BrokenCrypto3.class);
+	private static final Logger log = LogManager.getLogger(BrokenCrypto3.class);
 	private static String levelName = "Broken Crypto Challenge 3";
 	public static String levelHash = "2da053b4afb1530a500120a49a14d422ea56705a7e3fc405a77bc269948ccae1";
 	public static String levelResult = "thisisthesecurityshepherdabcencryptionkey"; //Is used as encryption key in this level
