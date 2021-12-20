@@ -46,7 +46,7 @@ import utils.Validate;
  */
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(Logout.class);
+	private static final Logger log = LogManager.getLogger(Logout.class);
 
 	/**
 	 * Initiated in index.jsp. Invalidates session and Security Shepherd tokens are

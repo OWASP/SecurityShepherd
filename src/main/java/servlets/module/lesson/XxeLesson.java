@@ -53,7 +53,7 @@ import utils.XmlDocumentBuilder;
  */
 public class XxeLesson extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(XxeLesson.class);
+	private static final Logger log = LogManager.getLogger(XxeLesson.class);
 	private static final String LEVEL_NAME = "XXE Lesson";
 	private static final String LEVEL_HASH = "57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a";
 

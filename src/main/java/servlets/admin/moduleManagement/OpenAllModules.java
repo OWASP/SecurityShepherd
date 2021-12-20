@@ -23,7 +23,7 @@ public class OpenAllModules extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static final  String SERVLET_NAME = "servlets.module.OpenAllModules";
-	private static Logger log = LogManager.getLogger(OpenAllModules.class);
+	private static final Logger log = LogManager.getLogger(OpenAllModules.class);
 	/**
 	 * Control class used to open all modules when called by an administrator
 	 * @param request the HTTP request

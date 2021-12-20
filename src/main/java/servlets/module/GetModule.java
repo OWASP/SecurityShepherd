@@ -44,7 +44,7 @@ import dbProcs.Getter;
  */
 public class GetModule extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(GetModule.class);
+	private static final Logger log = LogManager.getLogger(GetModule.class);
 
 	/**
 	 * Initiated by an Ajax call defined in index.jsp, this method takes a module

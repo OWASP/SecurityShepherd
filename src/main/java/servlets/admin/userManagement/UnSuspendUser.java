@@ -44,7 +44,7 @@ import dbProcs.Setter;
 public class UnSuspendUser extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(UnSuspendUser.class);
+	private static final Logger log = LogManager.getLogger(UnSuspendUser.class);
 	private static String functionName = new String("UnSuspend User");
 
 	public void doPost (HttpServletRequest request, HttpServletResponse response)

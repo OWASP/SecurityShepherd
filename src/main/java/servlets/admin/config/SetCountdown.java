@@ -41,7 +41,7 @@ import utils.Validate;
  */
 public class SetCountdown extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SetCountdown.class);
+	private static final Logger log = LogManager.getLogger(SetCountdown.class);
 
 	/**
 	 * If this functionality is validly called by an administrator, the cheat sheets

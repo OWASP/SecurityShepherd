@@ -44,7 +44,7 @@ import utils.XssFilter;
 public class XssChallengeFour extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(XssChallengeFour.class);
+	private static final Logger log = LogManager.getLogger(XssChallengeFour.class);
 	private static final String levelHash = "06f81ca93f26236112f8e31f32939bd496ffe8c9f7b564bce32bd5e3a8c2f751";
 	private static String levelName = "XSS Challenge 4";
 	/**

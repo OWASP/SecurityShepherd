@@ -41,7 +41,7 @@ import dbProcs.Getter;
 public class GetJsonProgress extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(GetFeedback.class);
+	private static final Logger log = LogManager.getLogger(GetFeedback.class);
 	/**
 	 * Used to return an administrator with the current progress of each player in a class.
 	 * This will require a complex client page to parse the returned JSON information to make a very pretty score board

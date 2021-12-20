@@ -32,7 +32,7 @@ import servlets.Login;
 import utils.InstallationException;
 
 public class TestProperties {
-	private static Logger log = LogManager.getLogger(TestProperties.class);
+	private static final Logger log = LogManager.getLogger(TestProperties.class);
 
 	public static void failAndPrint(String message) {
 		log.fatal(message);

@@ -16,7 +16,7 @@ import dbProcs.Setter;
  */
 public class ScoreboardStatus {
 
-	private static Logger log = LogManager.getLogger(ScoreboardStatus.class);
+	private static final Logger log = LogManager.getLogger(ScoreboardStatus.class);
 
 	private static boolean scoreboardEnabled = true;
 	private static String scoreboardClass = new String();

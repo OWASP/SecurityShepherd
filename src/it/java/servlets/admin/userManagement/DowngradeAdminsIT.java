@@ -18,7 +18,7 @@ import testUtils.TestProperties;
  */
 
 public class DowngradeAdminsIT {
-	private static Logger log = LogManager.getLogger(DowngradeAdminsIT.class);
+	private static final Logger log = LogManager.getLogger(DowngradeAdminsIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

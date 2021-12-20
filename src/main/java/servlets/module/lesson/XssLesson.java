@@ -45,7 +45,7 @@ public class XssLesson
 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(XssLesson.class);
+	private static final Logger log = LogManager.getLogger(XssLesson.class);
 	private static String levelName = "XSS Lesson";
 	private static String levelHash = "zf8ed52591579339e590e0726c7b24009f3ac54cdff1b81a65db1688d86efb3a";
 	/**

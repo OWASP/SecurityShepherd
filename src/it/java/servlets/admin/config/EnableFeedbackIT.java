@@ -20,7 +20,7 @@ import testUtils.TestProperties;
 import utils.FeedbackStatus;
 
 public class EnableFeedbackIT {
-	private static Logger log = LogManager.getLogger(EnableFeedbackIT.class);
+	private static final Logger log = LogManager.getLogger(EnableFeedbackIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

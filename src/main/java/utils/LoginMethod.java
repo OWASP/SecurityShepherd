@@ -31,7 +31,7 @@ public class LoginMethod {
 	private static boolean isSaml = false;
 	private static boolean isSet = false;
 
-	private static Logger log = LogManager.getLogger(LoginMethod.class);
+	private static final Logger log = LogManager.getLogger(LoginMethod.class);
 
 	public static boolean isSaml() {
 

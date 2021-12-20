@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 public class OpenAllModulesIT {
 
-	private static Logger log = LogManager.getLogger(OpenAllModulesIT.class);
+	private static final Logger log = LogManager.getLogger(OpenAllModulesIT.class);
 	private static final String LANGUAGE_CODE = "en_GB";
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

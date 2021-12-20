@@ -40,7 +40,7 @@ import utils.Validate;
 public class ToggleRegistration extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(ToggleRegistration.class);
+	private static final Logger log = LogManager.getLogger(ToggleRegistration.class);
 	/**
 	 * This method when called by an administrator toggles the availability of the registraion functionality,
 	 * This is actually performed by the OpenRegistration.toggle() method.

@@ -41,7 +41,7 @@ import dbProcs.Getter;
  */
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(Login.class);
+	private static final Logger log = LogManager.getLogger(Login.class);
 
 	/**
 	 * Initiated by login.jsp. Once this post request has been completely processed,

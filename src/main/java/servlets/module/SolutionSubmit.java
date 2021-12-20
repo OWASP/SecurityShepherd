@@ -49,7 +49,7 @@ import dbProcs.Setter;
  */
 public class SolutionSubmit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SolutionSubmit.class);
+	private static final Logger log = LogManager.getLogger(SolutionSubmit.class);
 
 	/**
 	 * Initiated by a dynamic form in index.jsp this method checks the existence of

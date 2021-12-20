@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
  */
 public class UserKicker
 {
-	private static Logger log = LogManager.getLogger(UserKicker.class);
+	private static final Logger log = LogManager.getLogger(UserKicker.class);
 	private static List<String> kickTheseUsers = new ArrayList<String>();
 
 	/**

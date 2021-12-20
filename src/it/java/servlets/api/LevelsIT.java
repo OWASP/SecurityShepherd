@@ -24,7 +24,7 @@ import dbProcs.Setter;
 
 public class LevelsIT {
 	private static String lang = "en_GB";
-	private static Logger log = LogManager.getLogger(LevelsIT.class);
+	private static final Logger log = LogManager.getLogger(LevelsIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

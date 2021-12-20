@@ -20,7 +20,7 @@ import testUtils.TestProperties;
 import utils.OpenRegistration;
 
 public class ToggleRegistrationIT {
-	private static Logger log = LogManager.getLogger(ToggleRegistrationIT.class);
+	private static final Logger log = LogManager.getLogger(ToggleRegistrationIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

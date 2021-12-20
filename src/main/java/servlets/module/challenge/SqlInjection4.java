@@ -49,7 +49,7 @@ public class SqlInjection4 extends HttpServlet
 {
 	//Sql Challenge 4
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SqlInjection4.class);
+	private static final Logger log = LogManager.getLogger(SqlInjection4.class);
 	private static String levelName = "SqlInjection4";
 	private static String levelResult = "d316e80045d50bdf8ed49d48f130b4acf4a878c82faef34daff8eb1b98763b6f";
 	public static String levelHash = "1feccf2205b4c5ddf743630b46aece3784d61adc56498f7603ccd7cb8ae92629";

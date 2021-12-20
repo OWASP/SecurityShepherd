@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class TestCountdownHandler {
-	private static Logger log = LogManager.getLogger(TestCountdownHandler.class);
+	private static final Logger log = LogManager.getLogger(TestCountdownHandler.class);
 
 	/**
 	 * Creates DB or Restores DB to Factory Defaults before running tests

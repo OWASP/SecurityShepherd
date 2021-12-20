@@ -26,7 +26,7 @@ import testUtils.TestProperties;
  *
  */
 public class CloseAllModulesTestIT {
-	private static Logger log = LogManager.getLogger(CloseAllModulesTestIT.class);
+	private static final Logger log = LogManager.getLogger(CloseAllModulesTestIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

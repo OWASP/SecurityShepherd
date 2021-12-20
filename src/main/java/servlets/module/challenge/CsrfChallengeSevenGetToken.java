@@ -46,7 +46,7 @@ import dbProcs.Database;
 public class CsrfChallengeSevenGetToken extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(CsrfChallengeSevenGetToken.class);
+	private static final Logger log = LogManager.getLogger(CsrfChallengeSevenGetToken.class);
 	public static final String levelHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
 	private static String levelName = "CSRF Challenge 7 Get Token";
 	/**

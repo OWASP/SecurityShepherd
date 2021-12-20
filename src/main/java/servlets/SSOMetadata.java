@@ -39,7 +39,7 @@ import utils.ShepherdLogManager;
 public class SSOMetadata extends HttpServlet {
 
 	private static final long serialVersionUID = 3679066677850981985L;
-	private static Logger log = LogManager.getLogger(SSOMetadata.class);
+	private static final Logger log = LogManager.getLogger(SSOMetadata.class);
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

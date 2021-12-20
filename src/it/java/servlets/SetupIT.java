@@ -22,7 +22,7 @@ import dbProcs.Constants;
 import testUtils.TestProperties;
 
 public class SetupIT {
-	private static Logger log = LogManager.getLogger(SetupIT.class);
+	private static final Logger log = LogManager.getLogger(SetupIT.class);
 
 	/**
 	 * Initialize directories

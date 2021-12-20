@@ -15,7 +15,7 @@ import dbProcs.Setter;
  *
  */
 public class FeedbackStatus {
-	private static Logger log = LogManager.getLogger(FeedbackStatus.class);
+	private static final Logger log = LogManager.getLogger(FeedbackStatus.class);
 
 	private static boolean enabled = false;
 

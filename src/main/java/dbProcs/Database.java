@@ -35,7 +35,7 @@ import org.apache.logging.log4j.LogManager;
  * @author Mark
  */
 public class Database {
-	private static Logger log = LogManager.getLogger(Database.class);
+	private static final Logger log = LogManager.getLogger(Database.class);
 
 	/**
 	 * This method is used by the application to open an connection to the database

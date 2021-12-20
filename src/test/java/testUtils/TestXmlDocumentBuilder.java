@@ -16,7 +16,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertNotNull;
 
 public class TestXmlDocumentBuilder {
-    private static Logger log = LogManager.getLogger(TestXmlDocumentBuilder.class);
+    private static final Logger log = LogManager.getLogger(TestXmlDocumentBuilder.class);
 
     @BeforeAll
     public static void initAll()

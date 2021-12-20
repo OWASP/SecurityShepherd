@@ -51,7 +51,7 @@ import dbProcs.Getter;
  */
 public class ACS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(ACS.class);
+	private static final Logger log = LogManager.getLogger(ACS.class);
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

@@ -44,7 +44,7 @@ import utils.Validate;
 public class GetCheat extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(GetCheat.class);
+	private static final Logger log = LogManager.getLogger(GetCheat.class);
 
 	/**
 	 * This method will reject requests if cheat sheet availability is marked as unavailable by administration.

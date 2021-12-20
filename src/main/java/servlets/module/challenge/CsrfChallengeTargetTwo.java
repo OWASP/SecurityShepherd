@@ -42,7 +42,7 @@ import dbProcs.Setter;
 public class CsrfChallengeTargetTwo extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(CsrfChallengeTargetTwo.class);
+	private static final Logger log = LogManager.getLogger(CsrfChallengeTargetTwo.class);
 	private static String levelName = "CSRF 2 Target";
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Two as complete.

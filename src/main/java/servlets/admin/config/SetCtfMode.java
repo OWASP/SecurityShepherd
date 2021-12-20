@@ -40,7 +40,7 @@ import utils.Validate;
 public class SetCtfMode extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SetCtfMode.class);
+	private static final Logger log = LogManager.getLogger(SetCtfMode.class);
 	/**
 	 * Called to change the status of the utils.ModulePlan class. Once this has been called by a valid administrator, the utils.ModulePlan will be changed.
 	 * @param csrfToken

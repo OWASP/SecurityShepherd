@@ -45,7 +45,7 @@ import utils.ScoreboardStatus;
  * @author Mark
  */
 public class Getter {
-	private static Logger log = LogManager.getLogger(Getter.class);
+	private static final Logger log = LogManager.getLogger(Getter.class);
 	/**
 	 * Used for scoreboards / progress bars
 	 */

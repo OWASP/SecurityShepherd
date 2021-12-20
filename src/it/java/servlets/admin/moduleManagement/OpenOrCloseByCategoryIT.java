@@ -20,7 +20,7 @@ import dbProcs.Setter;
 import testUtils.TestProperties;
 
 public class OpenOrCloseByCategoryIT {
-	private static Logger log = LogManager.getLogger(OpenOrCloseByCategoryIT.class);
+	private static final Logger log = LogManager.getLogger(OpenOrCloseByCategoryIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

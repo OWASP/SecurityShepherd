@@ -47,7 +47,7 @@ import utils.Validate;
 public class CsrfLesson extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(CsrfLesson.class);
+	private static final Logger log = LogManager.getLogger(CsrfLesson.class);
 	private static String levelName = "CSRF Lesson";
 	private static String levelHash = "ed4182af119d97728b2afca6da7cdbe270a9e9dd714065f0f775cd40dc296bc7";
 	/**

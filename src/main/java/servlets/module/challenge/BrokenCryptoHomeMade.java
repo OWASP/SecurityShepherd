@@ -58,7 +58,7 @@ public class BrokenCryptoHomeMade extends HttpServlet
 	public static String userNameKey = randomKeyLengthString();
 	private static String serverEncryptionKey = randomKeyLengthString();
 	private static String encryptionKeySalt = randomKeyLengthString();
-	private static Logger log = LogManager.getLogger(BrokenCryptoHomeMade.class);
+	private static final Logger log = LogManager.getLogger(BrokenCryptoHomeMade.class);
 	public static List<List<String>> challenges = new ArrayList<List<String>>();
 	public static boolean initDone = false;
 

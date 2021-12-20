@@ -48,7 +48,7 @@ import dbProcs.Database;
 public class SessionManagement2ChangePassword extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SessionManagement2ChangePassword.class);
+	private static final Logger log = LogManager.getLogger(SessionManagement2ChangePassword.class);
 	private static String levelName = "Session Management Challenge Two (Change Pass)";
 	public static String levelHash = "f5ddc0ed2d30e597ebacf5fdd117083674b19bb92ffc3499121b9e6a12c92959";
 	/**

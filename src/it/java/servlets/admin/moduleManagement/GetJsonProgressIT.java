@@ -26,7 +26,7 @@ import testUtils.TestProperties;
  *
  */
 public class GetJsonProgressIT {
-	private static Logger log = LogManager.getLogger(GetJsonProgressIT.class);
+	private static final Logger log = LogManager.getLogger(GetJsonProgressIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

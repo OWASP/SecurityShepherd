@@ -48,7 +48,7 @@ public class SessionManagement3ChangePassword extends HttpServlet
 {
 
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SessionManagement3ChangePassword.class);
+	private static final Logger log = LogManager.getLogger(SessionManagement3ChangePassword.class);
 	private static String levelName = "Session Management Challenge Three (Change Password)";
 	public static String levelHash = "b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a";
 	// private static String levelResult = ""; //This Servlet does not return a result

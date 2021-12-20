@@ -44,7 +44,7 @@ import dbProcs.Setter;
 public class FeedbackSubmit extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(SolutionSubmit.class);
+	private static final Logger log = LogManager.getLogger(SolutionSubmit.class);
 	/**
 	 * Initiated by a dynamic form returned by servlets.module.SolutionSubmit.doPost()
 	 * this method checks the existence of the submitted module identifier before ensuring that the submission is correct.

@@ -37,7 +37,7 @@ import java.util.Properties;
 
 public class MongoDatabase {
 
-	private static Logger log = LogManager.getLogger(MongoDatabase.class);
+	private static final Logger log = LogManager.getLogger(MongoDatabase.class);
 
 	/**
 	 * Method to close a MongoDb connection

@@ -43,7 +43,7 @@ import dbProcs.Setter;
 public class CsrfChallengeJSON extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(CsrfChallengeJSON.class);
+	private static final Logger log = LogManager.getLogger(CsrfChallengeJSON.class);
 	private static String levelName = "Cross Site Request Forgery Challenge NEW";
 	private static String levelHash = "2e0981dcb8278a57dcfaae3b8da0c78d5a70c2d38ea9d8b3e14db3aea01afcbb";
 	/**

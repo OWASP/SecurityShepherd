@@ -27,7 +27,7 @@ import testUtils.TestProperties;
  * @author Cosmin Craciun credit to Mark Denihan
  */
 public class DeletePlayersIT {
-	private static Logger log = LogManager.getLogger(DeletePlayersIT.class);
+	private static final Logger log = LogManager.getLogger(DeletePlayersIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

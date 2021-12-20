@@ -44,7 +44,7 @@ import utils.Validate;
 public class UrlAccess3 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(UrlAccess3.class);
+	private static final Logger log = LogManager.getLogger(UrlAccess3.class);
 	private static String levelName = "Failure to Restrict URL Access 3";
 	private static String levelHash = "e40333fc2c40b8e0169e433366350f55c77b82878329570efa894838980de5b4";
 	/**

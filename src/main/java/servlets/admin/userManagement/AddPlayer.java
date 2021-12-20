@@ -41,7 +41,7 @@ import dbProcs.Setter;
 public class AddPlayer extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(AddPlayer.class);
+	private static final Logger log = LogManager.getLogger(AddPlayer.class);
 
 	/** Initiated by addPlayers.jsp. Player is ether added to the system under a specific or null class or invalid data is detected and no player is added to the database
 	 * Adding of player to Core Database is handed by Setter.createUser
