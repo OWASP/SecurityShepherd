@@ -22,7 +22,10 @@ jobs:
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
       - name: Test MYSQL Server
-        run: mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS test;'
+        run: |
+          mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'GRANT ALL PRIVILEGES ON CsrfChallenge4.* TO 'csrfChalFour'@'%';'
+          mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'GRANT ALL PRIVILEGES ON csrfChallengeEnumTokens.* TO 'csrfChalEnuer'@'%';'
+          mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'GRANT ALL PRIVILEGES ON SqlInjLesson.* TO 'firstBloodyMessL'@'%';'
       - name: Unit Tests
         run: mvn test -B -e -X
       - name: Intergration Tests
