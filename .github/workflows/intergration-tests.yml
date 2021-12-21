@@ -8,7 +8,7 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: core
         ports:
             - '8888:3306'
@@ -22,6 +22,6 @@ jobs:
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
       - name: Test MYSQL Server
-        run: mysql -h 127.0.0.1 --port 8888 -u root -e 'CREATE DATABASE IF NOT EXISTS test;'
+        run: mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS test;'
       - name: Java and MYSQL Intergration Tests
         run: mvn -Pdocker validate
