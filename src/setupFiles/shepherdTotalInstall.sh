@@ -56,7 +56,7 @@ else
 	chown tomcat8 /etc/authbind/byport/443
 
   echo "Configuring MySQL (Blank Pass, just hit return after these two commands)"
-	mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'CowSaysMoo';" --force -p
+	mysql -u root -e "ALTER USER 'root'@'127.0.0.1' IDENTIFIED WITH mysql_native_password BY 'CowSaysMoo';" --force -p
 	mysql -u root -e "FLUSH PRIVILEGES;" --force -p
 
 	echo "Configuring MongoDB"
