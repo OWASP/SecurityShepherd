@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 
@@ -27,27 +28,27 @@ import dbProcs.Database;
  * SQL Injection Lesson - Does not use User Specific Key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
-public class SqlInjectionLesson 
+public class SqlInjectionLesson
 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjectionLesson.class);
+	private static final Logger log = LogManager.getLogger(SqlInjectionLesson.class);
 	private static String levelName = "SQL Injection Lesson";
 	public static String levelHash = "e881086d4d8eb2604d8093d93ae60986af8119c4f643894775433dbfb6faa594";
 	// private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific
@@ -55,18 +56,18 @@ extends HttpServlet
 	 * Uses user input in an insecure fashion when executing queries in database. Vulnerable to SQL injection.
 	 * @param aUserName User submitted filter for database results
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.sqlInjection", locale);
-		
+
 		try
 		{
 			HttpSession ses = request.getSession(true);
@@ -103,10 +104,10 @@ extends HttpServlet
 						htmlOutput += "<tr><td>" + output[i][0] + "</td><td>" + output[i][1] + "</td><td>"
 							+ output[i][2] + "</td></tr>";
 						i++;
-						
+
 					}
 					while(i < output.length && output[i][0] != null);
-					htmlOutput += "</table>";			
+					htmlOutput += "</table>";
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
@@ -123,12 +124,12 @@ extends HttpServlet
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}
-	
+
 	public static String[][] getSqlInjectionResult (String ApplicationRoot, String username)
 	{
-		
+
 		String[][] result = new String[10][3];
-		try 
+		try
 		{
 			Connection conn = Database.getSqlInjLessonConnection(ApplicationRoot);
 			Statement stmt;
@@ -143,7 +144,7 @@ extends HttpServlet
 				result[i][2] = Encode.forHtml(resultSet.getString(3));
 			}
 			log.debug("That's All");
-		} 
+		}
 		catch (SQLException e)
 		{
 			log.debug("SQL Error caught - " + e.toString());

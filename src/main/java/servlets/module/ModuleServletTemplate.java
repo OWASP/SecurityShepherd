@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 
@@ -28,27 +29,27 @@ import dbProcs.Database;
  * SQL Injection Lesson - Does not use User Specific Key
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author name
  *
  */
-public class ModuleServletTemplate 
+public class ModuleServletTemplate
 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(ModuleServletTemplate.class);
+	private static final Logger log = LogManager.getLogger(ModuleServletTemplate.class);
 	private static String levelName = "Level Name Here";
 	public static String levelHash = "Level Hash Here";
 	private static String levelResult = ""; // Put the Level Result Key here only if the level is not hardcoded in the database or mobile application
@@ -56,12 +57,12 @@ extends HttpServlet
 	 * Describe level here, and how a user is supposed to beat it
 	 * @param aUserName Expected Parameters
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Dont Change any of this. This is logging player activity
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
@@ -76,13 +77,13 @@ extends HttpServlet
 				//Valid Session, time to log who it is
 				ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 				log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-				
+
 				boolean returnKey = false;
-				
+
 				//Template Users: Edit from here
 				String aUserName = request.getParameter("aUserName");
 				log.debug("User submitted aUserName: " + aUserName); //Log what the player submitted for your expected parameters
-				
+
 				//If you want to call a database function, this section if for you. All the way up until if(returnKey)
 				//Get Running Context of Application to make Database Call with
 				String applicationRoot = getServletContext().getRealPath("");
@@ -116,7 +117,7 @@ extends HttpServlet
 							bundle.getString("module.example.theKeyIs") + " " +
 							"<a>" + userKey + "</a>" +
 							"</p>";
-					
+
 				}
 				log.debug("Outputting HTML");
 				out.write(htmlOutput);
@@ -134,12 +135,12 @@ extends HttpServlet
 			log.fatal(levelName + " - " + e.toString());
 		}
 	}
-	
+
 	public static String doLevelSqlStuff (String applicationRoot, String username, ResourceBundle bundle)
 	{
-		
+
 		String result = new String();
-		try 
+		try
 		{
 			//You will need to make a schema in the database/moduleSchemas.sql file, and define a user which can access it.
 			//The details of this user need to be entered in a properties file in WEB-INF/challenges
@@ -155,7 +156,7 @@ extends HttpServlet
 				result = Encode.forHtml(resultSet.getString(1));
 			}
 			log.debug("That's All");
-		} 
+		}
 		catch (SQLException e)
 		{
 			log.debug("SQL Error caught - " + e.toString());

@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import utils.ModuleBlock;
 
 public class GetModuleIT {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(GetModuleIT.class);
+	private static final Logger log = LogManager.getLogger(GetModuleIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
@@ -59,7 +60,7 @@ public class GetModuleIT {
 
 	/**
 	 * Method to Simulate the interaction with the getModule servlet.
-	 * 
+	 *
 	 * @param moduleId  The ID of the Module to Search For
 	 * @param csrfToken The CSRF Token of the User
 	 * @return The Content of the Response (Which is supposed to be the location of
@@ -99,7 +100,7 @@ public class GetModuleIT {
 	/**
 	 * This test checks the module address returned when the requested module is
 	 * currently blocked
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ServletException
@@ -146,7 +147,7 @@ public class GetModuleIT {
 
 	/**
 	 * This test retreives the location of a challenge module
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ServletException
@@ -225,7 +226,7 @@ public class GetModuleIT {
 
 	/**
 	 * This test submits a valid Module Id but with an invalid CSRF Token Pair
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ServletException
@@ -266,7 +267,7 @@ public class GetModuleIT {
 
 	/**
 	 * This test attempts to retrieve a module with a non existant identifier
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ServletException
@@ -306,7 +307,7 @@ public class GetModuleIT {
 
 	/**
 	 * This test submits a null value to the getModule Servlet
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws ServletException
 	 * @throws SQLException

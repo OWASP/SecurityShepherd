@@ -7,35 +7,36 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Class is used to validate various inputs <br/>
  * <br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class Validate {
-	private static org.apache.log4j.Logger log = Logger.getLogger(Validate.class);
+	private static final Logger log = LogManager.getLogger(Validate.class);
 
 	/**
 	 * Finds JSession token from user's cookies[], validates and returns.
-	 * 
+	 *
 	 * @param userCookies Cookies from users browser
 	 * @return JSession Id
 	 */
@@ -53,7 +54,7 @@ public class Validate {
 
 	/**
 	 * Finds CSRF token from user's cookies[], validates.
-	 * 
+	 *
 	 * @param userCookies All of the user's cookies from their browser
 	 * @return csrfCookie
 	 */
@@ -91,7 +92,7 @@ public class Validate {
 	/**
 	 * Validates class year when creating classes. Class year should be YY/YY, e.g.
 	 * 11/12. So the first year must be less than the second.
-	 * 
+	 *
 	 * @param classYear Class Year in YY/YY format, e.g. 11/12.
 	 * @return Boolean value stating weather or not these supplied attributes make a
 	 *         valid class year
@@ -113,7 +114,7 @@ public class Validate {
 
 	/**
 	 * Email validation
-	 * 
+	 *
 	 * @param email
 	 * @return Boolean reflect email validity
 	 */
@@ -133,7 +134,7 @@ public class Validate {
 
 	/**
 	 * Invalid password detecter
-	 * 
+	 *
 	 * @param passWord
 	 * @return
 	 */
@@ -148,7 +149,7 @@ public class Validate {
 
 	/**
 	 * Used to validate user creation requests
-	 * 
+	 *
 	 * @param userName User Name
 	 * @param passWord User Password
 	 * @return Boolean value stating weather or not these supplied attributes make a
@@ -171,7 +172,7 @@ public class Validate {
 
 	/**
 	 * Used to validate user creation requests
-	 * 
+	 *
 	 * @param userName    User Name
 	 * @param passWord    User Password
 	 * @param userAddress User address
@@ -190,7 +191,7 @@ public class Validate {
 
 	/**
 	 * Quick method to prevent data and javascript URLs
-	 * 
+	 *
 	 * @param theUrl
 	 * @return
 	 */
@@ -206,7 +207,7 @@ public class Validate {
 	/**
 	 * Session is checked for credentials and ensures that they have not been
 	 * modified and that they are valid for an administrator
-	 * 
+	 *
 	 * @param ses HttpSession from users browser
 	 * @return Boolean value that reflects the validity of the admins session
 	 */
@@ -244,7 +245,7 @@ public class Validate {
 	 * Session is checked for credentials and ensures that they have not been
 	 * modified and that they are valid for an administrator. This function also
 	 * validates CSRF tokens
-	 * 
+	 *
 	 * @param ses HttpSession from users browser
 	 * @return Boolean value that reflects the validity of the admins session
 	 */
@@ -291,7 +292,7 @@ public class Validate {
 	/**
 	 * Takes a String submitted to be used to encrypt and makes it the correct
 	 * length for an encryption key
-	 * 
+	 *
 	 * @param userSalt String to be validated
 	 * @return A Valid Encryption Key based on the input
 	 */
@@ -326,7 +327,7 @@ public class Validate {
 	/**
 	 * Function that will check if a valid language is set. if not, returns en
 	 * (English)
-	 * 
+	 *
 	 * @param ses Session Language Parameter
 	 * @return en by default, or the valid setting found in the submitted lang
 	 */
@@ -355,7 +356,7 @@ public class Validate {
 	/**
 	 * Validates objects received through a function request. Also ensures max
 	 * length is not too high.
-	 * 
+	 *
 	 * @param input     Object to validate
 	 * @param maxLength Maximum length of object
 	 * @return Validated String value or empty string value
@@ -380,7 +381,7 @@ public class Validate {
 	/**
 	 * Session is checked for credentials and ensures that they have not been
 	 * modified and that they are valid
-	 * 
+	 *
 	 * @param ses HttpSession from users browser
 	 * @return Boolean value that reflects the validity of the users session
 	 */
@@ -428,7 +429,7 @@ public class Validate {
 	/**
 	 * This method compares the two submitted tokens after ensuring they are not
 	 * null and not empty.
-	 * 
+	 *
 	 * @param cookieToken  CSRF cookie Token
 	 * @param requestToken CSRF request Token
 	 * @return A boolean value stating weather or not the tokens are valid
@@ -465,7 +466,7 @@ public class Validate {
 
 	/**
 	 * Validates file name attributes to defend against path traversal
-	 * 
+	 *
 	 * @param fileName File name to validate
 	 * @return Boolean value reflecting if valid or not
 	 */
@@ -491,7 +492,7 @@ public class Validate {
 
 	/**
 	 * Validates that a port number supplied is a valid port number
-	 * 
+	 *
 	 * @param portNum String to validate
 	 * @return Boolean value reflecting if valid or not
 	 */

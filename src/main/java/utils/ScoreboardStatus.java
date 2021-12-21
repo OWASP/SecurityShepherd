@@ -2,20 +2,21 @@ package utils;
 
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
 
 /**
  * Scoreboard management class
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class ScoreboardStatus {
 
-	private static org.apache.log4j.Logger log = Logger.getLogger(ScoreboardStatus.class);
+	private static final Logger log = LogManager.getLogger(ScoreboardStatus.class);
 
 	private static boolean scoreboardEnabled = true;
 	private static String scoreboardClass = new String();
@@ -27,7 +28,7 @@ public class ScoreboardStatus {
 
 	/**
 	 * Returns if user is authorised to see scoreboard currenly.
-	 * 
+	 *
 	 * @param userRole Must be player or admin
 	 * @return
 	 */
@@ -51,7 +52,7 @@ public class ScoreboardStatus {
 
 	/**
 	 * Used to tell if the current scoreboard config is set to Class Specific
-	 * 
+	 *
 	 * @return Boolean Value
 	 */
 	public static boolean getClassSpecificScoreboard() {
@@ -72,7 +73,7 @@ public class ScoreboardStatus {
 
 	/**
 	 * Is the scoreboard configured to be displayed?
-	 * 
+	 *
 	 * @return
 	 */
 	public static boolean isScoreboardEnabled() {
@@ -85,7 +86,7 @@ public class ScoreboardStatus {
 
 	/**
 	 * Method to know if user is running a class specific scoreboard or not
-	 * 
+	 *
 	 * @return True if class specific scoreboard is enabled. Otherwise False
 	 */
 	public static boolean isClassSpecificScoreboard() {
@@ -98,7 +99,7 @@ public class ScoreboardStatus {
 
 	/**
 	 * Method to know if scoreboard is public
-	 * 
+	 *
 	 * @return True if scoreboard is public. Otherwise False
 	 */
 	public static boolean isPublicScoreboard() {
@@ -143,7 +144,7 @@ public class ScoreboardStatus {
 
 	/**
 	 * Enables public Scoreboard based on scores from specific class
-	 * 
+	 *
 	 * @param theClass Class to base the Scoreboard on
 	 */
 	public static void setScoreboardClass(String theClass) {

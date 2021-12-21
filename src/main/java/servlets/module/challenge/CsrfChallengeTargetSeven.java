@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -25,19 +26,19 @@ import dbProcs.Setter;
  * Weak Nonce Variety can be broken
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
@@ -45,25 +46,25 @@ public class CsrfChallengeTargetSeven extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static String moduleHash = "7d79ea2b2a82543d480a63e55ebb8fef3209c5d648b54d1276813cd072815df3";
-	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfChallengeTargetSeven.class);
+	private static final Logger log = LogManager.getLogger(CsrfChallengeTargetSeven.class);
 	private static String levelName = "CSRF Seven Target";
 	/**
 	 * CSRF vulnerable function that can be used by users to force other users to mark their CSRF challenge Two as complete.
 	 * @param userId User identifier to be incremented
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug(levelName + " Servlet");
-		
+
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle csrfGenerics = ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
-		
-		PrintWriter out = response.getWriter();  
+
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		String storedToken = new String();
 		try
@@ -96,7 +97,7 @@ public class CsrfChallengeTargetSeven extends HttpServlet
 				String csrfToken = request.getParameter("csrfToken").trim();
 				log.debug("csrfToken Submitted - '" + csrfToken + "'");
 				log.debug("storedCsrf Token is - '" + storedToken + "'");
-				
+
 				if(!userId.equals(plusId))
 				{
 					if(csrfToken.equalsIgnoreCase(storedToken))
@@ -107,7 +108,7 @@ public class CsrfChallengeTargetSeven extends HttpServlet
 						if(attackerName != null)
 						{
 							log.debug(userName + " is been CSRF'd by " + attackerName);
-							
+
 							log.debug("Attempting to Increment ");
 							String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, moduleHash);
 							result = Setter.updateCsrfCounter(ApplicationRoot, moduleId, plusId);
@@ -126,7 +127,7 @@ public class CsrfChallengeTargetSeven extends HttpServlet
 				{
 					log.debug("User " + userId + " is attacking themselves");
 				}
-				
+
 				if(result)
 				{
 					out.write(csrfGenerics.getString("target.incrementSuccess"));

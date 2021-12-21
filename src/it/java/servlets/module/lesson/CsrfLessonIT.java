@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import dbProcs.Setter;
 
 public class CsrfLessonIT {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(CsrfLessonIT.class);
+	private static final Logger log = LogManager.getLogger(CsrfLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

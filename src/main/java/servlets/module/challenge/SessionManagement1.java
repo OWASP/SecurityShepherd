@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import utils.Hash;
 import utils.ShepherdLogManager;
@@ -23,47 +24,47 @@ import utils.Validate;
  * Session Management Challenge One
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
 public class SessionManagement1 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement1.class);
+	private static final Logger log = LogManager.getLogger(SessionManagement1.class);
 	private static String levelName = "Session Management Challenge One";
 	public static String levelHash = "dfd6bfba1033fa380e378299b6a998c759646bd8aea02511482b8ce5d707f93a";
 	private static String levelResult = "db7b1da5d7a43c7100a6f01bb0c";
 	/**
 	 * Users must take advance of the broken session management in this application by modifying the tracking cookie "checksum" which is encoded in base 64. They must modify this cookie to be equal to administrator to access the result key.
-	 * @param upgraeUserToAdmin Red herring 
-	 * @param returnPassword Red herring 
-	 * @param adminDetected Red herring 
+	 * @param upgraeUserToAdmin Red herring
+	 * @param returnPassword Red herring
+	 * @param adminDetected Red herring
 	 * @param checksum Cookie encoded base 64 that manages who is signed in to the sub schema
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
-		
+
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement1", locale);
-		
+
 		try
 		{
 			//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
@@ -91,7 +92,7 @@ public class SessionManagement1 extends HttpServlet
 					byte[] decodedCookieBytes = Base64.decodeBase64(theCookie.getValue());
 					String decodedCookie = new String(decodedCookieBytes, "UTF-8");
 					log.debug("Decoded Cookie: " + decodedCookie);
-					
+
 					if(decodedCookie.equals("userRole=administrator"))
 					{
 						log.debug("Challenge Complete");
@@ -99,7 +100,7 @@ public class SessionManagement1 extends HttpServlet
 						String userKey = Hash.generateUserSolution(levelResult, (String)ses.getAttribute("userName"));
 						htmlOutput = "<h2 class='title'>" + bundle.getString("response.adminClub") + "</h2>" +
 								"<p>" +
-								bundle.getString("response.welcomeAdmin") + 
+								bundle.getString("response.welcomeAdmin") +
 								"<a>" + userKey + "</a>" +
 								"</p>";
 					}
@@ -113,8 +114,8 @@ public class SessionManagement1 extends HttpServlet
 						hackDetected = !(request.getParameter("adminDetected").toString().equalsIgnoreCase("false") &&
 										request.getParameter("adminDetected").toString().equalsIgnoreCase("false") &&
 										request.getParameter("adminDetected").toString().equalsIgnoreCase("false"));
-					
-					
+
+
 					if(!hackDetected)
 					{
 						htmlOutput = "<h2 class='title'>" + bundle.getString("response.notAdmin") + "</h2>" +

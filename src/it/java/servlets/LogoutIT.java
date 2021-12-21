@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,11 +22,11 @@ import testUtils.TestProperties;
 public class LogoutIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(LogoutIT.class);
+	private static final Logger log = LogManager.getLogger(LogoutIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-	
+
     /**
 	 * Creates DB or Restores DB to Factory Defaults before running tests
 	 */
@@ -38,15 +39,15 @@ public class LogoutIT
 		TestProperties.executeSql(log);
 
 	}
-    
+
     @Before
-	public void setup() 
+	public void setup()
 	{
 		log.debug("Setting Up Blank Request and Response");
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
 	}
-    
+
 	/**
 	 * Method to simulate login servlet interaction. Can't seem to recyle the method in LoginTest with the MockRequests
 	 * @param userName User to Sign in
@@ -59,20 +60,20 @@ public class LogoutIT
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating Login Servlet Instance");
 			Login servlet = new Login();
 			servlet.init(new MockServletConfig("Login"));
-			
+
 			//Setup Servlet Parameters and Attributes
 			log.debug("Setting Up Params and Atrributes");
 			request.addParameter("login", userName);
 			request.addParameter("pwd", password);
 			request.getSession().setAttribute("lang", lang);
-			
+
 			log.debug("Running doPost");
 			servlet.doPost(request, response);
-			
+
 			if(response.getStatus() != expectedResponseCode)
 				fail("Login Servlet Returned " + response.getStatus() + " Code. 302 Expected");
 			else
@@ -91,17 +92,17 @@ public class LogoutIT
 			throw e;
 		}
 	}
-	
+
 	public void logoutDoPost(String csrfToken) throws Exception
 	{
 		try
 		{
 			int expectedResponseCode = 302;
-			
+
 			log.debug("Creating Logout Servlet Instance");
 			Logout servlet = new Logout();
 			servlet.init(new MockServletConfig("Logout"));
-			
+
 			//Setup Servlet Parameters and Attributes
 			log.debug("Setting Up Params and Atrributes");
 			request.addParameter("csrfToken", csrfToken);
@@ -126,7 +127,7 @@ public class LogoutIT
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * This test logs the user in and then calls the logout function
 	 */
@@ -172,7 +173,7 @@ public class LogoutIT
 			fail("Could not Complete testLogout");
 		}
 	}
-	
+
 	/**
 	 * This test logs the user in and then calls the logout function
 	 */

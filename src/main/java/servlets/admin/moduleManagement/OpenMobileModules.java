@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Setter;
 import utils.ShepherdLogManager;
@@ -19,19 +20,19 @@ import utils.Validate;
 public class OpenMobileModules extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(OpenMobileModules.class);
+	private static final Logger log = LogManager.getLogger(OpenMobileModules.class);
 	/**
 	 * Control class used to open all modules when called by an administrator
 	 * @param csrfToken The csrf protection token for this funciton
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		String servletName = "servlets.module.OpenMobileModules";
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& " + servletName + " &&&");
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		String htmlOutput = new String();
 		HttpSession ses = request.getSession(true);

@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -44,7 +45,7 @@ public class UrlAccess2 extends HttpServlet
 {
 	//URL Access 2
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(UrlAccess2.class);
+	private static final Logger log = LogManager.getLogger(UrlAccess2.class);
 	private static String levelName = "URL Access 2 (Guest)";
 	/**
 	 * This class is the User Level Function Call that works correctly from the level's view without manipulation

@@ -11,7 +11,8 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import dbProcs.Constants;
 import testUtils.TestProperties;
 
 public class SetupIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(SetupIT.class);
+	private static final Logger log = LogManager.getLogger(SetupIT.class);
 
 	/**
 	 * Initialize directories
@@ -38,10 +39,10 @@ public class SetupIT {
 	private void removeDatabaseProps() {
 		FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
 	}
-	
+
 	@Ignore @Test
 	public void testNoCoreDatabase() {
-		
+
 		log.debug("Creating Setup Servlet Instance");
 		Setup servlet = new Setup();
 		try {
@@ -50,7 +51,7 @@ public class SetupIT {
 			log.fatal(e.toString());
 			fail(e.toString());
 		}
-		
+
 		try {
 			TestProperties.createMysqlResource();
 		} catch (IOException e) {
@@ -58,7 +59,7 @@ public class SetupIT {
 			log.fatal(message);
 			fail(message);
 		}
-		
+
 		assertFalse(Setup.isInstalled());
 
 		String authData = "";
@@ -83,16 +84,16 @@ public class SetupIT {
 		}
 		/*
 		 * request.getSession().setAttribute("lang", lang);
-		 * 
+		 *
 		 * request.addParameter("dbhost", "localhost"); request.addParameter("dbport",
 		 * "3306"); request.addParameter("dbuser", "root");
 		 * request.addParameter("dbpass", ""); request.addParameter("dbauth", authData);
-		 * 
+		 *
 		 * log.debug("Running doPost"); try { servlet.doPost(request, response); } catch
 		 * (ServletException | IOException e) { e.printStackTrace();
 		 * log.fatal(e.toString()); fail(e.toString()); }
 		 * log.debug("doPost successful, reading response");
-		 * 
+		 *
 		 * if(response.getStatus() != expectedResponseCode) { String
 		 * message="Login Servlet Returned " + response.getStatus() +
 		 * " Code. 302 Expected"; log.fatal(message); fail(message); } String location =
@@ -100,13 +101,13 @@ public class SetupIT {
 		 * (NullPointerException e) { String message =
 		 * "Got invalid location from posting setup request: " + e.toString();
 		 * log.fatal(message); fail(message); }
-		 * 
+		 *
 		 * if (!location.endsWith("login.jsp")) {
 		 * fail("Setup not Redirecting to login.jsp."); }
 		 */
 
 	}
-	
+
 	@Ignore @Test
 	public void testNoMysqlResource() {
 
@@ -118,7 +119,7 @@ public class SetupIT {
 			log.fatal(e.toString());
 			fail(e.toString());
 		}
-		
+
 		TestProperties.deleteMysqlResource();
 		assertTrue(Setup.isInstalled());
 
@@ -144,16 +145,16 @@ public class SetupIT {
 		}
 		/*
 		 * request.getSession().setAttribute("lang", lang);
-		 * 
+		 *
 		 * request.addParameter("dbhost", "localhost"); request.addParameter("dbport",
 		 * "3306"); request.addParameter("dbuser", "root");
 		 * request.addParameter("dbpass", ""); request.addParameter("dbauth", authData);
-		 * 
+		 *
 		 * log.debug("Running doPost"); try { servlet.doPost(request, response); } catch
 		 * (ServletException | IOException e) { e.printStackTrace();
 		 * log.fatal(e.toString()); fail(e.toString()); }
 		 * log.debug("doPost successful, reading response");
-		 * 
+		 *
 		 * if(response.getStatus() != expectedResponseCode) { String
 		 * message="Login Servlet Returned " + response.getStatus() +
 		 * " Code. 302 Expected"; log.fatal(message); fail(message); } String location =
@@ -161,7 +162,7 @@ public class SetupIT {
 		 * (NullPointerException e) { String message =
 		 * "Got invalid location from posting setup request: " + e.toString();
 		 * log.fatal(message); fail(message); }
-		 * 
+		 *
 		 * if (!location.endsWith("login.jsp")) {
 		 * fail("Setup not Redirecting to login.jsp."); }
 		 */

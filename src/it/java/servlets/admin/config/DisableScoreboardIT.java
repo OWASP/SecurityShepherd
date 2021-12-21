@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
 public class DisableScoreboardIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(DisableScoreboardIT.class);
+	private static final Logger log = LogManager.getLogger(DisableScoreboardIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
@@ -53,7 +54,7 @@ public class DisableScoreboardIT {
 
 	/**
 	 * Method to Simulate the interaction with the disableScoreboard servlet.
-	 * 
+	 *
 	 * @param csrfToken The CSRF Token of the User
 	 * @return The Content of the Response (Which is supposed to be the location of
 	 *         the module)
@@ -91,7 +92,7 @@ public class DisableScoreboardIT {
 	/**
 	 * This test checks that non admin users get access errors when disabling the
 	 * scoreboard
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ServletException
@@ -136,7 +137,7 @@ public class DisableScoreboardIT {
 
 	/**
 	 * This test checks that admin users can disable the scoreboard
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ServletException
@@ -181,9 +182,9 @@ public class DisableScoreboardIT {
 
 	/**
 	 * Test with Bad CSRF Tokens
-	 * @throws SQLException 
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	@Test
 	public void testCsrf() throws SQLException, ServletException, IOException {

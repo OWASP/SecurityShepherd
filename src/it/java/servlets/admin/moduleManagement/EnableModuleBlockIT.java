@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,12 +22,12 @@ import utils.ModuleBlock;
 /**
  * This class just tests the servlet code. The Setter code is better tested in
  * the SetterTest test's / GetModule tests
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class EnableModuleBlockIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(EnableModuleBlockIT.class);
+	private static final Logger log = LogManager.getLogger(EnableModuleBlockIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
@@ -21,34 +22,34 @@ import utils.Validate;
  * Control class for the Change Password function
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
 public class ChangePassword extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(ChangePassword.class);
-	/** 
+	private static final Logger log = LogManager.getLogger(ChangePassword.class);
+	/**
 	 * Initiated by index.jsp, getStarted.jsp. This changes a users password. If the user gets it wrong 3 times in a row, they'll be locked out (This is handed by database)
 	 * @param csrfToken
 	 * @param currentPassword User's current password
 	 * @param newPassword Submitted new password
 	 * @param passwordConfirmation	Confirmation of the new password
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
@@ -73,7 +74,7 @@ public class ChangePassword extends HttpServlet
 					String newPassword = (String) request.getParameter("newPassword");
 					String passwordConfirm = (String) request.getParameter("passwordConfirmation");
 					String ApplicationRoot = getServletContext().getRealPath("");
-					
+
 					boolean validData = false;
 					boolean passwordChange = false;
 					boolean validPassword = false;

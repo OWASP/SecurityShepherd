@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import dbProcs.Setter;
 import servlets.module.challenge.XxeChallenge1;
@@ -22,7 +23,7 @@ public class OpenAllModules extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private static final  String SERVLET_NAME = "servlets.module.OpenAllModules";
-	private static org.apache.log4j.Logger log = Logger.getLogger(OpenAllModules.class);
+	private static final Logger log = LogManager.getLogger(OpenAllModules.class);
 	/**
 	 * Control class used to open all modules when called by an administrator
 	 * @param request the HTTP request
@@ -37,7 +38,7 @@ public class OpenAllModules extends HttpServlet
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("&&& " + SERVLET_NAME + " &&&");
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 
 		HttpSession ses = request.getSession(true);

@@ -12,7 +12,8 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -23,7 +24,7 @@ import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
 public class SetterTest {
-	private static org.apache.log4j.Logger log = Logger.getLogger(SetterTest.class);
+	private static final Logger log = LogManager.getLogger(SetterTest.class);
 	private static String applicationRoot = new String();
 
 	/**
@@ -44,7 +45,7 @@ public class SetterTest {
 	 * this method, but not nessisarily every time, as a class may already exist.
 	 * This Method creates a random class name so it can run every time without
 	 * failure
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -603,7 +604,7 @@ public class SetterTest {
 		}
 
 	}
-	
+
 	@Test
 	public void testUpdatePasswordAdmin() {
 		log.debug("Testing update Password");
@@ -1264,7 +1265,7 @@ public class SetterTest {
 		Setter.setScoreboardClass(applicationRoot, "");
 
 		assertEquals(Getter.getScoreboardClass(applicationRoot), "");
-		
+
 		Setter.setScoreboardClass(applicationRoot, "class1");
 
 		assertEquals(Getter.getScoreboardClass(applicationRoot), "class1");
@@ -1284,79 +1285,79 @@ public class SetterTest {
 
 		Setter.setStartTimeStatus(applicationRoot, false);
 		Setter.setStartTimeStatus(applicationRoot, true);
-		
+
 		assertTrue(Getter.getStartTimeStatus(applicationRoot));
 
 		Setter.setStartTimeStatus(applicationRoot, true);
 		Setter.setStartTimeStatus(applicationRoot, false);
-		
+
 		assertFalse(Getter.getStartTimeStatus(applicationRoot));
-		
+
 	}
-	
+
 	@Test
 	public void testSetStartTime() throws SQLException {
 
 		Setter.setStartTime(applicationRoot, LocalDateTime.parse("2018-11-03T12:45:30"));
-		assertEquals(Getter.getStartTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));				
-		
+		assertEquals(Getter.getStartTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));
+
 		Setter.setStartTime(applicationRoot, LocalDateTime.parse("2118-11-03T12:45:30"));
 		assertEquals(Getter.getStartTime(applicationRoot), LocalDateTime.parse("2118-11-03T12:45:30"));
-		
+
 	}
-	
+
 	@Test
 	public void testSetLockTimeStatus() throws SQLException {
 
 		Setter.setLockTimeStatus(applicationRoot, false);
 		Setter.setLockTimeStatus(applicationRoot, true);
-		
+
 		assertTrue(Getter.getLockTimeStatus(applicationRoot));
 
 		Setter.setLockTimeStatus(applicationRoot, true);
 		Setter.setLockTimeStatus(applicationRoot, false);
-		
+
 		assertFalse(Getter.getLockTimeStatus(applicationRoot));
-		
+
 	}
-	
+
 	@Test
 	public void testSetLockTime() throws SQLException {
 
 		Setter.setLockTime(applicationRoot, LocalDateTime.parse("2018-11-03T12:45:30"));
-		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));				
-		
+		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));
+
 		Setter.setLockTime(applicationRoot, LocalDateTime.parse("2118-11-03T12:45:30"));
 		assertEquals(Getter.getLockTime(applicationRoot), LocalDateTime.parse("2118-11-03T12:45:30"));
-		
+
 	}
-	
+
 	@Test
 	public void testSetEndTimeStatus() throws SQLException {
 
 		Setter.setEndTimeStatus(applicationRoot, false);
 		Setter.setEndTimeStatus(applicationRoot, true);
-		
+
 		assertTrue(Getter.getEndTimeStatus(applicationRoot));
 
 		Setter.setEndTimeStatus(applicationRoot, true);
 		Setter.setEndTimeStatus(applicationRoot, false);
-		
+
 		assertFalse(Getter.getEndTimeStatus(applicationRoot));
-		
+
 	}
-	
+
 	@Test
 	public void testSetEndTime() throws SQLException {
 
 		Setter.setEndTime(applicationRoot, LocalDateTime.parse("2018-11-03T12:45:30"));
 
 		assertEquals(Getter.getEndTime(applicationRoot), LocalDateTime.parse("2018-11-03T12:45:30"));
-		
+
 		Setter.setEndTime(applicationRoot, LocalDateTime.parse("2118-11-03T12:45:30"));
 
 		assertEquals(Getter.getEndTime(applicationRoot), LocalDateTime.parse("2118-11-03T12:45:30"));
-		
+
 	}
-	
+
 }

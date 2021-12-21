@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.onelogin.saml2.Auth;
 import com.onelogin.saml2.exception.Error;
@@ -26,31 +27,31 @@ import utils.Validate;
  * Control class for the logout operation <br/>
  * <br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(Logout.class);
+	private static final Logger log = LogManager.getLogger(Logout.class);
 
 	/**
 	 * Initiated in index.jsp. Invalidates session and Security Shepherd tokens are
 	 * removed. The user is logged out.
-	 * 
+	 *
 	 * @param csrfToken
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -83,7 +84,7 @@ public class Logout extends HttpServlet {
 				emptyCookie.setPath("/");
 				response.addCookie(emptyCookie);
 				log.debug("User Logged Out");
-				
+
 				if (LoginMethod.isSaml()) {
 
 					Auth auth;

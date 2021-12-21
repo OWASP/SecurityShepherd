@@ -3,7 +3,8 @@ package dbProcs;
 import com.mongodb.*;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,17 +31,17 @@ import java.util.Properties;
  *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Paul
  */
 
 public class MongoDatabase {
 
-	private static org.apache.log4j.Logger log = Logger.getLogger(MongoDatabase.class);
+	private static final Logger log = LogManager.getLogger(MongoDatabase.class);
 
 	/**
 	 * Method to close a MongoDb connection
-	 * 
+	 *
 	 * @param conn The connection to close
 	 */
 	public static void closeConnection(MongoClient conn) {
@@ -51,7 +52,7 @@ public class MongoDatabase {
 
 	/**
 	 * Method to get a MongoDb Challenge collection
-	 * 
+	 *
 	 * @param ApplicationRoot The running context of the application.
 	 * @param path            The path to the properties file to use for this
 	 *                        connection (filtered for path traversal attacks)
@@ -101,7 +102,7 @@ public class MongoDatabase {
 
 	/**
 	 * Method to get a MongoDb collection name from property file
-	 * 
+	 *
 	 * @return A MongoDb collection name
 	 * @throws IOException
 	 */
@@ -137,7 +138,7 @@ public class MongoDatabase {
 
 	/**
 	 * Method to get a MongoDb Connection
-	 * 
+	 *
 	 * @return A MongoDb Connection @throws IOException @throws
 	 */
 	public static MongoClient getMongoDbConnection(String ApplicationRoot) {
@@ -214,7 +215,7 @@ public class MongoDatabase {
 
 	/**
 	 * Method to get a MongoDb Connection
-	 * 
+	 *
 	 * @param credential to connect to the MongoDB
 	 * @return A MongoDb Connection
 	 */
@@ -303,7 +304,7 @@ public class MongoDatabase {
 
 	/**
 	 * Method to get a MongoDb Database
-	 * 
+	 *
 	 * @param mongoClient mongoDb connection
 	 * @return A MongoDb Database
 	 */
@@ -348,7 +349,7 @@ public class MongoDatabase {
 
 	/**
 	 * Method to execute a mongo database JS file in a Mongo Database
-	 * 
+	 *
 	 * @param file        the file to run
 	 * @param mongoClient to get connection to db
 	 */

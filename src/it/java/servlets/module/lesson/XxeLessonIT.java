@@ -10,7 +10,8 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,7 +27,7 @@ import utils.InstallationException;
 
 public class XxeLessonIT {
 	private static final String LANGUAGE_CODE = "en_GB";
-	private static Logger log = Logger.getLogger(XxeLessonIT.class);
+	private static final Logger log = LogManager.getLogger(XxeLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
@@ -115,7 +116,7 @@ public class XxeLessonIT {
 				log.error("Could not load properties file: " + e.toString());
 				throw new RuntimeException(e);
 			}
-			
+
 			String errorBase = "Missing property :";
 
 			String filename = prop.getProperty("xxe.lesson.file");

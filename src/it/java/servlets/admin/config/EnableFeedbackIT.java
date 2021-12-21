@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import testUtils.TestProperties;
 import utils.FeedbackStatus;
 
 public class EnableFeedbackIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(EnableFeedbackIT.class);
+	private static final Logger log = LogManager.getLogger(EnableFeedbackIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
@@ -51,7 +52,7 @@ public class EnableFeedbackIT {
 
 	/**
 	 * Method to Simulate the interaction with the enableFeedback servlet.
-	 * 
+	 *
 	 * @param csrfToken The CSRF Token of the User
 	 * @return The Content of the Response (Which is supposed to be the location of
 	 *         the module)
@@ -89,9 +90,9 @@ public class EnableFeedbackIT {
 	/**
 	 * This test checks that non admin users get access errors when enabling the
 	 * feedback
-	 * @throws SQLException 
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	@Test
 	public void testUserEnableFeedbackCall() throws SQLException, ServletException, IOException {
@@ -133,7 +134,7 @@ public class EnableFeedbackIT {
 
 	/**
 	 * This test checks that admin users can enable the feedback
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ServletException

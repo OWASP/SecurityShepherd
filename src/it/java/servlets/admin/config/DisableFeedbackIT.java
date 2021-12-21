@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import testUtils.TestProperties;
 import utils.FeedbackStatus;
 
 public class DisableFeedbackIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(DisableFeedbackIT.class);
+	private static final Logger log = LogManager.getLogger(DisableFeedbackIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
@@ -53,7 +54,7 @@ public class DisableFeedbackIT {
 
 	/**
 	 * Method to Simulate the interaction with the disableFeedback servlet.
-	 * 
+	 *
 	 * @param moduleId  The ID of the Module to Search For
 	 * @param csrfToken The CSRF Token of the User
 	 * @return The Content of the Response (Which is supposed to be the location of

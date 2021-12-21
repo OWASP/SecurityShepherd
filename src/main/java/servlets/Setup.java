@@ -27,7 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.mongodb.MongoClient;
 
@@ -41,7 +42,7 @@ import servlets.module.lesson.XxeLesson;
 import utils.Validate;
 
 public class Setup extends HttpServlet {
-	private static org.apache.log4j.Logger log = Logger.getLogger(Setup.class);
+	private static final Logger log = LogManager.getLogger(Setup.class);
 	private static final long serialVersionUID = -892181347446991016L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

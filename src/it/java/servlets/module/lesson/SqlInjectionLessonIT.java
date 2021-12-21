@@ -5,7 +5,8 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +21,7 @@ import dbProcs.Setter;
 public class SqlInjectionLessonIT
 {
 	private static String lang = "en_GB";
-	private static org.apache.log4j.Logger log = Logger.getLogger(SqlInjectionLessonIT.class);
+	private static final Logger log = LogManager.getLogger(SqlInjectionLessonIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
     private MockHttpServletResponse response;
@@ -37,7 +38,7 @@ public class SqlInjectionLessonIT
 		TestProperties.executeSql(log);
 
 	}
-    
+
     @Before
 	public void setup()
 	{
@@ -79,7 +80,7 @@ public class SqlInjectionLessonIT
 		}
 		return null;
 	}
-	
+
 	@Test
 	public void testLevelValidAnswer()
 	{
@@ -105,7 +106,7 @@ public class SqlInjectionLessonIT
 			{
 				String sqlInjectionAttack = "'or'1'='1";
 				String servletResponse = getModuleDoPost(sqlInjectionAttack, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -125,7 +126,7 @@ public class SqlInjectionLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelInvalidAnswer()
 	{
@@ -151,7 +152,7 @@ public class SqlInjectionLessonIT
 			{
 				String sqlInjectionAttack = "'or'2'='1";
 				String servletResponse = getModuleDoPost(sqlInjectionAttack, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -171,7 +172,7 @@ public class SqlInjectionLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelSqlException()
 	{
@@ -197,7 +198,7 @@ public class SqlInjectionLessonIT
 			{
 				String sqlInjectionAttack = "'";
 				String servletResponse = getModuleDoPost(sqlInjectionAttack, 302);
-				if(servletResponse.contains("You must be getting funky")) 
+				if(servletResponse.contains("You must be getting funky"))
 				{
 					String message = new String("General 'Funky' Error Detected");
 					log.fatal(message);
@@ -208,8 +209,8 @@ public class SqlInjectionLessonIT
 					String message = new String("Invalid Solution returned Result Key");
 					log.fatal(message);
 					fail(message);
-				} 
-				else if(!servletResponse.contains("An error was detected")) 
+				}
+				else if(!servletResponse.contains("An error was detected"))
 				{
 					String message = new String("No SQL Exception Returned");
 					log.fatal(message);
@@ -223,7 +224,7 @@ public class SqlInjectionLessonIT
 			fail("Could not Complete: " + e.toString());
 		}
 	}
-	
+
 	@Test
 	public void testLevelNoAuth()
 	{
@@ -231,7 +232,7 @@ public class SqlInjectionLessonIT
 		{
 			request.getSession().setAttribute("lang", lang);
 			String servletResponse = getModuleDoPost("String", 200); //Mock response is 200 for Unauthenticated response for some reason
-			if(servletResponse.contains("You must be getting funky")) 
+			if(servletResponse.contains("You must be getting funky"))
 			{
 				String message = new String("General 'Funky' Error Detected");
 				log.fatal(message);
@@ -242,7 +243,7 @@ public class SqlInjectionLessonIT
 				String message = new String("Did not get 'Are you signed in' Response");
 				log.fatal(message);
 				fail(message);
-			} 
+			}
 		}
 		catch(Exception e)
 		{

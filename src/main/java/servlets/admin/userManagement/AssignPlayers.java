@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 import dbProcs.Getter;
@@ -22,39 +23,39 @@ import utils.Validate;
  * This is the control class for the Assign Players to Class functionality
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
 public class AssignPlayers extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(AssignPlayers.class);
+	private static final Logger log = LogManager.getLogger(AssignPlayers.class);
 
 	/** Initiated by assignPlayers.jsp. A number of players can be assigned to a new class. Changing the actual class of the player is handed by Setter.changePlayerClass
 	 * @param classId The identifier of the class to add the players to
-	 * @param players[] An array of player identifiers to add to the specified class	
+	 * @param players[] An array of player identifiers to add to the specified class
 	 * @param csrfToken
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.AssignPlayers ***");
-		PrintWriter out = response.getWriter();  
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
@@ -74,13 +75,13 @@ public class AssignPlayers extends HttpServlet
 					log.debug("Getting ApplicationRoot");
 					String ApplicationRoot = getServletContext().getRealPath("");
 					log.debug("Servlet root = " + ApplicationRoot );
-					
+
 					log.debug("Getting Parameters");
 					String classId = (String)request.getParameter("classId");
 					log.debug("classId = " + classId);
 					String[] players = request.getParameterValues("players[]");;
 					log.debug("players = " + players.toString());
-					
+
 					//Validation
 					notNull = (players != null);
 					log.debug("Ensuring strings are not empty");
@@ -106,7 +107,7 @@ public class AssignPlayers extends HttpServlet
 						{
 							log.debug("Validating player " + players[i]);
 							validPlayer = Getter.findPlayerById(ApplicationRoot, players[i]);
-						}	
+						}
 					}
 					if(notNull && validPlayer)
 					{

@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import dbProcs.Setter;
 import testUtils.TestProperties;
 
 public class OpenOrCloseByCategoryIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(OpenOrCloseByCategoryIT.class);
+	private static final Logger log = LogManager.getLogger(OpenOrCloseByCategoryIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
@@ -81,7 +82,7 @@ public class OpenOrCloseByCategoryIT {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void testOpenByCategory() {

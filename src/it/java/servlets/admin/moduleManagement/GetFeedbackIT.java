@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,12 +21,12 @@ import testUtils.TestProperties;
 /**
  * This class just tests the servlet code. The Setter code is better tested in
  * the SetterTest test's
- * 
+ *
  * @author Mark Denihan
  *
  */
 public class GetFeedbackIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(GetFeedbackIT.class);
+	private static final Logger log = LogManager.getLogger(GetFeedbackIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;

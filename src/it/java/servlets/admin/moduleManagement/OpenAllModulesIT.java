@@ -1,6 +1,7 @@
 package servlets.admin.moduleManagement;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static org.junit.Assert.*;
 
 public class OpenAllModulesIT {
 
-	private static org.apache.log4j.Logger log = Logger.getLogger(OpenAllModulesIT.class);
+	private static final Logger log = LogManager.getLogger(OpenAllModulesIT.class);
 	private static final String LANGUAGE_CODE = "en_GB";
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
@@ -30,9 +31,9 @@ public class OpenAllModulesIT {
 
 	/**
 	 * Sets up DB with levels and users to test with
-	 * @throws InstallationException 
-	 * @throws SQLException 
-	 * @throws IOException 
+	 * @throws InstallationException
+	 * @throws SQLException
+	 * @throws IOException
 	 */
 	@BeforeClass
 	public static void readyDb() throws SQLException, IOException {

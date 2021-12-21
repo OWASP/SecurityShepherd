@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 
@@ -22,27 +23,27 @@ import dbProcs.Setter;
  * This class is the control structure of the Create class vulnerability
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
 public class CreateClass extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(CreateClass.class);
-	
+	private static final Logger log = LogManager.getLogger(CreateClass.class);
+
 	/**
 	 * Initiated by createClass.jsp. Class is added to the system if valid data has been submitted. Otherwise no class is added to the core database schema.
 	 * Adding of class to Core Database is handed by Setter.createClass
@@ -50,14 +51,14 @@ public class CreateClass extends HttpServlet
 	 * @param classYear Class's year, in the format YY/YY, eg 11/12
 	 * @param csrfToken
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		log.debug("*** servlets.Admin.createClass ***");
-		
-		PrintWriter out = response.getWriter();  
+
+		PrintWriter out = response.getWriter();
 		out.print(getServletInfo());
 		request.setCharacterEncoding("UTF-8");
 		HttpSession ses = request.getSession(true);
@@ -77,13 +78,13 @@ public class CreateClass extends HttpServlet
 					log.debug("Getting ApplicationRoot");
 					String ApplicationRoot = getServletContext().getRealPath("");
 					log.debug("Servlet root = " + ApplicationRoot );
-					
+
 					log.debug("Getting Parameters");
 					String className = (String)request.getParameter("className");
 					log.debug("className = " + className);
 					String classYear = (String)request.getParameter("classYear");
 					log.debug("classYear = " + classYear);
-					
+
 					//Validation
 					log.debug("Checking for nulls");
 					notNull = (classYear != null && className != null);
@@ -93,7 +94,7 @@ public class CreateClass extends HttpServlet
 					validYear = Validate.isValidClassYear(classYear);
 					log.debug("Validating Name");
 					classValidate = className.length() > 4 && className.length() <= 32;
-	
+
 					if(notNull && notEmpty && validYear && classValidate)
 					{
 						String reponseMessage = new String();

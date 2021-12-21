@@ -18,7 +18,8 @@ import java.util.Properties;
 import javax.servlet.ServletException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -31,14 +32,14 @@ import servlets.Login;
 import utils.InstallationException;
 
 public class TestProperties {
-	private static org.apache.log4j.Logger log = Logger.getLogger(TestProperties.class);
+	private static final Logger log = LogManager.getLogger(TestProperties.class);
 
 	public static void failAndPrint(String message) {
 		log.fatal(message);
 		fail(message);
 	}
 
-	public static void executeSql(org.apache.log4j.Logger log) throws IOException, SQLException {
+	public static void executeSql(Logger log) throws IOException, SQLException {
 
 		File file = new File(System.getProperty("user.dir") + "/src/main/resources/database/coreSchema.sql");
 		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
@@ -54,7 +55,7 @@ public class TestProperties {
 
 	}
 
-	public static void createFileSystemKey(org.apache.log4j.Logger log, String fileProp, String solutionProp)
+	public static void createFileSystemKey(Logger log, String fileProp, String solutionProp)
 			throws InstallationException {
 
 		String userDir = System.getProperty("user.dir");
@@ -101,7 +102,7 @@ public class TestProperties {
 	 *
 	 * @param log
 	 */
-	public static void setTestPropertiesFileDirectory(org.apache.log4j.Logger log) {
+	public static void setTestPropertiesFileDirectory(Logger log) {
 		if (System.getProperty("catalina.base") == null) {
 			String userDir = System.getProperty("user.dir");
 			log.debug("catalina.base returns null. Creating it with base of user.dir; " + userDir + File.separator
@@ -118,7 +119,7 @@ public class TestProperties {
 	 * @param password User Password to use to Sign in
 	 * @param theClass Class of the User
 	 */
-	public static void loginDoPost(org.apache.log4j.Logger log, MockHttpServletRequest request,
+	public static void loginDoPost(Logger log, MockHttpServletRequest request,
 			MockHttpServletResponse response, String userName, String password, String theClass, String lang) {
 
 		int expectedResponseCode = 302;
@@ -172,7 +173,7 @@ public class TestProperties {
 	 * @return Boolean value depicting if the user exists and can be authenticated
 	 *
 	 */
-	public static boolean verifyTestUser(org.apache.log4j.Logger log, String applicationRoot, String userName,
+	public static boolean verifyTestUser(Logger log, String applicationRoot, String userName,
 			String password) throws SQLException {
 		boolean result = false;
 
@@ -204,7 +205,7 @@ public class TestProperties {
 	 * @param classId         Class to create the user in
 	 * @return Boolean value depicting if the user exists and can be authenticated
 	 */
-	public static boolean verifyTestUser(org.apache.log4j.Logger log, String applicationRoot, String userName,
+	public static boolean verifyTestUser(Logger log, String applicationRoot, String userName,
 			String password, String classId) throws SQLException {
 		boolean result = false;
 
@@ -237,7 +238,7 @@ public class TestProperties {
 	 * @param classId         Class to create the user in
 	 * @return Boolean value depicting if the user exists and can be authenticated
 	 */
-	public static boolean verifyTestAdmin(org.apache.log4j.Logger log, String applicationRoot, String userName,
+	public static boolean verifyTestAdmin(Logger log, String applicationRoot, String userName,
 			String password, String classId) throws SQLException {
 		boolean result = false;
 
@@ -269,7 +270,7 @@ public class TestProperties {
 	 * @return Boolean value depicting if the user exists and can be authenticated
 	 *
 	 */
-	public static boolean verifyTestAdmin(org.apache.log4j.Logger log, String applicationRoot, String userName,
+	public static boolean verifyTestAdmin(Logger log, String applicationRoot, String userName,
 			String password) throws SQLException {
 		boolean result = false;
 
@@ -296,7 +297,7 @@ public class TestProperties {
 	 * @param className Name of the class you wish to search / create
 	 * @return The Identifier of the class owning the name submitted
 	 */
-	public static String findCreateClassId(org.apache.log4j.Logger log, String className, String applicationRoot)
+	public static String findCreateClassId(Logger log, String className, String applicationRoot)
 			throws SQLException {
 		String classId = new String();
 		ResultSet rs = Getter.getClassInfo(applicationRoot);
@@ -330,7 +331,7 @@ public class TestProperties {
 	 * @param feedbackString  Leave as null for default
 	 * @param applicationRoot
 	 */
-	public static boolean completeModuleForUser(org.apache.log4j.Logger log, String userName, String userPass,
+	public static boolean completeModuleForUser(Logger log, String userName, String userPass,
 			String moduleId, String feedbackString, String applicationRoot) throws SQLException {
 		boolean result = false;
 
@@ -401,7 +402,7 @@ public class TestProperties {
 	 * @throws IOException
 	 */
 	public static void createMysqlResource() throws IOException {
-		createMysqlResource("localhost", 8888, "core", "root", "password");
+		createMysqlResource("127.0.0.1", 3306, "core", "root", "");
 	}
 
 	/**

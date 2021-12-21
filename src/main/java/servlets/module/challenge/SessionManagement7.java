@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.commons.codec.binary.Base64;
 import org.owasp.encoder.Encode;
 
@@ -30,26 +31,26 @@ import dbProcs.Getter;
  * Session Management Challenge 7
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
 public class SessionManagement7 extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(SessionManagement7.class);
+	private static final Logger log = LogManager.getLogger(SessionManagement7.class);
 	private static String levelName = "Session Management Challenge 7";
 	public static String levelHash = "269d55bc0e0ff635dcaeec8533085e5eae5d25e8646dcd4b05009353c9cf9c80";
 	/**
@@ -57,25 +58,25 @@ public class SessionManagement7 extends HttpServlet
 	 * @param userName Sub schema user name
 	 * @param password Sub schema user password
 	 */
-	public void doPost (HttpServletRequest request, HttpServletResponse response) 
+	public void doPost (HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException
 	{
 		//Setting IpAddress To Log and taking header for original IP if forwarded from proxy
 		ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 		HttpSession ses = request.getSession(true);
-		
+
 		//Translation Stuff
 		Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 		ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
 		ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.challenges.sessionManagement.sessionManagement7", locale);
-		
+
 		if(Validate.validateSession(ses))
 		{
 			ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), ses.getAttribute("userName").toString());
 			log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
-			PrintWriter out = response.getWriter();  
+			PrintWriter out = response.getWriter();
 			out.print(getServletInfo());
-			
+
 			String htmlOutput = new String();
 			log.debug(levelName + " Servlet Accessed");
 			try
@@ -112,20 +113,20 @@ public class SessionManagement7 extends HttpServlet
 							subPass = (String) passObj;
 						log.debug("subName = " + subName);
 						log.debug("subPass = " + subPass);
-						
+
 						String ApplicationRoot = getServletContext().getRealPath("");
 						Connection conn = Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFlowers");
 						log.debug("Checking credentials");
 						PreparedStatement callstmt;
-						
+
 						log.debug("Committing changes made to database");
 						callstmt = conn.prepareStatement("COMMIT");
 						callstmt.execute();
 						log.debug("Changes committed.");
-						
+
 						//Filtering password for !, so that it is impossible for users to sign in
 						subPass = subPass.replaceAll("!", "");
-						
+
 						callstmt = conn.prepareStatement("SELECT userName, userAddress FROM users WHERE userName = ? AND userPassword = SHA(?)");
 						callstmt.setString(1, subName);
 						callstmt.setString(2, subPass);
@@ -187,7 +188,7 @@ public class SessionManagement7 extends HttpServlet
 			log.error(levelName + " servlet accessed with no session");
 		}
 	}
-	
+
 	private static String makeTable (String userAddress, ResourceBundle bundle)
 	{
 		return "<table>" + userAddress + "<tr><td>" + bundle.getString("form.userName") + "</td><td><input type='text' id='subName'/></td></tr>" +

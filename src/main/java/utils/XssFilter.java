@@ -3,7 +3,8 @@ package utils;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 
@@ -11,25 +12,25 @@ import org.owasp.encoder.Encode;
  * Provides a number of filters that are used in different XSS challenges.
  * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.<br/>
- * 
+ *
  * The Security Shepherd project is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.<br/>
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>.
  * @author Mark Denihan
  *
  */
-public class XssFilter 
+public class XssFilter
 {
-	private static org.apache.log4j.Logger log = Logger.getLogger(XssFilter.class);
+	private static final Logger log = LogManager.getLogger(XssFilter.class);
 	/**
 	 * A method to badly validate a URL
 	 * @param input URL to validate
@@ -41,12 +42,12 @@ public class XssFilter
 		input = input.toLowerCase();
 		if (input.startsWith("http"))
 		{
-			try 
+			try
 			{
 				URL theUrl = new URL(input.replaceAll("#", "&#x23;").replaceFirst("<", "&#x3c;").replaceFirst(">", "&#x3e;").replaceFirst("\"", "&quot;"));
 				input = theUrl.toString();
-			} 
-			catch (MalformedURLException e) 
+			}
+			catch (MalformedURLException e)
 			{
 				log.debug("Could not Cast URL from input: " + e.toString());
 				input = howToMakeAUrlUrl;
@@ -59,7 +60,7 @@ public class XssFilter
 		}
 		return input;
 	}
-	
+
 	/**
 	 * White lists for specific URL types but doesn't sanitise it well
 	 * @param input
@@ -71,12 +72,12 @@ public class XssFilter
 		input = input.toLowerCase();
 		if (input.startsWith("http"))
 		{
-			try 
+			try
 			{
 				URL theUrl = new URL(input.replaceAll("#", "&#x23;").replaceAll("<", "&#x3c;").replaceAll(">", "&#x3e;").replaceFirst("\"", "&quot;"));
 				input = theUrl.toString();
-			} 
-			catch (MalformedURLException e) 
+			}
+			catch (MalformedURLException e)
 			{
 				log.debug("Could not Cast URL from input: " + e.toString());
 				input = howToMakeAUrlUrl;
@@ -89,7 +90,7 @@ public class XssFilter
 		}
 		return input;
 	}
-	
+
 	/**
 	 * Encodes for HTML, but doesn't escape ampersands
 	 * @param input
@@ -98,14 +99,14 @@ public class XssFilter
 	public static String encodeForHtml (String input)
 	{
 		log.debug("Filtering input at XSS white list");
-		
+
 		input = Encode.forHtml(input);
 		//Decode quotes to open a security hole in Encoder
 		input = input.replaceFirst("&#34;", "\"");
 		//Encode lower-case "on" and upper-case "on" to complicate the required attack vectors to pass
 		return input.replaceAll("on", "&#x6f;&#x6e;").replaceAll("ON", "&#x4f;&#x4e;");
 	}
-	
+
 	/**
 	 * Filters for specific javascript events recursively in a specific order. Can be bypassed by embedding a trigger late in the list in a trigger early in the list
 	 * @param input String to be filtered for XSS attacks
@@ -132,7 +133,7 @@ public class XssFilter
 		}
 		return screwHtmlEncodings(input);
 	}
-	
+
 	/**
 	 * Filters the word "script" specifically
 	 * @param input Input to be filtered for XSS
@@ -143,7 +144,7 @@ public class XssFilter
 		log.debug("Filtering input at XSS levelOne");
 		return input.toLowerCase().replaceAll("script", "scr.pt").replaceAll("SCRIPT", "SCR.PT");
 	}
-	
+
 	/**
 	 * Filters for javascript triggers twice before stopping and breaks HTML encodings
 	 * @param input
@@ -161,7 +162,7 @@ public class XssFilter
 		}
 		return screwHtmlEncodings(input);
 	}
-	
+
 	/**
 	 * Filters specific javascript event triggers
 	 * @param input String to be filtered for XSS attacks
@@ -179,7 +180,7 @@ public class XssFilter
 		input = input.replaceAll("ondblclick", "o.dbl");
 		return screwHtmlEncodings(input);
 	}
-	
+
 	/**
 	 * Use this to cripple HTML encoded attacks. This is can be used to limit the vectors of attack for success
 	 * @param input The string you want to remove HTML encoding from

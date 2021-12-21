@@ -1,6 +1,7 @@
 package testUtils;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class TestCountdownHandler {
-	private static org.apache.log4j.Logger log = Logger.getLogger(TestCountdownHandler.class);
+	private static final Logger log = LogManager.getLogger(TestCountdownHandler.class);
 
 	/**
 	 * Creates DB or Restores DB to Factory Defaults before running tests

@@ -9,7 +9,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import testUtils.TestProperties;
 import utils.CheatSheetStatus;
 
 public class DisableCheatsIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(DisableCheatsIT.class);
+	private static final Logger log = LogManager.getLogger(DisableCheatsIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
@@ -54,13 +55,13 @@ public class DisableCheatsIT {
 
 	/**
 	 * Method to Simulate the interaction with the disableCheats servlet.
-	 * 
+	 *
 	 * @param moduleId  The ID of the Module to Search For
 	 * @param csrfToken The CSRF Token of the User
 	 * @return The Content of the Response (Which is supposed to be the location of
 	 *         the module)
 	 * @throws ServletException
-	 * 
+	 *
 	 */
 	public String doThePost(String csrfToken) throws ServletException {
 		String servletClassName = "DisableCheats";

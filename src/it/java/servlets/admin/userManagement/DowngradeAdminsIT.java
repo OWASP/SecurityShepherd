@@ -2,7 +2,8 @@ package servlets.admin.userManagement;
 
 import static org.junit.Assert.*;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -17,7 +18,7 @@ import testUtils.TestProperties;
  */
 
 public class DowngradeAdminsIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(DowngradeAdminsIT.class);
+	private static final Logger log = LogManager.getLogger(DowngradeAdminsIT.class);
 	private static String applicationRoot = new String();
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;

@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.owasp.encoder.Encode;
@@ -40,11 +41,11 @@ import utils.ScoreboardStatus;
  *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Mark
  */
 public class Getter {
-	private static org.apache.log4j.Logger log = Logger.getLogger(Getter.class);
+	private static final Logger log = LogManager.getLogger(Getter.class);
 	/**
 	 * Used for scoreboards / progress bars
 	 */
@@ -66,7 +67,7 @@ public class Getter {
 	/**
 	 * This method hashes the user submitted password and sends it to the database.
 	 * The database does the rest of the work, including Brute Force prevention.
-	 * 
+	 *
 	 * @param userName The submitted user name to be used in authentication process
 	 * @param password The submitted password in plain text to be used in
 	 *                 authentication
@@ -235,7 +236,7 @@ public class Getter {
 	/**
 	 * This method hashes the user submitted password and sends it to the database.
 	 * The database does the rest of the work, including Brute Force prevention.
-	 * 
+	 *
 	 * @param userName The submitted user name to be used in authentication process
 	 * @param password The submitted password in plain text to be used in
 	 *                 authentication
@@ -314,7 +315,7 @@ public class Getter {
 			log.debug("User did not exist, create it from SSO data");
 
 			try {
-				
+
 				if (defaultClass.isEmpty()) {
 					log.debug("Adding player to database, with null classId");
 					newUsername = Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName, userRole);
@@ -323,15 +324,15 @@ public class Getter {
 					log.debug("Adding player to database, to class " + defaultClass);
 					newUsername = Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName, userRole);
 				}
-				
+
 				if(newUsername== null) {
 					userCreated=false;
 				} else {
 					userCreated=true;
 				}
-				
+
 				userName=newUsername;
-					
+
 
 			} catch (SQLException e) {
 				String message = "Could not create user " + userName + " with ssoName " + ssoName + " via SSO: "
@@ -447,7 +448,7 @@ public class Getter {
 
 	/**
 	 * Used to determine if a user has completed a module already
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of an application
 	 * @param moduleId        The module identifier
 	 * @param userId          The user identifier
@@ -481,7 +482,7 @@ public class Getter {
 
 	/**
 	 * Used to decipher whether or not a user exists as a player
-	 * 
+	 *
 	 * @param userId The user identifier of the player to be found
 	 * @return A boolean reflecting the state of existence of the player
 	 */
@@ -513,7 +514,7 @@ public class Getter {
 	/**
 	 * Used to gather all module information for internal functionality. This method
 	 * is used in creating View's or in control class operations
-	 * 
+	 *
 	 * @param ApplicationRoot The current runing context of the application
 	 * @return An ArrayList of String arrays that contain the module identifier,
 	 *         module name, module type and module category of each module in the
@@ -554,7 +555,7 @@ public class Getter {
 	 * Returns HTML menu for challenges. Challenges are only referenced by their id,
 	 * The user will have to go through another servlet to get the module's View
 	 * address
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @return HTML menu for challenges
 	 * @throws SQLException
@@ -684,7 +685,7 @@ public class Getter {
 			resultSet.next();
 			result[0] = resultSet.getString(1);// Name
 			result[1] = resultSet.getString(2);// Year
-			
+
 		} catch (SQLException e) {
 			log.error("Could not execute query: " + e.toString());
 			result = null;
@@ -696,7 +697,7 @@ public class Getter {
 	/**
 	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks
 	 * against each other. URLs are contained in IFRAME tags
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param classId         Identifier of the class to populate the forum with
 	 * @param moduleId        The module in which to return the forum for
@@ -758,7 +759,7 @@ public class Getter {
 	/**
 	 * The CSRF forum is used in CSRF levels for users to deliver CSRF attacks
 	 * against each other. URLs are contained in IMG tags
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param classId         Identifier of the class to populate the forum with
 	 * @param moduleId        The module in which to return the forum for
@@ -817,7 +818,7 @@ public class Getter {
 
 	/**
 	 * Used to present a modules feedback, including averages and raw results.
-	 * 
+	 *
 	 * @param applicationRoot The current running context of the application.
 	 * @param moduleId        The module identifier
 	 * @return A HTML table of the feedback for a specific module
@@ -885,7 +886,7 @@ public class Getter {
 	 * at a time. This method also returns a script to be executed every time the
 	 * menu is chanegd. This is script defines the animation and operations to be
 	 * carried out when the menu is interacted with
-	 * 
+	 *
 	 * @param ApplicationRoot The running context of the application.
 	 * @param userId          The user identifier of the user.
 	 * @param csrfToken       The cross site request forgery token
@@ -978,7 +979,7 @@ public class Getter {
 	 * Shepherd is in "Game Mode". Users are presented with one uncompleted module
 	 * at a time. This method does not return the JS script describing how the menu
 	 * used should work
-	 * 
+	 *
 	 * @param ApplicationRoot The running context of the application.
 	 * @param userId          The user identifier of the user.
 	 * @param csrfToken       The cross site request forgery token
@@ -1066,7 +1067,7 @@ public class Getter {
 	/**
 	 * Use to return the current progress of a class in JSON format with information
 	 * like userid, user name and score
-	 * 
+	 *
 	 * @param applicationRoot The current running context of the application
 	 * @param classId         The identifier of the class to use in lookup
 	 * @return A JSON representation of a class's score in the order {id, username,
@@ -1230,7 +1231,7 @@ public class Getter {
 	/**
 	 * Used to gather a menu of lessons for a user, including markers for each
 	 * lesson they have completed or not completed
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param userId          Identifier of the user
 	 * @return HTML lesson menu for Open Floor Plan.
@@ -1285,7 +1286,7 @@ public class Getter {
 	 * other issues that cannot be abused to return a result key (like XSS, CSRF or
 	 * network sniffing) the address is of the core server. Otherwise the modules
 	 * sit on the vulnerable application server
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId        Identifier of the module the to return
 	 * @param userId          The identifier of the user that wants to get the
@@ -1326,7 +1327,7 @@ public class Getter {
 
 	/**
 	 * Retrieves the module category based on the moduleId submitted
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId        The id of the module that
 	 * @return
@@ -1382,7 +1383,7 @@ public class Getter {
 
 	/**
 	 * Convert module hash to ID
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleHash      The module hash to use for look up
 	 * @return The identifier of the module with the module hash of the moduleHash
@@ -1414,7 +1415,7 @@ public class Getter {
 
 	/**
 	 * Returns true if a module has a hard coded key, false if server encrypts it
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId        The id of the module
 	 * @return Returns true if a module has a hard coded key, false if server
@@ -1447,7 +1448,7 @@ public class Getter {
 
 	/**
 	 * This method retrieves the i18n local key for a module's name.
-	 * 
+	 *
 	 * @param applicationRoot Application Running Context
 	 * @param moduleId        ID of the module to lookup
 	 * @return Locale key for the Module's Name.
@@ -1507,7 +1508,7 @@ public class Getter {
 	/**
 	 * Returns the result key for a module using the module's hash for the lookup
 	 * procedure.
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleHash      The hash to use for module look up
 	 * @return The db stored solution key value for the moduleHash submited
@@ -1540,7 +1541,7 @@ public class Getter {
 	 * Used in creating functionality that requires a user to select a module. This
 	 * method only prepares the option tags for this type of input. It must still be
 	 * wrapped in select tags.
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @return All modules in HTML option tags
 	 */
@@ -1574,7 +1575,7 @@ public class Getter {
 	 * Used in creating functionality that requires a user to select a module. This
 	 * method only prepares the option tags for this type of input. It must still be
 	 * wrapped in select tags.
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @return All modules in HTML option tags ordered by incrementalRank
 	 */
@@ -1606,7 +1607,7 @@ public class Getter {
 
 	/**
 	 * Used to return a module cheat sheet
-	 * 
+	 *
 	 * @param ApplicationRoot The current running context of the application
 	 * @param moduleId        The identifier of the module to return the cheat sheet
 	 *                        for
@@ -1643,7 +1644,7 @@ public class Getter {
 	 * This method returns modules in option tags in different &lt;select&gt;
 	 * elements depending on their current open/closed status. The output assumes it
 	 * is contained in a table context
-	 * 
+	 *
 	 * @param ApplicationRoot The Running Context of the Application
 	 * @return Tr/td elements containing a moduleStatusMenu that has lists of the
 	 *         current open and closed modules
@@ -1689,7 +1690,7 @@ public class Getter {
 	/**
 	 * This method returns the module categories in option tags that are to be open
 	 * or closed in a &lt;select&gt; element for administration manipulation
-	 * 
+	 *
 	 * @param ApplicationRoot
 	 * @return Module Category List for Html (&lt;SELECT&gt; element)
 	 */
@@ -1726,7 +1727,7 @@ public class Getter {
 	 * is 'validClass' will Error, = 'validclass' must be used.<br/>
 	 * So there are two procedures this method calls. One that handles null classes,
 	 * one that does not
-	 * 
+	 *
 	 * @param ClassId         Identifier of class
 	 * @param ApplicationRoot The current running context of the application
 	 * @return ResultSet that contains users for the selected class in the formate
@@ -1764,7 +1765,7 @@ public class Getter {
 
 	/**
 	 * Used to present the progress of a class in a series of loading bars
-	 * 
+	 *
 	 * @param applicationRoot The current running context of the application
 	 * @param classId         The identifier of the class to use in lookup
 	 * @return A HTML representation of a class's progress in the application
@@ -1813,7 +1814,7 @@ public class Getter {
 	/**
 	 * Use to return the current progress of a class in JSON format with information
 	 * like user name, score and completed modules
-	 * 
+	 *
 	 * @param applicationRoot The current running context of the application
 	 * @param classId         The identifier of the class to use in lookup
 	 * @return A JSON representation of a class's progress in the application
@@ -1888,7 +1889,7 @@ public class Getter {
 	 * This method prepares the Tournament module menu. This is when Security
 	 * Shepherd is in "Tournament Mode". Users are presented with a list of that are
 	 * specified as open.
-	 * 
+	 *
 	 * @param ApplicationRoot The running context of the application.
 	 * @param userId          The user identifier of the user.
 	 * @param csrfToken       The cross site request forgery token
@@ -2012,7 +2013,7 @@ public class Getter {
 
 	/**
 	 * Return all modules in JSON for specific User
-	 * 
+	 *
 	 * @param ApplicationRoot
 	 * @param userId
 	 * @param lang
@@ -2180,7 +2181,7 @@ public class Getter {
 	 * This method is used to determine if a CSRF level has been completed. A call
 	 * is made to the DB that returns the CSRF counter for a level. If this counter
 	 * is greater than 0, the level has been completed
-	 * 
+	 *
 	 * @param applicationRoot Running context of the application
 	 * @param moduleHash      Hash ID of the CSRF module you wish to check if a user
 	 *                        has completed
@@ -2267,7 +2268,7 @@ public class Getter {
 
 	/**
 	 * Used to decipher whether or not a user exists as an admin
-	 * 
+	 *
 	 * @param userId The user identifier of the admin to be found
 	 * @return A boolean reflecting the state of existence of the admin
 	 */
@@ -2613,7 +2614,7 @@ public class Getter {
 		log.debug("*** END getEndTime ***");
 		return theEndTimeStatus;
 	}
-	
+
 	public static String getDefaultClass(String ApplicationRoot) throws SQLException {
 		String theDefaultClass = null;
 		log.debug("*** Getter.getDefaultClass ***");

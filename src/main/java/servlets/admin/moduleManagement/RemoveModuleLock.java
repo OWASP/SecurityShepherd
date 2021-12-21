@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -42,7 +43,7 @@ public class RemoveModuleLock extends HttpServlet
 	public static String blockerMessage = "";
 	public static boolean blockerEnabled = false;
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(EnableModuleBlock.class);
+	private static final Logger log = LogManager.getLogger(EnableModuleBlock.class);
 	/**
 	 * Used to remove a limit on the progress a player can make in a CTF environment
 	 */

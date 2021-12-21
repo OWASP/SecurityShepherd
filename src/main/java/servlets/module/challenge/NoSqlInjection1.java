@@ -23,7 +23,8 @@ import com.mongodb.MongoSocketException;
 import com.mongodb.MongoTimeoutException;
 
 import dbProcs.MongoDatabase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.owasp.encoder.Encode;
 
 import utils.ShepherdLogManager;
@@ -49,14 +50,14 @@ import static dbProcs.MongoDatabase.getMongoDbConnection;
  *
  * You should have received a copy of the GNU General Public License along with
  * the Security Shepherd project. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @author Paul McCann
  *
  */
 public class NoSqlInjection1 extends HttpServlet {
 	// Sql Challenge 3
 	private static final long serialVersionUID = 1L;
-	private static org.apache.log4j.Logger log = Logger.getLogger(NoSqlInjection1.class);
+	private static final Logger log = LogManager.getLogger(NoSqlInjection1.class);
 	private static String levelName = "NoSQL Injection Challenge One";
 	public static String levelHash = "d63c2fb5da9b81ca26237f1308afe54491d1bacf9fffa0b21a072b03c5bafe66";
 

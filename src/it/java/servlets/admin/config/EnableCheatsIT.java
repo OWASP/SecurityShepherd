@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import testUtils.TestProperties;
 import utils.CheatSheetStatus;
 
 public class EnableCheatsIT {
-	private static org.apache.log4j.Logger log = Logger.getLogger(EnableCheatsIT.class);
+	private static final Logger log = LogManager.getLogger(EnableCheatsIT.class);
 	private static String applicationRoot = new String();
 	private static String lang = "en_GB";
 	private MockHttpServletRequest request;
@@ -52,7 +53,7 @@ public class EnableCheatsIT {
 
 	/**
 	 * Method to Simulate the interaction with the enableCheats servlet.
-	 * 
+	 *
 	 * @param moduleId  The ID of the Module to Search For
 	 * @param csrfToken The CSRF Token of the User
 	 * @return The Content of the Response (Which is supposed to be the location of
@@ -93,7 +94,7 @@ public class EnableCheatsIT {
 	/**
 	 * This test checks that non admin users get access errors when disabling the
 	 * cheats
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ServletException
@@ -139,7 +140,7 @@ public class EnableCheatsIT {
 
 	/**
 	 * This test checks that admin can the cheats for all
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ServletException
@@ -186,9 +187,9 @@ public class EnableCheatsIT {
 	/**
 	 * This test checks that admin users can enable restricted cheat sheets (Admins
 	 * Only)
-	 * @throws SQLException 
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	@Test
 	public void testAdminRestrictedEnableCheatsCall() throws SQLException, ServletException, IOException {
