@@ -21,10 +21,11 @@ jobs:
           java-version: 1.8
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
-      - name: Create Connection File
+      - name: Modify MySQL Connection File
         run: |
-          docker ps
-          sed -i 's/databaseConnectionURL=jdbc:mysql:\/\/127.0.0.1:3306\//databaseConnectionURL=jdbc:mysql:\/\/127.0.0.1:8888/g' ${GITHUB_WORKSPACE}/target/test-classes/conf/database.properties
+          MYSQL_HOST_ID=$(docker ps | awk 'NR==2{print $1}')
+          MYSQL_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${MYSQL_HOST_ID})
+          sed -i 's/databaseConnectionURL=jdbc:mysql:\/\/127.0.0.1:3306\//databaseConnectionURL=jdbc:mysql:\/\/${MYSQL_HOST}:8888/g' ${GITHUB_WORKSPACE}/target/test-classes/conf/database.properties
       - name: Unit Tests
         run: mvn test -B -e -X
       - name: Intergration Tests
