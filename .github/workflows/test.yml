@@ -21,6 +21,9 @@ jobs:
           java-version: 1.8
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
+      - name: Create Connection File
+        run: |
+          sed -i 's/databaseConnectionURL=jdbc:mysql:\/\/127.0.0.1:3306\//databaseConnectionURL=jdbc:mysql:\/\/127.0.0.1:8888/g' target/test-classes/conf/database.properties
       - name: Unit Tests
         run: mvn test -B -e -X
       - name: Intergration Tests
