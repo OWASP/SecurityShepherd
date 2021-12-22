@@ -28,4 +28,7 @@ jobs:
       - name: Unit Tests
         run: mvn test -B -e -X
       - name: Intergration Tests
-        run: mvn -Pdocker validate
+        run: |
+          sudo apt-get -y install libargon2-0
+          mvn -Pdocker validate
+          mvn verify -DskipUTs=true -DmongoDocker -B
