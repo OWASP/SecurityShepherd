@@ -1,8 +1,8 @@
-name: Tests
+name: Integration Tests
 on: [push]
 
 jobs:
-  tests:
+  integration-tests:
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -11,7 +11,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: core
         ports:
-            - '8888:3306'
+          - '8888:3306'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v2
@@ -25,10 +25,10 @@ jobs:
         run: |
           sed -i "s/'@'127.0.0.1'/'@'%'/g" ${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql
           sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
-      - name: Unit Tests
-        run: mvn test -B -e -X
-      - name: Intergration Tests
+      - name: Prepare Intergration Tests
         run: |
           sudo apt-get -y install libargon2-0
           mvn -Pdocker validate
+      - name: Run Intergration Tests
+        run: |
           mvn verify -DskipUTs=true -DmongoDocker -B
