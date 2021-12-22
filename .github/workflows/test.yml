@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Build Security Shepherd Project
+        run: mvn clean install -DskipTests -B
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
       - name: Modify MySQL Connection File
