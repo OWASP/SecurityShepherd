@@ -1,0 +1,25 @@
+name: Deploy to Dockerhub
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref.name == 'refs/heads/master' ||  github.ref == 'refs/heads/dev'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Build Maven with Docker Profile
+        run: mvn install -Pdocker -DskipTests
+
+      - name: Build the web server
+        run: docker-compose build web
+
+      - name: Deploy to Dockerhub
+        run: ${GITHUB_WORKSPACE}/docker/scripts/deploy-dockerhub.sh ${GITHUB_REF_NAME}
+        shell: bash
