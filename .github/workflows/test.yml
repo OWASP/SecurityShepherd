@@ -21,11 +21,11 @@ jobs:
           java-version: 1.8
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
-      - name: Modify MySQL Connection File
+      - name: Modify MySQL Connection Variables
         run: |
-          MYSQL_HOST_ID=$(docker ps | awk 'NR==2{print $1}')
-          MYSQL_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${MYSQL_HOST_ID})
-          sed -i 's/TEST_MYSQL_HOST=127.0.0.1/TEST_MYSQL_HOST=${MYSQL_HOST}/g' ${GITHUB_WORKSPACE}/.env
+          GITHUB_MYSQL_HOST_ID=$(docker ps | awk 'NR==2{print $1}')
+          GITHUB_MYSQL_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${GITHUB_MYSQL_HOST_ID})
+          sed -i "s/TEST_MYSQL_HOST=127.0.0.1/TEST_MYSQL_HOST=${GITHUB_MYSQL_HOST}/g" ${GITHUB_WORKSPACE}/.env
           sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
       - name: Unit Tests
         run: mvn test -B -e -X
