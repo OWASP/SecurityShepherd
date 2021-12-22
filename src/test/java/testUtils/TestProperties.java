@@ -24,6 +24,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import dbProcs.Constants;
 import dbProcs.Database;
 import dbProcs.Getter;
@@ -402,7 +404,12 @@ public class TestProperties {
 	 * @throws IOException
 	 */
 	public static void createMysqlResource() throws IOException {
-		createMysqlResource("127.0.0.1", 3306, "core", "root", "password");
+		Dotenv dotenv = Dotenv.load();
+		createMysqlResource(dotenv.get("TEST_MYSQL_HOST"),
+				Integer.parseInt(dotenv.get("TEST_MYSQL_PORT")),
+				"core",
+				"root",
+				dotenv.get("TEST_MYSQL_PASSWORD"));
 	}
 
 	/**

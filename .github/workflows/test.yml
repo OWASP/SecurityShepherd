@@ -19,15 +19,14 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Build Security Shepherd Project
-        run: mvn clean install -DskipTests -B
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
       - name: Modify MySQL Connection File
         run: |
           MYSQL_HOST_ID=$(docker ps | awk 'NR==2{print $1}')
           MYSQL_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${MYSQL_HOST_ID})
-          sed -i 's/databaseConnectionURL=jdbc:mysql:\/\/127.0.0.1:3306\//databaseConnectionURL=jdbc:mysql:\/\/${MYSQL_HOST}:8888/g' ${GITHUB_WORKSPACE}/target/test-classes/conf/database.properties
+          sed -i 's/TEST_MYSQL_HOST=127.0.0.1/TEST_MYSQL_HOST=${MYSQL_HOST}/g' ${GITHUB_WORKSPACE}/.env
+          sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
       - name: Unit Tests
         run: mvn test -B -e -X
       - name: Intergration Tests
