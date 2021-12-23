@@ -1,5 +1,4 @@
 name: Java Build
-
 on: [push]
 
 jobs:
