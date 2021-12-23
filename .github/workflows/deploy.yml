@@ -1,11 +1,12 @@
 name: Deploy to Dockerhub
 on:
+  create:
+    tags:
+      - 'v*'
   push:
     branches:
       - master
       - dev
-    tags:
-      - 'v*'
 
 jobs:
   deploy:
