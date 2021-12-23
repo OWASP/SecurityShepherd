@@ -48,8 +48,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            TOMCAT_DOCKER_VERSION=${TOMCAT_DOCKER_VERSION}
-            TLS_KEYSTORE_FILE=${TLS_KEYSTORE_FILE}
-            TLS_KEYSTORE_PASS=${TLS_KEYSTORE_PASS}
-            ALIAS=${ALIAS}
-            HTTPS_PORT=${HTTPS_PORT}
+            TOMCAT_DOCKER_VERSION
+            TLS_KEYSTORE_FILE
+            TLS_KEYSTORE_PASS
+            ALIAS
+            HTTPS_PORT
