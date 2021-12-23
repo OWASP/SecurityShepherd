@@ -31,6 +31,12 @@ jobs:
         with:
           java-version: 1.8
 
+      # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
+      - name: Set environment variables
+        uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: .env
+
       - name: Build Maven with Docker Profile
         run: mvn install -Pdocker -DskipTests
 
@@ -41,3 +47,17 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            TOMCAT_DOCKER_VERSION=$TOMCAT_DOCKER_VERSION
+            TLS_KEYSTORE_FILE=$TLS_KEYSTORE_FILE
+            TLS_KEYSTORE_PASS=$TLS_KEYSTORE_PASS
+            ALIAS=$ALIAS
+            HTTPS_PORT=$HTTPS_PORT
+            MYSQL_USER=$MYSQL_USER
+            MYSQL_PASS=$MYSQL_PASS
+            MYSQL_URI=jdbc:mysql://127.0.0.1:3306
+            MONGO_PORT=27017
+            MONGO_CONN_TIMEOUT=1000
+            MONGO_SOCK_TIMEOUT=0
+            MONGO_SVR_TIMEOUT=30000
+            
