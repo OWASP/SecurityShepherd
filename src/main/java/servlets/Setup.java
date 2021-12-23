@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -388,6 +390,9 @@ public class Setup extends HttpServlet {
 	}
 
 	private static void generateAuth() {
+
+		createDirectoryStructure();
+
 		try {
 			if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
 				UUID randomUUID = UUID.randomUUID();
@@ -426,6 +431,22 @@ public class Setup extends HttpServlet {
 		log.debug("Initializing module database");
 
 		psProcToexecute = databaseConnection.createStatement();
+		psProcToexecute.executeUpdate(data);
+
+	}
+
+	private synchronized void executeSqlScript(String coreDbName) throws IOException, SQLException {
+
+		File file = new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
+		String data = FileUtils.readFileToString(file, Charset.defaultCharset());
+		if (isHerokuEnv()){
+			log.info("Replacing core with " + coreDbName);
+			data = data.replaceAll("core", coreDbName);
+			data = data.split("-- Enable backup script")[0];
+		}
+
+		Connection databaseConnection = Database.getDatabaseConnection(null, true);
+		Statement psProcToexecute = databaseConnection.createStatement();
 		psProcToexecute.executeUpdate(data);
 
 	}
@@ -471,4 +492,68 @@ public class Setup extends HttpServlet {
 
 		return false;
 	}
+
+	private static synchronized void createDirectoryStructure(){
+
+		try
+		{
+			if (!Files.exists((Paths.get(Constants.CATALINA_BASE))))
+			{
+				log.info("Creating Catalina Base in: " + Constants.CATALINA_BASE);
+				Files.createDirectory(Paths.get(Constants.CATALINA_BASE));
+			}
+			else if (!Files.exists(Paths.get(Constants.CATALINA_CONF))){
+				log.info("Creating Catalina conf in: " + Constants.CATALINA_CONF);
+				Files.createDirectory(Paths.get(Constants.CATALINA_CONF));
+			}
+			else
+				log.info("Directory Structure " + Constants.CATALINA_CONF + " already exists. Nothing to do.");
+		} catch(IOException e){
+			log.fatal("Error creating directory structure " + e.getMessage());
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static boolean isHerokuEnv(){
+
+		return Files.exists(Paths.get("/app/.heroku/bin/heroku-metrics-agent.jar"));
+	}
+
+
+	public void writeHerokuDbProps() throws URISyntaxException, IOException {
+
+		log.info("Configuring Security Shepherd for a Heroku Environment");
+
+		URI coreDbUri = new URI(System.getenv("HEROKU_CORE_URL"));
+
+		String dbUser = coreDbUri.getUserInfo().split(":")[0];
+		String dbPass = coreDbUri.getUserInfo().split(":")[1];
+		String coreDbName = coreDbUri.getPath().substring(1);
+
+		StringBuffer dbProp = new StringBuffer();
+		dbProp.append("databaseConnectionURL=jdbc:mysql://" + coreDbUri.getHost() + "/");
+		dbProp.append("\n");
+		dbProp.append("DriverType=org.gjt.mm.mysql.Driver");
+		dbProp.append("\n");
+		dbProp.append("databaseSchema=" + coreDbName);
+		dbProp.append("\n");
+		dbProp.append("databaseUsername=" + dbUser);
+		dbProp.append("\n");
+		dbProp.append("databasePassword=" + dbPass);
+		dbProp.append("\n");
+		dbProp.append("databaseOptions=useUnicode=true&character_set_server=utf8mb4");
+		dbProp.append("\n");
+
+		Files.write(Paths.get(Constants.MYSQL_DB_PROP), dbProp.toString().getBytes(), StandardOpenOption.CREATE);
+		log.info("Created Heroku Db properties file: " + new File(Constants.MYSQL_DB_PROP).getAbsolutePath());
+		try {
+			executeSqlScript(coreDbName);
+			log.info("Created Security Shepherd Database in " + coreDbUri.getHost() + ':' + coreDbUri.getPort() + coreDbUri.getPath());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+		}
+	}
+
+
 }
