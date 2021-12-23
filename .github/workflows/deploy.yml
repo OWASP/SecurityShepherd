@@ -48,16 +48,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            TOMCAT_DOCKER_VERSION=$TOMCAT_DOCKER_VERSION
-            TLS_KEYSTORE_FILE=$TLS_KEYSTORE_FILE
-            TLS_KEYSTORE_PASS=$TLS_KEYSTORE_PASS
-            ALIAS=$ALIAS
-            HTTPS_PORT=$HTTPS_PORT
-            MYSQL_USER=$MYSQL_USER
-            MYSQL_PASS=$MYSQL_PASS
-            MYSQL_URI=jdbc:mysql://127.0.0.1:3306
-            MONGO_PORT=27017
-            MONGO_CONN_TIMEOUT=1000
-            MONGO_SOCK_TIMEOUT=0
-            MONGO_SVR_TIMEOUT=30000
-            
+            TOMCAT_DOCKER_VERSION=${TOMCAT_DOCKER_VERSION}
+            TLS_KEYSTORE_FILE=${TLS_KEYSTORE_FILE}
+            TLS_KEYSTORE_PASS=${TLS_KEYSTORE_PASS}
+            ALIAS=${ALIAS}
+            HTTPS_PORT=${HTTPS_PORT}
