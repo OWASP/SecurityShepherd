@@ -19,12 +19,12 @@ jobs:
           password: ${{ secrets.DOCKER_PAS }}
 
       - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-      with:
-        images: ismisepaul/securityshepherd
-        tags: type=ref,event=branch
-        if: github.ref.name == 'refs/heads/master'
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ismisepaul/securityshepherd
+          tags: type=ref,event=branch
+          if: github.ref.name == 'refs/heads/master'
           flavor: latest=true
 
       - name: Set up JDK 1.8
