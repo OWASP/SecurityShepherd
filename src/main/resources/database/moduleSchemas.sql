@@ -1306,16 +1306,10 @@ GRANT SELECT ON `SqlChalFourSuperSecure`.`users` TO 'secureDood'@'localhost';
 
 GRANT USAGE ON *.* TO 'csrfChalEnuer'@'localhost' IDENTIFIED BY 'password';
 DROP USER 'csrfChalEnuer'@'localhost';
-GRANT USAGE ON *.* TO 'csrfChalEnuer'@'172.17.0.1' IDENTIFIED BY 'password';
-DROP USER 'csrfChalEnuer'@'172.17.0.1';
 CREATE USER  'csrfChalEnuer'@'localhost' IDENTIFIED BY 'c4n1bUplZ';
 GRANT SELECT ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'localhost';
 GRANT INSERT ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'localhost';
 GRANT UPDATE ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'localhost';
-CREATE USER  'csrfChalEnuer'@'172.17.0.1' IDENTIFIED BY 'c4n1bUplZ';
-GRANT SELECT ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'172.17.0.1';
-GRANT INSERT ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'172.17.0.1';
-GRANT UPDATE ON `csrfChallengeEnumTokens`.`csrfTokens` TO 'csrfChalEnuer'@'172.17.0.1';
 
 GRANT USAGE ON *.* TO 'l3tsg0cra'@'localhost' IDENTIFIED BY 'password';
 DROP USER  'l3tsg0cra'@'localhost';
