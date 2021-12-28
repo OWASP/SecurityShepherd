@@ -3,10 +3,14 @@ on:
   create:
     tags:
       - 'v*'
+    paths-ignore:
+      - '**.md'
   push:
     branches:
       - master
       - dev
+    paths-ignore:
+      - '**.md'
 
 jobs:
   release:

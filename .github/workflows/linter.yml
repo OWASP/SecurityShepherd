@@ -2,8 +2,12 @@ name: Lint Code Base
 
 on:
   push:
+    paths-ignore:
+      - '**.md'
   pull_request:
     branches: [master, dev]
+    paths-ignore:
+      - '**.md'
 
 jobs:
   build:

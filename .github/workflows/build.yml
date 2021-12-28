@@ -1,5 +1,8 @@
 name: Java Build
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - '**.md'
 
 jobs:
   build:
