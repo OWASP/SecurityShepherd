@@ -1,4 +1,4 @@
-name: Deploy to Dockerhub
+name: Release to Dockerhub
 on:
   create:
     tags:
@@ -9,7 +9,7 @@ on:
       - dev
 
 jobs:
-  deploy:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -3,6 +3,7 @@ on: [push]
 
 jobs:
   build:
+    name: Build Security Shepherd
     runs-on: ubuntu-latest
 
     steps:
