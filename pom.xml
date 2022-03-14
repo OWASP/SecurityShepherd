@@ -238,7 +238,7 @@
 									<goal>copy-resources</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>${basedir}/docker/mysql/target</outputDirectory>
+									<outputDirectory>docker/mariadb/target</outputDirectory>
 									<resources>
 										<resource>
 											<directory>src/main/resources/database</directory>

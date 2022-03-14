@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     build:
-      context: ./docker/mysql
+      context: docker/mariadb
       args:
         DB_VERSION: ${DB_VERSION}
         CONTAINER_TOMCAT: ${CONTAINER_TOMCAT}
