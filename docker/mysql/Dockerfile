@@ -1,4 +1,4 @@
-ARG MYSQL_VERSION
+ARG DB_VERSION
 
 FROM docker AS builder
 USER root
@@ -7,14 +7,16 @@ COPY target/coreSchema.sql coreSchema.sql
 COPY target/moduleSchemas.sql moduleSchemas.sql
 RUN { \
     		echo '[mysqld]'; \
+            echo 'max_allowed_packet=256M'; \
     		echo 'skip-host-cache'; \
     		echo 'datadir = /var/lib/mysql'; \
     		echo '!includedir /etc/mysql/conf.d/'; \
+            echo 'ssl=0'; \
     	} > my.cnf
 
 
-FROM mysql:${MYSQL_VERSION}
-ARG MYSQL_ROOT_PASSWORD=$MYSQL_PASS
+FROM mariadb:${DB_VERSION}
+ARG MYSQL_ROOT_PASSWORD=$DB_PASS
 ARG CONTAINER_TOMCAT
 ARG DOCKER_NETWORK_NAME
 
