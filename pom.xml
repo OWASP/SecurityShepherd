@@ -219,7 +219,7 @@
 								<fileset>
 									<directory>${basedir}/docker/</directory>
 									<includes>
-										<include>mysql/target/**</include>
+										<include>mariadb/target/**</include>
 										<include>mongo/target/**</include>
 									</includes>
 									<followSymlinks>false</followSymlinks>

@@ -10,7 +10,7 @@ ARG DB_DRIVER=org.gjt.mm.mysql.Driver
 ARG DB_SCHEMA=core
 ARG DB_USER
 ARG DB_PASS
-ARG MYSQL_URI
+ARG MARIADB_URI
 ARG MONGO_HOST
 ARG MONGO_PORT
 ARG MONGO_CONN_TIMEOUT
@@ -25,7 +25,7 @@ COPY target/docker/tomcat/$TLS_KEYSTORE_FILE $TLS_KEYSTORE_FILE
 COPY docker/tomcat/serverxml.patch serverxml.patch
 COPY docker/tomcat/webxml.patch webxml.patch
 
-RUN printf "databaseConnectionURL=$MYSQL_URI/\nDriverType=$DB_DRIVER\ndatabaseSchema=$DB_SCHEMA\ndatabaseUsername=$DB_USER\ndatabasePassword=$DB_PASS\ndatabaseOptions=useUnicode=true&character_set_server=utf8mb4\n" >> database.properties
+RUN printf "databaseConnectionURL=$MARIADB_URI/\nDriverType=$DB_DRIVER\ndatabaseSchema=$DB_SCHEMA\ndatabaseUsername=$DB_USER\ndatabasePassword=$DB_PASS\ndatabaseOptions=useUnicode=true&character_set_server=utf8mb4\n" >> database.properties
 RUN printf "connectionHost=$MONGO_HOST\nconnectionPort=$MONGO_PORT\ndatabaseName=shepherdGames\nconnectTimeout=$MONGO_CONN_TIMEOUT\nsocketTimeout=$MONGO_SOCK_TIMEOUT\nserverSelectionTimeout=$MONGO_SVR_TIMEOUT"  >> mongo.properties
 RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS">/keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'">/g' serverxml.patch &&\
     sed -i 's/redirectPort="HTTPS_PORT" \/>/redirectPort="'"$HTTPS_PORT"'" \/>/g' serverxml.patch

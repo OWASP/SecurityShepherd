@@ -1,6 +1,9 @@
 ARG DB_VERSION
 
 FROM docker AS builder
+
+ARG DB_BIND_ADDRESS
+
 USER root
 WORKDIR /workdir
 COPY target/coreSchema.sql coreSchema.sql
@@ -12,6 +15,7 @@ RUN { \
     		echo 'datadir = /var/lib/mysql'; \
     		echo '!includedir /etc/mysql/conf.d/'; \
             echo 'ssl=0'; \
+            echo 'bind-address='${DB_BIND_ADDRESS}; \
     	} > my.cnf
 
 
