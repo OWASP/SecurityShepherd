@@ -10,7 +10,6 @@ COPY target/coreSchema.sql coreSchema.sql
 COPY target/moduleSchemas.sql moduleSchemas.sql
 RUN { \
     		echo '[mysqld]'; \
-            echo 'max_allowed_packet=256M'; \
     		echo 'skip-host-cache'; \
     		echo 'datadir = /var/lib/mysql'; \
     		echo '!includedir /etc/mysql/conf.d/'; \
