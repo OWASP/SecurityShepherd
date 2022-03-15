@@ -5,11 +5,22 @@ on:
       - 'v*'
     paths-ignore:
       - '**.md'
+      - '.github/ISSUE_TEMPLATE'
+      - '.gitignore'
+      - 'provisioning'
+      - '.sonarcloud.properties'
+      - 'LICENSE'
+      - 'Vagrantfile'
   push:
     branches: [master, dev]
     paths-ignore:
       - '**.md'
-  pull_request:
+      - '.github/ISSUE_TEMPLATE'
+      - '.gitignore'
+      - 'provisioning'
+      - '.sonarcloud.properties'
+      - 'LICENSE'
+      - 'Vagrantfile'
 
 jobs:
   release:
