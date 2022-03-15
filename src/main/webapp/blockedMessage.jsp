@@ -1,5 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="dbProcs.Getter, utils.*" errorPage="" %>
-<%@ include file="translation.jsp" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="dbProcs.Getter, utils.*" errorPage=""%>
+<%@ include file="translation.jsp"%>
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: scoreboard.jsp *************************");
 
@@ -43,25 +44,31 @@
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title><fmt:message key="blockedMessage.text.heading.levelBlocked" /></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title><fmt:message
+		key="blockedMessage.text.heading.levelBlocked" /></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-		<div id="contentDiv">
-			<h2 class="title"><fmt:message key="generic.text.pleaseWait" /></h2>
-			<p> 
-				<fmt:message key="blockedMessage.text.info.levelBlocked" />
-				<br/><br/>
-				<%= ModuleBlock.getBlockerMessage() %>
-			</p>
-		</div>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-		
+	<div id="contentDiv">
+		<h2 class="title">
+			<fmt:message key="generic.text.pleaseWait" />
+		</h2>
+		<p>
+			<fmt:message key="blockedMessage.text.info.levelBlocked" />
+			<br />
+			<br />
+			<%= ModuleBlock.getBlockerMessage() %>
+		</p>
+	</div>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
+
 </body>
 </html>
-	<%
+<%
  	}
 	else
 	{

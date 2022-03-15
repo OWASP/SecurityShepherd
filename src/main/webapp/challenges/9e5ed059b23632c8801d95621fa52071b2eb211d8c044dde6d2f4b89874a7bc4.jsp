@@ -1,5 +1,9 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" import="utils.*, servlets.module.challenge.BrokenCryptoHomeMade" errorPage="" %>
-<%@ page import="java.util.Locale,java.util.ResourceBundle,java.util.ArrayList,java.util.List,org.owasp.encoder.Encode"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+	language="java"
+	import="utils.*, servlets.module.challenge.BrokenCryptoHomeMade"
+	errorPage=""%>
+<%@ page
+	import="java.util.Locale,java.util.ResourceBundle,java.util.ArrayList,java.util.List,org.owasp.encoder.Encode"%>
 
 <%
 	/**
@@ -56,54 +60,63 @@ if (request.getSession() != null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Security Shepherd - <%=levelName%></title>
-	<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
-	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%=levelName%></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
+
 </head>
 <body>
 	<div>
-	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
+		<script type="text/javascript" src="../js/jquery.js"></script>
+		<script type="text/javascript"
+			src="../js/clipboard-js/clipboard.min.js"></script>
+		<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+		<script type="text/javascript"
+			src="../js/clipboard-js/clipboard-events.js"></script>
 		<div id="contentDiv">
 			<h2 class="title"><%=levelName%></h2>
-			<p> 
+			<p>
 				<%=bundle.getString("challenge.whatToDo")%>
-				<br/>
-				<br/>
-				<h1 class='title'><%=bundle.getString("badCrypto.title")%></h1>
-				<table>
-					<tr><th>Challenge Name</th><th>Base Key</th><th>Your User Specific Solution</th></tr>
-					<%
+				<br /> <br />
+			<h1 class='title'><%=bundle.getString("badCrypto.title")%></h1>
+			<table>
+				<tr>
+					<th>Challenge Name</th>
+					<th>Base Key</th>
+					<th>Your User Specific Solution</th>
+				</tr>
+				<%
 					for(int i = 0; i < BrokenCryptoHomeMade.challenges.size(); i++)
 					{
 						%>
-						<tr>
-							<td><%= BrokenCryptoHomeMade.challenges.get(i).get(0) %></td>
-							<td><%= BrokenCryptoHomeMade.challenges.get(i).get(1) %></td>
-							<% if(!BrokenCryptoHomeMade.challenges.get(i).get(0).equalsIgnoreCase("This Challenge")) { %>
-								<td><%= BrokenCryptoHomeMade.generateUserSolution(BrokenCryptoHomeMade.challenges.get(i).get(1), ses.getAttribute("userName").toString()) %></td>
-							<% } else { %>
-								<td>
-									<form action="javascript:;" id="submitAnswerForm">
-										<textarea id='theSubmission' rows=2 style='height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width:65%' required></textarea>
-										<input type="submit" id="theSubmit" value="Submit" style="height: 32;"/>
-									</form>
-								</td>
-							<% } %>
-						</tr>
-						<%	
+				<tr>
+					<td><%= BrokenCryptoHomeMade.challenges.get(i).get(0) %></td>
+					<td><%= BrokenCryptoHomeMade.challenges.get(i).get(1) %></td>
+					<% if(!BrokenCryptoHomeMade.challenges.get(i).get(0).equalsIgnoreCase("This Challenge")) { %>
+					<td><%= BrokenCryptoHomeMade.generateUserSolution(BrokenCryptoHomeMade.challenges.get(i).get(1), ses.getAttribute("userName").toString()) %></td>
+					<% } else { %>
+					<td>
+						<form action="javascript:;" id="submitAnswerForm">
+							<textarea id='theSubmission' rows=2
+								style='height: 30px; display: inline-block; float: left; padding-right: 1em; overflow: hidden; width: 65%'
+								required></textarea>
+							<input type="submit" id="theSubmit" value="Submit"
+								style="height: 32;" />
+						</form>
+					</td>
+					<% } %>
+				</tr>
+				<%	
 					}
 					%>
-				</table>
-				</div>
-				<p style="display: none;" id="loadingSign"><%=bundle.getString("form.loading")%></p>
-				<div id="resultsDiv"></div>
-			</p>
+			</table>
 		</div>
-		<script>
+		<p style="display: none;" id="loadingSign"><%=bundle.getString("form.loading")%></p>
+		<div id="resultsDiv"></div>
+		</p>
+	</div>
+	<script>
 			$("#submitAnswerForm").submit(function(){
 				var attemptedSolution = $("#theSubmission").val();
 				$("#resultsDiv").hide("fast");
@@ -139,7 +152,8 @@ if (request.getSession() != null)
 				});
 			});
 		</script>
-		<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%

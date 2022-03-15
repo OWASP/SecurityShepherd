@@ -3,15 +3,16 @@ package servlets.module.lesson;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
+import dbProcs.GetterTest;
+import dbProcs.Setter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,184 +20,200 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
-
-import dbProcs.GetterTest;
-import dbProcs.Setter;
 import testUtils.TestProperties;
 import utils.InstallationException;
 
 public class XxeLessonIT {
-	private static final String LANGUAGE_CODE = "en_GB";
-	private static final Logger log = LogManager.getLogger(XxeLessonIT.class);
-	private static String applicationRoot = new String();
-	private MockHttpServletRequest request;
-	private MockHttpServletResponse response;
-	private static final String MODULE_CLASS_NAME = "XxeLesson";
-	private static String TEST_USERNAME = "lessonTester";
 
-	private static ResourceBundle errors;
+  private static final String LANGUAGE_CODE = "en_GB";
+  private static final Logger log = LogManager.getLogger(XxeLessonIT.class);
+  private static String applicationRoot = new String();
+  private MockHttpServletRequest request;
+  private MockHttpServletResponse response;
+  private static final String MODULE_CLASS_NAME = "XxeLesson";
+  private static String TEST_USERNAME = "lessonTester";
 
-	/**
-	 * Creates DB or Restores DB to Factory Defaults before running tests
-	 */
-	@BeforeClass
-	public static void before() {
-		Locale enLocale = Locale.forLanguageTag(LANGUAGE_CODE);
-		errors = ResourceBundle.getBundle("i18n.servlets.errors", enLocale);
-		TestProperties.setTestPropertiesFileDirectory(log);
-		try {
-			TestProperties.executeSql(log);
-			TestProperties.createFileSystemKey(log, "xxe.lesson.file", "xxe.lesson.solution");
-			GetterTest.verifyTestUser(applicationRoot, TEST_USERNAME, TEST_USERNAME);
-		} catch (InstallationException e) {
-			String message = "Could not create DB: " + e.toString();
-			log.fatal(message);
-			fail(message);
-		} catch (Exception e) {
-			log.fatal("Could not initialise test");
-			fail(e.toString());
-		}
-	}
+  private static ResourceBundle errors;
 
-	@Before
-	public void setup() {
-		request = new MockHttpServletRequest();
-		response = new MockHttpServletResponse();
-		// Open All modules
-		if (!Setter.openAllModules(applicationRoot, false) && !Setter.openAllModules(applicationRoot, true))
-			fail("Could not Mark All Modules As Open");
-	}
+  /** Creates DB or Restores DB to Factory Defaults before running tests */
+  @BeforeClass
+  public static void before() {
+    Locale enLocale = Locale.forLanguageTag(LANGUAGE_CODE);
+    errors = ResourceBundle.getBundle("i18n.servlets.errors", enLocale);
+    TestProperties.setTestPropertiesFileDirectory(log);
+    try {
+      TestProperties.executeSql(log);
+      TestProperties.createFileSystemKey(log, "xxe.lesson.file", "xxe.lesson.solution");
+      GetterTest.verifyTestUser(applicationRoot, TEST_USERNAME, TEST_USERNAME);
+    } catch (InstallationException e) {
+      String message = "Could not create DB: " + e.toString();
+      log.fatal(message);
+      fail(message);
+    } catch (Exception e) {
+      log.fatal("Could not initialise test");
+      fail(e.toString());
+    }
+  }
 
-	public String doMockPost(byte[] xmlEmail, String csrfToken, int expectedResponseCode) throws Exception {
-		log.debug("Creating " + MODULE_CLASS_NAME + " Servlet Instance");
+  @Before
+  public void setup() {
+    request = new MockHttpServletRequest();
+    response = new MockHttpServletResponse();
+    // Open All modules
+    if (!Setter.openAllModules(applicationRoot, false)
+        && !Setter.openAllModules(applicationRoot, true)) {
+      fail("Could not Mark All Modules As Open");
+    }
+  }
 
-		try {
-			XxeLesson servlet = new XxeLesson();
-			servlet.init(new MockServletConfig(MODULE_CLASS_NAME));
+  public String doMockPost(byte[] xmlEmail, String csrfToken, int expectedResponseCode)
+      throws Exception {
+    log.debug("Creating " + MODULE_CLASS_NAME + " Servlet Instance");
 
-			request.setContentType("application/xml");
-			log.debug("Setting Up Params and Atrributes");
-			request.setContent(xmlEmail); // for an XML payload use setContent instead of addParameter
-			// Adding Correct CSRF Token (Token Submitted)
-			request.addHeader("csrfToken", csrfToken);
+    try {
+      XxeLesson servlet = new XxeLesson();
+      servlet.init(new MockServletConfig(MODULE_CLASS_NAME));
 
-			log.debug("Running doPost");
-			servlet.doPost(request, response);
+      request.setContentType("application/xml");
+      log.debug("Setting Up Params and Atrributes");
+      request.setContent(xmlEmail); // for an XML payload use setContent instead of addParameter
+      // Adding Correct CSRF Token (Token Submitted)
+      request.addHeader("csrfToken", csrfToken);
 
-			assertFalse(response.getStatus() != expectedResponseCode);
+      log.debug("Running doPost");
+      servlet.doPost(request, response);
 
-			return (response.getContentAsString());
-		} catch (Exception e) {
-			fail(e.toString());
-			throw e;
-		}
-	}
+      assertFalse(response.getStatus() != expectedResponseCode);
 
-	@Test
-	public void testLevelValidAnswerXxeInjection() {
-		Setter.openAllModules(applicationRoot, true);
-		try {
-			// Sign in as Normal User
-			log.debug("Signing in as " + TEST_USERNAME + " Through LoginServlet");
-			TestProperties.loginDoPost(log, request, response, TEST_USERNAME, TEST_USERNAME, null, LANGUAGE_CODE);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
+      return (response.getContentAsString());
+    } catch (Exception e) {
+      fail(e.toString());
+      throw e;
+    }
+  }
 
-			String csrfToken = response.getCookie("token").getValue();
+  @Test
+  public void testLevelValidAnswerXxeInjection() {
+    Setter.openAllModules(applicationRoot, true);
+    try {
+      // Sign in as Normal User
+      log.debug("Signing in as " + TEST_USERNAME + " Through LoginServlet");
+      TestProperties.loginDoPost(
+          log, request, response, TEST_USERNAME, TEST_USERNAME, null, LANGUAGE_CODE);
+      log.debug("Login Servlet Complete, Getting CSRF Token");
 
-			assertFalse(csrfToken.isEmpty());
+      String csrfToken = response.getCookie("token").getValue();
 
-			Properties prop = new Properties();
+      assertFalse(csrfToken.isEmpty());
 
-			try (InputStream xxe_input = new FileInputStream(
-					System.getProperty("user.dir") + "/src/main/resources/fileSystemKeys.properties")) {
+      Properties prop = new Properties();
 
-				prop.load(xxe_input);
+      try (InputStream xxe_input =
+          new FileInputStream(
+              System.getProperty("user.dir") + "/src/main/resources/fileSystemKeys.properties")) {
 
-			} catch (IOException e) {
-				log.error("Could not load properties file: " + e.toString());
-				throw new RuntimeException(e);
-			}
+        prop.load(xxe_input);
 
-			String errorBase = "Missing property :";
+      } catch (IOException e) {
+        log.error("Could not load properties file: " + e.toString());
+        throw new RuntimeException(e);
+      }
 
-			String filename = prop.getProperty("xxe.lesson.file");
-			if (filename == null) {
-				throw new RuntimeException(errorBase + "xxe.lesson.file");
-			}
+      String errorBase = "Missing property :";
 
-			request.setCookies(response.getCookies());
-			String xxeString = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" + "<!DOCTYPE foo ["
-					+ "<!ELEMENT foo ANY >" + "<!ENTITY xxe SYSTEM \"file://" + System.getProperty("user.dir") + "/"
-					+ filename + "\"" + " >]><foo>&xxe;</foo>";
+      String filename = prop.getProperty("xxe.lesson.file");
+      if (filename == null) {
+        throw new RuntimeException(errorBase + "xxe.lesson.file");
+      }
 
-			// String xxeString = "<?xml version=\"1.0\"
-			// encoding=\"ISO-8859-1\"?><email>test@test.com</email>";
+      request.setCookies(response.getCookies());
+      String xxeString =
+          "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
+              + "<!DOCTYPE foo ["
+              + "<!ELEMENT foo ANY >"
+              + "<!ENTITY xxe SYSTEM \"file://"
+              + System.getProperty("user.dir")
+              + "/"
+              + filename
+              + "\""
+              + " >]><foo>&xxe;</foo>";
 
-			String servletResponse = doMockPost(xxeString.getBytes(), csrfToken, 302);
+      // String xxeString = "<?xml version=\"1.0\"
+      // encoding=\"ISO-8859-1\"?><email>test@test.com</email>";
 
-			log.debug("Servlet Response: " + servletResponse);
-			Assert.assertTrue(servletResponse.contains("Marsellus Wallace&#39;s Key"));
-			Assert.assertFalse(servletResponse.contains("You must be getting funky"));
+      String servletResponse = doMockPost(xxeString.getBytes(), csrfToken, 302);
 
-		} catch (Exception e) {
-			log.fatal("Could not Complete: " + e.toString());
-			fail("Could not Complete: " + e.toString());
-		}
-	}
+      log.debug("Servlet Response: " + servletResponse);
+      Assert.assertTrue(servletResponse.contains("Marsellus Wallace&#39;s Key"));
+      Assert.assertFalse(servletResponse.contains("You must be getting funky"));
 
-	@Test
-	public void testLevelWhenUnsafeLevelsAreDisabled() {
-		Setter.closeAllModules(applicationRoot);
-		Setter.openAllModules(applicationRoot, false);
+    } catch (Exception e) {
+      log.fatal("Could not Complete: " + e.toString());
+      fail("Could not Complete: " + e.toString());
+    }
+  }
 
-		try {
-			// Sign in as Normal User
-			log.debug("Signing in as " + TEST_USERNAME + " Through LoginServlet");
-			TestProperties.loginDoPost(log, request, response, TEST_USERNAME, TEST_USERNAME, null, LANGUAGE_CODE);
-			log.debug("Login Servlet Complete, Getting CSRF Token");
+  @Test
+  public void testLevelWhenUnsafeLevelsAreDisabled() {
+    Setter.closeAllModules(applicationRoot);
+    Setter.openAllModules(applicationRoot, false);
 
-			String csrfToken = response.getCookie("token").getValue();
+    try {
+      // Sign in as Normal User
+      log.debug("Signing in as " + TEST_USERNAME + " Through LoginServlet");
+      TestProperties.loginDoPost(
+          log, request, response, TEST_USERNAME, TEST_USERNAME, null, LANGUAGE_CODE);
+      log.debug("Login Servlet Complete, Getting CSRF Token");
 
-			assertFalse(csrfToken.isEmpty());
+      String csrfToken = response.getCookie("token").getValue();
 
-			request.setCookies(response.getCookies());
+      assertFalse(csrfToken.isEmpty());
 
-			Properties prop = new Properties();
+      request.setCookies(response.getCookies());
 
-			try (InputStream xxe_input = new FileInputStream(
-					System.getProperty("user.dir") + "/src/main/resources/fileSystemKeys.properties")) {
+      Properties prop = new Properties();
 
-				prop.load(xxe_input);
+      try (InputStream xxe_input =
+          new FileInputStream(
+              System.getProperty("user.dir") + "/src/main/resources/fileSystemKeys.properties")) {
 
-			} catch (IOException e) {
-				log.error("Could not load properties file: " + e.toString());
-				throw new RuntimeException(e);
-			}
+        prop.load(xxe_input);
 
-			String errorBase = "Missing property :";
+      } catch (IOException e) {
+        log.error("Could not load properties file: " + e.toString());
+        throw new RuntimeException(e);
+      }
 
-			String filename = prop.getProperty("xxe.lesson.file");
-			if (filename == null) {
-				throw new RuntimeException(errorBase + "xxe.lesson.file");
-			}
+      String errorBase = "Missing property :";
 
-			String xxeString = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" + "<!DOCTYPE foo ["
-					+ "<!ELEMENT foo ANY >" + "<!ENTITY xxe SYSTEM \"file://" + System.getProperty("user.dir") + "/"
-					+ filename + "\"" + " >]><foo>&xxe;</foo>";
+      String filename = prop.getProperty("xxe.lesson.file");
+      if (filename == null) {
+        throw new RuntimeException(errorBase + "xxe.lesson.file");
+      }
 
-			// String xxeString = "<?xml version=\"1.0\"
-			// encoding=\"ISO-8859-1\"?><email>test@test.com</email>";
+      String xxeString =
+          "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
+              + "<!DOCTYPE foo ["
+              + "<!ELEMENT foo ANY >"
+              + "<!ENTITY xxe SYSTEM \"file://"
+              + System.getProperty("user.dir")
+              + "/"
+              + filename
+              + "\""
+              + " >]><foo>&xxe;</foo>";
 
-			String servletResponse = doMockPost(xxeString.getBytes(), csrfToken, 302);
+      // String xxeString = "<?xml version=\"1.0\"
+      // encoding=\"ISO-8859-1\"?><email>test@test.com</email>";
 
-			log.debug("Servlet Response: " + servletResponse);
-			Assert.assertFalse(servletResponse.contains("Marsellus Wallace&#39;s Key"));
-			Assert.assertTrue(servletResponse.contains(errors.getString("error.notOpen")));
+      String servletResponse = doMockPost(xxeString.getBytes(), csrfToken, 302);
 
-		} catch (Exception e) {
-			log.fatal("Could not Complete: " + e.toString());
-			fail("Could not Complete: " + e.toString());
-		}
-	}
+      log.debug("Servlet Response: " + servletResponse);
+      Assert.assertFalse(servletResponse.contains("Marsellus Wallace&#39;s Key"));
+      Assert.assertTrue(servletResponse.contains(errors.getString("error.notOpen")));
 
+    } catch (Exception e) {
+      log.fatal("Could not Complete: " + e.toString());
+      fail("Could not Complete: " + e.toString());
+    }
+  }
 }

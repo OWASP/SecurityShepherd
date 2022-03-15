@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*, servlets.admin.userManagement.GetPlayersByClass" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*, servlets.admin.userManagement.GetPlayersByClass"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: givePoints.jsp *************************");
@@ -66,18 +68,22 @@ catch(SQLException e)
 	showClasses = false;
 }
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Reward / Deduct Points</h1>
-		<div class="entry">
-			<form id="theForm" action="javascript:;">
-				<p>Use this function to reward or punish your players. Use the following form with a positive or negitive number to modify the amount of points a player has. For the best results, ensure your users can see the Shepherd Scoreboard. If you push a player into negative points they will not appear on the scoreboard.</p>
-				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
-				<div id="updatePointsDiv">
-					<table align="center">
-						<tr>
-							<td colspan="2">
-								<p>Pick the class of the player you wish to modify</p>
-								<center>
+<div id="formDiv" class="post">
+	<h1 class="title">Reward / Deduct Points</h1>
+	<div class="entry">
+		<form id="theForm" action="javascript:;">
+			<p>Use this function to reward or punish your players. Use the
+				following form with a positive or negitive number to modify the
+				amount of points a player has. For the best results, ensure your
+				users can see the Shepherd Scoreboard. If you push a player into
+				negative points they will not appear on the scoreboard.</p>
+			<input type="hidden" id="csrfToken" value="<%=csrfToken%>" />
+			<div id="updatePointsDiv">
+				<table align="center">
+					<tr>
+						<td colspan="2">
+							<p>Pick the class of the player you wish to modify</p>
+							<center>
 								<select id="selectClass" style="width: 300px;">
 									<option value="">Unassigned Players</option>
 									<%
@@ -90,8 +96,8 @@ catch(SQLException e)
 													String classId = Encode.forHtml(classList.getString(1));
 													String classYearName = Encode.forHtml(classList.getString(3)) + " " + Encode.forHtml(classList.getString(2));
 													%>
-													<option value="<%=classId%>"><%=classYearName%></option>
-													<%
+									<option value="<%=classId%>"><%=classYearName%></option>
+									<%
 												}
 												while(classList.next());
 												classList.first();
@@ -104,36 +110,40 @@ catch(SQLException e)
 										}
 												%>
 								</select>
+							</center>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<p>Select the player that you want to give/take points from</p>
+							<div id="playerSelect">
+								<center>
+									<select id='playerId' style='width: 300px;'>
+										<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
+									</select>
 								</center>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<p>Select the player that you want to give/take points from</p>
-								<div id="playerSelect">	
-									<center>
-										<select id='playerId' style='width: 300px;'>
-											<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
-										</select>
-									</center>
-								</div>
-								<br>
-							</td>
-						</tr>
-						<tr><td>Number of Points:</td><td><input type="input" style='width: 200px' id="numberOfPoints"/><br></td></tr>
-						<tr><td colspan="2" align="center">
-							<input type="submit" id="submitButton" value="Update Player Points"/>
-						</td></tr>
-					</table>
-				</div>
-				<br>
-				<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-				<div id="resultDiv" style="display:none;" class="informationBox"></div>
-				<div id="badData"></div>
-			</form>
-		</div>
+							</div> <br>
+						</td>
+					</tr>
+					<tr>
+						<td>Number of Points:</td>
+						<td><input type="input" style='width: 200px'
+							id="numberOfPoints" /><br></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center"><input type="submit"
+							id="submitButton" value="Update Player Points" /></td>
+					</tr>
+				</table>
+			</div>
+			<br>
+			<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+			<div id="resultDiv" style="display: none;" class="informationBox"></div>
+			<div id="badData"></div>
+		</form>
 	</div>
-	<script>
+</div>
+<script>
 	$("#selectClass").change(function () {
 		var theCsrfToken = $('#csrfToken').val();
 		var ajaxCall = $.ajax({
@@ -215,8 +225,9 @@ catch(SQLException e)
 		}
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {

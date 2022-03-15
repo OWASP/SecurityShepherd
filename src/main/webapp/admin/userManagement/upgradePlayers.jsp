@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*, servlets.admin.userManagement.GetPlayersByClass" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*, servlets.admin.userManagement.GetPlayersByClass"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: upgradePlayer.jsp *************************");
@@ -66,22 +68,22 @@ catch(SQLException e)
 	showClasses = false;
 }
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Upgrade Players</h1>
-		<div id="upgradeDiv" class="entry">
-			<form id="theForm" action="javascript:;">
-				<p>Please select the player that you would like to upgrade to an administrator</p>
-				<div id="badData"></div>
-				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
-				<table align="center">
-					<tr>
-						<td>
-							<p>Class:</p>
-						</td>
-						<td>
-							<select id="selectClass">
-								<option value="">Unassigned Players</option>
-								<%
+<div id="formDiv" class="post">
+	<h1 class="title">Upgrade Players</h1>
+	<div id="upgradeDiv" class="entry">
+		<form id="theForm" action="javascript:;">
+			<p>Please select the player that you would like to upgrade to an
+				administrator</p>
+			<div id="badData"></div>
+			<input type="hidden" id="csrfToken" value="<%=csrfToken%>" />
+			<table align="center">
+				<tr>
+					<td>
+						<p>Class:</p>
+					</td>
+					<td><select id="selectClass">
+							<option value="">Unassigned Players</option>
+							<%
 									if(showClasses)
 														{
 															try
@@ -91,8 +93,8 @@ catch(SQLException e)
 																	String classId = Encode.forHtml(classList.getString(1));
 																	String classYearName = Encode.forHtml(classList.getString(3)) + " " + Encode.forHtml(classList.getString(2));
 								%>
-												<option value="<%=classId%>"><%=classYearName%></option>
-											<%
+							<option value="<%=classId%>"><%=classYearName%></option>
+							<%
 												}
 																			while(classList.next());
 																			classList.first();
@@ -104,33 +106,33 @@ catch(SQLException e)
 																		}
 																	}
 											%>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<p>Select the players that you want to assign here</p>
-							<div id="playerSelect">	
-								<center>
-									<select id='playerId' style='width: 300px;'>
-										<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
-									</select>
-								</center>
-							</div>
-						</td>
-					</tr>
-					<tr><td colspan="2" align="center">
-						<input type="submit" id="submitButton" value="Upgrade Player"/>
-					</td></tr>
-				</table>
-			</form>
-		</div>
-		<br>
-		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-		<div id="resultDiv" style="display:none;" class="informationBox"></div>
-		<div id="badData"></div>
+					</select></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p>Select the players that you want to assign here</p>
+						<div id="playerSelect">
+							<center>
+								<select id='playerId' style='width: 300px;'>
+									<%= GetPlayersByClass.playersInOptionTags(Getter.getPlayersByClass(ApplicationRoot, null)) %>
+								</select>
+							</center>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="submit"
+						id="submitButton" value="Upgrade Player" /></td>
+				</tr>
+			</table>
+		</form>
 	</div>
-	<script>
+	<br>
+	<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+	<div id="resultDiv" style="display: none;" class="informationBox"></div>
+	<div id="badData"></div>
+</div>
+<script>
 	$("#selectClass").change(function () {
 		var theCsrfToken = $('#csrfToken').val();
 		var ajaxCall = $.ajax({
@@ -210,8 +212,9 @@ catch(SQLException e)
 		}
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {

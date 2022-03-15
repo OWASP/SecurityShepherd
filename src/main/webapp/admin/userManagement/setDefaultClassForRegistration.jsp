@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: setDefaultClassForRegistration.jsp *************************");
@@ -65,21 +67,22 @@ catch(SQLException e)
 	showClasses = false;
 }
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Set Default Registration Class</h1>
-		<div id="setDefaultClassDiv" class="entry">
-			<form id="theForm" action="javascript:;">
-				<p>Any user that registers with this instance of Security Shepherd will be automatically assigned to the class group you choose in this form.</p>
-				<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
-				<table align="center">
-					<tr>
-						<td>
-							<p>Class:</p>
-						</td>
-						<td>
-							<select id="classId">
-								<option value="">Unassigned Players</option>
-								<%
+<div id="formDiv" class="post">
+	<h1 class="title">Set Default Registration Class</h1>
+	<div id="setDefaultClassDiv" class="entry">
+		<form id="theForm" action="javascript:;">
+			<p>Any user that registers with this instance of Security
+				Shepherd will be automatically assigned to the class group you
+				choose in this form.</p>
+			<input type="hidden" id="csrfToken" value="<%=csrfToken%>" />
+			<table align="center">
+				<tr>
+					<td>
+						<p>Class:</p>
+					</td>
+					<td><select id="classId">
+							<option value="">Unassigned Players</option>
+							<%
 									if(showClasses)
 									{
 										try
@@ -89,8 +92,8 @@ catch(SQLException e)
 												String classId = Encode.forHtml(classList.getString(1));
 												String classYearName = Encode.forHtml(classList.getString(3)) + " " + Encode.forHtml(classList.getString(2));
 												%>
-												<option value="<%=classId%>"><%=classYearName%></option>
-												<%
+							<option value="<%=classId%>"><%=classYearName%></option>
+							<%
 											}
 											while(classList.next());
 											classList.close();
@@ -102,21 +105,21 @@ catch(SQLException e)
 										}
 									}
 									%>
-							</select>
-						</td>
-					</tr>
-					<tr><td colspan="2" align="center">
-						<input type="submit" id="submitButton" value="Set to Default"/>
-					</td></tr>
-				</table>
-			</form>
-		</div>
-		<br>
-		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-		<div id="resultDiv" style="display:none;" class="informationBox"></div>
-		<div id="badData"></div>
+					</select></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="submit"
+						id="submitButton" value="Set to Default" /></td>
+				</tr>
+			</table>
+		</form>
 	</div>
-	<script>	
+	<br>
+	<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+	<div id="resultDiv" style="display: none;" class="informationBox"></div>
+	<div id="badData"></div>
+</div>
+<script>	
 	$("#theForm").submit(function(){
 		//Get Data
 		var theClass = $("#classId").val();
@@ -162,8 +165,9 @@ catch(SQLException e)
 		}
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {
