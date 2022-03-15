@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: setStatus.jsp *************************");
@@ -50,30 +52,33 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 String csrfToken = Encode.forHtmlAttribute(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<div class="post">
-		<h1 class="title">Open and Close Levels</h1>
-		<div id="formDiv" class="entry">
+<div class="post">
+	<h1 class="title">Open and Close Levels</h1>
+	<div id="formDiv" class="entry">
+		<div id="badData"></div>
+		<form id="theForm" action="javascript:;">
+			<p>Use this form to open and close levels by name. Levels that
+				are closed will not appear in any level listings.</p>
 			<div id="badData"></div>
-				<form id="theForm" action="javascript:;">
-					<p>Use this form to open and close levels by name. Levels that are closed will not appear in any level listings.</p>
-					<div id="badData"></div>
-					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<div  id="formDiv" align="center">
-						<div>
-							<table>
-							<%= Getter.getModuleStatusMenu(ApplicationRoot) %>
-							</table>
-						</div>
-						<div><input type="submit" value="Update Module Status"/></div>
-					</div>
-				</form>
-			
-		</div>
-		<br />
+			<input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+			<div id="formDiv" align="center">
+				<div>
+					<table>
+						<%= Getter.getModuleStatusMenu(ApplicationRoot) %>
+					</table>
+				</div>
+				<div>
+					<input type="submit" value="Update Module Status" />
+				</div>
+			</div>
+		</form>
+
 	</div>
-	<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
-	<div id="resultDiv" class="informationBox" style="display: none;"></div>
-	<script>					
+	<br />
+</div>
+<div id="loadingSign" style="display: none;" class="menuButton">Loading...</div>
+<div id="resultDiv" class="informationBox" style="display: none;"></div>
+<script>					
 	$("#theForm").submit(function(){
 		var toBeOpened = $("#toOpen").val();
 		var toBeClosed = $("#toClose").val();
@@ -115,8 +120,9 @@ String ApplicationRoot = getServletContext().getRealPath("");
 		});
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {

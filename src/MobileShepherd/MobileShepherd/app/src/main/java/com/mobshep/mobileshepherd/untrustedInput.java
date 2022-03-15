@@ -9,23 +9,25 @@ import android.widget.Button;
 
 public class untrustedInput extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.untrusted_main_layout);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.untrusted_main_layout);
 
-        Button bKeyActivity = (Button) findViewById(R.id.bGoToKey);
-        bKeyActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Access Denied", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+    Button bKeyActivity = (Button) findViewById(R.id.bGoToKey);
+    bKeyActivity.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Snackbar.make(view, "Access Denied", Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+                .show();
+          }
         });
-    }
+  }
 
-    public void goToSettings(){
-        Intent goToSettings = new Intent(this, Preferences.class);
-        startActivity(goToSettings);
-    }
+  public void goToSettings() {
+    Intent goToSettings = new Intent(this, Preferences.class);
+    startActivity(goToSettings);
+  }
 }

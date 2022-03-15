@@ -8,31 +8,28 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
 public class MainActivity extends AppCompatActivity {
 
-    EditText keyEditText;
+  EditText keyEditText;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        keyEditText = (EditText) findViewById(R.id.keyEditText);
-    }
+    keyEditText = (EditText) findViewById(R.id.keyEditText);
+  }
 
-    public void addKey(View view) {
+  public void addKey(View view) {
 
-        String key = keyEditText.getText().toString();
+    String key = keyEditText.getText().toString();
 
-        ContentValues values = new ContentValues();
-        values.put(mProvider.key, key);
+    ContentValues values = new ContentValues();
+    values.put(mProvider.key, key);
 
-        // Provides access to other applications Content Providers
-        Uri uri = getContentResolver().insert(mProvider.CONTENT_URL, values);
+    // Provides access to other applications Content Providers
+    Uri uri = getContentResolver().insert(mProvider.CONTENT_URL, values);
 
-        Toast.makeText(getBaseContext(), "New Secret Added", Toast.LENGTH_LONG)
-                .show();
-    }
-
+    Toast.makeText(getBaseContext(), "New Secret Added", Toast.LENGTH_LONG).show();
+  }
 }

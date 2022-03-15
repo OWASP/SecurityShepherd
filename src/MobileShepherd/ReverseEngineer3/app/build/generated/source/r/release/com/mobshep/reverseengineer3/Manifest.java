@@ -8,7 +8,9 @@
 package com.mobshep.reverseengineer3;
 
 public final class Manifest {
-    public static final class permission {
-        public static final String START_ACTIVITY="com.mobshep.RE4.START_ACTIVITY";
-    }
+
+  public static final class permission {
+
+    public static final String START_ACTIVITY = "com.mobshep.RE4.START_ACTIVITY";
+  }
 }

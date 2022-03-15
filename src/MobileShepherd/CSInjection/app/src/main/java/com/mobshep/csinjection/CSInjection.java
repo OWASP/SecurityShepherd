@@ -1,18 +1,10 @@
 package com.mobshep.csinjection;
 
-import java.io.File;
-import java.io.IOException;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,248 +13,236 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import java.io.File;
+import java.io.IOException;
 import net.sqlcipher.database.SQLiteDatabase;
 
 /**
  * This file is part of the Security Shepherd Project.
- * 
- * The Security Shepherd project is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
- * 
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
- * 
+ *
+ * <p>The Security Shepherd project is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or (at your option) any later version.<br>
+ *
+ * <p>The Security Shepherd project is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.<br>
+ *
+ * <p>You should have received a copy of the GNU General Public License along with the Security
+ * Shepherd project. If not, see <http://www.gnu.org/licenses/>.
+ *
  * @author Sean Duggan
  */
-
 public class CSInjection extends Activity implements OnClickListener {
 
-	TabHost th;
-	Button Login;
-	EditText username;
-	TextView loginTitle;
-	EditText password;
-	EditText key;
-	String dbPass = "37e44d547f20a9f3ca9ac7d625486b7b";
+  TabHost th;
+  Button Login;
+  EditText username;
+  TextView loginTitle;
+  EditText password;
+  EditText key;
+  String dbPass = "37e44d547f20a9f3ca9ac7d625486b7b";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    // TODO Auto-generated method stub
 
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.csi);
-		th = (TabHost) findViewById(R.id.tabhost);
-		populateTable(this, "dbPass");
-		generateKey(this, "dbPass");
-		referenceXML();
-		th.setup();
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.csi);
+    th = (TabHost) findViewById(R.id.tabhost);
+    populateTable(this, "dbPass");
+    generateKey(this, "dbPass");
+    referenceXML();
+    th.setup();
 
-		TabSpec specs = th.newTabSpec("tag1");
-		specs.setContent(R.id.tab2);
-		specs.setIndicator("Login");
-		th.addTab(specs);
+    TabSpec specs = th.newTabSpec("tag1");
+    specs.setContent(R.id.tab2);
+    specs.setIndicator("Login");
+    th.addTab(specs);
 
-		specs = th.newTabSpec("tag2");
-		specs.setContent(R.id.tab3);
-		specs.setIndicator("Key");
-		th.addTab(specs);
-	}
+    specs = th.newTabSpec("tag2");
+    specs.setContent(R.id.tab3);
+    specs.setIndicator("Key");
+    th.addTab(specs);
+  }
 
-	private void referenceXML() {
-		// TODO Auto-generated method stub		
-		Login = (Button) findViewById(R.id.bLogin);
-		// Login.setFilterTouchesWhenObscured(true);
-		username = (EditText) findViewById(R.id.etName);
-		password = (EditText) findViewById(R.id.etPass);
-		key = (EditText) findViewById(R.id.etKey);
-		Login.setOnClickListener(this);
-		loginTitle = (TextView) findViewById(R.id.tvTitle);
-		
-		th = (TabHost) findViewById(R.id.tabhost);		
+  private void referenceXML() {
+    // TODO Auto-generated method stub
+    Login = (Button) findViewById(R.id.bLogin);
+    // Login.setFilterTouchesWhenObscured(true);
+    username = (EditText) findViewById(R.id.etName);
+    password = (EditText) findViewById(R.id.etPass);
+    key = (EditText) findViewById(R.id.etKey);
+    Login.setOnClickListener(this);
+    loginTitle = (TextView) findViewById(R.id.tvTitle);
 
-	}
+    th = (TabHost) findViewById(R.id.tabhost);
+  }
 
-	public void onClick(View arg0) {
-		switch (arg0.getId()) {
+  public void onClick(View arg0) {
+    switch (arg0.getId()) {
+      case (R.id.bLogin):
+        String CheckName = username.getText().toString();
+        String CheckPass = password.getText().toString();
 
-		case (R.id.bLogin):
+        try {
+          if (login(CheckName, CheckPass) == true) {
+            outputKey(this, dbPass);
+            Toast login = Toast.makeText(CSInjection.this, "Logged in!", Toast.LENGTH_LONG);
+            login.show();
+          }
+        } catch (IOException e1) {
+          Toast error = Toast.makeText(CSInjection.this, "An error occurred!", Toast.LENGTH_LONG);
+          error.show();
+        }
 
-			String CheckName = username.getText().toString();
-			String CheckPass = password.getText().toString();
+        try {
+          if (login(CheckName, CheckPass) == false) {
+            Toast invalid =
+                Toast.makeText(CSInjection.this, "Invalid Credentials!", Toast.LENGTH_SHORT);
+            invalid.show();
+          }
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
 
-			try {
-				if (login(CheckName, CheckPass) == true) {
-					outputKey(this, dbPass);
-					Toast login = Toast.makeText(CSInjection.this,
-							"Logged in!", Toast.LENGTH_LONG);
-					login.show();
+        if (CheckName.contentEquals("")
+            || CheckPass.contentEquals("")
+            || CheckPass.contentEquals("A3B922DF010PQSI827")) {
+          Toast empty =
+              Toast.makeText(CSInjection.this, "Empty Fields Detected.", Toast.LENGTH_SHORT);
+          empty.show();
+        }
+    }
+  }
 
-				}
-			} catch (IOException e1) {
-				Toast error = Toast.makeText(CSInjection.this,
-						"An error occurred!", Toast.LENGTH_LONG);
-				error.show();
-			}
+  private boolean login(String username, String password) throws IOException {
+    try {
+      try {
+        String dbPath = this.getDatabasePath("Members.db").getPath();
 
-			try {
-				if (login(CheckName, CheckPass) == false) {
-					Toast invalid = Toast.makeText(CSInjection.this,
-							"Invalid Credentials!", Toast.LENGTH_SHORT);
-					invalid.show();
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPass, null);
 
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        String query =
+            ("SELECT * FROM MEMBERS WHERE memName='"
+                + username
+                + "' AND memPass = '"
+                + password
+                + "';");
 
-			if (CheckName.contentEquals("") || CheckPass.contentEquals("") || CheckPass.contentEquals("A3B922DF010PQSI827")) {
-				Toast empty = Toast.makeText(CSInjection.this,
-						"Empty Fields Detected.", Toast.LENGTH_SHORT);
-				empty.show();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor != null) {
+          if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+          }
+        }
 
-			}
-		}
-	}
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        Toast error = Toast.makeText(CSInjection.this, "An error occurred.", Toast.LENGTH_LONG);
+        error.show();
+        key.getText().clear();
+        key.setHint("The key is only shown to authenticated users.");
+        return false;
+      }
 
-	private boolean login(String username, String password) throws IOException {
-try{
-		try {
-			String dbPath = this.getDatabasePath("Members.db").getPath();
+    } catch (SQLiteException e) {
+      Toast error =
+          Toast.makeText(CSInjection.this, "An database error occurred.", Toast.LENGTH_LONG);
+      error.show();
+    }
 
-			SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-					dbPass, null);
+    return true;
+  }
 
-			String query = ("SELECT * FROM MEMBERS WHERE memName='" + username
-					+ "' AND memPass = '" + password + "';");
+  public void populateTable(Context context, String password) {
+    try {
+      try {
+        SQLiteDatabase.loadLibs(context);
 
-			Cursor cursor = db.rawQuery(query, null);
-			if (cursor != null) {
-				if (cursor.getCount() <= 0) {
-					cursor.close();
-					return false;
-				}
-			}
+        String dbPath = context.getDatabasePath("Members.db").getPath();
 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			Toast error = Toast.makeText(CSInjection.this,
-					"An error occurred.", Toast.LENGTH_LONG);
-			error.show();
-			key.getText().clear();
-			key.setHint("The key is only shown to authenticated users.");
-			return false;
-		}
-			
-		} catch (SQLiteException e) {
-			Toast error = Toast.makeText(CSInjection.this,
-					"An database error occurred.", Toast.LENGTH_LONG);
-			error.show();
-		}
+        File dbPathFile = new File(dbPath);
+        if (!dbPathFile.exists()) {
+          dbPathFile.getParentFile().mkdirs();
+        }
 
-		return true;
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPass, null);
 
-	}
+        db.execSQL("DROP TABLE IF EXISTS Members");
+        db.execSQL(
+            "CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge"
+                + " INTEGER, memPass VARCHAR)");
 
-	public void populateTable(Context context, String password) {
-		try {
-			try {
-				SQLiteDatabase.loadLibs(context);
+        db.execSQL("INSERT INTO Members VALUES( 1,'Admin',20,'A3B922DF010PQSI827')");
 
-				String dbPath = context.getDatabasePath("Members.db").getPath();
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        Toast error = Toast.makeText(CSInjection.this, "An error occurred.", Toast.LENGTH_LONG);
+        error.show();
+      }
 
-				File dbPathFile = new File(dbPath);
-				if (!dbPathFile.exists())
-					dbPathFile.getParentFile().mkdirs();
+    } catch (SQLiteException e) {
+      Toast error =
+          Toast.makeText(CSInjection.this, "An database error occurred.", Toast.LENGTH_LONG);
+      error.show();
+    }
+  }
 
-				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-						dbPass, null);
+  public void outputKey(Context context, String password) {
+    SQLiteDatabase.loadLibs(context);
 
-				db.execSQL("DROP TABLE IF EXISTS Members");
-				db.execSQL("CREATE TABLE Members(memID INTEGER PRIMARY KEY AUTOINCREMENT, memName TEXT, memAge INTEGER, memPass VARCHAR)");
+    String dbPath = context.getDatabasePath("key.db").getPath();
 
-				db.execSQL("INSERT INTO Members VALUES( 1,'Admin',20,'A3B922DF010PQSI827')");
+    SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPass, null);
 
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				Toast error = Toast.makeText(CSInjection.this,
-						"An error occurred.", Toast.LENGTH_LONG);
-				error.show();
+    String query = ("SELECT * FROM key;");
 
-			}
+    Cursor cursor = db.rawQuery(query, null);
 
-		} catch (SQLiteException e) {
-			Toast error = Toast.makeText(CSInjection.this,
-					"An database error occurred.", Toast.LENGTH_LONG);
-			error.show();
-		}
-	}
+    if (cursor != null) {
 
-	public void outputKey(Context context, String password) {
-		SQLiteDatabase.loadLibs(context);
+      try {
+        if (cursor.moveToFirst()) {
+          key.setText(cursor.getString(0));
+        }
+      } finally {
+        cursor.close();
+      }
+    }
+  }
 
-		String dbPath = context.getDatabasePath("key.db").getPath();
+  public void generateKey(Context context, String password) {
+    try {
+      try {
+        SQLiteDatabase.loadLibs(context);
 
-		SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPass,
-				null);
+        String dbPath = context.getDatabasePath("key.db").getPath();
 
-		String query = ("SELECT * FROM key;");
+        File dbPathFile = new File(dbPath);
+        if (!dbPathFile.exists()) {
+          dbPathFile.getParentFile().mkdirs();
+        }
 
-		Cursor cursor = db.rawQuery(query, null);
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath, dbPass, null);
 
-		if (cursor != null) {
+        db.execSQL("DROP TABLE IF EXISTS key");
+        db.execSQL("CREATE TABLE key(key VARCHAR)");
 
-			try {
-				if (cursor.moveToFirst())
-					key.setText(cursor.getString(0));
-			} finally {
-				cursor.close();
+        db.execSQL("INSERT INTO key VALUES('The Key is VolcanicEruptionsAbruptInterruptions.')");
 
-			}
-		}
-	}
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        Toast error = Toast.makeText(CSInjection.this, "An error occurred.", Toast.LENGTH_LONG);
+        error.show();
+      }
 
-	public void generateKey(Context context, String password) {
-		try {
-			try {
-				SQLiteDatabase.loadLibs(context);
-
-				String dbPath = context.getDatabasePath("key.db").getPath();
-
-				File dbPathFile = new File(dbPath);
-				if (!dbPathFile.exists())
-					dbPathFile.getParentFile().mkdirs();
-
-				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbPath,
-						dbPass, null);
-
-				db.execSQL("DROP TABLE IF EXISTS key");
-				db.execSQL("CREATE TABLE key(key VARCHAR)");
-
-				db.execSQL("INSERT INTO key VALUES('The Key is VolcanicEruptionsAbruptInterruptions.')");
-
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				Toast error = Toast.makeText(CSInjection.this,
-						"An error occurred.", Toast.LENGTH_LONG);
-				error.show();
-
-			}
-
-		} catch (SQLiteException e) {
-			Toast error = Toast.makeText(CSInjection.this,
-					"An database error occurred.", Toast.LENGTH_LONG);
-			error.show();
-		}
-	}
-
-
+    } catch (SQLiteException e) {
+      Toast error =
+          Toast.makeText(CSInjection.this, "An database error occurred.", Toast.LENGTH_LONG);
+      error.show();
+    }
+  }
 }

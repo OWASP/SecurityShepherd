@@ -8,31 +8,29 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
 public class providerLeakage extends AppCompatActivity {
 
-    EditText keyEditText;
+  EditText keyEditText;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.provider_content);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.provider_content);
 
-        keyEditText = (EditText) findViewById(R.id.keyEditText);
-    }
+    keyEditText = (EditText) findViewById(R.id.keyEditText);
+  }
 
-    public void addKey(View view) {
+  public void addKey(View view) {
 
-        String key = keyEditText.getText().toString();
+    String key = keyEditText.getText().toString();
 
-        ContentValues values = new ContentValues();
-        values.put(com.mobshep.mobileshepherd.SecretProvider.key, key);
+    ContentValues values = new ContentValues();
+    values.put(com.mobshep.mobileshepherd.SecretProvider.key, key);
 
-        // Provides access to other applications Content Providers
-        Uri uri = getContentResolver().insert(com.mobshep.mobileshepherd.SecretProvider.CONTENT_URL, values);
+    // Provides access to other applications Content Providers
+    Uri uri =
+        getContentResolver().insert(com.mobshep.mobileshepherd.SecretProvider.CONTENT_URL, values);
 
-        Toast.makeText(getBaseContext(), "New Key Added", Toast.LENGTH_LONG)
-                .show();
-    }
-
+    Toast.makeText(getBaseContext(), "New Key Added", Toast.LENGTH_LONG).show();
+  }
 }

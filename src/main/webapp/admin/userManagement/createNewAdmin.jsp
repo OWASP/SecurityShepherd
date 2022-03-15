@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: createNewAdmin.jsp *************************");
@@ -74,30 +76,55 @@ if(ses.getAttribute("errorMessage") != null)
 	}
 }
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Create New Admin</h1>
-		<div id="createUserDiv" class="entry">
-			<form id="theForm" action="javascript:;">
-			<p>Please input what data you want the new administrator to have. Please note that the password will be temporary.</p>
-			<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-				<table align="center">
-					<tr><td><p>Username<font color="red"><small>* </small></font> :</p></td><td><input type="text" id="userName" value="<%= newUserName %>"/></td></tr>
-					<tr><td><p>Password<font color="red"><small>* </small></font> :</p></td><td><input type="password" id="passWord" /></td></tr>
-					<tr><td><p>Confirm Password<font color="red"><small>* </small></font> :</p></td><td><input type="password" id="passWordConfirm" /></td></tr>
-					<tr><td><p>Email Address:</p></td><td><input type="text" id="userAddress" value="<%= userAddress %>"/></td></tr>
-					<tr><td><p>Confirm Address:</p></td><td><input type="text" id="userAddressCnf" /></td></tr>
-					<tr><td colspan="2" align="center">
-						<input type="submit" id="submitButton" value="Create New Admin"/>
-					</td></tr>
-				</table>
-			</form>
-		</div>
-		<br>
-		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-		<div id="resultDiv" style="display:none;" class="informationBox"></div>
-		<div id="badData"></div>
+<div id="formDiv" class="post">
+	<h1 class="title">Create New Admin</h1>
+	<div id="createUserDiv" class="entry">
+		<form id="theForm" action="javascript:;">
+			<p>Please input what data you want the new administrator to have.
+				Please note that the password will be temporary.</p>
+			<input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+			<table align="center">
+				<tr>
+					<td><p>
+							Username<font color="red"><small>* </small></font> :
+						</p></td>
+					<td><input type="text" id="userName"
+						value="<%= newUserName %>" /></td>
+				</tr>
+				<tr>
+					<td><p>
+							Password<font color="red"><small>* </small></font> :
+						</p></td>
+					<td><input type="password" id="passWord" /></td>
+				</tr>
+				<tr>
+					<td><p>
+							Confirm Password<font color="red"><small>* </small></font> :
+						</p></td>
+					<td><input type="password" id="passWordConfirm" /></td>
+				</tr>
+				<tr>
+					<td><p>Email Address:</p></td>
+					<td><input type="text" id="userAddress"
+						value="<%= userAddress %>" /></td>
+				</tr>
+				<tr>
+					<td><p>Confirm Address:</p></td>
+					<td><input type="text" id="userAddressCnf" /></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="submit"
+						id="submitButton" value="Create New Admin" /></td>
+				</tr>
+			</table>
+		</form>
 	</div>
-	<script>
+	<br>
+	<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+	<div id="resultDiv" style="display: none;" class="informationBox"></div>
+	<div id="badData"></div>
+</div>
+<script>
 	$("#theForm").submit(function(){
 		//Get data
 		var theUserName = $("#userName").attr('value');
@@ -178,8 +205,9 @@ if(ses.getAttribute("errorMessage") != null)
 		}
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {

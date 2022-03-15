@@ -2,9 +2,7 @@
 # OWASP Security Shepherd [![OWASP Flagship](https://img.shields.io/badge/owasp-flagship%20project-48A646.svg)](https://www.owasp.org/index.php/OWASP_Project_Inventory#tab=Flagship_Projects) 
 The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skill set to security expert status.
 
-[![Build Status](https://github.com/OWASP/SecurityShepherd/workflows/Java%20Build/badge.svg)](https://github.com/OWASP/SecurityShepherd/actions/workflows/build.yml)
-[![GitHub Super-Linter](https://github.com/OWASP/SecurityShepherd/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
-
+[![Build and Test](https://github.com/ismisepaul/SecurityShepherd/actions/workflows/test.yml/badge.svg)](https://github.com/ismisepaul/SecurityShepherd/actions/workflows/test.yml)
   
 # Where can I download Security Shepherd?
 

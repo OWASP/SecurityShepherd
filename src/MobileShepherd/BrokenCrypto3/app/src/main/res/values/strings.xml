@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">BrokenCrypto3</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_exit">Exit</string>
-    <string name="action_license">License</string>
-    <string name="action_info">Info</string>
+	<string name="app_name">BrokenCrypto3</string>
+	<string name="action_settings">Settings</string>
+	<string name="action_exit">Exit</string>
+	<string name="action_license">License</string>
+	<string name="action_info">Info</string>
 
 </resources>

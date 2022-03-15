@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: stopHere.jsp *************************");
@@ -50,51 +52,56 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 String csrfToken = Encode.forHtmlAttribute(tokenCookie.getValue());
 String ApplicationRoot = getServletContext().getRealPath("");
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Set a Module Blocker</h1>
-		<div class="entry">
-			
-			<form id="theForm" action="javascript:;">
-					<p>Selecting a module blocker will not allow users to take that specific module. In a CTF environment this will stop them from progress past this point until you disable it or enable it to a further down the line module.<br/><br/>
-					
-					Select the module you would like to see the feedback from and the message informing them when the blocker will be lifted. </p>
-					<input type="hidden" id="csrfToken" value="<%= csrfToken %>"/>
-					<div id="enableBlockForm" align="center">
-						<table>
-							<tr>
-								<td>The Module To Block: </td>
-								<td>
-									<select id="theModule" style="width: 300px">
-										<%= Getter.getModulesInOptionTagsCTF(ApplicationRoot) %>
-									</select>
-								</td>
-							</tr><tr>
-								<td>Blocked Message to Give: </td>
-								<td><textarea id="blockedMessage" maxlength="500" style="width: 300px; height: 80px;"></textarea>
-							</tr><tr>
-								<td colspan="2" align="center">
-									<input type="submit" value="Enable Block" style="width: 150px; height: 25px;"/>
-								</td>
-							</tr>
-						</table>
-					</div>
-					<% if(ModuleBlock.blockerEnabled){ %>
-					<div id="removeModuleBlockDiv">
-						<h2 class="title">Remove Module Block</h2>
-						<p>
-							Do you wish to remove the current module blocker? You can do this by clicking the following button;
-						</p>
-						<a href="javascript:;" style="text-decoration: none;" id="removeModuleBlockButton" title="Remove Module Block">
-							<div class="menuButton">Remove Module Block</div>
-						</a>
-					</div>
-					<% } %>
-					<br>
-					<div id="loadingSign" style="display:none;" class="menuButton">Loading...</div>
-					<div id="resultDiv" class="informationBox" style="display:none;"></div>
-					<div id="badData"></div>
-					
-					<script>					
+<div id="formDiv" class="post">
+	<h1 class="title">Set a Module Blocker</h1>
+	<div class="entry">
+
+		<form id="theForm" action="javascript:;">
+			<p>
+				Selecting a module blocker will not allow users to take that
+				specific module. In a CTF environment this will stop them from
+				progress past this point until you disable it or enable it to a
+				further down the line module.<br />
+				<br /> Select the module you would like to see the feedback from and
+				the message informing them when the blocker will be lifted.
+			</p>
+			<input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+			<div id="enableBlockForm" align="center">
+				<table>
+					<tr>
+						<td>The Module To Block:</td>
+						<td><select id="theModule" style="width: 300px">
+								<%= Getter.getModulesInOptionTagsCTF(ApplicationRoot) %>
+						</select></td>
+					</tr>
+					<tr>
+						<td>Blocked Message to Give:</td>
+						<td><textarea id="blockedMessage" maxlength="500"
+								style="width: 300px; height: 80px;"></textarea>
+					</tr>
+					<tr>
+						<td colspan="2" align="center"><input type="submit"
+							value="Enable Block" style="width: 150px; height: 25px;" /></td>
+					</tr>
+				</table>
+			</div>
+			<% if(ModuleBlock.blockerEnabled){ %>
+			<div id="removeModuleBlockDiv">
+				<h2 class="title">Remove Module Block</h2>
+				<p>Do you wish to remove the current module blocker? You can do
+					this by clicking the following button;</p>
+				<a href="javascript:;" style="text-decoration: none;"
+					id="removeModuleBlockButton" title="Remove Module Block">
+					<div class="menuButton">Remove Module Block</div>
+				</a>
+			</div>
+			<% } %>
+			<br>
+			<div id="loadingSign" style="display: none;" class="menuButton">Loading...</div>
+			<div id="resultDiv" class="informationBox" style="display: none;"></div>
+			<div id="badData"></div>
+
+			<script>					
 					$("#theForm").submit(function(){
 						var theCsrfToken = $('#csrfToken').val();
 						var theMessage = $("#blockedMessage").val();
@@ -163,11 +170,12 @@ String ApplicationRoot = getServletContext().getRealPath("");
 						});
 					<% } %>
 					</script>
-					<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-			</form>
-		</div>
+			<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+			<% } %>
+		</form>
 	</div>
-	<%
+</div>
+<%
 }
 else
 {

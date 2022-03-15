@@ -1,4 +1,6 @@
-<%@ page contentType="text/html; charset=iso-8859-1" language="java" import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*" errorPage="" %>
+<%@ page contentType="text/html; charset=iso-8859-1" language="java"
+	import="java.sql.*,java.io.*,java.net.*,org.owasp.encoder.Encode, dbProcs.*, utils.*"
+	errorPage=""%>
 
 <%
 	ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "DEBUG: addPlayers.jsp *************************");
@@ -65,21 +67,23 @@ catch(SQLException e)
 	showClasses = false;
 }
 %>
-	<div id="formDiv" class="post">
-		<h1 class="title">Add Players</h1>
-		<div id="createUserDiv" class="entry">
-			<form id="theForm" action="javascript:;">
-			<p>Please select the class you would like to add a player to and input the player information for the player you wish to create.</p>
-			<input type="hidden" id="csrfToken" value="<%=csrfToken%>"/>
-				<table align="center">
-					<tr>
-						<td>
-							<p>Class<font color="red"><small>* </small></font> :</p>
-						</td>
-						<td>
-							<select id="classId">
-								<option value=""></option>
-								<%
+<div id="formDiv" class="post">
+	<h1 class="title">Add Players</h1>
+	<div id="createUserDiv" class="entry">
+		<form id="theForm" action="javascript:;">
+			<p>Please select the class you would like to add a player to and
+				input the player information for the player you wish to create.</p>
+			<input type="hidden" id="csrfToken" value="<%=csrfToken%>" />
+			<table align="center">
+				<tr>
+					<td>
+						<p>
+							Class<font color="red"><small>* </small></font> :
+						</p>
+					</td>
+					<td><select id="classId">
+							<option value=""></option>
+							<%
 									if(showClasses)
 									{
 										try
@@ -89,8 +93,8 @@ catch(SQLException e)
 												String classId = Encode.forHtmlAttribute(classList.getString(1));
 												String classYearName = Encode.forHtml(classList.getString(3)) + " " + Encode.forHtml(classList.getString(2));
 												%>
-													<option value="<%=classId%>"><%=classYearName%></option>
-												<%
+							<option value="<%=classId%>"><%=classYearName%></option>
+							<%
 											}
 											while(classList.next());
 										}
@@ -101,26 +105,47 @@ catch(SQLException e)
 										}
 									}
 								%>
-							</select>
-						</td>
-					</tr>
-					<tr><td><p>Username<font color="red"><small>* </small></font> :</p></td><td><input type="text" id="userName" value=""/></td></tr>
-					<tr><td><p>Password<font color="red"><small>* </small></font> :</p></td><td><input type="password" id="passWord" /></td></tr>
-					<tr><td><p>Confirm Password<font color="red"><small>* </small></font> :</p></td><td><input type="password" id="passWordConfirm" /></td></tr>
-					<tr><td><p>Email Address:</p></td><td><input type="text" id="userAddress" value=""/></td></tr>
-					<tr><td><p>Confirm Address:</p></td><td><input type="text" id="userAddressCnf" /></td></tr>
-					<tr><td colspan="2" align="center">
-						<input type="submit" id="submitButton" value="Create New Player"/>
-					</td></tr>
-				</table>
-			</form>
-		</div>
-		<br>
-		<div id="loadingDiv" style="display:none;" class="menuButton">Loading...</div>
-		<div id="resultDiv" style="display:none;" class="informationBox"></div>
-		<div id="badData"></div>
+					</select></td>
+				</tr>
+				<tr>
+					<td><p>
+							Username<font color="red"><small>* </small></font> :
+						</p></td>
+					<td><input type="text" id="userName" value="" /></td>
+				</tr>
+				<tr>
+					<td><p>
+							Password<font color="red"><small>* </small></font> :
+						</p></td>
+					<td><input type="password" id="passWord" /></td>
+				</tr>
+				<tr>
+					<td><p>
+							Confirm Password<font color="red"><small>* </small></font> :
+						</p></td>
+					<td><input type="password" id="passWordConfirm" /></td>
+				</tr>
+				<tr>
+					<td><p>Email Address:</p></td>
+					<td><input type="text" id="userAddress" value="" /></td>
+				</tr>
+				<tr>
+					<td><p>Confirm Address:</p></td>
+					<td><input type="text" id="userAddressCnf" /></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="submit"
+						id="submitButton" value="Create New Player" /></td>
+				</tr>
+			</table>
+		</form>
 	</div>
-	<script>
+	<br>
+	<div id="loadingDiv" style="display: none;" class="menuButton">Loading...</div>
+	<div id="resultDiv" style="display: none;" class="informationBox"></div>
+	<div id="badData"></div>
+</div>
+<script>
 	$("#theForm").submit(function(){
 		//Get Data
 		var theClass = $("#classId").val();
@@ -204,8 +229,9 @@ catch(SQLException e)
 		}
 	});
 	</script>
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
-	<%
+<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+<% } %>
+<%
 }
 else
 {

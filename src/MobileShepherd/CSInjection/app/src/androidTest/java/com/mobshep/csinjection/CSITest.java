@@ -1,58 +1,53 @@
 package com.mobshep.csinjection;
 
-import com.robotium.solo.Solo;
-import com.mobshep.csinjection.CSInjection;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.EditText;
+import com.robotium.solo.Solo;
 
+public class CSITest extends ActivityInstrumentationTestCase2<CSInjection> {
 
-public class CSITest extends ActivityInstrumentationTestCase2<CSInjection>{
+  private Solo solo;
 
-    private Solo solo;
+  public CSITest() {
+    super(CSInjection.class);
+  }
 
-    public CSITest(){
-        super(CSInjection.class);
-    }
+  @Override
+  public void setUp() throws Exception {
+    // setUp() is run before a test case is started.
+    // This is where the solo object is created.
+    solo = new Solo(getInstrumentation(), getActivity());
+  }
 
+  @Override
+  public void tearDown() throws Exception {
+    // tearDown() is run after a test case has finished.
+    // finishOpenedActivities() will finish all the activities that have been opened during the test
+    // execution.
+    solo.finishOpenedActivities();
+  }
 
-    @Override
-    public void setUp() throws Exception {
-        //setUp() is run before a test case is started.
-        //This is where the solo object is created.
-        solo = new Solo(getInstrumentation(), getActivity());
-    }
+  public void testActionBar() throws Exception {
+    solo.unlockScreen();
+    solo.clickOnMenuItem("License");
+    solo.clickOnButton("OK");
+  }
 
-    @Override
-    public void tearDown() throws Exception {
-        //tearDown() is run after a test case has finished.
-        //finishOpenedActivities() will finish all the activities that have been opened during the test execution.
-        solo.finishOpenedActivities();
-    }
+  public void testBlankLogin() {
+    solo.setActivityOrientation(Solo.LANDSCAPE);
+    solo.setActivityOrientation(Solo.PORTRAIT);
 
-    public void testActionBar() throws Exception{
-        solo.unlockScreen();
-        solo.clickOnMenuItem("License");
-        solo.clickOnButton("OK");
-    }
+    EditText etName = (EditText) solo.getView(R.id.etName);
+    EditText etPass = (EditText) solo.getView(R.id.etPass);
 
-    public void testBlankLogin(){
-        solo.setActivityOrientation(Solo.LANDSCAPE);
-        solo.setActivityOrientation(Solo.PORTRAIT);
+    solo.clickOnButton("Login");
 
-        EditText etName = (EditText) solo.getView(R.id.etName);
-        EditText etPass = (EditText) solo.getView(R.id.etPass);
+    solo.enterText(etName, String.valueOf("Admin"));
+    solo.enterText(etPass, String.valueOf("Password"));
 
-        solo.clickOnButton("Login");
+    solo.clickOnButton("Login");
 
-        solo.enterText(etName, String.valueOf("Admin"));
-        solo.enterText(etPass, String.valueOf("Password"));
-
-        solo.clickOnButton("Login");
-
-        solo.enterText(etName, String.valueOf("Test"));
-        solo.enterText(etPass, String.valueOf("Password 1 (*&^%$"));
-
-
-    }
-
+    solo.enterText(etName, String.valueOf("Test"));
+    solo.enterText(etPass, String.valueOf("Password 1 (*&^%$"));
+  }
 }

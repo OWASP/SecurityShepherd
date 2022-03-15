@@ -1,73 +1,70 @@
 package utils;
 
-import java.sql.SQLException;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
 import dbProcs.Getter;
 import dbProcs.Setter;
+import java.sql.SQLException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class holds the status of weather feedback is enabled or not
  *
  * @author Mark
- *
  */
 public class FeedbackStatus {
-	private static final Logger log = LogManager.getLogger(FeedbackStatus.class);
 
-	private static boolean enabled = false;
+  private static final Logger log = LogManager.getLogger(FeedbackStatus.class);
 
-	private static boolean isLoaded = false;
+  private static boolean enabled = false;
 
-	public static boolean isEnabled() {
-		loadFeedbackStatus();
-		return enabled;
-	}
+  private static boolean isLoaded = false;
 
-	public static boolean isDisabled() {
-		loadFeedbackStatus();
-		return !enabled;
-	}
+  public static boolean isEnabled() {
+    loadFeedbackStatus();
+    return enabled;
+  }
 
-	public static void setEnabled() {
-		if (!isLoaded) {
-			loadFeedbackStatus();
-		}
-		enabled = true;
-		saveFeedbackStatus();
+  public static boolean isDisabled() {
+    loadFeedbackStatus();
+    return !enabled;
+  }
 
-	}
+  public static void setEnabled() {
+    if (!isLoaded) {
+      loadFeedbackStatus();
+    }
+    enabled = true;
+    saveFeedbackStatus();
+  }
 
-	public static void setDisabled() {
-		if (!isLoaded) {
-			loadFeedbackStatus();
-		}
-		enabled = false;
-		saveFeedbackStatus();
-	}
+  public static void setDisabled() {
+    if (!isLoaded) {
+      loadFeedbackStatus();
+    }
+    enabled = false;
+    saveFeedbackStatus();
+  }
 
-	private static void saveFeedbackStatus() {
-		try {
+  private static void saveFeedbackStatus() {
+    try {
 
-			Setter.setFeedbackStatus("", enabled);
+      Setter.setFeedbackStatus("", enabled);
 
-		} catch (SQLException e) {
-			log.fatal("Could not save feedback setting in database: " + e.toString());
-			throw new RuntimeException(e);
-		}
-	}
+    } catch (SQLException e) {
+      log.fatal("Could not save feedback setting in database: " + e.toString());
+      throw new RuntimeException(e);
+    }
+  }
 
-	private static void loadFeedbackStatus() {
-		try {
+  private static void loadFeedbackStatus() {
+    try {
 
-			enabled = Getter.getFeedbackStatus("");
+      enabled = Getter.getFeedbackStatus("");
 
-		} catch (SQLException e) {
-			log.fatal("Could not load feedback setting from database: " + e.toString());
-			throw new RuntimeException(e);
-		}
-		isLoaded = true;
-	}
+    } catch (SQLException e) {
+      log.fatal("Could not load feedback setting from database: " + e.toString());
+      throw new RuntimeException(e);
+    }
+    isLoaded = true;
+  }
 }
