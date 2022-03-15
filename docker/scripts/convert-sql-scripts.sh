@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-core="docker/mysql/target/coreSchema.sql"
-module="docker/mysql/target/moduleSchemas.sql"
+core="docker/mariadb/target/coreSchema.sql"
+module="docker/mariadb/target/moduleSchemas.sql"
 
 sed -i'' -e 's/-- DELIMITER \$\$/DELIMITER \$\$/g' ${core}
 sed -i'' -e 's/-- DELIMITER \$\$/DELIMITER \$\$/g' ${module}
