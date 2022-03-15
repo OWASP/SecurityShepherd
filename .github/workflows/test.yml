@@ -1,4 +1,4 @@
-name: Java Build and Test
+name: Build and Test
 on:
   push:
     branches: [master, dev]
@@ -8,9 +8,8 @@ on:
 
 jobs:
   build:
-    name: Build Security Shepherd
+    name: build
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 1.8
@@ -21,6 +20,7 @@ jobs:
         run: mvn clean install -Pdocker -DskipTests -B
       - name: Docker Compose Build
         run: docker-compose build
+
   unit-tests:
     runs-on: ubuntu-latest
     services:
@@ -46,6 +46,7 @@ jobs:
           sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
       - name: Run Unit Tests
         run: mvn test -B -e -X
+
   integration-tests:
     runs-on: ubuntu-latest
     services:
@@ -76,10 +77,11 @@ jobs:
       - name: Run Intergration Tests
         run: |
           mvn verify -DskipUTs=true -DmongoDocker -B
+
   lint-java:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2 # v2 minimum required
+      - uses: actions/checkout@v2
       - uses: axel-op/googlejavaformat-action@v3
         with:
           args: "--set-exit-if-changed"
