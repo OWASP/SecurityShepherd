@@ -1,6 +1,9 @@
-ARG MYSQL_VERSION
+ARG DB_VERSION
 
 FROM docker AS builder
+
+ARG DB_BIND_ADDRESS
+
 USER root
 WORKDIR /workdir
 COPY target/coreSchema.sql coreSchema.sql
@@ -10,11 +13,13 @@ RUN { \
     		echo 'skip-host-cache'; \
     		echo 'datadir = /var/lib/mysql'; \
     		echo '!includedir /etc/mysql/conf.d/'; \
+            echo 'ssl=0'; \
+            echo 'bind-address='${DB_BIND_ADDRESS}; \
     	} > my.cnf
 
 
-FROM mysql:${MYSQL_VERSION}
-ARG MYSQL_ROOT_PASSWORD=$MYSQL_PASS
+FROM mariadb:${DB_VERSION}
+ARG MYSQL_ROOT_PASSWORD=$DB_PASS
 ARG CONTAINER_TOMCAT
 ARG DOCKER_NETWORK_NAME
 

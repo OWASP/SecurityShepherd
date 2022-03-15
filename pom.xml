@@ -226,7 +226,7 @@
 								<fileset>
 									<directory>${basedir}/docker/</directory>
 									<includes>
-										<include>mysql/target/**</include>
+										<include>mariadb/target/**</include>
 										<include>mongo/target/**</include>
 									</includes>
 									<followSymlinks>false</followSymlinks>
@@ -245,7 +245,7 @@
 									<goal>copy-resources</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>${basedir}/docker/mysql/target</outputDirectory>
+									<outputDirectory>docker/mariadb/target</outputDirectory>
 									<resources>
 										<resource>
 											<directory>src/main/resources/database</directory>
