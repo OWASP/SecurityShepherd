@@ -397,9 +397,9 @@ public class TestProperties {
     file.getParentFile().mkdirs();
     FileWriter writer = new FileWriter(file);
     BufferedWriter bw = new BufferedWriter(writer);
-    bw.write("databaseConnectionURL=jdbc:mysql://" + dbHost + ":" + dbPort + "/");
+    bw.write("databaseConnectionURL=jdbc:mariadb://" + dbHost + ":" + dbPort + "/");
     bw.newLine();
-    bw.write("DriverType=org.gjt.mm.mysql.Driver");
+    bw.write("DriverType=org.mariadb.jdbc.Driver");
     bw.newLine();
     bw.write("databaseOptions=useUnicode=true&character_set_server=utf8mb4");
     bw.newLine();
