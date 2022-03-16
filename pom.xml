@@ -19,12 +19,12 @@
 		<dependency>
 			<groupId>com.onelogin</groupId>
 			<artifactId>java-saml</artifactId>
-			<version>2.5.0</version>
+			<version>2.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.mkammerer</groupId>
 			<artifactId>argon2-jvm</artifactId>
-			<version>2.2</version>
+			<version>2.11</version>
     	</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>org.owasp.encoder</groupId>
 			<artifactId>encoder</artifactId>
-			<version>1.2.1</version>
+			<version>1.2.3</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
@@ -133,7 +133,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>5.0.7.RELEASE</version>
+			<version>5.3.16</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -141,7 +141,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>5.0.11.RELEASE</version>
+			<version>5.3.16</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -156,7 +156,7 @@
 		<dependency>
 			<groupId>com.github.fakemongo</groupId>
 			<artifactId>fongo</artifactId>
-			<version>2.0.6</version>
+			<version>2.1.1</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -164,14 +164,14 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>5.1.1.RELEASE</version>
+			<version>5.3.16</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-mongodb -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
-			<version>2.1.1.RELEASE</version>
+			<version>3.3.2</version>
 		</dependency>
 
 		<!-- Test -->
@@ -185,7 +185,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.0.1</version>
+			<version>5.8.2</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -235,6 +235,7 @@
 						</configuration>
 					</plugin>
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-resources-plugin</artifactId>
 						<version>3.1.0</version>
 						<executions>
