@@ -301,7 +301,7 @@ public class Database {
       if (dbOptions.length() > 0) {
         dbOptions += "&";
       }
-      dbOptions += "allowMultiQueries=yes";
+      dbOptions += "allowMultiQueries=true";
     }
 
     conn = getConnection(driverType, connectionURL, dbOptions, username, password);
