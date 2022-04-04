@@ -133,7 +133,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>5.0.7.RELEASE</version>
+			<version>5.3.18</version>
 			<scope>test</scope>
 		</dependency>
 
