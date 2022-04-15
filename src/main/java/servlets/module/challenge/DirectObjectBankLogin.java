@@ -3,7 +3,6 @@ package servlets.module.challenge;
 import dbProcs.Database;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigInteger;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
