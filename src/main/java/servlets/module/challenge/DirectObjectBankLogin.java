@@ -161,9 +161,8 @@ public class DirectObjectBankLogin extends HttpServlet {
               + "<br><br>"
               + ""
               + bundle.getString("result.theKeyIs")
-              + " <a>"
-              + Hash.generateUserSolution(levelResult, (String) ses.getAttribute("userName"))
-              + "</a>";
+              + ""
+              + Hash.generateUserSolution(levelResult, (String) ses.getAttribute("userName"));
     }
     bankForm +=
         ""
