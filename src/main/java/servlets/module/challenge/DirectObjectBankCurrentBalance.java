@@ -71,10 +71,10 @@ public class DirectObjectBankCurrentBalance extends HttpServlet {
         log.debug("Account Number - " + accountNumber);
         String applicationRoot = getServletContext().getRealPath("");
         String htmlOutput = new String();
-        float currentBalance =
+        long currentBalance =
             DirectObjectBankLogin.getAccountBalance(accountNumber, applicationRoot);
         log.debug("Outputting HTML");
-        htmlOutput = Float.toString(currentBalance);
+        htmlOutput = Long.toString(currentBalance);
         out.write(htmlOutput);
       } catch (SQLException e) {
         out.write(

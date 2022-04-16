@@ -1,13 +1,13 @@
 package servlets.module.lesson;
 
+import dbProcs.FileInputProperties;
 import dbProcs.Getter;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -152,47 +152,34 @@ public class XxeLesson extends HttpServlet {
   public static boolean createXxeLessonSolutionFile() {
 
     File lessonFile;
+    String filename;
+    String solution;
 
-    Properties prop = new Properties();
-
-    // src/main/resources/fileSystemKeys.properties
-    try (InputStream xxe_input =
-        new FileInputStream(
-            System.getProperty("user.dir")
-                + "/webapps/ROOT/WEB-INF/classes/fileSystemKeys.properties")) {
-
-      prop.load(xxe_input);
-
-    } catch (IOException e) {
-      log.error("Could not load properties file: " + e.toString());
-      throw new RuntimeException(e);
-    }
-
-    String errorBase = "Missing property :";
-
-    String filename = prop.getProperty("xxe.lesson.file");
-    if (filename == null) {
-      throw new RuntimeException(errorBase + "xxe.lesson.file");
-    }
-    String solution = prop.getProperty("xxe.lesson.solution");
-    if (solution == null) {
-      throw new RuntimeException(errorBase + "xxe.lesson.solution");
-    }
-
-    lessonFile = new File(filename);
-
-    if (lessonFile.exists()) {
-      log.info("XXE Lesson Solution File " + filename + " already exists");
-      FileUtils.deleteQuietly(lessonFile);
-      log.info("XXE Lesson Solution File " + filename + " deleted");
-    }
     try {
+      filename =
+          FileInputProperties.readPropFileClassLoader(
+              "fileSystemKeys.properties", "xxe.lesson.file");
+      solution =
+          FileInputProperties.readPropFileClassLoader(
+              "fileSystemKeys.properties", "xxe.lesson.solution");
+
+      lessonFile = new File(filename);
+
+      if (lessonFile.exists()) {
+        log.info("XXE Lesson Solution File " + filename + " already exists");
+        FileUtils.deleteQuietly(lessonFile);
+        log.info("XXE Lesson Solution File " + filename + " deleted");
+      }
       FileUtils.write(lessonFile, solution, "UTF-8");
+      log.info("XXE Lesson Solution File " + filename + " created");
+      return true;
+    } catch (FileNotFoundException e) {
+      log.error(e);
+      throw new RuntimeException(e);
+
     } catch (IOException e) {
-      log.error("Could not load properties file: " + e.toString());
+      log.error(e);
       throw new RuntimeException(e);
     }
-    log.info("XXE Lesson Solution File " + filename + " created");
-    return true;
   }
 }
