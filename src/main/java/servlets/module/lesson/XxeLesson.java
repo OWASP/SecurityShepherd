@@ -157,9 +157,7 @@ public class XxeLesson extends HttpServlet {
 
     // src/main/resources/fileSystemKeys.properties
     try (InputStream xxe_input =
-        new FileInputStream(
-            System.getProperty("user.dir")
-                + "/webapps/ROOT/WEB-INF/classes/fileSystemKeys.properties")) {
+        XxeLesson.class.getResourceAsStream("/fileSystemKeys.properties")) {
 
       prop.load(xxe_input);
 
