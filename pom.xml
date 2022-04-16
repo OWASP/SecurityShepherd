@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>de.mkammerer</groupId>
 			<artifactId>argon2-jvm</artifactId>
-			<version>2.2</version>
+			<version>2.11</version>
     	</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>3.4.1</version>
+			<version>3.12.10</version>
 		</dependency>
 		<dependency>
 			<groupId>javax</groupId>
@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>org.owasp.encoder</groupId>
 			<artifactId>encoder</artifactId>
-			<version>1.2.1</version>
+			<version>1.2.3</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
@@ -125,7 +125,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>5.3.16</version>
+			<version>5.3.19</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -156,7 +156,7 @@
 		<dependency>
 			<groupId>com.github.fakemongo</groupId>
 			<artifactId>fongo</artifactId>
-			<version>2.0.6</version>
+			<version>2.1.1</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>5.1.1.RELEASE</version>
+			<version>5.3.19</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-mongodb -->
@@ -185,7 +185,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.0.1</version>
+			<version>5.8.2</version>
 			<scope>test</scope>
 		</dependency>
 
