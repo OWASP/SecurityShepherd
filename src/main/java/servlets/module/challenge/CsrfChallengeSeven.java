@@ -47,8 +47,6 @@ public class CsrfChallengeSeven extends HttpServlet {
    * Allows users to set their CSRF attack string to complete this module. They should be using this
    * to force users to visit their own pages that forces the victim to submit a post request to the
    * CSRFChallengeTargetSeven
-   *
-   * @param myMessage To Be stored as the users message for this module
    */
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -73,8 +71,8 @@ public class CsrfChallengeSeven extends HttpServlet {
             ses.getAttribute("userName").toString());
         log.debug(levelName + " servlet accessed by: " + ses.getAttribute("userName").toString());
         Cookie tokenCookie = Validate.getToken(request.getCookies());
-        Object tokenParmeter = request.getParameter("csrfToken");
-        if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
+        Object tokenParameter = request.getParameter("csrfToken");
+        if (Validate.validateTokens(tokenCookie, tokenParameter)) {
           String myMessage = request.getParameter("myMessage");
           log.debug("User Submitted - " + myMessage);
           myMessage = Validate.makeValidUrl(myMessage);
