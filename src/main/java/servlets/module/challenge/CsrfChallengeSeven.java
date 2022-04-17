@@ -47,7 +47,6 @@ public class CsrfChallengeSeven extends HttpServlet {
    * Allows users to set their CSRF attack string to complete this module. They should be using this
    * to force users to visit their own pages that forces the victim to submit a post request to the
    * CSRFChallengeTargetSeven
-   *
    */
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
