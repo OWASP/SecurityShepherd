@@ -115,13 +115,13 @@ td {
 .errorAlert {
     background: #E42217;
     color: #FFFFFF;
-    padding-left = 10px;
+    padding-left: 10px;
 }
 
 .successAlert {
     background: #7B55B4;
     color: #FFFFFF;
-    padding-left = 10px;
+    padding-left: 10px;
 }
 
 .title {
@@ -179,7 +179,7 @@ td {
     content: attr(aria-label);
     display: inline-block;
     font: normal normal 11px/1.5 Helvetica, arial, nimbussansl,
-    liberationsans, freesans, clean, sans-serif ";
+    liberationsans, freesans, clean, sans-serif;
     letter-spacing: 0.5px;
     padding: 5px 8px;
     pointer-events: none;

@@ -9,8 +9,7 @@ DROP SCHEMA IF EXISTS `core`;
 CREATE SCHEMA IF NOT EXISTS `core` DEFAULT CHARACTER SET utf8mb4;
 USE `core`;
 
-SELECT "Creating Tables"
-FROM DUAL;
+SELECT "Creating Tables" FROM DUAL;
 
 -- -----------------------------------------------------
 -- Table `core`.`class`
@@ -187,8 +186,7 @@ CREATE TABLE IF NOT EXISTS `core`.`settings`
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8mb4;
 
-SELECT "Creating Procedures"
-FROM DUAL;
+SELECT "Creating Procedures" FROM DUAL;
 
 -- -----------------------------------------------------
 -- procedure userLock
