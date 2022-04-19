@@ -50,143 +50,138 @@ import utils.XmlDocumentBuilder;
  */
 public class XxeLesson extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
-    private static final Logger log = LogManager.getLogger(XxeLesson.class);
-    private static final String LEVEL_NAME = "XXE Lesson";
-    private static final String LEVEL_HASH =
-            "57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a";
+  private static final long serialVersionUID = 1L;
+  private static final Logger log = LogManager.getLogger(XxeLesson.class);
+  private static final String LEVEL_NAME = "XXE Lesson";
+  private static final String LEVEL_HASH =
+      "57dda1bf9a2ca1c34e04f815491ef40836d9b710179cd19754ec5b3c31f27d1a";
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
 
-        String ApplicationRoot = getServletContext().getRealPath("");
-        String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, LEVEL_HASH);
+    String ApplicationRoot = getServletContext().getRealPath("");
+    String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, LEVEL_HASH);
 
-        // Setting IpAddress To Log and taking header for original IP if forwarded from
-        // proxy
-        ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-        log.debug(LEVEL_NAME + " Servlet Accessed");
-        PrintWriter out = response.getWriter();
-        out.print(getServletInfo());
+    // Setting IpAddress To Log and taking header for original IP if forwarded from
+    // proxy
+    ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+    log.debug(LEVEL_NAME + " Servlet Accessed");
+    PrintWriter out = response.getWriter();
+    out.print(getServletInfo());
 
-        // Translation Stuff
-        Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-        ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.xxe", locale);
+    // Translation Stuff
+    Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+    ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+    ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.xxe", locale);
 
-        try {
-            HttpSession ses = request.getSession(true);
-            if (Validate.validateSession(ses)) {
-                if (Getter.isModuleOpen(getServletContext().getRealPath(""), moduleId)) {
-                    ShepherdLogManager.setRequestIp(
-                            request.getRemoteAddr(),
-                            request.getHeader("X-Forwarded-For"),
-                            ses.getAttribute("userName").toString());
-                    log.debug(LEVEL_NAME + " accessed by: " + ses.getAttribute("userName").toString());
-                    Cookie tokenCookie = Validate.getToken(request.getCookies());
-                    Object tokenHeader = request.getHeader("csrfToken");
+    try {
+      HttpSession ses = request.getSession(true);
+      if (Validate.validateSession(ses)) {
+        if (Getter.isModuleOpen(getServletContext().getRealPath(""), moduleId)) {
+          ShepherdLogManager.setRequestIp(
+              request.getRemoteAddr(),
+              request.getHeader("X-Forwarded-For"),
+              ses.getAttribute("userName").toString());
+          log.debug(LEVEL_NAME + " accessed by: " + ses.getAttribute("userName").toString());
+          Cookie tokenCookie = Validate.getToken(request.getCookies());
+          Object tokenHeader = request.getHeader("csrfToken");
 
-                    if (Validate.validateTokens(tokenCookie, tokenHeader)) {
-                        InputStream xml = request.getInputStream();
-                        String emailAddr = readXml(xml);
-                        log.debug("Email Addr: " + emailAddr);
+          if (Validate.validateTokens(tokenCookie, tokenHeader)) {
+            InputStream xml = request.getInputStream();
+            String emailAddr = readXml(xml);
+            log.debug("Email Addr: " + emailAddr);
 
-                        String htmlOutput = "";
+            String htmlOutput = "";
 
-                        if (emailAddr == null) {
-                            htmlOutput += "<p>" + bundle.getString("response.blank.email") + "</p>";
-                            out.write(htmlOutput);
-                        } else if (Validate.isValidEmailAddress(emailAddr)) {
-                            log.debug("User Submitted - " + emailAddr);
+            if (emailAddr == null) {
+              htmlOutput += "<p>" + bundle.getString("response.blank.email") + "</p>";
+              out.write(htmlOutput);
+            } else if (Validate.isValidEmailAddress(emailAddr)) {
+              log.debug("User Submitted - " + emailAddr);
 
-                            htmlOutput +=
-                                    "<p>"
-                                            + bundle.getString("response.success.reset")
-                                            + ": "
-                                            + emailAddr
-                                            + " has been reset</p>";
-                            out.write(htmlOutput);
-                        } else {
-                            // dumb way of preventing the other level from being read
-                            if (emailAddr.contains("1016d6dce9f715e9eab4f3a884b3b316cfbba8fb4023c19f34c")) {
-                                htmlOutput +=
-                                        "<p>" + bundle.getString("response.invalid.email") + "</p>";
-                                out.write(htmlOutput);
-                            } else {
-                                htmlOutput +=
-                                        "<p>" + bundle.getString("response.invalid.email") + ": " + emailAddr + "</p>";
-                                out.write(htmlOutput);
-                            }
-
-                        }
-                    }
-                } else {
-                    log.error(LEVEL_NAME + " accessed but level is closed");
-                    out.write(errors.getString("error.notOpen"));
-                }
+              htmlOutput +=
+                  "<p>"
+                      + bundle.getString("response.success.reset")
+                      + ": "
+                      + emailAddr
+                      + " has been reset</p>";
+              out.write(htmlOutput);
             } else {
-                log.error(LEVEL_NAME + " accessed with no session");
-                out.write(errors.getString("error.noSession"));
+              // dumb way of preventing the other level from being read
+              if (emailAddr.contains("1016d6dce9f715e9eab4f3a884b3b316cfbba8fb4023c19f34c")) {
+                htmlOutput += "<p>" + bundle.getString("response.invalid.email") + "</p>";
+                out.write(htmlOutput);
+              } else {
+                htmlOutput +=
+                    "<p>" + bundle.getString("response.invalid.email") + ": " + emailAddr + "</p>";
+                out.write(htmlOutput);
+              }
             }
-        } catch (Exception e) {
-            out.write(errors.getString("error.funky"));
-            log.fatal(LEVEL_NAME + " - " + e);
+          }
+        } else {
+          log.error(LEVEL_NAME + " accessed but level is closed");
+          out.write(errors.getString("error.notOpen"));
         }
-        log.debug("End of " + LEVEL_NAME + " Servlet");
+      } else {
+        log.error(LEVEL_NAME + " accessed with no session");
+        out.write(errors.getString("error.noSession"));
+      }
+    } catch (Exception e) {
+      out.write(errors.getString("error.funky"));
+      log.fatal(LEVEL_NAME + " - " + e);
     }
+    log.debug("End of " + LEVEL_NAME + " Servlet");
+  }
 
-    @Nullable
-    public static String readXml(InputStream xmlEmail) {
+  @Nullable
+  public static String readXml(InputStream xmlEmail) {
 
-        Document doc;
-        String result;
+    Document doc;
+    String result;
 
-        DocumentBuilder dBuilder =
-                XmlDocumentBuilder.xmlDocBuilder(false, true, true, true, true, true);
-        InputSource is = new InputSource(xmlEmail);
+    DocumentBuilder dBuilder =
+        XmlDocumentBuilder.xmlDocBuilder(false, true, true, true, true, true);
+    InputSource is = new InputSource(xmlEmail);
 
-        try {
-            doc = dBuilder.parse(is);
-            Element root = doc.getDocumentElement();
-            result = root.getTextContent();
-            return Encode.forHtml(result);
-        } catch (SAXException | IOException e) {
-            log.error(e.toString());
-        }
-        return null;
+    try {
+      doc = dBuilder.parse(is);
+      Element root = doc.getDocumentElement();
+      result = root.getTextContent();
+      return Encode.forHtml(result);
+    } catch (SAXException | IOException e) {
+      log.error(e.toString());
     }
+    return null;
+  }
 
-    /**
-     * Creates the file with the solution key needed to pass the level
-     */
-    public static boolean createXxeLessonSolutionFile() {
+  /** Creates the file with the solution key needed to pass the level */
+  public static boolean createXxeLessonSolutionFile() {
 
-        File lessonFile;
-        String filename;
-        String solution;
+    File lessonFile;
+    String filename;
+    String solution;
 
-        try {
-            filename =
-                    FileInputProperties.readPropFileClassLoader(
-                            "fileSystemKeys.properties", "xxe.lesson.file");
-            solution =
-                    FileInputProperties.readPropFileClassLoader(
-                            "fileSystemKeys.properties", "xxe.lesson.solution");
+    try {
+      filename =
+          FileInputProperties.readPropFileClassLoader(
+              "fileSystemKeys.properties", "xxe.lesson.file");
+      solution =
+          FileInputProperties.readPropFileClassLoader(
+              "fileSystemKeys.properties", "xxe.lesson.solution");
 
-            lessonFile = new File(filename);
+      lessonFile = new File(filename);
 
-            if (lessonFile.exists()) {
-                log.info("XXE Lesson Solution File " + filename + " already exists");
-                FileUtils.deleteQuietly(lessonFile);
-                log.info("XXE Lesson Solution File " + filename + " deleted");
-            }
-            FileUtils.write(lessonFile, solution, "UTF-8");
-            log.info("XXE Lesson Solution File " + filename + " created");
-            return true;
-        } catch (IOException e) {
-            log.error(e);
-            throw new RuntimeException(e);
-
-        }
+      if (lessonFile.exists()) {
+        log.info("XXE Lesson Solution File " + filename + " already exists");
+        FileUtils.deleteQuietly(lessonFile);
+        log.info("XXE Lesson Solution File " + filename + " deleted");
+      }
+      FileUtils.write(lessonFile, solution, "UTF-8");
+      log.info("XXE Lesson Solution File " + filename + " created");
+      return true;
+    } catch (IOException e) {
+      log.error(e);
+      throw new RuntimeException(e);
     }
+  }
 }
