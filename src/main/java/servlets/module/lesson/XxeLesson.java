@@ -3,6 +3,7 @@ package servlets.module.lesson;
 import dbProcs.FileInputProperties;
 import dbProcs.Getter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -18,7 +19,6 @@ import javax.xml.parsers.DocumentBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 import org.owasp.encoder.Encode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -82,18 +82,18 @@ public class XxeLesson extends HttpServlet {
               ses.getAttribute("userName").toString());
           log.debug(LEVEL_NAME + " accessed by: " + ses.getAttribute("userName").toString());
           Cookie tokenCookie = Validate.getToken(request.getCookies());
-          Object tokenHeader = request.getHeader("csrfToken");
+          Object tokenHeader = request.getHeader("csrfToken").toString();
 
           if (Validate.validateTokens(tokenCookie, tokenHeader)) {
             InputStream xml = request.getInputStream();
             String emailAddr = readXml(xml);
             log.debug("Email Addr: " + emailAddr);
 
-            String htmlOutput = "";
+            String htmlOutput = new String();
 
             if (emailAddr == null) {
               htmlOutput += "<p>" + bundle.getString("response.blank.email") + "</p>";
-              out.write(htmlOutput);
+              out.write(htmlOutput + emailAddr);
             } else if (Validate.isValidEmailAddress(emailAddr)) {
               log.debug("User Submitted - " + emailAddr);
 
@@ -105,15 +105,9 @@ public class XxeLesson extends HttpServlet {
                       + " has been reset</p>";
               out.write(htmlOutput);
             } else {
-              // dumb way of preventing the other level from being read
-              if (emailAddr.contains("1016d6dce9f715e9eab4f3a884b3b316cfbba8fb4023c19f34c")) {
-                htmlOutput += "<p>" + bundle.getString("response.invalid.email") + "</p>";
-                out.write(htmlOutput);
-              } else {
-                htmlOutput +=
-                    "<p>" + bundle.getString("response.invalid.email") + ": " + emailAddr + "</p>";
-                out.write(htmlOutput);
-              }
+              htmlOutput +=
+                  "<p>" + bundle.getString("response.invalid.email") + ": " + emailAddr + "</p>";
+              out.write(htmlOutput);
             }
           }
         } else {
@@ -126,16 +120,15 @@ public class XxeLesson extends HttpServlet {
       }
     } catch (Exception e) {
       out.write(errors.getString("error.funky"));
-      log.fatal(LEVEL_NAME + " - " + e);
+      log.fatal(LEVEL_NAME + " - " + e.toString());
     }
     log.debug("End of " + LEVEL_NAME + " Servlet");
   }
 
-  @Nullable
   public static String readXml(InputStream xmlEmail) {
 
     Document doc;
-    String result;
+    String result = null;
 
     DocumentBuilder dBuilder =
         XmlDocumentBuilder.xmlDocBuilder(false, true, true, true, true, true);
@@ -145,11 +138,14 @@ public class XxeLesson extends HttpServlet {
       doc = dBuilder.parse(is);
       Element root = doc.getDocumentElement();
       result = root.getTextContent();
-      return Encode.forHtml(result);
-    } catch (SAXException | IOException e) {
+      return Encode.forHtml(result.toString());
+    } catch (SAXException e) {
+      log.error(e.toString());
+    } catch (IOException e) {
       log.error(e.toString());
     }
-    return null;
+
+    return result;
   }
 
   /** Creates the file with the solution key needed to pass the level */
@@ -177,6 +173,10 @@ public class XxeLesson extends HttpServlet {
       FileUtils.write(lessonFile, solution, "UTF-8");
       log.info("XXE Lesson Solution File " + filename + " created");
       return true;
+    } catch (FileNotFoundException e) {
+      log.error(e);
+      throw new RuntimeException(e);
+
     } catch (IOException e) {
       log.error(e);
       throw new RuntimeException(e);

@@ -34,7 +34,7 @@
     String i18nLevelName = bundle.getString("title.question.xxe");
 
     ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
-    String owaspMoreInfo = generic.getString("module.generic.owasp.more.info");
+    String owaspMoreInfo = 	generic.getString("module.generic.owasp.more.info");
     String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
     String owaspUrlAttack = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.attack.xxe");
 
@@ -61,86 +61,82 @@
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title>Security Shepherd - <%=i18nLevelName%>
-    </title>
-    <link href="../css/lessonCss/theCss.css" rel="stylesheet"
-          type="text/css" media="screen"/>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Security Shepherd - <%=i18nLevelName%>
+</title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet"
+	type="text/css" media="screen" />
 </head>
 <body>
-<script type="text/javascript" src="../js/jquery.js"></script>
-<script type="text/javascript"
-        src="../js/clipboard-js/clipboard.min.js"></script>
-<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-<script type="text/javascript"
-        src="../js/clipboard-js/clipboard-events.js"></script>
-<div id="contentDiv">
-    <h2 class="title"><%= i18nLevelName %>
-    </h2>
-    <p>
-    <div id="lessonIntro">
-        <%= bundle.getString("paragraph.info.1") %>
-        <br/> <br/>
-        <%= bundle.getString("paragraph.info.2")%>
-        <br/> <br/>
-        <%= bundle.getString("paragraph.info.3") %>
-        <br/>
-        <%= owaspMoreInfo %>
-        <a href="<%= owaspUrlAttack %>" target="_blank"><%= owaspGuideTo %>
-            XXE
-        </a> <br/> <br/>
-        <%= bundle.getString("example.text") %>
-        1: <br>
-        <code><%= bundle.getString("example.xxe.1") %>
-        </code>
-        <br/>
-        <br/>
-        <%= bundle.getString("example.text") %>
-        2: <br>
-        <code><%= bundle.getString("example.xxe.2") %>
-        </code>
-        <br/> <br/> <input type="button"
-                           value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson"/>
-    </div>
-    <input type="button"
-           value="<%= bundle.getString("button.showIntro") %>" id="showLesson"
-           style="display: none;"/> <br/>
-    <%= bundle.getString("paragraph.whattodo.xxe")
+	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
+	<script type="text/javascript"
+		src="../js/clipboard-js/clipboard-events.js"></script>
+	<div id="contentDiv">
+		<h2 class="title"><%= i18nLevelName %>
+		</h2>
+		<p>
+		<div id="lessonIntro">
+			<%= bundle.getString("paragraph.info.1") %>
+			<br /> <br />
+			<%= bundle.getString("paragraph.info.2")%>
+			<br /> <br />
+			<%= bundle.getString("paragraph.info.3") %>
+			<br />
+			<%= owaspMoreInfo %>
+			<a href="<%= owaspUrlAttack %>" target="_blank"> <%= owaspGuideTo %>
+				XXE
+			</a> <br /> <br />
+			<%= bundle.getString("example.text") %>
+			1: <br>
+			<code><%= bundle.getString("example.xxe.1") %></code>
+			<br />
+			<br />
+			<%= bundle.getString("example.text") %>
+			2: <br>
+			<code><%= bundle.getString("example.xxe.2") %></code>
+			<br /> <br /> <input type="button"
+				value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
+		</div>
+		<input type="button"
+			value="<%= bundle.getString("button.showIntro") %>" id="showLesson"
+			style="display: none;" /> <br />
+		<%= bundle.getString("paragraph.whattodo.xxe")
             + "<b>" + System.getProperty("user.dir") + "/"
             + FileInputProperties.readPropFileClassLoader("/fileSystemKeys.properties", "xxe.lesson.file") + "</b>" %>
-    <br/> <br/>
-    <form id="leForm" action="javascript:;" contentType="application/xml">
-        <table>
-            <tr>
-                <td><%= bundle.getString("paragraph.info.emailAddr") %>
-                </td>
-            </tr>
-            <tr>
-                <td><input style="width: 400px;" id="emailAddr" type="text"
-                           autocomplete="off"/></td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="submitButton">
-                        <input type="submit"
-                               value="<%= bundle.getString("button.resetPassword") %>"/>
-                    </div>
-                    <p style="display: none;" id="loadingSign"><%= bundle.getString("word.info.loading") %>
-                    </p>
-                    <div style="display: none;" id="hintButton">
-                        <input type="button"
-                               value="<%= bundle.getString("sentence.question.wouldYouLikeHint") %>"
-                               id="theHintButton"/>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </form>
+		<br /> <br />
+		<form id="leForm" action="javascript:;" contentType="application/xml">
+			<table>
+				<tr>
+					<td><%= bundle.getString("paragraph.info.emailAddr") %></td>
+				</tr>
+				<tr>
+					<td><input style="width: 400px;" id="emailAddr" type="text"
+						autocomplete="off" /></td>
+				</tr>
+				<tr>
+					<td>
+						<div id="submitButton">
+							<input type="submit"
+								value="<%= bundle.getString("button.resetPassword") %>" />
+						</div>
+						<p style="display: none;" id="loadingSign"><%= bundle.getString("word.info.loading") %></p>
+						<div style="display: none;" id="hintButton">
+							<input type="button"
+								value="<%= bundle.getString("sentence.question.wouldYouLikeHint") %>"
+								id="theHintButton" />
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
 
-    <div id="resultsDiv"></div>
-    </p>
-</div>
-<script>
+		<div id="resultsDiv"></div>
+		</p>
+	</div>
+	<script>
     $("#leForm").submit(function () {
         $("#submitButton").hide("fast");
         $("#loadingSign").show("slow");
@@ -148,17 +144,18 @@
         $("#resultsDiv").hide("slow", function () {
             var ajaxCall = $.ajax({
                 type: "POST",
-                beforeSend: function (request) {
+                beforeSend: function(request) {
                     request.setRequestHeader("csrfToken", "<%= csrfToken %>");//don't forget the "" around the Java variable or JS will try convert
                 },
                 contentType: "application/xml",
                 url: "<%= LEVEL_HASH %>",
-                data: "<?xml version=\"1.0\"?><email>" + theEmailAddr + "</email>",
+                data: "<?xml version=\"1.0\"?><email>"+ theEmailAddr +"</email>",
                 async: false
             });
             if (ajaxCall.status == 200) {
                 $("#resultsDiv").html(ajaxCall.responseText);
-            } else {
+            }
+            else {
                 $("#resultsDiv").html("<p> <%= bundle.getString("error.occurred") %>: "
                     + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
             }
@@ -182,8 +179,8 @@
         });
     });
 </script>
-<% if (Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
-<% } %>
+	<% if (Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
+	<% } %>
 </body>
 </html>
 <%
