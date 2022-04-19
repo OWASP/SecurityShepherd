@@ -1,90 +1,107 @@
 @media screen and (max-width: 1020px) {
-	#page {
-		width: 100%;
-	}
-	#sidebar {
-		display: none;
-		width: 100%;
-	}
-	#contentDiv {
-		width: 85%;
-		margin-right: 5%;
-	}
-	.sidebarWrapper {
-		width: 40px;
-		background: #D4D4D4;
-		border-top: 3px solid #A878EF;
-		border-right: 3px solid #A878EF;
-		position: absolute;
-		height: 150%;
-		border-radius: 2px;
-		text-decoration: none;
-		vertical-align: top;
-	}
-	.sidebarWrapper:hover {
-		width: 200px;
-		background: #AEACAC;
-		border-top: 3px solid #A878EF;
-		border-right: 3px solid #A878EF;
-		position: absolute;
-		border-radius: 2px;
-		text-decoration: none;
-		vertical-align: top;
-		padding-left: 10px;
-		padding-right: 10px;
-		padding-top: 10px;
-	}
-	.sidebarWrapper:hover  #sidebar {
-		display: block;
-	}
-	.sidebarWrapper:hover .menuIcon {
-		display: none;
-	}
-	.sidebarWrapperAlwaysOpen {
-		width: 200px;
-		background: #AEACAC;
-		border-top: 3px solid #A878EF;
-		border-right: 3px solid #A878EF;
-		position: absolute;
-		height: 100%;
-		border-radius: 2px;
-		text-decoration: none;
-		vertical-align: top;
-		padding-left: 10px;
-		padding-right: 10px;
-		padding-top: 10px;
-	}
-	.sidebarWrapperAlwaysOpen  #sidebar {
-		display: block;
-	}
-	.sidebarWrapperAlwaysOpen .menuIcon {
-		display: none;
-	}
-	.menuIcon {
-		display: block;
-	}
-	.menuIcon:before {
-		display: block;
-	}
-	#submitResult {
-		margin-left: 10%;
-		float: left;
-		width: 90%;
-	}
-	.resultTable {
-		width: 100%
-	}
-	.resultBoxCell {
-		width: 85%
-	}
-	.submitResultCell {
-		width: 15%
-	}
-	.resultbox {
-		width: 100%;
-	}
-	.cheatBox {
-		float: left;
-		width: 90%;
-	}
+    #page {
+        width: 100%;
+    }
+
+    #sidebar {
+        display: none;
+        width: 100%;
+    }
+
+    #contentDiv {
+        width: 85%;
+        margin-right: 5%;
+    }
+
+    .sidebarWrapper {
+        width: 40px;
+        background: #D4D4D4;
+        border-top: 3px solid #A878EF;
+        border-right: 3px solid #A878EF;
+        position: absolute;
+        height: 150%;
+        border-radius: 2px;
+        text-decoration: none;
+        vertical-align: top;
+    }
+
+    .sidebarWrapper:hover {
+        width: 200px;
+        background: #AEACAC;
+        border-top: 3px solid #A878EF;
+        border-right: 3px solid #A878EF;
+        position: absolute;
+        border-radius: 2px;
+        text-decoration: none;
+        vertical-align: top;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+    }
+
+    .sidebarWrapper:hover #sidebar {
+        display: block;
+    }
+
+    .sidebarWrapper:hover .menuIcon {
+        display: none;
+    }
+
+    .sidebarWrapperAlwaysOpen {
+        width: 200px;
+        background: #AEACAC;
+        border-top: 3px solid #A878EF;
+        border-right: 3px solid #A878EF;
+        position: absolute;
+        height: 100%;
+        border-radius: 2px;
+        text-decoration: none;
+        vertical-align: top;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+    }
+
+    .sidebarWrapperAlwaysOpen #sidebar {
+        display: block;
+    }
+
+    .sidebarWrapperAlwaysOpen .menuIcon {
+        display: none;
+    }
+
+    .menuIcon {
+        display: block;
+    }
+
+    .menuIcon:before {
+        display: block;
+    }
+
+    #submitResult {
+        margin-left: 10%;
+        float: left;
+        width: 90%;
+    }
+
+    .resultTable {
+        width: 100%
+    }
+
+    .resultBoxCell {
+        width: 85%
+    }
+
+    .submitResultCell {
+        width: 15%
+    }
+
+    .resultbox {
+        width: 100%;
+    }
+
+    .cheatBox {
+        float: left;
+        width: 90%;
+    }
 }
