@@ -141,7 +141,7 @@ public class DirectObjectBankLogin extends HttpServlet {
       ResourceBundle errors)
       throws SQLException {
 
-    float currentBalance = getAccountBalance(accountNumber, applicationRoot);
+    long currentBalance = getAccountBalance(accountNumber, applicationRoot);
     String bankForm =
         "<h2 class='title'>"
             + bundle.getString("bankForm.yourAccount")
@@ -161,9 +161,8 @@ public class DirectObjectBankLogin extends HttpServlet {
               + "<br><br>"
               + ""
               + bundle.getString("result.theKeyIs")
-              + " <a>"
-              + Hash.generateUserSolution(levelResult, (String) ses.getAttribute("userName"))
-              + "</a>";
+              + ""
+              + Hash.generateUserSolution(levelResult, (String) ses.getAttribute("userName"));
     }
     bankForm +=
         ""
@@ -233,7 +232,7 @@ public class DirectObjectBankLogin extends HttpServlet {
     ResourceBundle bundle =
         ResourceBundle.getBundle("i18n.servlets.challenges.directObject.directObjectBank", locale);
 
-    float currentBalance = getAccountBalance(accountNumber, applicationRoot);
+    long currentBalance = getAccountBalance(accountNumber, applicationRoot);
     String bankForm =
         "<h2 class='title'>"
             + bundle.getString("bankForm.yourAccount")
@@ -317,18 +316,18 @@ public class DirectObjectBankLogin extends HttpServlet {
    * @return Returns a Float Value representing the balance
    * @throws SQLException If no rows found or if SQL error occurs
    */
-  public static float getAccountBalance(String accountNumber, String applicationRoot)
+  public static long getAccountBalance(String accountNumber, String applicationRoot)
       throws SQLException {
     Connection conn = Database.getChallengeConnection(applicationRoot, "directObjectBank");
     CallableStatement callstmt;
-    float toReturn = 0;
+    long toReturn = 0;
     try {
 
       callstmt = conn.prepareCall("CALL currentFunds(?)");
       callstmt.setString(1, accountNumber);
       ResultSet rs = callstmt.executeQuery();
       if (rs.next()) {
-        toReturn = rs.getFloat(1);
+        toReturn = rs.getLong(1);
       } else {
         throw new SQLException("Could not Get Funds. No Rows Found From Query");
       }
