@@ -39,7 +39,7 @@ p, ul, ol {
 }
 
 a {
-	color: #9B1AC8;
+	color: #FF957D;
 	word-wrap: break-word;
 }
 
@@ -49,7 +49,6 @@ b {
 
 a:hover {
 	text-decoration: none;
-	color: #E6B715;
 }
 
 td {
@@ -70,7 +69,7 @@ td {
 
 #header h1, #header p {
 	margin: 0;
-	color: #A878EF;
+	color: #FA744E;
 }
 
 #header h1 {
@@ -83,7 +82,7 @@ td {
 }
 
 #header a {
-	color: #A878EF;
+	color: #FA744E;
 	text-decoration: none;
 }
 
@@ -131,7 +130,7 @@ td {
 .title {
 	margin: 0;
 	padding-bottom: 5px;
-	border-bottom: 2px solid #A878EF;
+	border-bottom: 2px solid #FA744E;
 }
 
 #sidebar {

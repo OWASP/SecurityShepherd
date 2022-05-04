@@ -91,7 +91,6 @@ if(ses.getAttribute("errorMessage") != null)
 		<jsp:include page="translation-select.jsp" />
 		<!-- start header -->
 		<div id="header">
-			<h1>Security Shepherd</h1>
 		</div>
 		<!-- end header -->
 		<!-- start page -->

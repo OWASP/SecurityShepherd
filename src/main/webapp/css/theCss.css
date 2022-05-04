@@ -1,7 +1,7 @@
 body {
 	margin: 0;
 	padding: 0;
-	background: #FFFFFF url(images/grassTile.jpg) repeat-x top center;
+	background: #F7F5FA url(images/grassTile-elastic.jpg) repeat-x top center;
 	font-size: 13px;
 	color: #090212;
 }
@@ -39,12 +39,11 @@ p, ul, ol {
 }
 
 a {
-	color: #9B1AC8;
+	color: #FF957D;
 }
 
 a:hover {
 	text-decoration: none;
-	color: #E6B715;
 }
 
 #wrapper {
@@ -54,14 +53,14 @@ a:hover {
 
 #header {
 	width: 757px;
-	height: 240px;
+	height: 340px;
 	margin: 0 auto;
-	background: url(images/shepherdAndSheep.jpg) no-repeat right top;
+	background: url(images/resized-banner.png) no-repeat center top;
 }
 
 #header h1, #header p {
 	margin: 0;
-	color: #A878EF;
+	color: #FA744E;
 }
 
 #header h1 {
@@ -74,7 +73,7 @@ a:hover {
 }
 
 #header a {
-	color: #A878EF;
+	color: #FA744E;
 	text-decoration: none;
 }
 
@@ -116,7 +115,7 @@ a:hover {
 .title {
 	margin: 0;
 	padding-bottom: 5px;
-	border-bottom: 2px solid #A878EF;
+	border-bottom: 2px solid #FA744E;
 }
 
 #sidebar {
@@ -196,12 +195,10 @@ a:hover {
 
 .menuButton {
 	display: block;
-	border-bottom: 3px solid #A878EF;
-	background: #D4D4D4;
+	background: #0077CC;
 	padding: 5px 5px;
 	border-radius: 5px;
-	color: black;
-	font-size: 1.5em;
+	color: white;
 	text-align: center;
 	text-decoration: none;
 	vertical-align: middle;
@@ -209,17 +206,16 @@ a:hover {
 }
 
 .menuButton:hover {
-	border-top-color: #CC99FF;
-	background: #BFBFBF;
+	background: #005A9E;
 }
 
 .menuButton:active {
-	border-top-color: #8660BF;
-	background: #8660BF;
+	border-top-color: #005A9E;
+	background: #005A9E;
 }
 
 .scoreBar {
-	background-color: #965BED;
+	background-color: #FA744E;
 	height: 30px;
 	position: relative;
 	font-size: 25px;
@@ -234,7 +230,7 @@ a:hover {
 }
 
 .scoreBar:hover {
-	background-color: #AC7DF2;
+	background-color: #F990C6;
 	height: 30px;
 	position: relative;
 	font-size: 25px;
@@ -332,9 +328,9 @@ a:hover {
 
 .informationBox {
 	display: block; margin 0;
-	border-color: #A878EF;
+	border-color: #FA744E;
 	border-style: dashed;
-	background-color: #D4D4D4;
+	background-color: #E6EbF2;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-right: 5px;
@@ -345,9 +341,9 @@ a:hover {
 .cheatBox {
 	float: right; margin 0;
 	width: 685px;
-	border-color: #A878EF;
+	border-color: #FA744E;
 	border-style: dashed;
-	background-color: #D4D4D4;
+	background-color: #E6EBF2;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-right: 5px;
