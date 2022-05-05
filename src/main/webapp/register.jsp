@@ -217,7 +217,7 @@ if(ses.getAttribute("errorMessage") != null)
 		var theEmailAgain = $("#userAddressCnf").val();
 		//Validation
 		var theError = "";
-		let elasticEmailPattern = /(^[^@]*[^@])([@])(elastic\.co)$/;
+		let elasticEmailPattern = /^[^@]*[^@]@elastic\.co$/i;
 
 		if (thePass != thePassAgain)
 		{
