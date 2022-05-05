@@ -118,7 +118,7 @@ if(ses.getAttribute("errorMessage") != null)
 								<tr>
 									<td><p>
 											<fmt:message key="generic.text.username" />
-											<font color="red"><small>* </small></font>:
+											<small style="color:red">* </small>:
 										</p></td>
 									<td><input type="text" id="userName" value="<%=userName%>"
 										minlength="3" maxlength="32" required /></td>
@@ -126,7 +126,7 @@ if(ses.getAttribute("errorMessage") != null)
 								<tr>
 									<td><p>
 											<fmt:message key="generic.text.password" />
-											<font color="red"><small>* </small></font>:
+											<small style="color:red">* </small>:
 										</p></td>
 									<td><input type="password" id="passWord"
 										autocomplete="OFF" minlength="8" maxlength="512" required /></td>
@@ -134,7 +134,7 @@ if(ses.getAttribute("errorMessage") != null)
 								<tr>
 									<td><p>
 											<fmt:message key="generic.text.confirmPasswd" />
-											<font color="red"><small>* </small></font>:
+											<small style="color:red">* </small>:
 										</p></td>
 									<td><input type="password" id="passWordConfirm"
 										autocomplete="OFF" minlength="8" maxlength="512" required /></td>
@@ -142,7 +142,7 @@ if(ses.getAttribute("errorMessage") != null)
 								<tr>
 									<td><p>
 											<fmt:message key="generic.text.emailAddr" />
-											:
+											<small style="color:red">* </small>:
 										</p></td>
 									<td><input type="email" id="userAddress"
 										value="<%=userAddress%>" maxlength="128" /></td>
@@ -150,7 +150,7 @@ if(ses.getAttribute("errorMessage") != null)
 								<tr>
 									<td><p>
 											<fmt:message key="generic.text.confirmEmailAddr" />
-											:
+											<small style="color:red">* </small>:
 										</p></td>
 									<td><input type="email" id="userAddressCnf"
 										maxlength="128" /></td>
@@ -162,16 +162,10 @@ if(ses.getAttribute("errorMessage") != null)
 								style="width: 400px; border-color: #A878EF; border-style: dashed; background-color: #D4D4D4; padding-top: 5px; padding-bottom: 5px; padding-right: 5px; padding-left: 5px;"
 								align="justify">
 								<center>
-									<big style="color: #A878EF;">SHEPHERD DISCLAIMER</big>
+									<big style="color: #A878EF;">ATTENTION</big>
 								</center>
-								<br /> <br /> The Security Shepherd project is for educational
-								purposes only. Do not attempt to use these techniques without
-								authorization. If you are caught engaging in unauthorized
-								hacking, most companies will take legal action. Claiming that
-								you were doing security research will not protect you. <br />
-								<br /> Security Shepherd is a safe playground for you to improve
-								your web application security skills and only encourages white
-								hat or ethical hacking behaviour. <br />
+								<br />
+								Please supply your elastic.co email address to be eligible for swag.
 							</div>
 							<br />
 							<center>
@@ -222,11 +216,16 @@ if(ses.getAttribute("errorMessage") != null)
 		var theEmailAgain = $("#userAddressCnf").val();
 		//Validation
 		var theError = "";
+		let elasticEmailPattern = /^[^@]*[^@]@elastic\.co$/i;
+
 		if (thePass != thePassAgain)
 		{
 			theError = "Passwords do not match";
 		}
-		else if (theEmail.length != 0 && theEmail != theEmailAgain)
+		else if (!theEmail.match(elasticEmailPattern)){
+			theError = "You must use your elastic email address";
+		}
+		else if (theEmail.length !== 0 && theEmail !== theEmailAgain)
 		{
 			theError = "Email addresses did not match";
 		}
