@@ -111,9 +111,11 @@ if(ses.getAttribute("errorMessage") != null)
 				}
 			%>
 					<div id="badData"></div>
+
 					<form id="leForm" action="javascript:;">
 						<div align="center">
 							<br />
+							<h3>Please supply your <a>elastic.co</a> email address to be eligible for swag.</h3>
 							<table>
 								<tr>
 									<td><p>
@@ -157,16 +159,6 @@ if(ses.getAttribute("errorMessage") != null)
 								</tr>
 							</table>
 
-							<br />
-							<div
-								style="width: 400px; border-color: #A878EF; border-style: dashed; background-color: #D4D4D4; padding-top: 5px; padding-bottom: 5px; padding-right: 5px; padding-left: 5px;"
-								align="justify">
-								<center>
-									<big style="color: #A878EF;">ATTENTION</big>
-								</center>
-								<br />
-								Please supply your elastic.co email address to be eligible for swag.
-							</div>
 							<br />
 							<center>
 								<input style="width: 350px; height: 50px;" type="submit"
