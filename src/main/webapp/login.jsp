@@ -80,8 +80,12 @@
 				style="margin-right: auto; margin-left: auto; width: 40%; max-width: 320px;">
 				<div class="post">
 					<h1 class="title" id="login_title">
-						<fmt:message key="generic.text.login" />
+						Get Started
 					</h1>
+					<p>
+						1) Download and install
+						<a href="https://portswigger.net/burp/communitydownload" target="_blank">Burp Suite</a>
+					</p>
 					<%
 					if (ScoreboardStatus.isPublicScoreboard()) {
 						%>
@@ -101,17 +105,20 @@
 						if (LoginMethod.isLogin()) {
 					%>
 					<p id="login-info">
-						<fmt:message key="login.text.info" />
+
 						<%
 							if (OpenRegistration.isEnabled()) {
 						%>
 					
 					<p id="register_info">
-						<fmt:message key="login.text.regInfo" />
+						2) <a href="register.jsp">Register</a> an account on the CTF platform.
 					</p>
 					<%
 							}
 					%>
+					<p id="register_info">
+						3) Login Below
+					</p>
 					<form name="loginForm" method="POST" action="login">
 						<table>
 							<tr>
@@ -146,33 +153,8 @@
 					%>
 					<br /> <br />
 					<div align="center">
-						<a id="tools" href="javascript:;"><fmt:message
-								key="login.text.proxy_question" /></a>
-						<div id="toolsTable" style="display: none;">
-							<p>
-								<fmt:message key="login.text.download_proxy" />
-								;
-							</p>
-							<table>
-								<tr>
-									<td align="center"><a
-										href="https://github.com/zaproxy/zaproxy/wiki/Downloads"><fmt:message
-												key="login.link.zap_win" /></a></td>
-								</tr>
-								<tr>
-									<td align="center"><a
-										href="https://github.com/zaproxy/zaproxy/wiki/Downloads"><fmt:message
-												key="login.link.zap_lin" /></a></td>
-								</tr>
-								<tr>
-									<td align="center"><a
-										href="https://github.com/zaproxy/zaproxy/wiki/Downloads"><fmt:message
-												key="login.link.zap_mac" /></a></td>
-								</tr>
-							</table>
-						</div>
-						<br> <a id="showAbout" href="javascript:;"><fmt:message
-								key="generic.text.aboutSecShep" /></a>
+					<br> <a id="showAbout" href="javascript:;"><fmt:message
+							key="generic.text.aboutSecShep" /></a>
 					</div>
 				</div>
 			</div>
