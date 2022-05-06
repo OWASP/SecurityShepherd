@@ -50,10 +50,138 @@
 <title><fmt:message key="readyToPlay.title.readyToPlay" /></title>
 <link href="css/lessonCss/theCss.css" rel="stylesheet" type="text/css"
 	media="screen" />
+<style>
+	.points th, td {
+		border: 1px solid #ddd;
+		padding: 8px;
+	}
+	.points tr:nth-child(even){background-color: #f2f2f2;}
+	.points tr:hover {background-color: #ddd;}
+	.points table {
+		border-collapse: unset;
+		box-sizing: unset;
+		text-indent: unset;
+		white-space: unset;
+		line-height: unset;
+		font-size: unset;
+		border-spacing: unset;
+		border-color: unset;
+		font-variant: unset;
+	}
+	.points th {
+		vertical-align: unset;
+		font-weight: unset;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		text-align: left;
+		background-color: #0077CC;
+		color: white;
+	}
+	.points h3 {
+		font-size: 18px;
+	}
+</style>
 </head>
 <body>
 	<script type="text/javascript" src="js/jquery.js"></script>
+	<div class="points">
+		<h2 class="title">Points</h2>
+		<p>Below is a breakdown of the points on offer for helping out your fellow participants and completing a level.</p>
+		<h3>Achievements</h3>
+		<table>
+			<tr>
+				<th>Achievement</th>
+				<th>Points</th>
+			</tr>
+			<tr>
+				<td>Don’t mute the messenger - Tag 5 people on the #capture-the-flag channel and use the hashtag
+					#ctftheword. Once they’re signed up @product-security on Slack referencing where you tagged
+					everyone and we’ll award the points.</td>
+				<td>10</td>
+			</tr>
+			<tr>
+				<td>Popup Points - Trigger an XSS alert box where the CTF platform doesn't award points. Use the
+					hashtag #alert on #capture-the-flag along with your XSS payload. (1 payload per person)</td>
+				<td>20</td>
+			</tr>
+			<tr>
+				<td>Proxy Pals - Nominate someone on #capture-the-flag who helped you figure out how to use Burp Suite.
+					Use the hashtag #proxypals were you get 3 points and they get 30!</td>
+				<td>30</td>
+			</tr>
+			<tr>
+				<td>It was like that when I got here - report a valid security issue against the CTF platform to the
+					Product Security Team by sending an email to product-security@</td>
+				<td>40</td>
+			</tr>
+			<tr>
+				<td>OWASP is that? - Nominate someone on #capture-the-flag using the hashtag #levelcomplete who
+					helped you understand any security issue in the CTF e.g. XSS, CSRF, Injection etc. where that help
+					lead you to pass the level. You get 5 points and they get 50!
+				</td>
+				<td>50</td>
+			</tr>
+		</table>
+		<br />
+		<h3>Levels</h3>
+		<table>
+			<tr>
+				<th>Rank</th>
+				<th>Points Range</th>
+			</tr>
+			<tr>
+				<td>Field Training</td>
+				<td>10 - 20</td>
+			</tr>
+			<tr>
+				<td>Private</td>
+				<td>25 - 40</td>
+			</tr>
+			<tr>
+				<td>Corporal</td>
+				<td>45 - 50</td>
+			</tr>
+			<tr>
+				<td>Sergeant</td>
+				<td>55 - 65</td>
+			</tr>
+			<tr>
+				<td>Lieutenant</td>
+				<td>70 - 75</td>
+			</tr>
+			<tr>
+				<td>Major</td>
+				<td>80 - 85</td>
+			</tr>
+			<tr>
+				<td>Admiral</td>
+				<td>90 - 180</td>
+			</tr>
+		</table>
+		<br />
+		<h3>Medals</h3>
+		<p>Be the 1st, 2nd or 3rd person to complete a level to gain a medal and bonus points.</p>
+		<table>
+			<tr>
+				<th>Rank</th>
+				<th>Points</th>
+			</tr>
+			<tr>
+				<td>Gold</td>
+				<td>5</td>
+			</tr>
+			<tr>
+				<td>Silver</td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td>Bronze</td>
+				<td>3</td>
+			</tr>
+		</table>
+	</div>
 	<div id="contentDiv">
+		<p><br /></p>
 		<h2 class="title">
 			<fmt:message key="readyToPlay.title.enteredGame" />
 		</h2>
