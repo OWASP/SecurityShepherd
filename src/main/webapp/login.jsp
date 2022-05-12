@@ -158,6 +158,30 @@
 					</div>
 				</div>
 			</div>
+			<div>
+				<h2 class="title">CTF Rules</h2>
+				<ul>
+					<li>Scope - don’t attempt to bypass the platform's mechanisms which include, but not limited to
+						<ul>
+							<li>The login / logout mechanisms </li>
+							<li>The registration page</li>
+							<li>The CTF key submission</li>
+							<li>The scoreboard</li>
+							<li>The admin console</li>
+						</ul>
+						However, if you stumble across something report it and we'll award points
+					</li>
+					<li>Exploiting - automated tools are forbidden where the platform will deduct points for multiple
+						wrongly submitted result keys</li>
+					<li>Collaborate - If you're super helpful to your fellow Elasticians and they nominate you there's
+					bonus points up for grabs</li>
+					<li>They're out there - post on the #capture-the-flag channel, reach out to a colleague or use
+					Google to understand a concept, don't just look up the answer</li>
+					<li>Have fun! - these are fun challenges that range from beginner to advanced difficulty and if
+						you learn something along the way then that’s a bonus!</li>
+				</ul>
+				<br /><br />
+			</div>
 			<div align="justify">
 
 				<div id="aboutDiv" style="display: none;">

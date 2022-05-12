@@ -95,7 +95,7 @@
 			</tr>
 			<tr>
 				<td>Don’t mute the messenger - Tag 5 people on the #capture-the-flag channel and use the hashtag
-					#ctftheword. Once they’re signed up @product-security on Slack referencing where you tagged
+					#ctftheword. Once they’re signed up @infosec-product-security on Slack referencing where you tagged
 					everyone and we’ll award the points.</td>
 				<td>10</td>
 			</tr>
