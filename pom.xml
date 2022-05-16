@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.14.3</version>
+			<version>1.15.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.sf.jtidy/jtidy -->
 		<dependency>
@@ -133,7 +133,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>5.3.19</version>
+			<version>5.3.20</version>
 			<scope>test</scope>
 		</dependency>
 
