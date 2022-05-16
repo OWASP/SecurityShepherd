@@ -85,12 +85,12 @@ public class DirectObjectBankTransfer extends HttpServlet {
         // Positive Transfer Amount?
         if (tranferAmount > 0) {
           // Sender Account Has necessary funds?
-          float senderFunds =
+          long senderFunds =
               DirectObjectBankLogin.getAccountBalance(senderAccountNumber, applicationRoot);
           if ((senderFunds - tranferAmount) > 0) {
             // Check Receiver Account Exists
             try {
-              float recieverAccountBalanace =
+              long recieverAccountBalanace =
                   DirectObjectBankLogin.getAccountBalance(recieverAccountNumber, applicationRoot);
               if (recieverAccountBalanace >= 0) {
                 performTransfer = true;
