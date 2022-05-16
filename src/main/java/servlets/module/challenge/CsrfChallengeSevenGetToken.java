@@ -90,7 +90,7 @@ public class CsrfChallengeSevenGetToken extends HttpServlet {
           int i = 0;
           while (rs.next()) {
             i++;
-            htmlOutput += Encode.forHtml("\"" + rs.getString(1) + "\"") + " <br/>";
+            htmlOutput += Encode.forHtml(rs.getString(1)) + " <br/>";
           }
           log.debug("Returned " + i + " CSRF Tokens for ID: " + userId);
           conn.close();

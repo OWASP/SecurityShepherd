@@ -87,20 +87,32 @@ if (request.getSession() != null)
 		src="../js/clipboard-js/clipboard-events.js"></script>
 	<div id="contentDiv">
 		<h2 class="title"><%= i18nLevelName %></h2>
-		<p>
-			<%= bundle.getString("challenge.intro") %>
-			<br /> <br /> <a> POST /user/csrfchallengeseven/plusplus</a> <br />
-			<%= bundle.getString("challenge.withTheseParameters") %>
-			<a>userId = <%= bundle.getString("challenge.userIdExample") %></a> &
-			<a>csrfToken = <%= bundle.getString("challenge.yourCsrfTokenCamelCase") %></a>
-			<br /> <br />
-			<%= bundle.getString("challenge.whereIdIsUserBeenIncremented.1") %>
-			<%= bundle.getString("challenge.userIdExample") %><%= bundle.getString("challenge.whereIdIsUserBeenIncremented.2") %>
-			<%=bundle.getString("challenge.yourIdIs") %>
-			<%= userId %>
-			<%= bundle.getString("challenge.yourIdIs.1") %>
-			<%= bundle.getString("challenge.getCsrfTokenHere.1") %>
-			<a href="<%= getYourTokenUrl %>"><%= bundle.getString("challenge.getCsrfTokenHere.2") %></a>
+      <p>
+        To complete the challenge you need;
+        <ul>
+          <li>Your ID: <a><%= userId %></a></li>
+          <li>Another player's CSRF token</li>
+          <li>A CSRF form attacking <a>POST /user/csrfchallengeseven/plusplus</a></li>
+        </ul>
+      </p>
+			<p>
+			  Once the victim visits your site hosting the CSRF exploit it will increment your CSRF counter above 0.
+      </p>
+      <p>
+        So the form should send a POST request to
+        <a>POST /user/csrfchallengeseven/plusplus</a> which is vulnerable to CSRF
+        <br /> With the following parameters;
+        <ul>
+          <li><a>userId = <%= userId %></a></li>
+          <li><a>csrfToken = csrfTokenOfAnotherPlayer</a></li>
+        </ul>
+      </p>
+      <p>
+        You've been reading that right. Along with your own ID you'll need the CSRF token of another player.
+        <br /> Once you have successfully CSRF'd another Security Shepherd user, the solution key will appear below this write up.
+        <br /> You can get your token using this function: <a href="<%= getYourTokenUrl %>">getYourToken</a>.
+      </p>
+
 			<br /> <br />
 			<%= bundle.getString("challenge.useForumForIframe") %>
 			<% 
