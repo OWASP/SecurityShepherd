@@ -1679,6 +1679,8 @@ INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solu
 INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('e7e44ba680b2ab1f6958b1344c9e43931b81164a', '5dda8dc216bd6a46fccaa4ed45d49404cdc1c82e', '2012-02-10 10:11:53', '5dda8dc216bd6a46fccaa4ed45d49404cdc1c82e.solution');
 INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('f392e5a69475b14fbe5ae17639e174f379c0870e', '201ae6f8c55ba3f3b5881806387fbf34b15c30c2', '2012-02-10 10:11:53', '201ae6f8c55ba3f3b5881806387fbf34b15c30c2.solution');
 INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('6afa50948e10466e9a94c7c2b270b3f958e412c6', '82e8e9e2941a06852b90c97087309b067aeb2c4c', '2012-02-10 10:11:53', '82e8e9e2941a06852b90c97087309b067aeb2c4c.solution');
+INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('c424a4c7012ac39a4aef70f15f51ecc8fa209411', 'df2ac757cc135dcb8ce5ea01f677c74f04b446d6', '2020-02-11 10:11:53', 'df2ac757cc135dcb8ce5ea01f677c74f04b446d6.solution');
+INSERT INTO `core`.`cheatsheet` (`cheatSheetId`, `moduleId`, `createDate`, `solution`) VALUES ('e6ce51d31070bef895bf9763caeff78a0c7c2cc9', '08b3dffd4b837ebe53d52e53b5bbbabf4a4ca9ae', '2020-10-09 10:11:53', '08b3dffd4b837ebe53d52e53b5bbbabf4a4ca9ae.solution');
 CALL cheatSheetCreate('a84bbf8737a9ca749d81d5226fc87e0c828138ee', 'a84bbf8737a9ca749d81d5226fc87e0c828138ee.solution');
 CALL cheatSheetCreate('e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998', 'e0ba96bb4c8d4cd2e1ff0a10a0c82b5362edf998.solution');
 CALL cheatSheetCreate('ad332a32a6af1f005f9c8d1e98db264eb2ae5dfe', 'ad332a32a6af1f005f9c8d1e98db264eb2ae5dfe.solution');
@@ -1733,6 +1735,8 @@ CALL cheatSheetCreate('d7eaeaa1cc4f218abd86d14eefa183a0f8eb6298', 'd7eaeaa1cc4f2
 CALL cheatSheetCreate('5ca9115f3279b9b9f3308eb6a59a4fcd374846d6', '5ca9115f3279b9b9f3308eb6a59a4fcd374846d6.solution');
 CALL cheatSheetCreate('6f5db377c28da4179bca1a43ede8d6bcf7bd322e', '6f5db377c28da4179bca1a43ede8d6bcf7bd322e.solution');
 CALL cheatSheetCreate('f02ce6bcd0a822d245433533997eaf44379065f4', 'f02ce6bcd0a822d245433533997eaf44379065f4.solution');
+CALL cheatSheetCreate('df2ac757cc135dcb8ce5ea01f677c74f04b446d6', 'df2ac757cc135dcb8ce5ea01f677c74f04b446d6.solution');
+CALL cheatSheetCreate('08b3dffd4b837ebe53d52e53b5bbbabf4a4ca9ae', '08b3dffd4b837ebe53d52e53b5bbbabf4a4ca9ae.solution');
 
 COMMIT;
 

@@ -25,7 +25,7 @@
          </SSLHostConfig>
      </Connector>
      -->
-+    <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
++    <Connector port="8443" protocol="HTTP/1.1" maxHttpHeaderSize="65536" SSLEnabled="true"
 +          maxThreads="150" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS"
 +          keystoreFile="conf/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS">
 +    </Connector>
