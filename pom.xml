@@ -133,7 +133,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>5.3.19</version>
+			<version>5.3.20</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>5.3.19</version>
+			<version>5.3.20</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-mongodb -->
