@@ -141,7 +141,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>5.3.19</version>
+			<version>5.3.20</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -171,7 +171,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
-			<version>3.3.4</version>
+			<version>3.4.0</version>
 		</dependency>
 
 		<!-- Test -->
@@ -298,7 +298,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>keytool-maven-plugin</artifactId>
-						<version>1.5</version>
+						<version>1.6</version>
 						<executions>
 							<execution>
 								<id>generate-tls-key</id>
