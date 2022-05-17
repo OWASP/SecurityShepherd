@@ -161,7 +161,10 @@
 			<div>
 				<h2 class="title">CTF Rules</h2>
 				<ul>
-					<li>Scope - don’t attempt to bypass the platform's mechanisms which include, but not limited to
+					<li><b>With great power comes great responsibility</b> - The levels within the CTF are for
+						educational purposes only. Do not use the skills and techniques that you learn from this
+						platform elsewhere without authorization. Always keep it ethical and legal.</li>
+					<li><b>Scope</b> - don’t attempt to bypass the platform's mechanisms which include, but not limited to
 						<ul>
 							<li>The login / logout mechanisms </li>
 							<li>The registration page</li>
@@ -171,13 +174,13 @@
 						</ul>
 						However, if you stumble across something report it and we'll award points
 					</li>
-					<li>Exploiting - automated tools are forbidden where the platform will deduct points for multiple
+					<li><b>Exploiting</b> - automated tools are forbidden where the platform will deduct points for multiple
 						wrongly submitted result keys</li>
-					<li>Collaborate - If you're super helpful to your fellow Elasticians and they nominate you there's
+					<li><b>Collaborate</b> - If you're super helpful to your fellow Elasticians and they nominate you there's
 					bonus points up for grabs</li>
-					<li>They're out there - post on the #capture-the-flag channel, reach out to a colleague or use
+					<li><b>They're out there</b> - post on the #capture-the-flag channel, reach out to a colleague or use
 					Google to understand a concept, don't just look up the answer</li>
-					<li>Have fun! - these are fun challenges that range from beginner to advanced difficulty and if
+					<li><b>Have fun!</b> - these are fun challenges that range from beginner to advanced difficulty and if
 						you learn something along the way then that’s a bonus!</li>
 				</ul>
 				<br /><br />

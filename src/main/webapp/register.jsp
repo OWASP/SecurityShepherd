@@ -160,6 +160,20 @@ if(ses.getAttribute("errorMessage") != null)
 							</table>
 
 							<br />
+							<div style="width: 400px; border-color: #A878EF; border-style:
+							dashed; background-color: #D4D4D4; padding-top: 5px; padding-bottom: 5px;
+							padding-right: 5px; padding-left: 5px; "align="justify">
+								<center>
+									<big style="color: #A878EF;">DISCLAIMER</big>
+								</center>
+								<br /> <br /> The levels within the CTF are for educational purposes only. Do not use
+								the skills and techniques that you learn from this platform elsewhere without authorization.
+								Always keep it ethical and legal.
+								<br /><br />
+							</div>
+							<br />
+
+							<br />
 							<center>
 								<input style="width: 350px; height: 50px;" type="submit"
 									name="submit" value="Sign me up!" />
