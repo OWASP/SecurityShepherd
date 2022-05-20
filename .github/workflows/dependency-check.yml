@@ -36,7 +36,6 @@ jobs:
           args: >
             --format JSON
             --prettyPrint
-            --failOnCVSS 7
       - name: Publish Dependency-Check Results
         uses: actions/upload-artifact@master
         with:
