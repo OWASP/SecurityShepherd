@@ -1,4 +1,9 @@
-on: [push]
+on:
+  push:
+    branches: [master, dev]
+    paths-ignore:
+      - '**.md'
+  pull_request:
 
 jobs:
   depchecktest:
