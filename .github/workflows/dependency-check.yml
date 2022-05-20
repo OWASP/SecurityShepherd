@@ -39,5 +39,5 @@ jobs:
       - name: Publish Dependency-Check Results
         uses: actions/upload-artifact@master
         with:
-           name: Dependency-Check report
+           name: dependency_check_report
            path: ${{github.workspace}}/reports
