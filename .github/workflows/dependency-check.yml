@@ -1,7 +1,14 @@
 name: Dependency-Check
+##on:
+##  schedule:
+##    - cron:  '0 0 1 * *'
+
 on:
-  schedule:
-    - cron:  '0 0 1 * *'
+  push:
+    branches: [master, dev]
+    paths-ignore:
+      - '**.md'
+  pull_request:
 
 jobs:
   depchecktest:
