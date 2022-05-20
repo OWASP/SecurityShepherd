@@ -25,6 +25,7 @@ jobs:
         run: mvn clean install -Pdocker -DskipTests -B
       - name: Dependency-Check Run
         env:
+          # need to set this because actions/setup-java@v1 seems to be messing with JAVA_HOME
           JAVA_HOME: /usr/lib/jvm/default-java/bin/
         uses: dependency-check/Dependency-Check_Action@main
         id: dependency-check
