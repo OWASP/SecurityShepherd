@@ -13,6 +13,9 @@
 		<skipTests>false</skipTests>
 		<skipITs>${skipTests}</skipITs>
 		<skipUTs>${skipTests}</skipUTs>
+		<jquery.version>3.6.0</jquery.version>
+		<jquery-ui.version>1.13.1</jquery-ui.version>
+		<malihu-custom-scrollbar-plugin.version>3.1.5</malihu-custom-scrollbar-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -211,6 +214,27 @@
 			<version>5.2.2</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.webjars/jquery -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>${jquery.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.webjars/jquery-ui -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery-ui</artifactId>
+			<version>${jquery-ui.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.webjars.bower/malihu-custom-scrollbar-plugin -->
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>malihu-custom-scrollbar-plugin</artifactId>
+			<version>${malihu-custom-scrollbar-plugin.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<profiles>
@@ -386,6 +410,16 @@
 				<directory>src/main/resources</directory>
 				<filtering>false</filtering>
 			</resource>
+
+			<!-- Allow access to maven properties variables for version of client side JS -->
+			<resource>
+				<directory>src/main/webapp</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.jsp</include>
+				</includes>
+			</resource>
+
 		</resources>
 
 		<plugins>
@@ -421,6 +455,15 @@
 				<version>3.3.2</version>
 				<configuration>
 					<warSourceDirectory>src/main/webapp</warSourceDirectory>
+					<webResources>
+						<resource>
+							<directory>src/main/webapp</directory>
+							<filtering>true</filtering>
+							<includes>
+								<include>**/*.jsp</include>
+							</includes>
+						</resource>
+					</webResources>
 				</configuration>
 			</plugin>
 			<plugin>

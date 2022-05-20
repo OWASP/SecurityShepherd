@@ -82,7 +82,7 @@
 	type="image/jpeg" />
 </head>
 <body>
-	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="webjars/jquery/${jquery.version}/jquery.js"></script>
 	<script type="text/javascript" src="js/tinysort.js"></script>
 	<div id="wrapper">
 		<!-- start header -->

@@ -56,7 +56,7 @@ catch (Exception e)
 </script>
 </head>
 <body>
-	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="webjars/jquery/${jquery.version}/jquery.js"></script>
 	<div id="contentDiv">
 		<h2 class="title"><%= i18nLevelName %>template
 		</h2>

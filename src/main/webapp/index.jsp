@@ -83,10 +83,10 @@ if (request.getSession() != null)
 
 </head>
 <body>
-	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/jqueryUI.js"></script>
+	<script type="text/javascript" src="webjars/jquery/${jquery.version}/jquery.js"></script>
+	<script type="text/javascript" src="webjars/jquery-ui/${jquery-ui.version}/jquery-ui.js"></script>
 	<script type="text/javascript"
-		src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+		src="webjars/malihu-custom-scrollbar-plugin/${malihu-custom-scrollbar-plugin.version}/jquery.mCustomScrollbar.concat.min.js"></script>
 	<div id="wrapper">
 		<jsp:include page="translation-select.jsp" />
 		<div id="header">

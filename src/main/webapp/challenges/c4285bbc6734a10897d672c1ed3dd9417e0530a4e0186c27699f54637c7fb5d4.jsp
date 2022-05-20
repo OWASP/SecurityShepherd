@@ -88,7 +88,7 @@ String i18nLevelName = bundle.getString("securityMisconfig.stealTokens.challenge
 
 </head>
 <body>
-	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="webjars/jquery/${jquery.version}/jquery.js"></script>
 	<script type="text/javascript"
 		src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
