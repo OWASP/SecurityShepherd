@@ -1,9 +1,9 @@
 name: Dependency-Check
-##on:
-##  schedule:
-##    - cron:  '0 0 1 * *'
 
 on:
+  schedule:
+    # runs on the default branch every 2 weeks
+    - cron:  '0 0 1,15 * *'
   push:
     branches: [master, dev]
     paths-ignore:
@@ -25,7 +25,7 @@ jobs:
         run: mvn clean install -Pdocker -DskipTests -B
       - name: Dependency-Check Run
         env:
-          # actions/setup-java@v1 changes this and needs to be set back to the variable set in the depcheck docker image
+          # actions/setup-java changes JAVA_HOME so it needs to be reset to match the dependency-check docker image
           JAVA_HOME: /opt/jdk
         uses: dependency-check/Dependency-Check_Action@main
         id: dependency-check
