@@ -168,8 +168,8 @@ public class NoSqlInjection1 extends HttpServlet {
         log.fatal("MongoDb Error caught - " + e.toString());
         htmlOutput +=
             "<p>An error was detected!</p>" + "<p>" + Encode.forHtml(e.toString()) + "</p>";
-      } finally {
-        mongoClient.close();
+      } catch (Exception e) {
+        log.fatal(levelName + " - " + e);
       }
 
       log.debug("Outputting HTML");
