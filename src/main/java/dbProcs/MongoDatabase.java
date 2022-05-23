@@ -17,7 +17,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Properties;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -75,12 +79,14 @@ public class MongoDatabase {
     MongoCredential credential;
 
     String mongo_props =
-        new File(MongoDatabase.class.getResource("/challenges/" + path + ".properties").getFile())
+        new File(
+                Objects.requireNonNull(
+                        MongoDatabase.class.getResource("/challenges/" + path + ".properties"))
+                    .getFile())
             .getAbsolutePath();
     log.debug("Level Properties File = " + path + ".properties");
 
-    try (InputStream mongo_input = new FileInputStream(mongo_props)) {
-
+    try (InputStream mongo_input = Files.newInputStream(Paths.get(mongo_props))) {
       prop.load(mongo_input);
     }
 
@@ -110,7 +116,6 @@ public class MongoDatabase {
    * Method to get a MongoDb collection name from property file
    *
    * @return A MongoDb collection name
-   * @throws IOException
    */
   public static String getMongoChallengeCollName(String ApplicationRoot, String path) {
     Properties prop = new Properties();
@@ -120,12 +125,15 @@ public class MongoDatabase {
     log.debug("Path = " + path);
 
     String mongo_props =
-        new File(Database.class.getResource("/challenges/" + path + ".properties").getFile())
+        new File(
+                Objects.requireNonNull(
+                        Database.class.getResource("/challenges/" + path + ".properties"))
+                    .getFile())
             .getAbsolutePath();
 
     log.debug("Properties File: " + mongo_props);
 
-    try (InputStream mongo_input = new FileInputStream(mongo_props)) {
+    try (InputStream mongo_input = Files.newInputStream(Paths.get(mongo_props))) {
 
       prop.load(mongo_input);
 
@@ -153,7 +161,7 @@ public class MongoDatabase {
     // Mongo DB URL from mongo.properties
     String mongo_props = Constants.MONGO_DB_PROP;
 
-    try (InputStream mongo_input = new FileInputStream(mongo_props)) {
+    try (InputStream mongo_input = Files.newInputStream(Paths.get(mongo_props))) {
 
       prop.load(mongo_input);
 
@@ -233,7 +241,7 @@ public class MongoDatabase {
     // Mongo DB URL from mongo.properties
     String mongo_props = Constants.MONGO_DB_PROP;
 
-    try (InputStream mongo_input = new FileInputStream(mongo_props)) {
+    try (InputStream mongo_input = Files.newInputStream(Paths.get(mongo_props))) {
 
       prop.load(mongo_input);
 
@@ -276,21 +284,17 @@ public class MongoDatabase {
       mongoClient =
           new MongoClient(
               new ServerAddress(connectionHost, Integer.parseInt(connectionPort)),
-              Arrays.asList(credential),
+              credential,
               mongoOptions);
 
       log.debug("Connection Host: " + connectionHost);
       log.debug("Connection Port: " + Integer.parseInt(connectionPort));
-      log.debug("Connection Creds: " + Arrays.asList(credential));
+      log.debug("Connection Creds: " + Collections.singletonList(credential));
     } catch (NumberFormatException e) {
       log.fatal("The port in the properties file is not a number: " + e);
       throw new RuntimeException(e);
 
-    } catch (MongoSocketException e) {
-      log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
-      throw new RuntimeException(e);
-
-    } catch (MongoTimeoutException e) {
+    } catch (MongoSocketException | MongoTimeoutException e) {
       log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
       throw new RuntimeException(e);
 
@@ -324,7 +328,7 @@ public class MongoDatabase {
     // Mongo DB URL from mongo.properties
     String mongo_props = Constants.MONGO_DB_PROP;
 
-    try (InputStream mongo_input = new FileInputStream(mongo_props)) {
+    try (InputStream mongo_input = Files.newInputStream(Paths.get(mongo_props))) {
 
       prop.load(mongo_input);
 
@@ -340,9 +344,7 @@ public class MongoDatabase {
 
     try {
       mongoDb = mongoClient.getDB(dbname);
-    } catch (MongoSocketException e) {
-      log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
-    } catch (MongoTimeoutException e) {
+    } catch (MongoSocketException | MongoTimeoutException e) {
       log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
     } catch (MongoException e) {
       log.fatal("Something went wrong with Mongo: " + e);
