@@ -4,7 +4,7 @@ services:
     image: ${IMAGE_MARIADB}
     container_name: ${CONTAINER_MARIADB}
     volumes:
-    - data:/var/lib/mysql
+      - data:/var/lib/mysql
     env_file:
       - .env
     build:
@@ -17,7 +17,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
     ports:
-      - "${DB_SERVER_IP}:${DB_PORT}:3306"
+      - "${DB_SERVER_MAPPED_HOST}:${DB_PORT_MAPPED_HOST}:3306"
   mongo:
     image: ${IMAGE_MONGO}
     container_name: ${CONTAINER_MONGO}
@@ -30,11 +30,14 @@ services:
       context: ./docker/mongo
       args:
         MONGODB_VERSION: ${MONGODB_VERSION}
+        MONGO_BIND_ADDRESS: ${MONGO_BIND_ADDRESS}
+    ports:
+      - "${MONGO_SERVER_MAPPED_HOST}:${MONGO_PORT_MAPPED_HOST}:27017"
   web:
     image: ${IMAGE_TOMCAT}
     container_name: ${CONTAINER_TOMCAT}
     volumes:
-    - conf:/usr/local/tomcat/conf
+      - conf:/usr/local/tomcat/conf
     env_file:
       - .env
     build:
