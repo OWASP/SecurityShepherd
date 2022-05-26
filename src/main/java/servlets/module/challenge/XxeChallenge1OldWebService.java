@@ -1,0 +1,137 @@
+package servlets.module.challenge;
+
+import java.io.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
+import javax.xml.parsers.DocumentBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
+import org.owasp.encoder.Encode;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import utils.ShepherdLogManager;
+import utils.Validate;
+import utils.XmlDocumentBuilder;
+
+/**
+ * XXE Challenge 1 <br>
+ * <br>
+ * This file is part of the Security Shepherd Project.
+ *
+ * <p>The Security Shepherd project is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or (at your option) any later version.<br>
+ *
+ * <p>The Security Shepherd project is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.<br>
+ *
+ * <p>You should have received a copy of the GNU General Public License along with the Security
+ * Shepherd project. If not, see <a
+ * href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>.
+ *
+ * @author ismisepaul
+ */
+public class XxeChallenge1OldWebService extends HttpServlet {
+
+  private static final long serialVersionUID = 1L;
+  private static final Logger log = LogManager.getLogger(XxeChallenge1OldWebService.class);
+  private static final String LEVEL_NAME = "XXE Challenge 1 OldWebService";
+
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+
+    // Setting IpAddress To Log and taking header for original IP if forwarded from
+    // proxy
+    ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+    log.debug(LEVEL_NAME + " Servlet Accessed");
+    PrintWriter out = response.getWriter();
+    out.print(getServletInfo());
+
+    // Translation Stuff
+    Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+    ResourceBundle errors = ResourceBundle.getBundle("i18n.servlets.errors", locale);
+    ResourceBundle bundle = ResourceBundle.getBundle("i18n.servlets.lessons.xxe", locale);
+
+    try {
+      HttpSession ses = request.getSession(true);
+      if (Validate.validateSession(ses)) {
+        ShepherdLogManager.setRequestIp(
+            request.getRemoteAddr(),
+            request.getHeader("X-Forwarded-For"),
+            ses.getAttribute("userName").toString());
+        log.debug(LEVEL_NAME + " accessed by: " + ses.getAttribute("userName").toString());
+        Cookie tokenCookie = Validate.getToken(request.getCookies());
+        Object tokenHeader = request.getHeader("csrfToken");
+
+        if (Validate.validateTokens(tokenCookie, tokenHeader)) {
+          InputStream xml = request.getInputStream();
+          String emailAddr = readXml(xml);
+          log.debug("Email Addr: " + emailAddr);
+
+          String htmlOutput = "";
+
+          if (emailAddr == null) {
+            htmlOutput += "<p>" + bundle.getString("response.blank.email") + "</p>";
+            out.write(htmlOutput);
+          } else if (Validate.isValidEmailAddress(emailAddr)) {
+            log.debug("User Submitted - " + emailAddr);
+
+            htmlOutput +=
+                "<p>"
+                    + bundle.getString("response.success.reset")
+                    + ": "
+                    + emailAddr
+                    + " has been reset</p>";
+            out.write(htmlOutput);
+          } else {
+            // dumb way of preventing the other level from being read
+            if (emailAddr.contains("c8c232cd8e3abdfea3fcef24379415a65e00")) {
+              htmlOutput +=
+                  "<p>" + bundle.getString("response.invalid.email") + ". Wrong File.</p>";
+              out.write(htmlOutput);
+            } else {
+              htmlOutput +=
+                  "<p>" + bundle.getString("response.invalid.email") + ": " + emailAddr + "</p>";
+              out.write(htmlOutput);
+            }
+          }
+        }
+
+      } else {
+        log.error(LEVEL_NAME + " accessed with no session");
+        out.write(errors.getString("error.noSession"));
+      }
+    } catch (Exception e) {
+      out.write(errors.getString("error.funky"));
+      log.fatal(LEVEL_NAME + " - " + e);
+    }
+    log.debug("End of " + LEVEL_NAME + " Servlet");
+  }
+
+  @Nullable
+  public static String readXml(InputStream xmlEmail) {
+
+    Document doc;
+    String result;
+
+    DocumentBuilder dBuilder =
+        XmlDocumentBuilder.xmlDocBuilder(false, true, true, true, true, true);
+    InputSource is = new InputSource(xmlEmail);
+
+    try {
+      doc = dBuilder.parse(is);
+      Element root = doc.getDocumentElement();
+      result = root.getTextContent();
+      return Encode.forHtml(result);
+    } catch (SAXException | IOException e) {
+      log.error(e.toString());
+    }
+    return null;
+  }
+}
