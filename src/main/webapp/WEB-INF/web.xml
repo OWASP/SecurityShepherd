@@ -1296,12 +1296,12 @@
 		<url-pattern>/challenges/ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123e</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>/challenges/ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123e0</servlet-name>
-		<servlet-class>servlets.module.lesson.XxeLesson</servlet-class>
+		<servlet-name>/challenges/ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123eOldWebService</servlet-name>
+		<servlet-class>servlets.module.challenge.XxeChallenge1OldWebService</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>/challenges/ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123e0</servlet-name>
-		<url-pattern>/challenges/ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123e0</url-pattern>
+		<servlet-name>/challenges/ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123eOldWebService</servlet-name>
+		<url-pattern>/challenges/ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123eOldWebService</url-pattern>
 	</servlet-mapping>
 
 
