@@ -1932,6 +1932,9 @@ public class Getter {
         if (resultSet.getString(1) != null) {
           result +=
               "<tr><td>"
+        		  + resultAmount
+        		  + // Output the user
+        		  "</td><td>"
                   + Encode.forHtml(resultSet.getString(1))
                   + // Output their progress
                   "</td><td><div style='background-color: #A878EF; heigth: 25px; width: "
@@ -1946,7 +1949,7 @@ public class Getter {
         }
       }
       if (resultAmount > 0) {
-        result = "<table><tr><th>Player</th><th>Progress</th></tr>" + result + "</table>";
+        result = "<table><tr><th>#</th><th>Player</th><th>Progress</th></tr>" + result + "</table>";
       } else {
         result = new String();
       }
