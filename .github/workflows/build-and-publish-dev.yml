@@ -44,7 +44,6 @@ jobs:
           java-version: 1.8
       - name: Build Maven with Docker Profile
         run: mvn clean install -Pdocker -DskipTests -B
-
       - name: Build and push
         uses: docker/bake-action@master
         with:
@@ -57,3 +56,7 @@ jobs:
           CONTAINER_MARIADB: secshep-mariadb
           CONTAINER_MONGO: secshep-mongo
           MONGO_BIND_ADDRESS: "0.0.0.0"
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
