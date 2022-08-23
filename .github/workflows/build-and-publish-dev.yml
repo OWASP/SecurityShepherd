@@ -56,8 +56,8 @@ jobs:
           CONTAINER_MARIADB: secshep-mariadb
           CONTAINER_MONGO: secshep-mongo
           MONGO_BIND_ADDRESS: "0.0.0.0"
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
-        if: ${{ failure() }}
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     limit-access-to-actor: true
+      #   if: ${{ failure() }}
