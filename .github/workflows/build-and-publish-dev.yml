@@ -6,7 +6,7 @@ on:
 
 permissions:
   contents: read
-  id-token: read
+  id-token: write
 
 jobs:
   build-and-publish:
