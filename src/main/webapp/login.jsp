@@ -58,7 +58,7 @@
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>OWASP Security Shepherd - Login</title>
+<title>Elastic CTF - Powered by OWASP Security Shepherd - Login</title>
 
 <link href="css/theCss.css" rel="stylesheet" type="text/css"
 	media="screen" />
@@ -71,7 +71,6 @@
 		<jsp:include page="translation-select.jsp" />
 		<!-- start header -->
 		<div id="header">
-			<h1>Security Shepherd</h1>
 		</div>
 		<!-- end header -->
 		<!-- start page -->
@@ -81,8 +80,12 @@
 				style="margin-right: auto; margin-left: auto; width: 40%; max-width: 320px;">
 				<div class="post">
 					<h1 class="title" id="login_title">
-						<fmt:message key="generic.text.login" />
+						Get Started
 					</h1>
+					<p>
+						1) Download and install
+						<a href="https://portswigger.net/burp/communitydownload" target="_blank">Burp Suite</a>
+					</p>
 					<%
 					if (ScoreboardStatus.isPublicScoreboard()) {
 						%>
@@ -102,17 +105,20 @@
 						if (LoginMethod.isLogin()) {
 					%>
 					<p id="login-info">
-						<fmt:message key="login.text.info" />
+
 						<%
 							if (OpenRegistration.isEnabled()) {
 						%>
 					
 					<p id="register_info">
-						<fmt:message key="login.text.regInfo" />
+						2) <a href="register.jsp">Register</a> an account on the CTF platform.
 					</p>
 					<%
 							}
 					%>
+					<p id="register_info">
+						3) Login Below
+					</p>
 					<form name="loginForm" method="POST" action="login">
 						<table>
 							<tr>
@@ -147,35 +153,37 @@
 					%>
 					<br /> <br />
 					<div align="center">
-						<a id="tools" href="javascript:;"><fmt:message
-								key="login.text.proxy_question" /></a>
-						<div id="toolsTable" style="display: none;">
-							<p>
-								<fmt:message key="login.text.download_proxy" />
-								;
-							</p>
-							<table>
-								<tr>
-									<td align="center"><a
-										href="https://github.com/zaproxy/zaproxy/wiki/Downloads"><fmt:message
-												key="login.link.zap_win" /></a></td>
-								</tr>
-								<tr>
-									<td align="center"><a
-										href="https://github.com/zaproxy/zaproxy/wiki/Downloads"><fmt:message
-												key="login.link.zap_lin" /></a></td>
-								</tr>
-								<tr>
-									<td align="center"><a
-										href="https://github.com/zaproxy/zaproxy/wiki/Downloads"><fmt:message
-												key="login.link.zap_mac" /></a></td>
-								</tr>
-							</table>
-						</div>
-						<br> <a id="showAbout" href="javascript:;"><fmt:message
-								key="generic.text.aboutSecShep" /></a>
+					<br> <a id="showAbout" href="javascript:;"><fmt:message
+							key="generic.text.aboutSecShep" /></a>
 					</div>
 				</div>
+			</div>
+			<div>
+				<h2 class="title">CTF Rules</h2>
+				<ul>
+					<li><b>With great power comes great responsibility</b> - The levels within the CTF are for
+						educational purposes only. Do not use the skills and techniques that you learn from this
+						platform elsewhere without authorization. Always keep it ethical and legal.</li>
+					<li><b>Scope</b> - don’t attempt to bypass the platform's mechanisms which include, but not limited to
+						<ul>
+							<li>The login / logout mechanisms </li>
+							<li>The registration page</li>
+							<li>The CTF key submission</li>
+							<li>The scoreboard</li>
+							<li>The admin console</li>
+						</ul>
+						However, if you stumble across something report it and we'll award points
+					</li>
+					<li><b>Exploiting</b> - automated tools are forbidden where the platform will deduct points for multiple
+						wrongly submitted result keys</li>
+					<li><b>Collaborate</b> - If you're super helpful to your fellow Elasticians and they nominate you there's
+					bonus points up for grabs</li>
+					<li><b>They're out there</b> - post on the #capture-the-flag channel, reach out to a colleague or use
+					Google to understand a concept, don't just look up the answer</li>
+					<li><b>Have fun!</b> - these are fun challenges that range from beginner to advanced difficulty and if
+						you learn something along the way then that’s a bonus!</li>
+				</ul>
+				<br /><br />
 			</div>
 			<div align="justify">
 
