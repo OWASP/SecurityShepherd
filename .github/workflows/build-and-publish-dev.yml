@@ -9,7 +9,7 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-publish:
+  build-and-publish-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
