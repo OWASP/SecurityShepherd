@@ -164,7 +164,7 @@
 					<li><b>With great power comes great responsibility</b> - The levels within the CTF are for
 						educational purposes only. Do not use the skills and techniques that you learn from this
 						platform elsewhere without authorization. Always keep it ethical and legal.</li>
-					<li><b>Scope</b> - don’t attempt to bypass the platform's mechanisms which include, but not limited to
+					<li><b>Scope</b> - don’t attempt to attack the platform's mechanisms which include, but not limited to
 						<ul>
 							<li>The login / logout mechanisms </li>
 							<li>The registration page</li>
@@ -172,11 +172,11 @@
 							<li>The scoreboard</li>
 							<li>The admin console</li>
 						</ul>
-						However, if you stumble across something report it and we'll award points
+						<span style="visibility: hidden; display: none">However, if you stumble across something report it and we'll award points</span>
 					</li>
-					<li><b>Exploiting</b> - automated tools are forbidden where the platform will deduct points for multiple
-						wrongly submitted result keys</li>
-					<li><b>Collaborate</b> - If you're super helpful to your fellow Elasticians and they nominate you there's
+					<li><b>Exploiting</b> - automated tools are forbidden <span  style="visibility: hidden; display: none">where the platform will deduct points for multiple
+						wrongly submitted result keys</span></li>
+					<li style="visibility: hidden; display: none"><b>Collaborate</b> - If you're super helpful to your fellow Elasticians and they nominate you there's
 					bonus points up for grabs</li>
 					<li><b>They're out there</b> - post on the #capture-the-flag channel, reach out to a colleague or use
 					Google to understand a concept, don't just look up the answer</li>

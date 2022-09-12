@@ -1,7 +1,7 @@
 body {
 	margin: 0;
 	padding: 0;
-	background: #FFFFFF url(images/grass_tile_v2.jpeg) repeat-x top center;
+	background: #F7F5FA url(images/grassTile-elastic.jpg) repeat-x top center;
 	font-size: 13px;
 	color: #090212;
 }
@@ -55,7 +55,7 @@ a:hover {
 	width: 757px;
 	height: 340px;
 	margin: 0 auto;
-	background: url(images/shepherd_and_sheep_v2.png) no-repeat right top;
+	background: url(images/resized-banner.png) no-repeat center top;
 }
 
 #header h1, #header p {

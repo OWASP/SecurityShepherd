@@ -84,45 +84,9 @@
 </head>
 <body>
 	<script type="text/javascript" src="js/jquery.js"></script>
-	<div class="points">
+	<div class="points" style="visibility: hidden; display: none">
 		<h2 class="title">Points</h2>
 		<p>Below is a breakdown of the points on offer for helping out your fellow participants and completing a level.</p>
-		<h3>Achievements</h3>
-		<table>
-			<tr>
-				<th>Achievement</th>
-				<th>Points</th>
-			</tr>
-			<tr>
-				<td>Don’t mute the messenger - Tag 5 people on the #capture-the-flag channel and use the hashtag
-					#ctftheword. Once they’re signed up @infosec-product-security on Slack referencing where you tagged
-					everyone and we’ll award the points.</td>
-				<td>10</td>
-			</tr>
-			<tr>
-				<td>Popup Points - Trigger an XSS alert box where the CTF platform doesn't award points. Use the
-					hashtag #alert on #capture-the-flag along with your XSS payload. (1 payload per person)</td>
-				<td>20</td>
-			</tr>
-			<tr>
-				<td>Proxy Pals - Nominate someone on #capture-the-flag who helped you figure out how to use Burp Suite.
-					Use the hashtag #proxypals were you get 3 points and they get 30!</td>
-				<td>30</td>
-			</tr>
-			<tr>
-				<td>It was like that when I got here - report a valid security issue against the CTF platform to the
-					Product Security Team by sending an email to product-security@</td>
-				<td>40</td>
-			</tr>
-			<tr>
-				<td>OWASP is that? - Nominate someone on #capture-the-flag using the hashtag #levelcomplete who
-					helped you understand any security issue in the CTF e.g. XSS, CSRF, Injection etc. where that help
-					lead you to pass the level. You get 5 points and they get 50!
-				</td>
-				<td>50</td>
-			</tr>
-		</table>
-		<br />
 		<h3>Levels</h3>
 		<table>
 			<tr>
