@@ -1,0 +1,63 @@
+name: build-and-publish-dev
+on:
+  push:
+    branches:
+      - "dev"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v0"
+        with:
+          token_format: "access_token"
+          workload_identity_provider: ${{secrets.WORKLOAD_IDENTITY_PROVIDER_DEV}}
+          service_account: ${{secrets.SERVICE_ACCOUNT_ID_DEV}}
+
+      - name: Login to GCR
+        uses: docker/login-action@v2
+        with:
+          registry: us-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - name: Set environment variables
+        uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: .env
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build Maven with Docker Profile
+        run: mvn clean install -Pdocker -DskipTests -B
+      - name: Build and push
+        uses: docker/bake-action@master
+        with:
+          push: true
+        env:
+          IMAGE_TOMCAT: us-docker.pkg.dev/elastic-infosec-dev/security-shepherd/security-shepherd:latest
+          IMAGE_MARIADB: us-docker.pkg.dev/elastic-infosec-dev/security-shepherd/security-shepherd_mariadb:latest
+          IMAGE_MONGO: us-docker.pkg.dev/elastic-infosec-dev/security-shepherd/security-shepherd_mongo:latest
+          CONTAINER_TOMCAT: secshep-tomcat
+          CONTAINER_MARIADB: secshep-mariadb
+          CONTAINER_MONGO: secshep-mongo
+          MONGO_BIND_ADDRESS: "0.0.0.0"
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     limit-access-to-actor: true
+      #   if: ${{ failure() }}

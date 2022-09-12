@@ -61,7 +61,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>OWASP Security Shepherd</title>
+<title>Elastic CTF - Powered by OWASP Security Shepherd</title>
 
 <!-- 
 			<fmt:message key="generic.text.commentMessage.1" /> 
@@ -90,7 +90,6 @@ if (request.getSession() != null)
 	<div id="wrapper">
 		<jsp:include page="translation-select.jsp" />
 		<div id="header">
-			<h1>Security Shepherd</h1>
 			<div style="position: absolute; top: 12px; right: 130px;">
 				<p>
 					<strong><%= userName %>&nbsp;&#x7c;&nbsp;<a
