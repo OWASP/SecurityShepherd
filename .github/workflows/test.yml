@@ -1,7 +1,6 @@
 name: Build and Test
 on:
   push:
-    branches: [master, dev]
     paths-ignore:
       - '**.md'
   pull_request:
