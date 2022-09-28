@@ -1,17 +1,8 @@
 name: Release to Dockerhub
 on:
-  create:
-    tags:
-      - 'v*'
-    paths-ignore:
-      - '**.md'
-      - '.github/ISSUE_TEMPLATE'
-      - '.gitignore'
-      - 'provisioning'
-      - '.sonarcloud.properties'
-      - 'LICENSE'
-      - 'Vagrantfile'
-  push:
+  pull_request:
+    types:
+      - closed
     branches: [master, dev]
     paths-ignore:
       - '**.md'
@@ -24,6 +15,7 @@ on:
 
 jobs:
   release:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
