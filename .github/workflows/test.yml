@@ -37,12 +37,12 @@ jobs:
         id: mariadb
         with:
           format: cyclonedx-json
-          image: owasp/security-shepherd_maridadb
+          image: owasp/security-shepherd_mariadb
       - uses: anchore/sbom-action@v0
         id: mongodb
         with:
           format: cyclonedx-json
-          image: owasp/security-shepherd_mongodb
+          image: owasp/security-shepherd_mongo
       - uses: actions/upload-artifact@v3
         with:
           name: security_shepherd_sboms
