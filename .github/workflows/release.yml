@@ -35,32 +35,34 @@ jobs:
           path: target/*.war
       - name: Docker Compose Build
         run: docker-compose build
-      - name: Generate Security Shepherd Tomcat SBOM
+      - name: Generate Tomcat Docker Image SBOM
         uses: anchore/sbom-action@v0
         id: tomcat
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd
-      - name: Generate Security Shepherd MariaDB SBOM
+          output-file: target/
+      - name: Generate MariaDB Docker Image SBOM
         uses: anchore/sbom-action@v0
         id: mariadb
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mariadb
-      - name: Generate Security Shepherd MongoDB SBOM
+          output-file: target/
+      - name: Generate MongoDB Docker Image SBOM
         uses: anchore/sbom-action@v0
         id: mongodb
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mongo
+          output-file: target/
       - name: Upload SBOMs
         uses: actions/upload-artifact@v3
         with:
           name: security_shepherd_sboms
           path: |
-            target/bom.json
-            target/bom.xml
-            *.json
+            target/*.json
+            target/*.xml
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
@@ -70,7 +72,7 @@ jobs:
             docker/mariadb/target
             docker/mongo/target
 
-  release-tomcat:
+  release-web-app:
     needs: build
 #    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
@@ -119,7 +121,7 @@ jobs:
             ALIAS
             HTTPS_PORT
 
-  release-mariadb:
+  release-database:
     needs: build
     #    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
