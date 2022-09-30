@@ -37,12 +37,12 @@ jobs:
         id: mariadb
         with:
           format: cyclonedx-json
-          path: docker/mariadb/
+          path: ./docker/mariadb/
       - uses: anchore/sbom-action@v0
         id: mongodb
         with:
           format: cyclonedx-json
-          path: docker/mongo/
+          path: ./docker/mongo/
       - uses: actions/upload-artifact@v3
         with:
           name: security_shepherd_sboms
