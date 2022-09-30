@@ -41,21 +41,21 @@ jobs:
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd
-          output-file: target/
+          output-file: ${{ github.workspace }}/target/
       - name: Generate MariaDB Docker Image SBOM
         uses: anchore/sbom-action@v0
         id: mariadb
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mariadb
-          output-file: target/
+          output-file: ${{ github.workspace }}/target/
       - name: Generate MongoDB Docker Image SBOM
         uses: anchore/sbom-action@v0
         id: mongodb
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mongo
-          output-file: target/
+          output-file: ${{ github.workspace }}/target/
       - name: Upload SBOMs
         uses: actions/upload-artifact@v3
         with:
@@ -72,7 +72,7 @@ jobs:
             docker/mariadb/target
             docker/mongo/target
 
-  release-web-app:
+  release-webapp:
     needs: build
 #    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
@@ -210,5 +210,3 @@ jobs:
           build-args: |
             MONGODB_VERSION
             MONGO_BIND_ADDRESS
-
-
