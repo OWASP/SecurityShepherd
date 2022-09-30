@@ -32,17 +32,17 @@ jobs:
         id: tomcat
         with:
           format: cyclonedx-json
-          image: ismisepaul/security-shepherd
+          image: owasp/security-shepherd
       - uses: anchore/sbom-action@v0
         id: mariadb
         with:
           format: cyclonedx-json
-          image: ismisepaul/security-shepherd_maridadb
+          image: owasp/security-shepherd_maridadb
       - uses: anchore/sbom-action@v0
         id: mongodb
         with:
           format: cyclonedx-json
-          image: ismisepaul/security-shepherd_mongodb
+          image: owasp/security-shepherd_mongodb
       - uses: actions/upload-artifact@v3
         with:
           name: security_shepherd_sboms
