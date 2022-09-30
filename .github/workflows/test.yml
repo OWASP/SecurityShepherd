@@ -1,9 +1,25 @@
 name: Build and Test
 on:
   push:
+    branches: [master, dev]
     paths-ignore:
       - '**.md'
+      - '.github/ISSUE_TEMPLATE'
+      - '.gitignore'
+      - 'provisioning'
+      - '.sonarcloud.properties'
+      - 'LICENSE'
+      - 'Vagrantfile'
   pull_request:
+    branches: [master, dev]
+    paths-ignore:
+      - '**.md'
+      - '.github/ISSUE_TEMPLATE'
+      - '.gitignore'
+      - 'provisioning'
+      - '.sonarcloud.properties'
+      - 'LICENSE'
+      - 'Vagrantfile'
 
 jobs:
   lint-java:

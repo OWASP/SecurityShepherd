@@ -1,23 +1,21 @@
 name: Release to Dockerhub
 on:
-  push:
+  pull_request:
+    types:
+      - closed
+    branches: [master, dev]
     paths-ignore:
       - '**.md'
-#  pull_request:
-#    types:
-#      - closed
-#    branches: [master, dev]
-#    paths-ignore:
-#      - '**.md'
-#      - '.github/ISSUE_TEMPLATE'
-#      - '.gitignore'
-#      - 'provisioning'
-#      - '.sonarcloud.properties'
-#      - 'LICENSE'
-#      - 'Vagrantfile'
+      - '.github/ISSUE_TEMPLATE'
+      - '.gitignore'
+      - 'provisioning'
+      - '.sonarcloud.properties'
+      - 'LICENSE'
+      - 'Vagrantfile'
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     name: build
     runs-on: ubuntu-latest
     steps:
@@ -74,7 +72,7 @@ jobs:
 
   release-webapp:
     needs: build
-#    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -90,7 +88,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ismisepaul/security-shepherd
+          images: owasp/security-shepherd
 
       - name: Restore Cached Maven packages
         uses: actions/cache@v3
@@ -123,7 +121,7 @@ jobs:
 
   release-database:
     needs: build
-    #    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -139,7 +137,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ismisepaul/security-shepherd_mariadb
+          images: owasp/security-shepherd_mariadb
 
       - name: Restore Cached Maven packages
         uses: actions/cache@v3
@@ -168,7 +166,7 @@ jobs:
 
   release-mongodb:
     needs: build
-    #    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -184,7 +182,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ismisepaul/security-shepherd_mongodb
+          images: owasp/security-shepherd_mongodb
 
       - name: Restore Cached Maven packages
         uses: actions/cache@v3
