@@ -28,12 +28,28 @@ jobs:
         run: mvn clean install -Pdocker -DskipTests -B -DexcludeTestProject=true cyclonedx:makeBom
       - name: Docker Compose Build
         run: docker-compose build
+      - uses: anchore/sbom-action@v0
+        with:
+          id: tomcat
+          format: cyclonedx-json
+          path: .
+      - uses: anchore/sbom-action@v0
+        with:
+          id: mariadb
+          format: cyclonedx-json
+          path: docker/mariadb/
+      - uses: anchore/sbom-action@v0
+        with:
+          id: mongodb
+          format: cyclonedx-json
+          path: docker/mongo/
       - uses: actions/upload-artifact@v3
         with:
-          name: sbom
+          name: security_shepherd_sboms
           path: |
-            target/security_shepherd_bom.json
-            target/security_shepherd_bom.xml
+            target/bom.json
+            target/bom.xml
+            *.json
 
   unit-tests:
     needs: [lint-java, build]
@@ -93,5 +109,3 @@ jobs:
       - name: Run Intergration Tests
         run: |
           mvn verify -DskipUTs=true -DmongoDocker -B
-
-
