@@ -41,21 +41,21 @@ jobs:
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd
-          output-file: ${{ github.workspace }}/target/
+          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-tomcat.cyclonedx.json
       - name: Generate MariaDB Docker Image SBOM
         uses: anchore/sbom-action@v0
         id: mariadb
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mariadb
-          output-file: ${{ github.workspace }}/target/
+          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mariadb.cyclonedx.json
       - name: Generate MongoDB Docker Image SBOM
         uses: anchore/sbom-action@v0
         id: mongodb
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mongo
-          output-file: ${{ github.workspace }}/target/
+          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mongodb.cyclonedx.json
       - name: Upload SBOMs
         uses: actions/upload-artifact@v3
         with:
