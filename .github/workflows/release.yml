@@ -37,10 +37,10 @@ jobs:
           path: |
             target/
             docker/mariadb/target
-            docker/mongodb/target
+            docker/mongo/target
       - uses: actions/upload-artifact@v3
         with:
-          name: War File
+          name: security_shepherd_war
           path: target/*.war
 
   release-tomcat:
@@ -70,7 +70,7 @@ jobs:
           path: |
             target/
             docker/mariadb/target
-            docker/mongodb/target
+            docker/mongo/target
 
       # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
       - name: Set environment variables
@@ -91,7 +91,6 @@ jobs:
             TLS_KEYSTORE_PASS
             ALIAS
             HTTPS_PORT
-            
 
   release-mariadb:
     needs: build
@@ -120,7 +119,7 @@ jobs:
           path: |
             target/
             docker/mariadb/target
-            docker/mongodb/target
+            docker/mongo/target
 
       - name: Set environment variables
         uses: c-py/action-dotenv-to-setenv@v2
@@ -165,7 +164,7 @@ jobs:
           path: |
             target/
             docker/mariadb/target
-            docker/mongodb/target
+            docker/mongo/target
 
       - name: Set environment variables
         uses: c-py/action-dotenv-to-setenv@v2

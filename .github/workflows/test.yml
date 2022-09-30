@@ -32,8 +32,8 @@ jobs:
         with:
           name: sbom
           path: |
-            target/bom.json
-            target/bom.xml
+            target/security_shepherd_bom.json
+            target/security_shepherd_bom.xml
 
   unit-tests:
     needs: [lint-java, build]
