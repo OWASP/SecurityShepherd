@@ -41,7 +41,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build Maven with Docker Profile
-        run: mvn clean install -Pdocker -DskipTests -B -DexcludeTestProject=true cyclonedx:makeBom
+        run: mvn clean install -Pdocker -DskipTests -B
       - name: Docker Compose Build
         run: docker-compose build
 
