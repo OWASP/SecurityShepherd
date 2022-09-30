@@ -74,7 +74,7 @@ jobs:
 
       # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
       - name: Set environment variables
-        uses: c-py/action-dotenv-to-setenv@v2
+        uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a  # v4
         with:
           env-file: .env
 
@@ -122,7 +122,7 @@ jobs:
             docker/mongo/target
 
       - name: Set environment variables
-        uses: c-py/action-dotenv-to-setenv@v2
+        uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a  # v4
         with:
           env-file: .env
 
@@ -167,7 +167,7 @@ jobs:
             docker/mongo/target
 
       - name: Set environment variables
-        uses: c-py/action-dotenv-to-setenv@v2
+        uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a  # v4
         with:
           env-file: .env
 

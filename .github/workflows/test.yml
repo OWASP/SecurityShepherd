@@ -29,18 +29,18 @@ jobs:
       - name: Docker Compose Build
         run: docker-compose build
       - uses: anchore/sbom-action@v0
+        id: tomcat
         with:
-          id: tomcat
           format: cyclonedx-json
           path: .
       - uses: anchore/sbom-action@v0
+        id: mariadb
         with:
-          id: mariadb
           format: cyclonedx-json
           path: docker/mariadb/
       - uses: anchore/sbom-action@v0
+        id: mongodb
         with:
-          id: mongodb
           format: cyclonedx-json
           path: docker/mongo/
       - uses: actions/upload-artifact@v3
