@@ -30,6 +30,14 @@ jobs:
         run: mvn clean install -Pdocker -DskipTests -B
       - name: Docker Compose Build
         run: docker-compose build
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          key: maven-output-${{ hashFiles('target/**') }}
+          path: |
+            target/
+            docker/mariadb/target
+            docker/mongodb/target
       - uses: actions/upload-artifact@v3
         with:
           name: War File
@@ -55,10 +63,14 @@ jobs:
         with:
           images: ismisepaul/security-shepherd
 
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Restore Cached Maven packages
+        uses: actions/cache@v3
         with:
-          java-version: 1.8
+          key: maven-output-${{ hashFiles('target/**') }}
+          path: |
+            target/
+            docker/mariadb/target
+            docker/mongodb/target
 
       # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
       - name: Set environment variables
@@ -101,12 +113,15 @@ jobs:
         with:
           images: ismisepaul/security-shepherd_mariadb
 
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Restore Cached Maven packages
+        uses: actions/cache@v3
         with:
-          java-version: 1.8
+          key: maven-output-${{ hashFiles('target/**') }}
+          path: |
+            target/
+            docker/mariadb/target
+            docker/mongodb/target
 
-      # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
       - name: Set environment variables
         uses: c-py/action-dotenv-to-setenv@v2
         with:
@@ -143,10 +158,14 @@ jobs:
         with:
           images: ismisepaul/security-shepherd_mongodb
 
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Restore Cached Maven packages
+        uses: actions/cache@v3
         with:
-          java-version: 1.8
+          key: maven-output-${{ hashFiles('target/**') }}
+          path: |
+            target/
+            docker/mariadb/target
+            docker/mongodb/target
 
       - name: Set environment variables
         uses: c-py/action-dotenv-to-setenv@v2
