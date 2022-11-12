@@ -205,7 +205,7 @@
 									} else {
 								%>
 								<input type="text" id="dbuser" name="dbuser"
-									placeholder="Database Port..." required>
+									placeholder="Database User..." required>
 								<%
 									}
 								%>
@@ -227,7 +227,7 @@
 									} else {
 								%>
 								<input type="password" id="dbpass" name="dbpass"
-									placeholder="Database Port..." required>
+									placeholder="Database Password..." required>
 								<%
 									}
 								%>
