@@ -1319,11 +1319,11 @@ public class Getter {
           jsonInner.put("scale", barScale); // Scale of score bar
           jsonInner.put("place", place); // Place on board
           jsonInner.put("order", (place + tieBreaker)); // Order on board
-          jsonInner.put("goldMedalCount", Integer.valueOfgoldMedals));
+          jsonInner.put("goldMedalCount", Integer.valueOf(goldMedals));
           jsonInner.put("goldDisplay", goldDisplayStyle);
-          jsonInner.put("silverMedalCount", Integer.valueOfsilverMedals));
+          jsonInner.put("silverMedalCount", Integer.valueOf(silverMedals));
           jsonInner.put("silverDisplay", silverDisplayStyle);
-          jsonInner.put("bronzeMedalCount", Integer.valueOfbronzeMedals));
+          jsonInner.put("bronzeMedalCount", Integer.valueOf(bronzeMedals));
           jsonInner.put("bronzeDisplay", bronzeDisplayStyle);
           // log.debug("Adding: " + jsonInner.toString());
           json.add(jsonInner);
@@ -1994,9 +1994,9 @@ public class Getter {
           jsonInner.put(
               "userName", new String(Encode.forHtml(resultSet.getString(1)))); // User Name
           jsonInner.put(
-              "progressBar", Integer.valueOfresultSet.getInt(2) * widthOfUnitBar)); // Progress Bar
+              "progressBar", Integer.valueOf(resultSet.getInt(2) * widthOfUnitBar)); // Progress Bar
           // Width
-          jsonInner.put("score", Integer.valueOfresultSet.getInt(3))); // Score
+          jsonInner.put("score", Integer.valueOf(resultSet.getInt(3))); // Score
           log.debug("Adding: " + jsonInner.toString());
           json.add(jsonInner);
         }
