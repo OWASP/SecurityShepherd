@@ -34,6 +34,7 @@ public class OpenOrCloseByCategory extends HttpServlet {
     log.debug("&&& servlets.module.OpenOrCloseByCategory &&&");
     String htmlOutput = new String();
     PrintWriter out = response.getWriter();
+    response.setContentType("text/html");
     out.print(getServletInfo());
     HttpSession ses = request.getSession(true);
     Cookie tokenCookie = Validate.getToken(request.getCookies());

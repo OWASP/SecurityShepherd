@@ -59,6 +59,7 @@ public class RefreshMenu extends HttpServlet {
     boolean isRunning = false;
     boolean isAdmin = false;
     log.debug("&&& servlets.module.RefreshMenu &&&");
+    response.setContentType("text/html");
     PrintWriter out = response.getWriter();
     out.print(getServletInfo());
     HttpSession ses = request.getSession(true);
