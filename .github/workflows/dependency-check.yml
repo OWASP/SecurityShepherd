@@ -6,8 +6,8 @@ on:
     - cron:  '0 0 1,15 * *'
   push:
     branches: [master, dev]
-    paths-ignore:
-      - '**.md'
+    paths:
+      - 'pom.xml'
   pull_request:
 
 jobs:
