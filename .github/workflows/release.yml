@@ -15,7 +15,7 @@ on: push
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
+#    if: github.event.pull_request.merged == true
     name: build
     runs-on: ubuntu-latest
     steps:
@@ -72,7 +72,7 @@ jobs:
 
   release-webapp:
     needs: build
-    if: github.event.pull_request.merged == true
+#    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -121,7 +121,7 @@ jobs:
 
   release-database:
     needs: build
-    if: github.event.pull_request.merged == true
+#    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -166,7 +166,7 @@ jobs:
 
   release-mongodb:
     needs: build
-    if: github.event.pull_request.merged == true
+#    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
