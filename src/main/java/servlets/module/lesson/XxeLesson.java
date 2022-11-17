@@ -42,7 +42,8 @@ import utils.XmlDocumentBuilder;
  * PURPOSE. See the GNU General Public License for more details.<br>
  *
  * <p>You should have received a copy of the GNU General Public License along with the Security
- * Shepherd project. If not, see <http://www.gnu.org/licenses/>.
+ * Shepherd project. If not, see <a
+ * href="https://www.gnu.org/licenses/">http://www.gnu.org/licenses/.</a>.
  *
  * @author ismisepaul
  */
@@ -107,7 +108,8 @@ public class XxeLesson extends HttpServlet {
             } else {
               // dumb way of preventing the other level from being read
               if (emailAddr.contains("1016d6dce9f715e9eab4f3a884b3b316cfbba8fb4023c19f34c")) {
-                htmlOutput += "<p>" + bundle.getString("response.invalid.email") + "</p>";
+                htmlOutput +=
+                    "<p>" + bundle.getString("response.invalid.email") + ". Wrong File.</p>";
                 out.write(htmlOutput);
               } else {
                 htmlOutput +=
