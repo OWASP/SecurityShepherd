@@ -310,7 +310,7 @@ public class Setter {
       File siteProperties = new File(applicationRoot + "/WEB-INF/database.properties");
       DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties, false));
       String theProperties =
-          new String("databaseConnectionURL=" + url + "\nDriverType=org.gjt.mm.mysql.Driver");
+          new String("databaseConnectionURL=" + url + "\nDriverType=com.mysql.jdbc.Driver");
       writer.write(theProperties.getBytes());
       writer.close();
       // Update Core Schema Settings

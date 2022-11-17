@@ -108,7 +108,7 @@ public class Setup extends HttpServlet {
       }
       driverType = mysql_props.getProperty("DriverType");
       if (driverType == null) {
-        driverType = "org.gjt.mm.mysql.Driver";
+        driverType = "com.mysql.jdbc.Driver";
       }
       if (dbUser.isEmpty()) {
         dbUser = mysql_props.getProperty("databaseUsername");
@@ -124,7 +124,7 @@ public class Setup extends HttpServlet {
       }
     } else {
       connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
-      driverType = "org.gjt.mm.mysql.Driver";
+      driverType = "com.mysql.jdbc.Driver";
       dbOptions = "useUnicode=true&character_set_server=utf8mb4";
       validateInput = true;
       saveMysqlProperties = true;

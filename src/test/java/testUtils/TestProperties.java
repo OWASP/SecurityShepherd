@@ -399,7 +399,7 @@ public class TestProperties {
     BufferedWriter bw = new BufferedWriter(writer);
     bw.write("databaseConnectionURL=jdbc:mysql://" + dbHost + ":" + dbPort + "/");
     bw.newLine();
-    bw.write("DriverType=org.gjt.mm.mysql.Driver");
+    bw.write("DriverType=com.mysql.jdbc.Driver");
     bw.newLine();
     bw.write("databaseOptions=useUnicode=true&character_set_server=utf8mb4");
     bw.newLine();
