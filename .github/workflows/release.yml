@@ -1,17 +1,17 @@
 name: Release to Dockerhub
-on:
-  pull_request:
-    types:
-      - closed
-    branches: [master, dev]
-    paths-ignore:
-      - '**.md'
-      - '.github/ISSUE_TEMPLATE'
-      - '.gitignore'
-      - 'provisioning'
-      - '.sonarcloud.properties'
-      - 'LICENSE'
-      - 'Vagrantfile'
+on: push
+#  pull_request:
+#    types:
+#      - closed
+#    branches: [master, dev]
+#    paths-ignore:
+#      - '**.md'
+#      - '.github/ISSUE_TEMPLATE'
+#      - '.gitignore'
+#      - 'provisioning'
+#      - '.sonarcloud.properties'
+#      - 'LICENSE'
+#      - 'Vagrantfile'
 
 jobs:
   build:
