@@ -48,7 +48,7 @@ public class Setup extends HttpServlet {
 
     ResourceBundle.getBundle("i18n.servlets.errors", locale);
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
-    response.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html; charset=UTF-8");
     request.setCharacterEncoding("UTF-8");
 
     // Output Stuff
