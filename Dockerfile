@@ -30,7 +30,6 @@ RUN printf "connectionHost=$MONGO_HOST\nconnectionPort=$MONGO_PORT\ndatabaseName
 RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS">/keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'">/g' serverxml.patch &&\
     sed -i 's/redirectPort="HTTPS_PORT" \/>/redirectPort="'"$HTTPS_PORT"'" \/>/g' serverxml.patch
 
-
 FROM tomcat:${TOMCAT_DOCKER_VERSION}
 COPY --from=builder /workdir/ROOT.war /usr/local/tomcat/webapps/
 COPY --from=builder /workdir/$TLS_KEYSTORE_FILE /usr/local/tomcat/conf/
@@ -44,6 +43,8 @@ RUN apt-get -qq update && apt-get install -y patch libargon2-0
 RUN adduser --system --group ${RUN_USER} --home ${CATALINA_HOME}
 RUN chown -R ${RUN_USER}:${RUN_GROUP} $CATALINA_HOME
 USER ${RUN_USER}
+
+ENV CATALINA_OPTS "-Duser.timezone=Europe/Dublin"
 
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 RUN patch /usr/local/tomcat/conf/server.xml /usr/local/tomcat/conf/serverxml.patch
