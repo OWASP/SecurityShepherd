@@ -59,7 +59,7 @@
 
 			String csrfToken = Encode.forHtml(tokenCookie.getValue());
 			String hex = (String) ses.getAttribute("userName");
-			String tempId = new Integer(hex.getBytes().hashCode() + hex.substring(0, hex.length() / 2).hashCode()).toString();
+			String tempId = Integer.valueOf(hex.getBytes().hashCode() + hex.substring(0, hex.length() / 2).hashCode()).toString();
 			ses.setAttribute("tempId", tempId);
 %>
 

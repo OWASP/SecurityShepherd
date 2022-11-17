@@ -62,7 +62,7 @@
 			String csrfToken = Encode.forHtml(tokenCookie.getValue());
 			// Getting Session Variables
 			String hex = (String) ses.getAttribute("userName");
-			String falseId = new Integer(hex.getBytes().hashCode() + hex.substring(0, hex.length() / 2).hashCode()).toString();
+			String falseId = Integer.valueOf(hex.getBytes().hashCode() + hex.substring(0, hex.length() / 2).hashCode()).toString();
 			ses.setAttribute("falseId", falseId);
 %>
 
