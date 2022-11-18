@@ -44,8 +44,6 @@ RUN adduser --system --group ${RUN_USER} --home ${CATALINA_HOME}
 RUN chown -R ${RUN_USER}:${RUN_GROUP} $CATALINA_HOME
 USER ${RUN_USER}
 
-ENV CATALINA_OPTS "-Duser.timezone=Europe/Dublin"
-
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 RUN patch /usr/local/tomcat/conf/server.xml /usr/local/tomcat/conf/serverxml.patch
 RUN patch /usr/local/tomcat/conf/web.xml /usr/local/tomcat/conf/webxml.patch
