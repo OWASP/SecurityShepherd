@@ -1,21 +1,21 @@
 name: Release to Dockerhub
 on: 
-  pull_request:
-    types:
-      - closed
+  push:
     branches: [master, dev]
     paths-ignore:
       - '**.md'
-      - '.github/ISSUE_TEMPLATE'
+      - '.github/'
       - '.gitignore'
-      - 'provisioning'
       - '.sonarcloud.properties'
+      - 'provisioning'
+      - 'CONTRIBUTING.md'
       - 'LICENSE'
+      - 'README.md'
       - 'Vagrantfile'
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
+    if: github.event_name != 'pull_request'
     name: build
     runs-on: ubuntu-latest
     steps:
@@ -73,7 +73,7 @@ jobs:
 
   release-security-shepherd:
     needs: build
-    if: github.event.pull_request.merged == true
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -84,7 +84,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
