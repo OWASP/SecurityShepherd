@@ -20,9 +20,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.owasp.encoder.Encode;
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -62,7 +62,6 @@ public class XxeChallenge1 extends HttpServlet {
     // Setting IpAddress To Log and taking header for original IP if forwarded from proxy
     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
     log.debug(LEVEL_NAME + " Servlet Accessed");
-    response.setContentType("text/html");
     PrintWriter out = response.getWriter();
     out.print(getServletInfo());
 
@@ -129,21 +128,16 @@ public class XxeChallenge1 extends HttpServlet {
   public static String readJson(InputStream jsonEmail, ResourceBundle errors) {
     String result;
 
-    JSONParser jsonParser = new JSONParser();
     JSONObject jsonObject;
     try {
-      jsonObject =
-          (JSONObject) jsonParser.parse(new InputStreamReader(jsonEmail, StandardCharsets.UTF_8));
+      jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(jsonEmail, StandardCharsets.UTF_8)));
       result = jsonObject.get("email").toString();
       return result;
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (ParseException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
       return errors.getString("error.funky");
     }
 
-    return null;
   }
 
   /** Creates the file with the solution key needed to pass the level */

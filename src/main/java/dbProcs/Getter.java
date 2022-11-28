@@ -15,8 +15,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.owasp.encoder.Encode;
 import servlets.Register;
 import utils.ModulePlan;
@@ -239,6 +239,7 @@ public class Getter {
    * the rest of the work, including Brute Force prevention.
    *
    * @param userName The submitted user name to be used in authentication process
+   * @param ssoName 
    * @param password The submitted password in plain text to be used in authentication
    * @return A string array made up of nothing or information to be consumed by the initiating
    *     authentication process.
@@ -574,6 +575,8 @@ public class Getter {
    * have to go through another servlet to get the module's View address
    *
    * @param ApplicationRoot The current running context of the application
+   * @param userId The user identifier of the player
+   * @param lang The Locale the user has enabled
    * @return HTML menu for challenges
    * @throws SQLException
    */
@@ -632,7 +635,7 @@ public class Getter {
     }
     // Check if output is empty
     if (output.isEmpty()) {
-      output = "<li><a href='javascript:;'>No challenges found</a></li>";
+      output = "<li>No challenges found</li>";
     } else {
       log.debug("Appending End tags");
       output += "</ul></li>";
@@ -950,6 +953,7 @@ public class Getter {
    *
    * @param ApplicationRoot The running context of the application.
    * @param userId The user identifier of the user.
+   * @param lang The name of the Locale the user
    * @param csrfToken The cross site request forgery token
    * @return A HTML menu of a users current module progress and a script for interaction with this
    *     menu
@@ -1064,6 +1068,7 @@ public class Getter {
    *
    * @param ApplicationRoot The running context of the application.
    * @param userId The user identifier of the user.
+   * @param lang The name of the Locale the user
    * @param csrfToken The cross site request forgery token
    * @return A HTML menu of a users current module progress and a script for interaction with this
    *     menu
@@ -1326,7 +1331,7 @@ public class Getter {
           jsonInner.put("bronzeMedalCount", Integer.valueOf(bronzeMedals));
           jsonInner.put("bronzeDisplay", bronzeDisplayStyle);
           // log.debug("Adding: " + jsonInner.toString());
-          json.add(jsonInner);
+          json.put(jsonInner);
         }
       }
       if (resultAmount > 0) {
@@ -1354,6 +1359,7 @@ public class Getter {
    *
    * @param ApplicationRoot The current running context of the application
    * @param userId Identifier of the user
+   * @param lang The the Locale the user has enabled
    * @return HTML lesson menu for Open Floor Plan.
    */
   public static String getLessons(String ApplicationRoot, String userId, Locale lang) {
@@ -1390,7 +1396,7 @@ public class Getter {
       }
       // If no output has been found, return an error message
       if (output.isEmpty()) {
-        output = "<li><a href='javascript:;'>No lessons found</a></li>";
+        output = "<li>No lessons found</li>";
       } else {
         log.debug("Lesson List returned");
       }
@@ -1871,8 +1877,8 @@ public class Getter {
    * is 'validClass' will Error, = 'validclass' must be used.<br>
    * So there are two procedures this method calls. One that handles null classes, one that does not
    *
-   * @param ClassId Identifier of class
    * @param ApplicationRoot The current running context of the application
+   * @param classId Identifier of class
    * @return ResultSet that contains users for the selected class in the formate {userId, userName,
    *     userAddress}
    */
@@ -1998,7 +2004,7 @@ public class Getter {
           // Width
           jsonInner.put("score", Integer.valueOf(resultSet.getInt(3))); // Score
           log.debug("Adding: " + jsonInner.toString());
-          json.add(jsonInner);
+          json.put(jsonInner);
         }
       }
       if (resultAmount > 0) {
@@ -2045,7 +2051,7 @@ public class Getter {
    *
    * @param ApplicationRoot The running context of the application.
    * @param userId The user identifier of the user.
-   * @param csrfToken The cross site request forgery token
+   * @param lang The Locale the user has enabled
    * @return A HTML menu of a users current module progress and a script for interaction with this
    *     menu
    */
@@ -2188,9 +2194,10 @@ public class Getter {
   /**
    * Return all modules in JSON for specific User
    *
-   * @param ApplicationRoot
-   * @param userId
-   * @param lang
+   * @param ApplicationRoot The running context of the application.
+   * @param userId The user identifier of the user.
+   * @param floor The current module plan
+   * @param locale The Locale the user has enabled
    * @return
    */
   public static JSONArray getModulesJson(String userId, String floor, Locale locale) {
@@ -2211,7 +2218,7 @@ public class Getter {
       JSONArray jsonSectionModules = new JSONArray();
       JSONObject jsonObject = new JSONObject();
       jsonSection.put("levelMode", floor);
-      jsonOutput.add(jsonSection);
+      jsonOutput.put(jsonSection);
       jsonSection = new JSONObject();
 
       // Get the modules
@@ -2255,10 +2262,10 @@ public class Getter {
           }
           jsonObject.put("moduleOpen", moduleOpen);
         }
-        jsonSectionModules.add(jsonObject);
+        jsonSectionModules.put(jsonObject);
       }
       jsonSection.put("modules", jsonSectionModules);
-      jsonOutput.add(jsonSection);
+      jsonOutput.put(jsonSection);
     } catch (Exception e) {
       log.error("Module List Retrieval: " + e.toString());
     }
@@ -2361,7 +2368,7 @@ public class Getter {
    * been completed
    *
    * @param applicationRoot Running context of the application
-   * @param moduleHash Hash ID of the CSRF module you wish to check if a user has completed
+   * @param moduleId Hash ID of the CSRF module you wish to check if a user has completed
    * @param userId the ID of the user to check
    * @return True or False value depicting if the user has completed the module
    */
@@ -2448,6 +2455,7 @@ public class Getter {
   /**
    * Used to decipher whether or not a user exists as an admin
    *
+   * @param ApplicationRoot The current running context of the application
    * @param userId The user identifier of the admin to be found
    * @return A boolean reflecting the state of existence of the admin
    */
