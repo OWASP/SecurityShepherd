@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
     name: build
     runs-on: ubuntu-latest
     steps:
@@ -73,7 +73,7 @@ jobs:
 
   release-security-shepherd:
     needs: build
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
