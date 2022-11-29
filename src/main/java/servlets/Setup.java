@@ -96,7 +96,7 @@ public class Setup extends HttpServlet {
         }
       } else {
         // Override db properties from request parameters
-        connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
+        connectionURL = "jdbc:mariadb://" + dbHost + ":" + dbPort + "/";
 
         // Store the overridden data in properties file
         saveMysqlProperties = true;
@@ -108,7 +108,7 @@ public class Setup extends HttpServlet {
       }
       driverType = mysql_props.getProperty("DriverType");
       if (driverType == null) {
-        driverType = "com.mysql.jdbc.Driver";
+        driverType = "org.mariadb.jdbc.Driver";
       }
       if (dbUser.isEmpty()) {
         dbUser = mysql_props.getProperty("databaseUsername");
@@ -123,8 +123,8 @@ public class Setup extends HttpServlet {
         }
       }
     } else {
-      connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
-      driverType = "com.mysql.jdbc.Driver";
+      connectionURL = "jdbc:mariadb://" + dbHost + ":" + dbPort + "/";
+      driverType = "org.mariadb.jdbc.Driver";
       dbOptions = "useUnicode=true&character_set_server=utf8mb4";
       validateInput = true;
       saveMysqlProperties = true;
