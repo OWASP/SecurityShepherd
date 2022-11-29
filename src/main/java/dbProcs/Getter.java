@@ -87,10 +87,11 @@ public class Getter {
     }
 
     // See if user Exists
+    PreparedStatement prestmt;
     CallableStatement callstmt;
     try {
-      callstmt =
-          conn.prepareCall(
+      prestmt =
+          conn.prepareStatement(
               "SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId,"
                   + " suspendedUntil, loginType, tempUsername FROM `users` WHERE userName = ?");
     } catch (SQLException e) {
@@ -101,8 +102,8 @@ public class Getter {
     log.debug("Gathering results from query");
     ResultSet userResult;
     try {
-      callstmt.setString(1, userName);
-      userResult = callstmt.executeQuery();
+      prestmt.setString(1, userName);
+      userResult = prestmt.executeQuery();
     } catch (SQLException e) {
       log.fatal("Could not execute db query: " + e.toString());
       throw new RuntimeException(e);
@@ -238,6 +239,7 @@ public class Getter {
    * This method hashes the user submitted password and sends it to the database. The database does
    * the rest of the work, including Brute Force prevention.
    *
+   * @param ApplicationRoot The current running context of an application
    * @param userName The submitted user name to be used in authentication process
    * @param ssoName
    * @param password The submitted password in plain text to be used in authentication
@@ -271,10 +273,10 @@ public class Getter {
       throw new RuntimeException(e);
     }
     // See if user Exists
-    CallableStatement callstmt;
+    PreparedStatement prestmt;
     try {
-      callstmt =
-          conn.prepareCall(
+      prestmt =
+          conn.prepareStatement(
               "SELECT userId, userName, userPass, badLoginCount, tempPassword, classId,"
                   + " suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND"
                   + " loginType='saml'");
@@ -286,9 +288,9 @@ public class Getter {
     log.debug("Gathering userFind ResultSet");
     ResultSet userResult;
     try {
-      callstmt.setString(1, ssoName);
+      prestmt.setString(1, ssoName);
       log.debug("Executing query");
-      userResult = callstmt.executeQuery();
+      userResult = prestmt.executeQuery();
     } catch (SQLException e) {
       log.fatal("Could not execute db query: " + e.toString());
       throw new RuntimeException(e);
@@ -386,8 +388,8 @@ public class Getter {
 
     // Find the generated userID and username by asking the database
     try {
-      callstmt =
-          conn.prepareCall(
+      prestmt =
+          conn.prepareStatement(
               "SELECT userId, userName, classID, tempUsername FROM `users` WHERE ssoName = ? AND"
                   + " loginType='saml'");
 
@@ -399,9 +401,9 @@ public class Getter {
     log.debug("Gathering userResult ResultSet");
 
     try {
-      callstmt.setString(1, ssoName);
+      prestmt.setString(1, ssoName);
       log.debug("Executing query");
-      userResult = callstmt.executeQuery();
+      userResult = prestmt.executeQuery();
     } catch (SQLException e) {
       log.fatal("Could not execute db query: " + e.toString());
       throw new RuntimeException(e);
@@ -1845,9 +1847,10 @@ public class Getter {
       Connection conn = Database.getCoreConnection(ApplicationRoot);
 
       // Get the modules
-      CallableStatement callstmt =
-          conn.prepareCall("SELECT DISTINCT moduleCategory FROM modules ORDER BY moduleCategory");
-      ResultSet modules = callstmt.executeQuery();
+      PreparedStatement prestmt =
+          conn.prepareStatement(
+              "SELECT DISTINCT moduleCategory FROM modules ORDER BY moduleCategory");
+      ResultSet modules = prestmt.executeQuery();
       while (modules.next()) {
         String theModule =
             "<option value='"
@@ -2198,6 +2201,7 @@ public class Getter {
    * @param userId The user identifier of the user.
    * @param floor The current module plan
    * @param locale The Locale the user has enabled
+
    * @return
    */
   public static JSONArray getModulesJson(String userId, String floor, Locale locale) {
@@ -2382,7 +2386,7 @@ public class Getter {
       Connection conn = Database.getCoreConnection(applicationRoot);
 
       log.debug("Preparing csrfLevelComplete call");
-      CallableStatement callstmnt = conn.prepareCall("call csrfLevelComplete(?, ?)");
+      PreparedStatement callstmnt = conn.prepareCall("call csrfLevelComplete(?, ?)");
       callstmnt.setString(1, moduleId);
       callstmnt.setString(2, userId);
       log.debug("moduleId: " + moduleId);
@@ -2412,7 +2416,7 @@ public class Getter {
 
       // Get the modules
       PreparedStatement prepStmt =
-          conn.prepareCall("SELECT moduleStatus FROM modules WHERE moduleId = ?");
+          conn.prepareStatement("SELECT moduleStatus FROM modules WHERE moduleId = ?");
       prepStmt.setString(1, moduleId);
       ResultSet rs = prepStmt.executeQuery();
       if (rs.next()) {
