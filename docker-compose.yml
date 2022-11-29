@@ -38,6 +38,7 @@ services:
     container_name: ${CONTAINER_TOMCAT}
     volumes:
       - conf:/usr/local/tomcat/conf
+      - logs:/usr/local/tomcat/logs
     env_file:
       - .env
     build:
@@ -64,5 +65,6 @@ services:
 volumes:
   data:
   conf:
+  logs:
   mongodata:
   mongoconfig:

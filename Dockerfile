@@ -30,7 +30,6 @@ RUN printf "connectionHost=$MONGO_HOST\nconnectionPort=$MONGO_PORT\ndatabaseName
 RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS">/keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'">/g' serverxml.patch &&\
     sed -i 's/redirectPort="HTTPS_PORT" \/>/redirectPort="'"$HTTPS_PORT"'" \/>/g' serverxml.patch
 
-
 FROM tomcat:${TOMCAT_DOCKER_VERSION}
 COPY --from=builder /workdir/ROOT.war /usr/local/tomcat/webapps/
 COPY --from=builder /workdir/$TLS_KEYSTORE_FILE /usr/local/tomcat/conf/
