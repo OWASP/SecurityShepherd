@@ -3,7 +3,6 @@ package servlets;
 import com.onelogin.saml2.Auth;
 import com.onelogin.saml2.exception.Error;
 import com.onelogin.saml2.exception.SettingsException;
-import com.onelogin.saml2.exception.XMLEntityException;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -43,7 +42,6 @@ public class Logout extends HttpServlet {
   /**
    * Initiated in index.jsp. Invalidates session and Security Shepherd tokens are removed. The user
    * is logged out.
-   *
    */
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
