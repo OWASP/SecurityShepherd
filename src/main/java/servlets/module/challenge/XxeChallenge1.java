@@ -130,14 +130,14 @@ public class XxeChallenge1 extends HttpServlet {
 
     JSONObject jsonObject;
     try {
-      jsonObject = new JSONObject(new JSONTokener(new InputStreamReader(jsonEmail, StandardCharsets.UTF_8)));
+      jsonObject =
+          new JSONObject(new JSONTokener(new InputStreamReader(jsonEmail, StandardCharsets.UTF_8)));
       result = jsonObject.get("email").toString();
       return result;
     } catch (JSONException e) {
       e.printStackTrace();
       return errors.getString("error.funky");
     }
-
   }
 
   /** Creates the file with the solution key needed to pass the level */

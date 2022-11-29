@@ -239,7 +239,7 @@ public class Getter {
    * the rest of the work, including Brute Force prevention.
    *
    * @param userName The submitted user name to be used in authentication process
-   * @param ssoName 
+   * @param ssoName
    * @param password The submitted password in plain text to be used in authentication
    * @return A string array made up of nothing or information to be consumed by the initiating
    *     authentication process.
