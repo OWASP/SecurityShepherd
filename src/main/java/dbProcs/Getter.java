@@ -1840,7 +1840,8 @@ public class Getter {
 
       // Get the modules
       PreparedStatement prestmt =
-          conn.prepareStatement("SELECT DISTINCT moduleCategory FROM modules ORDER BY moduleCategory");
+          conn.prepareStatement(
+              "SELECT DISTINCT moduleCategory FROM modules ORDER BY moduleCategory");
       ResultSet modules = prestmt.executeQuery();
       while (modules.next()) {
         String theModule =
