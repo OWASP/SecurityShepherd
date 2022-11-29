@@ -1,0 +1,43 @@
+name: Dependency-Check
+
+on:
+  schedule:
+    # runs on the default branch every 2 weeks
+    - cron:  '0 0 1,15 * *'
+  push:
+    branches: [master, dev]
+    paths:
+      - 'pom.xml'
+  pull_request:
+
+jobs:
+  dependency-check:
+    runs-on: ubuntu-latest
+    name: dependency-check
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build Maven with Docker Profile
+        run: mvn clean install -Pdocker -DskipTests -B
+      - name: Dependency-Check Run
+        env:
+          # actions/setup-java changes JAVA_HOME so it needs to be reset to match the dependency-check docker image
+          JAVA_HOME: /opt/jdk
+        uses: dependency-check/Dependency-Check_Action@main
+        id: dependency-check
+        with:
+          project: 'OWASP Security Shepherd'
+          path: '.'
+          format: 'HTML'
+          args: >
+            --format JSON
+            --prettyPrint
+      - name: Publish Dependency-Check Results
+        uses: actions/upload-artifact@master
+        with:
+           name: dependency_check_report
+           path: ${{github.workspace}}/reports

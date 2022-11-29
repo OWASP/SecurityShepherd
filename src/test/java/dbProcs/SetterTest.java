@@ -304,7 +304,7 @@ public class SetterTest {
       String userId = Getter.getUserIdFromName(applicationRoot, userName);
       String csrfToken = new String("CsrfTokenTest");
       if (!Setter.setCsrfChallengeSevenCsrfToken(userId, csrfToken, applicationRoot)) {
-        fail("Could not Set CSRF Chalenge 7 Token");
+        fail("Could not Set CSRF Challenge 7 Token");
       }
     } else {
       fail("Could not Verify User");

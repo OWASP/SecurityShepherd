@@ -52,6 +52,7 @@ public class GetCheat extends HttpServlet {
     // Setting IpAddress To Log and taking header for original IP if forwarded from proxy
     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
     log.debug("*** servlets.Admin.GetCheat ***");
+    response.setContentType("text/html");
     String[] result = null;
     PrintWriter out = response.getWriter();
     out.print(getServletInfo());

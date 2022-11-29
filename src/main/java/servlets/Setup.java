@@ -48,7 +48,7 @@ public class Setup extends HttpServlet {
 
     ResourceBundle.getBundle("i18n.servlets.errors", locale);
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
-    response.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html; charset=UTF-8");
     request.setCharacterEncoding("UTF-8");
 
     // Output Stuff
@@ -96,7 +96,7 @@ public class Setup extends HttpServlet {
         }
       } else {
         // Override db properties from request parameters
-        connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
+        connectionURL = "jdbc:mariadb://" + dbHost + ":" + dbPort + "/";
 
         // Store the overridden data in properties file
         saveMysqlProperties = true;
@@ -108,7 +108,7 @@ public class Setup extends HttpServlet {
       }
       driverType = mysql_props.getProperty("DriverType");
       if (driverType == null) {
-        driverType = "org.gjt.mm.mysql.Driver";
+        driverType = "org.mariadb.jdbc.Driver";
       }
       if (dbUser.isEmpty()) {
         dbUser = mysql_props.getProperty("databaseUsername");
@@ -123,8 +123,8 @@ public class Setup extends HttpServlet {
         }
       }
     } else {
-      connectionURL = "jdbc:mysql://" + dbHost + ":" + dbPort + "/";
-      driverType = "org.gjt.mm.mysql.Driver";
+      connectionURL = "jdbc:mariadb://" + dbHost + ":" + dbPort + "/";
+      driverType = "org.mariadb.jdbc.Driver";
       dbOptions = "useUnicode=true&character_set_server=utf8mb4";
       validateInput = true;
       saveMysqlProperties = true;

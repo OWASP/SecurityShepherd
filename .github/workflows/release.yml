@@ -1,65 +1,116 @@
 name: Release to Dockerhub
 on:
-  create:
-    tags:
-      - 'v*'
-    paths-ignore:
-      - '**.md'
-      - '.github/ISSUE_TEMPLATE'
-      - '.gitignore'
-      - 'provisioning'
-      - '.sonarcloud.properties'
-      - 'LICENSE'
-      - 'Vagrantfile'
   push:
     branches: [master, dev]
     paths-ignore:
       - '**.md'
-      - '.github/ISSUE_TEMPLATE'
+      - '.github/'
       - '.gitignore'
-      - 'provisioning'
       - '.sonarcloud.properties'
+      - 'provisioning'
+      - 'CONTRIBUTING.md'
       - 'LICENSE'
+      - 'README.md'
       - 'Vagrantfile'
 
 jobs:
-  release:
+  build:
+    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v3.6.0
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+      - name: Build Maven with Docker Profile and Generate SBOM
+        run: mvn clean install -Pdocker -DskipTests -B -DexcludeTestProject=true cyclonedx:makeBom
+      - name: Upload WAR File
+        uses: actions/upload-artifact@v3
+        with:
+          name: security_shepherd_war
+          path: target/*.war
+      - name: Docker Compose Build
+        run: docker-compose build
+      - name: Generate Tomcat Docker Image SBOM
+        uses: anchore/sbom-action@v0
+        id: tomcat
+        with:
+          format: cyclonedx-json
+          image: owasp/security-shepherd
+          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-tomcat.cyclonedx.json
+      - name: Generate MariaDB Docker Image SBOM
+        uses: anchore/sbom-action@v0
+        id: mariadb
+        with:
+          format: cyclonedx-json
+          image: owasp/security-shepherd_mariadb
+          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mariadb.cyclonedx.json
+      - name: Generate MongoDB Docker Image SBOM
+        uses: anchore/sbom-action@v0
+        id: mongodb
+        with:
+          format: cyclonedx-json
+          image: owasp/security-shepherd_mongo
+          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mongodb.cyclonedx.json
+      - name: Upload SBOMs
+        uses: actions/upload-artifact@v3
+        with:
+          name: security_shepherd_sboms
+          path: |
+            target/*.json
+            target/*.xml
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          key: maven-output-${{ hashFiles('target/**') }}
+          path: |
+            target/
+            docker/mariadb/target
+            docker/mongo/target
+
+  release-security-shepherd:
+    needs: build
+    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2.1.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4.1.1
         with:
           images: owasp/security-shepherd
 
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Restore Cached Maven packages
+        uses: actions/cache@v3
         with:
-          java-version: 1.8
+          key: maven-output-${{ hashFiles('target/**') }}
+          path: |
+            target/
+            docker/mariadb/target
+            docker/mongo/target
 
       # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
       - name: Set environment variables
-        uses: c-py/action-dotenv-to-setenv@v2
+        uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a  # v4
         with:
           env-file: .env
 
-      - name: Build Maven with Docker Profile
-        run: mvn install -Pdocker -DskipTests
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+      - name: Build and push Tomcat
+        uses: docker/build-push-action@v3.2.0
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |

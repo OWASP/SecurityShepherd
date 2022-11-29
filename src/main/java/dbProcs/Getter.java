@@ -87,10 +87,11 @@ public class Getter {
     }
 
     // See if user Exists
+    PreparedStatement prestmt;
     CallableStatement callstmt;
     try {
-      callstmt =
-          conn.prepareCall(
+      prestmt =
+          conn.prepareStatement(
               "SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId,"
                   + " suspendedUntil, loginType, tempUsername FROM `users` WHERE userName = ?");
     } catch (SQLException e) {
@@ -101,8 +102,8 @@ public class Getter {
     log.debug("Gathering results from query");
     ResultSet userResult;
     try {
-      callstmt.setString(1, userName);
-      userResult = callstmt.executeQuery();
+      prestmt.setString(1, userName);
+      userResult = prestmt.executeQuery();
     } catch (SQLException e) {
       log.fatal("Could not execute db query: " + e.toString());
       throw new RuntimeException(e);
@@ -239,7 +240,6 @@ public class Getter {
    * the rest of the work, including Brute Force prevention.
    *
    * @param userName The submitted user name to be used in authentication process
-   * @param password The submitted password in plain text to be used in authentication
    * @return A string array made up of nothing or information to be consumed by the initiating
    *     authentication process.
    */
@@ -270,10 +270,10 @@ public class Getter {
       throw new RuntimeException(e);
     }
     // See if user Exists
-    CallableStatement callstmt;
+    PreparedStatement prestmt;
     try {
-      callstmt =
-          conn.prepareCall(
+      prestmt =
+          conn.prepareStatement(
               "SELECT userId, userName, userPass, badLoginCount, tempPassword, classId,"
                   + " suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND"
                   + " loginType='saml'");
@@ -285,9 +285,9 @@ public class Getter {
     log.debug("Gathering userFind ResultSet");
     ResultSet userResult;
     try {
-      callstmt.setString(1, ssoName);
+      prestmt.setString(1, ssoName);
       log.debug("Executing query");
-      userResult = callstmt.executeQuery();
+      userResult = prestmt.executeQuery();
     } catch (SQLException e) {
       log.fatal("Could not execute db query: " + e.toString());
       throw new RuntimeException(e);
@@ -385,8 +385,8 @@ public class Getter {
 
     // Find the generated userID and username by asking the database
     try {
-      callstmt =
-          conn.prepareCall(
+      prestmt =
+          conn.prepareStatement(
               "SELECT userId, userName, classID, tempUsername FROM `users` WHERE ssoName = ? AND"
                   + " loginType='saml'");
 
@@ -398,9 +398,9 @@ public class Getter {
     log.debug("Gathering userResult ResultSet");
 
     try {
-      callstmt.setString(1, ssoName);
+      prestmt.setString(1, ssoName);
       log.debug("Executing query");
-      userResult = callstmt.executeQuery();
+      userResult = prestmt.executeQuery();
     } catch (SQLException e) {
       log.fatal("Could not execute db query: " + e.toString());
       throw new RuntimeException(e);
@@ -1315,15 +1315,15 @@ public class Getter {
           // for
           // title
           // attribute
-          jsonInner.put("score", new Integer(score)); // Score
+          jsonInner.put("score", Integer.valueOf(score)); // Score
           jsonInner.put("scale", barScale); // Scale of score bar
           jsonInner.put("place", place); // Place on board
           jsonInner.put("order", (place + tieBreaker)); // Order on board
-          jsonInner.put("goldMedalCount", new Integer(goldMedals));
+          jsonInner.put("goldMedalCount", Integer.valueOf(goldMedals));
           jsonInner.put("goldDisplay", goldDisplayStyle);
-          jsonInner.put("silverMedalCount", new Integer(silverMedals));
+          jsonInner.put("silverMedalCount", Integer.valueOf(silverMedals));
           jsonInner.put("silverDisplay", silverDisplayStyle);
-          jsonInner.put("bronzeMedalCount", new Integer(bronzeMedals));
+          jsonInner.put("bronzeMedalCount", Integer.valueOf(bronzeMedals));
           jsonInner.put("bronzeDisplay", bronzeDisplayStyle);
           // log.debug("Adding: " + jsonInner.toString());
           json.add(jsonInner);
@@ -1839,9 +1839,10 @@ public class Getter {
       Connection conn = Database.getCoreConnection(ApplicationRoot);
 
       // Get the modules
-      CallableStatement callstmt =
-          conn.prepareCall("SELECT DISTINCT moduleCategory FROM modules ORDER BY moduleCategory");
-      ResultSet modules = callstmt.executeQuery();
+      PreparedStatement prestmt =
+          conn.prepareStatement(
+              "SELECT DISTINCT moduleCategory FROM modules ORDER BY moduleCategory");
+      ResultSet modules = prestmt.executeQuery();
       while (modules.next()) {
         String theModule =
             "<option value='"
@@ -1871,7 +1872,6 @@ public class Getter {
    * is 'validClass' will Error, = 'validclass' must be used.<br>
    * So there are two procedures this method calls. One that handles null classes, one that does not
    *
-   * @param ClassId Identifier of class
    * @param ApplicationRoot The current running context of the application
    * @return ResultSet that contains users for the selected class in the formate {userId, userName,
    *     userAddress}
@@ -1994,9 +1994,9 @@ public class Getter {
           jsonInner.put(
               "userName", new String(Encode.forHtml(resultSet.getString(1)))); // User Name
           jsonInner.put(
-              "progressBar", new Integer(resultSet.getInt(2) * widthOfUnitBar)); // Progress Bar
+              "progressBar", Integer.valueOf(resultSet.getInt(2) * widthOfUnitBar)); // Progress Bar
           // Width
-          jsonInner.put("score", new Integer(resultSet.getInt(3))); // Score
+          jsonInner.put("score", Integer.valueOf(resultSet.getInt(3))); // Score
           log.debug("Adding: " + jsonInner.toString());
           json.add(jsonInner);
         }
@@ -2045,7 +2045,6 @@ public class Getter {
    *
    * @param ApplicationRoot The running context of the application.
    * @param userId The user identifier of the user.
-   * @param csrfToken The cross site request forgery token
    * @return A HTML menu of a users current module progress and a script for interaction with this
    *     menu
    */
@@ -2188,9 +2187,7 @@ public class Getter {
   /**
    * Return all modules in JSON for specific User
    *
-   * @param ApplicationRoot
    * @param userId
-   * @param lang
    * @return
    */
   public static JSONArray getModulesJson(String userId, String floor, Locale locale) {
@@ -2361,7 +2358,6 @@ public class Getter {
    * been completed
    *
    * @param applicationRoot Running context of the application
-   * @param moduleHash Hash ID of the CSRF module you wish to check if a user has completed
    * @param userId the ID of the user to check
    * @return True or False value depicting if the user has completed the module
    */
@@ -2375,7 +2371,7 @@ public class Getter {
       Connection conn = Database.getCoreConnection(applicationRoot);
 
       log.debug("Preparing csrfLevelComplete call");
-      CallableStatement callstmnt = conn.prepareCall("call csrfLevelComplete(?, ?)");
+      PreparedStatement callstmnt = conn.prepareCall("call csrfLevelComplete(?, ?)");
       callstmnt.setString(1, moduleId);
       callstmnt.setString(2, userId);
       log.debug("moduleId: " + moduleId);
@@ -2405,7 +2401,7 @@ public class Getter {
 
       // Get the modules
       PreparedStatement prepStmt =
-          conn.prepareCall("SELECT moduleStatus FROM modules WHERE moduleId = ?");
+          conn.prepareStatement("SELECT moduleStatus FROM modules WHERE moduleId = ?");
       prepStmt.setString(1, moduleId);
       ResultSet rs = prepStmt.executeQuery();
       if (rs.next()) {
