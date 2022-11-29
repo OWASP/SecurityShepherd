@@ -62,6 +62,7 @@ public class XxeChallenge1 extends HttpServlet {
     // Setting IpAddress To Log and taking header for original IP if forwarded from proxy
     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
     log.debug(LEVEL_NAME + " Servlet Accessed");
+    response.setContentType("text/html");
     PrintWriter out = response.getWriter();
     out.print(getServletInfo());
 

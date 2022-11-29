@@ -60,6 +60,7 @@ public class CsrfChallengeTargetJSON extends HttpServlet {
     ResourceBundle csrfGenerics =
         ResourceBundle.getBundle("i18n.servlets.challenges.csrf.csrfGenerics", locale);
 
+    response.setContentType("text/html");
     PrintWriter out = response.getWriter();
     out.print(getServletInfo());
     try {
