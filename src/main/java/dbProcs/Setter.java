@@ -310,7 +310,7 @@ public class Setter {
       File siteProperties = new File(applicationRoot + "/WEB-INF/database.properties");
       DataOutputStream writer = new DataOutputStream(new FileOutputStream(siteProperties, false));
       String theProperties =
-          new String("databaseConnectionURL=" + url + "\nDriverType=org.gjt.mm.mysql.Driver");
+          new String("databaseConnectionURL=" + url + "\nDriverType=org.mariadb.jdbc.Driver");
       writer.write(theProperties.getBytes());
       writer.close();
       // Update Core Schema Settings
@@ -401,11 +401,11 @@ public class Setter {
 
       boolean updateToken = false;
       log.debug("Preparing setCsrfChallengeSevenToken call");
-      PreparedStatement callstmnt =
+      PreparedStatement prestmnt =
           conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?");
-      callstmnt.setString(1, userId);
+      prestmnt.setString(1, userId);
       log.debug("Executing setCsrfChallengeSevenToken");
-      ResultSet rs = callstmnt.executeQuery();
+      ResultSet rs = prestmnt.executeQuery();
       if (rs.next()) {
         // Need to Update CSRF token rather than Insert
         log.debug("CSRF token Found for Challenge 7... Updating");
@@ -415,7 +415,7 @@ public class Setter {
       }
       rs.close();
 
-      String whatToDo = new String();
+      String whatToDo;
       if (updateToken) {
         whatToDo =
             "UPDATE `csrfChallengeEnumTokens`.`csrfTokens` SET csrfTokenscol = ? WHERE userId = ?";
@@ -424,13 +424,13 @@ public class Setter {
             "INSERT INTO `csrfChallengeEnumTokens`.`csrfTokens` (`csrfTokenscol`, `userId`) VALUES"
                 + " (?, ?)";
       }
-      callstmnt = conn.prepareStatement(whatToDo);
-      callstmnt.setString(1, csrfToken);
-      callstmnt.setString(2, userId);
+      prestmnt = conn.prepareStatement(whatToDo);
+      prestmnt.setString(1, csrfToken);
+      prestmnt.setString(2, userId);
       log.debug("Executing: " + whatToDo);
-      callstmnt.execute();
+      prestmnt.execute();
       result = true;
-      callstmnt.close();
+      prestmnt.close();
       Database.closeConnection(conn);
 
     } catch (SQLException e) {
@@ -733,18 +733,18 @@ public class Setter {
     boolean result = false;
 
     log.debug("Preparing username change call from username " + userName + " to " + newUsername);
-    CallableStatement callstmnt;
+    PreparedStatement prestmnt;
     try {
       Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-      callstmnt =
-          conn.prepareCall(
+      prestmnt =
+          conn.prepareStatement(
               "UPDATE users SET userName = ?, tempUsername = FALSE WHERE userName = ?;");
-      callstmnt.setString(1, newUsername);
+      prestmnt.setString(1, newUsername);
 
-      callstmnt.setString(2, userName);
+      prestmnt.setString(2, userName);
       log.debug("Executing name change query");
-      callstmnt.execute();
+      prestmnt.execute();
       result = true;
       Database.closeConnection(conn);
 
@@ -946,12 +946,12 @@ public class Setter {
       Connection conn = Database.getCoreConnection(ApplicationRoot);
 
       log.debug("Preparing updateUserPoints call");
-      CallableStatement callstmnt =
-          conn.prepareCall("UPDATE users SET userScore = userScore + ? WHERE userId = ?");
-      callstmnt.setInt(1, points);
-      callstmnt.setString(2, userId);
+      PreparedStatement prestmnt =
+          conn.prepareStatement("UPDATE users SET userScore = userScore + ? WHERE userId = ?");
+      prestmnt.setInt(1, points);
+      prestmnt.setString(2, userId);
       log.debug("Executing updateUserPoints");
-      callstmnt.execute();
+      prestmnt.execute();
       result = true;
       Database.closeConnection(conn);
 
@@ -1093,12 +1093,12 @@ public class Setter {
 
       while (isDuplicate) {
 
-        CallableStatement callstmt =
-            conn.prepareCall("SELECT ssoName FROM `users` WHERE userName = ?");
+        PreparedStatement prestmt =
+            conn.prepareStatement("SELECT ssoName FROM `users` WHERE userName = ?");
 
-        callstmt.setString(1, newUsername);
+        prestmt.setString(1, newUsername);
 
-        ResultSet checkDuplicate = callstmt.executeQuery();
+        ResultSet checkDuplicate = prestmt.executeQuery();
         log.debug("Opening result set");
 
         if (checkDuplicate.next()) {

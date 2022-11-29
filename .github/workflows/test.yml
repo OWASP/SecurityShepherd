@@ -4,10 +4,34 @@ on:
     branches: [master, dev]
     paths-ignore:
       - '**.md'
+      - '.github/ISSUE_TEMPLATE'
+      - '.gitignore'
+      - 'provisioning'
+      - '.sonarcloud.properties'
+      - 'LICENSE'
+      - 'Vagrantfile'
   pull_request:
+    branches: [master, dev]
+    paths-ignore:
+      - '**.md'
+      - '.github/ISSUE_TEMPLATE'
+      - '.gitignore'
+      - 'provisioning'
+      - '.sonarcloud.properties'
+      - 'LICENSE'
+      - 'Vagrantfile'
 
 jobs:
+  lint-java:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: axel-op/googlejavaformat-action@fe78db8a90171b6a836449f8d0e982d5d71e5c5a #v3.6.0
+        with:
+          args: "--set-exit-if-changed"
+
   build:
+    needs: lint-java
     name: build
     runs-on: ubuntu-latest
     steps:
@@ -22,6 +46,7 @@ jobs:
         run: docker-compose build
 
   unit-tests:
+    needs: [lint-java, build]
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -48,6 +73,7 @@ jobs:
         run: mvn test -B -e -X
 
   integration-tests:
+    needs: [lint-java, build]
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -77,11 +103,3 @@ jobs:
       - name: Run Intergration Tests
         run: |
           mvn verify -DskipUTs=true -DmongoDocker -B
-
-  lint-java:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: axel-op/googlejavaformat-action@v3
-        with:
-          args: "--set-exit-if-changed"

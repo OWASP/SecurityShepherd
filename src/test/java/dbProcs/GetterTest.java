@@ -3162,7 +3162,7 @@ public class GetterTest {
     String userName = new String("SSOSuspendedUser Lastname");
     String ssoName = new String("ssosuspendeduser@example.com");
 
-    String user[] = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
+    String[] user = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
     if (user == null || user[0].isEmpty()) {
       TestProperties.failAndPrint("Test Failed. Initial SSO auth did not succeed");
     }

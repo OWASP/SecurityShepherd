@@ -188,6 +188,10 @@
 							async: false,
 							success: function(o) {
 								$("#badData").hide("fast");
+								if (o == null || o.length == 0) {
+									$("#leaderboard").empty().append("<h3 style='text-align:center;'>No scoreboard data available yet</h3>");
+									return;
+								}
 								for(i=0;i<o.length;i++) {
 									if ($('#userbar-'+ o[i].id).length == 0) {
 										// this id doesn't exist, so add it to our list.

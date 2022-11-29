@@ -60,7 +60,7 @@ String ApplicationRoot = getServletContext().getRealPath("");
 	designed to foster and improve security awareness among a varied
 	skill-set demographic. The aim of this project is to take AppSec
 	novices or experienced engineers and sharpen their penetration testing
-	skill set to security expert status. For More information, please visit
+	skill set to security expert status. For more information, please visit
 	the <a href="http://bit.ly/owaspSecurityShepherd">OWASP Security
 		Shepherd Wiki Page</a>. <br>
 	<br> Please report any bugs or any feature requests on the <a

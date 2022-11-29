@@ -38,6 +38,7 @@ services:
     container_name: ${CONTAINER_TOMCAT}
     volumes:
       - conf:/usr/local/tomcat/conf
+      - logs:/usr/local/tomcat/logs
     env_file:
       - .env
     build:
@@ -46,7 +47,7 @@ services:
         TOMCAT_DOCKER_VERSION: ${TOMCAT_DOCKER_VERSION}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
-        MARIADB_URI: jdbc:mysql://${CONTAINER_MARIADB}:3306
+        MARIADB_URI: jdbc:mariadb://${CONTAINER_MARIADB}:3306
         MONGO_HOST: ${CONTAINER_MONGO}
         MONGO_PORT: 27017
         MONGO_CONN_TIMEOUT: 1000
@@ -64,5 +65,6 @@ services:
 volumes:
   data:
   conf:
+  logs:
   mongodata:
   mongoconfig:
