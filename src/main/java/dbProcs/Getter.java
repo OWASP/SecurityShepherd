@@ -2201,7 +2201,6 @@ public class Getter {
    * @param userId The user identifier of the user.
    * @param floor The current module plan
    * @param locale The Locale the user has enabled
-
    * @return
    */
   public static JSONArray getModulesJson(String userId, String floor, Locale locale) {
