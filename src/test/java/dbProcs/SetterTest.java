@@ -16,9 +16,8 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import testUtils.TestProperties;
@@ -102,9 +101,9 @@ public class SetterTest {
               TestProperties.failAndPrint(
                   "Could not detect user in scoreboard before bad submission test");
             } else {
-              JSONArray scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
+              JSONArray scoreboardJson = new JSONArray(scoreboardData);
               // Loop through array to find Our user
-              for (int i = 0; i < scoreboardJson.size(); i++) {
+              for (int i = 0; i < scoreboardJson.length(); i++) {
                 log.debug("Looping through Array " + i);
                 JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
                 if (scoreRowJson.get("username").toString().compareTo(userName) == 0) {
@@ -130,9 +129,9 @@ public class SetterTest {
               // Check Score again
               int scoreAfter = 0;
               scoreboardData = Getter.getJsonScore(applicationRoot, "");
-              scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
+              scoreboardJson = new JSONArray(scoreboardData);
               // Loop through array to find Our user
-              for (int i = 0; i < scoreboardJson.size(); i++) {
+              for (int i = 0; i < scoreboardJson.length(); i++) {
                 log.debug("Looping through Array " + i);
                 JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
                 if (scoreRowJson.get("username").toString().compareTo(userName) == 0) {
@@ -210,9 +209,9 @@ public class SetterTest {
             if (scoreboardData.isEmpty()) {
               fail("Could not detect user in scoreboard before bad submission test");
             } else {
-              JSONArray scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
+              JSONArray scoreboardJson = new JSONArray(scoreboardData);
               // Loop through array to find Our user
-              for (int i = 0; i < scoreboardJson.size(); i++) {
+              for (int i = 0; i < scoreboardJson.length(); i++) {
                 JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
                 if (scoreRowJson.get("username").toString().compareTo(userName) == 0) {
                   log.debug("Found user with score: " + scoreRowJson.get("score"));
@@ -247,9 +246,9 @@ public class SetterTest {
               // Check Score again
               int scoreAfter = 0;
               scoreboardData = Getter.getJsonScore(applicationRoot, "");
-              scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
+              scoreboardJson = new JSONArray(scoreboardData);
               // Loop through array to find Our user
-              for (int i = 0; i < scoreboardJson.size(); i++) {
+              for (int i = 0; i < scoreboardJson.length(); i++) {
                 log.debug("Looping through Array " + i);
                 JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
                 if (scoreRowJson.get("username").toString().compareTo(userName) == 0) {
@@ -933,10 +932,10 @@ public class SetterTest {
           if (scoreboardData.isEmpty()) {
             fail("Could not detect user in scoreboard before bad submission test");
           } else {
-            JSONArray scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
+            JSONArray scoreboardJson = new JSONArray(scoreboardData);
             // Loop through array to find Our first user
             boolean goldMedal = false;
-            for (int i = 0; i < scoreboardJson.size(); i++) {
+            for (int i = 0; i < scoreboardJson.length(); i++) {
               // log.debug("Looping through Array " + i);
               JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
               if (scoreRowJson.get("username").toString().compareTo(userName) == 0) {
@@ -955,7 +954,7 @@ public class SetterTest {
             } else {
               // Search for the other user
               goldMedal = false;
-              for (int i = 0; i < scoreboardJson.size(); i++) {
+              for (int i = 0; i < scoreboardJson.length(); i++) {
                 // log.debug("Looping through Array " + i);
                 JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
                 if (scoreRowJson.get("username").toString().compareTo(otherUserName) == 0) {
