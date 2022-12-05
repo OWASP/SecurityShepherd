@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONArray;
+import org.json.JSONArray;
 import utils.ModulePlan;
 import utils.Validate;
 
@@ -47,7 +47,7 @@ public class Levels extends HttpServlet {
       }
       theModules = Getter.getModulesJson(userId, floor, locale);
       response.setContentType("application/json");
-      out.write(theModules.toJSONString());
+      out.write(theModules.toString());
     } else {
       if (!validSession) {
         log.debug("Unauthentiated Module List Call");
