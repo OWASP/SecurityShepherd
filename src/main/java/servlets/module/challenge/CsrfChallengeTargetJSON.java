@@ -14,8 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONObject;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -77,7 +76,7 @@ public class CsrfChallengeTargetJSON extends HttpServlet {
         log.debug("Getting JSON String");
         String jsonData = extractPostRequestBody(request);
         log.debug("POST body: " + jsonData);
-        JSONObject json = (JSONObject) JSONValue.parse(jsonData);
+        JSONObject json = new JSONObject(jsonData);
         log.debug("Getting userId");
         String plusId = (String) json.get("userId");
         log.debug("User Submitted - " + plusId);
