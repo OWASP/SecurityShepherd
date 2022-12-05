@@ -12,9 +12,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -1575,9 +1574,9 @@ public class GetterTest {
             // Get Score board Data
             String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
             // Take the JSON String and make it Java JSON friendly
-            JSONArray scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
+            JSONArray scoreboardJson = new JSONArray(scoreboardData);
             // Loop through array to find Our user
-            for (int i = 0; i < scoreboardJson.size(); i++) {
+            for (int i = 0; i < scoreboardJson.length(); i++) {
               JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
               if (scoreRowJson.get("username").toString().compareTo(userName) == 0) {
                 pass = true;
@@ -1653,13 +1652,13 @@ public class GetterTest {
             }
             log.debug("Got Scoreboard Data");
             // Take the JSON String and make it Java JSON friendly
-            JSONArray scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
+            JSONArray scoreboardJson = new JSONArray(scoreboardData);
             log.debug("Parsed Scoreboard Data");
             if (scoreboardJson == null) {
               log.debug("scoreboardJson is Null. json was: " + scoreboardData);
             }
             // Loop through array to find Our user
-            for (int i = 0; i < scoreboardJson.size(); i++) {
+            for (int i = 0; i < scoreboardJson.length(); i++) {
               log.debug("Looping through Array " + i);
               JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
               if (scoreRowJson.get("username").toString().compareTo(userName) == 0) {
@@ -1744,9 +1743,9 @@ public class GetterTest {
             // Get Score board Data
             String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
             // Take the JSON String and make it Java JSON friendly
-            JSONArray scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
+            JSONArray scoreboardJson = new JSONArray(scoreboardData);
             // Loop through array to find Our user
-            for (int i = 0; i < scoreboardJson.size(); i++) {
+            for (int i = 0; i < scoreboardJson.length(); i++) {
               JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
               if (scoreRowJson.get("username").toString().compareTo(userName) == 0) {
                 pass = true;
@@ -1839,9 +1838,9 @@ public class GetterTest {
             // Get Score board Data
             String scoreboardData = Getter.getJsonScore(applicationRoot, classId);
             // Take the JSON String and make it Java JSON friendly
-            JSONArray scoreboardJson = (JSONArray) JSONValue.parse(scoreboardData);
+            JSONArray scoreboardJson = new JSONArray(scoreboardData);
             // Loop through array to find Our user
-            for (int i = 0; i < scoreboardJson.size(); i++) {
+            for (int i = 0; i < scoreboardJson.length(); i++) {
               JSONObject scoreRowJson = (JSONObject) scoreboardJson.get(i);
               if (scoreRowJson.get("username").toString().compareTo(userName) == 0) // Therefore not
               // encoded for HTML
@@ -2715,9 +2714,9 @@ public class GetterTest {
               } else {
                 log.debug("Going through JsonArray");
                 // Take the JSON String and make it Java JSON friendly
-                JSONArray jsonProgress = (JSONArray) JSONValue.parse(jsonProgressString);
+                JSONArray jsonProgress = new JSONArray(jsonProgressString);
                 // Loop through array to find Our user
-                for (int i = 0; i < jsonProgress.size(); i++) {
+                for (int i = 0; i < jsonProgress.length(); i++) {
                   JSONObject userProgress = (JSONObject) jsonProgress.get(i);
                   if (userProgress.get("userName").toString().compareTo(userName) == 0) {
                     int progressBar = Integer.parseInt(userProgress.get("progressBar").toString());
@@ -3162,7 +3161,7 @@ public class GetterTest {
     String userName = new String("SSOSuspendedUser Lastname");
     String ssoName = new String("ssosuspendeduser@example.com");
 
-    String user[] = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
+    String[] user = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
     if (user == null || user[0].isEmpty()) {
       TestProperties.failAndPrint("Test Failed. Initial SSO auth did not succeed");
     }
