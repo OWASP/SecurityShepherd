@@ -143,7 +143,7 @@ public class SetupIT {
       fail(message);
     }
 
-    if (authData == "") {
+    if (authData.equals("")) {
       String message = "Auth data loaded from " + Constants.SETUP_AUTH + " was empty!";
       log.fatal(message);
       fail(message);
@@ -172,5 +172,46 @@ public class SetupIT {
      * fail("Setup not Redirecting to login.jsp."); }
      */
 
+  }
+  @Ignore
+  @Test
+  public void testNoMongodbResource() {
+
+    log.debug("Creating Setup Servlet Instance");
+    Setup servlet = new Setup();
+    try {
+      servlet.init(new MockServletConfig("Setup"));
+    } catch (ServletException e) {
+      log.fatal(e.toString());
+      fail(e.toString());
+    }
+
+    TestProperties.deleteMongoResource();
+    assertTrue(Setup.isInstalled());
+
+    String mongodbProp = "";
+    try {
+      mongodbProp = FileUtils.readFileToString(new File(Constants.MONGO_DB_PROP), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      String message =
+              "Error when loading mongodb file "
+                      + Constants.MONGO_DB_PROP
+                      + ". Exception message was "
+                      + e.toString();
+      log.fatal(message);
+      fail(message);
+    }
+
+    if (mongodbProp == null) {
+      String message = "MongoDb data loaded from " + Constants.MONGO_DB_PROP + " was null!";
+      log.fatal(message);
+      fail(message);
+    }
+
+    if (mongodbProp.equals("")) {
+      String message = "MongoDb data loaded from " + Constants.MONGO_DB_PROP + " was empty!";
+      log.fatal(message);
+      fail(message);
+    }
   }
 }
