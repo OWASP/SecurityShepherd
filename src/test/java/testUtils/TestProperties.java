@@ -421,11 +421,11 @@ public class TestProperties {
   public static void createMysqlResource() throws IOException {
     Dotenv dotenv = Dotenv.load();
     createMysqlResource(
-        dotenv.get("TEST_MYSQL_HOST"),
-        Integer.parseInt(dotenv.get("TEST_MYSQL_PORT")),
+        dotenv.get("TEST_MARIADB_HOST"),
+        Integer.parseInt(dotenv.get("TEST_MARIADB_PORT")),
         "core",
         "root",
-        dotenv.get("TEST_MYSQL_PASSWORD"));
+        dotenv.get("TEST_MARIADB_PASSWORD"));
   }
 
   /**
