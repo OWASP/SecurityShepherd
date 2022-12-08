@@ -30,9 +30,9 @@ import utils.ScoreboardStatus;
 public class GetterTest {
 
   private static final Logger log = LogManager.getLogger(GetterTest.class);
-  private static String lang = new String("en_GB");
-  private static Locale locale = new Locale(lang);
-  private static String applicationRoot = new String();
+  private static final String lang = "en_GB";
+  private static final Locale locale = new Locale(lang);
+  private static final String applicationRoot = "";
   private static final int totalNumberOfModulesInShepherd = 58;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
@@ -51,10 +51,9 @@ public class GetterTest {
    *
    * @param className Name of the class you wish to search / create
    * @return The Identifier of the class owning the name submitted
-   * @throws SQLException
    */
   public static String findCreateClassId(String className) throws SQLException {
-    String classId = new String();
+    String classId = "";
     ResultSet rs = Getter.getClassInfo(applicationRoot);
     while (rs.next()) {
       if (rs.getString(2).compareTo(className) == 0) {
@@ -81,11 +80,10 @@ public class GetterTest {
    *
    * @param className Name of the class you wish to search / create
    * @return The Identifier of the class owning the name submitted
-   * @throws SQLException
    */
   public static String findCreateClassId(String className, String applicationRoot)
       throws SQLException {
-    String classId = new String();
+    String classId = "";
     ResultSet rs = Getter.getClassInfo(applicationRoot);
     while (rs.next()) {
       if (rs.getString(2).compareTo(className) == 0) {
@@ -114,13 +112,12 @@ public class GetterTest {
    * @param userName The user name of the admin you want to create or sign in as
    * @param password The password of the admin you want to create or sign in as
    * @return Boolean value depicting if the user exists and can be authenticated
-   * @throws SQLException
    */
   public static boolean verifyTestAdmin(String applicationRoot, String userName, String password)
       throws SQLException {
     boolean result = false;
 
-    String user[] = Getter.authUser(applicationRoot, userName, userName);
+    String[] user = Getter.authUser(applicationRoot, userName, userName);
     if (user == null || user[0].isEmpty()) {
       log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
       Setter.userCreate(
@@ -146,7 +143,6 @@ public class GetterTest {
    * @param userName The user name of the user you want to create or sign in as
    * @param password The password of the user you want to create or sign in as
    * @return Boolean value depicting if the user exists and can be authenticated
-   * @throws SQLException
    */
   public static boolean verifyTestUser(String applicationRoot, String userName, String password)
       throws SQLException {
@@ -185,13 +181,13 @@ public class GetterTest {
       throws SQLException {
     boolean result = false;
 
-    String className = new String();
+    String className;
     className = Getter.getClassInfo(applicationRoot, theClass)[0];
     if (className.isEmpty()) {
       TestProperties.failAndPrint("Could not find class info for class " + theClass);
     }
 
-    String user[] = Getter.authUser(applicationRoot, userName, userName);
+    String[] user = Getter.authUser(applicationRoot, userName, userName);
     if (user == null || user[0].isEmpty()) {
       log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
       Setter.userCreate(
@@ -229,7 +225,7 @@ public class GetterTest {
     String password = new String("goodPassword");
 
     try {
-      String user[] = Getter.authUser(applicationRoot, userName, password);
+      String[] user = Getter.authUser(applicationRoot, userName, password);
       if (user == null || user[0].isEmpty()) {
         log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 
@@ -239,7 +235,6 @@ public class GetterTest {
       }
       if (user != null && !user[0].isEmpty()) {
         log.debug("PASS: Successfully signed in as " + userName);
-        return;
       } else {
         fail("Could not Authenticate as " + userName);
       }
@@ -256,7 +251,7 @@ public class GetterTest {
     String password = new String("goodPassword");
 
     try {
-      String user[] = Getter.authUser(applicationRoot, userName, password);
+      String[] user = Getter.authUser(applicationRoot, userName, password);
       if (user == null || user[0].isEmpty()) {
         log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 
@@ -266,7 +261,6 @@ public class GetterTest {
       }
       if (user != null && !user[0].isEmpty()) {
         log.debug("PASS: Successfully signed in as " + userName);
-        return;
       } else {
         fail("Could not Authenticate as " + userName);
       }
@@ -282,7 +276,7 @@ public class GetterTest {
     String userName = new String("badUsernameWithAnIncrediblyLongLengthWhicIsTooMuch");
     String password = new String("goodPassword");
 
-    String user[] = Getter.authUser(applicationRoot, userName, password);
+    String[] user = Getter.authUser(applicationRoot, userName, password);
     if (user == null || user[0].isEmpty()) {
       log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 
@@ -301,7 +295,6 @@ public class GetterTest {
 
     } else {
       log.debug("PASS: Could not create bad username " + userName);
-      return;
     }
   }
 
@@ -312,7 +305,7 @@ public class GetterTest {
     String password = new String("goodPassword");
 
     log.debug("Attempting to authenticate as " + userName);
-    String user[] = Getter.authUser(applicationRoot, userName, password);
+    String[] user = Getter.authUser(applicationRoot, userName, password);
     if (user == null || user[0].isEmpty()) {
       log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 
@@ -329,7 +322,6 @@ public class GetterTest {
     }
     if (user != null && !user[0].isEmpty()) {
       log.debug("PASS: Successfully signed in as " + userName);
-      return;
     } else {
       log.debug("FAIL: Successfully signed in as " + userName);
       fail("Could not Authenticate as " + userName);
@@ -344,7 +336,7 @@ public class GetterTest {
     String password = new String("goodEmojiPassword");
 
     log.debug("Attempting to authenticate as " + userName);
-    String user[] = Getter.authUser(applicationRoot, userName, password);
+    String[] user = Getter.authUser(applicationRoot, userName, password);
     if (user == null || user[0].isEmpty()) {
       log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 
@@ -361,7 +353,6 @@ public class GetterTest {
     }
     if (user != null && !user[0].isEmpty()) {
       log.debug("PASS: Successfully signed in as " + userName);
-      return;
     } else {
       log.debug("FAIL: Successfully signed in as " + userName);
       fail("Could not Authenticate as " + userName);
@@ -375,7 +366,7 @@ public class GetterTest {
     String password = new String("אذاसтьᚩᚾåäö123ÅÄÖǎ𝓫𝚌Ⴛḗ𝑓ᶃ");
 
     try {
-      String user[] = Getter.authUser(applicationRoot, userName, password);
+      String[] user = Getter.authUser(applicationRoot, userName, password);
       if (user == null || user[0].isEmpty()) {
         log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 
@@ -385,7 +376,6 @@ public class GetterTest {
       }
       if (user != null && !user[0].isEmpty()) {
         log.debug("PASS: Successfully signed in as " + userName);
-        return;
       } else {
         fail("Could not Authenticate as " + userName);
       }
@@ -405,7 +395,7 @@ public class GetterTest {
             "goodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgoodPasswordgood");
 
     try {
-      String user[] = Getter.authUser(applicationRoot, userName, password);
+      String[] user = Getter.authUser(applicationRoot, userName, password);
       if (user == null || user[0].isEmpty()) {
         log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 
@@ -415,7 +405,6 @@ public class GetterTest {
       }
       if (user != null && !user[0].isEmpty()) {
         log.debug("PASS: Successfully signed in as " + userName);
-        return;
       } else {
         fail("Could not Authenticate as " + userName);
       }
@@ -431,7 +420,7 @@ public class GetterTest {
     String password = new String("goodPassword");
 
     try {
-      String user[] = Getter.authUser(applicationRoot, userName, password);
+      String[] user = Getter.authUser(applicationRoot, userName, password);
       if (user == null || user[0].isEmpty()) {
         log.debug("User not found in DB. Adding user to DB and Retesting before giving up");
 
@@ -441,7 +430,6 @@ public class GetterTest {
       }
       if (user != null && !user[0].isEmpty()) {
         log.debug("PASS: Successfully signed in as " + userName);
-        return;
       } else {
         fail("Could not Authenticate as " + userName);
       }
