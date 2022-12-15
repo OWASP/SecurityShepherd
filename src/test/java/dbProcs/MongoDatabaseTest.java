@@ -35,7 +35,7 @@ public class MongoDatabaseTest {
 
   @Test
   @DisplayName("Should Return Type MongoCredentials")
-  public void getMongoChallengeCredentials_ShouldReturnTypeMongoCredentials() throws IOException {
+  public void testGetMongoChallengeCredentials_ShouldReturnTypeMongoCredentials() throws IOException {
     assertThat(
         MongoDatabase.getMongoChallengeCredentials(null, TEST_PATH),
         instanceOf(MongoCredential.class));
@@ -43,7 +43,7 @@ public class MongoDatabaseTest {
 
   @Test
   @DisplayName("Should read properties file for mongo challenge credentials")
-  public void getMongoChallengeCredentials_ShouldReadPropertiesFileForCreds() throws IOException {
+  public void testGetMongoChallengeCredentials_ShouldReadPropertiesFileForCreds() throws IOException {
     MongoCredential creds = MongoDatabase.getMongoChallengeCredentials(null, TEST_PATH);
 
     String username = creds.getUserName();
@@ -57,19 +57,19 @@ public class MongoDatabaseTest {
 
   @Test
   @DisplayName("Should Return Type String")
-  public void getMongoChallengeCollName_ShouldReturnTypeString() {
+  public void testGetMongoChallengeCollName_ShouldReturnTypeString() {
     assertThat(MongoDatabase.getMongoChallengeCollName(null, TEST_PATH), instanceOf(String.class));
   }
 
   @Test
   @DisplayName("Should read properties file with connection details to challenge")
-  public void getMongoChallengeCollName_ReadPropertiesFile() {
+  public void testGetMongoChallengeCollName_ReadPropertiesFile() {
     MongoDatabase.getMongoChallengeCollName(null, TEST_PATH);
   }
 
   @Test
   @DisplayName("Should return a MongoClient instance")
-  public void getMongoDbConnection_ShouldReturnTypeMongoClient() {
+  public void testGetMongoDbConnection_ShouldReturnTypeMongoClient() {
     MongoCredential credential =
         MongoCredential.createScramSha1Credential("test", "test", "test".toCharArray());
     assertThat(MongoDatabase.getMongoDbConnection(null), instanceOf(MongoClient.class));
@@ -78,13 +78,13 @@ public class MongoDatabaseTest {
 
   @Test
   @DisplayName("Must return type (Mongo) DB")
-  public void getMongoDatabase_ShouldReturnTypeDB() {
+  public void testGetMongoDatabase_ShouldReturnTypeDB() {
     assertThat(MongoDatabase.getMongoDatabase(mongoClient), instanceOf(DB.class));
   }
 
   @Test
   @DisplayName("Read properties file for db name")
-  public void getMongoDatabase_ReadDbName() {
+  public void testGetMongoDatabase_ReadDbName() {
     DB db = MongoDatabase.getMongoDatabase(mongoClient);
     assertEquals("test_shepherdGames", db.getName());
   }

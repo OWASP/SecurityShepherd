@@ -324,7 +324,7 @@
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
-						<version>0.40.2</version>
+						<version>0.40.1</version>
 						<executions>
 							<execution>
 								<id>start</id>
@@ -350,17 +350,17 @@
 										<dockerFile>${project.basedir}/docker/mongo/Dockerfile</dockerFile>
 									</build>
 									<run>
-										<log>
-											<enabled>true</enabled>
-										</log>
+<!--										<log>-->
+<!--											<enabled>true</enabled>-->
+<!--										</log>-->
 										<ports>
 											<port>27017:27017</port>
 										</ports>
-										<wait>
-											<!-- Check for this URL to return a 200 return code .... -->
-											<log>waiting for connections on port 27017</log>
-											<time>120000</time>
-										</wait>
+<!--										<wait>-->
+<!--											&lt;!&ndash; Check for this URL to return a 200 return code .... &ndash;&gt;-->
+<!--											<log>waiting for connections on port 27017</log>-->
+<!--											<time>120000</time>-->
+<!--										</wait>-->
 									</run>
 								</image>
 							</images>
@@ -445,7 +445,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>2.6</version>
 				<configuration>
 					<skipTests>${skipUTs}</skipTests>
 					<excludes>
@@ -456,12 +456,18 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.22.2</version>
+				<version>2.6</version>
 				<configuration>
+					<failIfNoTests>true</failIfNoTests>
 					<skipTests>${skipTests}</skipTests>
 					<skipITs>${skipITs}</skipITs>
+<!--					<includes>-->
+<!--						<include>**/it/IT*.java</include>-->
+<!--						<include>**/it/*IT.java</include>-->
+<!--						<include>**/it/*ITCase.java</include>-->
+<!--					</includes>-->
 					<excludes>
-						<exclude>**/*Test*</exclude>
+						<exclude>**/test/*Test*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
