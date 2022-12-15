@@ -26,17 +26,15 @@ RUN { \
 
 FROM mongo:${MONGODB_VERSION}
 COPY --from=builder /workdir/moduleSchemas.js /docker-entrypoint-initdb.d/
-
-ENV RUN_USER mongodb
-ENV RUN_GROUP mongodb
-
 COPY --from=builder /workdir/mongod.conf /etc/mongod.conf
 
-RUN chown -R ${RUN_USER}:${RUN_GROUP} "/etc/mongod.conf"
-RUN chown -R ${RUN_USER}:${RUN_GROUP} "/docker-entrypoint-initdb.d"
+ENV RUN_USER mongodb
 
-USER ${RUN_USER}
+USER root
 RUN sed -i 's/\/\/REMOVE/ /g' /docker-entrypoint-initdb.d/moduleSchemas.js
+RUN chown -R ${RUN_USER}:${RUN_USER} /etc/mongod.conf
+RUN chown -R ${RUN_USER}:${RUN_USER} /docker-entrypoint-initdb.d/moduleSchemas.js
+USER ${RUN_USER}
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 

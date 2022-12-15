@@ -23,7 +23,7 @@ public class TestXmlDocumentBuilder {
 
   @Test
   @DisplayName("Should Return Type DocumentBuilder")
-  public void xmlDocBuilder_ShouldReturnTypeDocumentBuilder() {
+  public void testXmlDocBuilder_ShouldReturnTypeDocumentBuilder() {
     DocumentBuilder db = XmlDocumentBuilder.xmlDocBuilder(true, true, true, true, true, true);
     assertThat(db, instanceOf(DocumentBuilder.class));
     assertNotNull(db);

@@ -30,7 +30,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_SetCorrectStartTime() {
+  public void testCountdownHandler_SetCorrectStartTime() {
     LocalDateTime testTime = LocalDateTime.now();
 
     CountdownHandler.setStartTime(testTime);
@@ -51,7 +51,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_SetCorrectLockTime() {
+  public void testCountdownHandler_SetCorrectLockTime() {
     LocalDateTime testTime = LocalDateTime.now();
 
     CountdownHandler.setLockTime(testTime);
@@ -72,7 +72,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_SetCorrectEndTime() {
+  public void testCountdownHandler_SetCorrectEndTime() {
     LocalDateTime testTime = LocalDateTime.now();
 
     CountdownHandler.setEndTime(testTime);
@@ -93,7 +93,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_compareStartTime() {
+  public void testCountdownHandler_compareStartTime() {
 
     LocalDateTime testTime = LocalDateTime.now().minusMinutes(5);
 
@@ -119,7 +119,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_compareLockTime() {
+  public void testCountdownHandler_compareLockTime() {
 
     LocalDateTime testTime = LocalDateTime.now().minusMinutes(5);
 
@@ -144,7 +144,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_compareEndTime() {
+  public void testCountdownHandler_compareEndTime() {
 
     LocalDateTime testTime = LocalDateTime.now().minusMinutes(5);
 
@@ -169,7 +169,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsOpen() throws InvalidCountdownStateException {
+  public void testCountdownHandler_TestIsOpen() throws InvalidCountdownStateException {
 
     LocalDateTime longPastTime = LocalDateTime.now().minusMinutes(10);
     LocalDateTime shortPastTime = LocalDateTime.now().minusMinutes(5);
@@ -218,7 +218,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsOpenStartAfterEndInvalid() {
+  public void testCountdownHandler_TestIsOpenStartAfterEndInvalid() {
 
     LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
@@ -229,7 +229,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsOpenStartAfterLockInvalid() {
+  public void testCountdownHandler_TestIsOpenStartAfterLockInvalid() {
 
     LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
@@ -240,7 +240,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsOpenLockAfterEndInvalid() {
+  public void testCountdownHandler_TestIsOpenLockAfterEndInvalid() {
 
     LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
@@ -251,7 +251,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsRunning() throws InvalidCountdownStateException {
+  public void testCountdownHandler_TestIsRunning() throws InvalidCountdownStateException {
 
     LocalDateTime longPastTime = LocalDateTime.now().minusMinutes(10);
     LocalDateTime shortPastTime = LocalDateTime.now().minusMinutes(5);
@@ -296,7 +296,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsRunningStartAfterEndInvalid() {
+  public void testCountdownHandler_TestIsRunningStartAfterEndInvalid() {
 
     LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
@@ -307,7 +307,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsRunningStartAfterLockInvalid() {
+  public void testCountdownHandler_TestIsRunningStartAfterLockInvalid() {
 
     LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
@@ -318,7 +318,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsRunningLockAfterEndInvalid() {
+  public void testCountdownHandler_TestIsRunningLockAfterEndInvalid() {
 
     LocalDateTime testTime = LocalDateTime.parse("1980-01-01T12:00:00");
 
@@ -329,7 +329,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsRunningEqualTimes() throws InvalidCountdownStateException {
+  public void testCountdownHandler_TestIsRunningEqualTimes() throws InvalidCountdownStateException {
 
     // These equal-time edge cases should work even though they don't make much
     // sense...
@@ -358,7 +358,7 @@ public class TestCountdownHandler {
   }
 
   @Test
-  public void countdownHandler_TestIsOpenEqualTimes() throws InvalidCountdownStateException {
+  public void testCountdownHandler_TestIsOpenEqualTimes() throws InvalidCountdownStateException {
 
     // These equal-time edge cases should work even though they don't make much
     // sense...

@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -38,6 +39,7 @@ public class TestProperties {
     fail(message);
   }
 
+  @Test
   public static void executeSql(Logger log) throws IOException, SQLException {
 
     File file =
@@ -421,11 +423,11 @@ public class TestProperties {
   public static void createMysqlResource() throws IOException {
     Dotenv dotenv = Dotenv.load();
     createMysqlResource(
-        dotenv.get("TEST_MYSQL_HOST"),
-        Integer.parseInt(dotenv.get("TEST_MYSQL_PORT")),
+        dotenv.get("TEST_MARIADB_HOST"),
+        Integer.parseInt(dotenv.get("TEST_MARIADB_PORT")),
         "core",
         "root",
-        dotenv.get("TEST_MYSQL_PASSWORD"));
+        dotenv.get("TEST_MARIADB_PASSWORD"));
   }
 
   /**
