@@ -73,6 +73,14 @@ jobs:
           sed -i 's/TEST_MARIADB_PORT=3306/TEST_MARIADB_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
       - name: Run Unit Tests
         run: mvn test -B -e -X
+      - name: Upload unit test reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: failsafe-reports
+          path: |
+            target/surefire-reports/*.txt
+            target/surefire-reports/*.xml
 
   integration-tests:
     needs: [lint-java, build]
@@ -106,3 +114,11 @@ jobs:
       - name: Run Intergration Tests
         run: |
           mvn verify -DskipUTs=true -DmongoDocker -B
+      - name: Upload integration test reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: failsafe-reports
+          path: |
+            target/failsafe-reports/*.txt
+            target/failsafe-reports/*.xml
