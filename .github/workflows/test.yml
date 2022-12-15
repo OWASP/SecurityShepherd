@@ -25,7 +25,7 @@ jobs:
   lint-java:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.2.0
       - uses: axel-op/googlejavaformat-action@fe78db8a90171b6a836449f8d0e982d5d71e5c5a #v3.6.0
         with:
           args: "--set-exit-if-changed"
@@ -35,11 +35,12 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v3.2.0
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          distribution: 'zulu'
+          java-version: '11'
       - name: Build Maven with Docker Profile
         run: mvn clean install -Pdocker -DskipTests -B
       - name: Docker Compose Build
@@ -49,26 +50,27 @@ jobs:
     needs: [lint-java, build]
     runs-on: ubuntu-latest
     services:
-      mysql:
-        image: mysql:5.7
+      mariadb:
+        image: mariadb:10.6
         env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: core
+          MARIADB_ROOT_PASSWORD: password
+          MARIADB_DATABASE: core
         ports:
           - '8888:3306'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v3.2.0
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
-      - name: Start MYSQL Server
+          distribution: 'zulu'
+          java-version: '11'
+      - name: Start MariaDB Server
         run: sudo /etc/init.d/mysql start
-      - name: Modify MySQL Connection Variables
+      - name: Modify MyMariaDBSQL Connection Variables
         run: |
           sed -i "s/'@'localhost'/'@'%'/g" ${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql
-          sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
+          sed -i 's/TEST_MARIADB_PORT=3306/TEST_MARIADB_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
       - name: Run Unit Tests
         run: mvn test -B -e -X
 
@@ -76,27 +78,28 @@ jobs:
     needs: [lint-java, build]
     runs-on: ubuntu-latest
     services:
-      mysql:
-        image: mysql:5.7
+      mariadb:
+        image: mariadb:10.6
         env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: core
+          MARIADB_ROOT_PASSWORD: password
+          MARIADB_DATABASE: core
         ports:
           - '8888:3306'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v3.2.0
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
-      - name: Start MYSQL Server
+          distribution: 'zulu'
+          java-version: '11'
+      - name: Start MARIADB Server
         run: sudo /etc/init.d/mysql start
-      - name: Modify MySQL Connection Variables
+      - name: Modify MARIADB Connection Variables
         run: |
           sed -i "s/'@'localhost'/'@'%'/g" ${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql
-          sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
-      - name: Prepare Intergration Tests
+          sed -i 's/TEST_MARIADB_PORT=3306/TEST_MARIADB_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
+      - name: Prepare Integration Tests
         run: |
           sudo apt-get -y install libargon2-0
           mvn -Pdocker validate
