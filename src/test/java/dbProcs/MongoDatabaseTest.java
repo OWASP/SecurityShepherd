@@ -35,7 +35,8 @@ public class MongoDatabaseTest {
 
   @Test
   @DisplayName("Should Return Type MongoCredentials")
-  public void testGetMongoChallengeCredentials_ShouldReturnTypeMongoCredentials() throws IOException {
+  public void testGetMongoChallengeCredentials_ShouldReturnTypeMongoCredentials()
+      throws IOException {
     assertThat(
         MongoDatabase.getMongoChallengeCredentials(null, TEST_PATH),
         instanceOf(MongoCredential.class));
@@ -43,7 +44,8 @@ public class MongoDatabaseTest {
 
   @Test
   @DisplayName("Should read properties file for mongo challenge credentials")
-  public void testGetMongoChallengeCredentials_ShouldReadPropertiesFileForCreds() throws IOException {
+  public void testGetMongoChallengeCredentials_ShouldReadPropertiesFileForCreds()
+      throws IOException {
     MongoCredential creds = MongoDatabase.getMongoChallengeCredentials(null, TEST_PATH);
 
     String username = creds.getUserName();
