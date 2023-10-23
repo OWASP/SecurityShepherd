@@ -17,6 +17,7 @@ sudo apt install git maven docker docker-compose openjdk-8-jdk
 
 # Clone the github repository
 git clone https://github.com/OWASP/SecurityShepherd.git
+test
 
 # Change directory into the local copy of the repository
 cd SecurityShepherd
