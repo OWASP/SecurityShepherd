@@ -108,7 +108,7 @@ public class OpenOrCloseByCategoryIT {
         request.setCookies(response.getCookies());
         String responseBody = openOrCloseByCategoryDoPost("open", "Injection", csrfToken);
         if (!responseBody.contains("Please try non administrator functions")) {
-          log.debug("No Admin Access Result Recieved");
+          log.debug("No Admin Access Result Received");
           String expectedResult = "The categories selected have been opened";
           if (responseBody.contains(expectedResult)) {
             log.debug("Received Expected Message for this test");
@@ -153,7 +153,7 @@ public class OpenOrCloseByCategoryIT {
         request.setCookies(response.getCookies());
         String responseBody = openOrCloseByCategoryDoPost("open", "Injection", csrfToken);
         if (responseBody.contains("loggedOutSheep")) {
-          log.debug("Admin Access Result Recieved");
+          log.debug("Admin Access Result Received");
         } else {
           String message = "User Does not get 'Admin' Error";
           log.fatal(message);
@@ -191,7 +191,7 @@ public class OpenOrCloseByCategoryIT {
         String responseBody =
             openOrCloseByCategoryDoPost("<script>alert(1)</script>", "Injection", csrfToken);
         if (!responseBody.contains("Please try non administrator functions")) {
-          log.debug("No Admin Access Result Recieved");
+          log.debug("No Admin Access Result Received");
           String expectedResult = "Invalid Request";
           if (responseBody.contains(expectedResult)) {
             log.debug("Received Expected Message for this test");
@@ -212,3 +212,4 @@ public class OpenOrCloseByCategoryIT {
     }
   }
 }
+

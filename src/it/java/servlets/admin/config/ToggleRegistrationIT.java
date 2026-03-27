@@ -113,7 +113,7 @@ public class ToggleRegistrationIT {
         request.setCookies(response.getCookies());
         String responseBody = doThePost(csrfToken);
         if (responseBody.contains("try non administrator functions")) {
-          log.debug("Expected No Admin Access Result Recieved");
+          log.debug("Expected No Admin Access Result Received");
           if (OpenRegistration.isEnabled()) {
             String message = "Registration opened after what should have been a failed request";
             log.fatal(message);
@@ -240,3 +240,4 @@ public class ToggleRegistrationIT {
     }
   }
 }
+

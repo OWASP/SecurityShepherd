@@ -113,7 +113,7 @@ public class SetTournamentModeIT {
         request.setCookies(response.getCookies());
         String responseBody = doThePost(csrfToken);
         if (responseBody.isEmpty()) {
-          log.debug("Expected Empty Result Recieved");
+          log.debug("Expected Empty Result Received");
           if (ModulePlan.isTournamentFloor()) {
             String message =
                 "Floor Plan Changed to Tournament after what should have been a failed request";
@@ -227,3 +227,4 @@ public class SetTournamentModeIT {
     }
   }
 }
+

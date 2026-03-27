@@ -94,7 +94,7 @@ public class DeletePlayersIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, new String());
       if (responseBody.contains("Please try non administrator functions")) {
-        log.debug("No Admin Access Result Recieved");
+        log.debug("No Admin Access Result Received");
       } else {
         String message = "Did not get authoristion error for User accessing Admin Function";
         log.fatal(message);
@@ -127,7 +127,7 @@ public class DeletePlayersIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, new String());
       if (responseBody.contains("Player(s) Not Found")) {
-        log.debug("Player(s) Not Found Message Recieved");
+        log.debug("Player(s) Not Found Message Received");
       } else {
         String message = "Admin unable to use delete player";
         log.fatal(message);
@@ -177,7 +177,7 @@ public class DeletePlayersIT {
 
       String responseBody = doThePost(csrfToken, testuserId);
       if (responseBody.contains("User deleted successfully")) {
-        log.debug("User deleted successfully Message Recieved");
+        log.debug("User deleted successfully Message Received");
       } else {
         String message = "Admin unable to use delete player";
         log.fatal(message);
@@ -223,3 +223,4 @@ public class DeletePlayersIT {
     }
   }
 }
+

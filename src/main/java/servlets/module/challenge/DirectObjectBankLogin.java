@@ -175,8 +175,8 @@ public class DirectObjectBankLogin extends HttpServlet {
             + bundle.getString("bankForm.transferFunds.whatToDo")
             + "</p><div id='transferFundsForm'><form id='transferFunds'"
             + " action='javascript:transferFunds();'><table><tr><td>"
-            + bundle.getString("bankForm.recieverNumber")
-            + " </td><td><input type='text' id='recieverAccountNumber'></td></tr>"
+            + bundle.getString("bankForm.receiverNumber")
+            + " </td><td><input type='text' id='receiverAccountNumber'></td></tr>"
             + "<tr><td>"
             + bundle.getString("bankForm.amountToSend")
             + " </td><td><input type='text' id='transferAmount'></td></tr>"
@@ -268,8 +268,8 @@ public class DirectObjectBankLogin extends HttpServlet {
             + bundle.getString("bankForm.transferFunds.whatToDo")
             + "</p><div id='transferFundsForm'><form id='transferFunds'"
             + " action='javascript:transferFunds();'><table><tr><td>"
-            + bundle.getString("bankForm.recieverNumber")
-            + " </td><td><input type='text' id='recieverAccountNumber'></td></tr>"
+            + bundle.getString("bankForm.receiverNumber")
+            + " </td><td><input type='text' id='receiverAccountNumber'></td></tr>"
             + "<tr><td>"
             + bundle.getString("bankForm.amountToSend")
             + " </td><td><input type='text' id='transferAmount'></td></tr>"
@@ -338,3 +338,4 @@ public class DirectObjectBankLogin extends HttpServlet {
     return toReturn;
   }
 }
+

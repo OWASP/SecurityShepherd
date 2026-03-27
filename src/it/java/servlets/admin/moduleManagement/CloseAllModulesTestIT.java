@@ -104,7 +104,7 @@ public class CloseAllModulesTestIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken);
       if (responseBody.contains("loggedOutSheep")) {
-        log.debug("No Admin Access Result Recieved");
+        log.debug("No Admin Access Result Received");
       } else {
         String message = "Did not get authoristion error for User accessing Admin Function";
         log.fatal(message);
@@ -137,7 +137,7 @@ public class CloseAllModulesTestIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken);
       if (responseBody.contains("All Modules are Now Closed")) {
-        log.debug("All Modules are Now Closed Message Recieved");
+        log.debug("All Modules are Now Closed Message Received");
       } else {
         String message = "Admin unable to use close all modules servlet";
         log.fatal(message);
@@ -176,3 +176,4 @@ public class CloseAllModulesTestIT {
     }
   }
 }
+

@@ -124,7 +124,7 @@ public class EnableCheatsIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, enableForAll);
       if (responseBody.contains("loggedOutSheep")) {
-        log.debug("No Admin Access Expected Result Recieved");
+        log.debug("No Admin Access Expected Result Received");
         if (CheatSheetStatus.isEnabledAtAll()) {
           String message = "Cheat Sheets enabled in what should have been a failed request";
           log.fatal(message);
@@ -237,3 +237,4 @@ public class EnableCheatsIT {
     }
   }
 }
+

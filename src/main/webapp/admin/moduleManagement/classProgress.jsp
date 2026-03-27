@@ -92,7 +92,7 @@ catch(SQLException e)
 																		}
 																		catch(SQLException e)
 																		{
-																			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+																			ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occurred when manipulating classList: " + e.toString());
 																			showClasses = false;
 																		}
 																	}

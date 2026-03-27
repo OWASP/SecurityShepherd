@@ -111,7 +111,7 @@ public class GetJsonProgressIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, classId);
       if (responseBody.contains("loggedOutSheep")) {
-        log.debug("No Admin Access Result Recieved");
+        log.debug("No Admin Access Result Received");
       } else {
         String message = "Did not get authoristion error for User accessing Admin Function";
         log.fatal(message);
@@ -188,3 +188,4 @@ public class GetJsonProgressIT {
     }
   }
 }
+

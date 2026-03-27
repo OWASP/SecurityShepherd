@@ -119,7 +119,7 @@ public class DisableScoreboardIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken);
       if (responseBody.contains("try non administrator functions")) {
-        log.debug("No Admin Access Expected Result Recieved");
+        log.debug("No Admin Access Expected Result Received");
         if (!ScoreboardStatus.isScoreboardEnabled()) {
           String message = "Scoreboard was disabled on what should have been a failed request";
           log.fatal(message);
@@ -210,7 +210,7 @@ public class DisableScoreboardIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost("wrongCSRFToken");
       if (responseBody.contains("Scoreboard Configuration Failure")) {
-        log.debug("Scoreboard Config Failure Recieved");
+        log.debug("Scoreboard Config Failure Received");
         if (!ScoreboardStatus.isScoreboardEnabled()) {
           String message = "Scoreboard was disabled on what should have been a failed request";
           log.fatal(message);
@@ -224,3 +224,4 @@ public class DisableScoreboardIT {
     }
   }
 }
+

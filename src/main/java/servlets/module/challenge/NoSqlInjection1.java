@@ -148,7 +148,7 @@ public class NoSqlInjection1 extends HttpServlet {
         } catch (MongoTimeoutException e) {
           log.fatal(bundle.getString("result.mongoError") + e.toString());
           htmlOutput +=
-              "<p>Mongo Timeout Occured</p>" + "<p>" + Encode.forHtml(e.toString()) + "</p>";
+              "<p>Mongo Timeout Occurred</p>" + "<p>" + Encode.forHtml(e.toString()) + "</p>";
         } catch (MongoException e) {
           log.error(bundle.getString("result.mongoError") + e.toString());
           htmlOutput +=
@@ -179,3 +179,4 @@ public class NoSqlInjection1 extends HttpServlet {
     }
   }
 }
+

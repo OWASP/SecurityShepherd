@@ -115,7 +115,7 @@ public class SetOpenFloorModeIT {
         request.setCookies(response.getCookies());
         String responseBody = doThePost(csrfToken);
         if (responseBody.isEmpty()) {
-          log.debug("Expected Empty Result Recieved");
+          log.debug("Expected Empty Result Received");
           if (ModulePlan.isOpenFloor()) {
             String message =
                 "Floor Plan Changed to Open Floor after what should have been a failed request";
@@ -230,3 +230,4 @@ public class SetOpenFloorModeIT {
     }
   }
 }
+

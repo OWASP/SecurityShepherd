@@ -115,7 +115,7 @@ public class EnableModuleBlockIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, blockedMessage, moduleId);
       if (responseBody.contains("loggedOutSheep")) {
-        log.debug("No Admin Access Result Recieved");
+        log.debug("No Admin Access Result Received");
       } else {
         String message = "Did not get authoristion error for User accessing Admin Function";
         log.fatal(message);
@@ -197,8 +197,8 @@ public class EnableModuleBlockIT {
       // Add Cookies from Response to outgoing request
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, blockedMessage, moduleId);
-      if (responseBody.contains("Invalid data recieved")) {
-        log.debug("Invalid Data Error Recieved");
+      if (responseBody.contains("Invalid data Received")) {
+        log.debug("Invalid Data Error Received");
       } else {
         String message = "Module Id Validation Failed";
         log.fatal(message);
@@ -292,3 +292,4 @@ public class EnableModuleBlockIT {
     }
   }
 }
+

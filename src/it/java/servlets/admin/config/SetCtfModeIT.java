@@ -120,7 +120,7 @@ public class SetCtfModeIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken);
       if (responseBody.isEmpty()) {
-        log.debug("Expected Empty Result Recieved");
+        log.debug("Expected Empty Result Received");
         if (ModulePlan.isIncrementalFloor()) {
           String message =
               "Floor Plan Changed to Incremental after what should have been a failed request";
@@ -232,3 +232,4 @@ public class SetCtfModeIT {
     }
   }
 }
+

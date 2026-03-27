@@ -104,7 +104,7 @@ public class EnableModuleBlock extends HttpServlet {
             } else if (storedResult == null) {
               log.error("Module not found");
             }
-            out.write("<h3 class='title'>Error</h3><p>Invalid data recieved</p>");
+            out.write("<h3 class='title'>Error</h3><p>Invalid data received</p>");
           }
         } catch (Exception e) {
           log.error("StopHere Error: " + e.toString());

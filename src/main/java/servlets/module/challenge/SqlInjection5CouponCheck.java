@@ -109,7 +109,7 @@ public class SqlInjection5CouponCheck extends HttpServlet {
         conn.close();
       } catch (Exception e) {
         log.debug("Did complete Check: " + e.toString());
-        htmlOutput = "" + bundle.getString("errors.occured") + "" + Encode.forHtml(e.toString());
+        htmlOutput = "" + bundle.getString("errors.Occurred") + "" + Encode.forHtml(e.toString());
       }
       try {
         Thread.sleep(1000);
@@ -122,3 +122,4 @@ public class SqlInjection5CouponCheck extends HttpServlet {
     }
   }
 }
+

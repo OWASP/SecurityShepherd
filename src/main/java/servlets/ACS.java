@@ -227,7 +227,7 @@ public class ACS extends HttpServlet {
           if (ssoValid) {
 
             if (ssoName == null || userName == null || userRole == null) {
-              String errorMsg = "Unknown error occured when unpacking SAML properties";
+            String errorMsg = "Unknown error occurred when unpacking SAML properties";
 
               log.error(errorMsg);
               throw new RuntimeException(errorMsg);

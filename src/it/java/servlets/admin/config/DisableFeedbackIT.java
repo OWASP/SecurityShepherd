@@ -114,7 +114,7 @@ public class DisableFeedbackIT {
         request.setCookies(response.getCookies());
         String responseBody = doThePost(csrfToken);
         if (responseBody.contains("try non administrator functions")) {
-          log.debug("No Admin Access Expected Result Recieved");
+          log.debug("No Admin Access Expected Result Received");
           if (FeedbackStatus.isDisabled()) {
             String message = "Feedback was disabled when the request should have failed";
             log.fatal(message);
@@ -170,3 +170,4 @@ public class DisableFeedbackIT {
     }
   }
 }
+

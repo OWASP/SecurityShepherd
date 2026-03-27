@@ -96,10 +96,10 @@ jobs:
         run: |
           sed -i "s/'@'localhost'/'@'%'/g" ${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql
           sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
-      - name: Prepare Intergration Tests
+      - name: Prepare Integration Tests
         run: |
           sudo apt-get -y install libargon2-0
           mvn -Pdocker validate
-      - name: Run Intergration Tests
+      - name: Run Integration Tests
         run: |
           mvn verify -DskipUTs=true -DmongoDocker -B

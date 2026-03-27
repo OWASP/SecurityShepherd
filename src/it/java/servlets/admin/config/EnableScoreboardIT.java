@@ -129,7 +129,7 @@ public class EnableScoreboardIT {
         request.setCookies(response.getCookies());
         String responseBody = enableScoreboardDoPost(null, csrfToken);
         if (responseBody.contains("Please try non administrator functions")) {
-          log.debug("No Admin Access Expected Result Recieved");
+          log.debug("No Admin Access Expected Result Received");
         } else {
           String message = "Normal user did not get error when performing admin function";
           log.fatal(message);
@@ -403,3 +403,4 @@ public class EnableScoreboardIT {
     }
   }
 }
+
