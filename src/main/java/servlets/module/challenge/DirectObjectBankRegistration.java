@@ -79,7 +79,7 @@ public class DirectObjectBankRegistration extends HttpServlet {
         callstmt.setString(1, accountHolder);
         callstmt.setString(2, accountPass);
         callstmt.execute();
-      log.debug("Successfully ran create account procedure.");
+        log.debug("Successfully ran create account procedure.");
         log.debug("Outputting HTML");
         htmlOutput = bundle.getString("register.accountCreated");
         out.write(htmlOutput);

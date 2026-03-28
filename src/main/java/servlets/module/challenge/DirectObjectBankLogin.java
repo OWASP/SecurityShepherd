@@ -338,4 +338,3 @@ public class DirectObjectBankLogin extends HttpServlet {
     return toReturn;
   }
 }
-

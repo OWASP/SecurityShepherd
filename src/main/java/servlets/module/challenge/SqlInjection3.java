@@ -47,6 +47,7 @@ public class SqlInjection3 extends HttpServlet {
   private static String levelName = "SQL Injection Challenge Three";
   public static String levelHash =
       "b7327828a90da59df54b27499c0dc2e875344035e38608fcfb7c1ab8924923f6";
+
   // private static String levelResult = ""; // Stored in Vulnerable DB. Not User Specific
 
   /**

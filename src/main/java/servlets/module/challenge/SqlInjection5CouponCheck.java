@@ -122,4 +122,3 @@ public class SqlInjection5CouponCheck extends HttpServlet {
     }
   }
 }
-
