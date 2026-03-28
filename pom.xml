@@ -104,7 +104,7 @@
 		<dependency>
 		<groupId>com.mysql</groupId>
 		<artifactId>mysql-connector-j</artifactId>
-		<version>8.0.33</version>
+		<version>8.2.0</version>
 </dependency>
 
 <!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
