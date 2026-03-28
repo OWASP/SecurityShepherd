@@ -13,12 +13,13 @@ import com.mongodb.MongoSocketOpenException;
 import com.mongodb.MongoTimeoutException;
 import com.mongodb.ServerAddress;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,9 +28,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Used to create MongoDb connections using a singleton pattern for connection reuse.
- * MongoClient already includes internal connection pooling, so we only need one instance.
- * <br>
+ * Used to create MongoDb connections using a singleton pattern for connection reuse. MongoClient
+ * already includes internal connection pooling, so we only need one instance. <br>
  * <br>
  * This file is part of the Security Shepherd Project.
  *
@@ -65,10 +65,10 @@ public class MongoDatabase {
   private static final int DEFAULT_MIN_CONNECTIONS_PER_HOST = 2;
 
   /**
-   * Method to close a MongoDb connection.
-   * Note: With singleton pattern, individual connections should NOT be closed by callers.
-   * This method is kept for API compatibility but does nothing for singleton clients.
-   * Use shutdown() to close all connections when the application is shutting down.
+   * Method to close a MongoDb connection. Note: With singleton pattern, individual connections
+   * should NOT be closed by callers. This method is kept for API compatibility but does nothing for
+   * singleton clients. Use shutdown() to close all connections when the application is shutting
+   * down.
    *
    * @param conn The connection (ignored for singleton clients)
    * @deprecated Use shutdown() instead when shutting down the application
@@ -176,8 +176,8 @@ public class MongoDatabase {
   }
 
   /**
-   * Method to get a singleton MongoDb Connection.
-   * MongoClient has internal connection pooling, so the same instance is reused.
+   * Method to get a singleton MongoDb Connection. MongoClient has internal connection pooling, so
+   * the same instance is reused.
    *
    * @param ApplicationRoot The running context of the application (kept for API compatibility)
    * @return A singleton MongoDb Connection
@@ -233,13 +233,16 @@ public class MongoDatabase {
     optionsBuilder.serverSelectionTimeout(Integer.parseInt(serverSelectionTimeout));
 
     // Connection pool settings
-    int connectionsPerHost = getIntProperty(prop, "pool.connectionsPerHost", DEFAULT_CONNECTIONS_PER_HOST);
-    int minConnectionsPerHost = getIntProperty(prop, "pool.minConnectionsPerHost", DEFAULT_MIN_CONNECTIONS_PER_HOST);
+    int connectionsPerHost =
+        getIntProperty(prop, "pool.connectionsPerHost", DEFAULT_CONNECTIONS_PER_HOST);
+    int minConnectionsPerHost =
+        getIntProperty(prop, "pool.minConnectionsPerHost", DEFAULT_MIN_CONNECTIONS_PER_HOST);
     optionsBuilder.connectionsPerHost(connectionsPerHost);
     optionsBuilder.minConnectionsPerHost(minConnectionsPerHost);
 
     MongoClientOptions mongoOptions = optionsBuilder.build();
-    ServerAddress serverAddress = new ServerAddress(connectionHost, Integer.parseInt(connectionPort));
+    ServerAddress serverAddress =
+        new ServerAddress(connectionHost, Integer.parseInt(connectionPort));
 
     try {
       MongoClient mongoClient;
@@ -290,25 +293,26 @@ public class MongoDatabase {
     return prop;
   }
 
-  /**
-   * Helper method to get an integer property with a default value.
-   */
+  /** Helper method to get an integer property with a default value. */
   private static int getIntProperty(Properties prop, String key, int defaultValue) {
     String value = prop.getProperty(key);
     if (value != null) {
       try {
         return Integer.parseInt(value);
       } catch (NumberFormatException e) {
-        log.warn("Invalid integer value for property '{}': {}, using default: {}",
-            key, value, defaultValue);
+        log.warn(
+            "Invalid integer value for property '{}': {}, using default: {}",
+            key,
+            value,
+            defaultValue);
       }
     }
     return defaultValue;
   }
 
   /**
-   * Method to get a singleton MongoDb Connection with credentials.
-   * Each unique credential gets its own MongoClient instance (with internal pooling).
+   * Method to get a singleton MongoDb Connection with credentials. Each unique credential gets its
+   * own MongoClient instance (with internal pooling).
    *
    * @param ApplicationRoot The running context of the application (kept for API compatibility)
    * @param credential The credential to connect to MongoDB
@@ -324,10 +328,12 @@ public class MongoDatabase {
     // Use the credential source (database name) as the key
     String credentialKey = credential.getSource() + ":" + credential.getUserName();
 
-    return credentialClients.computeIfAbsent(credentialKey, key -> {
-      log.debug("Creating new MongoClient for credential: " + credentialKey);
-      return createMongoClient(credential);
-    });
+    return credentialClients.computeIfAbsent(
+        credentialKey,
+        key -> {
+          log.debug("Creating new MongoClient for credential: " + credentialKey);
+          return createMongoClient(credential);
+        });
   }
 
   /**
@@ -381,8 +387,8 @@ public class MongoDatabase {
   }
 
   /**
-   * Shuts down all MongoDB connections.
-   * This should be called when the application is shutting down.
+   * Shuts down all MongoDB connections. This should be called when the application is shutting
+   * down.
    */
   public static void shutdown() {
     synchronized (lock) {
@@ -405,9 +411,7 @@ public class MongoDatabase {
     }
   }
 
-  /**
-   * Resets the singleton instances. This is primarily for testing purposes.
-   */
+  /** Resets the singleton instances. This is primarily for testing purposes. */
   public static void resetInstance() {
     shutdown();
   }

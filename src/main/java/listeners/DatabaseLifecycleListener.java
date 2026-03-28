@@ -9,9 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Servlet context listener for managing database connection pool lifecycle.
- * Initializes connection pools when the application starts and shuts them down
- * when the application stops.
+ * Servlet context listener for managing database connection pool lifecycle. Initializes connection
+ * pools when the application starts and shuts them down when the application stops.
  *
  * <p>This file is part of the Security Shepherd Project.
  *
@@ -27,8 +26,8 @@ public class DatabaseLifecycleListener implements ServletContextListener {
   private static final Logger log = LogManager.getLogger(DatabaseLifecycleListener.class);
 
   /**
-   * Called when the servlet context is initialized (application startup).
-   * Initializes the database connection pools.
+   * Called when the servlet context is initialized (application startup). Initializes the database
+   * connection pools.
    *
    * @param sce The servlet context event
    */
@@ -49,8 +48,9 @@ public class DatabaseLifecycleListener implements ServletContextListener {
       // Catch RuntimeException (including configuration errors) to prevent
       // application startup from failing completely
       log.error("Failed to initialize database connection pools: " + e.getMessage(), e);
-      log.warn("Application will continue without database connectivity. "
-          + "Some features may not work until database is properly configured.");
+      log.warn(
+          "Application will continue without database connectivity. "
+              + "Some features may not work until database is properly configured.");
     } catch (Exception e) {
       log.error("Failed to initialize database connection pools: " + e.getMessage(), e);
       // Don't prevent application startup, but log the error
@@ -59,8 +59,8 @@ public class DatabaseLifecycleListener implements ServletContextListener {
   }
 
   /**
-   * Called when the servlet context is destroyed (application shutdown).
-   * Shuts down all database connection pools to release resources.
+   * Called when the servlet context is destroyed (application shutdown). Shuts down all database
+   * connection pools to release resources.
    *
    * @param sce The servlet context event
    */

@@ -1,7 +1,8 @@
 package listeners;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import dbProcs.ConnectionPool;
 import dbProcs.MongoDatabase;
@@ -10,10 +11,10 @@ import java.sql.Connection;
 import javax.servlet.ServletContextEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import testUtils.TestProperties;
@@ -21,26 +22,24 @@ import testUtils.TestProperties;
 /**
  * Unit tests for the DatabaseLifecycleListener class.
  *
- * Note: Tests that require actual database connectivity will be skipped if
- * the database is not available. Run with a proper database setup for full coverage.
+ * <p>Note: Tests that require actual database connectivity will be skipped if the database is not
+ * available. Run with a proper database setup for full coverage.
  */
 public class DatabaseLifecycleListenerTest {
 
   private static final Logger log = LogManager.getLogger(DatabaseLifecycleListenerTest.class);
   private static boolean databaseAvailable = false;
 
-  @Mock
-  private ServletContextEvent mockServletContextEvent;
+  @Mock private ServletContextEvent mockServletContextEvent;
 
   private DatabaseLifecycleListener listener;
 
-  @BeforeClass
+  @BeforeAll
   public static void setupClass() throws IOException {
     TestProperties.setTestPropertiesFileDirectory(log);
     TestProperties.createMysqlResource();
     TestProperties.createMongoResource();
 
-    // Check if database is available
     try {
       ConnectionPool.initialize();
       Connection conn = ConnectionPool.getConnection();
@@ -55,100 +54,66 @@ public class DatabaseLifecycleListenerTest {
     }
   }
 
-  @Before
+  @BeforeEach
   public void setup() throws IOException {
     MockitoAnnotations.openMocks(this);
-
-    // Reset pool state FIRST (before creating listener)
     ConnectionPool.reset();
     MongoDatabase.resetInstance();
-
-    // Ensure properties files exist before any pool operations
     TestProperties.createMysqlResource();
     TestProperties.createMongoResource();
-
-    // Create listener after properties exist
     listener = new DatabaseLifecycleListener();
   }
 
-  /**
-   * Helper method to skip tests that require database connectivity.
-   */
   private void requireDatabase() {
-    if (!databaseAvailable) {
-      log.info("Skipping test - database not available");
-    }
-    Assume.assumeTrue(databaseAvailable);
+    assumeTrue(databaseAvailable, "Database not available");
   }
 
   @Test
+  @DisplayName("contextInitialized should initialize the connection pool")
   public void testContextInitialized() {
     requireDatabase();
 
-    // Verify pool is not initialized before
-    assertFalse("Pool should not be initialized before contextInitialized",
-        ConnectionPool.isInitialized());
-
-    // Call contextInitialized
+    assertFalse(
+        ConnectionPool.isInitialized(), "Pool should not be initialized before contextInitialized");
     listener.contextInitialized(mockServletContextEvent);
-
-    // Verify pool is now initialized
-    assertTrue("Pool should be initialized after contextInitialized",
-        ConnectionPool.isInitialized());
+    assertTrue(
+        ConnectionPool.isInitialized(), "Pool should be initialized after contextInitialized");
   }
 
   @Test
+  @DisplayName("contextDestroyed should shut down all pools")
   public void testContextDestroyed() {
     requireDatabase();
 
-    // First initialize the pools
     listener.contextInitialized(mockServletContextEvent);
-    assertTrue("Pool should be initialized", ConnectionPool.isInitialized());
+    assertTrue(ConnectionPool.isInitialized(), "Pool should be initialized");
 
-    // Call contextDestroyed
     listener.contextDestroyed(mockServletContextEvent);
-
-    // Verify pools are shut down
-    assertFalse("Pool should not be initialized after contextDestroyed",
-        ConnectionPool.isInitialized());
-    assertFalse("MongoDB should not be initialized after contextDestroyed",
-        MongoDatabase.isInitialized());
+    assertFalse(
+        ConnectionPool.isInitialized(), "Pool should not be initialized after contextDestroyed");
+    assertFalse(
+        MongoDatabase.isInitialized(), "MongoDB should not be initialized after contextDestroyed");
   }
 
   @Test
+  @DisplayName("contextInitialized should handle missing config gracefully")
   public void testInitializationFailureHandling() throws IOException {
-    // This test verifies that initialization failures are handled gracefully
-    // The listener catches exceptions and logs them, allowing app to continue
-
-    // Delete the properties file to simulate a configuration error
     TestProperties.deleteMysqlResource();
-
-    // Reset pool to ensure clean state
     ConnectionPool.reset();
 
-    // The listener should catch the exception internally and not throw
-    // (it logs the error but doesn't prevent app startup)
     listener.contextInitialized(mockServletContextEvent);
 
-    // Pool should NOT be initialized because the properties file was missing
-    assertFalse("Pool should not be initialized when config is missing",
-        ConnectionPool.isInitialized());
+    assertFalse(
+        ConnectionPool.isInitialized(), "Pool should not be initialized when config is missing");
 
-    // Restore the properties file for other tests
     TestProperties.createMysqlResource();
   }
 
   @Test
+  @DisplayName("contextDestroyed without prior init should not throw")
   public void testContextDestroyedWithoutInit() {
-    // This test doesn't require a database - tests that destroy is safe without init
-
-    // Verify pool is not initialized
-    assertFalse("Pool should not be initialized", ConnectionPool.isInitialized());
-
-    // Call contextDestroyed without first initializing - should not throw
+    assertFalse(ConnectionPool.isInitialized(), "Pool should not be initialized");
     listener.contextDestroyed(mockServletContextEvent);
-
-    // Still not initialized
-    assertFalse("Pool should still not be initialized", ConnectionPool.isInitialized());
+    assertFalse(ConnectionPool.isInitialized(), "Pool should still not be initialized");
   }
 }

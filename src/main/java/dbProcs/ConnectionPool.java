@@ -118,18 +118,14 @@ public class ConnectionPool {
     config.setPoolName(poolName);
 
     // Pool size configuration
-    config.setMaximumPoolSize(
-        getIntProperty(prop, "pool.maximumPoolSize", DEFAULT_MAX_POOL_SIZE));
-    config.setMinimumIdle(
-        getIntProperty(prop, "pool.minimumIdle", DEFAULT_MIN_IDLE));
+    config.setMaximumPoolSize(getIntProperty(prop, "pool.maximumPoolSize", DEFAULT_MAX_POOL_SIZE));
+    config.setMinimumIdle(getIntProperty(prop, "pool.minimumIdle", DEFAULT_MIN_IDLE));
 
     // Timeout configuration
     config.setConnectionTimeout(
         getLongProperty(prop, "pool.connectionTimeout", DEFAULT_CONNECTION_TIMEOUT));
-    config.setIdleTimeout(
-        getLongProperty(prop, "pool.idleTimeout", DEFAULT_IDLE_TIMEOUT));
-    config.setMaxLifetime(
-        getLongProperty(prop, "pool.maxLifetime", DEFAULT_MAX_LIFETIME));
+    config.setIdleTimeout(getLongProperty(prop, "pool.idleTimeout", DEFAULT_IDLE_TIMEOUT));
+    config.setMaxLifetime(getLongProperty(prop, "pool.maxLifetime", DEFAULT_MAX_LIFETIME));
 
     // Connection validation
     config.setConnectionTestQuery("SELECT 1");
@@ -140,8 +136,11 @@ public class ConnectionPool {
     config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
     config.addDataSourceProperty("useServerPrepStmts", "true");
 
-    log.debug("Creating HikariCP pool '{}' with maxPoolSize={}, minIdle={}",
-        poolName, config.getMaximumPoolSize(), config.getMinimumIdle());
+    log.debug(
+        "Creating HikariCP pool '{}' with maxPoolSize={}, minIdle={}",
+        poolName,
+        config.getMaximumPoolSize(),
+        config.getMinimumIdle());
 
     return new HikariDataSource(config);
   }
@@ -173,7 +172,11 @@ public class ConnectionPool {
    */
   public static Connection getConnection() throws SQLException {
     if (!initialized) {
-      initialize();
+      try {
+        initialize();
+      } catch (RuntimeException e) {
+        throw new SQLException("Connection pool not available", e);
+      }
     }
     return coreDataSource.getConnection();
   }
@@ -213,7 +216,8 @@ public class ConnectionPool {
             poolKey,
             key -> {
               Properties prop = loadDatabaseProperties();
-              return createDataSource(jdbcUrl, username, password, prop, "ChallengePool-" + username);
+              return createDataSource(
+                  jdbcUrl, username, password, prop, "ChallengePool-" + username);
             });
 
     return dataSource.getConnection();
@@ -275,41 +279,41 @@ public class ConnectionPool {
         coreDataSource.getHikariPoolMXBean().getThreadsAwaitingConnection());
   }
 
-  /**
-   * Helper method to get an integer property with a default value.
-   */
+  /** Helper method to get an integer property with a default value. */
   private static int getIntProperty(Properties prop, String key, int defaultValue) {
     String value = prop.getProperty(key);
     if (value != null) {
       try {
         return Integer.parseInt(value);
       } catch (NumberFormatException e) {
-        log.warn("Invalid integer value for property '{}': {}, using default: {}",
-            key, value, defaultValue);
+        log.warn(
+            "Invalid integer value for property '{}': {}, using default: {}",
+            key,
+            value,
+            defaultValue);
       }
     }
     return defaultValue;
   }
 
-  /**
-   * Helper method to get a long property with a default value.
-   */
+  /** Helper method to get a long property with a default value. */
   private static long getLongProperty(Properties prop, String key, long defaultValue) {
     String value = prop.getProperty(key);
     if (value != null) {
       try {
         return Long.parseLong(value);
       } catch (NumberFormatException e) {
-        log.warn("Invalid long value for property '{}': {}, using default: {}",
-            key, value, defaultValue);
+        log.warn(
+            "Invalid long value for property '{}': {}, using default: {}",
+            key,
+            value,
+            defaultValue);
       }
     }
     return defaultValue;
   }
 
-  /**
-   * Resets the pool state. This is primarily for testing purposes.
-   */
+  /** Resets the pool state. This is primarily for testing purposes. */
   public static void reset() {
     shutdown();
   }

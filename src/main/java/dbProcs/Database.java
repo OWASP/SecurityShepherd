@@ -11,9 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Used to create database connections using connection pooling via HikariCP.
- * Connections are obtained from the pool and returned when closed.
- * Initiated by Getter.java, Setter.java <br>
+ * Used to create database connections using connection pooling via HikariCP. Connections are
+ * obtained from the pool and returned when closed. Initiated by Getter.java, Setter.java <br>
  * <br>
  * This file is part of the Security Shepherd Project.
  *
@@ -36,8 +35,8 @@ public class Database {
   private static final Logger log = LogManager.getLogger(Database.class);
 
   /**
-   * This method is used by the application to get a connection for challenge schemas.
-   * Connections are obtained from a pool specific to the challenge.
+   * This method is used by the application to get a connection for challenge schemas. Connections
+   * are obtained from a pool specific to the challenge.
    *
    * @param driverType The JDBC driver type (kept for API compatibility, but not used with pooling)
    * @param connectionURL The base connection URL
@@ -66,8 +65,8 @@ public class Database {
   }
 
   /**
-   * This method is used by the application to close/return a connection to the pool.
-   * With connection pooling, this returns the connection to the pool for reuse.
+   * This method is used by the application to close/return a connection to the pool. With
+   * connection pooling, this returns the connection to the pool for reuse.
    *
    * @param conn The connection to return to the pool
    */
