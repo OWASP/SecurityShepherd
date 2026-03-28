@@ -25,7 +25,7 @@ jobs:
   lint-java:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -35,22 +35,20 @@ jobs:
           args: "--set-exit-if-changed"
 
   build:
-    needs: lint-java
-    name: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
-          java-version: 1.8
+          distribution: temurin
+          java-version: '8'
+          cache: maven
       - name: Build Maven with Docker Profile
         run: mvn clean install -Pdocker -DskipTests -B
       - name: Docker Compose Build
         run: docker compose build
 
   unit-tests:
-    needs: [lint-java, build]
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -62,11 +60,12 @@ jobs:
           - '8888:3306'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
-          java-version: 1.8
+          distribution: temurin
+          java-version: '8'
+          cache: maven
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
       - name: Modify MySQL Connection Variables
@@ -74,10 +73,9 @@ jobs:
           sed -i "s/'@'localhost'/'@'%'/g" ${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql
           sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
       - name: Run Unit Tests
-        run: mvn test -B -e -X
+        run: mvn test -B -e
 
   integration-tests:
-    needs: [lint-java, build]
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -89,11 +87,12 @@ jobs:
           - '8888:3306'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
-          java-version: 1.8
+          distribution: temurin
+          java-version: '8'
+          cache: maven
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
       - name: Modify MySQL Connection Variables
