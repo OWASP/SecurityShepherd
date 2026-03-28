@@ -41,6 +41,11 @@
 		<env-entry-value>true</env-entry-value>
 	</env-entry>
 
+	<!-- Database connection pool lifecycle listener -->
+	<listener>
+		<listener-class>listeners.DatabaseLifecycleListener</listener-class>
+	</listener>
+
 	<servlet>
 		<servlet-name>/setup</servlet-name>
 		<servlet-class>servlets.Setup</servlet-class>

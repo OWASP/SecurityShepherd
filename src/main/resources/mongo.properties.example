@@ -1,0 +1,23 @@
+# Security Shepherd MongoDB Configuration
+# This file should be placed at: ${catalina.base}/conf/mongo.properties
+
+# MongoDB Connection Settings
+connectionHost=localhost
+connectionPort=27017
+databaseName=shepherdGames
+
+# Connection Timeouts (in milliseconds)
+connectTimeout=10000
+socketTimeout=0
+serverSelectionTimeout=30000
+
+# Connection Pool Settings
+# These settings control the MongoDB connection pool behavior.
+
+# Maximum number of connections per host
+# Default: 10
+pool.connectionsPerHost=10
+
+# Minimum number of connections per host
+# Default: 2
+pool.minConnectionsPerHost=2
