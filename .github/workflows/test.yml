@@ -102,7 +102,7 @@ jobs:
           sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
       - name: Prepare Integration Tests
         run: |
-          sudo apt-get -y install libargon2-0
+          sudo apt-get -y install libargon2-1
           mvn -Pdocker validate
       - name: Run Integration Tests
         run: |
