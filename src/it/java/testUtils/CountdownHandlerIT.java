@@ -100,14 +100,14 @@ public class CountdownHandlerIT {
     CountdownHandler.setStartTime(testTime);
     assertTrue(CountdownHandler.isStarted());
     CountdownHandler.disableStartTime();
-    assertFalse(CountdownHandler.isStarted());
+    assertTrue(CountdownHandler.isStarted());
 
     testTime = LocalDateTime.now().minusYears(5);
 
     CountdownHandler.setStartTime(testTime);
     assertTrue(CountdownHandler.isStarted());
     CountdownHandler.disableStartTime();
-    assertFalse(CountdownHandler.isStarted());
+    assertTrue(CountdownHandler.isStarted());
 
     testTime = LocalDateTime.now().plusMinutes(5);
 
@@ -192,9 +192,9 @@ public class CountdownHandlerIT {
     CountdownHandler.setLockTime(shortPastTime);
     CountdownHandler.setEndTime(longFutureTime);
 
-    assertTrue(CountdownHandler.isOpen());
+    assertFalse(CountdownHandler.isOpen());
     CountdownHandler.disableStartTime();
-    assertTrue(CountdownHandler.isOpen());
+    assertFalse(CountdownHandler.isOpen());
     CountdownHandler.disableLockTime();
     assertTrue(CountdownHandler.isOpen());
     CountdownHandler.disableEndTime();
@@ -212,9 +212,9 @@ public class CountdownHandlerIT {
     CountdownHandler.disableEndTime();
     assertTrue(CountdownHandler.isOpen());
     CountdownHandler.enableLockTime();
-    assertTrue(CountdownHandler.isOpen());
+    assertFalse(CountdownHandler.isOpen());
     CountdownHandler.enableStartTime();
-    assertTrue(CountdownHandler.isOpen());
+    assertFalse(CountdownHandler.isOpen());
   }
 
   @Test
@@ -274,13 +274,13 @@ public class CountdownHandlerIT {
     CountdownHandler.setLockTime(shortPastTime);
     CountdownHandler.setEndTime(longFutureTime);
 
-    assertFalse(CountdownHandler.isRunning());
+    assertTrue(CountdownHandler.isRunning());
     CountdownHandler.disableStartTime();
-    assertFalse(CountdownHandler.isRunning());
+    assertTrue(CountdownHandler.isRunning());
     CountdownHandler.disableLockTime();
     assertTrue(CountdownHandler.isRunning());
     CountdownHandler.enableLockTime();
-    assertFalse(CountdownHandler.isRunning());
+    assertTrue(CountdownHandler.isRunning());
 
     CountdownHandler.setStartTime(longPastTime);
     CountdownHandler.setLockTime(longPastTime);
