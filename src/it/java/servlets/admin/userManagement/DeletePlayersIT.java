@@ -17,7 +17,7 @@ import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 
 /**
- * This class just tests the servlet code. The Setter code is better tested in the SetterTest test's
+ * This class just tests the servlet code. The Setter code is better tested in the SetterIT test's
  *
  * @author Cosmin Craciun credit to Mark Denihan
  */

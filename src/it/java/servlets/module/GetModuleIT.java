@@ -2,7 +2,7 @@ package servlets.module;
 
 import static org.junit.Assert.fail;
 
-import dbProcs.GetterTest;
+import dbProcs.GetterIT;
 import dbProcs.Setter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -112,7 +112,7 @@ public class GetModuleIT {
     String userName = "getModule5";
 
     // Verify User Exists in DB
-    GetterTest.verifyTestUser(applicationRoot, userName, userName);
+    GetterIT.verifyTestUser(applicationRoot, userName, userName);
     // Sign in as Normal User
     log.debug("Signing in as User Through LoginServlet");
     TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -161,7 +161,7 @@ public class GetModuleIT {
     String userName = "getModule2";
 
     // Verify User Exists in DB
-    GetterTest.verifyTestUser(applicationRoot, userName, userName);
+    GetterIT.verifyTestUser(applicationRoot, userName, userName);
     // Sign in as Normal User
     log.debug("Signing in as User Through LoginServlet");
     TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -200,7 +200,7 @@ public class GetModuleIT {
     String userName = "getModule1";
 
     // Verify User Exists in DB
-    GetterTest.verifyTestUser(applicationRoot, userName, userName);
+    GetterIT.verifyTestUser(applicationRoot, userName, userName);
     // Sign in as Normal User
     log.debug("Signing in as User Through LoginServlet");
     TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -243,7 +243,7 @@ public class GetModuleIT {
     String userName = "getModule5";
 
     // Verify User Exists in DB
-    GetterTest.verifyTestUser(applicationRoot, userName, userName);
+    GetterIT.verifyTestUser(applicationRoot, userName, userName);
     // Sign in as Normal User
     log.debug("Signing in as User Through LoginServlet");
     TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -284,7 +284,7 @@ public class GetModuleIT {
     String userName = "getModule3";
 
     // Verify User Exists in DB
-    GetterTest.verifyTestUser(applicationRoot, userName, userName);
+    GetterIT.verifyTestUser(applicationRoot, userName, userName);
     // Sign in as Normal User
     log.debug("Signing in as User Through LoginServlet");
     TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -324,7 +324,7 @@ public class GetModuleIT {
     String userName = "getModule4";
 
     // Verify User Exists in DB
-    GetterTest.verifyTestUser(applicationRoot, userName, userName);
+    GetterIT.verifyTestUser(applicationRoot, userName, userName);
     // Sign in as Normal User
     log.debug("Signing in as User Through LoginServlet");
     TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -361,7 +361,7 @@ public class GetModuleIT {
     String userName = "getModule1";
 
     // Verify User Exists in DB
-    GetterTest.verifyTestUser(applicationRoot, userName, userName);
+    GetterIT.verifyTestUser(applicationRoot, userName, userName);
     // Sign in as Normal User
     log.debug("Signing in as User Through LoginServlet");
     TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);

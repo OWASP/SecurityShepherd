@@ -17,13 +17,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import testUtils.TestProperties;
 
-public class MongoDatabaseTest {
+public class MongoDatabaseIT {
 
   private static Fongo fongo = new Fongo("Unit Test");
   private static MongoClient mongoClient;
   private static String TEST_PATH = "mongo_challenge_test";
 
-  private static final Logger log = LogManager.getLogger(MongoDatabaseTest.class);
+  private static final Logger log = LogManager.getLogger(MongoDatabaseIT.class);
 
   @BeforeAll
   public static void initAll() throws IOException {

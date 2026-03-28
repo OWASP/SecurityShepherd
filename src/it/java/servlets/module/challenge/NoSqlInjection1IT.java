@@ -2,7 +2,7 @@ package servlets.module.challenge;
 
 import static org.junit.Assert.fail;
 
-import dbProcs.GetterTest;
+import dbProcs.GetterIT;
 import dbProcs.Setter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -101,7 +101,7 @@ public class NoSqlInjection1IT extends Mockito {
   @Test
   public void testLevelValidAnswer() throws Exception {
 
-    GetterTest.verifyTestUser(applicationRoot, USERNAME, USERNAME);
+    GetterIT.verifyTestUser(applicationRoot, USERNAME, USERNAME);
     log.debug("Signing in as " + USERNAME + " Through LoginServlet");
     TestProperties.loginDoPost(log, request, response, USERNAME, USERNAME, null, LANG);
     log.debug("Login Servlet Complete, Getting CSRF Token");

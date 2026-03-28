@@ -2,7 +2,7 @@ package servlets.module.lesson;
 
 import static org.junit.Assert.fail;
 
-import dbProcs.GetterTest;
+import dbProcs.GetterIT;
 import dbProcs.Setter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -88,7 +88,7 @@ public class UnvalidatedForwardsLessonIT {
     String userName = "lessonTester";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as " + userName + " Through LoginServlet");
       TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -133,7 +133,7 @@ public class UnvalidatedForwardsLessonIT {
     String userName = "lessonTester";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as " + userName + " Through LoginServlet");
       TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -183,7 +183,7 @@ public class UnvalidatedForwardsLessonIT {
     String userName = "lessonTester";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as " + userName + " Through LoginServlet");
       TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -233,7 +233,7 @@ public class UnvalidatedForwardsLessonIT {
     String userName = "lessonTester";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as " + userName + " Through LoginServlet");
       TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -283,7 +283,7 @@ public class UnvalidatedForwardsLessonIT {
     String userName = "lessonTester";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as " + userName + " Through LoginServlet");
       TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
@@ -333,7 +333,7 @@ public class UnvalidatedForwardsLessonIT {
     String userName = "lessonTester";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as " + userName + " Through LoginServlet");
       TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);

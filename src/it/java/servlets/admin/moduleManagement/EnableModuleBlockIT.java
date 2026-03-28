@@ -17,8 +17,8 @@ import testUtils.TestProperties;
 import utils.ModuleBlock;
 
 /**
- * This class just tests the servlet code. The Setter code is better tested in the SetterTest test's
- * / GetModule tests
+ * This class just tests the servlet code. The Setter code is better tested in the SetterIT test's /
+ * GetModule tests
  *
  * @author Mark Denihan
  */

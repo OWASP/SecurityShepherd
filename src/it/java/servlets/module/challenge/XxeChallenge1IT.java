@@ -3,7 +3,7 @@ package servlets.module.challenge;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-import dbProcs.GetterTest;
+import dbProcs.GetterIT;
 import dbProcs.Setter;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class XxeChallenge1IT {
     try {
       TestProperties.executeSql(log);
       TestProperties.createFileSystemKey(log, "xxe.challenge.1.file", "xxe.challenge.1.solution");
-      GetterTest.verifyTestUser(applicationRoot, TEST_USERNAME, TEST_USERNAME);
+      GetterIT.verifyTestUser(applicationRoot, TEST_USERNAME, TEST_USERNAME);
     } catch (InstallationException e) {
       String message = "Could not create DB: " + e.toString();
       log.fatal(message);

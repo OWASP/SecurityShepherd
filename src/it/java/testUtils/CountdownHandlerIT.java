@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test;
 import utils.CountdownHandler;
 import utils.InvalidCountdownStateException;
 
-public class TestCountdownHandler {
+public class CountdownHandlerIT {
 
-  private static final Logger log = LogManager.getLogger(TestCountdownHandler.class);
+  private static final Logger log = LogManager.getLogger(CountdownHandlerIT.class);
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
   @BeforeAll

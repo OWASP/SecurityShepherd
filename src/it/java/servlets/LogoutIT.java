@@ -2,7 +2,7 @@ package servlets;
 
 import static org.junit.Assert.fail;
 
-import dbProcs.GetterTest;
+import dbProcs.GetterIT;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.http.HttpSession;
@@ -115,7 +115,7 @@ public class LogoutIT {
     String userName = "logoutUser1";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as User Through LoginServlet");
       loginDoPost(userName, userName, null);
@@ -152,7 +152,7 @@ public class LogoutIT {
     String userName = "logoutUser2";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as User Through LoginServlet");
       loginDoPost(userName, userName, null);

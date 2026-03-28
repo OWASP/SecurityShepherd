@@ -23,9 +23,9 @@ import org.junit.Test;
 import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
-public class SetterTest {
+public class SetterIT {
 
-  private static final Logger log = LogManager.getLogger(SetterTest.class);
+  private static final Logger log = LogManager.getLogger(SetterIT.class);
   private static String applicationRoot = new String();
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
@@ -74,7 +74,7 @@ public class SetterTest {
     String moduleId = "853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5"; // CSRF7
     String userName = new String("BadSubUser");
 
-    if (GetterTest.verifyTestUser(applicationRoot, userName, userName)) {
+    if (GetterIT.verifyTestUser(applicationRoot, userName, userName)) {
       String userId = Getter.getUserIdFromName(applicationRoot, userName);
       if (!Setter.openAllModules(applicationRoot, false)
           && !Setter.openAllModules(applicationRoot, true)) {
@@ -189,7 +189,7 @@ public class SetterTest {
     String moduleId = "853c98bd070fe0d31f1ec8b4f2ada9d7fd1784c5"; // CSRF7
     String userName = new String("BadSubResetUser");
 
-    if (GetterTest.verifyTestUser(applicationRoot, userName, userName)) {
+    if (GetterIT.verifyTestUser(applicationRoot, userName, userName)) {
       String userId = Getter.getUserIdFromName(applicationRoot, userName);
       if (!Setter.openAllModules(applicationRoot, false)
           && !Setter.openAllModules(applicationRoot, true)) {
@@ -282,7 +282,7 @@ public class SetterTest {
   public void testSetCsrfChallengeFourCsrfToken() throws SQLException {
     String userName = new String("csrfFourUser");
 
-    if (GetterTest.verifyTestUser(applicationRoot, userName, userName)) {
+    if (GetterIT.verifyTestUser(applicationRoot, userName, userName)) {
       String userId = Getter.getUserIdFromName(applicationRoot, userName);
       String csrfTokenValue = new String("CsrfTokenTest");
       String csrfToken =
@@ -299,7 +299,7 @@ public class SetterTest {
   public void testSetCsrfChallengeSevenCsrfToken() throws SQLException {
     String userName = new String("csrfSevenUser");
 
-    if (GetterTest.verifyTestUser(applicationRoot, userName, userName)) {
+    if (GetterIT.verifyTestUser(applicationRoot, userName, userName)) {
       String userId = Getter.getUserIdFromName(applicationRoot, userName);
       String csrfToken = new String("CsrfTokenTest");
       if (!Setter.setCsrfChallengeSevenCsrfToken(userId, csrfToken, applicationRoot)) {
@@ -416,9 +416,9 @@ public class SetterTest {
     String message = new String("TestStoredMessage");
 
     log.debug("Getting class id");
-    String classId = GetterTest.findCreateClassId(className, applicationRoot);
+    String classId = GetterIT.findCreateClassId(className, applicationRoot);
     log.debug("Checking User Name in DB");
-    if (GetterTest.verifyTestUser(applicationRoot, userName, userName, classId)) {
+    if (GetterIT.verifyTestUser(applicationRoot, userName, userName, classId)) {
       // Open all Modules First so that the Module Can Be Opened
       if (!Setter.openAllModules(applicationRoot, false)) {
         fail("Could not open all modules");
@@ -461,7 +461,7 @@ public class SetterTest {
     boolean loggedIn = false;
     try {
       log.debug("Trying to Verify User");
-      loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      loggedIn = GetterIT.verifyTestUser(applicationRoot, userName, userName);
     } catch (SQLException e) {
       log.debug("Could not verify. May be suspended. Unsuspending");
       // Might need to unsuspend player
@@ -474,7 +474,7 @@ public class SetterTest {
         // Ignore if we're interrupted
         log.debug("Sleep was interrupted, continuing anyway...");
       }
-      loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      loggedIn = GetterIT.verifyTestUser(applicationRoot, userName, userName);
     }
     if (!loggedIn) {
       fail("Could not Verify User");
@@ -498,7 +498,7 @@ public class SetterTest {
     String userName = new String("UnsuspendedUser");
 
     log.debug("Checking User Name in DB");
-    if (!GetterTest.verifyTestUser(applicationRoot, userName, userName)) {
+    if (!GetterIT.verifyTestUser(applicationRoot, userName, userName)) {
       fail("Could not Verify User");
     } else {
       String userId = Getter.getUserIdFromName(applicationRoot, userName);
@@ -539,7 +539,7 @@ public class SetterTest {
 
     try {
       log.debug("Logging in as test user " + userName);
-      loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, password);
+      loggedIn = GetterIT.verifyTestUser(applicationRoot, userName, password);
     } catch (SQLException e) {
       loggedIn = false;
       TestProperties.failAndPrint("Could not log in with default pass: " + e.toString());
@@ -579,7 +579,7 @@ public class SetterTest {
       currentPass = userName;
       newPass = userName + userName;
       log.debug("Logging in with default Pass");
-      loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, currentPass);
+      loggedIn = GetterIT.verifyTestUser(applicationRoot, userName, currentPass);
     } catch (SQLException e) {
       newPass = userName;
       currentPass = userName + userName;
@@ -624,7 +624,7 @@ public class SetterTest {
       currentPass = userName;
       newPass = userName + userName;
       log.debug("Logging in with default Pass");
-      loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, currentPass);
+      loggedIn = GetterIT.verifyTestUser(applicationRoot, userName, currentPass);
     } catch (SQLException e) {
       newPass = userName;
       currentPass = userName + userName;
@@ -664,10 +664,10 @@ public class SetterTest {
     String newClass = new String();
 
     log.debug("Getting class ids");
-    classId = GetterTest.findCreateClassId(className, applicationRoot);
-    otherClassId = GetterTest.findCreateClassId(otherClassName, applicationRoot);
+    classId = GetterIT.findCreateClassId(className, applicationRoot);
+    otherClassId = GetterIT.findCreateClassId(otherClassName, applicationRoot);
     log.debug("Verifying User");
-    if (!GetterTest.verifyTestUser(applicationRoot, userName, userName, classId)) {
+    if (!GetterIT.verifyTestUser(applicationRoot, userName, userName, classId)) {
       fail("Could not verify user");
     } else {
       String userId = Getter.getUserIdFromName(applicationRoot, userName);
@@ -699,12 +699,12 @@ public class SetterTest {
 
     log.debug("Getting class ids");
     try {
-      classId = GetterTest.findCreateClassId(className, applicationRoot);
+      classId = GetterIT.findCreateClassId(className, applicationRoot);
     } catch (SQLException e) {
       TestProperties.failAndPrint(
           "Could not find or create class ID from name " + className + ": " + e.toString());
     }
-    if (!GetterTest.verifyTestUser(applicationRoot, userName, userName, classId)) {
+    if (!GetterIT.verifyTestUser(applicationRoot, userName, userName, classId)) {
       fail("Could not verify user");
     } else {
       String userId = Getter.getUserIdFromName(applicationRoot, userName);
@@ -732,7 +732,7 @@ public class SetterTest {
     boolean testUserVerified = false;
 
     try {
-      testUserVerified = GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      testUserVerified = GetterIT.verifyTestUser(applicationRoot, userName, userName);
     } catch (SQLException e) {
       TestProperties.failAndPrint("Could not create test user " + userName + ": " + e.toString());
     }
