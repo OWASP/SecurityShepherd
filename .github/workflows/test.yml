@@ -47,7 +47,7 @@ jobs:
       - name: Build Maven with Docker Profile
         run: mvn clean install -Pdocker -DskipTests -B
       - name: Docker Compose Build
-        run: docker-compose build
+        run: docker compose build
 
   unit-tests:
     needs: [lint-java, build]
