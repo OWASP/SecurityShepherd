@@ -76,11 +76,13 @@ public class MongoDatabaseIT {
 
   @Test
   @DisplayName("Must return type (Mongo) DB")
-  @Disabled("Fongo 2.1.0 is incompatible with mongo-java-driver 3.12.14 (NPE in createOperationExecutor)")
+  @Disabled(
+      "Fongo 2.1.0 is incompatible with mongo-java-driver 3.12.14 (NPE in createOperationExecutor)")
   public void getMongoDatabase_ShouldReturnTypeDB() {}
 
   @Test
   @DisplayName("Read properties file for db name")
-  @Disabled("Fongo 2.1.0 is incompatible with mongo-java-driver 3.12.14 (NPE in createOperationExecutor)")
+  @Disabled(
+      "Fongo 2.1.0 is incompatible with mongo-java-driver 3.12.14 (NPE in createOperationExecutor)")
   public void getMongoDatabase_ReadDbName() {}
 }
