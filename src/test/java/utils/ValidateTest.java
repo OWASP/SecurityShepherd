@@ -5,9 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 class ValidateTest {
+
+  private static String chars(char c, int count) {
+    char[] arr = new char[count];
+    Arrays.fill(arr, c);
+    return new String(arr);
+  }
 
   // validateParameter
 
@@ -50,12 +57,12 @@ class ValidateTest {
 
   @Test
   void isValidPassword_maximumValid() {
-    assertTrue(Validate.isValidPassword("a".repeat(512)));
+    assertTrue(Validate.isValidPassword(chars('a', 512)));
   }
 
   @Test
   void isValidPassword_tooLong() {
-    assertFalse(Validate.isValidPassword("a".repeat(513)));
+    assertFalse(Validate.isValidPassword(chars('a', 513)));
   }
 
   @Test
@@ -77,7 +84,7 @@ class ValidateTest {
 
   @Test
   void isValidUser_usernameTooLong() {
-    assertFalse(Validate.isValidUser("a".repeat(33), "password1"));
+    assertFalse(Validate.isValidUser(chars('a', 33), "password1"));
   }
 
   @Test
@@ -87,7 +94,7 @@ class ValidateTest {
 
   @Test
   void isValidUser_maxUsername() {
-    assertTrue(Validate.isValidUser("a".repeat(32), "password1"));
+    assertTrue(Validate.isValidUser(chars('a', 32), "password1"));
   }
 
   // isValidUser (3 params)
@@ -99,12 +106,12 @@ class ValidateTest {
 
   @Test
   void isValidUserWithAddress_addressTooLong() {
-    assertFalse(Validate.isValidUser("bob", "password1", "a".repeat(129)));
+    assertFalse(Validate.isValidUser("bob", "password1", chars('a', 129)));
   }
 
   @Test
   void isValidUserWithAddress_maxAddress() {
-    assertTrue(Validate.isValidUser("bob", "password1", "a".repeat(128)));
+    assertTrue(Validate.isValidUser("bob", "password1", chars('a', 128)));
   }
 
   // validateEncryptionKey

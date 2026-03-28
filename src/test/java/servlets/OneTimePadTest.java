@@ -4,9 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 class OneTimePadTest {
+
+  private static String chars(char c, int count) {
+    char[] arr = new char[count];
+    Arrays.fill(arr, c);
+    return new String(arr);
+  }
 
   @Test
   void encryptDecrypt_roundTripWithDefaultKey() {
@@ -64,7 +71,7 @@ class OneTimePadTest {
 
   @Test
   void encryptDecrypt_longString() {
-    String plaintext = "A".repeat(1000);
+    String plaintext = chars('A', 1000);
     String encrypted = OneTimePad.encrypt(plaintext);
     String decrypted = OneTimePad.decrypt(encrypted);
     assertEquals(plaintext, decrypted);
