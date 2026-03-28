@@ -39,7 +39,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '24'
-      - uses: axel-op/googlejavaformat-action@fe78db8a90171b6a836449f8d0e982d5d71e5c5a #v3.6.0
+      - uses: axel-op/googlejavaformat-action@c1134ebd196c4cbffb077f9476585b0be8b6afcd #v4
         with:
           args: "--set-exit-if-changed"
 
