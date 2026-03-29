@@ -41,6 +41,8 @@ public class Setup extends HttpServlet {
   private static final Logger log = LogManager.getLogger(Setup.class);
   private static final long serialVersionUID = -892181347446991016L;
 
+  private static volatile Boolean installedCached = null;
+
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     // Translation Stuff
@@ -285,6 +287,7 @@ public class Setup extends HttpServlet {
             // Clean up File as it is not needed anymore. Will Cause a new one to be
             // generated next time too
             removeAuthFile();
+            resetInstalledCache();
           }
 
           if (enableMongoChallenge.equalsIgnoreCase("enable")) {
@@ -367,26 +370,44 @@ public class Setup extends HttpServlet {
   }
 
   public static boolean isInstalled() {
-    boolean isInstalled = false;
+    Boolean cached = installedCached;
+    if (cached != null) {
+      return cached;
+    }
 
-    Properties prop = getDBProps();
-
-    if (prop != null) {
-
-      try (Connection coreConnection = Database.getCoreConnection(null)) {
-        if (coreConnection != null) {
-          isInstalled = true;
-        }
-      } catch (SQLException e) {
-        log.info("isInstalled got SQL exception " + e.toString() + ", assuming not installed.");
+    synchronized (Setup.class) {
+      cached = installedCached;
+      if (cached != null) {
+        return cached;
       }
-    }
 
-    if (!isInstalled) {
-      generateAuth();
-    }
+      boolean installed = false;
 
-    return isInstalled;
+      Properties prop = getDBProps();
+
+      if (prop != null) {
+        try (Connection coreConnection = Database.getCoreConnection(null)) {
+          if (coreConnection != null) {
+            installed = true;
+          }
+        } catch (SQLException e) {
+          log.info("isInstalled got SQL exception " + e.toString() + ", assuming not installed.");
+        }
+      }
+
+      if (installed) {
+        installedCached = true;
+      } else {
+        generateAuth();
+      }
+
+      return installed;
+    }
+  }
+
+  /** Clear the cached installation status so the next call re-evaluates. */
+  public static void resetInstalledCache() {
+    installedCached = null;
   }
 
   public static Properties getDBProps() {

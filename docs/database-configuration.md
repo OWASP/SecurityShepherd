@@ -95,9 +95,9 @@ databaseUsername=root
 databasePassword=your_password
 
 # HikariCP Pool Settings (optional - defaults shown)
-pool.maximumPoolSize=10
-pool.minimumIdle=2
-pool.connectionTimeout=30000
+pool.maximumPoolSize=20
+pool.minimumIdle=5
+pool.connectionTimeout=5000
 pool.idleTimeout=600000
 pool.maxLifetime=1800000
 pool.poolName=SecurityShepherdPool
@@ -107,9 +107,9 @@ pool.poolName=SecurityShepherdPool
 
 | Property | Default | Description |
 |----------|---------|-------------|
-| `pool.maximumPoolSize` | 10 | Maximum number of connections in the pool |
-| `pool.minimumIdle` | 2 | Minimum number of idle connections to maintain |
-| `pool.connectionTimeout` | 30000 | Maximum time (ms) to wait for a connection |
+| `pool.maximumPoolSize` | 20 | Maximum number of connections in the pool |
+| `pool.minimumIdle` | 5 | Minimum number of idle connections to maintain |
+| `pool.connectionTimeout` | 5000 | Maximum time (ms) to wait for a connection |
 | `pool.idleTimeout` | 600000 | Maximum time (ms) a connection can be idle |
 | `pool.maxLifetime` | 1800000 | Maximum lifetime (ms) of a connection |
 | `pool.leakDetectionThreshold` | 60000 | Logs a warning if a connection is held longer than this (ms). Set to 0 to disable |

@@ -41,9 +41,10 @@ public class ConnectionPool {
       new ConcurrentHashMap<>();
 
   // Default pool configuration values (used by core pool)
-  private static final int DEFAULT_MAX_POOL_SIZE = 10;
-  private static final int DEFAULT_MIN_IDLE = 2;
-  private static final long DEFAULT_CONNECTION_TIMEOUT = 30000; // 30 seconds
+  private static final int DEFAULT_MAX_POOL_SIZE = 20;
+  private static final int DEFAULT_MIN_IDLE = 5;
+  private static final long DEFAULT_CONNECTION_TIMEOUT =
+      5000; // 5 seconds — fail fast under overload
   private static final long DEFAULT_IDLE_TIMEOUT = 600000; // 10 minutes
   private static final long DEFAULT_MAX_LIFETIME = 1800000; // 30 minutes
   private static final long DEFAULT_LEAK_DETECTION_THRESHOLD = 60000; // 60 seconds
@@ -382,6 +383,19 @@ public class ConnectionPool {
         coreDataSource.getHikariPoolMXBean().getIdleConnections(),
         coreDataSource.getHikariPoolMXBean().getTotalConnections(),
         coreDataSource.getHikariPoolMXBean().getThreadsAwaitingConnection());
+  }
+
+  /**
+   * Returns the number of connections currently checked out from the core pool. Intended for
+   * integration tests that verify connections are returned after Getter/Setter operations.
+   *
+   * @return active connection count, or -1 if the pool is not initialized
+   */
+  public static int getCoreActiveConnections() {
+    if (coreDataSource == null || coreDataSource.isClosed()) {
+      return -1;
+    }
+    return coreDataSource.getHikariPoolMXBean().getActiveConnections();
   }
 
   /** Helper method to get an integer property with a default value. */

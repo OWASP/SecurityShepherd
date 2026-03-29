@@ -7,6 +7,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import servlets.Setup;
 
 /**
  * Servlet context listener for managing database connection pool lifecycle. Initializes connection
@@ -43,6 +44,9 @@ public class DatabaseLifecycleListener implements ServletContextListener {
       // Note: MongoDB connections are lazy-initialized on first use
       // since MongoClient has its own internal connection pool
       log.info("MongoDB connections will be initialized on first use");
+
+      boolean installed = Setup.isInstalled();
+      log.info("Setup.isInstalled() cached at startup: " + installed);
 
     } catch (RuntimeException e) {
       // Catch RuntimeException (including configuration errors) to prevent

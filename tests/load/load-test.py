@@ -2,12 +2,23 @@
 """
 Load test for Security Shepherd connection pooling (issue #536).
 
-Simulates 20 users: 17 doing normal browsing, 3 running aggressive
-automated scanning. Monitors DB connections and app responsiveness
-to verify the connection pool prevents exhaustion.
+Modes:
+  --target all       Full soak test (default): 20 concurrent users, monitors
+                     DB connections and app responsiveness over time.
+  --target getter    Targeted: tight loops against endpoints backed by Getter.java.
+  --target setter    Targeted: tight loops against endpoints backed by Setter.java.
+  --target getter setter   Both targeted classes sequentially.
+  --methods authUser refreshMenu   Only specific methods within the target class.
+
+Targeted mode runs each endpoint in isolation, checking DB connection count
+before and after to detect leaks. Soak mode runs concurrent traffic.
 
 Usage:
-    python3 load-test.py [--skip-build] [--duration MINUTES] [--users NORMAL AGGRESSIVE]
+    python3 load-test.py --skip-setup --target getter
+    python3 load-test.py --skip-setup --target getter --concurrency 10
+    python3 load-test.py --skip-setup --target getter --methods authUser refreshMenu
+    python3 load-test.py --skip-setup --target all --duration 5
+    python3 load-test.py --skip-setup --target getter setter --iterations 200 --concurrency 5
 """
 
 import argparse
@@ -27,7 +38,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 
-# Disable SSL verification globally (self-signed cert)
 SSL_CTX = ssl.create_default_context()
 SSL_CTX.check_hostname = False
 SSL_CTX.verify_mode = ssl.CERT_NONE
@@ -50,6 +60,87 @@ SPIDER_PATHS = [
 ]
 
 NORMAL_PAGES = ["/login.jsp", "/index.jsp", "/register.jsp", "/logout"]
+
+MAX_ALLOWED_CONNS = 50
+
+# ── Target Definitions ────────────────────────────────────────────
+#
+# Each entry maps a human-readable method name to the HTTP request
+# that exercises it plus the Java method(s) it covers.  The runner
+# calls these in a tight loop and measures connection growth.
+
+GETTER_TARGETS = {
+    "authUser": {
+        "http": "POST", "path": "/login",
+        "data": {"login": "nonexistent_leak_probe_{i}", "pwd": "wrong"},
+        "auth_required": False,
+        "java": "Getter.authUser — core login, was leaking on failed lookups",
+    },
+    "refreshMenu": {
+        "http": "GET", "path": "/refreshMenu",
+        "auth_required": True,
+        "java": "Getter.getChallenges / getLessons / getTournamentModules / getIncrementalModules",
+    },
+    "apiLevels": {
+        "http": "GET", "path": "/api/levels",
+        "auth_required": True,
+        "java": "Getter.getModulesJson",
+    },
+    "getModule": {
+        "http": "GET", "path": "/getModule",
+        "auth_required": True,
+        "java": "Getter.getModuleAddress + checkPlayerResult",
+    },
+    "getProgress": {
+        "http": "GET", "path": "/getProgress",
+        "auth_required": True,
+        "java": "Getter.getProgress / getJsonScore (admin)",
+    },
+    "getFeedback": {
+        "http": "GET", "path": "/getFeedback",
+        "auth_required": True,
+        "java": "Getter.getFeedback (admin)",
+    },
+    "scoreboard": {
+        "http": "GET", "path": "/scoreboard",
+        "auth_required": True,
+        "java": "Getter.getJsonScore + getScoreboardStatus",
+    },
+    "loginPage": {
+        "http": "GET", "path": "/login.jsp",
+        "auth_required": False,
+        "java": "Getter settings: getRegistrationStatus / getStartTimeStatus / etc.",
+    },
+}
+
+SETTER_TARGETS = {
+    "register": {
+        "http": "POST", "path": "/register",
+        "data": {
+            "userName": "setter_probe_{i}", "passWord": "probe",
+            "passWordConfirm": "probe",
+            "userAddress": "probe_{i}@test.com",
+            "userAddressCnf": "probe_{i}@test.com",
+        },
+        "needs_csrf": True,
+        "csrf_page": "/register.jsp",
+        "auth_required": False,
+        "java": "Setter.userCreate — registration path",
+    },
+    "passwordChange": {
+        "http": "POST", "path": "/passwordChange",
+        "data": {
+            "currentPassword": "{user_pass}",
+            "newPassword": "{user_pass}",
+            "passwordConfirmation": "{user_pass}",
+        },
+        "needs_csrf": True,
+        "auth_required": True,
+        "java": "Setter.updatePassword",
+    },
+}
+
+ALL_TARGETS = {"getter": GETTER_TARGETS, "setter": SETTER_TARGETS}
 
 
 # ── Utilities ──────────────────────────────────────────────────────
@@ -175,9 +266,7 @@ def build_and_start(skip_build, project_root):
     else:
         log("Skipping build (--skip-build)")
 
-    # Check for existing volumes
     stdout, _, _ = docker_compose("down", "-v")
-    # Remove any orphaned volumes
     result = subprocess.run(
         ["docker", "volume", "ls", "-q", "--filter", "name=securityshepherd"],
         capture_output=True, text=True
@@ -219,17 +308,14 @@ def configure_platform():
     """Login as admin, change password, and enable registration."""
     session = ShepherdSession()
 
-    # Get initial session
     log("Logging in as admin (admin/password)...")
     session.get("/login.jsp")
 
-    # Login
     status, body, location = session.post("/login", {
         "login": ADMIN_USER,
         "pwd": ADMIN_DEFAULT_PASS,
     })
 
-    # Change temporary password
     log("Changing admin password...")
     token = session.token
     if not token:
@@ -243,7 +329,6 @@ def configure_platform():
     })
     log("Admin password changed")
 
-    # Enable registration
     log("Enabling registration...")
     token = session.token
     status, body, _ = session.post("/updateRegistration", {"csrfToken": token})
@@ -251,7 +336,6 @@ def configure_platform():
     if "Opened" in body:
         log("Registration enabled")
     elif "Closed" in body:
-        # Was already open, got toggled closed — toggle again
         session.post("/updateRegistration", {"csrfToken": token})
         log("Registration enabled (toggled twice)")
     else:
@@ -296,6 +380,16 @@ def register_users(num_users):
     return created
 
 
+def login_user(username, password):
+    """Login a single user and return the session, or None on failure."""
+    session = ShepherdSession()
+    session.get("/login.jsp")
+    status, body, location = session.post("/login", {"login": username, "pwd": password})
+    if "index.jsp" in str(location):
+        return session
+    return None
+
+
 def login_users(num_users):
     """Login all test users and return their sessions."""
     log("Logging in test users...")
@@ -304,19 +398,12 @@ def login_users(num_users):
 
     for i in range(1, num_users + 1):
         username = f"loadtest_user_{i}"
-        session = ShepherdSession()
-        session.get("/login.jsp")
-
-        status, body, location = session.post("/login", {
-            "login": username,
-            "pwd": username,
-        })
-
-        if "index.jsp" in str(location):
+        session = login_user(username, username)
+        if session:
             sessions[i] = session
             logged_in += 1
         else:
-            warn(f"Login failed for {username} (HTTP {status}, location: {location})")
+            warn(f"Login failed for {username}")
 
     if logged_in == 0:
         fail("No users could log in")
@@ -325,7 +412,181 @@ def login_users(num_users):
     return sessions
 
 
-# ── Traffic Simulation ─────────────────────────────────────────────
+# ── Targeted Scenario Runner ──────────────────────────────────────
+
+
+def _warmup_pool():
+    """Hit the app a few times to let Hikari establish idle connections."""
+    s = ShepherdSession()
+    for _ in range(5):
+        s.get("/login.jsp")
+    time.sleep(2)
+
+
+def _worker_loop(spec, iterations, worker_id, session, conn_samples, errors_count):
+    """Single worker thread: fires requests and periodically samples connections."""
+    user_pass = "loadtest_user_1"
+
+    for i in range(iterations):
+        try:
+            if spec["http"] == "GET":
+                session.get(spec["path"])
+            else:
+                raw_data = spec.get("data", {})
+                data = {}
+                for k, v in raw_data.items():
+                    v = v.replace("{i}", f"{worker_id}_{i}")
+                    v = v.replace("{user_pass}", user_pass)
+                    data[k] = v
+
+                if spec.get("needs_csrf"):
+                    csrf_page = spec.get("csrf_page", spec["path"])
+                    csrf = session.get_csrf_from_page(csrf_page)
+                    if csrf:
+                        data["csrfToken"] = csrf
+                    elif session.token:
+                        data["csrfToken"] = session.token
+
+                session.post(spec["path"], data)
+        except Exception:
+            errors_count.append(1)
+
+        if i % 25 == 24:
+            current = get_connections()
+            if current:
+                conn_samples.append(current)
+
+
+def run_scenario(name, spec, iterations, session=None, concurrency=1):
+    """
+    Run a single endpoint scenario, optionally with concurrent threads.
+    Returns dict with baseline, peak, final connection counts and request stats.
+    """
+    _warmup_pool()
+
+    baseline = get_connections() or 0
+    conn_samples = [baseline]
+    errors_list = []
+
+    if concurrency <= 1:
+        _worker_loop(spec, iterations, 0, session, conn_samples, errors_list)
+    else:
+        def make_session(spec, base_session):
+            if spec.get("auth_required"):
+                s = login_user("loadtest_user_1", "loadtest_user_1")
+                return s if s else base_session
+            return ShepherdSession()
+
+        with ThreadPoolExecutor(max_workers=concurrency) as pool:
+            futures = []
+            for w in range(concurrency):
+                worker_session = session if w == 0 else make_session(spec, session)
+                f = pool.submit(
+                    _worker_loop, spec, iterations, w,
+                    worker_session, conn_samples, errors_list,
+                )
+                futures.append(f)
+            for f in futures:
+                f.result()
+
+    time.sleep(1)
+    final = get_connections() or 0
+    conn_samples.append(final)
+    peak = max(conn_samples)
+
+    return {
+        "baseline": baseline,
+        "peak": peak,
+        "final": final,
+        "iterations": iterations * concurrency,
+        "errors": len(errors_list),
+        "concurrency": concurrency,
+    }
+
+
+def run_targeted_tests(targets_to_run, methods_filter, iterations, concurrency,
+                       admin_session):
+    """Run targeted scenarios and print per-method results."""
+    user_session = login_user("loadtest_user_1", "loadtest_user_1")
+    if not user_session:
+        user_session = admin_session
+
+    results = {}
+    all_passed = True
+
+    for class_name, method_map in targets_to_run.items():
+        print()
+        log(f"Running targeted tests for {class_name.upper()}")
+        print("-" * 59)
+
+        for method_name, spec in method_map.items():
+            if methods_filter and method_name not in methods_filter:
+                continue
+
+            session = admin_session if spec.get("auth_required") else ShepherdSession()
+            if spec.get("auth_required") and user_session:
+                session = user_session
+
+            label = f"{class_name}.{method_name}"
+            conc_label = f" x{concurrency} threads" if concurrency > 1 else ""
+            log(f"  {label} ({spec['http']} {spec['path']}{conc_label})")
+            log(f"    {spec['java']}")
+
+            result = run_scenario(method_name, spec, iterations, session,
+                                  concurrency=concurrency)
+            results[label] = result
+
+            bounded = result["peak"] <= MAX_ALLOWED_CONNS
+            leaked = result["final"] > MAX_ALLOWED_CONNS
+
+            status_color = "\033[0;32m" if (bounded and not leaked) else "\033[0;31m"
+            status_word = "PASS" if (bounded and not leaked) else "FAIL"
+
+            print(f"    Total reqs:  {result['iterations']}"
+                  f" ({iterations}/thread x {concurrency})" if concurrency > 1
+                  else f"    Iterations:  {result['iterations']}")
+            print(f"    Baseline:    {result['baseline']} connections")
+            print(f"    Peak:        {result['peak']} connections")
+            print(f"    Final:       {result['final']} connections")
+            if result["errors"]:
+                print(f"    Errors:      {result['errors']}")
+            print(f"    {status_color}{status_word}\033[0m")
+            print()
+
+            if not bounded or leaked:
+                all_passed = False
+
+    return all_passed, results
+
+
+def print_targeted_summary(results, all_passed):
+    """Print a final summary table for targeted tests."""
+    print()
+    print("=" * 76)
+    print("  TARGETED TEST SUMMARY")
+    print("=" * 76)
+    print()
+    print(f"  {'Scenario':<30} {'Reqs':>6} {'Conc':>5} {'Base':>5} {'Peak':>5} {'Final':>5}  Result")
+    print(f"  {'-'*30} {'-'*6} {'-'*5} {'-'*5} {'-'*5} {'-'*5}  ------")
+
+    for label, r in results.items():
+        bounded = r["peak"] <= MAX_ALLOWED_CONNS
+        leaked = r["final"] > MAX_ALLOWED_CONNS
+        ok = bounded and not leaked
+        mark = "\033[0;32mPASS\033[0m" if ok else "\033[0;31mFAIL\033[0m"
+        conc = r.get("concurrency", 1)
+        print(f"  {label:<30} {r['iterations']:>6} {conc:>5} "
+              f"{r['baseline']:>5} {r['peak']:>5} {r['final']:>5}  {mark}")
+
+    print()
+    if all_passed:
+        print("  \033[0;32mALL SCENARIOS PASSED\033[0m")
+    else:
+        print("  \033[0;31mSOME SCENARIOS FAILED\033[0m")
+    print("=" * 76)
+
+
+# ── Soak Test (original behavior) ─────────────────────────────────
 
 
 def normal_user_traffic(session, duration):
@@ -355,14 +616,12 @@ def aggressive_user_traffic(session, duration):
     while time.time() < end_time:
         path = random.choice(SPIDER_PATHS)
 
-        # GET (spider)
         try:
             session.get(path)
             requests_made += 1
         except Exception:
             pass
 
-        # POST with random params (fuzzer)
         try:
             session.post(path, {
                 "param1": "test",
@@ -390,7 +649,6 @@ def monitor_loop(duration, interval, results_file, stop_event):
             ts = datetime.now().strftime("%H:%M:%S")
             conns = get_connections()
 
-            # Health check
             start = time.time()
             try:
                 req = urllib.request.Request(BASE_URL + "/login.jsp")
@@ -414,7 +672,7 @@ def monitor_loop(duration, interval, results_file, stop_event):
             stop_event.wait(interval)
 
 
-# ── Report ─────────────────────────────────────────────────────────
+# ── Soak Report ────────────────────────────────────────────────────
 
 
 def generate_report(results_file, config, aggressive_total):
@@ -456,7 +714,7 @@ def generate_report(results_file, config, aggressive_total):
 
     print()
     print("=" * 59)
-    print("  LOAD TEST RESULTS")
+    print("  SOAK TEST RESULTS")
     print("=" * 59)
     print()
     print("  Configuration:")
@@ -480,8 +738,8 @@ def generate_report(results_file, config, aggressive_total):
     print()
 
     passed = True
-    if max_conns > 50:
-        print(f"  \033[0;31mFAIL: Max connections ({max_conns}) exceeded 50\033[0m")
+    if max_conns > MAX_ALLOWED_CONNS:
+        print(f"  \033[0;31mFAIL: Max connections ({max_conns}) exceeded {MAX_ALLOWED_CONNS}\033[0m")
         passed = False
     if failed > 0:
         print(f"  \033[0;31mFAIL: {failed} health checks failed\033[0m")
@@ -499,47 +757,22 @@ def generate_report(results_file, config, aggressive_total):
     return passed
 
 
-# ── Main ───────────────────────────────────────────────────────────
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Security Shepherd load test")
-    parser.add_argument("--skip-build", action="store_true", help="Skip Maven/Docker build")
-    parser.add_argument("--duration", type=int, default=5, help="Test duration in minutes (default: 5)")
-    parser.add_argument("--normal-users", type=int, default=17, help="Number of normal users (default: 17)")
-    parser.add_argument("--aggressive-users", type=int, default=3, help="Number of aggressive users (default: 3)")
-    parser.add_argument("--monitor-interval", type=int, default=10, help="Monitor interval in seconds (default: 10)")
-    args = parser.parse_args()
-
+def run_soak_test(args):
+    """Run the original soak test with concurrent users."""
     duration = args.duration * 60
     total_users = args.normal_users + args.aggressive_users
 
     script_dir = Path(__file__).resolve().parent
-    project_root = script_dir.parent.parent
     results_dir = script_dir / "results" / datetime.now().strftime("%Y%m%d-%H%M%S")
     results_dir.mkdir(parents=True, exist_ok=True)
     monitor_file = str(results_dir / "monitor.csv")
 
-    # Step 1: Build and start
-    build_and_start(args.skip_build, str(project_root))
-
-    # Step 2: Wait for services
-    wait_for_services()
-
-    # Step 3: Configure platform (admin login, password change, enable registration)
-    configure_platform()
-
-    # Step 4: Register users
     register_users(total_users)
-
-    # Step 5: Login users
     sessions = login_users(total_users)
 
-    # Step 6: Record baseline
     baseline = get_connections() or 0
     log(f"Baseline DB connections: {baseline}")
 
-    # Step 7: Start monitoring
     log("Starting monitor...")
     stop_monitor = threading.Event()
     monitor_thread = threading.Thread(
@@ -549,26 +782,22 @@ def main():
     )
     monitor_thread.start()
 
-    # Step 8: Start traffic
     log(f"Starting {args.normal_users} normal + {args.aggressive_users} aggressive users for {args.duration} minutes...")
     print()
 
     with ThreadPoolExecutor(max_workers=total_users) as executor:
         futures = {}
 
-        # Normal users
         for i in range(1, args.normal_users + 1):
             if i in sessions:
                 f = executor.submit(normal_user_traffic, sessions[i], duration)
                 futures[f] = ("normal", i)
 
-        # Aggressive users
         for i in range(args.normal_users + 1, total_users + 1):
             if i in sessions:
                 f = executor.submit(aggressive_user_traffic, sessions[i], duration)
                 futures[f] = ("aggressive", i)
 
-        # Wait for all to complete
         aggressive_total = 0
         for future in as_completed(futures):
             kind, user_id = futures[future]
@@ -579,13 +808,12 @@ def main():
             except Exception as e:
                 warn(f"User {user_id} ({kind}) error: {e}")
 
-    # Step 9: Stop monitoring and report
     time.sleep(5)
     stop_monitor.set()
     monitor_thread.join(timeout=10)
 
     print()
-    log("Load test complete. Analyzing results...")
+    log("Soak test complete. Analyzing results...")
 
     config = {
         "normal": args.normal_users,
@@ -594,8 +822,111 @@ def main():
         "baseline": baseline,
     }
 
-    passed = generate_report(monitor_file, config, aggressive_total)
-    sys.exit(0 if passed else 1)
+    return generate_report(monitor_file, config, aggressive_total)
+
+
+# ── Main ───────────────────────────────────────────────────────────
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Security Shepherd load test — targeted or full soak",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+examples:
+  %(prog)s --skip-setup --target getter
+  %(prog)s --skip-setup --target getter --concurrency 10
+  %(prog)s --skip-setup --target getter --methods authUser --iterations 500 --concurrency 20
+  %(prog)s --skip-setup --target getter setter --iterations 200 --concurrency 5
+  %(prog)s --skip-setup --target all --duration 3
+  %(prog)s --list-targets
+""",
+    )
+
+    parser.add_argument(
+        "--target", nargs="+", default=["all"],
+        choices=["all", "getter", "setter"],
+        help="Which classes to test: getter, setter, or all (soak). Default: all",
+    )
+    parser.add_argument(
+        "--methods", nargs="+", default=None,
+        help="Specific methods within the target class (e.g. authUser refreshMenu)",
+    )
+    parser.add_argument(
+        "--iterations", type=int, default=300,
+        help="Requests per thread per scenario in targeted mode (default: 300)",
+    )
+    parser.add_argument(
+        "--concurrency", type=int, default=1,
+        help="Concurrent threads per scenario in targeted mode (default: 1)",
+    )
+    parser.add_argument(
+        "--list-targets", action="store_true",
+        help="List available targets and methods, then exit",
+    )
+
+    parser.add_argument("--skip-build", action="store_true", help="Skip Maven/Docker build")
+    parser.add_argument("--skip-setup", action="store_true",
+                        help="Skip build, service wait, and platform config (app already running)")
+    parser.add_argument("--duration", type=int, default=5,
+                        help="Soak test duration in minutes (default: 5)")
+    parser.add_argument("--normal-users", type=int, default=17,
+                        help="Normal users for soak test (default: 17)")
+    parser.add_argument("--aggressive-users", type=int, default=3,
+                        help="Aggressive users for soak test (default: 3)")
+    parser.add_argument("--monitor-interval", type=int, default=10,
+                        help="Monitor interval in seconds for soak test (default: 10)")
+
+    args = parser.parse_args()
+
+    if args.list_targets:
+        for class_name, methods in ALL_TARGETS.items():
+            print(f"\n  {class_name}:")
+            for method_name, spec in methods.items():
+                auth = "auth" if spec.get("auth_required") else "anon"
+                print(f"    {method_name:<20} {spec['http']:<4} {spec['path']:<20} [{auth}]  {spec['java']}")
+        print()
+        sys.exit(0)
+
+    script_dir = Path(__file__).resolve().parent
+    project_root = script_dir.parent.parent
+
+    is_targeted = "all" not in args.target
+
+    if not args.skip_setup:
+        build_and_start(args.skip_build, str(project_root))
+        wait_for_services()
+        admin_session = configure_platform()
+    else:
+        log("Skipping setup (--skip-setup), assuming app is running")
+        admin_session = ShepherdSession()
+        admin_session.get("/login.jsp")
+        status, body, location = admin_session.post("/login", {
+            "login": ADMIN_USER, "pwd": ADMIN_NEW_PASS,
+        })
+        if "index.jsp" not in str(location):
+            admin_session.post("/login", {
+                "login": ADMIN_USER, "pwd": ADMIN_DEFAULT_PASS,
+            })
+
+    if is_targeted:
+        targets_to_run = {}
+        for t in args.target:
+            if t in ALL_TARGETS:
+                targets_to_run[t] = ALL_TARGETS[t]
+
+        if not args.skip_setup:
+            register_users(2)
+
+        all_passed, results = run_targeted_tests(
+            targets_to_run, args.methods, args.iterations,
+            args.concurrency, admin_session
+        )
+        print_targeted_summary(results, all_passed)
+        sys.exit(0 if all_passed else 1)
+    else:
+        passed = run_soak_test(args)
+        sys.exit(0 if passed else 1)
 
 
 if __name__ == "__main__":
