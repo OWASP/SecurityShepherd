@@ -211,3 +211,25 @@ If connections are failing validation:
 1. Check database server is running
 2. Verify credentials in properties file
 3. Check network connectivity
+
+### MariaDB Container Exits with SQL Syntax Error
+
+If the MariaDB container exits immediately on first startup with an error like:
+
+```
+ERROR 1064 (42000) at line 181: You have an error in your SQL syntax;
+check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 3
+```
+
+This is a **stale Docker image cache** issue. The SQL source files in `src/main/resources/database/` have `DELIMITER` statements commented out for compatibility with tools that don't support `DELIMITER`. During the Maven build (`mvn -Pdocker`), a script (`docker/scripts/convert-sql-scripts.sh`) uncomments them in the copies under `docker/mariadb/target/`. If Docker reuses a cached image from before this conversion ran, the stored procedures fail to parse.
+
+**Fix:**
+
+```bash
+mvn -Pdocker validate                    # ensure SQL scripts are converted
+docker compose build --no-cache db       # rebuild without cache
+docker compose down -v                   # remove old volumes with failed init
+docker compose up -d db                  # start fresh
+```
+
+Note: `docker compose down -v` is needed because MariaDB only runs init scripts on first startup with an empty data volume. If the previous attempt partially initialized, the scripts won't re-run without removing the volume.

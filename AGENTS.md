@@ -57,6 +57,14 @@ docker run -d --name secshep_test_db \
 
 The docker-compose `db` service is **not suitable for quick test runs** — it requires `mvn -Pdocker validate` first to generate SQL init scripts, and those scripts run on first container startup to create all challenge schemas.
 
+### Docker DB init fails with SQL syntax error
+
+If the MariaDB container exits immediately with `ERROR 1064 (42000) at line 181` referencing a `CREATE PROCEDURE` statement, this is a **stale Docker image cache** issue, not a bug in the SQL.
+
+The SQL source files have `DELIMITER` statements commented out (for compatibility with tools that don't support `DELIMITER`). A build script (`docker/scripts/convert-sql-scripts.sh`) uncomments them when Maven copies the files to `docker/mariadb/target/`. If Docker reuses a cached image from before the conversion ran, the procedures fail to parse.
+
+Fix: `docker compose build --no-cache db && docker compose up -d db`
+
 ### Test credentials
 
 Tests read DB connection details from `.env` via dotenv. The key values:
