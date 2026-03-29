@@ -163,8 +163,8 @@ public class ConnectionPool {
   }
 
   /**
-   * Creates a HikariDataSource with custom pool size settings. Used for challenge pools which need a
-   * smaller resource footprint than the core pool.
+   * Creates a HikariDataSource with custom pool size settings. Used for challenge pools which need
+   * a smaller resource footprint than the core pool.
    *
    * @param jdbcUrl The JDBC URL
    * @param username Database username
