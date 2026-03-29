@@ -413,4 +413,24 @@ public class ConnectionPool {
   public static void reset() {
     shutdown();
   }
+
+  /**
+   * Returns the number of challenge pools currently active. Intended for testing and monitoring.
+   *
+   * @return the number of challenge pools
+   */
+  public static int getChallengePoolCount() {
+    return challengePools.size();
+  }
+
+  /**
+   * Returns the HikariDataSource for a challenge pool by key, or null if not found. Intended for
+   * testing to verify pool configuration.
+   *
+   * @param poolKey the pool key (jdbcUrl:username)
+   * @return the HikariDataSource, or null
+   */
+  static HikariDataSource getChallengePool(String poolKey) {
+    return challengePools.get(poolKey);
+  }
 }
