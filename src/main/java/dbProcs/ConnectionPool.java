@@ -40,12 +40,17 @@ public class ConnectionPool {
   private static final ConcurrentHashMap<String, HikariDataSource> challengePools =
       new ConcurrentHashMap<>();
 
-  // Default pool configuration values
+  // Default pool configuration values (used by core pool)
   private static final int DEFAULT_MAX_POOL_SIZE = 10;
   private static final int DEFAULT_MIN_IDLE = 2;
   private static final long DEFAULT_CONNECTION_TIMEOUT = 30000; // 30 seconds
   private static final long DEFAULT_IDLE_TIMEOUT = 600000; // 10 minutes
   private static final long DEFAULT_MAX_LIFETIME = 1800000; // 30 minutes
+
+  // Challenge pool configuration values (smaller footprint per schema)
+  private static final int CHALLENGE_MAX_POOL_SIZE = 3;
+  private static final int CHALLENGE_MIN_IDLE = 0;
+  private static final long CHALLENGE_IDLE_TIMEOUT = 120000; // 2 minutes
 
   // Flag to track if pool has been initialized
   private static volatile boolean initialized = false;
@@ -158,6 +163,78 @@ public class ConnectionPool {
   }
 
   /**
+   * Creates a HikariDataSource with custom pool size settings. Used for challenge pools which need a
+   * smaller resource footprint than the core pool.
+   *
+   * @param jdbcUrl The JDBC URL
+   * @param username Database username
+   * @param password Database password
+   * @param prop Properties containing pool configuration
+   * @param poolName Name for the pool (for logging/monitoring)
+   * @param maxPoolSize Maximum number of connections in the pool
+   * @param minIdle Minimum number of idle connections maintained
+   * @param idleTimeout Idle timeout in milliseconds before a connection is retired
+   * @return Configured HikariDataSource
+   */
+  private static HikariDataSource createDataSource(
+      String jdbcUrl,
+      String username,
+      String password,
+      Properties prop,
+      String poolName,
+      int maxPoolSize,
+      int minIdle,
+      long idleTimeout) {
+
+    HikariConfig config = new HikariConfig();
+
+    config.setJdbcUrl(jdbcUrl);
+    config.setUsername(username);
+    config.setPassword(password);
+    config.setPoolName(poolName);
+
+    String driverClassName = prop.getProperty("DriverType");
+    if (driverClassName == null || driverClassName.isEmpty()) {
+      if (jdbcUrl.startsWith("jdbc:mariadb:")) {
+        driverClassName = "org.mariadb.jdbc.Driver";
+      } else if (jdbcUrl.startsWith("jdbc:mysql:")) {
+        driverClassName = "com.mysql.cj.jdbc.Driver";
+      } else {
+        throw new IllegalArgumentException("Unsupported JDBC URL: " + jdbcUrl);
+      }
+    }
+    config.setDriverClassName(driverClassName);
+
+    // Pool size configuration (using provided values instead of defaults)
+    config.setMaximumPoolSize(maxPoolSize);
+    config.setMinimumIdle(minIdle);
+
+    // Timeout configuration
+    config.setConnectionTimeout(
+        getLongProperty(prop, "pool.connectionTimeout", DEFAULT_CONNECTION_TIMEOUT));
+    config.setIdleTimeout(idleTimeout);
+    config.setMaxLifetime(getLongProperty(prop, "pool.maxLifetime", DEFAULT_MAX_LIFETIME));
+
+    // Connection validation
+    config.setConnectionTestQuery("SELECT 1");
+
+    // Performance optimizations
+    config.addDataSourceProperty("cachePrepStmts", "true");
+    config.addDataSourceProperty("prepStmtCacheSize", "250");
+    config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+    config.addDataSourceProperty("useServerPrepStmts", "true");
+
+    log.debug(
+        "Creating HikariCP pool '{}' with maxPoolSize={}, minIdle={}, idleTimeout={}",
+        poolName,
+        config.getMaximumPoolSize(),
+        config.getMinimumIdle(),
+        config.getIdleTimeout());
+
+    return new HikariDataSource(config);
+  }
+
+  /**
    * Loads database properties from the configuration file.
    *
    * @return Properties object containing database configuration
@@ -229,7 +306,14 @@ public class ConnectionPool {
             key -> {
               Properties prop = loadDatabaseProperties();
               return createDataSource(
-                  jdbcUrl, username, password, prop, "ChallengePool-" + username);
+                  jdbcUrl,
+                  username,
+                  password,
+                  prop,
+                  "ChallengePool-" + username,
+                  CHALLENGE_MAX_POOL_SIZE,
+                  CHALLENGE_MIN_IDLE,
+                  CHALLENGE_IDLE_TIMEOUT);
             });
 
     return dataSource.getConnection();
