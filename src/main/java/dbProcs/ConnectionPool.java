@@ -384,6 +384,19 @@ public class ConnectionPool {
         coreDataSource.getHikariPoolMXBean().getThreadsAwaitingConnection());
   }
 
+  /**
+   * Returns the number of connections currently checked out from the core pool. Intended for
+   * integration tests that verify connections are returned after Getter/Setter operations.
+   *
+   * @return active connection count, or -1 if the pool is not initialized
+   */
+  public static int getCoreActiveConnections() {
+    if (coreDataSource == null || coreDataSource.isClosed()) {
+      return -1;
+    }
+    return coreDataSource.getHikariPoolMXBean().getActiveConnections();
+  }
+
   /** Helper method to get an integer property with a default value. */
   private static int getIntProperty(Properties prop, String key, int defaultValue) {
     String value = prop.getProperty(key);

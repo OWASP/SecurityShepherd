@@ -79,159 +79,157 @@ public class Getter {
     boolean userFound = false;
     boolean userVerified = false;
 
-    Connection conn;
-    try {
-      conn = Database.getCoreConnection(ApplicationRoot);
-    } catch (SQLException e) {
-      log.fatal("Could create get core connection: " + e.toString());
-      throw new RuntimeException(e);
-    }
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    // See if user Exists
-    PreparedStatement prestmt;
-    CallableStatement callstmt;
-    try {
-      prestmt =
-          conn.prepareStatement(
-              "SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId,"
-                  + " suspendedUntil, loginType, tempUsername FROM `users` WHERE userName = ?");
-    } catch (SQLException e) {
-      log.fatal("Could create call statement: " + e.toString());
-      throw new RuntimeException(e);
-    }
+      // See if user Exists
+      PreparedStatement prestmt;
+      CallableStatement callstmt;
+      try {
+        prestmt =
+            conn.prepareStatement(
+                "SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId,"
+                    + " suspendedUntil, loginType, tempUsername FROM `users` WHERE userName = ?");
+      } catch (SQLException e) {
+        log.fatal("Could create call statement: " + e.toString());
+        throw new RuntimeException(e);
+      }
 
-    log.debug("Gathering results from query");
-    ResultSet userResult;
-    try {
-      prestmt.setString(1, userName);
-      userResult = prestmt.executeQuery();
-    } catch (SQLException e) {
-      log.fatal("Could not execute db query: " + e.toString());
-      throw new RuntimeException(e);
-    }
+      log.debug("Gathering results from query");
+      ResultSet userResult;
+      try {
+        prestmt.setString(1, userName);
+        userResult = prestmt.executeQuery();
+      } catch (SQLException e) {
+        log.fatal("Could not execute db query: " + e.toString());
+        throw new RuntimeException(e);
+      }
 
-    log.debug("Opening Result Set from query");
+      log.debug("Opening Result Set from query");
 
-    try {
-      if (userResult.next()) {
-        log.debug(
-            "User Found"); // User found if a row is in the database, this line will not work if the
-        // result
-        // set is empty
-        userFound = true;
-      } else {
+      try {
+        if (userResult.next()) {
+          log.debug(
+              "User Found"); // User found if a row is in the database, this line will not work if
+                             // the
+          // result
+          // set is empty
+          userFound = true;
+        } else {
+          log.debug("User did not exist");
+          userFound = false;
+        }
+      } catch (SQLException e) {
         log.debug("User did not exist");
         userFound = false;
       }
-    } catch (SQLException e) {
-      log.debug("User did not exist");
-      userFound = false;
-    }
 
-    if (userFound) {
-      // Authenticate User
-      Argon2 argon2 = Argon2Factory.create();
+      if (userFound) {
+        // Authenticate User
+        Argon2 argon2 = Argon2Factory.create();
 
-      log.debug("Getting password hash");
-      String dbHash;
-      try {
-        dbHash = userResult.getString(3);
-        log.debug("Verifying hash");
-
-        userVerified = argon2.verify(dbHash, password.toCharArray());
-
-      } catch (SQLException e) {
-        log.fatal("Could not retrieve password hash from db: " + e.toString());
-        result = null;
-        userVerified = false;
-        throw new RuntimeException(e);
-        // TODO: We should throw a checked exception here instead
-      }
-
-      if (userVerified) {
-        // Hash matches
-        log.debug("Hash matches");
-
-        result = new String[6];
-
-        int badLoginCount;
-        String loginType = new String();
-
-        Timestamp suspendedUntil;
-
+        log.debug("Getting password hash");
+        String dbHash;
         try {
-          result[0] = userResult.getString(1);
-          result[1] = userResult.getString(2); // userName
-          result[2] = userResult.getString(4); // role
-          badLoginCount = userResult.getInt(5);
-          result[3] = Boolean.toString(userResult.getBoolean(6));
-          result[4] = userResult.getString(7); // classId
-          suspendedUntil = userResult.getTimestamp(8);
-          loginType = userResult.getString(9);
-          result[5] = Boolean.toString(userResult.getBoolean(10));
+          dbHash = userResult.getString(3);
+          log.debug("Verifying hash");
+
+          userVerified = argon2.verify(dbHash, password.toCharArray());
+
         } catch (SQLException e) {
-
-          log.fatal("Could not retrieve auth data from db: " + e.toString());
+          log.fatal("Could not retrieve password hash from db: " + e.toString());
+          result = null;
+          userVerified = false;
           throw new RuntimeException(e);
+          // TODO: We should throw a checked exception here instead
         }
 
-        if (!loginType.equals("login")) {
-          // Login type must be "login" and not "saml" if password login is to be allowed
-          log.debug("User is SSO user, can't login with password!");
-          result = null;
-          return result;
-        }
+        if (userVerified) {
+          // Hash matches
+          log.debug("Hash matches");
 
-        // Get current system time
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+          result = new String[6];
 
-        if (suspendedUntil.after(currentTime)) {
-          // User is suspended
-          result = null;
-          return result;
-        }
+          int badLoginCount;
+          String loginType = new String();
 
-        if (!result[1].equalsIgnoreCase(
-            userName)) // If somehow this functionality has been compromised to sign
-        // in as
-        // other users, this will limit the expoitability. But the method is
-        // sql injection safe, so it should be ok
-        {
-          log.fatal(
-              "User Name used ("
-                  + userName
-                  + ") and User Name retrieved ("
-                  + result[1]
-                  + ") were not the Same. Nulling Result");
-          result = null;
-        } else {
-          log.debug("User '" + userName + "' has logged in");
-          // Before finishing, check if user had a badlogin history, if so, Clear it
-          if (badLoginCount > 0) {
-            log.debug("Clearing Bad Login History");
-            try {
-              callstmt = conn.prepareCall("call userBadLoginReset(?)");
-              callstmt.setString(1, result[0]);
-              callstmt.execute();
-            } catch (SQLException e) {
-              log.fatal("Could not reset bad login count: " + e.toString());
-              throw new RuntimeException(e);
-            }
+          Timestamp suspendedUntil;
 
-            log.debug("userBadLoginReset executed!");
+          try {
+            result[0] = userResult.getString(1);
+            result[1] = userResult.getString(2); // userName
+            result[2] = userResult.getString(4); // role
+            badLoginCount = userResult.getInt(5);
+            result[3] = Boolean.toString(userResult.getBoolean(6));
+            result[4] = userResult.getString(7); // classId
+            suspendedUntil = userResult.getTimestamp(8);
+            loginType = userResult.getString(9);
+            result[5] = Boolean.toString(userResult.getBoolean(10));
+          } catch (SQLException e) {
+
+            log.fatal("Could not retrieve auth data from db: " + e.toString());
+            throw new RuntimeException(e);
           }
-        }
-        // User has logged in, or a Authentication Bypass was detected... You never
-        // know! Better safe than sorry
-        // TODO: will this close the db connection if we return here?
-        return result;
-      } else {
-        // Hash did not match
-        log.debug("Hash did not match, authentication failed");
-      }
-    }
 
-    Database.closeConnection(conn);
+          if (!loginType.equals("login")) {
+            // Login type must be "login" and not "saml" if password login is to be allowed
+            log.debug("User is SSO user, can't login with password!");
+            result = null;
+            return result;
+          }
+
+          // Get current system time
+          Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+          if (suspendedUntil.after(currentTime)) {
+            // User is suspended
+            result = null;
+            return result;
+          }
+
+          if (!result[1].equalsIgnoreCase(
+              userName)) // If somehow this functionality has been compromised to sign
+          // in as
+          // other users, this will limit the expoitability. But the method is
+          // sql injection safe, so it should be ok
+          {
+            log.fatal(
+                "User Name used ("
+                    + userName
+                    + ") and User Name retrieved ("
+                    + result[1]
+                    + ") were not the Same. Nulling Result");
+            result = null;
+          } else {
+            log.debug("User '" + userName + "' has logged in");
+            // Before finishing, check if user had a badlogin history, if so, Clear it
+            if (badLoginCount > 0) {
+              log.debug("Clearing Bad Login History");
+              try {
+                callstmt = conn.prepareCall("call userBadLoginReset(?)");
+                callstmt.setString(1, result[0]);
+                callstmt.execute();
+              } catch (SQLException e) {
+                log.fatal("Could not reset bad login count: " + e.toString());
+                throw new RuntimeException(e);
+              }
+
+              log.debug("userBadLoginReset executed!");
+            }
+          }
+          // User has logged in, or a Authentication Bypass was detected... You never
+          // know! Better safe than sorry
+          // TODO: will this close the db connection if we return here?
+          return result;
+        } else {
+          // Hash did not match
+          log.debug("Hash did not match, authentication failed");
+        }
+      }
+
+    } catch (SQLException e) {
+      log.fatal("authUser failed: " + e.toString());
+      throw new RuntimeException(e);
+    }
     log.debug("$$$ End authUser $$$");
     return result;
   }
@@ -266,83 +264,182 @@ public class Getter {
 
     boolean isTempUsername = false;
 
-    Connection conn;
-    try {
-      conn = Database.getCoreConnection(ApplicationRoot);
-    } catch (SQLException e) {
-      log.fatal("Could create get core connection: " + e.toString());
-      throw new RuntimeException(e);
-    }
-    // See if user Exists
-    PreparedStatement prestmt;
-    try {
-      prestmt =
-          conn.prepareStatement(
-              "SELECT userId, userName, userPass, badLoginCount, tempPassword, classId,"
-                  + " suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND"
-                  + " loginType='saml'");
-    } catch (SQLException e) {
-      log.fatal("Could create call statement: " + e.toString());
-      throw new RuntimeException(e);
-    }
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      // See if user Exists
+      PreparedStatement prestmt;
+      try {
+        prestmt =
+            conn.prepareStatement(
+                "SELECT userId, userName, userPass, badLoginCount, tempPassword, classId,"
+                    + " suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND"
+                    + " loginType='saml'");
+      } catch (SQLException e) {
+        log.fatal("Could create call statement: " + e.toString());
+        throw new RuntimeException(e);
+      }
 
-    log.debug("Gathering userFind ResultSet");
-    ResultSet userResult;
-    try {
-      prestmt.setString(1, ssoName);
-      log.debug("Executing query");
-      userResult = prestmt.executeQuery();
-    } catch (SQLException e) {
-      log.fatal("Could not execute db query: " + e.toString());
-      throw new RuntimeException(e);
-    }
+      log.debug("Gathering userFind ResultSet");
+      ResultSet userResult;
+      try {
+        prestmt.setString(1, ssoName);
+        log.debug("Executing query");
+        userResult = prestmt.executeQuery();
+      } catch (SQLException e) {
+        log.fatal("Could not execute db query: " + e.toString());
+        throw new RuntimeException(e);
+      }
 
-    log.debug("Opening Result Set from userResult");
+      log.debug("Opening Result Set from userResult");
 
-    try {
-      if (userResult.next()) {
-        // User found if a row is in the database
-        userFound = true;
-        log.debug("User Found");
-      } else {
+      try {
+        if (userResult.next()) {
+          // User found if a row is in the database
+          userFound = true;
+          log.debug("User Found");
+        } else {
+          userFound = false;
+        }
+
+      } catch (SQLException e) {
+        log.debug("User did not exist");
         userFound = false;
       }
 
-    } catch (SQLException e) {
-      log.debug("User did not exist");
-      userFound = false;
-    }
+      if (!userFound) {
+        // User wasn't found, enroll them in database
 
-    if (!userFound) {
-      // User wasn't found, enroll them in database
+        boolean userCreated = false;
 
-      boolean userCreated = false;
+        log.debug("User did not exist, create it from SSO data");
 
-      log.debug("User did not exist, create it from SSO data");
+        try {
 
+          if (defaultClass.isEmpty()) {
+            log.debug("Adding player to database, with null classId");
+            newUsername = Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName, userRole);
+          } else // defaultClass is not empty, so It must be set to a class!
+          {
+            log.debug("Adding player to database, to class " + defaultClass);
+            newUsername =
+                Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName, userRole);
+          }
+
+          if (newUsername == null) {
+            userCreated = false;
+          } else {
+            userCreated = true;
+          }
+
+          userName = newUsername;
+
+        } catch (SQLException e) {
+          String message =
+              "Could not create user "
+                  + userName
+                  + " with ssoName "
+                  + ssoName
+                  + " via SSO: "
+                  + e.toString();
+          log.fatal(message);
+          throw new RuntimeException(message);
+        }
+
+        if (!userCreated) {
+          String message =
+              "Could not create user " + userName + " with ssoName " + ssoName + " via SSO";
+          log.fatal(message);
+          throw new RuntimeException(message);
+        }
+
+        log.debug("User created");
+
+      } else {
+
+        Timestamp suspendedUntil;
+
+        log.debug("Getting suspension data");
+
+        try {
+          suspendedUntil = userResult.getTimestamp(7);
+        } catch (SQLException e) {
+          log.fatal(
+              "Could not find suspension information from ssoName: "
+                  + ssoName
+                  + ": "
+                  + e.toString());
+          throw new RuntimeException(e);
+        }
+
+        // Get current system time
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+        if (suspendedUntil.after(currentTime)) {
+          // User is suspended
+          log.debug("User is suspended");
+
+          result = null;
+          return result;
+        }
+      }
+
+      // Find the generated userID and username by asking the database
       try {
-
-        if (defaultClass.isEmpty()) {
-          log.debug("Adding player to database, with null classId");
-          newUsername = Setter.userCreateSSO(ApplicationRoot, null, userName, ssoName, userRole);
-        } else // defaultClass is not empty, so It must be set to a class!
-        {
-          log.debug("Adding player to database, to class " + defaultClass);
-          newUsername =
-              Setter.userCreateSSO(ApplicationRoot, defaultClass, userName, ssoName, userRole);
-        }
-
-        if (newUsername == null) {
-          userCreated = false;
-        } else {
-          userCreated = true;
-        }
-
-        userName = newUsername;
+        prestmt =
+            conn.prepareStatement(
+                "SELECT userId, userName, classID, tempUsername FROM `users` WHERE ssoName = ? AND"
+                    + " loginType='saml'");
 
       } catch (SQLException e) {
+        log.fatal("Could create call statement: " + e.toString());
+        throw new RuntimeException(e);
+      }
+
+      log.debug("Gathering userResult ResultSet");
+
+      try {
+        prestmt.setString(1, ssoName);
+        log.debug("Executing query");
+        userResult = prestmt.executeQuery();
+      } catch (SQLException e) {
+        log.fatal("Could not execute db query: " + e.toString());
+        throw new RuntimeException(e);
+      }
+
+      log.debug("Opening user list result set");
+
+      try {
+        if (userResult.next()) {
+          userFound = true;
+          log.debug(
+              "User Found"); // User found if a row is in the database, this line will not work if
+                             // the
+          // result
+          // set is empty
+        } else {
+          userFound = false;
+        }
+
+      } catch (SQLException e) {
+        log.debug("User did not exist");
+        userFound = false;
+      }
+
+      if (!userFound) {
+        // If user wasn't found at this stage something is quite wrong, so exit
+        // forefully
+        String message = "User wasn't found after being added!";
+        log.fatal(message);
+        throw new RuntimeException(message);
+      }
+
+      try {
+        userID = userResult.getString(1);
+        userName = userResult.getString(2);
+        classId = userResult.getString(3); // classId
+        isTempUsername = userResult.getBoolean(4);
+      } catch (SQLException e) {
         String message =
-            "Could not create user "
+            "Could find userID for userName "
                 + userName
                 + " with ssoName "
                 + ssoName
@@ -352,119 +449,21 @@ public class Getter {
         throw new RuntimeException(message);
       }
 
-      if (!userCreated) {
-        String message =
-            "Could not create user " + userName + " with ssoName " + ssoName + " via SSO";
-        log.fatal(message);
-        throw new RuntimeException(message);
-      }
+      log.debug("User '" + userName + "' has logged in via SSO" + " with role " + userRole);
 
-      log.debug("User created");
+      result[0] = userID;
+      result[1] = userName; // userName
+      result[2] = userRole; // role
+      result[5] = "false"; // sso logins can't change password
+      result[4] = classId; // classId
+      result[5] = Boolean.toString(isTempUsername);
 
-    } else {
-
-      Timestamp suspendedUntil;
-
-      log.debug("Getting suspension data");
-
-      try {
-        suspendedUntil = userResult.getTimestamp(7);
-      } catch (SQLException e) {
-        log.fatal(
-            "Could not find suspension information from ssoName: " + ssoName + ": " + e.toString());
-        throw new RuntimeException(e);
-      }
-
-      // Get current system time
-      Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-
-      if (suspendedUntil.after(currentTime)) {
-        // User is suspended
-        log.debug("User is suspended");
-
-        result = null;
-        return result;
-      }
-    }
-
-    // Find the generated userID and username by asking the database
-    try {
-      prestmt =
-          conn.prepareStatement(
-              "SELECT userId, userName, classID, tempUsername FROM `users` WHERE ssoName = ? AND"
-                  + " loginType='saml'");
-
+      log.debug("$$$ End authUser $$$");
+      return result;
     } catch (SQLException e) {
-      log.fatal("Could create call statement: " + e.toString());
+      log.fatal("authUserSSO failed: " + e.toString());
       throw new RuntimeException(e);
     }
-
-    log.debug("Gathering userResult ResultSet");
-
-    try {
-      prestmt.setString(1, ssoName);
-      log.debug("Executing query");
-      userResult = prestmt.executeQuery();
-    } catch (SQLException e) {
-      log.fatal("Could not execute db query: " + e.toString());
-      throw new RuntimeException(e);
-    }
-
-    log.debug("Opening user list result set");
-
-    try {
-      if (userResult.next()) {
-        userFound = true;
-        log.debug(
-            "User Found"); // User found if a row is in the database, this line will not work if the
-        // result
-        // set is empty
-      } else {
-        userFound = false;
-      }
-
-    } catch (SQLException e) {
-      log.debug("User did not exist");
-      userFound = false;
-    }
-
-    if (!userFound) {
-      // If user wasn't found at this stage something is quite wrong, so exit
-      // forefully
-      String message = "User wasn't found after being added!";
-      log.fatal(message);
-      throw new RuntimeException(message);
-    }
-
-    try {
-      userID = userResult.getString(1);
-      userName = userResult.getString(2);
-      classId = userResult.getString(3); // classId
-      isTempUsername = userResult.getBoolean(4);
-    } catch (SQLException e) {
-      String message =
-          "Could find userID for userName "
-              + userName
-              + " with ssoName "
-              + ssoName
-              + " via SSO: "
-              + e.toString();
-      log.fatal(message);
-      throw new RuntimeException(message);
-    }
-
-    log.debug("User '" + userName + "' has logged in via SSO" + " with role " + userRole);
-
-    result[0] = userID;
-    result[1] = userName; // userName
-    result[2] = userRole; // role
-    result[5] = "false"; // sso logins can't change password
-    result[4] = classId; // classId
-    result[5] = Boolean.toString(isTempUsername);
-
-    Database.closeConnection(conn);
-    log.debug("$$$ End authUser $$$");
-    return result;
   }
 
   /**
@@ -480,8 +479,7 @@ public class Getter {
     log.debug("*** Getter.checkPlayerResult ***");
 
     String result = null;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Preparing userCheckResult call");
       CallableStatement callstmnt = conn.prepareCall("call userCheckResult(?, ?)");
@@ -491,8 +489,6 @@ public class Getter {
       ResultSet resultSet = callstmnt.executeQuery();
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.debug("userCheckResult Failure: " + e.toString());
       result = null;
@@ -511,8 +507,7 @@ public class Getter {
     log.debug("*** Getter.findPlayerById ***");
     boolean userFound = false;
     // Get connection
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call playerFindById(?)");
       log.debug("Gathering playerFindById ResultSet");
@@ -524,8 +519,6 @@ public class Getter {
           "Player Found: "
               + userFind.getString(1)); // This line will not execute if player not found
       userFound = true;
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Player did not exist: " + e.toString());
       userFound = false;
@@ -546,8 +539,7 @@ public class Getter {
     log.debug("*** Getter.getAllModuleInfo ***");
     ArrayList<String[]> modules = new ArrayList<String[]>();
 
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleGetAll()");
       log.debug("Gathering moduleGetAll ResultSet");
@@ -564,8 +556,6 @@ public class Getter {
         modules.add(result);
       }
       log.debug("Returning Array list with " + i + " entries.");
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
     }
@@ -590,63 +580,63 @@ public class Getter {
     // Getting Translated Level Names
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
     // Encoder to prevent XSS
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    CallableStatement callstmt = conn.prepareCall("call moduleAllInfo(?, ?)");
-    callstmt.setString(1, "challenge");
-    callstmt.setString(2, userId);
-    log.debug("Gathering moduleAllInfo ResultSet");
-    ResultSet challenges = callstmt.executeQuery();
-    log.debug("Opening Result Set from moduleAllInfo");
-    String challengeCategory = new String();
-    int rowNumber = 0; // Identifies the first row, ie the start of the list. This is slightly
-    // different output to every other row
-    while (challenges.next()) {
-      if (!challengeCategory.equalsIgnoreCase(challenges.getString(2))) {
-        challengeCategory = challenges.getString(2);
-        // log.debug("New Category Detected: " + challengeCategory);
-        if (rowNumber > 0) // output prepared for Every row after row 1
-        {
-          output +=
-              "</ul></li><li><a href='javascript:;' class='challengeHeader' >"
-                  + Encode.forHtml(bundle.getString("category." + challengeCategory))
-                  + "</a><ul class='challengeList' style='display: none;'>";
-        } else // output prepared for First row in entire challenge
-        {
-          output +=
-              "<li><a href='javascript:;' class='challengeHeader'>"
-                  + Encode.forHtml(bundle.getString("category." + challengeCategory))
-                  + "</a><ul class='challengeList' style='display: none;'>";
+      CallableStatement callstmt = conn.prepareCall("call moduleAllInfo(?, ?)");
+      callstmt.setString(1, "challenge");
+      callstmt.setString(2, userId);
+      log.debug("Gathering moduleAllInfo ResultSet");
+      ResultSet challenges = callstmt.executeQuery();
+      log.debug("Opening Result Set from moduleAllInfo");
+      String challengeCategory = new String();
+      int rowNumber = 0; // Identifies the first row, ie the start of the list. This is slightly
+      // different output to every other row
+      while (challenges.next()) {
+        if (!challengeCategory.equalsIgnoreCase(challenges.getString(2))) {
+          challengeCategory = challenges.getString(2);
+          // log.debug("New Category Detected: " + challengeCategory);
+          if (rowNumber > 0) // output prepared for Every row after row 1
+          {
+            output +=
+                "</ul></li><li><a href='javascript:;' class='challengeHeader' >"
+                    + Encode.forHtml(bundle.getString("category." + challengeCategory))
+                    + "</a><ul class='challengeList' style='display: none;'>";
+          } else // output prepared for First row in entire challenge
+          {
+            output +=
+                "<li><a href='javascript:;' class='challengeHeader'>"
+                    + Encode.forHtml(bundle.getString("category." + challengeCategory))
+                    + "</a><ul class='challengeList' style='display: none;'>";
+          }
+          // log.debug("Compiling Challenge Category - " + challengeCategory);
         }
-        // log.debug("Compiling Challenge Category - " + challengeCategory);
+        output += "<li>"; // Starts next LI element
+        if (challenges.getString(4) != null) {
+          output += "<img src='css/images/completed.png'/>"; // Completed marker
+        } else {
+          output += "<img src='css/images/uncompleted.png'/>"; // Incomplete marker
+        }
+        // Final out put compilation
+        output +=
+            "<a class='lesson' id='"
+                + Encode.forHtmlAttribute(challenges.getString(3))
+                + "' href='javascript:;'>"
+                + Encode.forHtml(bundle.getString(challenges.getString(1)))
+                + "</a>";
+        output += "</li>";
+        rowNumber++;
       }
-      output += "<li>"; // Starts next LI element
-      if (challenges.getString(4) != null) {
-        output += "<img src='css/images/completed.png'/>"; // Completed marker
+      // Check if output is empty
+      if (output.isEmpty()) {
+        output = "<li>No challenges found</li>";
       } else {
-        output += "<img src='css/images/uncompleted.png'/>"; // Incomplete marker
+        log.debug("Appending End tags");
+        output += "</ul></li>";
       }
-      // Final out put compilation
-      output +=
-          "<a class='lesson' id='"
-              + Encode.forHtmlAttribute(challenges.getString(3))
-              + "' href='javascript:;'>"
-              + Encode.forHtml(bundle.getString(challenges.getString(1)))
-              + "</a>";
-      output += "</li>";
-      rowNumber++;
-    }
-    // Check if output is empty
-    if (output.isEmpty()) {
-      output = "<li>No challenges found</li>";
-    } else {
-      log.debug("Appending End tags");
-      output += "</ul></li>";
-    }
 
-    Database.closeConnection(conn);
-    log.debug("*** END getChallenges() ***");
-    return output;
+      log.debug("*** END getChallenges() ***");
+      return output;
+    }
   }
 
   /**
@@ -657,8 +647,7 @@ public class Getter {
     int result = 0;
     ResultSet resultSet = null;
     log.debug("*** Getter.getClassCount ***");
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call classCount()");
       log.debug("Gathering classCount ResultSet");
@@ -666,8 +655,6 @@ public class Getter {
       log.debug("Opening Result Set from classCount");
       resultSet.next();
       result = resultSet.getInt(1);
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
       result = 0;
@@ -706,8 +693,7 @@ public class Getter {
   public static String[] getClassInfo(String ApplicationRoot, String classId) {
     String[] result = new String[2];
     log.debug("*** Getter.getClassInfo (Single Class) ***");
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call classFind(?)");
       callstmt.setString(1, classId);
@@ -741,8 +727,7 @@ public class Getter {
     log.debug("*** Getter.getCsrfForum ***");
     log.debug("Getting stored messages from class: " + classId);
     String htmlOutput = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       if (classId != null) {
         CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)");
@@ -783,8 +768,6 @@ public class Getter {
         log.error("User with Null Class detected");
         htmlOutput = "<p><font color='red'>" + bundle.getString("error.noClass") + "</font></p>";
       }
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
       htmlOutput = "<p>" + bundle.getString("error.occurred ") + "</p>";
@@ -810,8 +793,7 @@ public class Getter {
     log.debug("*** Getter.getCsrfForum ***");
     log.debug("Getting stored messages from class: " + classId);
     String htmlOutput = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       if (classId != null) {
         CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)");
@@ -852,8 +834,6 @@ public class Getter {
         log.error("User with Null Class detected");
         htmlOutput = "<p><font color='red'>" + bundle.getString("error.noClass") + "</font></p>";
       }
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
       htmlOutput = "<p>" + bundle.getString("error.occurred") + "</p>";
@@ -875,8 +855,7 @@ public class Getter {
     log.debug("*** Getter.getFeedback ***");
 
     String result = new String();
-    try {
-      Connection conn = Database.getCoreConnection(applicationRoot);
+    try (Connection conn = Database.getCoreConnection(applicationRoot)) {
 
       log.debug("Preparing moduleFeedback call");
       CallableStatement callstmnt = conn.prepareCall("call moduleFeedback(?)");
@@ -938,8 +917,6 @@ public class Getter {
         result = new String();
       }
 
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("moduleFeedback Failure: " + e.toString());
       result = null;
@@ -971,8 +948,7 @@ public class Getter {
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
     ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
 
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)");
       callstmt.setString(1, userId);
@@ -1055,8 +1031,6 @@ public class Getter {
               + Encode.forHtml(bundle.getString("generic.text.sorryError"))
               + "\");</script>";
 
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Challenge Retrieval: " + e.toString());
     }
@@ -1086,8 +1060,7 @@ public class Getter {
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
     ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
 
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)");
       callstmt.setString(1, userId);
@@ -1162,8 +1135,6 @@ public class Getter {
         // into Footer
       }
 
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Challenge Retrieval: " + e.toString());
     }
@@ -1185,8 +1156,7 @@ public class Getter {
   public static String getJsonScore(String applicationRoot, String classId) {
     log.debug("classId: " + classId);
     String result = new String();
-    try {
-      Connection conn = Database.getCoreConnection(applicationRoot);
+    try (Connection conn = Database.getCoreConnection(applicationRoot)) {
 
       // Returns User's: Name, # of Completed modules and Score
       CallableStatement callstmnt = null;
@@ -1343,8 +1313,6 @@ public class Getter {
         result = new String();
       }
 
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("getJsonScore Failure: " + e.toString());
       result = null;
@@ -1370,8 +1338,7 @@ public class Getter {
     // Getting Translated Level Names
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
     String output = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       // Get the lesson modules
       CallableStatement callstmt = conn.prepareCall("call lessonInfo(?)");
@@ -1403,8 +1370,6 @@ public class Getter {
       } else {
         log.debug("Lesson List returned");
       }
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("lesson Retrieval: " + e.toString());
     }
@@ -1428,8 +1393,7 @@ public class Getter {
     log.debug("*** Getter.getModuleAddress ***");
     String output = new String();
     String type = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleGetHash(?, ?)");
       callstmt.setString(1, moduleId);
@@ -1445,8 +1409,6 @@ public class Getter {
         type = "lessons";
       }
       output = type + "/" + modules.getString(1) + ".jsp";
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Module Hash Retrieval: " + e.toString());
       log.error("moduleID = " + moduleId);
@@ -1466,8 +1428,7 @@ public class Getter {
   public static String getModuleCategory(String ApplicationRoot, String moduleId) {
     log.debug("*** Getter.getModuleResult ***");
     String theCategory = null;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       PreparedStatement prepstmt =
           conn.prepareStatement("SELECT moduleCategory FROM modules WHERE moduleId = ?");
@@ -1475,8 +1436,6 @@ public class Getter {
       ResultSet moduleFind = prepstmt.executeQuery();
       moduleFind.next();
       theCategory = moduleFind.getString(1);
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Module did not exist: " + e.toString());
       theCategory = null;
@@ -1493,8 +1452,7 @@ public class Getter {
   public static String getModuleHash(String applicationRoot, String moduleId) {
     log.debug("*** Getter.getModuleHash ***");
     String result = new String();
-    try {
-      Connection conn = Database.getCoreConnection(applicationRoot);
+    try (Connection conn = Database.getCoreConnection(applicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleGetHashById(?)");
       log.debug("Gathering moduleGetHash ResultSet");
@@ -1503,8 +1461,6 @@ public class Getter {
       log.debug("Opening Result Set from moduleGetHash");
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute moduleGetHash: " + e.toString());
       result = null;
@@ -1524,8 +1480,7 @@ public class Getter {
     log.debug("*** Getter.getModuleIdFromHash ***");
     log.debug("Getting ID from Hash: " + moduleHash);
     String result = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleGetIdFromHash(?)");
       log.debug("Gathering moduleGetIdFromHash ResultSet");
@@ -1534,8 +1489,6 @@ public class Getter {
       log.debug("Opening Result Set from moduleGetIdFromHash");
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
       result = null;
@@ -1554,8 +1507,7 @@ public class Getter {
   public static boolean getModuleKeyType(String ApplicationRoot, String moduleId) {
     log.debug("*** Getter.getModuleKeyType ***");
     boolean theKeyType = true;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       PreparedStatement prepstmt =
           conn.prepareStatement("SELECT hardcodedKey FROM modules WHERE moduleId = ?");
@@ -1568,8 +1520,6 @@ public class Getter {
       } else {
         log.debug("Module has user specific Key");
       }
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Module did not exist: " + e.toString());
       theKeyType = true;
@@ -1588,8 +1538,7 @@ public class Getter {
   public static String getModuleNameLocaleKey(String applicationRoot, String moduleId) {
     log.debug("*** Getter.getModuleNameLocaleKey ***");
     String result = new String();
-    try {
-      Connection conn = Database.getCoreConnection(applicationRoot);
+    try (Connection conn = Database.getCoreConnection(applicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleGetNameLocale(?)");
       log.debug("Gathering moduleGetNameLocale ResultSet");
@@ -1598,8 +1547,6 @@ public class Getter {
       log.debug("Opening Result Set from moduleGetNameLocale");
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute moduleGetNameLocale: " + e.toString());
       result = null;
@@ -1616,8 +1563,7 @@ public class Getter {
   public static String getModuleResult(String ApplicationRoot, String moduleId) {
     log.debug("*** Getter.getModuleResult ***");
     String moduleFound = null;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleGetResult(?)");
       log.debug("Gathering moduleGetResult ResultSet");
@@ -1627,8 +1573,6 @@ public class Getter {
       moduleFind.next();
       log.debug("Module " + moduleFind.getString(1) + " Found");
       moduleFound = moduleFind.getString(2);
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Module did not exist: " + e.toString());
       moduleFound = null;
@@ -1647,8 +1591,7 @@ public class Getter {
   public static String getModuleResultFromHash(String ApplicationRoot, String moduleHash) {
     log.debug("*** Getter.getModuleResultFromHash ***");
     String result = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("hash '" + moduleHash + "'");
       CallableStatement callstmt = conn.prepareCall("call moduleGetResultFromHash(?)");
@@ -1658,8 +1601,6 @@ public class Getter {
       log.debug("Opening Result Set from moduleGetResultFromHash");
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
       result = null;
@@ -1678,8 +1619,7 @@ public class Getter {
   public static String getModulesInOptionTags(String ApplicationRoot) {
     log.debug("*** Getter.getModulesInOptionTags ***");
     String output = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       PreparedStatement callstmt =
           conn.prepareStatement(
@@ -1697,8 +1637,6 @@ public class Getter {
                 + Encode.forHtml(modules.getString(2))
                 + "</option>\n";
       }
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Challenge Retrieval: " + e.toString());
     }
@@ -1716,8 +1654,7 @@ public class Getter {
   public static String getModulesInOptionTagsCTF(String ApplicationRoot) {
     log.debug("*** Getter.getModulesInOptionTags ***");
     String output = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       PreparedStatement callstmt =
           conn.prepareStatement(
@@ -1735,8 +1672,6 @@ public class Getter {
                 + Encode.forHtml(modules.getString(2))
                 + "</option>\n";
       }
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Challenge Retrieval: " + e.toString());
     }
@@ -1757,8 +1692,7 @@ public class Getter {
     String[] result = new String[2];
     // Getting Translations
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.cheatsheets.solutions", lang);
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call cheatSheetGetSolution(?)");
       log.debug("Gathering cheatSheetGetSolution ResultSet");
@@ -1768,8 +1702,6 @@ public class Getter {
       resultSet.next();
       result[0] = resultSet.getString(1);
       result[1] = bundle.getString(resultSet.getString(2));
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
       result = null;
@@ -1791,8 +1723,7 @@ public class Getter {
     String openModules = new String();
     String closedModules = new String();
     String output = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       // Get the modules
       CallableStatement callstmt = conn.prepareCall("call moduleAllStatus()");
@@ -1825,8 +1756,6 @@ public class Getter {
               + "</select></td>\n"
               + "</tr>\n";
       log.debug("Module Status Menu returned");
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Module Status Menu: " + e.toString());
     }
@@ -1844,8 +1773,7 @@ public class Getter {
     log.debug("*** Getter.getOpenCloseCategoryMenu ***");
     String theModules = new String();
     String output = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       // Get the modules
       PreparedStatement prestmt =
@@ -1867,8 +1795,6 @@ public class Getter {
               + theModules
               + "</select>\n";
       log.debug("Module Category Menu returned");
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Module Status Menu: " + e.toString());
     }
@@ -1927,8 +1853,7 @@ public class Getter {
     log.debug("*** Getter.getProgress ***");
 
     String result = new String();
-    try {
-      Connection conn = Database.getCoreConnection(applicationRoot);
+    try (Connection conn = Database.getCoreConnection(applicationRoot)) {
 
       log.debug("Preparing userProgress call");
       CallableStatement callstmnt = conn.prepareCall("call userProgress(?)");
@@ -1961,8 +1886,6 @@ public class Getter {
         result = new String();
       }
 
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("getProgress Failure: " + e.toString());
       result = null;
@@ -1984,8 +1907,7 @@ public class Getter {
     log.debug("*** Getter.getProgressJSON ***");
 
     String result = new String();
-    try {
-      Connection conn = Database.getCoreConnection(applicationRoot);
+    try (Connection conn = Database.getCoreConnection(applicationRoot)) {
 
       log.debug("Preparing userProgress call");
       // Returns User's: Name, # of Completed modules and Score
@@ -2016,8 +1938,6 @@ public class Getter {
       } else {
         result = new String();
       }
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("getProgressJSON Failure: " + e.toString());
       result = null;
@@ -2065,8 +1985,7 @@ public class Getter {
     // Getting Translations
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", lang);
     ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       String listEntry = new String();
       // Get the modules
@@ -2187,8 +2106,6 @@ public class Getter {
         levelMasterList += "</ul>";
         log.debug("Tournament List returned");
       }
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Tournament List Retrieval: " + e.toString());
     }
@@ -2208,73 +2125,72 @@ public class Getter {
     log.debug("*** Getter.getModulesJson ***");
     JSONArray jsonOutput = new JSONArray();
     new String();
-    Connection conn;
-    try {
-      conn = Database.getCoreConnection();
+    try (Connection conn = Database.getCoreConnection()) {
+      ResourceBundle.getBundle("i18n.text", locale);
+      ResourceBundle levelNames =
+          ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
+      try {
+        JSONObject jsonSection = new JSONObject();
+        JSONArray jsonSectionModules = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        jsonSection.put("levelMode", floor);
+        jsonOutput.put(jsonSection);
+        jsonSection = new JSONObject();
+
+        // Get the modules
+        CallableStatement callstmt = conn.prepareCall("call getMyModules(?)");
+        callstmt.setString(1, userId);
+        log.debug("Gathering getMyModules ResultSet for user " + userId);
+        ResultSet levels = callstmt.executeQuery();
+        boolean thisModuleIsOpen =
+            true; // If Incremental Mode is enabled, after all the modules that have been
+        // completed have been added to the JSON Array the next level will be
+        // labeled as open and the rest as closed
+        while (levels.next()) {
+          jsonObject = new JSONObject();
+          boolean moduleCompleted = levels.getString(4) != null;
+          jsonObject.put("moduleCompleted", moduleCompleted);
+          jsonObject.put("moduleId", levels.getString(3));
+          jsonObject.put("moduleType", levels.getString(5));
+          jsonObject.put("moduleName", levelNames.getString(levels.getString(1)));
+          jsonObject.put("moduleCategory", levelNames.getString("category." + levels.getString(2)));
+          jsonObject.put(
+              "difficultyCategory", getTounnamentSectionFromRankNumber(levels.getInt(7)));
+          jsonObject.put("moduleScore", levels.getString(6));
+          jsonObject.put("moduleRank", levels.getInt(7));
+          jsonObject.put("scoredPoints", levels.getString(8)); // Could be null
+          jsonObject.put("medalEarned", levels.getString(9)); // Could be null
+          if (ModulePlan.isIncrementalFloor()) {
+            boolean moduleOpen;
+            if (moduleCompleted
+                || (!moduleCompleted && thisModuleIsOpen)) // If its completed or if this is the
+            // first not completed
+            {
+              moduleOpen = true;
+              if (!moduleCompleted && thisModuleIsOpen) {
+                log.debug(
+                    levelNames.getString(levels.getString(1))
+                        + " is the Next Module for user "
+                        + userId);
+                thisModuleIsOpen = false; // Stop this from being set again
+              }
+            } else {
+              moduleOpen = false;
+            }
+            jsonObject.put("moduleOpen", moduleOpen);
+          }
+          jsonSectionModules.put(jsonObject);
+        }
+        jsonSection.put("modules", jsonSectionModules);
+        jsonOutput.put(jsonSection);
+      } catch (Exception e) {
+        log.error("Module List Retrieval: " + e.toString());
+      }
+      return jsonOutput;
     } catch (SQLException | IOException e) {
       log.error("Could not connect to core database: " + e.toString());
       throw new RuntimeException(e);
     }
-    ResourceBundle.getBundle("i18n.text", locale);
-    ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
-    try {
-      JSONObject jsonSection = new JSONObject();
-      JSONArray jsonSectionModules = new JSONArray();
-      JSONObject jsonObject = new JSONObject();
-      jsonSection.put("levelMode", floor);
-      jsonOutput.put(jsonSection);
-      jsonSection = new JSONObject();
-
-      // Get the modules
-      CallableStatement callstmt = conn.prepareCall("call getMyModules(?)");
-      callstmt.setString(1, userId);
-      log.debug("Gathering getMyModules ResultSet for user " + userId);
-      ResultSet levels = callstmt.executeQuery();
-      boolean thisModuleIsOpen =
-          true; // If Incremental Mode is enabled, after all the modules that have been
-      // completed have been added to the JSON Array the next level will be
-      // labeled as open and the rest as closed
-      while (levels.next()) {
-        jsonObject = new JSONObject();
-        boolean moduleCompleted = levels.getString(4) != null;
-        jsonObject.put("moduleCompleted", moduleCompleted);
-        jsonObject.put("moduleId", levels.getString(3));
-        jsonObject.put("moduleType", levels.getString(5));
-        jsonObject.put("moduleName", levelNames.getString(levels.getString(1)));
-        jsonObject.put("moduleCategory", levelNames.getString("category." + levels.getString(2)));
-        jsonObject.put("difficultyCategory", getTounnamentSectionFromRankNumber(levels.getInt(7)));
-        jsonObject.put("moduleScore", levels.getString(6));
-        jsonObject.put("moduleRank", levels.getInt(7));
-        jsonObject.put("scoredPoints", levels.getString(8)); // Could be null
-        jsonObject.put("medalEarned", levels.getString(9)); // Could be null
-        if (ModulePlan.isIncrementalFloor()) {
-          boolean moduleOpen;
-          if (moduleCompleted
-              || (!moduleCompleted && thisModuleIsOpen)) // If its completed or if this is the
-          // first not completed
-          {
-            moduleOpen = true;
-            if (!moduleCompleted && thisModuleIsOpen) {
-              log.debug(
-                  levelNames.getString(levels.getString(1))
-                      + " is the Next Module for user "
-                      + userId);
-              thisModuleIsOpen = false; // Stop this from being set again
-            }
-          } else {
-            moduleOpen = false;
-          }
-          jsonObject.put("moduleOpen", moduleOpen);
-        }
-        jsonSectionModules.put(jsonObject);
-      }
-      jsonSection.put("modules", jsonSectionModules);
-      jsonOutput.put(jsonSection);
-    } catch (Exception e) {
-      log.error("Module List Retrieval: " + e.toString());
-    }
-    Database.closeConnection(conn);
-    return jsonOutput;
   }
 
   /**
@@ -2286,8 +2202,7 @@ public class Getter {
     log.debug("*** Getter.getUserClass ***");
     String result = new String();
     userName = userName.toLowerCase();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call userClassId(?)");
       log.debug("Gathering userClassId ResultSet");
@@ -2297,8 +2212,6 @@ public class Getter {
       resultSet.next();
       result = resultSet.getString(1);
       log.debug("Found " + result);
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute userClassId: " + e.toString());
       result = new String();
@@ -2318,8 +2231,7 @@ public class Getter {
 
     userName = userName.toLowerCase();
 
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call userGetIdByName(?)");
       log.debug("Gathering userGetIdByName ResultSet");
@@ -2328,8 +2240,6 @@ public class Getter {
       log.debug("Opening Result Set from userGetIdByName");
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
       result = null;
@@ -2346,8 +2256,7 @@ public class Getter {
   public static String getUserName(String ApplicationRoot, String userId) {
     log.debug("*** Getter.getUserName ***");
     String result = new String();
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call userGetNameById(?)");
       log.debug("Gathering userGetNameById ResultSet");
@@ -2356,8 +2265,6 @@ public class Getter {
       log.debug("Opening Result Set from userGetNameById");
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
       result = null;
@@ -2382,8 +2289,7 @@ public class Getter {
 
     boolean result = false;
 
-    try {
-      Connection conn = Database.getCoreConnection(applicationRoot);
+    try (Connection conn = Database.getCoreConnection(applicationRoot)) {
 
       log.debug("Preparing csrfLevelComplete call");
       PreparedStatement callstmnt = conn.prepareCall("call csrfLevelComplete(?, ?)");
@@ -2398,8 +2304,6 @@ public class Getter {
       if (result) {
         log.debug("CSRF Level is complete");
       }
-      Database.closeConnection(conn);
-
     } catch (SQLException e) {
       log.error("csrfLevelComplete Failure: " + e.toString());
       result = false;
@@ -2411,8 +2315,7 @@ public class Getter {
   public static boolean isModuleOpen(String ApplicationRoot, String moduleId) {
     log.debug("*** Getter.isModuleOpen ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       // Get the modules
       PreparedStatement prepStmt =
@@ -2425,8 +2328,6 @@ public class Getter {
         }
       }
       rs.close();
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("isModuleOpen Error: " + e.toString());
     }
@@ -2467,8 +2368,7 @@ public class Getter {
     log.debug("*** Getter.findAdminById ***");
     boolean userFound = false;
     // Get connection
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call adminFindById(?)");
       log.debug("Gathering adminFindById ResultSet");
@@ -2479,8 +2379,6 @@ public class Getter {
       log.debug(
           "Admin Found: " + userFind.getString(1)); // This line will not execute if admin not found
       userFound = true;
-      Database.closeConnection(conn);
-
     } catch (Exception e) {
       log.error("Admin does not exist: " + e.toString());
       userFound = false;
@@ -2493,355 +2391,355 @@ public class Getter {
     boolean adminCheatStatus = false;
     log.debug("*** Getter.getAdminCheatStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting admin cheat setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting admin cheat setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "adminCheatsEnabled");
+      callstmt.setString(1, "adminCheatsEnabled");
 
-    ResultSet cheatResult = callstmt.executeQuery();
+      ResultSet cheatResult = callstmt.executeQuery();
 
-    cheatResult.next();
+      cheatResult.next();
 
-    adminCheatStatus = cheatResult.getBoolean(1);
+      adminCheatStatus = cheatResult.getBoolean(1);
 
-    log.debug("Value found: " + adminCheatStatus);
+      log.debug("Value found: " + adminCheatStatus);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getAdminCheatStatus ***");
-    return adminCheatStatus;
+      log.debug("*** END getAdminCheatStatus ***");
+      return adminCheatStatus;
+    }
   }
 
   public static boolean getPlayerCheatStatus(String ApplicationRoot) throws SQLException {
     boolean getPlayerCheatStatus = false;
     log.debug("*** Getter.getPlayerCheatStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting player cheat setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting player cheat setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "playerCheatsEnabled");
+      callstmt.setString(1, "playerCheatsEnabled");
 
-    ResultSet cheatResult = callstmt.executeQuery();
+      ResultSet cheatResult = callstmt.executeQuery();
 
-    cheatResult.next();
+      cheatResult.next();
 
-    getPlayerCheatStatus = cheatResult.getBoolean(1);
+      getPlayerCheatStatus = cheatResult.getBoolean(1);
 
-    log.debug("Value found: " + getPlayerCheatStatus);
+      log.debug("Value found: " + getPlayerCheatStatus);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getPlayerCheatStatus ***");
-    return getPlayerCheatStatus;
+      log.debug("*** END getPlayerCheatStatus ***");
+      return getPlayerCheatStatus;
+    }
   }
 
   public static String getModuleLayout(String ApplicationRoot) throws SQLException {
     String theModuleLayout = "";
     log.debug("*** Getter.getModuleLayout ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting module layout setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting module layout setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "moduleLayout");
+      callstmt.setString(1, "moduleLayout");
 
-    ResultSet layoutResult = callstmt.executeQuery();
+      ResultSet layoutResult = callstmt.executeQuery();
 
-    layoutResult.next();
+      layoutResult.next();
 
-    theModuleLayout = layoutResult.getString(1);
+      theModuleLayout = layoutResult.getString(1);
 
-    log.debug("Value found: " + theModuleLayout);
+      log.debug("Value found: " + theModuleLayout);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getModuleLayout ***");
-    return theModuleLayout;
+      log.debug("*** END getModuleLayout ***");
+      return theModuleLayout;
+    }
   }
 
   public static boolean getFeedbackStatus(String ApplicationRoot) throws SQLException {
     boolean theFeedbackStatus = false;
     log.debug("*** Getter.getFeedbackStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting feedback status setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting feedback status setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "enableFeedback");
+      callstmt.setString(1, "enableFeedback");
 
-    ResultSet feedbackResult = callstmt.executeQuery();
+      ResultSet feedbackResult = callstmt.executeQuery();
 
-    feedbackResult.next();
+      feedbackResult.next();
 
-    theFeedbackStatus = feedbackResult.getBoolean(1);
+      theFeedbackStatus = feedbackResult.getBoolean(1);
 
-    log.debug("Value found: " + theFeedbackStatus);
+      log.debug("Value found: " + theFeedbackStatus);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getFeedbackStatus ***");
-    return theFeedbackStatus;
+      log.debug("*** END getFeedbackStatus ***");
+      return theFeedbackStatus;
+    }
   }
 
   public static boolean getRegistrationStatus(String ApplicationRoot) throws SQLException {
     boolean theRegistrationStatus = false;
     log.debug("*** Getter.getRegistrationStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting registration status setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting registration status setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "openRegistration");
+      callstmt.setString(1, "openRegistration");
 
-    ResultSet registrationResult = callstmt.executeQuery();
+      ResultSet registrationResult = callstmt.executeQuery();
 
-    registrationResult.next();
+      registrationResult.next();
 
-    theRegistrationStatus = registrationResult.getBoolean(1);
+      theRegistrationStatus = registrationResult.getBoolean(1);
 
-    log.debug("Value found: " + theRegistrationStatus);
+      log.debug("Value found: " + theRegistrationStatus);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getRegistrationStatus ***");
-    return theRegistrationStatus;
+      log.debug("*** END getRegistrationStatus ***");
+      return theRegistrationStatus;
+    }
   }
 
   public static String getScoreboardStatus(String ApplicationRoot) throws SQLException {
     String theScoreboardStatus = "";
     log.debug("*** Getter.getScoreboardStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Setting scoreboard status setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Setting scoreboard status setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "scoreboardStatus");
+      callstmt.setString(1, "scoreboardStatus");
 
-    ResultSet scoreboardResult = callstmt.executeQuery();
+      ResultSet scoreboardResult = callstmt.executeQuery();
 
-    scoreboardResult.next();
+      scoreboardResult.next();
 
-    theScoreboardStatus = scoreboardResult.getString(1);
+      theScoreboardStatus = scoreboardResult.getString(1);
 
-    log.debug("Value found: " + theScoreboardStatus);
+      log.debug("Value found: " + theScoreboardStatus);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getScoreboardStatus ***");
-    return theScoreboardStatus;
+      log.debug("*** END getScoreboardStatus ***");
+      return theScoreboardStatus;
+    }
   }
 
   public static String getScoreboardClass(String ApplicationRoot) throws SQLException {
     String theScoreboardClass = "";
     log.debug("*** Getter.getScoreboardClass ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting scoreboard class setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting scoreboard class setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "scoreboardClass");
+      callstmt.setString(1, "scoreboardClass");
 
-    ResultSet scoreboardResult = callstmt.executeQuery();
+      ResultSet scoreboardResult = callstmt.executeQuery();
 
-    scoreboardResult.next();
+      scoreboardResult.next();
 
-    theScoreboardClass = scoreboardResult.getString(1);
+      theScoreboardClass = scoreboardResult.getString(1);
 
-    log.debug("Value found: " + theScoreboardClass);
+      log.debug("Value found: " + theScoreboardClass);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getScoreboardClass ***");
-    return theScoreboardClass;
+      log.debug("*** END getScoreboardClass ***");
+      return theScoreboardClass;
+    }
   }
 
   public static Boolean getStartTimeStatus(String ApplicationRoot) throws SQLException {
     Boolean theStartTimeStatus = null;
     log.debug("*** Getter.getStartTimeStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting start time setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting start time setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "hasStartTime");
+      callstmt.setString(1, "hasStartTime");
 
-    ResultSet timestampResult = callstmt.executeQuery();
+      ResultSet timestampResult = callstmt.executeQuery();
 
-    timestampResult.next();
+      timestampResult.next();
 
-    theStartTimeStatus = timestampResult.getBoolean(1);
+      theStartTimeStatus = timestampResult.getBoolean(1);
 
-    log.debug("Value found: " + theStartTimeStatus);
+      log.debug("Value found: " + theStartTimeStatus);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getStartTimeStatus ***");
-    return theStartTimeStatus;
+      log.debug("*** END getStartTimeStatus ***");
+      return theStartTimeStatus;
+    }
   }
 
   public static LocalDateTime getStartTime(String ApplicationRoot) throws SQLException {
     LocalDateTime theStartTimeStatus = null;
     log.debug("*** Getter.getStartTimeStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting start time");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting start time");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "startTime");
+      callstmt.setString(1, "startTime");
 
-    ResultSet timestampResult = callstmt.executeQuery();
+      ResultSet timestampResult = callstmt.executeQuery();
 
-    timestampResult.next();
+      timestampResult.next();
 
-    String dateTimeString = timestampResult.getString(1);
+      String dateTimeString = timestampResult.getString(1);
 
-    log.debug("Value found: " + dateTimeString);
+      log.debug("Value found: " + dateTimeString);
 
-    theStartTimeStatus = LocalDateTime.parse(dateTimeString);
+      theStartTimeStatus = LocalDateTime.parse(dateTimeString);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getStartTime ***");
-    return theStartTimeStatus;
+      log.debug("*** END getStartTime ***");
+      return theStartTimeStatus;
+    }
   }
 
   public static Boolean getLockTimeStatus(String ApplicationRoot) throws SQLException {
     Boolean theLockTimeStatus = null;
     log.debug("*** Getter.getLockTimeStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting lock time setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting lock time setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "hasLockTime");
+      callstmt.setString(1, "hasLockTime");
 
-    ResultSet timestampResult = callstmt.executeQuery();
+      ResultSet timestampResult = callstmt.executeQuery();
 
-    timestampResult.next();
+      timestampResult.next();
 
-    theLockTimeStatus = timestampResult.getBoolean(1);
+      theLockTimeStatus = timestampResult.getBoolean(1);
 
-    log.debug("Value found: " + theLockTimeStatus);
+      log.debug("Value found: " + theLockTimeStatus);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getLockTimeStatus ***");
-    return theLockTimeStatus;
+      log.debug("*** END getLockTimeStatus ***");
+      return theLockTimeStatus;
+    }
   }
 
   public static LocalDateTime getLockTime(String ApplicationRoot) throws SQLException {
     LocalDateTime theLockTimeStatus = null;
     log.debug("*** Getter.getLockTimeStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting lock time");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting lock time");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "lockTime");
+      callstmt.setString(1, "lockTime");
 
-    ResultSet timestampResult = callstmt.executeQuery();
+      ResultSet timestampResult = callstmt.executeQuery();
 
-    timestampResult.next();
+      timestampResult.next();
 
-    String dateTimeString = timestampResult.getString(1);
+      String dateTimeString = timestampResult.getString(1);
 
-    log.debug("Value found: " + dateTimeString);
+      log.debug("Value found: " + dateTimeString);
 
-    theLockTimeStatus = LocalDateTime.parse(dateTimeString);
+      theLockTimeStatus = LocalDateTime.parse(dateTimeString);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getLockTime ***");
-    return theLockTimeStatus;
+      log.debug("*** END getLockTime ***");
+      return theLockTimeStatus;
+    }
   }
 
   public static Boolean getEndTimeStatus(String ApplicationRoot) throws SQLException {
     Boolean theEndTimeStatus = null;
     log.debug("*** Getter.getEndTimeStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting end time setting");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting end time setting");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "hasEndTime");
+      callstmt.setString(1, "hasEndTime");
 
-    ResultSet timestampResult = callstmt.executeQuery();
+      ResultSet timestampResult = callstmt.executeQuery();
 
-    timestampResult.next();
+      timestampResult.next();
 
-    theEndTimeStatus = timestampResult.getBoolean(1);
+      theEndTimeStatus = timestampResult.getBoolean(1);
 
-    log.debug("Value found: " + theEndTimeStatus);
+      log.debug("Value found: " + theEndTimeStatus);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getEndTimeStatus ***");
-    return theEndTimeStatus;
+      log.debug("*** END getEndTimeStatus ***");
+      return theEndTimeStatus;
+    }
   }
 
   public static LocalDateTime getEndTime(String ApplicationRoot) throws SQLException {
     LocalDateTime theEndTimeStatus = null;
     log.debug("*** Getter.getEndTimeStatus ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting end time");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting end time");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "endTime");
+      callstmt.setString(1, "endTime");
 
-    ResultSet timestampResult = callstmt.executeQuery();
+      ResultSet timestampResult = callstmt.executeQuery();
 
-    timestampResult.next();
+      timestampResult.next();
 
-    String dateTimeString = timestampResult.getString(1);
+      String dateTimeString = timestampResult.getString(1);
 
-    log.debug("Value found: " + dateTimeString);
+      log.debug("Value found: " + dateTimeString);
 
-    theEndTimeStatus = LocalDateTime.parse(dateTimeString);
+      theEndTimeStatus = LocalDateTime.parse(dateTimeString);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getEndTime ***");
-    return theEndTimeStatus;
+      log.debug("*** END getEndTime ***");
+      return theEndTimeStatus;
+    }
   }
 
   public static String getDefaultClass(String ApplicationRoot) throws SQLException {
     String theDefaultClass = null;
     log.debug("*** Getter.getDefaultClass ***");
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-    log.debug("Getting default class");
-    PreparedStatement callstmt =
-        conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
+      log.debug("Getting default class");
+      PreparedStatement callstmt =
+          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
 
-    callstmt.setString(1, "defaultClass");
+      callstmt.setString(1, "defaultClass");
 
-    ResultSet classResult = callstmt.executeQuery();
+      ResultSet classResult = callstmt.executeQuery();
 
-    classResult.next();
+      classResult.next();
 
-    theDefaultClass = classResult.getString(1);
+      theDefaultClass = classResult.getString(1);
 
-    log.debug("Value found: " + theDefaultClass);
+      log.debug("Value found: " + theDefaultClass);
 
-    Database.closeConnection(conn);
-    log.debug("*** END getDefaultClass ***");
-    return theDefaultClass;
+      log.debug("*** END getDefaultClass ***");
+      return theDefaultClass;
+    }
   }
 }
