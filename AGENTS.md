@@ -41,6 +41,41 @@ mvn verify -DskipUTs=true -DmongoDocker -B   # integration tests (requires MySQL
 
 The `-Pdocker` profile must run before `docker compose build` — it generates SQL scripts, MongoDB init scripts, and TLS keystores.
 
+### Running tests locally
+
+**Always run tests locally before pushing to remote.**
+
+Integration tests require a running database. For quick local test runs, start a plain MariaDB container:
+
+```bash
+docker run -d --name secshep_test_db \
+  -e MYSQL_ROOT_PASSWORD=CowSaysMoo \
+  -e MYSQL_DATABASE=core \
+  -p 3306:3306 \
+  mariadb:10.6.11
+```
+
+The docker-compose `db` service is **not suitable for quick test runs** — it requires `mvn -Pdocker validate` first to generate SQL init scripts, and those scripts run on first container startup to create all challenge schemas.
+
+### Test credentials
+
+Tests read DB connection details from `.env` via dotenv. The key values:
+
+- `TEST_MYSQL_HOST` — default `127.0.0.1`
+- `TEST_MYSQL_PORT` — default `3306`
+- `TEST_MYSQL_PASSWORD` — must match the password on the running database
+
+The `.env` file ships with `TEST_MYSQL_PASSWORD=password` (used in CI where a separate MySQL service is configured with that password). When running locally against the container above (password `CowSaysMoo`), either:
+
+```bash
+# Option 1: override at test time
+TEST_MYSQL_PASSWORD=CowSaysMoo mvn test -B
+
+# Option 2: update .env temporarily
+```
+
+Do not commit `.env` changes that break CI.
+
 ## Git workflow
 
 - Never commit directly to `master` or `dev`
@@ -64,6 +99,10 @@ The `-Pdocker` profile must run before `docker compose build` — it generates S
 - Password hashing uses Argon2 (requires `libargon2` native library)
 
 ## Agent behaviors
+
+### Always run tests before pushing
+
+Run `mvn test -B` locally before pushing any code changes. If integration tests are relevant to your changes, run those too. Do not rely solely on CI to catch failures.
 
 ### Bug fixes must include tests
 
