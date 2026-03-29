@@ -186,6 +186,26 @@ CONTAINER_MONGO=secshep_mongo
 
 The Tomcat container connects to databases using container names (e.g., `secshep_mariadb`) as hostnames within the Docker network.
 
+### First-Time Setup
+
+After starting the stack with `docker compose up`, the app will redirect to `https://localhost/setup.jsp` for initial database configuration.
+
+1. **Get the authentication token** from the Tomcat container:
+   ```bash
+   docker exec secshep_tomcat cat /usr/local/tomcat/conf/SecurityShepherd.auth
+   ```
+
+2. **Fill in the setup form** at `https://localhost/setup.jsp`:
+   - **Hostname**: `secshep_mariadb` (the Docker container name, not `localhost`)
+   - **Port**: `3306`
+   - **DB Username**: `root`
+   - **DB Password**: the value of `DB_PASS` from your `.env` file (default: `CowSaysMoo`)
+   - **Override Databases**: check this on first setup to initialize all schemas
+
+3. **Submit** with the authentication token from step 1
+
+> **Note:** The TLS certificate is self-signed. Your browser will show a security warning — accept it to proceed.
+
 ## Troubleshooting
 
 ### Pool Exhaustion

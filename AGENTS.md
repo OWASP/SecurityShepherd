@@ -84,6 +84,24 @@ TEST_MYSQL_PASSWORD=CowSaysMoo mvn test -B
 
 Do not commit `.env` changes that break CI.
 
+### First-time app setup
+
+After `docker compose up`, the app redirects to `https://localhost/setup.jsp`. You must:
+
+1. Get the auth token from inside the Tomcat container:
+   ```bash
+   docker exec secshep_tomcat cat /usr/local/tomcat/conf/SecurityShepherd.auth
+   ```
+2. Fill in the database details on the setup form:
+   - **Hostname**: `secshep_mariadb` (the Docker container name, not `localhost`)
+   - **Port**: `3306`
+   - **DB Username**: `root`
+   - **DB Password**: value of `DB_PASS` from `.env` (default `CowSaysMoo`)
+   - **Override Databases**: check this on first setup
+3. Submit with the auth token
+
+The TLS certificate is self-signed — accept the browser warning or use `-k` with curl.
+
 ## Git workflow
 
 - Never commit directly to `master` or `dev`
