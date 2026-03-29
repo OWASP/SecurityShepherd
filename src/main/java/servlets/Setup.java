@@ -395,11 +395,12 @@ public class Setup extends HttpServlet {
         }
       }
 
-      if (!installed) {
+      if (installed) {
+        installedCached = true;
+      } else {
         generateAuth();
       }
 
-      installedCached = installed;
       return installed;
     }
   }
