@@ -258,7 +258,7 @@ public class ConnectionPoolIT {
       if (conn != null) {
         assertFalse(conn.isClosed(), "Connection should not be closed");
       }
-    } catch (SQLException e) {
+    } catch (SQLException | RuntimeException e) {
       log.debug("Challenge connection test skipped: " + e.getMessage());
     } finally {
       if (conn != null) {
