@@ -117,6 +117,18 @@ public class ConnectionPool {
     config.setPassword(password);
     config.setPoolName(poolName);
 
+    String driverClassName = prop.getProperty("DriverType");
+    if (driverClassName == null || driverClassName.isEmpty()) {
+      if (jdbcUrl.startsWith("jdbc:mariadb:")) {
+        driverClassName = "org.mariadb.jdbc.Driver";
+      } else if (jdbcUrl.startsWith("jdbc:mysql:")) {
+        driverClassName = "com.mysql.cj.jdbc.Driver";
+      } else {
+        throw new IllegalArgumentException("Unsupported JDBC URL: " + jdbcUrl);
+      }
+    }
+    config.setDriverClassName(driverClassName);
+
     // Pool size configuration
     config.setMaximumPoolSize(getIntProperty(prop, "pool.maximumPoolSize", DEFAULT_MAX_POOL_SIZE));
     config.setMinimumIdle(getIntProperty(prop, "pool.minimumIdle", DEFAULT_MIN_IDLE));

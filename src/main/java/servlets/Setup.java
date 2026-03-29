@@ -79,14 +79,14 @@ public class Setup extends HttpServlet {
     if (hasDBFile) {
       // Db auth file exists, try to load from it
 
-      if (!dbHost.isEmpty() || !dbPort.isEmpty()) {
-        // One of db host and db port are missing, we can't handle this situation!
+      if (dbHost.isEmpty() != dbPort.isEmpty()) {
+        // Only one of db host and db port provided, we need both or neither
 
         htmlOutput += "If you override db host and db port, both must be entered!";
         validateInput = false;
         connectionURL = "";
-      } else if (dbHost.isEmpty() || dbPort.isEmpty()) {
-        // Both db host and db port are missing, good, load from props file instead
+      } else if (dbHost.isEmpty() && dbPort.isEmpty()) {
+        // Both db host and db port are missing, load from props file instead
         connectionURL = mysql_props.getProperty("databaseConnectionURL");
         String databaseSchema = mysql_props.getProperty("databaseSchema");
 
@@ -351,6 +351,19 @@ public class Setup extends HttpServlet {
     out.write(htmlOutput);
 
     out.close();
+  }
+
+  /**
+   * Validates that db host and port are either both provided or both empty. Returns null if valid,
+   * or an error message if invalid.
+   */
+  static String validateHostPort(String dbHost, String dbPort) {
+    if (dbHost == null) dbHost = "";
+    if (dbPort == null) dbPort = "";
+    if (dbHost.isEmpty() != dbPort.isEmpty()) {
+      return "If you override db host and db port, both must be entered!";
+    }
+    return null;
   }
 
   public static boolean isInstalled() {
