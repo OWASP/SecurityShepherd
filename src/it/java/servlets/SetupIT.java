@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 import dbProcs.ConnectionPool;
 import dbProcs.Constants;
@@ -159,20 +160,26 @@ public class SetupIT {
     TestProperties.createMysqlResource();
     TestProperties.executeSql(log);
 
+    boolean poolReady = false;
     try {
       ConnectionPool.initialize();
+      poolReady = ConnectionPool.isInitialized();
     } catch (Exception e) {
       log.warn("Pool init issue: " + e.getMessage());
     }
+    assumeTrue(poolReady);
 
-    Setup.resetInstalledCache();
+    try {
+      Setup.resetInstalledCache();
 
-    boolean first = Setup.isInstalled();
-    boolean second = Setup.isInstalled();
+      boolean first = Setup.isInstalled();
+      boolean second = Setup.isInstalled();
 
-    assertEquals(first, second);
-
-    ConnectionPool.shutdown();
+      assertTrue("isInstalled should return true with a running database", first);
+      assertEquals(first, second);
+    } finally {
+      ConnectionPool.shutdown();
+    }
   }
 
   @Test
@@ -181,20 +188,26 @@ public class SetupIT {
     TestProperties.createMysqlResource();
     TestProperties.executeSql(log);
 
+    boolean poolReady = false;
     try {
       ConnectionPool.initialize();
+      poolReady = ConnectionPool.isInitialized();
     } catch (Exception e) {
       log.warn("Pool init issue: " + e.getMessage());
     }
+    assumeTrue(poolReady);
 
-    Setup.resetInstalledCache();
-    boolean first = Setup.isInstalled();
+    try {
+      Setup.resetInstalledCache();
+      boolean first = Setup.isInstalled();
 
-    Setup.resetInstalledCache();
-    boolean second = Setup.isInstalled();
+      Setup.resetInstalledCache();
+      boolean second = Setup.isInstalled();
 
-    assertEquals(first, second);
-
-    ConnectionPool.shutdown();
+      assertTrue("isInstalled should return true with a running database", first);
+      assertEquals(first, second);
+    } finally {
+      ConnectionPool.shutdown();
+    }
   }
 }

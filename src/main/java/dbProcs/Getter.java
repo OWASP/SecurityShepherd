@@ -216,9 +216,6 @@ public class Getter {
               log.debug("userBadLoginReset executed!");
             }
           }
-          // User has logged in, or a Authentication Bypass was detected... You never
-          // know! Better safe than sorry
-          // TODO: will this close the db connection if we return here?
           return result;
         } else {
           // Hash did not match
