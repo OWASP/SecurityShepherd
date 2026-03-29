@@ -2,26 +2,30 @@ name: Build and Test
 on:
   push:
     branches: [master, dev]
-    paths-ignore:
-      - '**.md'
-      - '.github/ISSUE_TEMPLATE'
-      - '.gitignore'
-      - 'provisioning'
-      - '.sonarcloud.properties'
-      - 'LICENSE'
-      - 'Vagrantfile'
   pull_request:
     branches: [master, dev]
-    paths-ignore:
-      - '**.md'
-      - '.github/ISSUE_TEMPLATE'
-      - '.gitignore'
-      - 'provisioning'
-      - '.sonarcloud.properties'
-      - 'LICENSE'
-      - 'Vagrantfile'
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      src: ${{ steps.filter.outputs.src }}
+      java: ${{ steps.filter.outputs.java }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 #v3.0.2
+        id: filter
+        with:
+          filters: |
+            java:
+              - 'src/**/*.java'
+            src:
+              - 'src/**'
+              - 'pom.xml'
+              - 'docker-compose.yml'
+              - 'docker/**'
+              - '.env'
+
   dependency-review:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -32,6 +36,8 @@ jobs:
           fail-on-severity: critical
 
   lint-java:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.java == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +50,8 @@ jobs:
           args: "--set-exit-if-changed"
 
   build:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.src == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,6 +66,8 @@ jobs:
         run: docker compose build
 
   unit-tests:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.src == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -70,6 +80,8 @@ jobs:
         run: mvn test -B -e
 
   integration-tests:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.src == 'true'
     runs-on: ubuntu-latest
     services:
       mysql:
