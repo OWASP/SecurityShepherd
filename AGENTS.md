@@ -86,21 +86,32 @@ Do not commit `.env` changes that break CI.
 
 ### First-time app setup
 
-After `docker compose up`, the app redirects to `https://localhost/setup.jsp`. You must:
+After `docker compose up`, the app redirects to `https://localhost/setup.jsp` for initial database configuration. **Ask the user before performing setup** — they may prefer to configure it themselves via the browser. If they ask you to do it:
 
-1. Get the auth token from inside the Tomcat container:
+1. Get the auth token:
    ```bash
    docker exec secshep_tomcat cat /usr/local/tomcat/conf/SecurityShepherd.auth
    ```
-2. Fill in the database details on the setup form:
-   - **Hostname**: `secshep_mariadb` (the Docker container name, not `localhost`)
-   - **Port**: `3306`
-   - **DB Username**: `root`
-   - **DB Password**: value of `DB_PASS` from `.env` (default `CowSaysMoo`)
-   - **Override Databases**: check this on first setup
-3. Submit with the auth token
+2. Submit the setup via curl (the TLS cert is self-signed, use `-k`):
+   ```bash
+   curl -k -s -X POST https://localhost/setup \
+     -d "dbhost=secshep_mariadb" \
+     -d "dbport=3306" \
+     -d "dbuser=root" \
+     -d "dbpass=CowSaysMoo" \
+     -d "dboverride=override" \
+     -d "dbauth=<AUTH_TOKEN>" \
+     -d "mhost=secshep_mongo" \
+     -d "mport=27017"
+   ```
 
-The TLS certificate is self-signed — accept the browser warning or use `-k` with curl.
+The setup servlet parameter names (from `Setup.java`) are:
+- `dbhost`, `dbport`, `dbuser`, `dbpass` — MySQL/MariaDB connection
+- `dboverride` — set to `override` to reinitialize schemas
+- `dbauth` — the auth token (NOT `authToken`)
+- `mhost`, `mport` — MongoDB connection (required, even if not using mongo challenges)
+
+The hostname must be the **Docker container name** (e.g. `secshep_mariadb`), not `localhost`, since the Tomcat container connects over the Docker network.
 
 ## Git workflow
 
