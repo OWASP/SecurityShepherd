@@ -112,6 +112,7 @@ pool.poolName=SecurityShepherdPool
 | `pool.connectionTimeout` | 30000 | Maximum time (ms) to wait for a connection |
 | `pool.idleTimeout` | 600000 | Maximum time (ms) a connection can be idle |
 | `pool.maxLifetime` | 1800000 | Maximum lifetime (ms) of a connection |
+| `pool.leakDetectionThreshold` | 60000 | Logs a warning if a connection is held longer than this (ms). Set to 0 to disable |
 | `pool.poolName` | SecurityShepherdPool | Name for the pool (appears in logs) |
 
 ### MongoDB Configuration

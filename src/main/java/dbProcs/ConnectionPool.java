@@ -46,6 +46,7 @@ public class ConnectionPool {
   private static final long DEFAULT_CONNECTION_TIMEOUT = 30000; // 30 seconds
   private static final long DEFAULT_IDLE_TIMEOUT = 600000; // 10 minutes
   private static final long DEFAULT_MAX_LIFETIME = 1800000; // 30 minutes
+  private static final long DEFAULT_LEAK_DETECTION_THRESHOLD = 60000; // 60 seconds
 
   // Challenge pool configuration values (smaller footprint per schema)
   private static final int CHALLENGE_MAX_POOL_SIZE = 3;
@@ -144,6 +145,10 @@ public class ConnectionPool {
     config.setIdleTimeout(getLongProperty(prop, "pool.idleTimeout", DEFAULT_IDLE_TIMEOUT));
     config.setMaxLifetime(getLongProperty(prop, "pool.maxLifetime", DEFAULT_MAX_LIFETIME));
 
+    // Leak detection - logs a warning if a connection is held longer than this threshold
+    config.setLeakDetectionThreshold(
+        getLongProperty(prop, "pool.leakDetectionThreshold", DEFAULT_LEAK_DETECTION_THRESHOLD));
+
     // Connection validation
     config.setConnectionTestQuery("SELECT 1");
 
@@ -214,6 +219,10 @@ public class ConnectionPool {
         getLongProperty(prop, "pool.connectionTimeout", DEFAULT_CONNECTION_TIMEOUT));
     config.setIdleTimeout(idleTimeout);
     config.setMaxLifetime(getLongProperty(prop, "pool.maxLifetime", DEFAULT_MAX_LIFETIME));
+
+    // Leak detection - logs a warning if a connection is held longer than this threshold
+    config.setLeakDetectionThreshold(
+        getLongProperty(prop, "pool.leakDetectionThreshold", DEFAULT_LEAK_DETECTION_THRESHOLD));
 
     // Connection validation
     config.setConnectionTestQuery("SELECT 1");

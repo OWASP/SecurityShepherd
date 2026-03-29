@@ -32,3 +32,8 @@ pool.idleTimeout=600000
 # Maximum lifetime (ms) of a connection in the pool
 # Default: 1800000 (30 minutes)
 pool.maxLifetime=1800000
+
+# Leak detection threshold (ms) - logs a warning if a connection is held longer than this
+# Helps identify code that forgets to close connections
+# Default: 60000 (60 seconds), set to 0 to disable
+pool.leakDetectionThreshold=60000
