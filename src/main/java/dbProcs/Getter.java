@@ -110,7 +110,7 @@ public class Getter {
         if (userResult.next()) {
           log.debug(
               "User Found"); // User found if a row is in the database, this line will not work if
-                             // the
+          // the
           // result
           // set is empty
           userFound = true;
@@ -412,7 +412,7 @@ public class Getter {
           userFound = true;
           log.debug(
               "User Found"); // User found if a row is in the database, this line will not work if
-                             // the
+          // the
           // result
           // set is empty
         } else {
