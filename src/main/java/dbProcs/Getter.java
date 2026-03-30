@@ -85,8 +85,6 @@ public class Getter {
     Timestamp suspendedUntil;
     String loginType;
     boolean tempUsername;
-    boolean userFound = false;
-
     try (Connection conn = Database.getCoreConnection(ApplicationRoot);
         PreparedStatement prestmt =
             conn.prepareStatement(
@@ -106,7 +104,6 @@ public class Getter {
           suspendedUntil = userResult.getTimestamp(8);
           loginType = userResult.getString(9);
           tempUsername = userResult.getBoolean(10);
-          userFound = true;
         } else {
           log.debug("User did not exist");
           log.debug("$$$ End authUser $$$");
@@ -133,7 +130,7 @@ public class Getter {
     // Phase 3: Post-verification checks and DB updates (short DB hold if needed)
     log.debug("Hash matches");
 
-    if (!loginType.equals("login")) {
+    if (!"login".equals(loginType)) {
       log.debug("User is SSO user, can't login with password!");
       return null;
     }
