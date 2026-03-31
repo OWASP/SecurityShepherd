@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
-import servlets.module.lesson.XxeLesson;
 import testUtils.TestProperties;
 import utils.InstallationException;
 
@@ -72,7 +71,7 @@ public class XxeChallenge1IT {
     log.debug("Creating " + MODULE_CLASS_NAME + " Servlet Instance");
 
     try {
-      XxeLesson servlet = new XxeLesson();
+      XxeChallenge1OldWebService servlet = new XxeChallenge1OldWebService();
       servlet.init(new MockServletConfig(MODULE_CLASS_NAME));
 
       request.setContentType("application/xml");
