@@ -1,6 +1,6 @@
 package dbProcs;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,10 +14,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
@@ -36,7 +36,7 @@ public class GetterIT {
   private static final int totalNumberOfModulesInShepherd = 58;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
-  @BeforeClass
+  @BeforeAll
   public static void resetDatabase() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
 
@@ -218,7 +218,7 @@ public class GetterIT {
     return result;
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     TestProperties.setTestPropertiesFileDirectory(log);
   }
@@ -337,7 +337,7 @@ public class GetterIT {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void testAuthUserCorrectEmojiUsername() {
     // Here is a very non-latin username
     String userName = new String("😃😅😍💩👍‌𝑓ᶃ我璃မ္ယက္‌");

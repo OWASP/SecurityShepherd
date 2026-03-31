@@ -1,8 +1,8 @@
 package servlets;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.Constants;
 import java.io.File;
@@ -12,9 +12,9 @@ import javax.servlet.ServletException;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.After;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 
@@ -23,7 +23,7 @@ public class SetupIT {
   private static final Logger log = LogManager.getLogger(SetupIT.class);
 
   /** Initialize directories */
-  @After
+  @AfterEach
   public void tearDown() throws IOException {
     log.debug("Cleaning up");
 
@@ -35,7 +35,7 @@ public class SetupIT {
     FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
   }
 
-  @Ignore
+  @Disabled
   @Test
   public void testNoCoreDatabase() {
 
@@ -108,7 +108,7 @@ public class SetupIT {
 
   }
 
-  @Ignore
+  @Disabled
   @Test
   public void testNoMysqlResource() {
 
