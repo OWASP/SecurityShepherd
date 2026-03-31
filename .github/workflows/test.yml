@@ -1,9 +1,16 @@
 name: Build and Test
 on:
   push:
-    branches: [master, dev]
+    branches:
+      - master
+      - dev
+      # Stacked / feature branches (e.g. dev#536, dev#536-getter-leak-fix) — must quote # for YAML
+      - "dev#*"
   pull_request:
-    branches: [master, dev]
+    branches:
+      - master
+      - dev
+      - "dev#*"
 
 jobs:
   detect-changes:
