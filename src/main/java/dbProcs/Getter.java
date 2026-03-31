@@ -116,6 +116,17 @@ public class Getter {
     }
     // Connection released — all user data extracted into local variables
 
+    // Fail-fast: reject suspended and SSO users before expensive Argon2 work
+    if (!"login".equals(loginType)) {
+      log.debug("User is SSO user, can't login with password!");
+      return null;
+    }
+
+    Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+    if (suspendedUntil != null && suspendedUntil.after(currentTime)) {
+      return null;
+    }
+
     // Phase 2: Verify password (CPU-bound Argon2, no DB connection held)
     log.debug("Verifying hash");
     Argon2 argon2 = Argon2Factory.create();
@@ -127,18 +138,8 @@ public class Getter {
       return null;
     }
 
-    // Phase 3: Post-verification checks and DB updates (short DB hold if needed)
+    // Phase 3: Post-verification DB updates (short DB hold if needed)
     log.debug("Hash matches");
-
-    if (!"login".equals(loginType)) {
-      log.debug("User is SSO user, can't login with password!");
-      return null;
-    }
-
-    Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-    if (suspendedUntil.after(currentTime)) {
-      return null;
-    }
 
     if (!dbUserName.equalsIgnoreCase(userName)) {
       log.fatal(
