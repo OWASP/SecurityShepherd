@@ -2,10 +2,10 @@ package dbProcs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.IOException;
 import java.sql.CallableStatement;
@@ -1153,8 +1153,7 @@ public class SetterIT {
   @Test
   public void testEmptyModuleLayouts() {
 
-    assertThrows(
-        IllegalArgumentException.class, () -> Setter.setModuleLayout(applicationRoot, ""));
+    assertThrows(IllegalArgumentException.class, () -> Setter.setModuleLayout(applicationRoot, ""));
   }
 
   @Test
