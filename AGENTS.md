@@ -4,7 +4,7 @@ Instructions for AI coding agents working on this repository.
 
 ## Project overview
 
-OWASP Security Shepherd is a web and mobile application security training platform. The web app is a Java servlet application built with Maven, deployed as a WAR on Tomcat. The mobile challenges are independent Android apps under `src/MobileShepherd/`.
+OWASP Security Shepherd is a web and mobile application security training platform. The web app is a Java servlet application built with Maven, deployed as a WAR on Tomcat. The mobile challenges are independent Android apps under `mobile/MobileShepherd/`.
 
 ## Intentionally vulnerable code — DO NOT FIX
 
@@ -12,7 +12,7 @@ The following paths contain **deliberately insecure code** used for security tra
 
 - `src/main/java/servlets/module/lesson/` — lesson servlets with intentional vulnerabilities
 - `src/main/java/servlets/module/challenge/` — challenge servlets with intentional vulnerabilities
-- `src/MobileShepherd/` — mobile challenge apps with intentional vulnerabilities
+- `mobile/MobileShepherd/` — mobile challenge apps with intentional vulnerabilities
 
 Security improvements should only be made to the **platform infrastructure** (authentication, session management, admin functions, DB layer, etc.), never to the training content.
 
@@ -84,11 +84,16 @@ Do not commit `.env` changes that break CI.
 
 ## Project structure
 
-- `src/main/java/` — web app source (servlets, DB layer, utilities)
+- `src/main/java/` — web app source
+  - `dbProcs/` — database layer: `Database.java` (connection pooling), `Getter.java` (read queries), `Setter.java` (write queries), `MongoDatabase.java`, `Constants.java`, `FileInputProperties.java`
+  - `servlets/` — platform servlets (Login, Register, Setup, etc.)
+  - `servlets/admin/` — admin servlets (`config/`, `moduleManagement/`, `userManagement/`)
+  - `servlets/module/` — module framework (`SolutionSubmit.java`, `GetModule.java`, etc.) plus `challenge/` and `lesson/` (intentionally vulnerable — do not fix)
+  - `utils/` — shared utilities (validation, hashing, scoring, XSS/SQL filters)
 - `src/main/resources/` — config and challenge properties files
 - `src/test/java/` — unit tests
 - `src/it/java/` — integration tests (require running DB containers)
-- `src/MobileShepherd/` — independent Android apps (Gradle-based, not part of Maven build)
+- `mobile/MobileShepherd/` — independent Android apps (Gradle-based, not part of Maven build)
 
 ## Database
 
@@ -97,6 +102,16 @@ Do not commit `.env` changes that break CI.
 - Each challenge uses isolated DB credentials scoped to its own schema — do not consolidate challenge DB users
 - Encoding must be `utf8mb4` (not `utf8`) for full Unicode support
 - Password hashing uses Argon2 (requires `libargon2` native library)
+
+### SQL schema files
+
+- `src/main/resources/database/coreSchema.sql` — **source of truth** for the core database: users table, settings table, stored procedures (user management, authentication, class management, scoring), and seed data (default admin user, default settings)
+- `src/main/resources/database/moduleSchemas.sql` — challenge and lesson schemas with intentionally vulnerable data (treat as training content, not infrastructure)
+- `docker/mariadb/target/` — **build-generated copies** produced by `mvn -Pdocker`; not source of truth, do not edit directly
+
+The `settings` table stores admin-configurable options as key-value pairs (`setting` VARCHAR, `value` VARCHAR). Known keys: `adminCheatsEnabled`, `playerCheatsEnabled`, `moduleLayout`, `enableFeedback`, `openRegistration`, `scoreboardStatus`, `scoreboardClass`, `hasStartTime`, `startTime`, `hasLockTime`, `lockTime`, `hasEndTime`, `endTime`, `enableTranslations`, `defaultClass`.
+
+Stored procedures use `DELIMITER` statements that are commented out in the source SQL (for tool compatibility). The build script `docker/scripts/convert-sql-scripts.sh` uncomments them when copying to `docker/mariadb/target/`. See the "Docker DB init fails" section above if procedures fail to parse.
 
 ## Agent behaviors
 
