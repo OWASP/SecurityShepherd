@@ -4,9 +4,6 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 
 [![Build and Test](https://github.com/OWASP/SecurityShepherd/actions/workflows/test.yml/badge.svg)](https://github.com/OWASP/SecurityShepherd/actions/workflows/test.yml)  
 
-## Trello Link
-https://trello.com/b/V1LZYBvT/owasp-security-shepherd
-
 # Where can I download Security Shepherd?
 
 ### Virtual Machine or Manual Setup
