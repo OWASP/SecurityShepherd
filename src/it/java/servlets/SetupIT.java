@@ -1,8 +1,10 @@
 package servlets;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import dbProcs.ConnectionPool;
 import dbProcs.Constants;
@@ -173,7 +175,7 @@ public class SetupIT {
       boolean first = Setup.isInstalled();
       boolean second = Setup.isInstalled();
 
-      assertTrue("isInstalled should return true with a running database", first);
+      assertTrue(first, "isInstalled should return true with a running database");
       assertEquals(first, second);
     } finally {
       ConnectionPool.shutdown();
@@ -202,7 +204,7 @@ public class SetupIT {
       Setup.resetInstalledCache();
       boolean second = Setup.isInstalled();
 
-      assertTrue("isInstalled should return true with a running database", first);
+      assertTrue(first, "isInstalled should return true with a running database");
       assertEquals(first, second);
     } finally {
       ConnectionPool.shutdown();
