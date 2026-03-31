@@ -71,162 +71,109 @@ public class Getter {
    *     authentication process.
    */
   public static String[] authUser(String ApplicationRoot, String userName, String password) {
-    String[] result = null;
     log.debug("$$$ Getter.authUser $$$");
-
     log.debug("userName = " + userName);
 
-    boolean userFound = false;
-    boolean userVerified = false;
-
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
-
-      // See if user Exists
-      PreparedStatement prestmt;
-      CallableStatement callstmt;
-      try {
-        prestmt =
+    // Phase 1: Fetch user record (short DB hold, ~1-5ms)
+    String userId;
+    String dbUserName;
+    String dbHash;
+    String userRole;
+    int badLoginCount;
+    boolean tempPassword;
+    String classId;
+    Timestamp suspendedUntil;
+    String loginType;
+    boolean tempUsername;
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement prestmt =
             conn.prepareStatement(
                 "SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId,"
-                    + " suspendedUntil, loginType, tempUsername FROM `users` WHERE userName = ?");
-      } catch (SQLException e) {
-        log.fatal("Could create call statement: " + e.toString());
-        throw new RuntimeException(e);
-      }
-
-      log.debug("Gathering results from query");
-      ResultSet userResult;
-      try {
-        prestmt.setString(1, userName);
-        userResult = prestmt.executeQuery();
-      } catch (SQLException e) {
-        log.fatal("Could not execute db query: " + e.toString());
-        throw new RuntimeException(e);
-      }
-
-      log.debug("Opening Result Set from query");
-
-      try {
+                    + " suspendedUntil, loginType, tempUsername FROM `users` WHERE userName = ?")) {
+      prestmt.setString(1, userName);
+      try (ResultSet userResult = prestmt.executeQuery()) {
         if (userResult.next()) {
-          log.debug(
-              "User Found"); // User found if a row is in the database, this line will not work if
-          // the
-          // result
-          // set is empty
-          userFound = true;
+          log.debug("User Found");
+          userId = userResult.getString(1);
+          dbUserName = userResult.getString(2);
+          dbHash = userResult.getString(3);
+          userRole = userResult.getString(4);
+          badLoginCount = userResult.getInt(5);
+          tempPassword = userResult.getBoolean(6);
+          classId = userResult.getString(7);
+          suspendedUntil = userResult.getTimestamp(8);
+          loginType = userResult.getString(9);
+          tempUsername = userResult.getBoolean(10);
         } else {
           log.debug("User did not exist");
-          userFound = false;
-        }
-      } catch (SQLException e) {
-        log.debug("User did not exist");
-        userFound = false;
-      }
-
-      if (userFound) {
-        // Authenticate User
-        Argon2 argon2 = Argon2Factory.create();
-
-        log.debug("Getting password hash");
-        String dbHash;
-        try {
-          dbHash = userResult.getString(3);
-          log.debug("Verifying hash");
-
-          userVerified = argon2.verify(dbHash, password.toCharArray());
-
-        } catch (SQLException e) {
-          log.fatal("Could not retrieve password hash from db: " + e.toString());
-          result = null;
-          userVerified = false;
-          throw new RuntimeException(e);
-          // TODO: We should throw a checked exception here instead
-        }
-
-        if (userVerified) {
-          // Hash matches
-          log.debug("Hash matches");
-
-          result = new String[6];
-
-          int badLoginCount;
-          String loginType = new String();
-
-          Timestamp suspendedUntil;
-
-          try {
-            result[0] = userResult.getString(1);
-            result[1] = userResult.getString(2); // userName
-            result[2] = userResult.getString(4); // role
-            badLoginCount = userResult.getInt(5);
-            result[3] = Boolean.toString(userResult.getBoolean(6));
-            result[4] = userResult.getString(7); // classId
-            suspendedUntil = userResult.getTimestamp(8);
-            loginType = userResult.getString(9);
-            result[5] = Boolean.toString(userResult.getBoolean(10));
-          } catch (SQLException e) {
-
-            log.fatal("Could not retrieve auth data from db: " + e.toString());
-            throw new RuntimeException(e);
-          }
-
-          if (!loginType.equals("login")) {
-            // Login type must be "login" and not "saml" if password login is to be allowed
-            log.debug("User is SSO user, can't login with password!");
-            result = null;
-            return result;
-          }
-
-          // Get current system time
-          Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-
-          if (suspendedUntil.after(currentTime)) {
-            // User is suspended
-            result = null;
-            return result;
-          }
-
-          if (!result[1].equalsIgnoreCase(
-              userName)) // If somehow this functionality has been compromised to sign
-          // in as
-          // other users, this will limit the expoitability. But the method is
-          // sql injection safe, so it should be ok
-          {
-            log.fatal(
-                "User Name used ("
-                    + userName
-                    + ") and User Name retrieved ("
-                    + result[1]
-                    + ") were not the Same. Nulling Result");
-            result = null;
-          } else {
-            log.debug("User '" + userName + "' has logged in");
-            // Before finishing, check if user had a badlogin history, if so, Clear it
-            if (badLoginCount > 0) {
-              log.debug("Clearing Bad Login History");
-              try {
-                callstmt = conn.prepareCall("call userBadLoginReset(?)");
-                callstmt.setString(1, result[0]);
-                callstmt.execute();
-              } catch (SQLException e) {
-                log.fatal("Could not reset bad login count: " + e.toString());
-                throw new RuntimeException(e);
-              }
-
-              log.debug("userBadLoginReset executed!");
-            }
-          }
-          return result;
-        } else {
-          // Hash did not match
-          log.debug("Hash did not match, authentication failed");
+          log.debug("$$$ End authUser $$$");
+          return null;
         }
       }
-
     } catch (SQLException e) {
       log.fatal("authUser failed: " + e.toString());
       throw new RuntimeException(e);
     }
+    // Connection released — all user data extracted into local variables
+
+    // Fail-fast: reject suspended and SSO users before expensive Argon2 work
+    if (!"login".equals(loginType)) {
+      log.debug("User is SSO user, can't login with password!");
+      return null;
+    }
+
+    Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+    if (suspendedUntil != null && suspendedUntil.after(currentTime)) {
+      return null;
+    }
+
+    // Phase 2: Verify password (CPU-bound Argon2, no DB connection held)
+    log.debug("Verifying hash");
+    Argon2 argon2 = Argon2Factory.create();
+    boolean userVerified = argon2.verify(dbHash, password.toCharArray());
+
+    if (!userVerified) {
+      log.debug("Hash did not match, authentication failed");
+      log.debug("$$$ End authUser $$$");
+      return null;
+    }
+
+    // Phase 3: Post-verification DB updates (short DB hold if needed)
+    log.debug("Hash matches");
+
+    if (!dbUserName.equalsIgnoreCase(userName)) {
+      log.fatal(
+          "User Name used ("
+              + userName
+              + ") and User Name retrieved ("
+              + dbUserName
+              + ") were not the Same. Nulling Result");
+      return null;
+    }
+
+    log.debug("User '" + userName + "' has logged in");
+
+    if (badLoginCount > 0) {
+      log.debug("Clearing Bad Login History");
+      try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+          CallableStatement callstmt = conn.prepareCall("call userBadLoginReset(?)")) {
+        callstmt.setString(1, userId);
+        callstmt.execute();
+        log.debug("userBadLoginReset executed!");
+      } catch (SQLException e) {
+        log.fatal("Could not reset bad login count: " + e.toString());
+        throw new RuntimeException(e);
+      }
+    }
+
+    String[] result = new String[6];
+    result[0] = userId;
+    result[1] = dbUserName;
+    result[2] = userRole;
+    result[3] = Boolean.toString(tempPassword);
+    result[4] = classId;
+    result[5] = Boolean.toString(tempUsername);
+
     log.debug("$$$ End authUser $$$");
     return result;
   }
