@@ -1,6 +1,6 @@
 package testUtils;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.ConnectionPool;
 import dbProcs.Constants;
@@ -29,6 +29,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import servlets.Login;
+import utils.CountdownHandler;
 import utils.InstallationException;
 
 public class TestProperties {
@@ -55,6 +56,8 @@ public class TestProperties {
     data = FileUtils.readFileToString(file, Charset.defaultCharset());
     psProcToexecute = databaseConnection.createStatement();
     psProcToexecute.executeUpdate(data);
+
+    CountdownHandler.forceReload();
   }
 
   public static void createFileSystemKey(Logger log, String fileProp, String solutionProp)

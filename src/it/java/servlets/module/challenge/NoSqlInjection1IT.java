@@ -1,6 +1,6 @@
 package servlets.module.challenge;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.GetterIT;
 import dbProcs.Setter;
@@ -9,9 +9,9 @@ import java.sql.SQLException;
 import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -33,7 +33,7 @@ public class NoSqlInjection1IT extends Mockito {
   @Mock private MockHttpServletResponse response;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
-  @BeforeClass
+  @BeforeAll
   public static void resetDatabase() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
 
@@ -43,7 +43,7 @@ public class NoSqlInjection1IT extends Mockito {
     TestProperties.executeSql(log);
   }
 
-  @Before
+  @BeforeEach
   public void setup() {
     request = new MockHttpServletRequest();
     response = new MockHttpServletResponse();

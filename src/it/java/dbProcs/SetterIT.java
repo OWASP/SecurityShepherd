@@ -1,10 +1,11 @@
 package dbProcs;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.sql.CallableStatement;
@@ -18,8 +19,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import testUtils.TestProperties;
 import utils.ScoreboardStatus;
 
@@ -29,7 +30,7 @@ public class SetterIT {
   private static String applicationRoot = new String();
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
-  @BeforeClass
+  @BeforeAll
   public static void resetDatabase() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
 
@@ -1149,28 +1150,32 @@ public class SetterIT {
     assertEquals(Getter.getModuleLayout(applicationRoot), "tournament");
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testEmptyModuleLayouts() throws SQLException {
+  @Test
+  public void testEmptyModuleLayouts() {
 
-    Setter.setModuleLayout(applicationRoot, "");
+    assertThrows(IllegalArgumentException.class, () -> Setter.setModuleLayout(applicationRoot, ""));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidModuleLayouts() throws SQLException {
+  @Test
+  public void testInvalidModuleLayouts() {
 
-    Setter.setModuleLayout(applicationRoot, "strangeLayout");
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> Setter.setModuleLayout(applicationRoot, "strangeLayout"));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidCaseCTFModuleLayouts() throws SQLException {
+  @Test
+  public void testInvalidCaseCTFModuleLayouts() {
 
-    Setter.setModuleLayout(applicationRoot, "CTF");
+    assertThrows(
+        IllegalArgumentException.class, () -> Setter.setModuleLayout(applicationRoot, "CTF"));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidCaseOpenModuleLayouts() throws SQLException {
+  @Test
+  public void testInvalidCaseOpenModuleLayouts() {
 
-    Setter.setModuleLayout(applicationRoot, "Open");
+    assertThrows(
+        IllegalArgumentException.class, () -> Setter.setModuleLayout(applicationRoot, "Open"));
   }
 
   @Test
@@ -1249,16 +1254,19 @@ public class SetterIT {
     assertEquals(Getter.getScoreboardStatus(applicationRoot), "public");
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testEmptyScoreboardStatus() throws SQLException {
+  @Test
+  public void testEmptyScoreboardStatus() {
 
-    Setter.setScoreboardStatus(applicationRoot, "");
+    assertThrows(
+        IllegalArgumentException.class, () -> Setter.setScoreboardStatus(applicationRoot, ""));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidScoreboardStatus() throws SQLException {
+  @Test
+  public void testInvalidScoreboardStatus() {
 
-    Setter.setScoreboardStatus(applicationRoot, "invalidStatus");
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> Setter.setScoreboardStatus(applicationRoot, "invalidStatus"));
   }
 
   @Test

@@ -1,6 +1,6 @@
 package servlets.admin.moduleManagement;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.Setter;
 import java.io.IOException;
@@ -8,9 +8,9 @@ import java.sql.SQLException;
 import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -25,7 +25,7 @@ public class OpenOrCloseByCategoryIT {
   private MockHttpServletResponse response;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
-  @BeforeClass
+  @BeforeAll
   public static void resetDatabase() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
 
@@ -34,7 +34,7 @@ public class OpenOrCloseByCategoryIT {
     TestProperties.executeSql(log);
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     TestProperties.setTestPropertiesFileDirectory(log);
     request = new MockHttpServletRequest();
