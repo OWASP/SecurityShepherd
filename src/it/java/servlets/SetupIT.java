@@ -158,7 +158,8 @@ public class SetupIT {
   public void isInstalled_cachesResult() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
     TestProperties.createMysqlResource();
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
 
     boolean poolReady = false;
     try {
@@ -186,7 +187,8 @@ public class SetupIT {
   public void resetInstalledCache_allowsReevaluation() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
     TestProperties.createMysqlResource();
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
 
     boolean poolReady = false;
     try {

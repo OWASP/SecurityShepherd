@@ -2,6 +2,7 @@ package dbProcs;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -264,6 +265,19 @@ public class ConnectionPool {
   }
 
   /**
+   * Loads database properties if the file exists; otherwise returns an empty Properties object.
+   * Used by the challenge-connection path during first-time setup, when callers supply
+   * url/user/password as arguments and the on-disk file does not yet exist. All pool tuning
+   * properties have defaults, so an empty Properties object is safe.
+   */
+  private static Properties loadDatabasePropertiesIfPresent() {
+    if (!new File(Constants.MYSQL_DB_PROP).isFile()) {
+      return new Properties();
+    }
+    return loadDatabaseProperties();
+  }
+
+  /**
    * Gets a connection from the core database pool.
    *
    * @return A connection from the pool
@@ -314,7 +328,10 @@ public class ConnectionPool {
         challengePools.computeIfAbsent(
             poolKey,
             key -> {
-              Properties prop = loadDatabaseProperties();
+              // Tolerate missing database.properties: during first-time setup the file does
+              // not exist yet, but the caller already supplied url/user/password. Pool tuning
+              // falls back to defaults when properties are absent.
+              Properties prop = loadDatabasePropertiesIfPresent();
               return createDataSource(
                   jdbcUrl,
                   username,

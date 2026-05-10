@@ -1,5 +1,6 @@
 package dbProcs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -22,14 +23,12 @@ public class GetterCorePoolLeakIT {
   private static boolean databaseAvailable = false;
   private static final String applicationRoot = "";
 
-  /** Must stay within configured core pool max (see database.properties / ConnectionPool). */
-  private static final int MAX_ALLOWED_ACTIVE = 32;
-
   @BeforeAll
   public static void setup() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
     TestProperties.createMysqlResource();
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
     try {
       ConnectionPool.initialize();
       Getter.getClassCount(applicationRoot);
@@ -49,6 +48,12 @@ public class GetterCorePoolLeakIT {
     assumeTrue(databaseAvailable, "Database not available");
   }
 
+  /**
+   * The loop is serial, so a non-leaking pool must return active count to the pre-call baseline
+   * after every iteration. Asserting equality with baseline (typically 0) detects leaks
+   * deterministically — a hardcoded ceiling can still pass while the pool saturates (e.g. with
+   * coreMax=20 and Hikari's 5s acquire timeout, callers throw long before active reaches 32).
+   */
   @Test
   public void repeatedAuthUserDoesNotExhaustCorePool() {
     requireDatabase();
@@ -64,8 +69,13 @@ public class GetterCorePoolLeakIT {
         "GetterCorePoolLeakIT: baseline active={}, after 500 authUser calls active={}",
         baseline,
         active);
-    assertTrue(
-        active <= MAX_ALLOWED_ACTIVE,
-        "Core pool active connections should stay bounded; got " + active);
+    assertEquals(
+        baseline,
+        active,
+        "Core pool active connections should return to baseline after a serial loop; got "
+            + active
+            + " (baseline "
+            + baseline
+            + ")");
   }
 }
