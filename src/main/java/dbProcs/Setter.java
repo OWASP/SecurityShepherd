@@ -76,8 +76,7 @@ public class Setter {
     log.debug("*** Setter.classCreate ***");
 
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Preparing classCreate call");
       CallableStatement callstmnt = conn.prepareCall("call classCreate(?, ?)");
@@ -86,7 +85,6 @@ public class Setter {
       log.debug("Executing classCreate");
       callstmnt.execute();
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("classCreate Failure: " + e.toString());
@@ -104,15 +102,13 @@ public class Setter {
   public static boolean closeAllModules(String ApplicationRoot) {
     log.debug("*** Setter.closeAllModules ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       PreparedStatement callstmt =
           conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed'");
       callstmt.execute();
       log.debug("All modules Set to closed");
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("Could not close all modules: " + e.toString());
@@ -133,8 +129,7 @@ public class Setter {
     log.debug("*** Setter.incrementBadSubmission ***");
 
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Prepairing bad Submission call");
       PreparedStatement callstmnt = conn.prepareCall("CALL userBadSubmission(?)");
@@ -142,7 +137,6 @@ public class Setter {
       log.debug("Executing userBadSubmission statement on id '" + userId + "'");
       callstmnt.execute();
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("userBadSubmission Failure: " + e.toString());
@@ -162,8 +156,7 @@ public class Setter {
   public static boolean openAllModules(String ApplicationRoot, boolean unsafe) {
     log.debug("*** Setter.openAllModules ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       if (unsafe) {
         PreparedStatement callstmt =
@@ -178,7 +171,6 @@ public class Setter {
       }
 
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("Could not open all modules: " + e.toString());
@@ -196,8 +188,7 @@ public class Setter {
   public static boolean openOnlyMobileCategories(String ApplicationRoot) {
     log.debug("*** Setter.openOnlyMobileCategories ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       PreparedStatement prepstmt =
           conn.prepareStatement(
@@ -212,7 +203,6 @@ public class Setter {
       prepstmt.execute();
       log.debug("Mobile Levels have been opened");
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("Could not only open Mobile Levels: " + e.toString());
@@ -231,8 +221,7 @@ public class Setter {
   public static boolean openOnlyWebCategories(String ApplicationRoot, int unsafe) {
     log.debug("*** Setter.openOnlyWebCategories ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       PreparedStatement prepstmt =
           conn.prepareStatement(
@@ -251,7 +240,6 @@ public class Setter {
       prepstmt.execute();
       log.debug("Mobile Levels have been closed");
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("Could not only open Web levels: " + e.toString());
@@ -271,8 +259,7 @@ public class Setter {
     log.debug("*** Setter.resetBadSubmission ***");
 
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Prepairing resetUserBadSubmission call");
       PreparedStatement callstmnt = conn.prepareCall("CALL resetUserBadSubmission(?)");
@@ -280,7 +267,6 @@ public class Setter {
       log.debug("Executing resetUserBadSubmission statement on id '" + userId + "'");
       callstmnt.execute();
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("resetUserBadSubmission Failure: " + e.toString());
@@ -344,8 +330,7 @@ public class Setter {
   public static String setCsrfChallengeFourCsrfToken(
       String userId, String csrfToken, String ApplicationRoot) {
     log.debug("*** setCsrfChallengeFourToken ***");
-    try {
-      Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeFour");
+    try (Connection conn = Database.getChallengeConnection(ApplicationRoot, "csrfChallengeFour")) {
 
       boolean tokenExists = false;
       log.debug("Preparing setSsrfChallengeFourToken call");
@@ -375,7 +360,6 @@ public class Setter {
       callstmnt.setString(2, userId);
       callstmnt.execute();
       callstmnt.close();
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("CsrfChallenge4 TokenUpdate Failure: " + e.toString());
@@ -395,9 +379,8 @@ public class Setter {
       String userId, String csrfToken, String ApplicationRoot) {
     log.debug("*** setCsrfChallengeSevenToken ***");
     boolean result = false;
-    try {
-      Connection conn =
-          Database.getChallengeConnection(ApplicationRoot, "csrfChallengeEnumerateTokens");
+    try (Connection conn =
+        Database.getChallengeConnection(ApplicationRoot, "csrfChallengeEnumerateTokens")) {
 
       boolean updateToken = false;
       log.debug("Preparing setCsrfChallengeSevenToken call");
@@ -431,7 +414,6 @@ public class Setter {
       prestmnt.execute();
       result = true;
       prestmnt.close();
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("csrfChallenge7EnumTokens TokenUpdate Failure: " + e.toString());
@@ -451,8 +433,7 @@ public class Setter {
       String ApplicationRoot, String moduleCategory, String openOrClosed) {
     log.debug("*** Setter.setModuleCategoryStatusOpen ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       PreparedStatement prepstmt =
           conn.prepareStatement("UPDATE modules SET moduleStatus = ? WHERE moduleCategory = ?");
@@ -461,7 +442,6 @@ public class Setter {
       prepstmt.execute();
       log.debug("Set " + moduleCategory + " to " + openOrClosed);
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("Could not open/close category: " + e.toString());
@@ -481,8 +461,7 @@ public class Setter {
   public static boolean setModuleStatusClosed(String ApplicationRoot, String moduleId) {
     log.debug("*** Setter.setModuleStatusClosed ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
       log.debug("Preparing moduleSetStatus procedure");
@@ -491,7 +470,6 @@ public class Setter {
       callstmt.execute();
       log.debug("Executed moduleSetStatus");
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("Could not execute moduleSetStatus: " + e.toString());
@@ -511,8 +489,7 @@ public class Setter {
   public static boolean setModuleStatusOpen(String ApplicationRoot, String moduleId) {
     log.debug("*** Setter.setModuleStatusOpen ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
       log.debug("Preparing moduleSetStatus procedure");
@@ -521,7 +498,6 @@ public class Setter {
       callstmt.execute();
       log.debug("Executed moduleSetStatus");
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("Could not execute moduleSetStatus: " + e.toString());
@@ -544,8 +520,7 @@ public class Setter {
       String ApplicationRoot, String message, String userId, String moduleId) {
     log.debug("*** Setter.setStoredMessage ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call resultMessageSet(?, ?, ?)");
       log.debug("Preparing resultMessageSet procedure");
@@ -555,7 +530,6 @@ public class Setter {
       callstmt.execute();
       log.debug("Executed resultMessageSet");
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("Could not execute resultMessageSet: " + e.toString());
@@ -577,8 +551,7 @@ public class Setter {
     log.debug("*** Setter.suspendUser ***");
 
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Prepairing suspendUser call");
       PreparedStatement callstmnt = conn.prepareCall("CALL suspendUser(?, ?)");
@@ -587,7 +560,6 @@ public class Setter {
       log.debug("Executing suspendUser statement on id '" + userId + "'");
       callstmnt.execute();
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("suspendUser Failure: " + e.toString());
@@ -608,8 +580,7 @@ public class Setter {
     log.debug("*** Setter.unSuspendUser ***");
 
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Prepairing suspendUser call");
       PreparedStatement callstmnt = conn.prepareCall("CALL unSuspendUser(?)");
@@ -617,7 +588,6 @@ public class Setter {
       log.debug("Executing unSuspendUser statement on id '" + userId + "'");
       callstmnt.execute();
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("unSuspendUser Failure: " + e.toString());
@@ -638,8 +608,7 @@ public class Setter {
   public static boolean updateCsrfCounter(String ApplicationRoot, String moduleId, String userId) {
     log.debug("*** Getter.updateCsrfCounter ***");
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       CallableStatement callstmt = conn.prepareCall("call resultMessagePlus(?, ?)");
       log.debug("Preparing resultMessagePlus procedure");
@@ -647,7 +616,6 @@ public class Setter {
       callstmt.setString(2, userId);
       callstmt.execute();
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("Could not execute resultMessagePlus: " + e.toString());
@@ -669,14 +637,7 @@ public class Setter {
 
     boolean result = false;
 
-    Connection conn;
-    try {
-      conn = Database.getCoreConnection(ApplicationRoot);
-    } catch (SQLException e) {
-      log.debug("Could not get core connection: " + e.toString());
-      throw new RuntimeException(e);
-    }
-
+    // Phase 1: Verify current password (Getter.authUser manages its own connection)
     log.debug("Checking current password");
     String user[] = Getter.authUser(ApplicationRoot, userName, currentPassword);
 
@@ -685,36 +646,27 @@ public class Setter {
       log.debug("Current password incorrect!");
       return false;
     }
-    if (user != null && !user[0].isEmpty()) {
-      // Correct password, proceed
-      log.debug("Hashing password");
 
-      Argon2 argon2 = Argon2Factory.create();
+    // Phase 2: Hash new password (CPU-bound, ~100-200ms — do not hold a DB connection)
+    log.debug("Hashing password");
+    Argon2 argon2 = Argon2Factory.create();
+    String newHash = argon2.hash(10, 65536, 1, newPassword.toCharArray());
+    // TODO: wipe password from memory after hashing
 
-      String newHash = argon2.hash(10, 65536, 1, newPassword.toCharArray());
-      // TODO: wipe password from memory after hashing
-
-      log.debug("Preparing userPasswordChange call");
-      CallableStatement callstmnt;
-      try {
-        callstmnt = conn.prepareCall("call userPasswordChange(?, ?)");
-        callstmnt.setString(1, userName);
-
-        callstmnt.setString(2, newHash);
-        log.debug("Executing userPasswordChange");
-        callstmnt.execute();
-        result = true;
-      } catch (SQLException e) {
-        log.debug("Could not update password: " + e.toString());
-        throw new RuntimeException(e);
-      }
-
-    } else {
-      log.debug("Could not verify password!");
-      return false;
+    // Phase 3: Persist the new hash (short DB hold)
+    log.debug("Preparing userPasswordChange call");
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmnt = conn.prepareCall("call userPasswordChange(?, ?)")) {
+      callstmnt.setString(1, userName);
+      callstmnt.setString(2, newHash);
+      log.debug("Executing userPasswordChange");
+      callstmnt.execute();
+      result = true;
+    } catch (SQLException e) {
+      log.debug("Could not update password: " + e.toString());
+      throw new RuntimeException(e);
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END updatePassword ***");
     return result;
   }
@@ -733,11 +685,9 @@ public class Setter {
     boolean result = false;
 
     log.debug("Preparing username change call from username " + userName + " to " + newUsername);
-    PreparedStatement prestmnt;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-      prestmnt =
+      PreparedStatement prestmnt =
           conn.prepareStatement(
               "UPDATE users SET userName = ?, tempUsername = FALSE WHERE userName = ?;");
       prestmnt.setString(1, newUsername);
@@ -746,7 +696,6 @@ public class Setter {
       log.debug("Executing name change query");
       prestmnt.execute();
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.debug("Could not update username: " + e.toString());
@@ -770,15 +719,13 @@ public class Setter {
     log.debug("*** Setter.updatePasswordAdmin ***");
 
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
 
-      log.debug("Hashing password");
+    // Hash before opening a DB connection (Argon2 is CPU-bound, ~100-200ms)
+    log.debug("Hashing password");
+    Argon2 argon2 = Argon2Factory.create();
+    String newHash = argon2.hash(10, 65536, 1, newPassword.toCharArray());
 
-      Argon2 argon2 = Argon2Factory.create();
-
-      String newHash = argon2.hash(10, 65536, 1, newPassword.toCharArray());
-
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
       log.debug("Preparing userPasswordChangeAdmin call");
       CallableStatement callstmnt = conn.prepareCall("call userPasswordChangeAdmin(?, ?)");
       callstmnt.setString(1, userId);
@@ -786,7 +733,6 @@ public class Setter {
       log.debug("Executing userPasswordChangeAdmin");
       callstmnt.execute();
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("updatePasswordAdmin Failure: " + e.toString());
@@ -807,8 +753,7 @@ public class Setter {
     log.debug("*** Setter.updatePlayerClass ***");
 
     String result = null;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Preparing playerUpdateClass call");
       CallableStatement callstmnt = conn.prepareCall("call playerUpdateClass(?, ?)");
@@ -818,7 +763,6 @@ public class Setter {
       ResultSet resultSet = callstmnt.executeQuery();
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("playerUpdateClass Failure: " + e.toString());
@@ -839,8 +783,7 @@ public class Setter {
     log.debug("*** Setter.updatePlayerClassToNull ***");
 
     String result = null;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Preparing playerUpdateClassToNull call");
       CallableStatement callstmnt = conn.prepareCall("call playerUpdateClassToNull(?)");
@@ -849,7 +792,6 @@ public class Setter {
       ResultSet resultSet = callstmnt.executeQuery();
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("updatePlayerClassToNull Failure: " + e.toString());
@@ -899,8 +841,7 @@ public class Setter {
 
     if (isRunning) {
 
-      try {
-        Connection conn = Database.getCoreConnection(ApplicationRoot);
+      try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
         log.debug("Preparing userUpdateResult call");
         CallableStatement callstmnt =
@@ -916,7 +857,6 @@ public class Setter {
         callstmnt.execute();
         // User Executed. Now Get the Level Name Langauge Key
         result = Getter.getModuleNameLocaleKey(ApplicationRoot, moduleId);
-        Database.closeConnection(conn);
 
       } catch (SQLException e) {
         log.error("userUpdateResult Failure: " + e.toString());
@@ -942,8 +882,7 @@ public class Setter {
     log.debug("*** Setter.updateUserPoints ***");
 
     boolean result = false;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Preparing updateUserPoints call");
       PreparedStatement prestmnt =
@@ -953,7 +892,6 @@ public class Setter {
       log.debug("Executing updateUserPoints");
       prestmnt.execute();
       result = true;
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("updateUserPoints Failure: " + e.toString());
@@ -974,8 +912,7 @@ public class Setter {
     log.debug("*** Setter.updateUserRole ***");
 
     String result = null;
-    try {
-      Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Preparing userUpdateRole call");
       CallableStatement callstmnt = conn.prepareCall("call userUpdateRole(?, ?)");
@@ -985,7 +922,6 @@ public class Setter {
       ResultSet resultSet = callstmnt.executeQuery();
       resultSet.next();
       result = resultSet.getString(1);
-      Database.closeConnection(conn);
 
     } catch (SQLException e) {
       log.error("userUpdateRole Failure: " + e.toString());
@@ -1025,44 +961,43 @@ public class Setter {
     // We don't log passwords
     log.debug("userRole = " + userRole);
     log.debug("userAddress = " + userAddress);
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
 
+    // Hash before opening a DB connection (Argon2 is CPU-bound, ~100-200ms)
     log.debug("Hashing password");
-
     Argon2 argon2 = Argon2Factory.create();
-
     String hash = argon2.hash(10, 65536, 1, userPass.toCharArray());
     // TODO: wipe password from memory after hashing
 
-    log.debug("Executing userCreate procedure on Database");
-    CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    callstmt.setString(1, classId);
-    callstmt.setString(2, userName);
-    callstmt.setString(3, hash);
-    callstmt.setString(4, userRole);
-    callstmt.setString(5, null); // ssoName
-    callstmt.setString(6, userAddress);
-    callstmt.setString(7, "login"); // login type
-    callstmt.setBoolean(8, tempPass);
-    callstmt.setBoolean(9, false); // Tempname
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Executing userCreate procedure on Database");
+      CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      callstmt.setString(1, classId);
+      callstmt.setString(2, userName);
+      callstmt.setString(3, hash);
+      callstmt.setString(4, userRole);
+      callstmt.setString(5, null); // ssoName
+      callstmt.setString(6, userAddress);
+      callstmt.setString(7, "login"); // login type
+      callstmt.setBoolean(8, tempPass);
+      callstmt.setBoolean(9, false); // Tempname
 
-    ResultSet registerAttempt = callstmt.executeQuery();
-    log.debug("Opening result set");
+      ResultSet registerAttempt = callstmt.executeQuery();
+      log.debug("Opening result set");
 
-    registerAttempt.next(); // Procedure Ran correctly
+      registerAttempt.next(); // Procedure Ran correctly
 
-    if (registerAttempt.getString(1) == null) {
-      // Registration success
-      log.debug("Register Success");
-      result = true;
-    } else {
-      // Registration failure
-      result = false;
-      log.debug("ResultSet contained -> " + registerAttempt.getString(1));
-      throw new SQLException(registerAttempt.getString(1));
+      if (registerAttempt.getString(1) == null) {
+        // Registration success
+        log.debug("Register Success");
+        result = true;
+      } else {
+        // Registration failure
+        result = false;
+        log.debug("ResultSet contained -> " + registerAttempt.getString(1));
+        throw new SQLException(registerAttempt.getString(1));
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END userCreate ***");
 
     return result;
@@ -1079,94 +1014,95 @@ public class Setter {
     log.debug("ssoName = " + ssoName);
     // We don't log passwords
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
-
     String newUsername = userName;
 
-    try {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-      log.debug("Checking for duplicate usernames");
+      try {
 
-      boolean isDuplicate = true;
+        log.debug("Checking for duplicate usernames");
 
-      int duplicateCounter = 0;
+        boolean isDuplicate = true;
 
-      while (isDuplicate) {
+        int duplicateCounter = 0;
 
-        PreparedStatement prestmt =
-            conn.prepareStatement("SELECT ssoName FROM `users` WHERE userName = ?");
+        while (isDuplicate) {
 
-        prestmt.setString(1, newUsername);
+          PreparedStatement prestmt =
+              conn.prepareStatement("SELECT ssoName FROM `users` WHERE userName = ?");
 
-        ResultSet checkDuplicate = prestmt.executeQuery();
+          prestmt.setString(1, newUsername);
+
+          ResultSet checkDuplicate = prestmt.executeQuery();
+          log.debug("Opening result set");
+
+          if (checkDuplicate.next()) {
+            // Found a duplicate user, sigh
+            isDuplicate = true;
+            duplicateCounter++;
+
+            newUsername = userName + String.valueOf(duplicateCounter);
+
+            log.debug(
+                "Duplicate username found, changing to "
+                    + newUsername
+                    + " counter "
+                    + String.valueOf(duplicateCounter));
+
+          } else {
+            isDuplicate = false;
+          }
+
+          if (duplicateCounter > 500) {
+            String message =
+                "Bailing out of the de-duplicate loop at " + String.valueOf(duplicateCounter);
+            log.error(message);
+            throw new RuntimeException(message);
+          }
+        }
+
+      } catch (SQLException e) {
+        log.fatal("Failed to check for duplicate usernames: " + e.toString());
+        throw new SQLException(e);
+      }
+
+      try {
+
+        log.debug("Executing userCreate procedure on Database");
+
+        CallableStatement callstmt =
+            conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        callstmt.setString(1, classId);
+        callstmt.setString(2, newUsername);
+        callstmt.setString(3, "DISABLED");
+        callstmt.setString(4, userRole);
+        callstmt.setString(5, ssoName);
+        callstmt.setString(6, ""); // userAddress
+        callstmt.setString(7, "saml"); // login type
+        callstmt.setBoolean(8, false); // temppass
+        callstmt.setBoolean(9, true); // Tempname
+
+        ResultSet registerAttempt = callstmt.executeQuery();
         log.debug("Opening result set");
 
-        if (checkDuplicate.next()) {
-          // Found a duplicate user, sigh
-          isDuplicate = true;
-          duplicateCounter++;
+        registerAttempt.next(); // Procedure Ran correctly
 
-          newUsername = userName + String.valueOf(duplicateCounter);
-
-          log.debug(
-              "Duplicate username found, changing to "
-                  + newUsername
-                  + " counter "
-                  + String.valueOf(duplicateCounter));
-
+        if (registerAttempt.getString(1) == null) {
+          // Registration success
+          log.debug("Register Success");
+          result = newUsername;
         } else {
-          isDuplicate = false;
+          // Registration failure
+          result = null;
+          log.debug("ResultSet contained -> " + registerAttempt.getString(1));
+          throw new SQLException(registerAttempt.getString(1));
         }
 
-        if (duplicateCounter > 500) {
-          String message =
-              "Bailing out of the de-duplicate loop at " + String.valueOf(duplicateCounter);
-          log.error(message);
-          throw new RuntimeException(message);
-        }
+      } catch (SQLException e) {
+        log.fatal("userCreate Failure: " + e.toString());
+        throw new SQLException(e);
       }
-
-    } catch (SQLException e) {
-      log.fatal("Failed to check for duplicate usernames: " + e.toString());
-      throw new SQLException(e);
     }
-
-    try {
-
-      log.debug("Executing userCreate procedure on Database");
-
-      CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
-      callstmt.setString(1, classId);
-      callstmt.setString(2, newUsername);
-      callstmt.setString(3, "DISABLED");
-      callstmt.setString(4, userRole);
-      callstmt.setString(5, ssoName);
-      callstmt.setString(6, ""); // userAddress
-      callstmt.setString(7, "saml"); // login type
-      callstmt.setBoolean(8, false); // temppass
-      callstmt.setBoolean(9, true); // Tempname
-
-      ResultSet registerAttempt = callstmt.executeQuery();
-      log.debug("Opening result set");
-
-      registerAttempt.next(); // Procedure Ran correctly
-
-      if (registerAttempt.getString(1) == null) {
-        // Registration success
-        log.debug("Register Success");
-        result = newUsername;
-      } else {
-        // Registration failure
-        result = null;
-        log.debug("ResultSet contained -> " + registerAttempt.getString(1));
-        throw new SQLException(registerAttempt.getString(1));
-      }
-
-    } catch (SQLException e) {
-      log.fatal("userCreate Failure: " + e.toString());
-      throw new SQLException(e);
-    }
-    Database.closeConnection(conn);
     log.debug("*** END userCreateSSO ***");
     return result;
   }
@@ -1176,8 +1112,7 @@ public class Setter {
     log.debug("*** Setter.userDelete ***");
     log.debug("userId = " + userId);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
-    try {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
       log.debug("Deleting User's Results");
       PreparedStatement callDelResults =
           conn.prepareStatement("DELETE FROM results WHERE userId = ?");
@@ -1196,7 +1131,6 @@ public class Setter {
       log.fatal("userDelete Failure: " + sqlEx.toString());
       throw new SQLException(sqlEx);
     }
-    Database.closeConnection(conn);
     log.debug("*** END userDelete ***");
     return result;
   }
@@ -1207,21 +1141,20 @@ public class Setter {
     log.debug("*** Setter.setAdminCheatStatus ***");
     log.debug("adminCheatsEnabled = " + adminCheatsEnabled);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting admin cheat setting");
+      PreparedStatement callAdminSetting =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      callAdminSetting.setBoolean(1, adminCheatsEnabled);
+      callAdminSetting.setString(2, "adminCheatsEnabled");
 
-    log.debug("Setting admin cheat setting");
-    PreparedStatement callAdminSetting =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    callAdminSetting.setBoolean(1, adminCheatsEnabled);
-    callAdminSetting.setString(2, "adminCheatsEnabled");
-
-    if (callAdminSetting.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set admin cheat setting");
+      if (callAdminSetting.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set admin cheat setting");
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setAdminCheatStatus ***");
     return result;
   }
@@ -1232,21 +1165,20 @@ public class Setter {
     log.debug("*** Setter.setPlayerCheatStatus ***");
     log.debug("playerCheatsEnabled = " + playerCheatsEnabled);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting player cheat setting");
+      PreparedStatement callPlayerSetting =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      callPlayerSetting.setBoolean(1, playerCheatsEnabled);
+      callPlayerSetting.setString(2, "playerCheatsEnabled");
 
-    log.debug("Setting player cheat setting");
-    PreparedStatement callPlayerSetting =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    callPlayerSetting.setBoolean(1, playerCheatsEnabled);
-    callPlayerSetting.setString(2, "playerCheatsEnabled");
-
-    if (callPlayerSetting.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set player cheat setting");
+      if (callPlayerSetting.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set player cheat setting");
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setPlayerCheatStatus ***");
     return result;
   }
@@ -1261,21 +1193,20 @@ public class Setter {
       throw new IllegalArgumentException("Invalid module layout: " + theModuleLayout);
     }
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting player cheat setting");
+      PreparedStatement moduleLayoutSetting =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      moduleLayoutSetting.setString(1, theModuleLayout);
+      moduleLayoutSetting.setString(2, "modulelayout");
 
-    log.debug("Setting player cheat setting");
-    PreparedStatement moduleLayoutSetting =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    moduleLayoutSetting.setString(1, theModuleLayout);
-    moduleLayoutSetting.setString(2, "modulelayout");
-
-    if (moduleLayoutSetting.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set module layout to " + theModuleLayout);
+      if (moduleLayoutSetting.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set module layout to " + theModuleLayout);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setModulelayout ***");
     return result;
   }
@@ -1286,23 +1217,22 @@ public class Setter {
     log.debug("*** Setter.setFeedbackStatus ***");
     log.debug("feedbackStatus = " + theFeebackStatus);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting feedback status setting");
+      PreparedStatement getFeedbackSetting =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      getFeedbackSetting.setBoolean(1, theFeebackStatus);
+      getFeedbackSetting.setString(2, "enableFeedback");
 
-    log.debug("Setting feedback status setting");
-    PreparedStatement getFeedbackSetting =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    getFeedbackSetting.setBoolean(1, theFeebackStatus);
-    getFeedbackSetting.setString(2, "enableFeedback");
+      int updateResult = getFeedbackSetting.executeUpdate();
 
-    int updateResult = getFeedbackSetting.executeUpdate();
-
-    if (updateResult == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set feedback status to " + theFeebackStatus);
+      if (updateResult == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set feedback status to " + theFeebackStatus);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setFeedbackStatus ***");
     return result;
   }
@@ -1313,21 +1243,21 @@ public class Setter {
     log.debug("*** Setter.setRegistrationStatus ***");
     log.debug("enableRegistration = " + theRegistrationStatus);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting registration status setting");
+      PreparedStatement setRegistrationSetting =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      setRegistrationSetting.setBoolean(1, theRegistrationStatus);
+      setRegistrationSetting.setString(2, "openRegistration");
 
-    log.debug("Setting registration status setting");
-    PreparedStatement setRegistrationSetting =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    setRegistrationSetting.setBoolean(1, theRegistrationStatus);
-    setRegistrationSetting.setString(2, "openRegistration");
-
-    if (setRegistrationSetting.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set registration status to " + theRegistrationStatus);
+      if (setRegistrationSetting.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException(
+            "Could not set registration status to " + theRegistrationStatus);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setRegistrationStatus ***");
     return result;
   }
@@ -1346,21 +1276,20 @@ public class Setter {
       throw new IllegalArgumentException("Invalid scoreboard status: " + theScoreboardStatus);
     }
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting scoreboard status setting");
+      PreparedStatement scoreboardSetting =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      scoreboardSetting.setString(1, theScoreboardStatus);
+      scoreboardSetting.setString(2, "scoreboardStatus");
 
-    log.debug("Setting scoreboard status setting");
-    PreparedStatement scoreboardSetting =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    scoreboardSetting.setString(1, theScoreboardStatus);
-    scoreboardSetting.setString(2, "scoreboardStatus");
-
-    if (scoreboardSetting.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set scoreboard status to " + theScoreboardStatus);
+      if (scoreboardSetting.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set scoreboard status to " + theScoreboardStatus);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setScoreboardStatus ***");
     return result;
   }
@@ -1371,21 +1300,20 @@ public class Setter {
     log.debug("*** Setter.setScoreboardClass ***");
     log.debug("scoreboardClass = " + theScoreboardClass);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting scoreboard class setting");
+      PreparedStatement scoreboardClassSetting =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      scoreboardClassSetting.setString(1, theScoreboardClass);
+      scoreboardClassSetting.setString(2, "scoreboardClass");
 
-    log.debug("Setting scoreboard class setting");
-    PreparedStatement scoreboardClassSetting =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    scoreboardClassSetting.setString(1, theScoreboardClass);
-    scoreboardClassSetting.setString(2, "scoreboardClass");
-
-    if (scoreboardClassSetting.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set scoreboard class to " + theScoreboardClass);
+      if (scoreboardClassSetting.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set scoreboard class to " + theScoreboardClass);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setScoreboardClass ***");
     return result;
   }
@@ -1396,21 +1324,20 @@ public class Setter {
     log.debug("*** Setter.setStartTimeStatus ***");
     log.debug("theLockTimeStatus = " + theStartTimeStatus);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting start time setting");
+      PreparedStatement lockTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      lockTimeStatement.setBoolean(1, theStartTimeStatus);
+      lockTimeStatement.setString(2, "hasStartTime");
 
-    log.debug("Setting start time setting");
-    PreparedStatement lockTimeStatement =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    lockTimeStatement.setBoolean(1, theStartTimeStatus);
-    lockTimeStatement.setString(2, "hasStartTime");
-
-    if (lockTimeStatement.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set start time status to " + theStartTimeStatus);
+      if (lockTimeStatement.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set start time status to " + theStartTimeStatus);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setStartTimeStatus ***");
     return result;
   }
@@ -1421,21 +1348,20 @@ public class Setter {
     log.debug("*** Setter.setStartTime ***");
     log.debug("theLockTime = " + theStartTime);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting start time");
+      PreparedStatement lockTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      lockTimeStatement.setString(1, theStartTime.toString());
+      lockTimeStatement.setString(2, "startTime");
 
-    log.debug("Setting start time");
-    PreparedStatement lockTimeStatement =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    lockTimeStatement.setString(1, theStartTime.toString());
-    lockTimeStatement.setString(2, "startTime");
-
-    if (lockTimeStatement.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set start time to " + theStartTime);
+      if (lockTimeStatement.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set start time to " + theStartTime);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setStartTime ***");
     return result;
   }
@@ -1446,21 +1372,20 @@ public class Setter {
     log.debug("*** Setter.setLockTimeStatus ***");
     log.debug("theLockTimeStatus = " + theLockTimeStatus);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting lock timestamp setting");
+      PreparedStatement lockTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      lockTimeStatement.setBoolean(1, theLockTimeStatus);
+      lockTimeStatement.setString(2, "hasLockTime");
 
-    log.debug("Setting lock timestamp setting");
-    PreparedStatement lockTimeStatement =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    lockTimeStatement.setBoolean(1, theLockTimeStatus);
-    lockTimeStatement.setString(2, "hasLockTime");
-
-    if (lockTimeStatement.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set lock time status to " + theLockTimeStatus);
+      if (lockTimeStatement.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set lock time status to " + theLockTimeStatus);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setLockTimeStatus ***");
     return result;
   }
@@ -1471,21 +1396,20 @@ public class Setter {
     log.debug("*** Setter.setLockTime ***");
     log.debug("theLockTime = " + theLockTime);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting lock time");
+      PreparedStatement lockTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      lockTimeStatement.setString(1, theLockTime.toString());
+      lockTimeStatement.setString(2, "lockTime");
 
-    log.debug("Setting lock time");
-    PreparedStatement lockTimeStatement =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    lockTimeStatement.setString(1, theLockTime.toString());
-    lockTimeStatement.setString(2, "lockTime");
-
-    if (lockTimeStatement.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set lock time to " + theLockTime);
+      if (lockTimeStatement.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set lock time to " + theLockTime);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setLockTime ***");
     return result;
   }
@@ -1496,21 +1420,20 @@ public class Setter {
     log.debug("*** Setter.setEndTimeStatus ***");
     log.debug("theEndTimeStatus = " + theEndTimeStatus);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting end time setting");
+      PreparedStatement lockTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      lockTimeStatement.setBoolean(1, theEndTimeStatus);
+      lockTimeStatement.setString(2, "hasEndTime");
 
-    log.debug("Setting end time setting");
-    PreparedStatement lockTimeStatement =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    lockTimeStatement.setBoolean(1, theEndTimeStatus);
-    lockTimeStatement.setString(2, "hasEndTime");
-
-    if (lockTimeStatement.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set end time status to " + theEndTimeStatus);
+      if (lockTimeStatement.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set end time status to " + theEndTimeStatus);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END theEndTimeStatus ***");
     return result;
   }
@@ -1521,21 +1444,20 @@ public class Setter {
     log.debug("*** Setter.setEndTime ***");
     log.debug("theLockTime = " + theEndTime);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting end time");
+      PreparedStatement endTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      endTimeStatement.setString(1, theEndTime.toString());
+      endTimeStatement.setString(2, "endTime");
 
-    log.debug("Setting end time");
-    PreparedStatement endTimeStatement =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    endTimeStatement.setString(1, theEndTime.toString());
-    endTimeStatement.setString(2, "endTime");
-
-    if (endTimeStatement.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set end time to " + theEndTime);
+      if (endTimeStatement.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set end time to " + theEndTime);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setEndTime ***");
     return result;
   }
@@ -1546,21 +1468,20 @@ public class Setter {
     log.debug("*** Setter.setDefaultClass ***");
     log.debug("theLockTime = " + theDefaultClass);
 
-    Connection conn = Database.getCoreConnection(ApplicationRoot);
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      log.debug("Setting default class");
+      PreparedStatement endTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
+      endTimeStatement.setString(1, theDefaultClass);
+      endTimeStatement.setString(2, "defaultClass");
 
-    log.debug("Setting default class");
-    PreparedStatement endTimeStatement =
-        conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-    endTimeStatement.setString(1, theDefaultClass);
-    endTimeStatement.setString(2, "defaultClass");
-
-    if (endTimeStatement.executeUpdate() == 1) {
-      result = true;
-    } else {
-      throw new RuntimeException("Could not set default class to " + theDefaultClass);
+      if (endTimeStatement.executeUpdate() == 1) {
+        result = true;
+      } else {
+        throw new RuntimeException("Could not set default class to " + theDefaultClass);
+      }
     }
 
-    Database.closeConnection(conn);
     log.debug("*** END setDefaultClass ***");
     return result;
   }
