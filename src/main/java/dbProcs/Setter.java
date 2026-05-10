@@ -629,7 +629,7 @@ public class Setter {
    * @param userName User name of the user
    * @param currentPassword User's current password
    * @param newPassword New password to use in update
-   * @return ResultSet that contains error details if not successful
+   * @return true if the password was updated, false if the current password did not verify
    */
   public static boolean updatePassword(
       String ApplicationRoot, String userName, String currentPassword, String newPassword) {
@@ -673,10 +673,9 @@ public class Setter {
 
   /**
    * @param ApplicationRoot The current running context of the application
-   * @param userName User name of the user
-   * @param currentPassword User's current password
-   * @param newPassword New password to use in update
-   * @return ResultSet that contains error details if not successful
+   * @param userName Existing user name to rename
+   * @param newUsername The new user name to assign
+   * @return true if the username was updated successfully
    */
   public static boolean updateUsername(
       String ApplicationRoot, String userName, String newUsername) {
@@ -840,11 +839,12 @@ public class Setter {
 
     if (isRunning) {
 
-      try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+      boolean updated = false;
+      try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+          CallableStatement callstmnt =
+              conn.prepareCall("call userUpdateResult(?, ?, ?, ?, ?, ?, ?)")) {
 
         log.debug("Preparing userUpdateResult call");
-        CallableStatement callstmnt =
-            conn.prepareCall("call userUpdateResult(?, ?, ?, ?, ?, ?, ?)");
         callstmnt.setString(1, moduleId);
         callstmnt.setString(2, userId);
         callstmnt.setInt(3, before);
@@ -854,12 +854,16 @@ public class Setter {
         callstmnt.setString(7, extra);
         log.debug("Executing userUpdateResult");
         callstmnt.execute();
-        // User Executed. Now Get the Level Name Langauge Key
-        result = Getter.getModuleNameLocaleKey(ApplicationRoot, moduleId);
+        updated = true;
 
       } catch (SQLException e) {
         log.error("userUpdateResult Failure: " + e.toString());
-        result = null;
+      }
+
+      // Release the core connection before calling back into Getter, which opens its own.
+      // Holding two pooled connections per call doubles pool pressure under concurrency.
+      if (updated) {
+        result = Getter.getModuleNameLocaleKey(ApplicationRoot, moduleId);
       }
     } else {
       log.error("Error: Can't allow results to be stored when CTF isn't running");

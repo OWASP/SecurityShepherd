@@ -51,8 +51,9 @@ public class SetterCorePoolLeakIT {
   /**
    * resetBadSubmission is a representative core write: it borrows a connection, runs a stored
    * procedure, returns. With a nonexistent userId the procedure is a no-op, so we can hammer it
-   * safely. Pre-fix, every iteration would leak a connection on the success path's manual
-   * closeConnection call (and on every exception path).
+   * safely. Pre-fix, the success path called Database.closeConnection and returned the connection,
+   * but any thrown SQLException (or early return) skipped that line and leaked the connection —
+   * exactly the failure mode the try-with-resources conversion fixes.
    *
    * <p>The loop is serial, so a non-leaking pool must return active count to the pre-call baseline
    * after every iteration. Asserting equality with baseline (typically 0) detects leaks
