@@ -40,7 +40,8 @@ public class NoSqlInjection1IT extends Mockito {
     TestProperties.createMysqlResource();
     TestProperties.createMongoResource();
 
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
   }
 
   @BeforeEach
