@@ -685,11 +685,10 @@ public class Setter {
     boolean result = false;
 
     log.debug("Preparing username change call from username " + userName + " to " + newUsername);
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
-
-      PreparedStatement prestmnt =
-          conn.prepareStatement(
-              "UPDATE users SET userName = ?, tempUsername = FALSE WHERE userName = ?;");
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement prestmnt =
+            conn.prepareStatement(
+                "UPDATE users SET userName = ?, tempUsername = FALSE WHERE userName = ?;")) {
       prestmnt.setString(1, newUsername);
 
       prestmnt.setString(2, userName);
@@ -725,9 +724,9 @@ public class Setter {
     Argon2 argon2 = Argon2Factory.create();
     String newHash = argon2.hash(10, 65536, 1, newPassword.toCharArray());
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmnt = conn.prepareCall("call userPasswordChangeAdmin(?, ?)")) {
       log.debug("Preparing userPasswordChangeAdmin call");
-      CallableStatement callstmnt = conn.prepareCall("call userPasswordChangeAdmin(?, ?)");
       callstmnt.setString(1, userId);
       callstmnt.setString(2, newHash);
       log.debug("Executing userPasswordChangeAdmin");
@@ -968,9 +967,10 @@ public class Setter {
     String hash = argon2.hash(10, 65536, 1, userPass.toCharArray());
     // TODO: wipe password from memory after hashing
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt =
+            conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
       log.debug("Executing userCreate procedure on Database");
-      CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
       callstmt.setString(1, classId);
       callstmt.setString(2, userName);
       callstmt.setString(3, hash);
@@ -981,20 +981,21 @@ public class Setter {
       callstmt.setBoolean(8, tempPass);
       callstmt.setBoolean(9, false); // Tempname
 
-      ResultSet registerAttempt = callstmt.executeQuery();
-      log.debug("Opening result set");
+      try (ResultSet registerAttempt = callstmt.executeQuery()) {
+        log.debug("Opening result set");
 
-      registerAttempt.next(); // Procedure Ran correctly
+        registerAttempt.next(); // Procedure Ran correctly
 
-      if (registerAttempt.getString(1) == null) {
-        // Registration success
-        log.debug("Register Success");
-        result = true;
-      } else {
-        // Registration failure
-        result = false;
-        log.debug("ResultSet contained -> " + registerAttempt.getString(1));
-        throw new SQLException(registerAttempt.getString(1));
+        if (registerAttempt.getString(1) == null) {
+          // Registration success
+          log.debug("Register Success");
+          result = true;
+        } else {
+          // Registration failure
+          result = false;
+          log.debug("ResultSet contained -> " + registerAttempt.getString(1));
+          throw new SQLException(registerAttempt.getString(1));
+        }
       }
     }
 
@@ -1190,7 +1191,9 @@ public class Setter {
     log.debug("*** Setter.setModulelayout ***");
     log.debug("playerCheatsEnabled = " + theModuleLayout);
 
-    if (theModuleLayout != "ctf" && theModuleLayout != "tournament" && theModuleLayout != "open") {
+    if (!"ctf".equals(theModuleLayout)
+        && !"tournament".equals(theModuleLayout)
+        && !"open".equals(theModuleLayout)) {
       throw new IllegalArgumentException("Invalid module layout: " + theModuleLayout);
     }
 
@@ -1268,11 +1271,11 @@ public class Setter {
     log.debug("*** Setter.setScoreboardStatus ***");
     log.debug("scoreboardStatus = " + theScoreboardStatus);
 
-    if (theScoreboardStatus != "closed"
-        && theScoreboardStatus != "adminOnly"
-        && theScoreboardStatus != "classSpecific"
-        && theScoreboardStatus != "open"
-        && theScoreboardStatus != "public") {
+    if (!"closed".equals(theScoreboardStatus)
+        && !"adminOnly".equals(theScoreboardStatus)
+        && !"classSpecific".equals(theScoreboardStatus)
+        && !"open".equals(theScoreboardStatus)
+        && !"public".equals(theScoreboardStatus)) {
       throw new IllegalArgumentException("Invalid scoreboard status: " + theScoreboardStatus);
     }
 
