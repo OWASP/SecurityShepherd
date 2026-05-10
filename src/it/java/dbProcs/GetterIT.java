@@ -2502,7 +2502,8 @@ public class GetterIT {
     try {
       String classId = findCreateClassId("playersByClass");
       String userName = new String("playersByClass");
-      for (int i = 0; i <= 9; i++) {
+      int expectedPlayerCount = 10;
+      for (int i = 0; i < expectedPlayerCount; i++) {
         if (verifyTestUser(applicationRoot, userName + i, userName + i, classId)) {
           log.debug("Created User " + userName + i);
         } else {
@@ -2519,14 +2520,11 @@ public class GetterIT {
             fail("Incorrect User from Different Class Returned");
           }
         }
-        if (i != 9) {
-          if (i < 9) {
+        if (i != expectedPlayerCount) {
+          if (i < expectedPlayerCount) {
             fail("Too Few Users Returned");
-          } else if (i > 9) {
-            fail("Too Many Users Returned");
           } else {
-            log.fatal("Then surely the number WAS 9? How did this happen");
-            fail("Incorrect Amount of Users Returned");
+            fail("Too Many Users Returned");
           }
         }
       } catch (Exception e) {
