@@ -28,7 +28,8 @@ public class GetterAuthIT {
   public static void setup() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
     TestProperties.createMysqlResource();
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
     try {
       ConnectionPool.initialize();
       Getter.getClassCount(applicationRoot);
