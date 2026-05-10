@@ -55,14 +55,13 @@ public class TestProperties {
   public static synchronized void ensureSchemaReady(Logger log) throws IOException, SQLException {
     if (!schemaReady) {
       try (Connection conn = Database.getDatabaseConnection(null, true)) {
-        executeSql(log, conn);
+        executeSql(conn);
       }
       schemaReady = true;
     }
   }
 
-  public static void executeSql(Logger log, Connection databaseConnection)
-      throws IOException, SQLException {
+  public static void executeSql(Connection databaseConnection) throws IOException, SQLException {
 
     File file =
         new File(System.getProperty("user.dir") + "/src/main/resources/database/coreSchema.sql");
@@ -98,14 +97,11 @@ public class TestProperties {
 
       // 2. Reset sequence counters to their per-row initial values
       try (Statement stmt2 = conn.createStatement()) {
-        stmt2.executeUpdate(
-            "UPDATE sequence SET currVal = 282475249 WHERE tableName = 'users'");
+        stmt2.executeUpdate("UPDATE sequence SET currVal = 282475249 WHERE tableName = 'users'");
         stmt2.executeUpdate(
             "UPDATE sequence SET currVal = 282475299 WHERE tableName = 'cheatSheet'");
-        stmt2.executeUpdate(
-            "UPDATE sequence SET currVal = 282475249 WHERE tableName = 'class'");
-        stmt2.executeUpdate(
-            "UPDATE sequence SET currVal = 282475576 WHERE tableName = 'modules'");
+        stmt2.executeUpdate("UPDATE sequence SET currVal = 282475249 WHERE tableName = 'class'");
+        stmt2.executeUpdate("UPDATE sequence SET currVal = 282475576 WHERE tableName = 'modules'");
       }
 
       // 3. Reset module status to default
