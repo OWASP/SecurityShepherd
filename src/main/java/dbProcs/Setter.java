@@ -1070,8 +1070,7 @@ public class Setter {
 
         log.debug("Executing userCreate procedure on Database");
 
-        CallableStatement callstmt =
-            conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
         callstmt.setString(1, classId);
         callstmt.setString(2, newUsername);
         callstmt.setString(3, "DISABLED");
@@ -1253,8 +1252,7 @@ public class Setter {
       if (setRegistrationSetting.executeUpdate() == 1) {
         result = true;
       } else {
-        throw new RuntimeException(
-            "Could not set registration status to " + theRegistrationStatus);
+        throw new RuntimeException("Could not set registration status to " + theRegistrationStatus);
       }
     }
 
