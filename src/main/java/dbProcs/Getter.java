@@ -64,6 +64,15 @@ public class Getter {
   private static final int admiralCap = 999; // everything above Major is Admiral
 
   /**
+   * Safety cap on the number of rows materialized by {@link #getClassInfo}, {@link
+   * #getPlayersByClass}, and {@link #getAdmins}. These methods return a {@link
+   * javax.sql.rowset.CachedRowSet}, which holds every row in memory. Realistic workloads are well
+   * under this limit (tens to a few hundred per call); the cap exists to fail fast on a runaway
+   * query rather than OOM the JVM. Tracked for proper bounded-collection conversion in #839.
+   */
+  private static final int MAX_ROWSET_ROWS = 10_000;
+
+  /**
    * This method hashes the user submitted password and sends it to the database. The database does
    * the rest of the work, including Brute Force prevention.
    *
@@ -617,13 +626,15 @@ public class Getter {
     ResultSet result = null;
     log.debug("*** Getter.getClassInfo (All Classes) ***");
     try (Connection conn = Database.getCoreConnection(ApplicationRoot);
-        CallableStatement callstmt = conn.prepareCall("call classesGetData()");
-        ResultSet resultSet = callstmt.executeQuery()) {
-      log.debug("Gathering classesGetData ResultSet");
-      CachedRowSet rowSet = RowSetProvider.newFactory().createCachedRowSet();
-      rowSet.populate(resultSet);
-      rowSet.beforeFirst(); // populate() leaves the cursor after the last row
-      result = rowSet;
+        CallableStatement callstmt = conn.prepareCall("call classesGetData()")) {
+      callstmt.setMaxRows(MAX_ROWSET_ROWS);
+      try (ResultSet resultSet = callstmt.executeQuery()) {
+        log.debug("Gathering classesGetData ResultSet");
+        CachedRowSet rowSet = RowSetProvider.newFactory().createCachedRowSet();
+        rowSet.populate(resultSet);
+        rowSet.beforeFirst(); // populate() leaves the cursor after the last row
+        result = rowSet;
+      }
       log.debug("Returning Result Set from classesGetData");
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
@@ -1767,6 +1778,7 @@ public class Getter {
     String sql = (classId != null) ? "call playersByClass(?)" : "call playersWithoutClass()";
     try (Connection conn = Database.getCoreConnection(ApplicationRoot);
         CallableStatement callstmt = conn.prepareCall(sql)) {
+      callstmt.setMaxRows(MAX_ROWSET_ROWS);
       if (classId != null) {
         log.debug("Gathering playersByClass ResultSet");
         callstmt.setString(1, classId);
@@ -2288,13 +2300,15 @@ public class Getter {
     ResultSet result = null;
     log.debug("*** Getter.adminGetAll () ***");
     try (Connection conn = Database.getCoreConnection(ApplicationRoot);
-        CallableStatement callstmt = conn.prepareCall("call adminGetAll()");
-        ResultSet resultSet = callstmt.executeQuery()) {
-      log.debug("Gathering adminGetAll ResultSet");
-      CachedRowSet rowSet = RowSetProvider.newFactory().createCachedRowSet();
-      rowSet.populate(resultSet);
-      rowSet.beforeFirst(); // populate() leaves the cursor after the last row
-      result = rowSet;
+        CallableStatement callstmt = conn.prepareCall("call adminGetAll()")) {
+      callstmt.setMaxRows(MAX_ROWSET_ROWS);
+      try (ResultSet resultSet = callstmt.executeQuery()) {
+        log.debug("Gathering adminGetAll ResultSet");
+        CachedRowSet rowSet = RowSetProvider.newFactory().createCachedRowSet();
+        rowSet.populate(resultSet);
+        rowSet.beforeFirst(); // populate() leaves the cursor after the last row
+        result = rowSet;
+      }
       log.debug("Returning Result Set from adminGetAll");
 
     } catch (SQLException e) {
