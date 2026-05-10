@@ -19,6 +19,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
@@ -204,14 +205,26 @@ public class Setup extends HttpServlet {
         log.error("Authorization mismatch: " + auth + " does not equal " + dbAuth);
 
       } else {
-        // Test the user's entered database properties
+        // Test the user's entered database properties. Use DriverManager directly instead of
+        // the pool: setup is a one-shot credential check that runs before database.properties
+        // exists, and routing it through a pooled DataSource keyed on (url, user) would
+        // silently reuse a stale pool when the password changes between setup attempts.
+        //
+        // Append connectTimeout=5000 so a typo'd host or unreachable port fails fast (matching
+        // ConnectionPool's 5s default) instead of hanging on the OS's default TCP connect
+        // timeout — DriverManager has no built-in timeout and the setup page would otherwise
+        // appear to freeze.
         Boolean connectionSuccess = false;
         log.debug("Attempting to connect to database");
 
-        try {
-          Connection conn =
-              Database.getConnection(driverType, connectionURL, dbOptions, dbUser, dbPass);
-          Database.closeConnection(conn);
+        String testJdbcUrl;
+        if (dbOptions != null && !dbOptions.isEmpty()) {
+          testJdbcUrl = connectionURL + "?" + dbOptions + "&connectTimeout=5000";
+        } else {
+          testJdbcUrl = connectionURL + "?connectTimeout=5000";
+        }
+
+        try (Connection conn = DriverManager.getConnection(testJdbcUrl, dbUser, dbPass)) {
           connectionSuccess = true;
           log.debug("Database connection successful");
 
@@ -463,17 +476,21 @@ public class Setup extends HttpServlet {
     String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
     log.debug("Initializing core database");
-    Connection databaseConnection = Database.getDatabaseConnection(null, true);
-    Statement psProcToexecute = databaseConnection.createStatement();
-    psProcToexecute.executeUpdate(data);
+    try (Connection databaseConnection = Database.getDatabaseConnection(null, true)) {
+      try (Statement psProcToexecute = databaseConnection.createStatement()) {
+        psProcToexecute.executeUpdate(data);
+      }
 
-    file =
-        new File(getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
-    data = FileUtils.readFileToString(file, Charset.defaultCharset());
-    log.debug("Initializing module database");
+      file =
+          new File(
+              getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
+      data = FileUtils.readFileToString(file, Charset.defaultCharset());
+      log.debug("Initializing module database");
 
-    psProcToexecute = databaseConnection.createStatement();
-    psProcToexecute.executeUpdate(data);
+      try (Statement psProcToexecute = databaseConnection.createStatement()) {
+        psProcToexecute.executeUpdate(data);
+      }
+    }
   }
 
   private synchronized void executeMongoScript() throws IOException {
@@ -502,9 +519,10 @@ public class Setup extends HttpServlet {
 
     data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
-    Connection databaseConnection = Database.getDatabaseConnection(null, true);
-    Statement psProcToexecute = databaseConnection.createStatement();
-    psProcToexecute.executeUpdate(data);
+    try (Connection databaseConnection = Database.getDatabaseConnection(null, true);
+        Statement psProcToexecute = databaseConnection.createStatement()) {
+      psProcToexecute.executeUpdate(data);
+    }
   }
 
   private synchronized void openUnsafeLevels() {
