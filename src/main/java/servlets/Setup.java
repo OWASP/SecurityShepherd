@@ -209,12 +209,19 @@ public class Setup extends HttpServlet {
         // the pool: setup is a one-shot credential check that runs before database.properties
         // exists, and routing it through a pooled DataSource keyed on (url, user) would
         // silently reuse a stale pool when the password changes between setup attempts.
+        //
+        // Append connectTimeout=5000 so a typo'd host or unreachable port fails fast (matching
+        // ConnectionPool's 5s default) instead of hanging on the OS's default TCP connect
+        // timeout — DriverManager has no built-in timeout and the setup page would otherwise
+        // appear to freeze.
         Boolean connectionSuccess = false;
         log.debug("Attempting to connect to database");
 
-        String testJdbcUrl = connectionURL;
+        String testJdbcUrl;
         if (dbOptions != null && !dbOptions.isEmpty()) {
-          testJdbcUrl = connectionURL + "?" + dbOptions;
+          testJdbcUrl = connectionURL + "?" + dbOptions + "&connectTimeout=5000";
+        } else {
+          testJdbcUrl = connectionURL + "?connectTimeout=5000";
         }
 
         try (Connection conn = DriverManager.getConnection(testJdbcUrl, dbUser, dbPass)) {
