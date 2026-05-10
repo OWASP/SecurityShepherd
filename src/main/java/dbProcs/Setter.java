@@ -606,7 +606,7 @@ public class Setter {
    * @return Boolean reflecting the success of the operation
    */
   public static boolean updateCsrfCounter(String ApplicationRoot, String moduleId, String userId) {
-    log.debug("*** Getter.updateCsrfCounter ***");
+    log.debug("*** Setter.updateCsrfCounter ***");
     boolean result = false;
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
@@ -1028,29 +1028,31 @@ public class Setter {
 
         while (isDuplicate) {
 
-          PreparedStatement prestmt =
-              conn.prepareStatement("SELECT ssoName FROM `users` WHERE userName = ?");
+          try (PreparedStatement prestmt =
+              conn.prepareStatement("SELECT ssoName FROM `users` WHERE userName = ?")) {
 
-          prestmt.setString(1, newUsername);
+            prestmt.setString(1, newUsername);
 
-          ResultSet checkDuplicate = prestmt.executeQuery();
-          log.debug("Opening result set");
+            try (ResultSet checkDuplicate = prestmt.executeQuery()) {
+              log.debug("Opening result set");
 
-          if (checkDuplicate.next()) {
-            // Found a duplicate user, sigh
-            isDuplicate = true;
-            duplicateCounter++;
+              if (checkDuplicate.next()) {
+                // Found a duplicate user, sigh
+                isDuplicate = true;
+                duplicateCounter++;
 
-            newUsername = userName + String.valueOf(duplicateCounter);
+                newUsername = userName + String.valueOf(duplicateCounter);
 
-            log.debug(
-                "Duplicate username found, changing to "
-                    + newUsername
-                    + " counter "
-                    + String.valueOf(duplicateCounter));
+                log.debug(
+                    "Duplicate username found, changing to "
+                        + newUsername
+                        + " counter "
+                        + String.valueOf(duplicateCounter));
 
-          } else {
-            isDuplicate = false;
+              } else {
+                isDuplicate = false;
+              }
+            }
           }
 
           if (duplicateCounter > 500) {
@@ -1066,11 +1068,10 @@ public class Setter {
         throw new SQLException(e);
       }
 
-      try {
+      log.debug("Executing userCreate procedure on Database");
 
-        log.debug("Executing userCreate procedure on Database");
-
-        CallableStatement callstmt = conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      try (CallableStatement callstmt =
+          conn.prepareCall("call userCreate(?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
         callstmt.setString(1, classId);
         callstmt.setString(2, newUsername);
         callstmt.setString(3, "DISABLED");
@@ -1081,20 +1082,21 @@ public class Setter {
         callstmt.setBoolean(8, false); // temppass
         callstmt.setBoolean(9, true); // Tempname
 
-        ResultSet registerAttempt = callstmt.executeQuery();
-        log.debug("Opening result set");
+        try (ResultSet registerAttempt = callstmt.executeQuery()) {
+          log.debug("Opening result set");
 
-        registerAttempt.next(); // Procedure Ran correctly
+          registerAttempt.next(); // Procedure Ran correctly
 
-        if (registerAttempt.getString(1) == null) {
-          // Registration success
-          log.debug("Register Success");
-          result = newUsername;
-        } else {
-          // Registration failure
-          result = null;
-          log.debug("ResultSet contained -> " + registerAttempt.getString(1));
-          throw new SQLException(registerAttempt.getString(1));
+          if (registerAttempt.getString(1) == null) {
+            // Registration success
+            log.debug("Register Success");
+            result = newUsername;
+          } else {
+            // Registration failure
+            result = null;
+            log.debug("ResultSet contained -> " + registerAttempt.getString(1));
+            throw new SQLException(registerAttempt.getString(1));
+          }
         }
 
       } catch (SQLException e) {

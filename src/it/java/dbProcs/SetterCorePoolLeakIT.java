@@ -1,5 +1,6 @@
 package dbProcs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -21,9 +22,6 @@ public class SetterCorePoolLeakIT {
   private static final Logger log = LogManager.getLogger(SetterCorePoolLeakIT.class);
   private static boolean databaseAvailable = false;
   private static final String applicationRoot = "";
-
-  /** Must stay within configured core pool max (see database.properties / ConnectionPool). */
-  private static final int MAX_ALLOWED_ACTIVE = 32;
 
   @BeforeAll
   public static void setup() throws IOException, SQLException {
@@ -55,6 +53,10 @@ public class SetterCorePoolLeakIT {
    * procedure, returns. With a nonexistent userId the procedure is a no-op, so we can hammer it
    * safely. Pre-fix, every iteration would leak a connection on the success path's manual
    * closeConnection call (and on every exception path).
+   *
+   * <p>The loop is serial, so a non-leaking pool must return active count to the pre-call baseline
+   * after every iteration. Asserting equality with baseline (typically 0) detects leaks
+   * deterministically — a hardcoded ceiling can still pass while the pool saturates.
    */
   @Test
   public void repeatedResetBadSubmissionDoesNotExhaustCorePool() {
@@ -71,9 +73,14 @@ public class SetterCorePoolLeakIT {
         "SetterCorePoolLeakIT: baseline active={}, after 500 resetBadSubmission calls active={}",
         baseline,
         active);
-    assertTrue(
-        active <= MAX_ALLOWED_ACTIVE,
-        "Core pool active connections should stay bounded; got " + active);
+    assertEquals(
+        baseline,
+        active,
+        "Core pool active connections should return to baseline after a serial loop; got "
+            + active
+            + " (baseline "
+            + baseline
+            + ")");
   }
 
   /**
@@ -95,8 +102,13 @@ public class SetterCorePoolLeakIT {
         "SetterCorePoolLeakIT: baseline active={}, after 500 suspendUser calls active={}",
         baseline,
         active);
-    assertTrue(
-        active <= MAX_ALLOWED_ACTIVE,
-        "Core pool active connections should stay bounded; got " + active);
+    assertEquals(
+        baseline,
+        active,
+        "Core pool active connections should return to baseline after a serial loop; got "
+            + active
+            + " (baseline "
+            + baseline
+            + ")");
   }
 }
