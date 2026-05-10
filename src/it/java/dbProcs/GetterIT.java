@@ -42,7 +42,8 @@ public class GetterIT {
 
     TestProperties.createMysqlResource();
 
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
   }
 
   /**

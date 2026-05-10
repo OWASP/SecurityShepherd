@@ -40,7 +40,8 @@ public class OpenAllModulesIT {
   public static void readyDb() throws SQLException, IOException {
     testUtils.TestProperties.setTestPropertiesFileDirectory(log);
 
-    testUtils.TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
     log.debug("Creating - user: " + testUsers[0] + " password: " + testUsers[0]);
     TestProperties.verifyTestAdmin(log, null, testUsers[0], testUsers[0]);
     log.debug("Creating - user: " + testUsers[1] + " password: " + testUsers[1]);

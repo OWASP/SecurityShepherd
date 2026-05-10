@@ -42,7 +42,8 @@ public class XxeChallenge1IT {
     errors = ResourceBundle.getBundle("i18n.servlets.errors", enLocale);
     TestProperties.setTestPropertiesFileDirectory(log);
     try {
-      TestProperties.executeSql(log);
+      TestProperties.ensureSchemaReady(log);
+      TestProperties.reseedTestData();
       TestProperties.createFileSystemKey(log, "xxe.challenge.1.file", "xxe.challenge.1.solution");
       GetterIT.verifyTestUser(applicationRoot, TEST_USERNAME, TEST_USERNAME);
     } catch (InstallationException e) {

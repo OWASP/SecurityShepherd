@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,8 +28,13 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import servlets.Login;
+import utils.CheatSheetStatus;
 import utils.CountdownHandler;
+import utils.FeedbackStatus;
 import utils.InstallationException;
+import utils.ModulePlan;
+import utils.OpenRegistration;
+import utils.ScoreboardStatus;
 
 public class TestProperties {
 
@@ -39,23 +45,86 @@ public class TestProperties {
     fail(message);
   }
 
-  public static void executeSql(Logger log) throws IOException, SQLException {
+  private static volatile boolean schemaReady = false;
+
+  /**
+   * Build the schema (DDL + static seed data) exactly once per JVM. Subsequent calls are no-ops.
+   * Runs the full coreSchema.sql + moduleSchemas.sql, including DROP SCHEMA — this is fine because
+   * it only happens once per `mvn verify`.
+   */
+  public static synchronized void ensureSchemaReady(Logger log) throws IOException, SQLException {
+    if (!schemaReady) {
+      try (Connection conn = Database.getDatabaseConnection(null, true)) {
+        executeSql(log, conn);
+      }
+      schemaReady = true;
+    }
+  }
+
+  public static void executeSql(Logger log, Connection databaseConnection)
+      throws IOException, SQLException {
 
     File file =
         new File(System.getProperty("user.dir") + "/src/main/resources/database/coreSchema.sql");
     String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
-    Connection databaseConnection = Database.getDatabaseConnection(null, true);
-    Statement psProcToexecute = databaseConnection.createStatement();
-    psProcToexecute.executeUpdate(data);
+    try (Statement psProcToexecute = databaseConnection.createStatement()) {
+      psProcToexecute.executeUpdate(data);
+    }
 
     file =
         new File(System.getProperty("user.dir") + "/src/main/resources/database/moduleSchemas.sql");
     data = FileUtils.readFileToString(file, Charset.defaultCharset());
-    psProcToexecute = databaseConnection.createStatement();
-    psProcToexecute.executeUpdate(data);
+    try (Statement psProcToexecute = databaseConnection.createStatement()) {
+      psProcToexecute.executeUpdate(data);
+    }
 
     CountdownHandler.forceReload();
+  }
+
+  // CRITICAL: This method must reset ALL mutable data to post-init defaults.
+  // If a new table is added that tests write to, it must be cleaned here.
+  // If a new cache/setting is introduced, its reset must be added here.
+  // All cache mutators used here must fully overwrite prior state (no partial updates).
+  public static void reseedTestData() throws SQLException {
+    try (Connection conn = Database.getCoreConnection("")) {
+      // 1. Clear test-generated data (FK order: children first)
+      try (Statement stmt = conn.createStatement()) {
+        stmt.executeUpdate("DELETE FROM results");
+        stmt.executeUpdate("DELETE FROM medals");
+        stmt.executeUpdate("DELETE FROM users");
+        stmt.executeUpdate("DELETE FROM class");
+      }
+
+      // 2. Reset sequence counters to their per-row initial values
+      try (Statement stmt2 = conn.createStatement()) {
+        stmt2.executeUpdate(
+            "UPDATE sequence SET currVal = 282475249 WHERE tableName = 'users'");
+        stmt2.executeUpdate(
+            "UPDATE sequence SET currVal = 282475299 WHERE tableName = 'cheatSheet'");
+        stmt2.executeUpdate(
+            "UPDATE sequence SET currVal = 282475249 WHERE tableName = 'class'");
+        stmt2.executeUpdate(
+            "UPDATE sequence SET currVal = 282475576 WHERE tableName = 'modules'");
+      }
+
+      // 3. Reset module status to default
+      try (PreparedStatement ps =
+          conn.prepareStatement("UPDATE modules SET moduleStatus = 'open'")) {
+        ps.executeUpdate();
+      }
+    }
+
+    // 4. Reset all cached settings to coreSchema.sql defaults via existing public API.
+    //    Each call updates BOTH the in-memory cache AND the database.
+    CheatSheetStatus.disableForAll();
+    ScoreboardStatus.setScoreboardOpen();
+    FeedbackStatus.setDisabled();
+    OpenRegistration.disable();
+    ModulePlan.setIncrementalFloor();
+    CountdownHandler.disableStartTime();
+    CountdownHandler.disableLockTime();
+    CountdownHandler.disableEndTime();
   }
 
   public static void createFileSystemKey(Logger log, String fileProp, String solutionProp)

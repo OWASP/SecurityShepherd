@@ -32,7 +32,8 @@ public class CsrfLessonIT {
 
     TestProperties.createMysqlResource();
 
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
   }
 
   @BeforeEach

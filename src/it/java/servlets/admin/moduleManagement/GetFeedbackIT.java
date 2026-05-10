@@ -36,7 +36,8 @@ public class GetFeedbackIT {
 
     TestProperties.createMysqlResource();
 
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
   }
 
   @BeforeEach
