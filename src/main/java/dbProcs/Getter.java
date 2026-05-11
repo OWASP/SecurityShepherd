@@ -434,16 +434,17 @@ public class Getter {
     log.debug("*** Getter.checkPlayerResult ***");
 
     String result = null;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmnt = conn.prepareCall("call userCheckResult(?, ?)")) {
 
       log.debug("Preparing userCheckResult call");
-      CallableStatement callstmnt = conn.prepareCall("call userCheckResult(?, ?)");
       callstmnt.setString(1, moduleId);
       callstmnt.setString(2, userId);
       log.debug("Executing userCheckResult");
-      ResultSet resultSet = callstmnt.executeQuery();
-      resultSet.next();
-      result = resultSet.getString(1);
+      try (ResultSet resultSet = callstmnt.executeQuery()) {
+        resultSet.next();
+        result = resultSet.getString(1);
+      }
     } catch (SQLException e) {
       log.debug("userCheckResult Failure: " + e.toString());
       result = null;
@@ -462,18 +463,19 @@ public class Getter {
     log.debug("*** Getter.findPlayerById ***");
     boolean userFound = false;
     // Get connection
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call playerFindById(?)")) {
 
-      CallableStatement callstmt = conn.prepareCall("call playerFindById(?)");
       log.debug("Gathering playerFindById ResultSet");
       callstmt.setString(1, userId);
-      ResultSet userFind = callstmt.executeQuery();
-      log.debug("Opening Result Set from playerFindById");
-      userFind.next(); // This will throw an exception if player not found
-      log.debug(
-          "Player Found: "
-              + userFind.getString(1)); // This line will not execute if player not found
-      userFound = true;
+      try (ResultSet userFind = callstmt.executeQuery()) {
+        log.debug("Opening Result Set from playerFindById");
+        userFind.next(); // This will throw an exception if player not found
+        log.debug(
+            "Player Found: "
+                + userFind.getString(1)); // This line will not execute if player not found
+        userFound = true;
+      }
     } catch (SQLException e) {
       log.error("Player did not exist: " + e.toString());
       userFound = false;
@@ -494,23 +496,24 @@ public class Getter {
     log.debug("*** Getter.getAllModuleInfo ***");
     ArrayList<String[]> modules = new ArrayList<String[]>();
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call moduleGetAll()")) {
 
-      CallableStatement callstmt = conn.prepareCall("call moduleGetAll()");
       log.debug("Gathering moduleGetAll ResultSet");
-      ResultSet resultSet = callstmt.executeQuery();
-      log.debug("Opening Result Set from moduleGetAll");
-      int i = 0;
-      while (resultSet.next()) {
-        String[] result = new String[4];
-        i++;
-        result[0] = resultSet.getString(1); // moduleId
-        result[1] = resultSet.getString(2); // moduleName
-        result[2] = resultSet.getString(3); // moduleType
-        result[3] = resultSet.getString(4); // mdouleCategory
-        modules.add(result);
+      try (ResultSet resultSet = callstmt.executeQuery()) {
+        log.debug("Opening Result Set from moduleGetAll");
+        int i = 0;
+        while (resultSet.next()) {
+          String[] result = new String[4];
+          i++;
+          result[0] = resultSet.getString(1); // moduleId
+          result[1] = resultSet.getString(2); // moduleName
+          result[2] = resultSet.getString(3); // moduleType
+          result[3] = resultSet.getString(4); // mdouleCategory
+          modules.add(result);
+        }
+        log.debug("Returning Array list with " + i + " entries.");
       }
-      log.debug("Returning Array list with " + i + " entries.");
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
     }
@@ -535,58 +538,59 @@ public class Getter {
     // Getting Translated Level Names
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", lang);
     // Encoder to prevent XSS
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call moduleAllInfo(?, ?)")) {
 
-      CallableStatement callstmt = conn.prepareCall("call moduleAllInfo(?, ?)");
       callstmt.setString(1, "challenge");
       callstmt.setString(2, userId);
       log.debug("Gathering moduleAllInfo ResultSet");
-      ResultSet challenges = callstmt.executeQuery();
-      log.debug("Opening Result Set from moduleAllInfo");
-      String challengeCategory = new String();
-      int rowNumber = 0; // Identifies the first row, ie the start of the list. This is slightly
-      // different output to every other row
-      while (challenges.next()) {
-        if (!challengeCategory.equalsIgnoreCase(challenges.getString(2))) {
-          challengeCategory = challenges.getString(2);
-          // log.debug("New Category Detected: " + challengeCategory);
-          if (rowNumber > 0) // output prepared for Every row after row 1
-          {
-            output +=
-                "</ul></li><li><a href='javascript:;' class='challengeHeader' >"
-                    + Encode.forHtml(bundle.getString("category." + challengeCategory))
-                    + "</a><ul class='challengeList' style='display: none;'>";
-          } else // output prepared for First row in entire challenge
-          {
-            output +=
-                "<li><a href='javascript:;' class='challengeHeader'>"
-                    + Encode.forHtml(bundle.getString("category." + challengeCategory))
-                    + "</a><ul class='challengeList' style='display: none;'>";
+      try (ResultSet challenges = callstmt.executeQuery()) {
+        log.debug("Opening Result Set from moduleAllInfo");
+        String challengeCategory = new String();
+        int rowNumber = 0; // Identifies the first row, ie the start of the list. This is slightly
+        // different output to every other row
+        while (challenges.next()) {
+          if (!challengeCategory.equalsIgnoreCase(challenges.getString(2))) {
+            challengeCategory = challenges.getString(2);
+            // log.debug("New Category Detected: " + challengeCategory);
+            if (rowNumber > 0) // output prepared for Every row after row 1
+            {
+              output +=
+                  "</ul></li><li><a href='javascript:;' class='challengeHeader' >"
+                      + Encode.forHtml(bundle.getString("category." + challengeCategory))
+                      + "</a><ul class='challengeList' style='display: none;'>";
+            } else // output prepared for First row in entire challenge
+            {
+              output +=
+                  "<li><a href='javascript:;' class='challengeHeader'>"
+                      + Encode.forHtml(bundle.getString("category." + challengeCategory))
+                      + "</a><ul class='challengeList' style='display: none;'>";
+            }
+            // log.debug("Compiling Challenge Category - " + challengeCategory);
           }
-          // log.debug("Compiling Challenge Category - " + challengeCategory);
+          output += "<li>"; // Starts next LI element
+          if (challenges.getString(4) != null) {
+            output += "<img src='css/images/completed.png'/>"; // Completed marker
+          } else {
+            output += "<img src='css/images/uncompleted.png'/>"; // Incomplete marker
+          }
+          // Final out put compilation
+          output +=
+              "<a class='lesson' id='"
+                  + Encode.forHtmlAttribute(challenges.getString(3))
+                  + "' href='javascript:;'>"
+                  + Encode.forHtml(bundle.getString(challenges.getString(1)))
+                  + "</a>";
+          output += "</li>";
+          rowNumber++;
         }
-        output += "<li>"; // Starts next LI element
-        if (challenges.getString(4) != null) {
-          output += "<img src='css/images/completed.png'/>"; // Completed marker
+        // Check if output is empty
+        if (output.isEmpty()) {
+          output = "<li>No challenges found</li>";
         } else {
-          output += "<img src='css/images/uncompleted.png'/>"; // Incomplete marker
+          log.debug("Appending End tags");
+          output += "</ul></li>";
         }
-        // Final out put compilation
-        output +=
-            "<a class='lesson' id='"
-                + Encode.forHtmlAttribute(challenges.getString(3))
-                + "' href='javascript:;'>"
-                + Encode.forHtml(bundle.getString(challenges.getString(1)))
-                + "</a>";
-        output += "</li>";
-        rowNumber++;
-      }
-      // Check if output is empty
-      if (output.isEmpty()) {
-        output = "<li>No challenges found</li>";
-      } else {
-        log.debug("Appending End tags");
-        output += "</ul></li>";
       }
 
       log.debug("*** END getChallenges() ***");
@@ -2087,60 +2091,61 @@ public class Getter {
       ResourceBundle.getBundle("i18n.text", locale);
       ResourceBundle levelNames =
           ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
-      try {
-        JSONObject jsonSection = new JSONObject();
-        JSONArray jsonSectionModules = new JSONArray();
-        JSONObject jsonObject = new JSONObject();
-        jsonSection.put("levelMode", floor);
-        jsonOutput.put(jsonSection);
-        jsonSection = new JSONObject();
+      JSONObject jsonSection = new JSONObject();
+      JSONArray jsonSectionModules = new JSONArray();
+      JSONObject jsonObject = new JSONObject();
+      jsonSection.put("levelMode", floor);
+      jsonOutput.put(jsonSection);
+      jsonSection = new JSONObject();
 
-        // Get the modules
-        CallableStatement callstmt = conn.prepareCall("call getMyModules(?)");
+      // Get the modules
+      try (CallableStatement callstmt = conn.prepareCall("call getMyModules(?)")) {
         callstmt.setString(1, userId);
         log.debug("Gathering getMyModules ResultSet for user " + userId);
-        ResultSet levels = callstmt.executeQuery();
-        boolean thisModuleIsOpen =
-            true; // If Incremental Mode is enabled, after all the modules that have been
-        // completed have been added to the JSON Array the next level will be
-        // labeled as open and the rest as closed
-        while (levels.next()) {
-          jsonObject = new JSONObject();
-          boolean moduleCompleted = levels.getString(4) != null;
-          jsonObject.put("moduleCompleted", moduleCompleted);
-          jsonObject.put("moduleId", levels.getString(3));
-          jsonObject.put("moduleType", levels.getString(5));
-          jsonObject.put("moduleName", levelNames.getString(levels.getString(1)));
-          jsonObject.put("moduleCategory", levelNames.getString("category." + levels.getString(2)));
-          jsonObject.put(
-              "difficultyCategory", getTounnamentSectionFromRankNumber(levels.getInt(7)));
-          jsonObject.put("moduleScore", levels.getString(6));
-          jsonObject.put("moduleRank", levels.getInt(7));
-          jsonObject.put("scoredPoints", levels.getString(8)); // Could be null
-          jsonObject.put("medalEarned", levels.getString(9)); // Could be null
-          if (ModulePlan.isIncrementalFloor()) {
-            boolean moduleOpen;
-            if (moduleCompleted
-                || (!moduleCompleted && thisModuleIsOpen)) // If its completed or if this is the
-            // first not completed
-            {
-              moduleOpen = true;
-              if (!moduleCompleted && thisModuleIsOpen) {
-                log.debug(
-                    levelNames.getString(levels.getString(1))
-                        + " is the Next Module for user "
-                        + userId);
-                thisModuleIsOpen = false; // Stop this from being set again
+        try (ResultSet levels = callstmt.executeQuery()) {
+          boolean thisModuleIsOpen =
+              true; // If Incremental Mode is enabled, after all the modules that have been
+          // completed have been added to the JSON Array the next level will be
+          // labeled as open and the rest as closed
+          while (levels.next()) {
+            jsonObject = new JSONObject();
+            boolean moduleCompleted = levels.getString(4) != null;
+            jsonObject.put("moduleCompleted", moduleCompleted);
+            jsonObject.put("moduleId", levels.getString(3));
+            jsonObject.put("moduleType", levels.getString(5));
+            jsonObject.put("moduleName", levelNames.getString(levels.getString(1)));
+            jsonObject.put(
+                "moduleCategory", levelNames.getString("category." + levels.getString(2)));
+            jsonObject.put(
+                "difficultyCategory", getTounnamentSectionFromRankNumber(levels.getInt(7)));
+            jsonObject.put("moduleScore", levels.getString(6));
+            jsonObject.put("moduleRank", levels.getInt(7));
+            jsonObject.put("scoredPoints", levels.getString(8)); // Could be null
+            jsonObject.put("medalEarned", levels.getString(9)); // Could be null
+            if (ModulePlan.isIncrementalFloor()) {
+              boolean moduleOpen;
+              if (moduleCompleted
+                  || (!moduleCompleted && thisModuleIsOpen)) // If its completed or if this is the
+              // first not completed
+              {
+                moduleOpen = true;
+                if (!moduleCompleted && thisModuleIsOpen) {
+                  log.debug(
+                      levelNames.getString(levels.getString(1))
+                          + " is the Next Module for user "
+                          + userId);
+                  thisModuleIsOpen = false; // Stop this from being set again
+                }
+              } else {
+                moduleOpen = false;
               }
-            } else {
-              moduleOpen = false;
+              jsonObject.put("moduleOpen", moduleOpen);
             }
-            jsonObject.put("moduleOpen", moduleOpen);
+            jsonSectionModules.put(jsonObject);
           }
-          jsonSectionModules.put(jsonObject);
+          jsonSection.put("modules", jsonSectionModules);
+          jsonOutput.put(jsonSection);
         }
-        jsonSection.put("modules", jsonSectionModules);
-        jsonOutput.put(jsonSection);
       } catch (Exception e) {
         log.error("Module List Retrieval: " + e.toString());
       }
@@ -2353,21 +2358,18 @@ public class Getter {
     boolean adminCheatStatus = false;
     log.debug("*** Getter.getAdminCheatStatus ***");
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement callstmt =
+            conn.prepareStatement("SELECT value FROM settings WHERE setting= ?")) {
 
       log.debug("Getting admin cheat setting");
-      PreparedStatement callstmt =
-          conn.prepareStatement("SELECT value FROM settings WHERE setting= ?");
-
       callstmt.setString(1, "adminCheatsEnabled");
 
-      ResultSet cheatResult = callstmt.executeQuery();
-
-      cheatResult.next();
-
-      adminCheatStatus = cheatResult.getBoolean(1);
-
-      log.debug("Value found: " + adminCheatStatus);
+      try (ResultSet cheatResult = callstmt.executeQuery()) {
+        cheatResult.next();
+        adminCheatStatus = cheatResult.getBoolean(1);
+        log.debug("Value found: " + adminCheatStatus);
+      }
 
       log.debug("*** END getAdminCheatStatus ***");
       return adminCheatStatus;

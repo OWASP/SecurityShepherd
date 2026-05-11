@@ -1147,10 +1147,10 @@ public class Setter {
     log.debug("*** Setter.setAdminCheatStatus ***");
     log.debug("adminCheatsEnabled = " + adminCheatsEnabled);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement callAdminSetting =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting admin cheat setting");
-      PreparedStatement callAdminSetting =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       callAdminSetting.setBoolean(1, adminCheatsEnabled);
       callAdminSetting.setString(2, "adminCheatsEnabled");
 
@@ -1171,10 +1171,10 @@ public class Setter {
     log.debug("*** Setter.setPlayerCheatStatus ***");
     log.debug("playerCheatsEnabled = " + playerCheatsEnabled);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement callPlayerSetting =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting player cheat setting");
-      PreparedStatement callPlayerSetting =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       callPlayerSetting.setBoolean(1, playerCheatsEnabled);
       callPlayerSetting.setString(2, "playerCheatsEnabled");
 
@@ -1201,10 +1201,10 @@ public class Setter {
       throw new IllegalArgumentException("Invalid module layout: " + theModuleLayout);
     }
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement moduleLayoutSetting =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting player cheat setting");
-      PreparedStatement moduleLayoutSetting =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       moduleLayoutSetting.setString(1, theModuleLayout);
       moduleLayoutSetting.setString(2, "modulelayout");
 
@@ -1225,10 +1225,10 @@ public class Setter {
     log.debug("*** Setter.setFeedbackStatus ***");
     log.debug("feedbackStatus = " + theFeebackStatus);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement getFeedbackSetting =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting feedback status setting");
-      PreparedStatement getFeedbackSetting =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       getFeedbackSetting.setBoolean(1, theFeebackStatus);
       getFeedbackSetting.setString(2, "enableFeedback");
 
