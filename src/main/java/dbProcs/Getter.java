@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.owasp.encoder.Encode;
 import servlets.Register;
+import utils.DbTime;
 import utils.ModulePlan;
 import utils.ScoreboardStatus;
 
@@ -166,7 +167,7 @@ public class Getter {
           badLoginCount = userResult.getInt(5);
           result[3] = Boolean.toString(userResult.getBoolean(6));
           result[4] = userResult.getString(7); // classId
-          suspendedUntil = userResult.getTimestamp(8);
+          suspendedUntil = userResult.getTimestamp(8,DbTime.UTC);
           loginType = userResult.getString(9);
           result[5] = Boolean.toString(userResult.getBoolean(10));
         } catch (SQLException e) {
@@ -368,7 +369,7 @@ public class Getter {
       log.debug("Getting suspension data");
 
       try {
-        suspendedUntil = userResult.getTimestamp(7);
+        suspendedUntil = userResult.getTimestamp(7, DbTime.UTC);
       } catch (SQLException e) {
         log.fatal(
             "Could not find suspension information from ssoName: " + ssoName + ": " + e.toString());
