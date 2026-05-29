@@ -3,7 +3,7 @@
 # pre
 sudo apt-get update -y
 sudo apt-get install -y maven
-sudo apt-get install -y openjdk-8-jdk
+sudo apt-get install -y openjdk-17-jdk
 
 # install docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -

@@ -1,0 +1,4 @@
+# Normalize line endings for the Maven-built Java sources. These are formatted
+# with Google Java Format (via Spotless), which expects LF; enforce LF so the
+# format check is stable across platforms.
+src/**/*.java text eol=lf
