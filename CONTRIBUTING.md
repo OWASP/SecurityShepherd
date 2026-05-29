@@ -11,23 +11,29 @@ To add a new feature or fix a bug in Shepherd, create a fork or branch from the 
 If you're working on an issue from the backlog, call your branch dev#{issueNumber}
 
 ## Code Format
-Shepherd enforces [Google Java Format](https://github.com/google/google-java-format) via CI. Pull requests with incorrectly formatted Java files will fail the `lint-java` check.
+Shepherd enforces [Google Java Format](https://github.com/google/google-java-format) via [Spotless](https://github.com/diffplug/spotless), bound to the Maven build. The format version is pinned in `pom.xml`, so local and CI use the exact same formatter. Pull requests with incorrectly formatted Java files will fail the `lint-java` check (`mvn spotless:check`).
 
 ### Formatting your code
 
-**Option 1 — Command line (recommended):**
-
-Download the [google-java-format JAR](https://github.com/google/google-java-format/releases) and run:
+**Option 1 — Maven (recommended):**
 
 ```bash
-java -jar google-java-format-1.25.2-all-deps.jar --replace $(find src -name "*.java")
+# Reformat all Java sources in place
+mvn spotless:apply
+
+# Verify formatting without changing files (this is what CI runs)
+mvn spotless:check
 ```
+
+`mvn verify` also runs `spotless:check` automatically, so unformatted code fails the build before you push.
 
 **Option 2 — IDE plugins:**
 
 - **IntelliJ IDEA / Android Studio:** Install the [google-java-format plugin](https://plugins.jetbrains.com/plugin/8527-google-java-format) and enable it under *Settings → google-java-format*.
 - **Eclipse:** Import the [Eclipse style config](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml) under *Preferences → Java → Code Style → Formatter*.
 - **VS Code:** Use the [Google Java Format extension](https://marketplace.visualstudio.com/items?itemName=ilkka.google-java-format) or configure the built-in formatter.
+
+IDE plugins should be set to the same Google Java Format version pinned in `pom.xml` (`spotless-maven-plugin` → `<googleJavaFormat><version>`) to avoid producing output that differs from CI.
 
 Always format before committing to avoid CI failures.
 

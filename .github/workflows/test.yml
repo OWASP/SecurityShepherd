@@ -53,10 +53,10 @@ jobs:
       - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: temurin
-          java-version: '24'
-      - uses: axel-op/googlejavaformat-action@c1134ebd196c4cbffb077f9476585b0be8b6afcd # v4.0.0
-        with:
-          args: "--set-exit-if-changed"
+          java-version: '17'
+          cache: maven
+      - name: Check Java formatting (Google Java Format via Spotless)
+        run: mvn spotless:check -B
 
   build:
     needs: detect-changes
