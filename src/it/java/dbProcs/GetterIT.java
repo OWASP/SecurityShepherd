@@ -3195,6 +3195,30 @@ public class GetterIT {
   }
 
   /**
+   * Exercises the existing-user SSO re-login path: the first call creates the user, the second call
+   * finds the existing (non-suspended) user. This drives Phase 1 (found) -> skip create -> Phase 3
+   * of the try-with-resources refactor (#840) and asserts the user identity is stable across
+   * logins.
+   */
+  @Test
+  public void testSSOAuthExistingUserRelogin() {
+    String userName = new String("SSOReloginUser Lastname");
+    String ssoName = new String("ssoreloginuser@example.com");
+
+    String[] first = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
+    assertNotNull(first, "First SSO auth (user creation) should succeed");
+    assertFalse(first[0].isEmpty(), "Newly created SSO user should have a userId");
+
+    String[] second = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
+    assertNotNull(second, "Second SSO auth (existing user) should succeed");
+    assertEquals(
+        first[0],
+        second[0],
+        "Existing-user re-login should return the same userId, not create a new user");
+    assertEquals(first[1], second[1], "Existing-user re-login should return the same userName");
+  }
+
+  /**
    * Verifies Getter.getAdminCheatStatus reads the value Setter.setAdminCheatStatus wrote. Catches
    * any regression in the try-with-resources refactor of these methods (#834-follow-up). Restores
    * the original setting after running.
