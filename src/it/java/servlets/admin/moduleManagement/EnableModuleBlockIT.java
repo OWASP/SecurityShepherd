@@ -1,15 +1,15 @@
 package servlets.admin.moduleManagement;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -17,8 +17,8 @@ import testUtils.TestProperties;
 import utils.ModuleBlock;
 
 /**
- * This class just tests the servlet code. The Setter code is better tested in the SetterTest test's
- * / GetModule tests
+ * This class just tests the servlet code. The Setter code is better tested in the SetterIT test's /
+ * GetModule tests
  *
  * @author Mark Denihan
  */
@@ -31,16 +31,17 @@ public class EnableModuleBlockIT {
   private MockHttpServletResponse response;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
-  @BeforeClass
+  @BeforeAll
   public static void resetDatabase() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
 
     TestProperties.createMysqlResource();
 
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     request = new MockHttpServletRequest();
     response = new MockHttpServletResponse();
@@ -115,7 +116,7 @@ public class EnableModuleBlockIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, blockedMessage, moduleId);
       if (responseBody.contains("loggedOutSheep")) {
-        log.debug("No Admin Access Result Recieved");
+        log.debug("No Admin Access Result Received");
       } else {
         String message = "Did not get authoristion error for User accessing Admin Function";
         log.fatal(message);
@@ -197,8 +198,8 @@ public class EnableModuleBlockIT {
       // Add Cookies from Response to outgoing request
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, blockedMessage, moduleId);
-      if (responseBody.contains("Invalid data recieved")) {
-        log.debug("Invalid Data Error Recieved");
+      if (responseBody.contains("Invalid data Received")) {
+        log.debug("Invalid Data Error Received");
       } else {
         String message = "Module Id Validation Failed";
         log.fatal(message);

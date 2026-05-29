@@ -1,6 +1,6 @@
 package servlets.admin.userManagement;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
@@ -9,15 +9,15 @@ import java.sql.SQLException;
 import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 
 /**
- * This class just tests the servlet code. The Setter code is better tested in the SetterTest test's
+ * This class just tests the servlet code. The Setter code is better tested in the SetterIT test's
  *
  * @author Cosmin Craciun credit to Mark Denihan
  */
@@ -29,7 +29,7 @@ public class DeletePlayersIT {
   private MockHttpServletResponse response;
   private static String lang = "en_GB";
 
-  @Before
+  @BeforeEach
   public void setUp() {
     TestProperties.setTestPropertiesFileDirectory(log);
     request = new MockHttpServletRequest();
@@ -94,7 +94,7 @@ public class DeletePlayersIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, new String());
       if (responseBody.contains("Please try non administrator functions")) {
-        log.debug("No Admin Access Result Recieved");
+        log.debug("No Admin Access Result Received");
       } else {
         String message = "Did not get authoristion error for User accessing Admin Function";
         log.fatal(message);
@@ -127,7 +127,7 @@ public class DeletePlayersIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, new String());
       if (responseBody.contains("Player(s) Not Found")) {
-        log.debug("Player(s) Not Found Message Recieved");
+        log.debug("Player(s) Not Found Message Received");
       } else {
         String message = "Admin unable to use delete player";
         log.fatal(message);
@@ -177,7 +177,7 @@ public class DeletePlayersIT {
 
       String responseBody = doThePost(csrfToken, testuserId);
       if (responseBody.contains("User deleted successfully")) {
-        log.debug("User deleted successfully Message Recieved");
+        log.debug("User deleted successfully Message Received");
       } else {
         String message = "Admin unable to use delete player";
         log.fatal(message);

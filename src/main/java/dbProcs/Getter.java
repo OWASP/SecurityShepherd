@@ -43,6 +43,7 @@ import utils.ScoreboardStatus;
 public class Getter {
 
   private static final Logger log = LogManager.getLogger(Getter.class);
+
   /** Used for scoreboards / progress bars */
   private static final int widthOfUnitBar = 11; // px
 

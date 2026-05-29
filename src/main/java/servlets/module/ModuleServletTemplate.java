@@ -47,6 +47,7 @@ public class ModuleServletTemplate extends HttpServlet {
   public static String levelHash = "Level Hash Here";
   private static String levelResult =
       ""; // Put the Level Result Key here only if the level is not hardcoded in the database or
+
   // mobile application
 
   /**
