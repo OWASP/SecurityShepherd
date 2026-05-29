@@ -12,16 +12,15 @@ else
   systemctl mask systemd-networkd-wait-online.service
 	# Install Pre-Requisite Stuff
 	sudo add-apt-repository universe #Tomcat8 is here
-	sudo add-apt-repository -y ppa:webupd8team/java #Java is here
 	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
 	echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list #mongodb is here
 	sudo apt-get update -y
 	sudo apt-get upgrade -y
-	sudo apt-get install -y oracle-java8-installer tomcat8 tomcat8-admin mysql-server-5.7 mongodb-org unzip
+	sudo apt-get install -y openjdk-17-jdk tomcat8 tomcat8-admin mysql-server-5.7 mongodb-org unzip
 
 	#Configuring Tomcat to Run the way we want (Oracle Java, HTTPs, Port 80 redirect to 443
 	echo "Configuring Tomcat"
-	sudo echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/default/tomcat8
+	sudo echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> /etc/default/tomcat8
 	sudo echo "AUTHBIND=yes" >> /etc/default/tomcat8
   #Have to CHOWN conf / etc/tomcat8 so Tomcat can create DB Auth / DB Prop files there.
   sudo chown tomcat8 /etc/tomcat8

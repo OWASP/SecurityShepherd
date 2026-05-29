@@ -1,79 +1,96 @@
 name: Build and Test
 on:
   push:
-    branches: [master, dev]
-    paths-ignore:
-      - '**.md'
-      - '.github/ISSUE_TEMPLATE'
-      - '.gitignore'
-      - 'provisioning'
-      - '.sonarcloud.properties'
-      - 'LICENSE'
-      - 'Vagrantfile'
+    branches:
+      - master
+      - dev
   pull_request:
-    branches: [master, dev]
-    paths-ignore:
-      - '**.md'
-      - '.github/ISSUE_TEMPLATE'
-      - '.gitignore'
-      - 'provisioning'
-      - '.sonarcloud.properties'
-      - 'LICENSE'
-      - 'Vagrantfile'
+    branches:
+      - master
+      - dev
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  lint-java:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      src: ${{ steps.filter.outputs.src }}
+      java: ${{ steps.filter.outputs.java }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
+        id: filter
+        with:
+          filters: |
+            java:
+              - 'src/**/*.java'
+            src:
+              - 'src/**'
+              - 'pom.xml'
+              - 'docker-compose.yml'
+              - 'docker/**'
+              - '.env'
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: axel-op/googlejavaformat-action@fe78db8a90171b6a836449f8d0e982d5d71e5c5a #v3.6.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
-          args: "--set-exit-if-changed"
+          fail-on-severity: critical
+
+  lint-java:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.java == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Check Java formatting (Google Java Format via Spotless)
+        run: mvn spotless:check -B
 
   build:
-    needs: lint-java
-    name: build
+    needs: detect-changes
+    if: needs.detect-changes.outputs.src == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
-          java-version: 1.8
+          distribution: temurin
+          java-version: '17'
+          cache: maven
       - name: Build Maven with Docker Profile
         run: mvn clean install -Pdocker -DskipTests -B
       - name: Docker Compose Build
-        run: docker-compose build
+        run: docker compose build
 
   unit-tests:
-    needs: [lint-java, build]
+    needs: detect-changes
+    if: needs.detect-changes.outputs.src == 'true'
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: core
-        ports:
-          - '8888:3306'
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
-          java-version: 1.8
-      - name: Start MYSQL Server
-        run: sudo /etc/init.d/mysql start
-      - name: Modify MySQL Connection Variables
-        run: |
-          sed -i "s/'@'localhost'/'@'%'/g" ${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql
-          sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
+          distribution: temurin
+          java-version: '17'
+          cache: maven
       - name: Run Unit Tests
-        run: mvn test -B -e -X
+        run: mvn test -B -e
 
   integration-tests:
-    needs: [lint-java, build]
+    needs: detect-changes
+    if: needs.detect-changes.outputs.src == 'true'
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -85,21 +102,22 @@ jobs:
           - '8888:3306'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
-          java-version: 1.8
+          distribution: temurin
+          java-version: '17'
+          cache: maven
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
       - name: Modify MySQL Connection Variables
         run: |
           sed -i "s/'@'localhost'/'@'%'/g" ${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql
           sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
-      - name: Prepare Intergration Tests
+      - name: Prepare Integration Tests
         run: |
-          sudo apt-get -y install libargon2-0
+          sudo apt-get -y install libargon2-1
           mvn -Pdocker validate
-      - name: Run Intergration Tests
+      - name: Run Integration Tests
         run: |
           mvn verify -DskipUTs=true -DmongoDocker -B

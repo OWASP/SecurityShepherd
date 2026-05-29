@@ -1,5 +1,6 @@
 package servlets.module.challenge;
 
+import dbProcs.Getter;
 import java.io.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -42,9 +43,14 @@ public class XxeChallenge1OldWebService extends HttpServlet {
   private static final long serialVersionUID = 1L;
   private static final Logger log = LogManager.getLogger(XxeChallenge1OldWebService.class);
   private static final String LEVEL_NAME = "XXE Challenge 1 OldWebService";
+  private static final String LEVEL_HASH =
+      "ac8f3f6224b1ea3fb8a0f017aadd0d84013ea2c80e232c980e54dd753700123e";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+
+    String ApplicationRoot = getServletContext().getRealPath("");
+    String moduleId = Getter.getModuleIdFromHash(ApplicationRoot, LEVEL_HASH);
 
     // Setting IpAddress To Log and taking header for original IP if forwarded from
     // proxy
@@ -61,48 +67,52 @@ public class XxeChallenge1OldWebService extends HttpServlet {
     try {
       HttpSession ses = request.getSession(true);
       if (Validate.validateSession(ses)) {
-        ShepherdLogManager.setRequestIp(
-            request.getRemoteAddr(),
-            request.getHeader("X-Forwarded-For"),
-            ses.getAttribute("userName").toString());
-        log.debug(LEVEL_NAME + " accessed by: " + ses.getAttribute("userName").toString());
-        Cookie tokenCookie = Validate.getToken(request.getCookies());
-        Object tokenHeader = request.getHeader("csrfToken");
+        if (Getter.isModuleOpen(ApplicationRoot, moduleId)) {
+          ShepherdLogManager.setRequestIp(
+              request.getRemoteAddr(),
+              request.getHeader("X-Forwarded-For"),
+              ses.getAttribute("userName").toString());
+          log.debug(LEVEL_NAME + " accessed by: " + ses.getAttribute("userName").toString());
+          Cookie tokenCookie = Validate.getToken(request.getCookies());
+          Object tokenHeader = request.getHeader("csrfToken");
 
-        if (Validate.validateTokens(tokenCookie, tokenHeader)) {
-          InputStream xml = request.getInputStream();
-          String emailAddr = readXml(xml);
-          log.debug("Email Addr: " + emailAddr);
+          if (Validate.validateTokens(tokenCookie, tokenHeader)) {
+            InputStream xml = request.getInputStream();
+            String emailAddr = readXml(xml);
+            log.debug("Email Addr: " + emailAddr);
 
-          String htmlOutput = "";
+            String htmlOutput = "";
 
-          if (emailAddr == null) {
-            htmlOutput += "<p>" + bundle.getString("response.blank.email") + "</p>";
-            out.write(htmlOutput);
-          } else if (Validate.isValidEmailAddress(emailAddr)) {
-            log.debug("User Submitted - " + emailAddr);
+            if (emailAddr == null) {
+              htmlOutput += "<p>" + bundle.getString("response.blank.email") + "</p>";
+              out.write(htmlOutput);
+            } else if (Validate.isValidEmailAddress(emailAddr)) {
+              log.debug("User Submitted - " + emailAddr);
 
-            htmlOutput +=
-                "<p>"
-                    + bundle.getString("response.success.reset")
-                    + ": "
-                    + emailAddr
-                    + " has been reset</p>";
-            out.write(htmlOutput);
-          } else {
-            // dumb way of preventing the other level from being read
-            if (emailAddr.contains("c8c232cd8e3abdfea3fcef24379415a65e00")) {
               htmlOutput +=
-                  "<p>" + bundle.getString("response.invalid.email") + ". Wrong File.</p>";
+                  "<p>"
+                      + bundle.getString("response.success.reset")
+                      + ": "
+                      + emailAddr
+                      + " has been reset</p>";
               out.write(htmlOutput);
             } else {
-              htmlOutput +=
-                  "<p>" + bundle.getString("response.invalid.email") + ": " + emailAddr + "</p>";
-              out.write(htmlOutput);
+              // dumb way of preventing the other level from being read
+              if (emailAddr.contains("c8c232cd8e3abdfea3fcef24379415a65e00")) {
+                htmlOutput +=
+                    "<p>" + bundle.getString("response.invalid.email") + ". Wrong File.</p>";
+                out.write(htmlOutput);
+              } else {
+                htmlOutput +=
+                    "<p>" + bundle.getString("response.invalid.email") + ": " + emailAddr + "</p>";
+                out.write(htmlOutput);
+              }
             }
           }
+        } else {
+          log.error(LEVEL_NAME + " accessed but level is closed");
+          out.write(errors.getString("error.notOpen"));
         }
-
       } else {
         log.error(LEVEL_NAME + " accessed with no session");
         out.write(errors.getString("error.noSession"));

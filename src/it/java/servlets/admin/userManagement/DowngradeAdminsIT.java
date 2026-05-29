@@ -1,13 +1,13 @@
 package servlets.admin.userManagement;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -22,7 +22,7 @@ public class DowngradeAdminsIT {
   private MockHttpServletResponse response;
   private static String lang = "en_GB";
 
-  @Before
+  @BeforeEach
   public void setUp() {
     TestProperties.setTestPropertiesFileDirectory(log);
     request = new MockHttpServletRequest();

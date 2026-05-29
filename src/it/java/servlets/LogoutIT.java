@@ -1,16 +1,16 @@
 package servlets;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import dbProcs.GetterTest;
+import dbProcs.GetterIT;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -25,16 +25,17 @@ public class LogoutIT {
   private MockHttpServletResponse response;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
-  @BeforeClass
+  @BeforeAll
   public static void resetDatabase() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
 
     TestProperties.createMysqlResource();
 
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
   }
 
-  @Before
+  @BeforeEach
   public void setup() {
     log.debug("Setting Up Blank Request and Response");
     request = new MockHttpServletRequest();
@@ -115,7 +116,7 @@ public class LogoutIT {
     String userName = "logoutUser1";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as User Through LoginServlet");
       loginDoPost(userName, userName, null);
@@ -152,7 +153,7 @@ public class LogoutIT {
     String userName = "logoutUser2";
     try {
       // Verify User Exists in DB
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       // Sign in as Normal User
       log.debug("Signing in as User Through LoginServlet");
       loginDoPost(userName, userName, null);
