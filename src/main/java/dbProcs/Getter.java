@@ -219,49 +219,36 @@ public class Getter {
 
     boolean isTempUsername = false;
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
-      // See if user Exists
-      PreparedStatement prestmt;
-      try {
-        prestmt =
-            conn.prepareStatement(
-                "SELECT userId, userName, userPass, badLoginCount, tempPassword, classId,"
-                    + " suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND"
-                    + " loginType='saml'");
-      } catch (SQLException e) {
-        log.fatal("Could create call statement: " + e.toString());
-        throw new RuntimeException(e);
-      }
+    try {
+      // Phase 1: See if the user already exists, and capture suspension data if so.
+      // Each phase opens its own pooled connection in try-with-resources so the
+      // connection is never held across the Setter.userCreateSSO call (Phase 2).
+      Timestamp suspendedUntil = null;
 
-      log.debug("Gathering userFind ResultSet");
-      ResultSet userResult;
-      try {
+      try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+          PreparedStatement prestmt =
+              conn.prepareStatement(
+                  "SELECT userId, userName, userPass, badLoginCount, tempPassword, classId,"
+                      + " suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND"
+                      + " loginType='saml'")) {
         prestmt.setString(1, ssoName);
-        log.debug("Executing query");
-        userResult = prestmt.executeQuery();
-      } catch (SQLException e) {
-        log.fatal("Could not execute db query: " + e.toString());
-        throw new RuntimeException(e);
-      }
-
-      log.debug("Opening Result Set from userResult");
-
-      try {
-        if (userResult.next()) {
-          // User found if a row is in the database
-          userFound = true;
-          log.debug("User Found");
-        } else {
-          userFound = false;
+        log.debug("Gathering userFind ResultSet");
+        try (ResultSet userResult = prestmt.executeQuery()) {
+          log.debug("Opening Result Set from userResult");
+          if (userResult.next()) {
+            // User found if a row is in the database
+            userFound = true;
+            log.debug("User Found");
+            suspendedUntil = userResult.getTimestamp(7);
+          } else {
+            userFound = false;
+          }
         }
-
-      } catch (SQLException e) {
-        log.debug("User did not exist");
-        userFound = false;
       }
 
       if (!userFound) {
-        // User wasn't found, enroll them in database
+        // Phase 2: User wasn't found, enroll them in database. No pooled
+        // connection is held here; Setter.userCreateSSO borrows its own.
 
         boolean userCreated = false;
 
@@ -310,20 +297,7 @@ public class Getter {
 
       } else {
 
-        Timestamp suspendedUntil;
-
         log.debug("Getting suspension data");
-
-        try {
-          suspendedUntil = userResult.getTimestamp(7);
-        } catch (SQLException e) {
-          log.fatal(
-              "Could not find suspension information from ssoName: "
-                  + ssoName
-                  + ": "
-                  + e.toString());
-          throw new RuntimeException(e);
-        }
 
         // Get current system time
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
@@ -337,71 +311,36 @@ public class Getter {
         }
       }
 
-      // Find the generated userID and username by asking the database
-      try {
-        prestmt =
-            conn.prepareStatement(
-                "SELECT userId, userName, classID, tempUsername FROM `users` WHERE ssoName = ? AND"
-                    + " loginType='saml'");
-
-      } catch (SQLException e) {
-        log.fatal("Could create call statement: " + e.toString());
-        throw new RuntimeException(e);
-      }
-
-      log.debug("Gathering userResult ResultSet");
-
-      try {
+      // Phase 3: Find the generated userID and username by asking the database.
+      try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+          PreparedStatement prestmt =
+              conn.prepareStatement(
+                  "SELECT userId, userName, classID, tempUsername FROM `users` WHERE ssoName = ?"
+                      + " AND loginType='saml'")) {
         prestmt.setString(1, ssoName);
-        log.debug("Executing query");
-        userResult = prestmt.executeQuery();
-      } catch (SQLException e) {
-        log.fatal("Could not execute db query: " + e.toString());
-        throw new RuntimeException(e);
-      }
+        log.debug("Gathering userResult ResultSet");
+        try (ResultSet userResult = prestmt.executeQuery()) {
+          log.debug("Opening user list result set");
+          if (userResult.next()) {
+            userFound = true;
+            log.debug("User Found");
+          } else {
+            userFound = false;
+          }
 
-      log.debug("Opening user list result set");
+          if (!userFound) {
+            // If user wasn't found at this stage something is quite wrong, so exit
+            // forefully
+            String message = "User wasn't found after being added!";
+            log.fatal(message);
+            throw new RuntimeException(message);
+          }
 
-      try {
-        if (userResult.next()) {
-          userFound = true;
-          log.debug(
-              "User Found"); // User found if a row is in the database, this line will not work if
-          // the
-          // result
-          // set is empty
-        } else {
-          userFound = false;
+          userID = userResult.getString(1);
+          userName = userResult.getString(2);
+          classId = userResult.getString(3); // classId
+          isTempUsername = userResult.getBoolean(4);
         }
-
-      } catch (SQLException e) {
-        log.debug("User did not exist");
-        userFound = false;
-      }
-
-      if (!userFound) {
-        // If user wasn't found at this stage something is quite wrong, so exit
-        // forefully
-        String message = "User wasn't found after being added!";
-        log.fatal(message);
-        throw new RuntimeException(message);
-      }
-
-      try {
-        userID = userResult.getString(1);
-        userName = userResult.getString(2);
-        classId = userResult.getString(3); // classId
-        isTempUsername = userResult.getBoolean(4);
-      } catch (SQLException e) {
-        String message =
-            "Could find userID for userName "
-                + userName
-                + " with ssoName "
-                + ssoName
-                + " via SSO: "
-                + e.toString();
-        log.fatal(message);
-        throw new RuntimeException(message);
       }
 
       log.debug("User '" + userName + "' has logged in via SSO" + " with role " + userRole);

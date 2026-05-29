@@ -76,10 +76,10 @@ public class Setter {
     log.debug("*** Setter.classCreate ***");
 
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmnt = conn.prepareCall("call classCreate(?, ?)")) {
 
       log.debug("Preparing classCreate call");
-      CallableStatement callstmnt = conn.prepareCall("call classCreate(?, ?)");
       callstmnt.setString(1, className);
       callstmnt.setString(2, classYear);
       log.debug("Executing classCreate");
@@ -102,10 +102,10 @@ public class Setter {
   public static boolean closeAllModules(String ApplicationRoot) {
     log.debug("*** Setter.closeAllModules ***");
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement callstmt =
+            conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed'")) {
 
-      PreparedStatement callstmt =
-          conn.prepareStatement("UPDATE modules SET moduleStatus = 'closed'");
       callstmt.execute();
       log.debug("All modules Set to closed");
       result = true;
@@ -129,10 +129,10 @@ public class Setter {
     log.debug("*** Setter.incrementBadSubmission ***");
 
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement callstmnt = conn.prepareCall("CALL userBadSubmission(?)")) {
 
       log.debug("Prepairing bad Submission call");
-      PreparedStatement callstmnt = conn.prepareCall("CALL userBadSubmission(?)");
       callstmnt.setString(1, userId);
       log.debug("Executing userBadSubmission statement on id '" + userId + "'");
       callstmnt.execute();
@@ -259,10 +259,10 @@ public class Setter {
     log.debug("*** Setter.resetBadSubmission ***");
 
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement callstmnt = conn.prepareCall("CALL resetUserBadSubmission(?)")) {
 
       log.debug("Prepairing resetUserBadSubmission call");
-      PreparedStatement callstmnt = conn.prepareCall("CALL resetUserBadSubmission(?)");
       callstmnt.setString(1, userId);
       log.debug("Executing resetUserBadSubmission statement on id '" + userId + "'");
       callstmnt.execute();
@@ -461,9 +461,9 @@ public class Setter {
   public static boolean setModuleStatusClosed(String ApplicationRoot, String moduleId) {
     log.debug("*** Setter.setModuleStatusClosed ***");
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)")) {
 
-      CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
       log.debug("Preparing moduleSetStatus procedure");
       callstmt.setString(1, moduleId);
       callstmt.setString(2, "closed");
@@ -489,9 +489,9 @@ public class Setter {
   public static boolean setModuleStatusOpen(String ApplicationRoot, String moduleId) {
     log.debug("*** Setter.setModuleStatusOpen ***");
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)")) {
 
-      CallableStatement callstmt = conn.prepareCall("call moduleSetStatus(?, ?)");
       log.debug("Preparing moduleSetStatus procedure");
       callstmt.setString(1, moduleId);
       callstmt.setString(2, "open");
@@ -520,9 +520,9 @@ public class Setter {
       String ApplicationRoot, String message, String userId, String moduleId) {
     log.debug("*** Setter.setStoredMessage ***");
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call resultMessageSet(?, ?, ?)")) {
 
-      CallableStatement callstmt = conn.prepareCall("call resultMessageSet(?, ?, ?)");
       log.debug("Preparing resultMessageSet procedure");
       callstmt.setString(1, message);
       callstmt.setString(2, userId);
@@ -551,10 +551,10 @@ public class Setter {
     log.debug("*** Setter.suspendUser ***");
 
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement callstmnt = conn.prepareCall("CALL suspendUser(?, ?)")) {
 
       log.debug("Prepairing suspendUser call");
-      PreparedStatement callstmnt = conn.prepareCall("CALL suspendUser(?, ?)");
       callstmnt.setString(1, userId);
       callstmnt.setInt(2, numberOfMinutes);
       log.debug("Executing suspendUser statement on id '" + userId + "'");
@@ -580,10 +580,10 @@ public class Setter {
     log.debug("*** Setter.unSuspendUser ***");
 
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement callstmnt = conn.prepareCall("CALL unSuspendUser(?)")) {
 
       log.debug("Prepairing suspendUser call");
-      PreparedStatement callstmnt = conn.prepareCall("CALL unSuspendUser(?)");
       callstmnt.setString(1, userId);
       log.debug("Executing unSuspendUser statement on id '" + userId + "'");
       callstmnt.execute();
@@ -608,9 +608,9 @@ public class Setter {
   public static boolean updateCsrfCounter(String ApplicationRoot, String moduleId, String userId) {
     log.debug("*** Setter.updateCsrfCounter ***");
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call resultMessagePlus(?, ?)")) {
 
-      CallableStatement callstmt = conn.prepareCall("call resultMessagePlus(?, ?)");
       log.debug("Preparing resultMessagePlus procedure");
       callstmt.setString(1, moduleId);
       callstmt.setString(2, userId);
@@ -885,11 +885,11 @@ public class Setter {
     log.debug("*** Setter.updateUserPoints ***");
 
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement prestmnt =
+            conn.prepareStatement("UPDATE users SET userScore = userScore + ? WHERE userId = ?")) {
 
       log.debug("Preparing updateUserPoints call");
-      PreparedStatement prestmnt =
-          conn.prepareStatement("UPDATE users SET userScore = userScore + ? WHERE userId = ?");
       prestmnt.setInt(1, points);
       prestmnt.setString(2, userId);
       log.debug("Executing updateUserPoints");
@@ -1251,10 +1251,10 @@ public class Setter {
     log.debug("*** Setter.setRegistrationStatus ***");
     log.debug("enableRegistration = " + theRegistrationStatus);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement setRegistrationSetting =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting registration status setting");
-      PreparedStatement setRegistrationSetting =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       setRegistrationSetting.setBoolean(1, theRegistrationStatus);
       setRegistrationSetting.setString(2, "openRegistration");
 
@@ -1283,10 +1283,10 @@ public class Setter {
       throw new IllegalArgumentException("Invalid scoreboard status: " + theScoreboardStatus);
     }
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement scoreboardSetting =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting scoreboard status setting");
-      PreparedStatement scoreboardSetting =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       scoreboardSetting.setString(1, theScoreboardStatus);
       scoreboardSetting.setString(2, "scoreboardStatus");
 
@@ -1307,10 +1307,10 @@ public class Setter {
     log.debug("*** Setter.setScoreboardClass ***");
     log.debug("scoreboardClass = " + theScoreboardClass);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement scoreboardClassSetting =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting scoreboard class setting");
-      PreparedStatement scoreboardClassSetting =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       scoreboardClassSetting.setString(1, theScoreboardClass);
       scoreboardClassSetting.setString(2, "scoreboardClass");
 
@@ -1331,10 +1331,10 @@ public class Setter {
     log.debug("*** Setter.setStartTimeStatus ***");
     log.debug("theLockTimeStatus = " + theStartTimeStatus);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement lockTimeStatement =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting start time setting");
-      PreparedStatement lockTimeStatement =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       lockTimeStatement.setBoolean(1, theStartTimeStatus);
       lockTimeStatement.setString(2, "hasStartTime");
 
@@ -1355,10 +1355,10 @@ public class Setter {
     log.debug("*** Setter.setStartTime ***");
     log.debug("theLockTime = " + theStartTime);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement lockTimeStatement =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting start time");
-      PreparedStatement lockTimeStatement =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       lockTimeStatement.setString(1, theStartTime.toString());
       lockTimeStatement.setString(2, "startTime");
 
@@ -1379,10 +1379,10 @@ public class Setter {
     log.debug("*** Setter.setLockTimeStatus ***");
     log.debug("theLockTimeStatus = " + theLockTimeStatus);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement lockTimeStatement =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting lock timestamp setting");
-      PreparedStatement lockTimeStatement =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       lockTimeStatement.setBoolean(1, theLockTimeStatus);
       lockTimeStatement.setString(2, "hasLockTime");
 
@@ -1475,10 +1475,10 @@ public class Setter {
     log.debug("*** Setter.setDefaultClass ***");
     log.debug("theLockTime = " + theDefaultClass);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement endTimeStatement =
+            conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
       log.debug("Setting default class");
-      PreparedStatement endTimeStatement =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
       endTimeStatement.setString(1, theDefaultClass);
       endTimeStatement.setString(2, "defaultClass");
 
