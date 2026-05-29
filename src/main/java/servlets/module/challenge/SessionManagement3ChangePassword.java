@@ -46,6 +46,7 @@ public class SessionManagement3ChangePassword extends HttpServlet {
   private static String levelName = "Session Management Challenge Three (Change Password)";
   public static String levelHash =
       "b467dbe3cd61babc0ec599fd0c67e359e6fe04e8cdc618d537808cbb693fee8a";
+
   // private static String levelResult = ""; //This Servlet does not return a result
 
   /**

@@ -75,8 +75,8 @@ public class DirectObjectBankTransfer extends HttpServlet {
       try {
         String senderAccountNumber = request.getParameter("senderAccountNumber");
         log.debug("Sender Account Number - " + senderAccountNumber);
-        String recieverAccountNumber = request.getParameter("recieverAccountNumber");
-        log.debug("Reciever Account Number - " + recieverAccountNumber);
+        String receiverAccountNumber = request.getParameter("receiverAccountNumber");
+        log.debug("Receiver Account Number - " + receiverAccountNumber);
         String transferAmountString = request.getParameter("transferAmount");
         log.debug("Transfer Amount - " + transferAmountString);
         float tranferAmount = Float.parseFloat(transferAmountString);
@@ -90,14 +90,14 @@ public class DirectObjectBankTransfer extends HttpServlet {
           if ((senderFunds - tranferAmount) > 0) {
             // Check Receiver Account Exists
             try {
-              long recieverAccountBalanace =
-                  DirectObjectBankLogin.getAccountBalance(recieverAccountNumber, applicationRoot);
-              if (recieverAccountBalanace >= 0) {
+              long receiverAccountBalance =
+                  DirectObjectBankLogin.getAccountBalance(receiverAccountNumber, applicationRoot);
+              if (receiverAccountBalance >= 0) {
                 performTransfer = true;
               }
             } catch (Exception e) {
-              log.debug("Reciever Account does not exist. Cancelling");
-              errorMessage = bundle.getString("transfer.error.recieverNotFound");
+              log.debug("Receiver Account does not exist. Cancelling");
+              errorMessage = bundle.getString("transfer.error.receiverNotFound");
             }
           } else {
             errorMessage = bundle.getString("transfer.error.notEnoughCash");
@@ -112,10 +112,10 @@ public class DirectObjectBankTransfer extends HttpServlet {
           Connection conn = Database.getChallengeConnection(applicationRoot, "directObjectBank");
           CallableStatement callstmt = conn.prepareCall("CALL transferFunds(?, ?, ?)");
           callstmt.setString(1, senderAccountNumber);
-          callstmt.setString(2, recieverAccountNumber);
+          callstmt.setString(2, receiverAccountNumber);
           callstmt.setFloat(3, tranferAmount);
           callstmt.execute();
-          log.debug("Sucessfully ran Transfer Funds procedure.");
+          log.debug("Successfully ran Transfer Funds procedure.");
           htmlOutput = bundle.getString("transfer.success");
           Database.closeConnection(conn);
         } else {

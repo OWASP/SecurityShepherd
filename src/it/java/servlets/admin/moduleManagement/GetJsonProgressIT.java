@@ -1,22 +1,22 @@
 package servlets.admin.moduleManagement;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 
 /**
- * This class just tests the servlet code. The Setter code is better tested in the GetterTest test's
+ * This class just tests the servlet code. The Setter code is better tested in the GetterIT test's
  *
  * @author Mark Denihan
  */
@@ -34,16 +34,17 @@ public class GetJsonProgressIT {
    * @throws SQLException
    * @throws IOException
    */
-  @BeforeClass
+  @BeforeAll
   public static void resetDatabase() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
 
     TestProperties.createMysqlResource();
 
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     request = new MockHttpServletRequest();
     response = new MockHttpServletResponse();
@@ -111,7 +112,7 @@ public class GetJsonProgressIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, classId);
       if (responseBody.contains("loggedOutSheep")) {
-        log.debug("No Admin Access Result Recieved");
+        log.debug("No Admin Access Result Received");
       } else {
         String message = "Did not get authoristion error for User accessing Admin Function";
         log.fatal(message);

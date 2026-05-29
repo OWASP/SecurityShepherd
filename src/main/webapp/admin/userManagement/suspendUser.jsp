@@ -100,7 +100,7 @@ catch(SQLException e)
 										}
 										catch(SQLException e)
 										{
-											ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occured when manipulating classList: " + e.toString());
+											ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), "Error occurred when manipulating classList: " + e.toString());
 											showClasses = false;
 										}
 									}
@@ -157,7 +157,7 @@ catch(SQLException e)
 				}
 				else if(ajaxCall.responseText == 'fail')
 				{
-					$("#playerSelect").html("<p><font color='red'>Sorry, but an error occured! Please try again!</font></p>");
+					$("#playerSelect").html("<p><font color='red'>Sorry, but an error occurred! Please try again!</font></p>");
 				}
 				else
 				{

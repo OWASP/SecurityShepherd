@@ -1,18 +1,18 @@
 package servlets;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.Getter;
-import dbProcs.GetterTest;
+import dbProcs.GetterIT;
 import dbProcs.Setter;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -27,16 +27,17 @@ public class LoginIT {
   private MockHttpServletResponse response;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
-  @BeforeClass
+  @BeforeAll
   public static void resetDatabase() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
 
     TestProperties.createMysqlResource();
 
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
   }
 
-  @Before
+  @BeforeEach
   public void setup() {
     log.debug("Setting Up Blank Request and Response");
     request = new MockHttpServletRequest();
@@ -47,7 +48,7 @@ public class LoginIT {
   public void testUserLogin() {
     String userName = "userLogin1";
     try {
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       loginDoPost(userName, userName, null);
       HttpSession ses = request.getSession();
       if (!ses.getAttribute("userRole").toString().equalsIgnoreCase("player")) {
@@ -82,7 +83,7 @@ public class LoginIT {
         currentPass = userName;
         newPass = userName + userName;
         log.debug("Logging in with default Pass");
-        loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, currentPass);
+        loggedIn = GetterIT.verifyTestUser(applicationRoot, userName, currentPass);
       } catch (Exception e) {
         newPass = userName;
         currentPass = userName + userName;
@@ -134,7 +135,7 @@ public class LoginIT {
         currentPass = userName;
         newPass = userName + userName;
         log.debug("Logging in with default Pass");
-        loggedIn = GetterTest.verifyTestUser(applicationRoot, userName, currentPass);
+        loggedIn = GetterIT.verifyTestUser(applicationRoot, userName, currentPass);
       } catch (Exception e) {
         newPass = userName;
         currentPass = userName + userName;
@@ -181,7 +182,7 @@ public class LoginIT {
   public void testAdminLogin() {
     String userName = "adminLogin1";
     try {
-      GetterTest.verifyTestAdmin(applicationRoot, userName, userName);
+      GetterIT.verifyTestAdmin(applicationRoot, userName, userName);
       loginDoPost(userName, userName, null);
       HttpSession ses = request.getSession();
       if (!ses.getAttribute("userRole").toString().equalsIgnoreCase("admin")) {
@@ -201,7 +202,7 @@ public class LoginIT {
   public void testUserLoginWithBadPass() {
     String userName = "userLogin2";
     try {
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       try {
         loginDoPost(userName, "wrongPassword", null);
         fail("LoginDoPost ran without exception with bad password");
@@ -224,7 +225,7 @@ public class LoginIT {
   public void testUserLoginWithNullUser() {
     String userName = "userLogin2";
     try {
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       try {
         loginDoPost(null, userName, null);
         fail("LoginDoPost ran without exception with bad password");
@@ -247,7 +248,7 @@ public class LoginIT {
   public void testUserLoginWithSqli() {
     String userName = "userLogin4";
     try {
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       try {
         loginDoPost(userName, "'OR'1'='1", null);
         fail("LoginDoPost ran without exception with bad password");
@@ -270,7 +271,7 @@ public class LoginIT {
   public void testUserLoginWithSqliName() {
     String userName = "userLogin5";
     try {
-      GetterTest.verifyTestUser(applicationRoot, userName, userName);
+      GetterIT.verifyTestUser(applicationRoot, userName, userName);
       try {
         loginDoPost("'OR'1'='1'; -- ;", userName, null);
         fail("LoginDoPost ran without exception with bad password");
