@@ -67,7 +67,7 @@ jobs:
       - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '17'
           cache: maven
       - name: Build Maven with Docker Profile
         run: mvn clean install -Pdocker -DskipTests -B
@@ -83,7 +83,7 @@ jobs:
       - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '17'
           cache: maven
       - name: Run Unit Tests
         run: mvn test -B -e
@@ -106,7 +106,7 @@ jobs:
       - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '17'
           cache: maven
       - name: Start MYSQL Server
         run: sudo /etc/init.d/mysql start
