@@ -156,19 +156,15 @@ public class Setter {
   public static boolean openAllModules(String ApplicationRoot, boolean unsafe) {
     log.debug("*** Setter.openAllModules ***");
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    String updateSql =
+        unsafe
+            ? "UPDATE modules SET moduleStatus = 'open' WHERE isUnsafe = 1"
+            : "UPDATE modules SET moduleStatus = 'open' WHERE isUnsafe = 0";
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement callstmt = conn.prepareStatement(updateSql)) {
 
-      if (unsafe) {
-        PreparedStatement callstmt =
-            conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE isUnsafe = 1");
-        callstmt.execute();
-        log.debug("All unsafe modules set to open");
-      } else {
-        PreparedStatement callstmt =
-            conn.prepareStatement("UPDATE modules SET moduleStatus = 'open' WHERE isUnsafe = 0");
-        callstmt.execute();
-        log.debug("All safe modules set to open");
-      }
+      callstmt.execute();
+      log.debug(unsafe ? "All unsafe modules set to open" : "All safe modules set to open");
 
       result = true;
 
@@ -190,18 +186,20 @@ public class Setter {
     boolean result = false;
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
-      PreparedStatement prepstmt =
+      try (PreparedStatement prepstmt =
           conn.prepareStatement(
               "UPDATE modules SET moduleStatus = 'closed' WHERE "
-                  + webModuleCategoryHardcodedWhereClause);
-      prepstmt.execute();
-      log.debug("Web Levels have been closed");
-      prepstmt =
+                  + webModuleCategoryHardcodedWhereClause)) {
+        prepstmt.execute();
+        log.debug("Web Levels have been closed");
+      }
+      try (PreparedStatement prepstmt =
           conn.prepareStatement(
               "UPDATE modules SET moduleStatus = 'open' WHERE "
-                  + mobileModuleCategoryHardcodedWhereClause);
-      prepstmt.execute();
-      log.debug("Mobile Levels have been opened");
+                  + mobileModuleCategoryHardcodedWhereClause)) {
+        prepstmt.execute();
+        log.debug("Mobile Levels have been opened");
+      }
       result = true;
 
     } catch (SQLException e) {
@@ -334,20 +332,21 @@ public class Setter {
 
       boolean tokenExists = false;
       log.debug("Preparing setSsrfChallengeFourToken call");
-      PreparedStatement callstmnt =
-          conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?");
-      callstmnt.setString(1, userId);
-      log.debug("Executing setCsrfChallengeFourToken");
-      ResultSet rs = callstmnt.executeQuery();
-      if (rs.next()) {
-        // Need to Update CSRF token rather than Insert
-        log.debug("CSRF for Challenge 4 already is set");
-        csrfToken = rs.getString(1); // overwrite token with DB Stored Entry
-        tokenExists = true;
-      } else {
-        log.debug("No CSRF token Found for Challenge 4... Creating");
+      try (PreparedStatement callstmnt =
+          conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?")) {
+        callstmnt.setString(1, userId);
+        log.debug("Executing setCsrfChallengeFourToken");
+        try (ResultSet rs = callstmnt.executeQuery()) {
+          if (rs.next()) {
+            // Need to Update CSRF token rather than Insert
+            log.debug("CSRF for Challenge 4 already is set");
+            csrfToken = rs.getString(1); // overwrite token with DB Stored Entry
+            tokenExists = true;
+          } else {
+            log.debug("No CSRF token Found for Challenge 4... Creating");
+          }
+        }
       }
-      rs.close();
 
       String whatToDo = new String();
       if (!tokenExists) {
@@ -355,11 +354,11 @@ public class Setter {
             "INSERT INTO `csrfChallengeFour`.`csrfTokens` (`csrfTokenscol`, `userId`) VALUES (?,"
                 + " ?)";
       }
-      callstmnt = conn.prepareStatement(whatToDo);
-      callstmnt.setString(1, csrfToken);
-      callstmnt.setString(2, userId);
-      callstmnt.execute();
-      callstmnt.close();
+      try (PreparedStatement callstmnt = conn.prepareStatement(whatToDo)) {
+        callstmnt.setString(1, csrfToken);
+        callstmnt.setString(2, userId);
+        callstmnt.execute();
+      }
 
     } catch (SQLException e) {
       log.error("CsrfChallenge4 TokenUpdate Failure: " + e.toString());
@@ -384,19 +383,20 @@ public class Setter {
 
       boolean updateToken = false;
       log.debug("Preparing setCsrfChallengeSevenToken call");
-      PreparedStatement prestmnt =
-          conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?");
-      prestmnt.setString(1, userId);
-      log.debug("Executing setCsrfChallengeSevenToken");
-      ResultSet rs = prestmnt.executeQuery();
-      if (rs.next()) {
-        // Need to Update CSRF token rather than Insert
-        log.debug("CSRF token Found for Challenge 7... Updating");
-        updateToken = true;
-      } else {
-        log.debug("No CSRF token Found for Challenge 7... Creating");
+      try (PreparedStatement prestmnt =
+          conn.prepareStatement("SELECT csrfTokenscol FROM csrfTokens WHERE userId = ?")) {
+        prestmnt.setString(1, userId);
+        log.debug("Executing setCsrfChallengeSevenToken");
+        try (ResultSet rs = prestmnt.executeQuery()) {
+          if (rs.next()) {
+            // Need to Update CSRF token rather than Insert
+            log.debug("CSRF token Found for Challenge 7... Updating");
+            updateToken = true;
+          } else {
+            log.debug("No CSRF token Found for Challenge 7... Creating");
+          }
+        }
       }
-      rs.close();
 
       String whatToDo;
       if (updateToken) {
@@ -407,13 +407,13 @@ public class Setter {
             "INSERT INTO `csrfChallengeEnumTokens`.`csrfTokens` (`csrfTokenscol`, `userId`) VALUES"
                 + " (?, ?)";
       }
-      prestmnt = conn.prepareStatement(whatToDo);
-      prestmnt.setString(1, csrfToken);
-      prestmnt.setString(2, userId);
-      log.debug("Executing: " + whatToDo);
-      prestmnt.execute();
-      result = true;
-      prestmnt.close();
+      try (PreparedStatement prestmnt = conn.prepareStatement(whatToDo)) {
+        prestmnt.setString(1, csrfToken);
+        prestmnt.setString(2, userId);
+        log.debug("Executing: " + whatToDo);
+        prestmnt.execute();
+        result = true;
+      }
 
     } catch (SQLException e) {
       log.error("csrfChallenge7EnumTokens TokenUpdate Failure: " + e.toString());
@@ -433,10 +433,10 @@ public class Setter {
       String ApplicationRoot, String moduleCategory, String openOrClosed) {
     log.debug("*** Setter.setModuleCategoryStatusOpen ***");
     boolean result = false;
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        PreparedStatement prepstmt =
+            conn.prepareStatement("UPDATE modules SET moduleStatus = ? WHERE moduleCategory = ?")) {
 
-      PreparedStatement prepstmt =
-          conn.prepareStatement("UPDATE modules SET moduleStatus = ? WHERE moduleCategory = ?");
       prepstmt.setString(1, openOrClosed);
       prepstmt.setString(2, moduleCategory);
       prepstmt.execute();
@@ -754,13 +754,15 @@ public class Setter {
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Preparing playerUpdateClass call");
-      CallableStatement callstmnt = conn.prepareCall("call playerUpdateClass(?, ?)");
-      callstmnt.setString(1, playerId);
-      callstmnt.setString(2, classId);
-      log.debug("Executing playerUpdateClass");
-      ResultSet resultSet = callstmnt.executeQuery();
-      resultSet.next();
-      result = resultSet.getString(1);
+      try (CallableStatement callstmnt = conn.prepareCall("call playerUpdateClass(?, ?)")) {
+        callstmnt.setString(1, playerId);
+        callstmnt.setString(2, classId);
+        log.debug("Executing playerUpdateClass");
+        try (ResultSet resultSet = callstmnt.executeQuery()) {
+          resultSet.next();
+          result = resultSet.getString(1);
+        }
+      }
 
     } catch (SQLException e) {
       log.error("playerUpdateClass Failure: " + e.toString());
@@ -784,12 +786,14 @@ public class Setter {
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Preparing playerUpdateClassToNull call");
-      CallableStatement callstmnt = conn.prepareCall("call playerUpdateClassToNull(?)");
-      callstmnt.setString(1, playerId);
-      log.debug("Executing playerUpdateClassToNull");
-      ResultSet resultSet = callstmnt.executeQuery();
-      resultSet.next();
-      result = resultSet.getString(1);
+      try (CallableStatement callstmnt = conn.prepareCall("call playerUpdateClassToNull(?)")) {
+        callstmnt.setString(1, playerId);
+        log.debug("Executing playerUpdateClassToNull");
+        try (ResultSet resultSet = callstmnt.executeQuery()) {
+          resultSet.next();
+          result = resultSet.getString(1);
+        }
+      }
 
     } catch (SQLException e) {
       log.error("updatePlayerClassToNull Failure: " + e.toString());
@@ -918,13 +922,15 @@ public class Setter {
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       log.debug("Preparing userUpdateRole call");
-      CallableStatement callstmnt = conn.prepareCall("call userUpdateRole(?, ?)");
-      callstmnt.setString(1, playerId);
-      callstmnt.setString(2, newRole);
-      log.debug("Executing userUpdateRole");
-      ResultSet resultSet = callstmnt.executeQuery();
-      resultSet.next();
-      result = resultSet.getString(1);
+      try (CallableStatement callstmnt = conn.prepareCall("call userUpdateRole(?, ?)")) {
+        callstmnt.setString(1, playerId);
+        callstmnt.setString(2, newRole);
+        log.debug("Executing userUpdateRole");
+        try (ResultSet resultSet = callstmnt.executeQuery()) {
+          resultSet.next();
+          result = resultSet.getString(1);
+        }
+      }
 
     } catch (SQLException e) {
       log.error("userUpdateRole Failure: " + e.toString());
@@ -1120,18 +1126,21 @@ public class Setter {
 
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
       log.debug("Deleting User's Results");
-      PreparedStatement callDelResults =
-          conn.prepareStatement("DELETE FROM results WHERE userId = ?");
-      callDelResults.setString(1, userId);
-      callDelResults.executeUpdate();
+      try (PreparedStatement callDelResults =
+          conn.prepareStatement("DELETE FROM results WHERE userId = ?")) {
+        callDelResults.setString(1, userId);
+        callDelResults.executeUpdate();
+      }
 
       log.debug("Executing delete from users on Database");
-      PreparedStatement callUserDel = conn.prepareStatement("DELETE FROM users WHERE userId = ?");
-      callUserDel.setString(1, userId);
-      int deleteAttemptResult = callUserDel.executeUpdate();
+      try (PreparedStatement callUserDel =
+          conn.prepareStatement("DELETE FROM users WHERE userId = ?")) {
+        callUserDel.setString(1, userId);
+        int deleteAttemptResult = callUserDel.executeUpdate();
 
-      if (deleteAttemptResult == 1) {
-        result = true;
+        if (deleteAttemptResult == 1) {
+          result = true;
+        }
       }
     } catch (SQLException sqlEx) {
       log.fatal("userDelete Failure: " + sqlEx.toString());
@@ -1405,15 +1414,16 @@ public class Setter {
 
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
       log.debug("Setting lock time");
-      PreparedStatement lockTimeStatement =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-      lockTimeStatement.setString(1, theLockTime.toString());
-      lockTimeStatement.setString(2, "lockTime");
+      try (PreparedStatement lockTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
+        lockTimeStatement.setString(1, theLockTime.toString());
+        lockTimeStatement.setString(2, "lockTime");
 
-      if (lockTimeStatement.executeUpdate() == 1) {
-        result = true;
-      } else {
-        throw new RuntimeException("Could not set lock time to " + theLockTime);
+        if (lockTimeStatement.executeUpdate() == 1) {
+          result = true;
+        } else {
+          throw new RuntimeException("Could not set lock time to " + theLockTime);
+        }
       }
     }
 
@@ -1429,15 +1439,16 @@ public class Setter {
 
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
       log.debug("Setting end time setting");
-      PreparedStatement lockTimeStatement =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-      lockTimeStatement.setBoolean(1, theEndTimeStatus);
-      lockTimeStatement.setString(2, "hasEndTime");
+      try (PreparedStatement lockTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
+        lockTimeStatement.setBoolean(1, theEndTimeStatus);
+        lockTimeStatement.setString(2, "hasEndTime");
 
-      if (lockTimeStatement.executeUpdate() == 1) {
-        result = true;
-      } else {
-        throw new RuntimeException("Could not set end time status to " + theEndTimeStatus);
+        if (lockTimeStatement.executeUpdate() == 1) {
+          result = true;
+        } else {
+          throw new RuntimeException("Could not set end time status to " + theEndTimeStatus);
+        }
       }
     }
 
@@ -1453,15 +1464,16 @@ public class Setter {
 
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
       log.debug("Setting end time");
-      PreparedStatement endTimeStatement =
-          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?");
-      endTimeStatement.setString(1, theEndTime.toString());
-      endTimeStatement.setString(2, "endTime");
+      try (PreparedStatement endTimeStatement =
+          conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
+        endTimeStatement.setString(1, theEndTime.toString());
+        endTimeStatement.setString(2, "endTime");
 
-      if (endTimeStatement.executeUpdate() == 1) {
-        result = true;
-      } else {
-        throw new RuntimeException("Could not set end time to " + theEndTime);
+        if (endTimeStatement.executeUpdate() == 1) {
+          result = true;
+        } else {
+          throw new RuntimeException("Could not set end time to " + theEndTime);
+        }
       }
     }
 
