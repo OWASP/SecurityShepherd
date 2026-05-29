@@ -541,16 +541,16 @@ public class Getter {
    */
   public static int getClassCount(String ApplicationRoot) {
     int result = 0;
-    ResultSet resultSet = null;
     log.debug("*** Getter.getClassCount ***");
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call classCount()")) {
 
-      CallableStatement callstmt = conn.prepareCall("call classCount()");
       log.debug("Gathering classCount ResultSet");
-      resultSet = callstmt.executeQuery();
-      log.debug("Opening Result Set from classCount");
-      resultSet.next();
-      result = resultSet.getInt(1);
+      try (ResultSet resultSet = callstmt.executeQuery()) {
+        log.debug("Opening Result Set from classCount");
+        resultSet.next();
+        result = resultSet.getInt(1);
+      }
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
       result = 0;
@@ -593,16 +593,17 @@ public class Getter {
   public static String[] getClassInfo(String ApplicationRoot, String classId) {
     String[] result = new String[2];
     log.debug("*** Getter.getClassInfo (Single Class) ***");
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call classFind(?)")) {
 
-      CallableStatement callstmt = conn.prepareCall("call classFind(?)");
       callstmt.setString(1, classId);
       log.debug("Gathering classFind ResultSet");
-      ResultSet resultSet = callstmt.executeQuery();
-      log.debug("Opening Result Set from classFind");
-      resultSet.next();
-      result[0] = resultSet.getString(1); // Name
-      result[1] = resultSet.getString(2); // Year
+      try (ResultSet resultSet = callstmt.executeQuery()) {
+        log.debug("Opening Result Set from classFind");
+        resultSet.next();
+        result[0] = resultSet.getString(1); // Name
+        result[1] = resultSet.getString(2); // Year
+      }
 
     } catch (SQLException e) {
       log.error("Could not execute query: " + e.toString());
@@ -630,40 +631,42 @@ public class Getter {
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       if (classId != null) {
-        CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)");
-        log.debug("Gathering resultMessageByClass ResultSet");
-        callstmt.setString(1, classId);
-        callstmt.setString(2, moduleId);
-        ResultSet resultSet = callstmt.executeQuery();
-        log.debug("resultMessageByClass executed");
+        try (CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)")) {
+          log.debug("Gathering resultMessageByClass ResultSet");
+          callstmt.setString(1, classId);
+          callstmt.setString(2, moduleId);
+          try (ResultSet resultSet = callstmt.executeQuery()) {
+            log.debug("resultMessageByClass executed");
 
-        // Table Header
-        htmlOutput =
-            "<table><tr><th>"
-                + bundle.getString("forum.userName")
-                + "</th><th>"
-                + bundle.getString("forum.message")
-                + "</th></tr>";
+            // Table Header
+            htmlOutput =
+                "<table><tr><th>"
+                    + bundle.getString("forum.userName")
+                    + "</th><th>"
+                    + bundle.getString("forum.message")
+                    + "</th></tr>";
 
-        log.debug("Opening Result Set from resultMessageByClass");
-        int counter = 0;
-        while (resultSet.next()) {
-          counter++;
-          // Table content
-          htmlOutput +=
-              "<tr><td>"
-                  + Encode.forHtml(resultSet.getString(1))
-                  + "</td><td><iframe sandbox=\"allow-scripts allow-forms\" src=\""
-                  + Encode.forHtmlAttribute(resultSet.getString(2))
-                  + "\"></iframe></td></tr>";
+            log.debug("Opening Result Set from resultMessageByClass");
+            int counter = 0;
+            while (resultSet.next()) {
+              counter++;
+              // Table content
+              htmlOutput +=
+                  "<tr><td>"
+                      + Encode.forHtml(resultSet.getString(1))
+                      + "</td><td><iframe sandbox=\"allow-scripts allow-forms\" src=\""
+                      + Encode.forHtmlAttribute(resultSet.getString(2))
+                      + "\"></iframe></td></tr>";
+            }
+            if (counter > 0) {
+              log.debug("Added a " + counter + " row table");
+            } else {
+              log.debug("No results from query");
+            }
+            // Table end
+            htmlOutput += "</table>";
+          }
         }
-        if (counter > 0) {
-          log.debug("Added a " + counter + " row table");
-        } else {
-          log.debug("No results from query");
-        }
-        // Table end
-        htmlOutput += "</table>";
       } else {
         log.error("User with Null Class detected");
         htmlOutput = "<p><font color='red'>" + bundle.getString("error.noClass") + "</font></p>";
@@ -696,40 +699,42 @@ public class Getter {
     try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
 
       if (classId != null) {
-        CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)");
-        log.debug("Gathering resultMessageByClass ResultSet");
-        callstmt.setString(1, classId);
-        callstmt.setString(2, moduleId);
-        ResultSet resultSet = callstmt.executeQuery();
-        log.debug("resultMessageByClass executed");
+        try (CallableStatement callstmt = conn.prepareCall("call resultMessageByClass(?, ?)")) {
+          log.debug("Gathering resultMessageByClass ResultSet");
+          callstmt.setString(1, classId);
+          callstmt.setString(2, moduleId);
+          try (ResultSet resultSet = callstmt.executeQuery()) {
+            log.debug("resultMessageByClass executed");
 
-        // Table Header
-        htmlOutput =
-            "<table><tr><th>"
-                + bundle.getString("forum.userName")
-                + "</th><th>"
-                + bundle.getString("forum.image")
-                + "</th></tr>";
+            // Table Header
+            htmlOutput =
+                "<table><tr><th>"
+                    + bundle.getString("forum.userName")
+                    + "</th><th>"
+                    + bundle.getString("forum.image")
+                    + "</th></tr>";
 
-        log.debug("Opening Result Set from resultMessageByClass");
-        int counter = 0;
-        while (resultSet.next()) {
-          counter++;
-          // Table content
-          htmlOutput +=
-              "<tr><td>"
-                  + Encode.forHtml(resultSet.getString(1))
-                  + "</td><td><img src=\""
-                  + Encode.forHtmlAttribute(resultSet.getString(2))
-                  + "\"/></td></tr>";
+            log.debug("Opening Result Set from resultMessageByClass");
+            int counter = 0;
+            while (resultSet.next()) {
+              counter++;
+              // Table content
+              htmlOutput +=
+                  "<tr><td>"
+                      + Encode.forHtml(resultSet.getString(1))
+                      + "</td><td><img src=\""
+                      + Encode.forHtmlAttribute(resultSet.getString(2))
+                      + "\"/></td></tr>";
+            }
+            if (counter > 0) {
+              log.debug("Added a " + counter + " row table");
+            } else {
+              log.debug("No results from query");
+            }
+            // Table end
+            htmlOutput += "</table>";
+          }
         }
-        if (counter > 0) {
-          log.debug("Added a " + counter + " row table");
-        } else {
-          log.debug("No results from query");
-        }
-        // Table end
-        htmlOutput += "</table>";
       } else {
         log.error("User with Null Class detected");
         htmlOutput = "<p><font color='red'>" + bundle.getString("error.noClass") + "</font></p>";
@@ -755,66 +760,67 @@ public class Getter {
     log.debug("*** Getter.getFeedback ***");
 
     String result = new String();
-    try (Connection conn = Database.getCoreConnection(applicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(applicationRoot);
+        CallableStatement callstmnt = conn.prepareCall("call moduleFeedback(?)")) {
 
       log.debug("Preparing moduleFeedback call");
-      CallableStatement callstmnt = conn.prepareCall("call moduleFeedback(?)");
       callstmnt.setString(1, moduleId);
       log.debug("Executing moduleFeedback");
-      ResultSet resultSet = callstmnt.executeQuery();
-      int resultAmount = 0;
-      int before = 0;
-      int after = 0;
-      int difficulty = 0;
-      boolean color = true;
-      while (resultSet.next()) {
-        if (resultSet.getString(1) != null) {
-          resultAmount++;
-          difficulty += resultSet.getInt(3);
-          before += resultSet.getInt(4);
-          after += resultSet.getInt(5);
-          result += "<tr ";
-          if (color) // Alternate row color
-          {
-            color = !color;
-            result += "BGCOLOR='A878EF'";
-          } else {
-            color = !color;
-            result += "BGCOLOR='D4BCF7'";
+      try (ResultSet resultSet = callstmnt.executeQuery()) {
+        int resultAmount = 0;
+        int before = 0;
+        int after = 0;
+        int difficulty = 0;
+        boolean color = true;
+        while (resultSet.next()) {
+          if (resultSet.getString(1) != null) {
+            resultAmount++;
+            difficulty += resultSet.getInt(3);
+            before += resultSet.getInt(4);
+            after += resultSet.getInt(5);
+            result += "<tr ";
+            if (color) // Alternate row color
+            {
+              color = !color;
+              result += "BGCOLOR='A878EF'";
+            } else {
+              color = !color;
+              result += "BGCOLOR='D4BCF7'";
+            }
+            // A row off information
+            result +=
+                "><td>"
+                    + Encode.forHtml(resultSet.getString(1))
+                    + "</td><td>"
+                    + Encode.forHtml(resultSet.getString(2))
+                    + "</td><td>"
+                    + resultSet.getInt(3)
+                    + "</td><td>"
+                    + resultSet.getInt(4)
+                    + "</td><td>"
+                    + resultSet.getInt(5)
+                    + "</td><td>"
+                    + Encode.forHtml(resultSet.getString(6))
+                    + "</td></tr>";
           }
-          // A row off information
-          result +=
-              "><td>"
-                  + Encode.forHtml(resultSet.getString(1))
-                  + "</td><td>"
-                  + Encode.forHtml(resultSet.getString(2))
-                  + "</td><td>"
-                  + resultSet.getInt(3)
-                  + "</td><td>"
-                  + resultSet.getInt(4)
-                  + "</td><td>"
-                  + resultSet.getInt(5)
-                  + "</td><td>"
-                  + Encode.forHtml(resultSet.getString(6))
-                  + "</td></tr>";
         }
-      }
-      if (resultAmount > 0) // Table header
-      {
-        result =
-            "<table><tr><th>Player</th><th>Time</th><th>Difficulty</th><th>Before</th><th>After</th><th>Comments</th></tr>"
-                + "<tr><td>Average</td><td></td><td>"
-                + difficulty / resultAmount
-                + "</td><td>"
-                + before / resultAmount
-                + "</td><td>"
-                + after / resultAmount
-                + "</td><td></td></tr>"
-                + result
-                + "<table>";
-      } else // If empty, Blank output
-      {
-        result = new String();
+        if (resultAmount > 0) // Table header
+        {
+          result =
+              "<table><tr><th>Player</th><th>Time</th><th>Difficulty</th><th>Before</th><th>After</th><th>Comments</th></tr>"
+                  + "<tr><td>Average</td><td></td><td>"
+                  + difficulty / resultAmount
+                  + "</td><td>"
+                  + before / resultAmount
+                  + "</td><td>"
+                  + after / resultAmount
+                  + "</td><td></td></tr>"
+                  + result
+                  + "<table>";
+        } else // If empty, Blank output
+        {
+          result = new String();
+        }
       }
 
     } catch (SQLException e) {
@@ -848,88 +854,89 @@ public class Getter {
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
     ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)")) {
 
-      CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)");
       callstmt.setString(1, userId);
       log.debug("Gathering moduleIncrementalInfo ResultSet");
-      ResultSet modules = callstmt.executeQuery();
-      log.debug("Opening Result Set from moduleIncrementalInfo");
-      boolean lastRow = false;
-      boolean completedModules = false;
+      try (ResultSet modules = callstmt.executeQuery()) {
+        log.debug("Opening Result Set from moduleIncrementalInfo");
+        boolean lastRow = false;
+        boolean completedModules = false;
 
-      // Preparing first Category header; "Completed"
-      output =
-          "<li><a id='completedList' href='javascript:;'><div class='menuButton'>"
-              + bundle.getString("getter.button.completed")
-              + "</div></a>\n"
-              + "<ul id='theCompletedList' style='display: none;' class='levelList'>";
-
-      while (modules.next() && !lastRow) {
-        // For each row, prepair the modules the users can select
-        if (modules.getString(4) != null) // If not Last Row
-        {
-          completedModules = true;
-          output += "<li>";
-          output +=
-              "<a class='lesson' id='"
-                  + Encode.forHtmlAttribute(modules.getString(3))
-                  + "' href='javascript:;'>"
-                  + Encode.forHtml(levelNames.getString(modules.getString(1)))
-                  + "</a>";
-          output += "</li>";
-        } else {
-          lastRow = true;
-          // Last Row - Highlighed Next Challenge
-          if (completedModules) {
-            output += "</ul></li><li>";
-          } else {
-            // NO completed modules, so dont show any...
-            output = new String();
-          }
-
-          // Second category - Uncompleted
-          output +=
-              "<a class='lesson' id='"
-                  + Encode.forHtmlAttribute(modules.getString(3))
-                  + "' href='javascript:;'>"
-                  + "<div class='menuButton'>"
-                  + bundle.getString("getter.button.nextChallenge")
-                  + "</div>"
-                  + "</a>";
-          output += "</li>";
-        }
-      }
-
-      if (!lastRow) // If true, then the user has completed all challenges
-      {
-        output +=
-            "<h2 id='uncompletedList'><a href='javascript:;'>"
-                + bundle.getString("getter.button.finished")
-                + "</a></h2>\n"
-                + "</li>";
-      }
-      if (output
-          .isEmpty()) // If this method has gone so far without any output, create a error message
-      {
+        // Preparing first Category header; "Completed"
         output =
-            "<li><a href='javascript:;'>"
-                + bundle.getString("getter.button.noModulesFound")
-                + "</a></li>";
-      } else // final tags to ensure valid HTML
-      {
-        log.debug("Appending End tags");
-        // output += "</ul></li>"; //Commented Out to prevent Search Box being pushed
-        // into Footer
-      }
+            "<li><a id='completedList' href='javascript:;'><div class='menuButton'>"
+                + bundle.getString("getter.button.completed")
+                + "</div></a>\n"
+                + "<ul id='theCompletedList' style='display: none;' class='levelList'>";
 
-      // This is the script for menu interaction
-      output +=
-          "<script>applyMenuButtonActionsCtfMode('"
-              + Encode.forHtml(csrfToken)
-              + "', \""
-              + Encode.forHtml(bundle.getString("generic.text.sorryError"))
-              + "\");</script>";
+        while (modules.next() && !lastRow) {
+          // For each row, prepair the modules the users can select
+          if (modules.getString(4) != null) // If not Last Row
+          {
+            completedModules = true;
+            output += "<li>";
+            output +=
+                "<a class='lesson' id='"
+                    + Encode.forHtmlAttribute(modules.getString(3))
+                    + "' href='javascript:;'>"
+                    + Encode.forHtml(levelNames.getString(modules.getString(1)))
+                    + "</a>";
+            output += "</li>";
+          } else {
+            lastRow = true;
+            // Last Row - Highlighed Next Challenge
+            if (completedModules) {
+              output += "</ul></li><li>";
+            } else {
+              // NO completed modules, so dont show any...
+              output = new String();
+            }
+
+            // Second category - Uncompleted
+            output +=
+                "<a class='lesson' id='"
+                    + Encode.forHtmlAttribute(modules.getString(3))
+                    + "' href='javascript:;'>"
+                    + "<div class='menuButton'>"
+                    + bundle.getString("getter.button.nextChallenge")
+                    + "</div>"
+                    + "</a>";
+            output += "</li>";
+          }
+        }
+
+        if (!lastRow) // If true, then the user has completed all challenges
+        {
+          output +=
+              "<h2 id='uncompletedList'><a href='javascript:;'>"
+                  + bundle.getString("getter.button.finished")
+                  + "</a></h2>\n"
+                  + "</li>";
+        }
+        if (output
+            .isEmpty()) // If this method has gone so far without any output, create a error message
+        {
+          output =
+              "<li><a href='javascript:;'>"
+                  + bundle.getString("getter.button.noModulesFound")
+                  + "</a></li>";
+        } else // final tags to ensure valid HTML
+        {
+          log.debug("Appending End tags");
+          // output += "</ul></li>"; //Commented Out to prevent Search Box being pushed
+          // into Footer
+        }
+
+        // This is the script for menu interaction
+        output +=
+            "<script>applyMenuButtonActionsCtfMode('"
+                + Encode.forHtml(csrfToken)
+                + "', \""
+                + Encode.forHtml(bundle.getString("generic.text.sorryError"))
+                + "\");</script>";
+      }
 
     } catch (Exception e) {
       log.error("Challenge Retrieval: " + e.toString());
@@ -960,79 +967,80 @@ public class Getter {
     ResourceBundle bundle = ResourceBundle.getBundle("i18n.text", locale);
     ResourceBundle levelNames = ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
 
-    try (Connection conn = Database.getCoreConnection(ApplicationRoot)) {
+    try (Connection conn = Database.getCoreConnection(ApplicationRoot);
+        CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)")) {
 
-      CallableStatement callstmt = conn.prepareCall("call moduleIncrementalInfo(?)");
       callstmt.setString(1, userId);
       log.debug("Gathering moduleIncrementalInfo ResultSet");
-      ResultSet modules = callstmt.executeQuery();
-      log.debug("Opening Result Set from moduleIncrementalInfo");
-      boolean lastRow = false;
-      boolean completedModules = false;
+      try (ResultSet modules = callstmt.executeQuery()) {
+        log.debug("Opening Result Set from moduleIncrementalInfo");
+        boolean lastRow = false;
+        boolean completedModules = false;
 
-      // Preparing first Category header; "Completed"
-      output =
-          "<li><a id='completedList' href='javascript:;'><div class='menuButton'>"
-              + bundle.getString("getter.button.completed")
-              + "</div></a>\n"
-              + "<ul id='theCompletedList' style='display: none;' class='levelList'>";
-
-      while (modules.next() && !lastRow) {
-        // For each row, prepair the modules the users can select
-        if (modules.getString(4) != null) // If not Last Row
-        {
-          completedModules = true;
-          output += "<li>";
-          output +=
-              "<a class='lesson' id='"
-                  + Encode.forHtmlAttribute(modules.getString(3))
-                  + "' href='javascript:;'>"
-                  + Encode.forHtml(levelNames.getString(modules.getString(1)))
-                  + "</a>";
-          output += "</li>";
-        } else {
-          lastRow = true;
-          // Last Row - Highlighed Next Challenge
-          if (completedModules) {
-            output += "</ul></li><li>";
-          } else {
-            // NO completed modules, so dont show any...
-            output = new String();
-          }
-
-          // Second category - Uncompleted
-          output +=
-              "<a class='lesson' id='"
-                  + Encode.forHtmlAttribute(modules.getString(3))
-                  + "' href='javascript:;'>"
-                  + "<div class='menuButton'>"
-                  + bundle.getString("getter.button.nextChallenge")
-                  + "</div>"
-                  + "</a>";
-          output += "</li>";
-        }
-      }
-
-      if (!lastRow) // If true, then the user has completed all challenges
-      {
-        output +=
-            "<h2 id='uncompletedList'><a href='javascript:;'>"
-                + bundle.getString("getter.button.finished")
-                + "</a></h2>\n"
-                + "</li>";
-      }
-      if (output
-          .isEmpty()) // If this method has gone so far without any output, create a error message
-      {
+        // Preparing first Category header; "Completed"
         output =
-            "<li><a href='javascript:;'>"
-                + bundle.getString("getter.button.noModulesFound")
-                + "</a></li>";
-      } else // final tags to ensure valid HTML
-      {
-        log.debug("Appending End tags");
-        // output += "</ul></li>"; //Commented Out to prevent Search Box being pushed
-        // into Footer
+            "<li><a id='completedList' href='javascript:;'><div class='menuButton'>"
+                + bundle.getString("getter.button.completed")
+                + "</div></a>\n"
+                + "<ul id='theCompletedList' style='display: none;' class='levelList'>";
+
+        while (modules.next() && !lastRow) {
+          // For each row, prepair the modules the users can select
+          if (modules.getString(4) != null) // If not Last Row
+          {
+            completedModules = true;
+            output += "<li>";
+            output +=
+                "<a class='lesson' id='"
+                    + Encode.forHtmlAttribute(modules.getString(3))
+                    + "' href='javascript:;'>"
+                    + Encode.forHtml(levelNames.getString(modules.getString(1)))
+                    + "</a>";
+            output += "</li>";
+          } else {
+            lastRow = true;
+            // Last Row - Highlighed Next Challenge
+            if (completedModules) {
+              output += "</ul></li><li>";
+            } else {
+              // NO completed modules, so dont show any...
+              output = new String();
+            }
+
+            // Second category - Uncompleted
+            output +=
+                "<a class='lesson' id='"
+                    + Encode.forHtmlAttribute(modules.getString(3))
+                    + "' href='javascript:;'>"
+                    + "<div class='menuButton'>"
+                    + bundle.getString("getter.button.nextChallenge")
+                    + "</div>"
+                    + "</a>";
+            output += "</li>";
+          }
+        }
+
+        if (!lastRow) // If true, then the user has completed all challenges
+        {
+          output +=
+              "<h2 id='uncompletedList'><a href='javascript:;'>"
+                  + bundle.getString("getter.button.finished")
+                  + "</a></h2>\n"
+                  + "</li>";
+        }
+        if (output
+            .isEmpty()) // If this method has gone so far without any output, create a error message
+        {
+          output =
+              "<li><a href='javascript:;'>"
+                  + bundle.getString("getter.button.noModulesFound")
+                  + "</a></li>";
+        } else // final tags to ensure valid HTML
+        {
+          log.debug("Appending End tags");
+          // output += "</ul></li>"; //Commented Out to prevent Search Box being pushed
+          // into Footer
+        }
       }
 
     } catch (Exception e) {
