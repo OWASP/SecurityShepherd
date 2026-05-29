@@ -4,9 +4,6 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 
 [![Build and Test](https://github.com/OWASP/SecurityShepherd/actions/workflows/test.yml/badge.svg)](https://github.com/OWASP/SecurityShepherd/actions/workflows/test.yml)  
 
-## Trello Link
-https://trello.com/b/V1LZYBvT/owasp-security-shepherd
-
 # Where can I download Security Shepherd?
 
 ### Virtual Machine or Manual Setup
@@ -17,7 +14,7 @@ You can download Security Shepherd VM's or Manual Installation Packs from [GitHu
 #### Initial Setup
 ```console
 # Install pre-reqs
-sudo apt install git maven docker docker-compose openjdk-8-jdk
+sudo apt install git maven docker docker-compose openjdk-17-jdk
 
 # Clone the github repository
 git clone https://github.com/OWASP/SecurityShepherd.git
