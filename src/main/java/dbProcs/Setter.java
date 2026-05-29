@@ -1193,7 +1193,7 @@ public class Setter {
       throws SQLException {
     boolean result = false;
     log.debug("*** Setter.setModulelayout ***");
-    log.debug("playerCheatsEnabled = " + theModuleLayout);
+    log.debug("moduleLayout = " + theModuleLayout);
 
     if (!"ctf".equals(theModuleLayout)
         && !"tournament".equals(theModuleLayout)
@@ -1204,7 +1204,7 @@ public class Setter {
     try (Connection conn = Database.getCoreConnection(ApplicationRoot);
         PreparedStatement moduleLayoutSetting =
             conn.prepareStatement("UPDATE settings SET value = ? WHERE setting = ?")) {
-      log.debug("Setting player cheat setting");
+      log.debug("Setting module layout");
       moduleLayoutSetting.setString(1, theModuleLayout);
       moduleLayoutSetting.setString(2, "modulelayout");
 

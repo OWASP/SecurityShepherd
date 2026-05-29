@@ -3232,8 +3232,10 @@ public class GetterIT {
     String userId = Getter.getUserIdFromName(applicationRoot, userName);
     assertNotNull(userId, "verifyTestUser should leave the user retrievable by name");
 
-    // Ensure modules are open so getMyModules returns rows.
-    if (!Setter.openAllModules(applicationRoot, true)) {
+    // Ensure modules are open so getMyModules returns rows. openAllModules only opens one
+    // category per call (safe when unsafe=false, unsafe when unsafe=true), so call both.
+    if (!Setter.openAllModules(applicationRoot, false)
+        || !Setter.openAllModules(applicationRoot, true)) {
       fail("Could not open all modules");
     }
 

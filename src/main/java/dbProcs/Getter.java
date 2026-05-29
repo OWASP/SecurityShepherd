@@ -2091,60 +2091,62 @@ public class Getter {
       ResourceBundle.getBundle("i18n.text", locale);
       ResourceBundle levelNames =
           ResourceBundle.getBundle("i18n.moduleGenerics.moduleNames", locale);
-      JSONObject jsonSection = new JSONObject();
-      JSONArray jsonSectionModules = new JSONArray();
-      JSONObject jsonObject = new JSONObject();
-      jsonSection.put("levelMode", floor);
-      jsonOutput.put(jsonSection);
-      jsonSection = new JSONObject();
+      try {
+        JSONObject jsonSection = new JSONObject();
+        JSONArray jsonSectionModules = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        jsonSection.put("levelMode", floor);
+        jsonOutput.put(jsonSection);
+        jsonSection = new JSONObject();
 
-      // Get the modules
-      try (CallableStatement callstmt = conn.prepareCall("call getMyModules(?)")) {
-        callstmt.setString(1, userId);
-        log.debug("Gathering getMyModules ResultSet for user " + userId);
-        try (ResultSet levels = callstmt.executeQuery()) {
-          boolean thisModuleIsOpen =
-              true; // If Incremental Mode is enabled, after all the modules that have been
-          // completed have been added to the JSON Array the next level will be
-          // labeled as open and the rest as closed
-          while (levels.next()) {
-            jsonObject = new JSONObject();
-            boolean moduleCompleted = levels.getString(4) != null;
-            jsonObject.put("moduleCompleted", moduleCompleted);
-            jsonObject.put("moduleId", levels.getString(3));
-            jsonObject.put("moduleType", levels.getString(5));
-            jsonObject.put("moduleName", levelNames.getString(levels.getString(1)));
-            jsonObject.put(
-                "moduleCategory", levelNames.getString("category." + levels.getString(2)));
-            jsonObject.put(
-                "difficultyCategory", getTounnamentSectionFromRankNumber(levels.getInt(7)));
-            jsonObject.put("moduleScore", levels.getString(6));
-            jsonObject.put("moduleRank", levels.getInt(7));
-            jsonObject.put("scoredPoints", levels.getString(8)); // Could be null
-            jsonObject.put("medalEarned", levels.getString(9)); // Could be null
-            if (ModulePlan.isIncrementalFloor()) {
-              boolean moduleOpen;
-              if (moduleCompleted
-                  || (!moduleCompleted && thisModuleIsOpen)) // If its completed or if this is the
-              // first not completed
-              {
-                moduleOpen = true;
-                if (!moduleCompleted && thisModuleIsOpen) {
-                  log.debug(
-                      levelNames.getString(levels.getString(1))
-                          + " is the Next Module for user "
-                          + userId);
-                  thisModuleIsOpen = false; // Stop this from being set again
+        // Get the modules
+        try (CallableStatement callstmt = conn.prepareCall("call getMyModules(?)")) {
+          callstmt.setString(1, userId);
+          log.debug("Gathering getMyModules ResultSet for user " + userId);
+          try (ResultSet levels = callstmt.executeQuery()) {
+            boolean thisModuleIsOpen =
+                true; // If Incremental Mode is enabled, after all the modules that have been
+            // completed have been added to the JSON Array the next level will be
+            // labeled as open and the rest as closed
+            while (levels.next()) {
+              jsonObject = new JSONObject();
+              boolean moduleCompleted = levels.getString(4) != null;
+              jsonObject.put("moduleCompleted", moduleCompleted);
+              jsonObject.put("moduleId", levels.getString(3));
+              jsonObject.put("moduleType", levels.getString(5));
+              jsonObject.put("moduleName", levelNames.getString(levels.getString(1)));
+              jsonObject.put(
+                  "moduleCategory", levelNames.getString("category." + levels.getString(2)));
+              jsonObject.put(
+                  "difficultyCategory", getTounnamentSectionFromRankNumber(levels.getInt(7)));
+              jsonObject.put("moduleScore", levels.getString(6));
+              jsonObject.put("moduleRank", levels.getInt(7));
+              jsonObject.put("scoredPoints", levels.getString(8)); // Could be null
+              jsonObject.put("medalEarned", levels.getString(9)); // Could be null
+              if (ModulePlan.isIncrementalFloor()) {
+                boolean moduleOpen;
+                if (moduleCompleted
+                    || (!moduleCompleted && thisModuleIsOpen)) // If its completed or if this is the
+                // first not completed
+                {
+                  moduleOpen = true;
+                  if (!moduleCompleted && thisModuleIsOpen) {
+                    log.debug(
+                        levelNames.getString(levels.getString(1))
+                            + " is the Next Module for user "
+                            + userId);
+                    thisModuleIsOpen = false; // Stop this from being set again
+                  }
+                } else {
+                  moduleOpen = false;
                 }
-              } else {
-                moduleOpen = false;
+                jsonObject.put("moduleOpen", moduleOpen);
               }
-              jsonObject.put("moduleOpen", moduleOpen);
+              jsonSectionModules.put(jsonObject);
             }
-            jsonSectionModules.put(jsonObject);
+            jsonSection.put("modules", jsonSectionModules);
+            jsonOutput.put(jsonSection);
           }
-          jsonSection.put("modules", jsonSectionModules);
-          jsonOutput.put(jsonSection);
         }
       } catch (Exception e) {
         log.error("Module List Retrieval: " + e.toString());
