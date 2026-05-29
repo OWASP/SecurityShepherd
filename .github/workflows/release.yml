@@ -19,51 +19,51 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Set up JDK 1.8
-        uses: actions/setup-java@v3.6.0
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: 'zulu'
           java-version: '8'
       - name: Build Maven with Docker Profile and Generate SBOM
         run: mvn clean install -Pdocker -DskipTests -B -DexcludeTestProject=true cyclonedx:makeBom
       - name: Upload WAR File
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: security_shepherd_war
           path: target/*.war
       - name: Docker Compose Build
         run: docker-compose build
       - name: Generate Tomcat Docker Image SBOM
-        uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
         id: tomcat
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd
           output-file: ${{ github.workspace }}/target/owasp-security-shepherd-tomcat.cyclonedx.json
       - name: Generate MariaDB Docker Image SBOM
-        uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
         id: mariadb
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mariadb
           output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mariadb.cyclonedx.json
       - name: Generate MongoDB Docker Image SBOM
-        uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
         id: mongodb
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mongo
           output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mongodb.cyclonedx.json
       - name: Upload SBOMs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: security_shepherd_sboms
           path: |
             target/*.json
             target/*.xml
       - name: Cache Maven packages
-        uses: actions/cache@v3
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           key: maven-output-${{ hashFiles('target/**') }}
           path: |
@@ -77,22 +77,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v2.1.0
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v4.1.1
+        uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
         with:
           images: owasp/security-shepherd
 
       - name: Restore Cached Maven packages
-        uses: actions/cache@v3
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           key: maven-output-${{ hashFiles('target/**') }}
           path: |
@@ -102,12 +102,12 @@ jobs:
 
       # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
       - name: Set environment variables
-        uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a  # v4
+        uses: c-py/action-dotenv-to-setenv@925b5d99a3f1e4bd7b4e9928be4e2491e29891d9 # v5
         with:
           env-file: .env
 
       - name: Build and push Tomcat
-        uses: docker/build-push-action@v3.2.0
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
           context: .
           push: true
