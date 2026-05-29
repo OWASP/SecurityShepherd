@@ -18,17 +18,17 @@ Security improvements should only be made to the **platform infrastructure** (au
 
 ## Code style
 
-All Java code MUST be formatted with [Google Java Format](https://github.com/google/google-java-format). CI enforces this via `axel-op/googlejavaformat-action` and will reject unformatted code.
+All Java code MUST be formatted with [Google Java Format](https://github.com/google/google-java-format), bound to the Maven build via [Spotless](https://github.com/diffplug/spotless) and pinned in `pom.xml`. CI enforces this with `mvn spotless:check` (the `lint-java` job) and will reject unformatted code.
 
 Before committing Java changes, run:
 
 ```bash
-google-java-format --replace <changed-files>
+mvn spotless:apply
 ```
 
 ## Java version
 
-The project targets **Java 8**. All code must compile against Java 8, even though CI uses Java 24 for linting. Do not use Java 9+ APIs or language features.
+The project targets **Java 8**. All code must compile against Java 8, even though CI uses Java 17 for linting and building. Do not use Java 9+ APIs or language features.
 
 ## Build and test
 
