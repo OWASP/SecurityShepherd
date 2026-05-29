@@ -228,9 +228,7 @@ public class Getter {
       try (Connection conn = Database.getCoreConnection(ApplicationRoot);
           PreparedStatement prestmt =
               conn.prepareStatement(
-                  "SELECT userId, userName, userPass, badLoginCount, tempPassword, classId,"
-                      + " suspendedUntil, loginType FROM `users` WHERE ssoName = ? AND"
-                      + " loginType='saml'")) {
+                  "SELECT suspendedUntil FROM `users` WHERE ssoName = ? AND loginType='saml'")) {
         prestmt.setString(1, ssoName);
         log.debug("Gathering userFind ResultSet");
         try (ResultSet userResult = prestmt.executeQuery()) {
@@ -239,7 +237,7 @@ public class Getter {
             // User found if a row is in the database
             userFound = true;
             log.debug("User Found");
-            suspendedUntil = userResult.getTimestamp(7);
+            suspendedUntil = userResult.getTimestamp(1);
           } else {
             userFound = false;
           }
@@ -330,7 +328,7 @@ public class Getter {
 
           if (!userFound) {
             // If user wasn't found at this stage something is quite wrong, so exit
-            // forefully
+            // forcefully
             String message = "User wasn't found after being added!";
             log.fatal(message);
             throw new RuntimeException(message);

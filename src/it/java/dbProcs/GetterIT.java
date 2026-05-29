@@ -3197,7 +3197,8 @@ public class GetterIT {
   /**
    * Exercises the existing-user SSO re-login path: the first call creates the user, the second call
    * finds the existing (non-suspended) user. This drives Phase 1 (found) -> skip create -> Phase 3
-   * of the try-with-resources refactor (#840) and asserts the user identity is stable across logins.
+   * of the try-with-resources refactor (#840) and asserts the user identity is stable across
+   * logins.
    */
   @Test
   public void testSSOAuthExistingUserRelogin() {
@@ -3211,7 +3212,9 @@ public class GetterIT {
     String[] second = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
     assertNotNull(second, "Second SSO auth (existing user) should succeed");
     assertEquals(
-        first[0], second[0], "Existing-user re-login should return the same userId, not create a new user");
+        first[0],
+        second[0],
+        "Existing-user re-login should return the same userId, not create a new user");
     assertEquals(first[1], second[1], "Existing-user re-login should return the same userName");
   }
 
