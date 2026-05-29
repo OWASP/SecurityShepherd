@@ -183,7 +183,7 @@
 				}
 				if (theError.length > 0)
 				{
-					$("#badData").html("<p> <%= bundle.getString("error.occured") %>:" + theError + "</p>");
+					$("#badData").html("<p> <%= bundle.getString("error.occurred") %>:" + theError + "</p>");
 					$("#badData").show("slow");
 				}
 			});
@@ -222,3 +222,4 @@ else
 	response.sendRedirect("../loggedOutSheep.html");
 }
 %>
+

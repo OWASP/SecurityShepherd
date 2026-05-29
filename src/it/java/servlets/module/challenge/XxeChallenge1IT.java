@@ -1,9 +1,10 @@
 package servlets.module.challenge;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import dbProcs.GetterTest;
+import dbProcs.GetterIT;
 import dbProcs.Setter;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,14 +14,12 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
-import servlets.module.lesson.XxeLesson;
 import testUtils.TestProperties;
 import utils.InstallationException;
 
@@ -37,15 +36,16 @@ public class XxeChallenge1IT {
   private static ResourceBundle errors;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
-  @BeforeClass
+  @BeforeAll
   public static void before() {
     Locale enLocale = Locale.forLanguageTag(LANGUAGE_CODE);
     errors = ResourceBundle.getBundle("i18n.servlets.errors", enLocale);
     TestProperties.setTestPropertiesFileDirectory(log);
     try {
-      TestProperties.executeSql(log);
+      TestProperties.ensureSchemaReady(log);
+      TestProperties.reseedTestData();
       TestProperties.createFileSystemKey(log, "xxe.challenge.1.file", "xxe.challenge.1.solution");
-      GetterTest.verifyTestUser(applicationRoot, TEST_USERNAME, TEST_USERNAME);
+      GetterIT.verifyTestUser(applicationRoot, TEST_USERNAME, TEST_USERNAME);
     } catch (InstallationException e) {
       String message = "Could not create DB: " + e.toString();
       log.fatal(message);
@@ -56,7 +56,7 @@ public class XxeChallenge1IT {
     }
   }
 
-  @Before
+  @BeforeEach
   public void setup() {
     request = new MockHttpServletRequest();
     response = new MockHttpServletResponse();
@@ -72,7 +72,7 @@ public class XxeChallenge1IT {
     log.debug("Creating " + MODULE_CLASS_NAME + " Servlet Instance");
 
     try {
-      XxeLesson servlet = new XxeLesson();
+      XxeChallenge1OldWebService servlet = new XxeChallenge1OldWebService();
       servlet.init(new MockServletConfig(MODULE_CLASS_NAME));
 
       request.setContentType("application/xml");
@@ -142,8 +142,8 @@ public class XxeChallenge1IT {
       String servletResponse = doMockPost(xxeString.getBytes(), csrfToken, 302);
 
       log.debug("Servlet Response: " + servletResponse);
-      Assert.assertTrue(servletResponse.contains("JSON&#39;s key: "));
-      Assert.assertFalse(servletResponse.contains("You must be getting funky"));
+      assertTrue(servletResponse.contains("JSON&#39;s key: "));
+      assertFalse(servletResponse.contains("You must be getting funky"));
 
     } catch (Exception e) {
       log.fatal("Could not Complete: " + e.toString());
@@ -203,8 +203,8 @@ public class XxeChallenge1IT {
       String servletResponse = doMockPost(xxeString.getBytes(), csrfToken, 302);
 
       log.debug("Servlet Response: " + servletResponse);
-      Assert.assertFalse(servletResponse.contains("JSON&#39;s key: "));
-      Assert.assertTrue(servletResponse.contains(errors.getString("error.notOpen")));
+      assertFalse(servletResponse.contains("JSON&#39;s key: "));
+      assertTrue(servletResponse.contains(errors.getString("error.notOpen")));
 
     } catch (Exception e) {
       log.fatal("Could not Complete: " + e.toString());

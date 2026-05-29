@@ -1,15 +1,15 @@
 package servlets.admin.config;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -25,16 +25,17 @@ public class EnableCheatsIT {
   private MockHttpServletResponse response;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
-  @BeforeClass
+  @BeforeAll
   public static void resetDatabase() throws IOException, SQLException {
     TestProperties.setTestPropertiesFileDirectory(log);
 
     TestProperties.createMysqlResource();
 
-    TestProperties.executeSql(log);
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     request = new MockHttpServletRequest();
     response = new MockHttpServletResponse();
@@ -124,7 +125,7 @@ public class EnableCheatsIT {
       request.setCookies(response.getCookies());
       String responseBody = doThePost(csrfToken, enableForAll);
       if (responseBody.contains("loggedOutSheep")) {
-        log.debug("No Admin Access Expected Result Recieved");
+        log.debug("No Admin Access Expected Result Received");
         if (CheatSheetStatus.isEnabledAtAll()) {
           String message = "Cheat Sheets enabled in what should have been a failed request";
           log.fatal(message);

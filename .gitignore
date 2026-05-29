@@ -1,10 +1,39 @@
+# Maven
 /target/
+
+# Gradle
+.gradle/
+build/
+local.properties
+
+# IDE - Eclipse
 /.classpath
 /.project
 /bin/
 /.settings/
 .settings/
+.metadata/
+
+# IDE - IntelliJ / Cursor
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+null/
+
+# Project-specific
 docker/*/*.sql
 docker/*/*.sql-esrc
+docker/*/target/
 src/main/resources/onelogin.saml.properties
 src/main/resources/sso.properties
+
+# Test artifacts written to project root by IT challenges
+briefcase.pulp
+json.xml

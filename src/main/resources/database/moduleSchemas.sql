@@ -1092,15 +1092,15 @@ END
 -- transferFunds Procedure
 USE `directObjectBank`;
 -- DELIMITER $$
-CREATE PROCEDURE `directObjectBank`.`transferFunds` (IN theGiverAccountNumber VARCHAR(45), IN theRecieverAccountNumber VARCHAR(45), IN theAmmount FLOAT)
+CREATE PROCEDURE `directObjectBank`.`transferFunds` (IN theGiverAccountNumber VARCHAR(45), IN theReceiverAccountNumber VARCHAR(45), IN theAmount FLOAT)
 BEGIN
 COMMIT;
 UPDATE `directObjectBank`.`bankAccounts`
-	SET account_balance = account_balance - theAmmount
+	SET account_balance = account_balance - theAmount
 	WHERE account_number = theGiverAccountNumber;
 UPDATE `directObjectBank`.`bankAccounts`
-	SET account_balance = account_balance + theAmmount
-	WHERE account_number = theRecieverAccountNumber;
+	SET account_balance = account_balance + theAmount
+	WHERE account_number = theReceiverAccountNumber;
 COMMIT;
 END
 ;

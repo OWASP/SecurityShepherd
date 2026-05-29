@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.onelogin</groupId>
 			<artifactId>java-saml</artifactId>
-			<version>2.9.0</version>
+		<version>2.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.mkammerer</groupId>
@@ -30,32 +30,37 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.18.0</version>
+			<version>2.24.3</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20220924</version>
+			<version>20240303</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.11.0</version>
-		</dependency>
+		<version>2.18.0</version>
+	</dependency>
 
-		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+	<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.15</version>
+			<version>1.21.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.15.3</version>
+			<version>1.22.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.sf.jtidy/jtidy -->
 		<dependency>
@@ -65,16 +70,16 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.7</version>
+		<groupId>com.sun.mail</groupId>
+		<artifactId>javax.mail</artifactId>
+		<version>1.6.2</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>3.12.11</version>
+		<version>3.12.14</version>
 		</dependency>
 		<dependency>
 			<groupId>javax</groupId>
@@ -97,26 +102,33 @@
 
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>3.0.6</version>
-		</dependency>
+		<groupId>com.mysql</groupId>
+		<artifactId>mysql-connector-j</artifactId>
+		<version>8.0.33</version>
+</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.owasp.encoder/encoder -->
-		<dependency>
-			<groupId>org.owasp.encoder</groupId>
-			<artifactId>encoder</artifactId>
-			<version>1.2.3</version>
-		</dependency>
+<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
+<dependency>
+	<groupId>org.mariadb.jdbc</groupId>
+	<artifactId>mariadb-java-client</artifactId>
+	<version>3.3.2</version>
+</dependency>
 
-		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
-		</dependency>
+<!-- https://mvnrepository.com/artifact/org.owasp.encoder/encoder -->
+<dependency>
+	<groupId>org.owasp.encoder</groupId>
+	<artifactId>encoder</artifactId>
+	<version>1.3.1</version>
+</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
+<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+<dependency>
+	<groupId>commons-logging</groupId>
+	<artifactId>commons-logging</artifactId>
+	<version>1.2</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -128,7 +140,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>5.3.23</version>
+			<version>5.3.31</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -136,7 +148,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>5.3.22</version>
+			<version>5.3.31</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -151,7 +163,7 @@
 		<dependency>
 			<groupId>com.github.fakemongo</groupId>
 			<artifactId>fongo</artifactId>
-			<version>2.1.1</version>
+			<version>2.1.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -159,37 +171,37 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>5.3.22</version>
+			<version>5.3.31</version>
 		</dependency>
 
 		<!-- Test -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.9.0</version>
+			<version>5.11.4</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.9.1</version>
+			<version>5.11.4</version>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/junit/junit -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-junit -->
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest -->
 		<dependency>
 			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-junit</artifactId>
-			<version>2.0.0.0</version>
+			<artifactId>hamcrest</artifactId>
+			<version>2.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- SLF4J binding for test logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.36</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -197,17 +209,17 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>4.8.0</version>
-		</dependency>
+		<version>3.12.4</version>
+	</dependency>
 
-		<!-- https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv -->
-		<dependency>
-			<groupId>io.github.cdimascio</groupId>
-			<artifactId>java-dotenv</artifactId>
-			<version>5.2.2</version>
-		</dependency>
+	<!-- https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv -->
+	<dependency>
+		<groupId>io.github.cdimascio</groupId>
+		<artifactId>java-dotenv</artifactId>
+		<version>5.2.2</version>
+	</dependency>
 
-	</dependencies>
+</dependencies>
 
 	<profiles>
 		<profile>
@@ -232,7 +244,7 @@
 					</plugin>
 					<plugin>
 						<artifactId>maven-resources-plugin</artifactId>
-						<version>3.1.0</version>
+						<version>3.5.0</version>
 						<executions>
 							<execution>
 								<id>copy-sql-scripts</id>
@@ -250,6 +262,12 @@
 									</resources>
 								</configuration>
 							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>3.5.0</version>
+						<executions>
 							<execution>
 								<id>copy-mongo-scripts</id>
 								<phase>validate</phase>
@@ -288,7 +306,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>keytool-maven-plugin</artifactId>
-						<version>1.6</version>
+						<version>1.7</version>
 						<executions>
 							<execution>
 								<id>generate-tls-key</id>
@@ -307,6 +325,13 @@
 							<keypass>${TLS_KEYSTORE_PASS}</keypass>
 							<deststoretype>${STORE_TYPE}</deststoretype>
 						</configuration>
+						<dependencies>
+							<dependency>
+								<groupId>org.codehaus.plexus</groupId>
+								<artifactId>plexus-utils</artifactId>
+								<version>3.5.1</version>
+							</dependency>
+						</dependencies>
 					</plugin>
 				</plugins>
 			</build>
@@ -324,7 +349,7 @@
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
-						<version>0.40.1</version>
+						<version>0.48.1</version>
 						<executions>
 							<execution>
 								<id>start</id>
@@ -382,7 +407,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.1.0</version>
+				<version>1.2.1</version>
 				<executions>
 					<execution>
 						<phase>initialize</phase>
@@ -399,10 +424,9 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
+				<version>3.13.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>17</release>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
@@ -415,7 +439,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.5.0</version>
 				<executions>
 					<execution>
 						<id>copy-resources</id>
@@ -423,26 +447,43 @@
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/test-classes/WEB-INF/classes</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/resources</directory>
-									<filtering>true</filtering>
-								</resource>
-								<resource>
-									<directory>src/it/resources</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
+					<configuration>
+						<outputDirectory>${basedir}/target/test-classes/WEB-INF/classes</outputDirectory>
+						<encoding>UTF-8</encoding>
+						<nonFilteredFileExtensions>
+							<nonFilteredFileExtension>jks</nonFilteredFileExtension>
+							<nonFilteredFileExtension>p12</nonFilteredFileExtension>
+							<nonFilteredFileExtension>pfx</nonFilteredFileExtension>
+							<nonFilteredFileExtension>dat</nonFilteredFileExtension>
+						</nonFilteredFileExtensions>
+						<resources>
+							<resource>
+								<directory>src/main/resources</directory>
+								<filtering>true</filtering>
+								<excludes>
+									<exclude>i18n/**/*.properties</exclude>
+								</excludes>
+							</resource>
+							<resource>
+								<directory>src/main/resources</directory>
+								<filtering>false</filtering>
+								<includes>
+									<include>i18n/**/*.properties</include>
+								</includes>
+							</resource>
+							<resource>
+								<directory>src/it/resources</directory>
+								<filtering>true</filtering>
+							</resource>
+						</resources>
+					</configuration>
 					</execution>
 				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>3.5.2</version>
 				<configuration>
 					<skipTests>${skipUTs}</skipTests>
 					<excludes>
@@ -453,7 +494,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.22.2</version>
+				<version>3.5.2</version>
 				<configuration>
 					<skipTests>${skipTests}</skipTests>
 					<skipITs>${skipITs}</skipITs>
@@ -468,6 +509,32 @@
 						<goals>
 							<goal>integration-test</goal>
 							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>2.44.5</version>
+				<configuration>
+					<java>
+						<includes>
+							<include>src/main/java/**/*.java</include>
+							<include>src/test/java/**/*.java</include>
+							<include>src/it/java/**/*.java</include>
+						</includes>
+						<googleJavaFormat>
+							<version>1.25.2</version>
+						</googleJavaFormat>
+					</java>
+				</configuration>
+				<executions>
+					<execution>
+						<id>spotless-check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -489,13 +556,23 @@
 							</sources>
 						</configuration>
 					</execution>
+					<execution>
+						<id>add-test-resource</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>add-test-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>src/it/resources</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.cyclonedx</groupId>
-				<artifactId>cyclonedx-maven-plugin</artifactId>
-				<version>2.7.1</version>
-			</plugin>
+
 		</plugins>
 	</build>
 </project>

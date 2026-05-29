@@ -46,6 +46,7 @@ public class SqlInjectionStoredProcedure extends HttpServlet {
   private static String levelName = "SQL Injection Stored Procedure Challenge";
   public static String levelHash =
       "7edcbc1418f11347167dabb69fcb54137960405da2f7a90a0684f86c4d45a2e7";
+
   // private static String levelResult = ""; // Stored in Vulnerable DB. Not user Specific
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
