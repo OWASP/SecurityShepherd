@@ -30,5 +30,10 @@ null/
 # Project-specific
 docker/*/*.sql
 docker/*/*.sql-esrc
+docker/*/target/
 src/main/resources/onelogin.saml.properties
 src/main/resources/sso.properties
+
+# Test artifacts written to project root by IT challenges
+briefcase.pulp
+json.xml
