@@ -167,7 +167,7 @@ public class Getter {
           badLoginCount = userResult.getInt(5);
           result[3] = Boolean.toString(userResult.getBoolean(6));
           result[4] = userResult.getString(7); // classId
-          suspendedUntil = userResult.getTimestamp(8,DbTime.UTC);
+          suspendedUntil = userResult.getTimestamp(8, DbTime.UTC);
           loginType = userResult.getString(9);
           result[5] = Boolean.toString(userResult.getBoolean(10));
         } catch (SQLException e) {

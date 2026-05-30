@@ -5,8 +5,7 @@ import java.util.TimeZone;
 
 public class DbTime {
 
-	private DbTime(){};
+  private DbTime() {}
 
-	public static final Calendar UTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-
+  public static final Calendar UTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 }
