@@ -1,0 +1,39 @@
+# Security Shepherd Database Configuration
+# This file should be placed at: ${catalina.base}/conf/database.properties
+
+# Database Connection Settings
+databaseConnectionURL=jdbc:mysql://localhost:3306/
+databaseSchema=core
+DriverType=org.gjt.mm.mysql.Driver
+databaseUsername=root
+databasePassword=yourpassword
+databaseOptions=useUnicode=true&character_set_server=utf8mb4
+
+# Connection Pool Settings (HikariCP)
+# These settings control the database connection pool behavior.
+# Adjust based on your expected concurrent user load.
+
+# Maximum number of connections in the pool
+# Default: 20
+pool.maximumPoolSize=20
+
+# Minimum number of idle connections to maintain
+# Default: 5
+pool.minimumIdle=5
+
+# Maximum time (ms) to wait for a connection from the pool
+# Default: 5000 (5 seconds)
+pool.connectionTimeout=5000
+
+# Maximum time (ms) a connection can sit idle in the pool
+# Default: 600000 (10 minutes)
+pool.idleTimeout=600000
+
+# Maximum lifetime (ms) of a connection in the pool
+# Default: 1800000 (30 minutes)
+pool.maxLifetime=1800000
+
+# Leak detection threshold (ms) - logs a warning if a connection is held longer than this
+# Helps identify code that forgets to close connections
+# Default: 60000 (60 seconds), set to 0 to disable
+pool.leakDetectionThreshold=60000

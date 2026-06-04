@@ -2,9 +2,11 @@ package testUtils;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import dbProcs.ConnectionPool;
 import dbProcs.Constants;
 import dbProcs.Database;
 import dbProcs.Getter;
+import dbProcs.MongoDatabase;
 import dbProcs.Setter;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.io.BufferedWriter;
@@ -555,5 +557,45 @@ public class TestProperties {
    */
   public static void deleteMongoResource() {
     FileUtils.deleteQuietly(new File(Constants.MONGO_DB_PROP));
+  }
+
+  /**
+   * Initialize the MySQL/MariaDB connection pool for tests. Call this in @BeforeClass after
+   * createMysqlResource().
+   */
+  public static void initializeConnectionPool() {
+    ConnectionPool.initialize();
+    log.debug("Connection pool initialized for tests");
+  }
+
+  /**
+   * Shutdown the MySQL/MariaDB connection pool after tests. Call this in @AfterClass to clean up
+   * resources.
+   */
+  public static void shutdownConnectionPool() {
+    ConnectionPool.shutdown();
+    log.debug("Connection pool shut down after tests");
+  }
+
+  /** Reset the MySQL/MariaDB connection pool. Useful for tests that need a fresh pool state. */
+  public static void resetConnectionPool() {
+    ConnectionPool.reset();
+    log.debug("Connection pool reset");
+  }
+
+  /** Reset the MongoDB singleton instance. Call this to ensure a clean state for MongoDB tests. */
+  public static void resetMongoSingleton() {
+    MongoDatabase.resetInstance();
+    log.debug("MongoDB singleton reset");
+  }
+
+  /**
+   * Shutdown all database connections (MySQL and MongoDB). Call this in @AfterClass to ensure all
+   * resources are released.
+   */
+  public static void shutdownAllDatabases() {
+    shutdownConnectionPool();
+    resetMongoSingleton();
+    log.debug("All database connections shut down");
   }
 }

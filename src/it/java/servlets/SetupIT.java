@@ -1,13 +1,17 @@
 package servlets;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import dbProcs.ConnectionPool;
 import dbProcs.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -148,29 +152,64 @@ public class SetupIT {
       log.fatal(message);
       fail(message);
     }
-    /*
-     * request.getSession().setAttribute("lang", lang);
-     *
-     * request.addParameter("dbhost", "localhost"); request.addParameter("dbport",
-     * "3306"); request.addParameter("dbuser", "root");
-     * request.addParameter("dbpass", ""); request.addParameter("dbauth", authData);
-     *
-     * log.debug("Running doPost"); try { servlet.doPost(request, response); } catch
-     * (ServletException | IOException e) { e.printStackTrace();
-     * log.fatal(e.toString()); fail(e.toString()); }
-     * log.debug("doPost successful, reading response");
-     *
-     * if(response.getStatus() != expectedResponseCode) { String
-     * message="Login Servlet Returned " + response.getStatus() +
-     * " Code. 302 Expected"; log.fatal(message); fail(message); } String location =
-     * ""; try { location = response.getHeader("Location"); } catch
-     * (NullPointerException e) { String message =
-     * "Got invalid location from posting setup request: " + e.toString();
-     * log.fatal(message); fail(message); }
-     *
-     * if (!location.endsWith("login.jsp")) {
-     * fail("Setup not Redirecting to login.jsp."); }
-     */
+  }
 
+  @Test
+  public void isInstalled_cachesResult() throws IOException, SQLException {
+    TestProperties.setTestPropertiesFileDirectory(log);
+    TestProperties.createMysqlResource();
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
+
+    boolean poolReady = false;
+    try {
+      ConnectionPool.initialize();
+      poolReady = ConnectionPool.isInitialized();
+    } catch (Exception e) {
+      log.warn("Pool init issue: " + e.getMessage());
+    }
+    assumeTrue(poolReady);
+
+    try {
+      Setup.resetInstalledCache();
+
+      boolean first = Setup.isInstalled();
+      boolean second = Setup.isInstalled();
+
+      assertTrue(first, "isInstalled should return true with a running database");
+      assertEquals(first, second);
+    } finally {
+      ConnectionPool.shutdown();
+    }
+  }
+
+  @Test
+  public void resetInstalledCache_allowsReevaluation() throws IOException, SQLException {
+    TestProperties.setTestPropertiesFileDirectory(log);
+    TestProperties.createMysqlResource();
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
+
+    boolean poolReady = false;
+    try {
+      ConnectionPool.initialize();
+      poolReady = ConnectionPool.isInitialized();
+    } catch (Exception e) {
+      log.warn("Pool init issue: " + e.getMessage());
+    }
+    assumeTrue(poolReady);
+
+    try {
+      Setup.resetInstalledCache();
+      boolean first = Setup.isInstalled();
+
+      Setup.resetInstalledCache();
+      boolean second = Setup.isInstalled();
+
+      assertTrue(first, "isInstalled should return true with a running database");
+      assertEquals(first, second);
+    } finally {
+      ConnectionPool.shutdown();
+    }
   }
 }

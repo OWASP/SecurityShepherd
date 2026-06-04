@@ -5,15 +5,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Used to create database connections using the FileInputProperties.readfile method to gather
- * property information Initiated by Getter.java, Setter.java <br>
+ * Used to create database connections using connection pooling via HikariCP. Connections are
+ * obtained from the pool and returned when closed. Initiated by Getter.java, Setter.java <br>
  * <br>
  * This file is part of the Security Shepherd Project.
  *
@@ -29,16 +28,23 @@ import org.apache.logging.log4j.Logger;
  * Shepherd project. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Mark
+ * @author Paul (connection pooling)
  */
 public class Database {
 
   private static final Logger log = LogManager.getLogger(Database.class);
 
   /**
-   * This method is used by the application to open an connection to the database
+   * This method is used by the application to get a connection for challenge schemas. Connections
+   * are obtained from a pool specific to the challenge.
    *
-   * @param conn The connection to close
-   * @throws SQLException
+   * @param driverType The JDBC driver type (kept for API compatibility, but not used with pooling)
+   * @param connectionURL The base connection URL
+   * @param dbOptions Database connection options
+   * @param dbUsername Database username
+   * @param dbPassword Database password
+   * @return A pooled connection
+   * @throws SQLException if a connection cannot be obtained
    */
   public static Connection getConnection(
       String driverType,
@@ -48,33 +54,29 @@ public class Database {
       String dbPassword)
       throws SQLException {
 
-    try {
-      Class.forName(driverType).newInstance();
-    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-
-    if (dbOptions.length() > 0) {
-      connectionURL += "?" + dbOptions;
-    }
-
-    Connection conn = DriverManager.getConnection(connectionURL, dbUsername, dbPassword);
-
-    return conn;
+    // Extract the schema portion from the connectionURL for challenge connections
+    // The connectionURL at this point already includes the schema
+    return ConnectionPool.getChallengeConnection(
+        "", // Base URL is already included in connectionURL
+        connectionURL,
+        dbOptions,
+        dbUsername,
+        dbPassword);
   }
 
   /**
-   * This method is used by the application to close an open connection to a database server
+   * This method is used by the application to close/return a connection to the pool. With
+   * connection pooling, this returns the connection to the pool for reuse.
    *
-   * @param conn The connection to close
+   * @param conn The connection to return to the pool
    */
   public static void closeConnection(Connection conn) {
-
-    // log.debug("Closing database connection");
-    try {
-      conn.close();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+    if (conn != null) {
+      try {
+        conn.close(); // With HikariCP, this returns the connection to the pool
+      } catch (SQLException e) {
+        log.warn("Error returning connection to pool: " + e.getMessage());
+      }
     }
   }
 
@@ -181,68 +183,19 @@ public class Database {
   }
 
   public static Connection getCoreConnection() throws SQLException, IOException {
-    Connection conn = getCoreConnection("");
-
-    return conn;
+    return getCoreConnection("");
   }
 
   /**
-   * @param ApplicationRoot @return Connection to core schema with admin privileges @throws
-   *     FileNotFoundException @throws SQLException @throws
-   * @throws IOException Returns connection to core schema in database
-   * @throws FileNotFoundException
-   * @throws SQLException
-   * @throws RuntimeException
+   * Gets a connection to the core database schema from the connection pool.
+   *
+   * @param ApplicationRoot The running context of the application (kept for API compatibility)
+   * @return Connection to core schema from the pool
+   * @throws SQLException if a connection cannot be obtained
    */
   public static Connection getCoreConnection(String ApplicationRoot) throws SQLException {
-    Connection conn = null;
-    Properties prop = new Properties();
-
-    // Pull Driver and DB URL out of database.properties
-
-    String mysql_props = Constants.MYSQL_DB_PROP;
-
-    try (InputStream mysql_input = new FileInputStream(mysql_props)) {
-
-      prop.load(mysql_input);
-
-    } catch (IOException e) {
-      log.error("Could not load properties file: " + e.toString());
-      throw new RuntimeException(e);
-    }
-
-    String errorBase = "Missing property :";
-
-    String connectionURL = prop.getProperty("databaseConnectionURL");
-    if (connectionURL == null) {
-      throw new RuntimeException(errorBase + "connectionURL");
-    }
-    String databaseSchema = prop.getProperty("databaseSchema");
-    if (databaseSchema == null) {
-      throw new RuntimeException(errorBase + "databaseSchema");
-    }
-    String dbOptions = prop.getProperty("databaseOptions");
-    if (dbOptions == null) {
-      throw new RuntimeException(errorBase + "databaseOptions");
-    }
-    String driverType = prop.getProperty("DriverType");
-    if (driverType == null) {
-      throw new RuntimeException(errorBase + "DriverType");
-    }
-    String username = prop.getProperty("databaseUsername");
-    if (username == null) {
-      throw new RuntimeException(errorBase + "databaseUsername");
-    }
-    String password = prop.getProperty("databasePassword");
-    if (password == null) {
-      throw new RuntimeException(errorBase + "databasePassword");
-    }
-
-    connectionURL += databaseSchema;
-
-    conn = getConnection(driverType, connectionURL, dbOptions, username, password);
-
-    return conn;
+    // Use the connection pool for core connections
+    return ConnectionPool.getConnection();
   }
 
   public static Connection getDatabaseConnection(String ApplicationRoot)

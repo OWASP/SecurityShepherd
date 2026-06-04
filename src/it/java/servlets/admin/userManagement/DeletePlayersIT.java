@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -28,6 +29,17 @@ public class DeletePlayersIT {
   private MockHttpServletRequest request;
   private MockHttpServletResponse response;
   private static String lang = "en_GB";
+
+  /** Creates DB or Restores DB to Factory Defaults before running tests */
+  @BeforeAll
+  public static void resetDatabase() throws IOException, SQLException {
+    TestProperties.setTestPropertiesFileDirectory(log);
+
+    TestProperties.createMysqlResource();
+
+    TestProperties.ensureSchemaReady(log);
+    TestProperties.reseedTestData();
+  }
 
   @BeforeEach
   public void setUp() {

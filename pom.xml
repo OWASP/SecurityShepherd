@@ -114,6 +114,13 @@
 	<version>3.3.2</version>
 </dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>4.0.3</version>
+		</dependency>
+
 <!-- https://mvnrepository.com/artifact/org.owasp.encoder/encoder -->
 <dependency>
 	<groupId>org.owasp.encoder</groupId>
@@ -489,6 +496,17 @@
 					<excludes>
 						<exclude>**/*IT</exclude>
 					</excludes>
+					<!--
+						Pin tests to UTC so they pass deterministically on non-UTC developer
+						machines. The application reads SQL DATETIME values via JDBC
+						getTimestamp() without a Calendar, which interprets them in the JVM's
+						default timezone. With the DB in UTC and the JVM in a non-UTC zone,
+						time-based checks (suspendedUntil, startTime, lockTime, endTime) skew
+						by the JVM's UTC offset. CI runs in UTC so does not see this; local
+						runs on UTC+N developer machines fail those tests.
+						Production bug tracked in #841.
+					-->
+					<argLine>-Duser.timezone=UTC</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -501,6 +519,7 @@
 					<excludes>
 						<exclude>**/*Test*</exclude>
 					</excludes>
+					<argLine>-Duser.timezone=UTC</argLine>
 				</configuration>
 				<executions>
 					<execution>

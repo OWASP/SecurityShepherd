@@ -49,6 +49,18 @@ Install ZenHub for your browser and click the ZenHub tab that will appear in thi
 ## How do I setup my dev environment?
 [Like This](https://github.com/OWASP/SecurityShepherd/wiki/Create-a-Security-Shepherd-Dev-Environment)
 
+## Development Workflow
+See [docs/development-workflow.md](docs/development-workflow.md) for the full development cycle, including how to:
+- Create your branch and make changes
+- Build and test your changes in the runtime environment using Docker
+- Run the automated test suite
+
+## Running Tests
+See [docs/testing.md](docs/testing.md) for instructions on running unit and integration tests with Docker.
+
+## Database Configuration
+See [docs/database-configuration.md](docs/database-configuration.md) for connection pooling configuration and database setup.
+
 ## Is there a Definition of Done?
 *Work in Progess*  
 - [ ] New Code has 'Good' JUnit Tests that cover it
