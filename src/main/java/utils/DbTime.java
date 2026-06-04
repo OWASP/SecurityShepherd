@@ -7,5 +7,6 @@ public class DbTime {
 
   private DbTime() {}
 
-  public static final Calendar UTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+  public static final ThreadLocal<Calendar> UTC =
+      ThreadLocal.withInitial(() -> Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 }
