@@ -164,7 +164,7 @@
 
 		<!-- spring-mock:2.0.8 removed: javax-era standalone mock (2008).
 		     Spring 6 spring-test provides the Jakarta MockHttpServletRequest /
-		     MockServletConfig that supersede it.
+		     MockServletConfig that supersedes it.
 		     fongo removed: unmaintained and unused (its only tests are @Disabled);
 		     test rescue tracked in #876. -->
 
