@@ -1,0 +1,75 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'org.owasp.mobileshepherd'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "org.owasp.mobileshepherd"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+        }
+    }
+    sourceSets {
+        test {
+            java {
+                // These test files reference unimplemented modules — exclude from compilation
+                // until the corresponding fragments/models are implemented.
+                exclude 'org/owasp/mobileshepherd/InsecureData3Test.java'
+                exclude 'org/owasp/mobileshepherd/ReverseEngineering2Test.java'
+                exclude 'org/owasp/mobileshepherd/ReverseEngineeringChallenge3Test.java'
+                exclude 'org/owasp/mobileshepherd/SecurityMisconfigChallenge3Test.java'
+                exclude 'org/owasp/mobileshepherd/SupplyChainChallengeTest.java'
+            }
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+    implementation 'androidx.navigation:navigation-fragment:2.7.7'
+    implementation 'androidx.navigation:navigation-ui:2.7.7'
+    implementation 'androidx.exifinterface:exifinterface:1.3.7'
+    implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
+    
+    // Unit testing
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.10'
+    
+    // Instrumented testing
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}

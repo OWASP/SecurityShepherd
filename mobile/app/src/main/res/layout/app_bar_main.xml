@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shepherd_background"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.Reverser.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primary_dark_blue"
+            app:popupTheme="@style/Theme.Reverser.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/content_main" />
+
+    <!-- Mini FAB for Command Reference -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_command_reference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="88dp"
+        android:visibility="gone"
+        android:contentDescription="@string/command_reference"
+        app:fabSize="mini"
+        app:tint="@color/white"
+        app:backgroundTint="@color/info_blue"
+        app:elevation="6dp"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+    <!-- Mini FAB for OWASP Top 10 -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_owasp_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="152dp"
+        android:visibility="gone"
+        android:contentDescription="@string/owasp_mobile_top_10"
+        app:fabSize="mini"
+        app:tint="@color/white"
+        app:backgroundTint="@color/warning_orange"
+        app:elevation="6dp"
+        app:srcCompat="@android:drawable/ic_menu_view" />
+
+    <!-- Main FAB with Material 3 styling -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/help_and_information"
+        app:tint="@color/white"
+        app:backgroundTint="@color/primary_blue"
+        app:elevation="8dp"
+        app:hoveredFocusedTranslationZ="12dp"
+        app:pressedTranslationZ="16dp"
+        app:rippleColor="@color/primary_light_blue"
+        app:srcCompat="@android:drawable/ic_menu_help" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
