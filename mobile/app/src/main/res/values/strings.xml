@@ -1,0 +1,507 @@
+<resources>
+
+    <!-- =========================================================== -->
+    <!--  APP SHELL: Navigation, menus, preferences, landing          -->
+    <!-- =========================================================== -->
+
+    <string name="app_name">MobileShepherd</string>
+    <string name="nav_header_title">OWASP Security Shepherd</string>
+    <string name="nav_header_subtitle">Mobile Security Training</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Action bar -->
+    <string name="action_settings">Settings</string>
+    <string name="action_adb_reference">ADB Commands</string>
+    <string name="action_exit">Exit</string>
+
+    <!-- Nav drawer menu labels -->
+    <string name="menu_home">Home</string>
+    <string name="menu_scoreboard">Scoreboard</string>
+    <string name="menu_lesson">Reverse Engineering Lesson</string>
+    <string name="menu_reverse_engineering1">Reverse Engineering 1</string>
+    <string name="menu_reverse_engineering2">Reverse Engineering 2</string>
+    <string name="menu_reverse_engineering3">Reverse Engineering 3</string>
+    <string name="menu_insecure_data_lesson">Insecure Data Lesson</string>
+    <string name="menu_insecure_data1">Insecure Data 1</string>
+    <string name="menu_poor_auth_lesson">Poor Authentication Lesson</string>
+    <string name="menu_poor_auth_challenge">Poor Authentication 1</string>
+    <string name="menu_insecure_authorization_lesson">Insecure Authorization Lesson</string>
+    <string name="menu_supply_chain_lesson">Supply Chain Security Lesson</string>
+    <string name="menu_insecure_comm_lesson">Insecure Communication Lesson</string>
+    <string name="menu_insecure_comm_challenge">Insecure Communication 1</string>
+    <string name="menu_insufficient_crypto_lesson">Insufficient Cryptography Lesson</string>
+    <string name="menu_insufficient_crypto_challenge">Insufficient Cryptography 1</string>
+    <string name="menu_security_misconfig_lesson">Security Misconfiguration Lesson</string>
+    <string name="menu_security_misconfig_challenge2">Security Misconfiguration 1</string>
+    <string name="menu_input_validation_lesson">Input Validation Lesson</string>
+    <string name="menu_privacy_lesson">Privacy Controls Lesson</string>
+
+    <!-- Preferences screen -->
+    <string name="dialog_based_preferences">Server Preferences</string>
+    <string name="hello_blank_fragment">Preferences</string>
+    <string name="server_title">Server Address</string>
+    <string name="server_summary">Enter Server address here</string>
+    <string name="server_dialog_title">Enter Server Address</string>
+
+
+    <!-- Auth UI -->
+    <string name="auth_status_offline">Offline mode</string>
+    <string name="auth_status_online">Signed in as: %1$s</string>
+    <string name="auth_button_sign_in">Sign In</string>
+    <string name="auth_button_sign_out">Sign Out</string>
+    <string name="auth_dialog_title_login">Sign In</string>
+    <string name="auth_dialog_title_register">Register</string>
+    <string name="auth_hint_server">Server URL (e.g. http://10.0.2.2:8080)</string>
+    <string name="auth_hint_email">Email (optional)</string>
+    <string name="auth_email_label">Registration only</string>
+    <string name="auth_switch_to_register">No account? Register</string>
+    <string name="auth_switch_to_login">Already have an account? Sign In</string>
+    <string name="submit_issue_title">Submit an Issue</string>
+    <string name="submit_issue_summary">Report bugs or request features on GitHub</string>
+    <string name="license_title">License</string>
+    <string name="summary_license">This App is part of the Security Shepherd Project.
+The Security Shepherd project is free software: you can redistribute
+it and/or modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version. The Security Shepherd
+project is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General
+Public License along with the Security Shepherd project. If not, see
+http://www.gnu.org/licenses.</string>
+
+    <!-- Theme arrays -->
+    <string-array name="theme_entries">
+        <item>System Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+
+    <!-- Landing screen -->
+    <string name="landing_title">Mobile Security Shepherd</string>
+    <string name="landing_warning">WARNING: This is an intentionally vulnerable mobile application!</string>
+    <string name="landing_button">Enter App</string>
+    <string name="intro">This is a vulnerable App made to be used with the
+OWASP Security Shepherd Project. You will need to configure the server
+address in the settings to match the address of the Security Shepherd
+instance you have access to. This can be either a URL or an IP. For
+more information, please visit
+https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
+    <string name="owasp_security_shepherd_project">OWASP Security Shepherd Project</string>
+    <string name="this_application_is_designed_for_educati">This application is designed for educational purposes as part of the OWASP Security Shepherd project.</string>
+    <string name="licensed_under_gnu_gpl_v3">Licensed under GNU GPL v3</string>
+
+    <!-- Home screen -->
+    <string name="home_welcome_title">Welcome to OWASP Mobile Shepherd</string>
+    <string name="home_welcome_description">An Android App that hosts the Mobile Lesson and Challenge content from the OWASP Security Shepherd Project.</string>
+
+
+    <!-- Progress screen -->
+    <string name="your_progress">Your Progress</string>
+    <string name="track_your_learning_journey_through_mobi">Track your learning journey through MobileShepherd</string>
+    <string name="overall_progress">Overall Progress</string>
+    <string name="s_0" formatted="false">0%</string>
+    <string name="s_0_25_modules">0 / 25 modules</string>
+    <string name="congratulations_youve_completed_all_modu">Congratulations! You\'ve completed all modules!</string>
+    <string name="challenges">Challenges</string>
+    <string name="s_0_14_completed">0 / 14 completed</string>
+    <string name="s_0_of_13_challenges_completed">0 of 13 challenges completed</string>
+    <string name="lessons">Lessons</string>
+    <string name="s_0_11_completed">0 / 11 completed</string>
+    <string name="s_0_of_11_lessons_completed">0 of 11 lessons completed</string>
+    <string name="module_details">Module Details</string>
+    <string name="module_name">Module Name</string>
+    <string name="not_started">Not Started</string>
+    <string name="reverse_engineering_1">Reverse Engineering 1</string>
+    <string name="security_misconfiguration_2_backup_extra">Security Misconfiguration 2: Backup Extraction</string>
+
+    <!-- Common UI -->
+    <string name="validate_button">Validate Key</string>
+    <string name="clear_button">Clear</string>
+    <string name="validate_flag">Validate Flag</string>
+    <string name="submit_flag">Submit Flag</string>
+    <string name="enter_flag">Enter Flag</string>
+    <string name="flag">Flag</string>
+    <string name="results">Results</string>
+    <string name="challenge_info">Challenge Info</string>
+    <string name="help_and_information">Help and Information</string>
+    <string name="about">About</string>
+    <string name="hints">Hints</string>
+    <string name="command_reference">Command Reference</string>
+    <string name="owasp_mobile_top_10">OWASP Mobile Top 10</string>
+    <string name="lesson_key_found">Lesson Key Found:</string>
+    <string name="key">KEY{...}</string>
+    <string name="what_just_happened">What Just Happened?</string>
+    <string name="vulnerability_explanation">Vulnerability explanation...</string>
+    <string name="actions">Actions</string>
+    <string name="cancel">Cancel</string>
+    <string name="login">Login</string>
+    <!-- Login screen -->
+    <string name="login_get_started">Get Started</string>
+    <string name="login_step1">1) Ensure this App can reach the Security Shepherd Platform.</string>
+    <string name="login_step2">2) Register an account or sign in with your existing credentials.</string>
+    <string name="login_step3_signin">3) Sign in below.</string>
+    <string name="login_step3_register">3) Register below.</string>
+    <string name="login_continue_offline">Continue without signing in (offline mode)</string>
+    <string name="login_error_fill_fields">Please fill in Server URL, Username and Password.</string>
+    <string name="login_connecting">Connecting\u2026</string>
+
+    <string name="logout">Logout</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+    <!-- ADB Reference screen -->
+    <string name="adb_command_reference">ADB Command Reference</string>
+    <string name="quick_reference_for_android_debug_bridge">Quick reference for Android Debug Bridge commands used in challenges. Tap any command to copy it to clipboard.</string>
+    <string name="logcat_commands">Logcat Commands</string>
+    <string name="view_all_logs">View all logs</string>
+    <string name="adb_logcat">adb logcat</string>
+    <string name="filter_by_tag">Filter by tag</string>
+    <string name="adb_logcat_s_tagname">adb logcat -s TAG_NAME</string>
+    <string name="search_logs_powershell">Search logs (PowerShell)</string>
+    <string name="adb_logcat_grep_quotsearchtermquot">adb logcat | grep &amp;quot;search_term&amp;quot;</string>
+    <string name="clear_logs">Clear logs</string>
+    <string name="adb_logcat_c">adb logcat -c</string>
+    <string name="basic_adb_commands">Basic ADB Commands</string>
+    <string name="list_connected_devices">List connected devices</string>
+    <string name="adb_devices">adb devices</string>
+    <string name="open_device_shell">Open device shell</string>
+    <string name="adb_shell">adb shell</string>
+    <string name="install_apk">Install APK</string>
+    <string name="adb_install_appapk">adb install app.apk</string>
+    <string name="uninstall_app">Uninstall app</string>
+    <string name="adb_uninstall_compackagename">adb uninstall com.package.name</string>
+    <string name="file_operations">File Operations</string>
+    <string name="pull_database_file">Pull database file</string>
+    <string name="adb_pull_datadatacomowaspappdatabasesuse">adb pull /data/data/org.owasp.mobileshepherd/databases/Users.db</string>
+    <string name="pull_sharedpreferences">Pull SharedPreferences</string>
+    <string name="adb_pull_datadatacomowaspappsharedprefs">adb pull /data/data/org.owasp.mobileshepherd/shared_prefs/</string>
+    <string name="list_app_files">List app files</string>
+    <string name="adb_shell_ls_datadatacomowaspapp">adb shell ls /data/data/org.owasp.mobileshepherd/</string>
+    <string name="list_databases">List databases</string>
+    <string name="adb_shell_ls_datadatacomowaspappdatabase">adb shell ls /data/data/org.owasp.mobileshepherd/databases/</string>
+    <string name="database_commands">Database Commands</string>
+    <string name="open_sqlite_database">Open SQLite database</string>
+    <string name="adb_shell_sqlite3_datadatacomowaspappdat">adb shell sqlite3 /data/data/org.owasp.mobileshepherd/databases/Users.db</string>
+    <string name="query_database">Query database</string>
+    <string name="sqlite_select_from_users">sqlite&gt; SELECT * FROM users;</string>
+    <string name="view_file_contents">View file contents</string>
+    <string name="adb_shell_cat_datadatacomowaspappsharedp">adb shell cat /data/data/org.owasp.mobileshepherd/shared_prefs/UserCredentials.xml</string>
+    <string name="package_management">Package Management</string>
+    <string name="find_package_name">Find package name</string>
+    <string name="adb_shell_pm_list_packages_grep_reverser">adb shell pm list packages | grep reverser</string>
+    <string name="get_apk_path">Get APK path</string>
+    <string name="adb_shell_pm_path_comowaspapp">adb shell pm path org.owasp.mobileshepherd</string>
+    <string name="pull_apk_file">Pull APK file</string>
+    <string name="adb_pull_dataappcomowaspappbaseapk">adb pull /data/app/org.owasp.mobileshepherd-*/base.apk</string>
+    <string name="clear_app_data">Clear app data</string>
+    <string name="adb_shell_pm_clear_comowaspapp">adb shell pm clear org.owasp.mobileshepherd</string>
+
+    <!-- Insufficient Crypto Challenge -->
+    <string name="insufficient_crypto_challenge_section">Insufficient Cryptography Challenge</string>
+    <string name="read_vault_file">Read vault from device (run-as)</string>
+    <string name="cmd_run_as_vault">adb shell run-as org.owasp.mobileshepherd cat shared_prefs/recovery_vault.xml</string>
+    <string name="pull_vault_xml">Pull vault XML to host</string>
+    <string name="cmd_pull_vault">adb pull /data/data/org.owasp.mobileshepherd/shared_prefs/recovery_vault.xml</string>
+    <string name="decompile_apk_jadx">Decompile APK (find XOR key)</string>
+    <string name="cmd_jadx">jadx-gui app-debug.apk</string>
+    <string name="xor_decode_python">XOR-decode vault data (Python)</string>
+    <string name="cmd_xor_decode">python3 -c "import base64; d=base64.b64decode(\'PASTE_BASE64_HERE\'); print(\'\'.join(chr(b^0x42) for b in d))"</string>
+
+
+    <!-- =========================================================== -->
+    <!--  REVERSE ENGINEERING (M9)                                    -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="lesson_intro">The Reverse Engineering module introduces techniques for extracting hidden information from Android applications.</string>
+    <string name="lesson_tools">- APKTool - Decompiles APK files\n- Jadx - Java decompiler\n- dex2jar - Converts DEX to JAR\n- JD-GUI - Java class viewer\n- Android Studio - APK Analyzer</string>
+    <string name="lesson_hint">Step-by-Step Guide:\n\n1. EXTRACT THE APK\n   - Connect device via ADB\n   - Run: adb shell pm list packages | grep reverser\n   - Run: adb shell pm path org.owasp.mobileshepherd\n   - Run: adb pull /data/app/[path]/base.apk\n\n2. DECOMPILE WITH JADX\n   - Download JADX from GitHub\n   - Run: jadx base.apk\n   - Or use JADX-GUI for visual interface\n\n3. NAVIGATE TO TARGET FILE\n   - Open: sources/com/owasp/reverser/ui/lessons/LessonFragment.java\n   - Look in the class body for string variables\n   - Search for keywords: flag, key, secret, password\n\n4. ALTERNATIVE TOOLS\n   - APKTool: apktool d base.apk (produces smali)\n   - dex2jar + JD-GUI: For JAR decompilation\n   - Ghidra: Advanced static analysis\n   - Frida: Dynamic runtime inspection\n\n5. WHAT TO LOOK FOR\n   - Hardcoded strings in class fields\n   - Static final String variables\n   - Suspicious base64 or hex strings\n   - Comments or debug messages\n\nTarget: LessonFragment.java in package org.owasp.mobileshepherd.ui.lessons</string>
+    <string name="where_to_find_the_key">Where to Find the Key</string>
+    <string name="the_key_is_hardcoded_in_the_java_source">The key is hardcoded in the Java source code of this lesson fragment:\n\nFile: LessonFragment.java\nPackage: org.owasp.mobileshepherd.ui.lessons\nLocation: Inside the class as a string variable</string>
+    <string name="verify_key">Verify Key</string>
+    <string name="enter_the_key_you_found">Enter the key you found</string>
+
+    <!-- Challenge 1 -->
+    <string name="reverse_engineering_1_description">The key is hardcoded in the Java source code of this app. Decompile the APK to find it.</string>
+    <string name="reverse_engineering_1_hint">Hint: The key is stored as a simple string constant in one of the Java classes. Try searching for "flag" or "key" in the decompiled code.</string>
+    <string name="reverse_engineering_1_input_hint">Enter key here</string>
+    <string name="reverse_engineering_1_success">Key validated successfully.</string>
+    <string name="reverse_engineering_1_failure">The key is incorrect. Please try again.</string>
+
+
+
+
+    <!-- =========================================================== -->
+    <!--  INSECURE DATA STORAGE (M2)                                  -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="insecure_data_intro">Learn about insecure data storage vulnerabilities in mobile applications. This is one of the most common security issues in mobile apps where sensitive information is stored without proper protection.</string>
+    <string name="insecure_data_locations">- SQLite Databases (unencrypted)\n- SharedPreferences (plain text)\n- Internal Storage files\n- External Storage (SD card)\n- Application logs\n- Temporary files\n- Cloud storage backups</string>
+    <string name="insecure_data_vulns">1. Physical Access - Anyone with the device can extract data\n2. Backup Exposure - Data in cloud backups\n3. Malware - Other apps can access unprotected data\n4. Forensics - Data persists even after app deletion\n5. Rooted Devices - Full filesystem access</string>
+
+    <!-- Challenge 1 - SQLite hash cracking -->
+    <string name="insecure_data_storage_1">Insecure Data Storage 1</string>
+    <string name="insecure_data1_description">This app stores a password in a local SQLite database. The password has been hashed, but the algorithm is weak. Extract the database and crack the hash to find the key.</string>
+    <string name="insecure_data1_db_path">\nPasswords are hidden here but stored in plaintext in:\n/data/data/org.owasp.mobileshepherd/databases/passwordDB</string>
+    <string name="this_challenge_shows_password_hash_crack">This challenge shows password hash cracking. The app stores a password hash in a database - your goal is to crack the hash and find the original password.</string>
+    <string name="extract_sensitive_data_from_unencrypted">Data is stored in plaintext in a local SQLite database. Get access to this data to find the key.</string>
+    <string name="database_users">Database Users</string>
+    <string name="members_stored_in_unencrypted_sqlite_dat">Members stored in unencrypted SQLite database:</string>
+    <string name="npasswords_are_hidden_here_but_stored_in">\nPasswords are hidden here but stored in plaintext in:\n/data/data/org.owasp.mobileshepherd/databases/Members.db</string>
+
+
+
+    <!-- =========================================================== -->
+    <!--  POOR AUTHENTICATION (M4)                                    -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="poor_auth_intro">Poor authentication is one of the most critical mobile vulnerabilities. Authentication is the cornerstone of app security - if attackers bypass it, all other security measures become irrelevant.</string>
+    <string name="poor_auth_vulnerabilities">- Weak security questions (easily guessable)\n- Passwords logged in plaintext\n- Credentials in world-readable files\n- Weak temporary passwords\n- Verbose error messages\n- Debug logs in production</string>
+
+    <!-- Challenge 1 -->
+    <string name="poor_auth_challenge_description">An account in this app is locked. The password reset workflow leaks the answers to its security questions through logs and local files. Recover the answers, reset the password, and authenticate to retrieve the key.</string>
+    <string name="poor_authentication">Poor Authentication</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="password_reset">Password Reset</string>
+    <string name="answer_these_security_questions_to_reset">Answer these security questions to reset your password:</string>
+    <string name="what_is_your_favorite_food">What is your favorite food?</string>
+    <string name="what_is_your_mothers_maiden_name">What is your mother\'s maiden name?</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="login_successful">Login Successful!</string>
+    <string name="find_hardcoded_credentials_in_the_app_ch">This app protects a secret behind a PIN. The authentication mechanism has a fundamental weakness that makes it possible to bypass. Find the PIN to retrieve the key.</string>
+    <string name="validate_pin">Validate Pin</string>
+    <string name="this_exercise_shows_hardcoded_credential">This exercise shows hardcoded credentials and insecure logging. Try to find the PIN by exploiting these vulnerabilities!</string>
+    <string name="enter_pin">Enter PIN</string>
+    <string name="verify_pin">Verify PIN</string>
+    <string name="device_information">Device Information</string>
+    <string name="serial_loading">Serial: Loading...</string>
+    <string name="build_loading">Build: Loading...</string>
+    <string name="manufacturer_loading">Manufacturer: Loading...</string>
+    <string name="brand_loading">Brand: Loading...</string>
+    <string name="sdk_loading">SDK: Loading...</string>
+
+
+    <!-- =========================================================== -->
+    <!--  INSECURE AUTHORIZATION (M3)                                 -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="insecure_authorization_intro">Insecure authorization occurs when apps fail to properly enforce access controls after authentication. Even if users authenticate correctly, improper authorization checks allow privilege escalation, access to other users\' data, or unauthorized actions. Client-side authorization flaws can allow role and permission checks to be manipulated.</string>
+
+    <!-- Challenge 1 - Role escalation via SharedPreferences -->
+    <string name="escalate_from_basic_user_to_admin_login">This app has two privilege levels. A standard user account is available to log in with, but the key is only accessible to admins. Find a way to escalate your privileges.</string>
+    <string name="login_to_app">Login to App</string>
+    <string name="user_dashboard">User Dashboard</string>
+    <string name="welcome_user">Welcome, User!</string>
+    <string name="current_role_user">Current Role: user</string>
+    <string name="access_admin_panel">Access Admin Panel</string>
+    <string name="admin_panel">Admin Panel</string>
+    <string name="access_deniednnyou_do_not_have_admin_pri">Access Denied\n\nYou do not have admin privileges.\n\nHint: Authorization is checked client-side using SharedPreferences.</string>
+
+
+    <!-- =========================================================== -->
+    <!--  SUPPLY CHAIN SECURITY (M6)                                  -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="supply_chain_intro">Inadequate supply chain security occurs when mobile apps use vulnerable third-party libraries, SDKs, or dependencies. Attackers exploit these weak links to compromise entire applications, affecting millions of users.</string>
+    <string name="supply_chain_vulnerabilities">Common Issues:\n\n- Using dependencies with known vulnerabilities\n- Not verifying SDK authenticity\n- Hardcoded API keys in libraries\n- Insecure data collection by third parties\n- Excessive permissions requested by SDKs\n- Outdated dependencies not updated for years</string>
+
+    <string name="owasp_mobile_top_10_m6_insufficient_supp">OWASP Mobile Top 10: M6 - Insufficient Supply Chain Security</string>
+    <string name="this_application_uses_several_thirdparty">This app bundles a third-party library that has a known vulnerability. Identify the vulnerable dependency and exploit it to retrieve the key.</string>
+    <string name="vulnerable_sdk">Vulnerable SDK</string>
+    <string name="sdk_investigation">SDK Investigation</string>
+    <string name="the_app_uses_a_vulnerable_thirdparty_ana">The app uses a vulnerable third-party analytics SDK. Analyze the SDK initialization, check logs, and inspect the filesystem to find security issues.</string>
+    <string name="analyze_sdk">Analyze SDK</string>
+    <string name="analysis_results">Analysis Results</string>
+    <string name="once_youve_exploited_the_supply_chain_vu">Once you\'ve exploited the supply chain vulnerability, enter the flag below:</string>
+    <string name="thirdparty_dependencies">Third-Party Dependencies</string>
+    <string name="androidxappcompatappcompat161">androidx.appcompat:appcompat:1.6.1</string>
+    <string name="comgoogleandroidmaterialmaterial1110">com.google.android.material:material:1.11.0</string>
+    <string name="androidxnavigationnavigationfragment277">androidx.navigation:navigation-fragment:2.7.7</string>
+    <string name="androidxexifinterfaceexifinterface137">androidx.exifinterface:exifinterface:1.3.7</string>
+    <string name="androidxconstraintlayoutconstraintlayout">androidx.constraintlayout:constraintlayout:2.1.4</string>
+
+
+    <!-- =========================================================== -->
+    <!--  INSECURE COMMUNICATION (M5)                                 -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="insecure_comm_intro">Insecure communication occurs when mobile apps transmit sensitive data without proper encryption. Any attacker on the same network can intercept, read, and modify unencrypted traffic, leading to credential theft, session hijacking, and data breaches.</string>
+    <string name="insecure_comm_vulnerabilities">Common Issues:\n\n- Sending credentials over HTTP\n- Accepting invalid/self-signed certificates\n- Using weak cipher suites or deprecated TLS versions\n- Disabling certificate pinning for convenience\n- Sensitive data in URLs (visible in logs/history)\n- Mixed HTTP/HTTPS sessions exposing session tokens</string>
+
+    <!-- Challenge 1 - HTTP traffic interception -->
+    <string name="insecure_comm_challenge_desc">This app sends traffic to multiple endpoints, some over HTTP. Set up a proxy and capture the unencrypted request to find the key.</string>
+    <string name="network_traffic_analysis">Network Traffic Analysis</string>
+    <string name="network_monitor">Network Monitor</string>
+    <string name="this_app_makes_multiple_network_requests">This app makes multiple network requests. Start monitoring to capture all traffic and identify insecure communications.</string>
+    <string name="start_monitoring">Start Monitoring</string>
+    <string name="ready_to_monitor_network_traffic">Ready to monitor network traffic...</string>
+    <string name="analyze_the_captured_traffic_in_logcat_f">Analyze the captured traffic in logcat. Find the request sent over HTTP (not HTTPS) and extract the session token.</string>
+    <string name="this_app_sends_analytics_data_to_a_third">This app transmits sensitive data over the network without adequate protection. Intercept the app\'s traffic to find the key.</string>
+    <string name="analytics_event">Analytics Event</string>
+    <string name="set_up_a_proxy_eg_burp_suite_on_12700180">Set up a proxy (e.g., Burp Suite on 127.0.0.1:8080) and configure the emulator to use it. When you click the button below, the app will send analytics data to a third-party service over HTTP with the API key in the headers.</string>
+    <string name="send_analytics_event">Send Analytics Event</string>
+    <string name="ready_to_send_request">Ready to send request...</string>
+
+
+    <!-- =========================================================== -->
+    <!--  INSUFFICIENT CRYPTOGRAPHY (M10)                            -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="insufficient_crypto_intro">Insufficient cryptography occurs when mobile apps use deprecated encryption algorithms, inadequate key lengths, poor key management, or flawed cryptographic implementations. These vulnerabilities allow attackers to decrypt sensitive data, bypass encryption, or manipulate cryptographic processes.</string>
+    <string name="insufficient_crypto_vulnerabilities">Common Crypto Vulnerabilities:\n\n- Deprecated algorithms: DES, RC4, MD5, SHA-1\n- Insufficient key length: Keys &lt; 128 bits\n- ECB mode: Pattern analysis attacks\n- Hardcoded keys: Keys in source code\n- Static IVs: Initialization vector reuse\n- Poor key derivation: Simple hashing for keys\n- Insecure random: Predictable Random() instead of SecureRandom\n- No salt: Password hashing without random salt</string>
+
+    <!-- Challenge 1 - DES/ECB cracking -->
+    <string name="insufficient_crypto_challenge_desc">This app stores your recovery keys in local storage using a custom encoding scheme. Save your keys, then investigate how the data is actually stored on the device. Can you recover the hidden session token from the vault?</string>
+    <string name="insufficient_cryptography_challenge">Insufficient Cryptography Challenge</string>
+    <string name="once_youve_identified_all_cryptographic">Once you\'ve identified all cryptographic vulnerabilities and extracted the hidden flag, submit it below.</string>
+    <string name="enter_flag_format_key">Enter flag (format: KEY{...})</string>
+    <string name="use_des_encryption_56bit_key_each_secret">Sensitive data in this app is encrypted, but the encryption algorithm and key length are weak. Break the encryption to recover the hidden secrets.</string>
+    <string name="encrypt_decrypt_data">Encrypt / Decrypt Data</string>
+    <string name="enter_a_key_08_characters_text_and_optio">Enter a key (0-8 characters), text, and optional hint. Click on secrets below to decrypt them.</string>
+    <string name="enter_key_08_characters">Enter key (0-8 characters)</string>
+    <string name="enter_text">Enter text</string>
+    <string name="enter_hint_optional">Enter hint (optional)</string>
+    <string name="encrypt">Encrypt</string>
+    <string name="decrypt">Decrypt</string>
+    <string name="output_will_appear_here">Output will appear here</string>
+    <string name="encrypted_secrets">Encrypted Secrets</string>
+    <string name="decrypt_these_using_the_correct_key">Decrypt these using the correct key:</string>
+
+
+    <!-- =========================================================== -->
+    <!--  SECURITY MISCONFIGURATION (M8)                             -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="security_misconfig_intro">Security misconfiguration occurs when security settings are not properly defined, implemented, maintained, or enforced. This is one of the most common vulnerabilities in mobile applications, often resulting from default configurations, incomplete setups, or overly permissive settings that expose the app to various attack vectors.</string>
+    <string name="security_misconfig_vulnerabilities">Common Security Misconfigurations:\n\n- Debug Mode Enabled: android:debuggable=true allows JDWP debugging in production\n- Backup Allowed: android:allowBackup=true enables ADB backup extraction of app data\n- Exported Components: Activities/Services/Receivers without proper permission checks\n- Cleartext Traffic: Allowing unencrypted HTTP connections\n- Excessive Permissions: Requesting unnecessary dangerous permissions\n- Verbose Error Messages: Leaking sensitive information in production logs\n- Default Credentials: Unchanged API keys, passwords in configuration files\n- Insecure File Permissions: World-readable/writable files\n- Missing Certificate Pinning: Vulnerable to MITM attacks\n- WebView Misconfigurations: JavaScript enabled, file access allowed</string>
+    <string name="configuration_check">Configuration Check</string>
+    <string name="check_various_security_configuration_set">Check various security configuration settings to identify which ones are properly configured and which are security risks.</string>
+    <string name="check_configuration">Check Configuration</string>
+    <string name="debug_mode_checking">Debug Mode: Checking...</string>
+    <string name="backup_allowed_checking">Backup Allowed: Checking...</string>
+    <string name="exported_components_checking">Exported Components: Checking...</string>
+    <string name="network_security_checking">Network Security: Checking...</string>
+    <string name="permissions_checking">Permissions: Checking...</string>
+    <string name="exported_component_exploited">Exported Component Exploited!</string>
+    <string name="exploit_exported_component">Exploit Exported Component</string>
+    <string name="this_app_contains_an_exported_component">This app contains an EXPORTED COMPONENT that can be invoked by any app or ADB command. Scan for components, identify the vulnerable one, and exploit it to retrieve the lesson key!</string>
+    <string name="scan_app_components">Scan App Components</string>
+    <string name="discovered_activities">Discovered Activities:</string>
+    <string name="safe_exportedfalse_vulnerable_exportedtr">Safe (exported=false) / Vulnerable (exported=true)</string>
+    <string name="adb_exploitation_command">ADB Exploitation Command:</string>
+    <string name="adb_shell_am_start_n_comowaspappactivity">adb shell am start -n org.owasp.mobileshepherd/[ACTIVITY_PATH]</string>
+    <string name="scan_components_above_find_the_exported">Scan components above, find the exported one, and replace [ACTIVITY_PATH] with the full class path (e.g., .ui.lessons.securitymisconfig.ClassName)</string>
+    <string name="find_security_misconfigurations_in_andro">This app has been misconfigured in ways that expose it to attack. Examine the app\'s configuration to find the key.</string>
+
+    <!-- Challenge 1 - ADB backup extraction -->
+    <string name="security_misconfig_challenge2_description">This app has ADB backup enabled. Extract a backup of the app data and examine the contents to find the key stored in plaintext.</string>
+    <string name="stored_user_preferences">Stored User Preferences:</string>
+    <string name="username_admin">Username: admin</string>
+    <string name="theme_dark_mode">Theme: Dark Mode</string>
+    <string name="language_english">Language: English</string>
+    <string name="secret_flag_encrypted">Secret Flag: [Encrypted]</string>
+    <string name="hint_this_app_allows_backups_use_adb_to">Hint: This app allows backups. Use ADB to extract the app data and examine the backup file for stored preferences.</string>
+
+
+    <!-- =========================================================== -->
+    <!--  INPUT VALIDATION / XSS (M7)                                -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="input_validation_lesson_intro">Input/Output validation vulnerabilities occur when applications fail to properly validate, sanitize, or encode data at trust boundaries. This includes both data coming into the app (user input, API responses, intents) and data going out (WebView content, logs, broadcasts). Insufficient validation can lead to injection attacks, data corruption, security bypasses, and unintended application behavior.</string>
+    <string name="input_validation_lesson_vulnerabilities">Common Input/Output Validation Issues:\n\n- SQL Injection: Unsanitized input in database queries allows data extraction\n- Path Traversal: Unvalidated file paths enable access to unauthorized files\n- WebView XSS: Unescaped user data rendered in WebViews enables script injection\n- Intent Injection: Malicious data in Android Intents bypasses security checks\n- Command Injection: User input passed to system commands enables arbitrary execution\n- XML/JSON Injection: Malformed data breaks parsers and logic\n- Log Injection: Unvalidated data in logs creates fake entries or leaks data\n- URL Validation Bypass: Weak URL checks allow access to unauthorized resources\n- Format String Attacks: User input in format strings causes crashes or leaks\n- Deep Link Exploits: Improperly validated deep link parameters bypass authentication</string>
+
+    <string name="challenge">Challenge</string>
+
+    <!-- Challenge 2 - Deep link injection -->
+    <string name="deep_link_content_loader">Deep Link Content Loader</string>
+    <string name="this_app_accepts_deep_links_to_load_exte">This app loads external content via deep links, but only permits a set of trusted domains. Find a way to bypass this restriction.</string>
+    <string name="quick_links">Quick Links</string>
+    <string name="examplecom">Example.com</string>
+    <string name="trusted_site">Trusted Site</string>
+    <string name="owasporg">OWASP.org</string>
+    <string name="custom_deep_link">Custom Deep Link</string>
+    <string name="format_myappopenurllttargeturlgt">Format: myapp://open?url=&amp;lt;target_url&amp;gt;</string>
+    <string name="enter_target_url">Enter target URL</string>
+    <string name="open_deep_link">Open Deep Link</string>
+    <string name="loaded_content">Loaded Content</string>
+    <string name="no_content_loaded">No content loaded</string>
+    <string name="use_the_buttons_above_or_enter_a_custom">Use the buttons above or enter a custom deep link to load content.</string>
+
+
+    <!-- =========================================================== -->
+    <!--  PRIVACY CONTROLS (M6)                                      -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson / Challenge - EXIF metadata -->
+    <string name="privacy_lesson_title">Inadequate Privacy Controls</string>
+    <string name="privacy_lesson_description">A photo is accessible within this app. It was shared without being properly sanitised first. Examine it carefully to find the key.</string>
+    <string name="privacy_lesson_intro">Image metadata can leak sensitive information about users, including location, device information, and timestamps. The content aligns with OWASP Mobile Top 10 M6: Inadequate Privacy Controls.</string>
+    <string name="privacy_lesson_objective">Load the sample image and analyze its metadata to find the hidden key. Pay attention to EXIF data that applications often fail to strip before sharing or uploading images.</string>
+    <string name="privacy_lesson_vulnerabilities">Privacy Control Failures:\n\n- Image Metadata Leakage: Photos contain GPS coordinates, timestamps, device info in EXIF data\n- Location Tracking: Apps collect precise location without clear user benefit\n- Clipboard Access: Reading clipboard without user knowledge\n- Contact/Calendar Access: Uploading full contact lists unnecessarily\n- Analytics Overreach: Tracking user behavior beyond stated purpose\n- PII in Logs: Logging personally identifiable information\n- Identifier Persistence: Using permanent device IDs for tracking\n- No Privacy Controls: Missing opt-out mechanisms\n- Data Minimization Failure: Collecting more data than needed\n- Third-party SDK Leaks: SDKs transmitting user data without disclosure</string>
+    <string name="privacy_lesson_hints">Finding the Key:\n\n1. Tap "Load Sample Image" to load the preloaded photo\n2. Tap "Analyze Metadata" to view all EXIF data\n3. Look for the Image Description field in the metadata\n4. The key is hidden in one of the EXIF tags</string>
+    <string name="privacy_photo_description">Photo with metadata</string>
+    <string name="privacy_no_image_text">No image loaded. Tap \"Load Sample Image\" to begin.</string>
+    <string name="privacy_btn_load_sample">Load Sample Image</string>
+    <string name="privacy_btn_take_photo">Take New Photo</string>
+    <string name="extract_exif_metadata_from_images_to_dis">Extract EXIF metadata from images to discover location coordinates. Use ADB to pull the photo and examine its metadata.</string>
+    <string name="photo_viewer">Photo Viewer</string>
+
+
+    <!-- =========================================================== -->
+    <!--  CLIENT-SIDE INJECTION (M7 / SQLite)                        -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="client_side_injection_lesson_description">This app queries a local database using unsanitised user input. Manipulate the query to expose data that isn\'t meant to be visible.</string>
+    <string name="client_side_injection_lesson_intro">Client-Side Injection occurs when mobile applications fail to properly validate and sanitize user input before using it in SQL queries, JavaScript contexts, or other interpreters on the device.\n\nTypes of Client-Side Injection:\n\n- SQL Injection in SQLite databases\n- JavaScript injection in WebViews\n- XML/JSON injection in parsers\n- Command injection in system calls\n- NoSQL injection in local databases\n- File path injection\n\nSQL Injection is particularly dangerous because:\n- SQLite databases store sensitive app data\n- Attackers can read any table\n- Authentication can be bypassed\n- Data can be modified or deleted\n- Business logic can be circumvented</string>
+    <string name="client_side_injection_lesson_vulnerabilities">SQL Injection Vulnerabilities:\n\n- String Concatenation: Building queries with user input\n  - "SELECT * FROM users WHERE name = \'" + input + "\'"\n  - Allows injection: \' OR 1=1--\n\n- Improper Escaping: Not handling special characters\n  - Single quotes (\')\n  - Comment markers (-- or /**/)\n  - SQL keywords (OR, UNION, SELECT)\n\n- Lack of Validation: Accepting any user input\n  - No input length limits\n  - No character whitelisting\n  - No pattern matching\n\nCommon Attack Patterns:\n- Authentication Bypass: \' OR \'1\'=\'1\n- UNION Attacks: \' UNION SELECT * FROM secrets--\n- Comment Injection: admin\'--\n- Always True Conditions: 1\' OR \'1\'=\'1</string>
+
+    <!-- Challenge 1 - Auth bypass -->
+    <string name="clientside_injection_1">Client-Side Injection 1</string>
+    <string name="client_side_injection_challenge1_description">This app authenticates users against a local SQLite database using a query built with string concatenation. Bypass the login to retrieve the admin password.</string>
+    <string name="client_side_injection_challenge1_intro">A vulnerable login workflow builds SQL queries through string concatenation. User accounts are stored in a SQLite database with usernames, passwords, roles, and balance data.\n\nObjective:\n1. Identify the SQL injection vulnerability\n2. Bypass the authentication mechanism\n3. Retrieve the administrator account password\n4. Submit the password as the key\n\nThe weakness exists because user input is concatenated directly into SQL queries without proper validation or parameterization.</string>
+    <string name="client_side_injection_challenge1_vulnerabilities">Vulnerable Code Pattern:\n\nString query = "SELECT * FROM accounts WHERE username = \'" + username + "\' AND password = \'" + password + "\'";\n\nThis allows attackers to:\n- Break out of the query context\n- Inject their own SQL logic\n- Bypass authentication checks\n- Retrieve data from any user\n\nExample Attack:\nUsername: admin\'--\nPassword: (anything)\n\nResulting Query:\nSELECT * FROM accounts WHERE username = \'admin\'--\' AND password = \'....\'\n\nThe -- comments out the password check!</string>
+    <string name="account_login">Account Login</string>
+    <string name="login_to_access_your_account_can_you_byp">Login to access your account. Can you bypass the authentication and retrieve the admin password?</string>
+    <string name="login_results_will_appear_here">Login results will appear here...</string>
+    <string name="once_youve_retrieved_the_admin_password">Once you\'ve retrieved the admin password, submit it as the flag:</string>
+
+    <!-- Challenge 2 - UNION injection -->
+    <string name="clientside_injection_2">Client-Side Injection 2</string>
+    <string name="client_side_injection_challenge2_description">This app searches a product database using unsanitised input. Use a UNION-based injection to query the hidden secrets table and extract the admin token.</string>
+    <string name="client_side_injection_challenge2_intro">A product search feature contains a SQL injection vulnerability. Unlike basic authentication bypass, this challenge requires UNION-based injection to query a separate table.\n\nDatabase Structure:\n- products table: name, category, price, stock\n- secrets table: secret_key, secret_value (HIDDEN)\n\nObjective:\n1. Identify the number of columns in the products query\n2. Use UNION SELECT to query the secrets table\n3. Extract the admin_token value\n4. Submit it as the key\n\nRequired concepts:\n- UNION SQL operator\n- Column count matching\n- Cross-table data extraction</string>
+    <string name="client_side_injection_challenge2_vulnerabilities" formatted="false">Vulnerable Code:\n\nString query = "SELECT name, category, price, stock FROM products WHERE name LIKE \'%" + input + "%\'";\n\nUNION-Based Injection allows:\n- Combining results from multiple queries\n- Accessing tables not in original query\n- Bypassing application logic\n- Extracting data from hidden tables\n\nAttack Requirements:\n1. Match column count in UNION\n2. Match data types (use NULL for unknowns)\n3. Terminate original query properly\n4. Know or guess target table name\n\nExample Attack:\n\' UNION SELECT secret_key, secret_value, NULL, NULL FROM secrets--</string>
+    <string name="product_search">Product Search</string>
+    <string name="search_the_product_database_can_you_disc">Search the product database. Can you discover the hidden \'secrets\' table and extract the admin token?</string>
+    <string name="search_products">Search products</string>
+    <string name="search_results_will_appear_here">Search results will appear here...</string>
+    <string name="once_youve_extracted_the_admin_token_fro">Once you\'ve extracted the admin token from the secrets table, submit it as the flag:</string>
+
+    <!-- Challenge 3 - User search injection -->
+    <string name="user_search">User Search</string>
+    <string name="find_the_hidden_admin_user">Find the hidden admin user!</string>
+    <string name="search_username">Search username</string>
+    <string name="search_users">Search Users</string>
+
+    <!-- Login screen hints -->
+    <string name="username_title">Username</string>
+    <string name="password_title">Password</string>
+
+</resources>

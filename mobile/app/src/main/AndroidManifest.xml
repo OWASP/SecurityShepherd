@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:usesCleartextTraffic="true"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/icon"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Reverser"
+        tools:targetApi="31">
+        <activity
+            android:name=".LandingActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Reverser.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Reverser.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Reverser.NoActionBar">
+        </activity>
+
+        <activity android:name="Preferences"
+            android:label="@string/action_settings"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="org.owasp.mobileshepherd.Preferences" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Security Misconfiguration Lesson: Exported Component Vulnerability -->
+        <activity
+            android:name=".ui.lessons.securitymisconfig.MisconfigLessonSecretActivity"
+            android:exported="true"
+            android:label="Configuration Debug Panel" />
+
+        <!-- Insecure Data Storage Lesson: Internal Debug Activity -->
+        <activity
+            android:name=".ui.lessons.insecuredata.DataStorageDebugActivity"
+            android:exported="false"
+            android:label="Data Storage Debug" />
+
+        <!-- FileProvider for camera image capture -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="org.owasp.mobileshepherd.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

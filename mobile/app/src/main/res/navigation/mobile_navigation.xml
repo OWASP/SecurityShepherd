@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home"
+    app:enterAnim="@anim/slide_in_right"
+    app:exitAnim="@anim/slide_out_left"
+    app:popEnterAnim="@anim/slide_in_left"
+    app:popExitAnim="@anim/slide_out_right">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="org.owasp.mobileshepherd.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.LessonFragment"
+        android:label="@string/menu_lesson"
+        tools:layout="@layout/fragment_lesson" />
+
+    <fragment
+        android:id="@+id/nav_insecure_data_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.insecuredata.InsecureDataLessonFragment"
+        android:label="@string/menu_insecure_data_lesson"
+        tools:layout="@layout/fragment_insecure_data_lesson" />
+
+    <fragment
+        android:id="@+id/nav_challenge1"
+        android:name="org.owasp.mobileshepherd.ui.challenges.reverseengineering.ReverseEngineering1Fragment"
+        android:label="@string/menu_reverse_engineering1"
+        tools:layout="@layout/fragment_reverse_engineering1" />
+
+    <fragment
+        android:id="@+id/nav_insecure_data1"
+        android:name="org.owasp.mobileshepherd.ui.challenges.insecuredata1.InsecureData1Fragment"
+        android:label="@string/menu_insecure_data1"
+        tools:layout="@layout/fragment_insecure_data1" />
+
+    <fragment
+        android:id="@+id/nav_poor_auth_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.poorauth.PoorAuthLessonFragment"
+        android:label="@string/menu_poor_auth_lesson"
+        tools:layout="@layout/fragment_poor_auth_lesson" />
+
+    <fragment
+        android:id="@+id/nav_poor_auth_challenge"
+        android:name="org.owasp.mobileshepherd.ui.challenges.poorauth.PoorAuthChallengeFragment"
+        android:label="@string/menu_poor_auth_challenge"
+        tools:layout="@layout/fragment_poor_auth_challenge" />
+
+    <fragment
+        android:id="@+id/nav_insecure_authorization_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.insecureauthorization.InsecureAuthorizationLessonFragment"
+        android:label="@string/menu_insecure_authorization_lesson"
+        tools:layout="@layout/fragment_insecure_authorization_lesson" />
+
+    <fragment
+        android:id="@+id/nav_supply_chain_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.supplychain.SupplyChainLessonFragment"
+        android:label="@string/menu_supply_chain_lesson"
+        tools:layout="@layout/fragment_supply_chain_lesson" />
+
+    <fragment
+        android:id="@+id/nav_insecure_comm_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.insecurecomm.InsecureCommLessonFragment"
+        android:label="@string/menu_insecure_comm_lesson"
+        tools:layout="@layout/fragment_insecure_comm_lesson" />
+
+    <fragment
+        android:id="@+id/nav_insecure_comm_challenge"
+        android:name="org.owasp.mobileshepherd.ui.challenges.insecurecomm.InsecureCommChallengeFragment"
+        android:label="@string/menu_insecure_comm_challenge"
+        tools:layout="@layout/fragment_insecure_comm_challenge" />
+
+    <fragment
+        android:id="@+id/nav_insufficient_crypto_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.crypto.InsufficientCryptoLessonFragment"
+        android:label="@string/menu_insufficient_crypto_lesson"
+        tools:layout="@layout/fragment_insufficient_crypto_lesson" />
+
+    <fragment
+        android:id="@+id/nav_insufficient_crypto_challenge"
+        android:name="org.owasp.mobileshepherd.ui.challenges.crypto.InsufficientCryptoChallengeFragment"
+        android:label="@string/menu_insufficient_crypto_challenge"
+        tools:layout="@layout/fragment_insufficient_crypto_challenge" />
+
+    <fragment
+        android:id="@+id/nav_adb_reference"
+        android:name="org.owasp.mobileshepherd.ui.adb.AdbReferenceFragment"
+        android:label="@string/action_adb_reference"
+        tools:layout="@layout/fragment_adb_reference" />
+
+    <fragment
+        android:id="@+id/nav_security_misconfig_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.securitymisconfig.SecurityMisconfigLessonFragment"
+        android:label="@string/menu_security_misconfig_lesson"
+        tools:layout="@layout/fragment_security_misconfig_lesson" />
+
+    <fragment
+        android:id="@+id/nav_security_misconfig_challenge2"
+        android:name="org.owasp.mobileshepherd.ui.challenges.securitymisconfig.SecurityMisconfigChallenge2Fragment"
+        android:label="@string/menu_security_misconfig_challenge2"
+        tools:layout="@layout/fragment_security_misconfig_challenge2" />
+
+    <fragment
+        android:id="@+id/nav_input_validation_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.InputValidationLessonFragment"
+        android:label="@string/menu_input_validation_lesson"
+        tools:layout="@layout/fragment_input_validation_lesson" />
+
+    <fragment
+        android:id="@+id/nav_privacy_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.privacycontrols.PrivacyControlsLessonFragment"
+        android:label="@string/menu_privacy_lesson"
+        tools:layout="@layout/fragment_privacy_controls_lesson" />
+
+    <fragment
+        android:id="@+id/nav_client_side_injection_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.clientsideinjection.ClientSideInjectionLessonFragment"
+        android:label="Client-Side Injection Lesson"
+        tools:layout="@layout/fragment_client_side_injection_lesson" />
+
+    <fragment
+        android:id="@+id/nav_client_side_injection_challenge1"
+        android:name="org.owasp.mobileshepherd.ui.challenges.clientsideinjection.ClientSideInjectionChallenge1Fragment"
+        android:label="Client-Side Injection Challenge 1"
+        tools:layout="@layout/fragment_client_side_injection_challenge1" />
+
+    <fragment
+        android:id="@+id/nav_client_side_injection_challenge2"
+        android:name="org.owasp.mobileshepherd.ui.challenges.clientsideinjection.ClientSideInjectionChallenge2Fragment"
+        android:label="Client-Side Injection Challenge 2"
+        tools:layout="@layout/fragment_client_side_injection_challenge2" />
+
+    <fragment
+        android:id="@+id/nav_scoreboard"
+        android:name="org.owasp.mobileshepherd.ui.scoreboard.ScoreboardFragment"
+        android:label="@string/menu_scoreboard"
+        tools:layout="@layout/fragment_scoreboard" />
+
+</navigation>
