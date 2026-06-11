@@ -34,7 +34,7 @@ import utils.ScoreboardStatus;
 public class GetterIT {
 
   private static final Logger log = LogManager.getLogger(GetterIT.class);
-  private static String lang = new String("en_GB");
+  private static String lang = "en_GB";
   private static Locale locale = new Locale(lang);
   private static String applicationRoot = new String();
   private static final int totalNumberOfModulesInShepherd = 58;
@@ -230,8 +230,8 @@ public class GetterIT {
 
   @Test
   public void testAuthUserCorrectUpperCaseCredentials() {
-    String userName = new String("authWithGoodUpperCaseCreds");
-    String password = new String("goodPassword");
+    String userName = "authWithGoodUpperCaseCreds";
+    String password = "goodPassword";
 
     try {
       String user[] = Getter.authUser(applicationRoot, userName, password);
@@ -257,8 +257,8 @@ public class GetterIT {
   @Test
   public void testAuthUserCorrectLongUsername() {
     // Here is a pretty long username
-    String userName = new String("göödUsernämeWithÅDecentOKLengthÖ");
-    String password = new String("goodPassword");
+    String userName = "göödUsernämeWithÅDecentOKLengthÖ";
+    String password = "goodPassword";
 
     try {
       String user[] = Getter.authUser(applicationRoot, userName, password);
@@ -284,8 +284,8 @@ public class GetterIT {
   @Test
   public void testAuthUserBadLongUsername() {
     // Here is a pretty long username
-    String userName = new String("badUsernameWithAnIncrediblyLongLengthWhicIsTooMuch");
-    String password = new String("goodPassword");
+    String userName = "badUsernameWithAnIncrediblyLongLengthWhicIsTooMuch";
+    String password = "goodPassword";
 
     String user[] = Getter.authUser(applicationRoot, userName, password);
     if (user == null || user[0].isEmpty()) {
@@ -313,8 +313,8 @@ public class GetterIT {
   @Test
   public void testAuthUserCorrectNonLatinUsername() {
     // Here is a non-latin username
-    String userName = new String("nonLatinåäöÅÄÖ");
-    String password = new String("goodPassword");
+    String userName = "nonLatinåäöÅÄÖ";
+    String password = "goodPassword";
 
     log.debug("Attempting to authenticate as " + userName);
     String user[] = Getter.authUser(applicationRoot, userName, password);
@@ -345,8 +345,8 @@ public class GetterIT {
   @Disabled
   public void testAuthUserCorrectEmojiUsername() {
     // Here is a very non-latin username
-    String userName = new String("😃😅😍💩👍‌𝑓ᶃ我璃မ္ယက္‌");
-    String password = new String("goodEmojiPassword");
+    String userName = "😃😅😍💩👍‌𝑓ᶃ我璃မ္ယက္‌";
+    String password = "goodEmojiPassword";
 
     log.debug("Attempting to authenticate as " + userName);
     String user[] = Getter.authUser(applicationRoot, userName, password);
@@ -375,9 +375,9 @@ public class GetterIT {
 
   @Test
   public void testAuthUserCorrectNonLatinPassword() {
-    String userName = new String("NonLatinPass");
+    String userName = "NonLatinPass";
     // Here is a very non-latin password
-    String password = new String("אذاसтьᚩᚾåäö123ÅÄÖǎ𝓫𝚌Ⴛḗ𝑓ᶃ");
+    String password = "אذاसтьᚩᚾåäö123ÅÄÖǎ𝓫𝚌Ⴛḗ𝑓ᶃ";
 
     try {
       String user[] = Getter.authUser(applicationRoot, userName, password);
@@ -402,7 +402,7 @@ public class GetterIT {
 
   @Test
   public void testAuthUserCorrectCredentialsLongPassword() {
-    String userName = new String("authWithGoodCredsLongPass");
+    String userName = "authWithGoodCredsLongPass";
 
     // A 160 character password should work!
     String password =
@@ -3202,8 +3202,8 @@ public class GetterIT {
    */
   @Test
   public void testSSOAuthExistingUserRelogin() {
-    String userName = new String("SSOReloginUser Lastname");
-    String ssoName = new String("ssoreloginuser@example.com");
+    String userName = "SSOReloginUser Lastname";
+    String ssoName = "ssoreloginuser@example.com";
 
     String[] first = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
     assertNotNull(first, "First SSO auth (user creation) should succeed");
