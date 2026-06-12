@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.TimeZone;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
@@ -73,6 +74,30 @@ public class GetterAuthIT {
     assertNotNull(
         Getter.authUser(applicationRoot, userName, userName),
         "User should be able to authenticate after unsuspension");
+  }
+
+  @Test
+  public void suspendedUserIsRejectedWhenJvmTimezoneIsNonUtc() throws SQLException {
+    requireDatabase();
+    TimeZone originalTimeZone = TimeZone.getDefault();
+    TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+    try {
+      String userName = "authSuspendedNonUtcUser";
+
+      Setter.userCreate(
+          applicationRoot, null, userName, userName, "player", userName + "@test.com", false);
+      String[] user = Getter.authUser(applicationRoot, userName, userName);
+      assertNotNull(user, "User should be able to authenticate before suspension");
+
+      String userId = user[0];
+
+      assertTrue(Setter.suspendUser(applicationRoot, userId, 10), "Could not suspend user");
+      assertNull(
+          Getter.authUser(applicationRoot, userName, userName),
+          "Suspended user should not be able to authenticate under a non-UTC JVM timezone");
+    } finally {
+      TimeZone.setDefault(originalTimeZone);
+    }
   }
 
   @Test

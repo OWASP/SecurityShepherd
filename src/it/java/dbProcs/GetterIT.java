@@ -3,6 +3,7 @@ package dbProcs;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -3191,6 +3193,29 @@ public class GetterIT {
       } else {
         log.debug("PASS: User Could Authenticate after unsuspension");
       }
+    }
+  }
+
+  @Test
+  public void testSSOAuthSuspendedWithNonUtcJvmTimeZone() {
+    TimeZone originalTimeZone = TimeZone.getDefault();
+    TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+    try {
+      String userName = "SSOSuspendedNonUtcUser Lastname";
+      String ssoName = "ssosuspendednonutcuser@example.com";
+
+      String[] user = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
+      assertNotNull(user, "Initial SSO auth should succeed");
+      assertFalse(user[0].isEmpty(), "Initial SSO auth should return a userId");
+
+      String userID = user[0];
+
+      assertTrue(Setter.suspendUser(applicationRoot, userID, 10), "Could not suspend user");
+      assertNull(
+          Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player"),
+          "Suspended SSO user should not authenticate under a non-UTC JVM timezone");
+    } finally {
+      TimeZone.setDefault(originalTimeZone);
     }
   }
 
