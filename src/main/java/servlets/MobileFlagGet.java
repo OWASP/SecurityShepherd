@@ -1,6 +1,5 @@
 package servlets;
 
-import dbProcs.Getter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -89,8 +88,6 @@ public class MobileFlagGet extends HttpServlet {
     String userId = (String) ses.getAttribute("userStamp");
     String userName = (String) ses.getAttribute("userName");
 
-    String applicationRoot = getServletContext().getRealPath("");
-
     String baseFlag = MobileModuleFlags.BASE_FLAGS.get(moduleId);
     if (baseFlag == null) {
       log.debug("Unknown mobile module ID: " + MobileModuleFlags.sanitize(moduleId));
@@ -102,21 +99,6 @@ public class MobileFlagGet extends HttpServlet {
     // Gate: only deliver a flag if the student has opened this module via the app.
     // This prevents bulk flag farming by calling this endpoint directly after login.
     boolean started = MobileModuleProgress.hasStarted(userId, moduleId);
-    if (!started) {
-      // In-memory cache miss — could be a server restart. Fall back to DB.
-      String dbModuleId = MobileModuleFlags.MODULE_DB_IDS.get(moduleId);
-      if (dbModuleId != null) {
-        started = Getter.hasPlayerStarted(applicationRoot, dbModuleId, userId);
-        if (started) {
-          // Warm the in-memory cache so subsequent calls don't hit the DB.
-          MobileModuleProgress.recordStart(userId, moduleId);
-          log.debug(
-              "Gate: DB start record found for "
-                  + MobileModuleFlags.sanitize(moduleId)
-                  + ", cache warmed");
-        }
-      }
-    }
     if (!started) {
       log.debug(
           "Flag requested for "
