@@ -20,9 +20,8 @@ import utils.Validate;
  * Stateless registration endpoint for the Security Shepherd mobile app. <br>
  * <br>
  * Unlike the web {@link Register} servlet, this endpoint does not require a session or CSRF token
- * because registration is always initiated by a human using the mobile app's sign-in screen.
- * All standard input validation (username format, password strength, email format) is still
- * enforced.
+ * because registration is always initiated by a human using the mobile app's sign-in screen. All
+ * standard input validation (username format, password strength, email format) is still enforced.
  *
  * <p>Request (POST, application/x-www-form-urlencoded):
  *
@@ -57,8 +56,7 @@ public class MobileRegister extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    ShepherdLogManager.setRequestIp(
-        request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+    ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
     log.debug("**** servlets.MobileRegister ****");
 
     response.setCharacterEncoding("UTF-8");
@@ -86,8 +84,7 @@ public class MobileRegister extends HttpServlet {
       userAddress = "";
     }
 
-    boolean validAddress = userAddress.isEmpty()
-        || Validate.isValidEmailAddress(userAddress);
+    boolean validAddress = userAddress.isEmpty() || Validate.isValidEmailAddress(userAddress);
 
     boolean userValidate;
     if (validAddress && !userAddress.isEmpty()) {
