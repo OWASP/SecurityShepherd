@@ -79,6 +79,7 @@ final class MobileModuleFlags {
     ids.put("ids_challenge_1", "307f78f18fd6a87e50ed6705231a9f24cd582574");
     // RE challenges use hardcodedKey=1 (client-side SHA-256); DB IDs registered for module list
     // display
+    ids.put("re_lesson", "2ab09c0c18470ae5f87d219d019a1f603e66f944");
     ids.put("re_challenge_1", "52885a3db5b09adc24f38bc453fe348f850649b3");
     ids.put("poor_auth_lesson", "0cdd1549e7c74084d7059ce748b93ef657b44457");
     ids.put("poor_auth_challenge", "ba6e65e4881c8499b5e53eb33b5be6b5d0f1fb2c");
