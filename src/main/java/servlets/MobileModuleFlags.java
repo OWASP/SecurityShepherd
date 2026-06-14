@@ -90,7 +90,7 @@ final class MobileModuleFlags {
     ids.put("insecure_comm_lesson", "a76d11ebd575aecfba5d69441cbd90c95e8abe31");
     ids.put("insecure_comm_challenge", "d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7");
     ids.put("insufficient_crypto_lesson", "3385d879b0da97597e16e5c8a7511a6ec331d1d9");
-    ids.put("insufficient_crypto_challenge", "3f010a976bcbd6a37fba4a10e4a057acc80bdc09");
+    ids.put("insufficient_crypto_challenge", "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2");
     ids.put("security_misconfig_lesson", "c85dad7f468a333e53edaca90a435528db76d118");
     ids.put("security_misconfig_challenge_2", "e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8");
     ids.put("input_validation_lesson", "708b76213e50409e138fc68eba81ed7ec8fccf08");
