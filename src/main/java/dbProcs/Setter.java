@@ -55,7 +55,10 @@ public class Setter {
   public static final String mobileModuleCategoryHardcodedWhereClause =
       new String(
           ""
-              + "moduleCategory = 'Mobile Injection'"
+              + "moduleCategory = 'Mobile Broken Crypto'"
+              + " OR moduleCategory = 'Mobile Content Provider'"
+              + " OR moduleCategory = 'Mobile Data Leakage'"
+              + " OR moduleCategory = 'Mobile Injection'"
               + " OR moduleCategory = 'Mobile Insecure Authorization'"
               + " OR moduleCategory = 'Mobile Insecure Communication'"
               + " OR moduleCategory = 'Mobile Insecure Data Storage'"
