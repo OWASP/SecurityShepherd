@@ -113,7 +113,7 @@ public class Getter {
           badLoginCount = userResult.getInt(5);
           tempPassword = userResult.getBoolean(6);
           classId = userResult.getString(7);
-          suspendedUntil = userResult.getTimestamp(8, DbTime.utcCalendar());
+          suspendedUntil = userResult.getTimestamp(8, DbTime.UTC.get());
           loginType = userResult.getString(9);
           tempUsername = userResult.getBoolean(10);
         } else {
@@ -238,7 +238,7 @@ public class Getter {
             // User found if a row is in the database
             userFound = true;
             log.debug("User Found");
-            suspendedUntil = userResult.getTimestamp(1, DbTime.utcCalendar());
+            suspendedUntil = userResult.getTimestamp(1, DbTime.UTC.get());
           } else {
             userFound = false;
           }
