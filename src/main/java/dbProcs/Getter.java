@@ -369,7 +369,7 @@ public class Getter {
       log.debug("Getting suspension data");
 
       try {
-        suspendedUntil = userResult.getTimestamp(7, DbTime.UTC.get());
+        suspendedUntil = userResult.getTimestamp(7,DbTime.UTC.get());
       } catch (SQLException e) {
         log.fatal(
             "Could not find suspension information from ssoName: " + ssoName + ": " + e.toString());
