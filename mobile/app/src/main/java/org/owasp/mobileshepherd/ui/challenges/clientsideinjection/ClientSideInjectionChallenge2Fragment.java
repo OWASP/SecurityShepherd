@@ -1,4 +1,4 @@
-﻿package org.owasp.mobileshepherd.ui.challenges.clientsideinjection;
+package org.owasp.mobileshepherd.ui.challenges.clientsideinjection;
 
 import android.content.ContentValues;
 import android.content.Intent;

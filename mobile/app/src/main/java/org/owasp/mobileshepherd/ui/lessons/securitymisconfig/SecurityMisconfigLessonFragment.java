@@ -1,4 +1,4 @@
-﻿package org.owasp.mobileshepherd.ui.lessons.securitymisconfig;
+package org.owasp.mobileshepherd.ui.lessons.securitymisconfig;
 
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;

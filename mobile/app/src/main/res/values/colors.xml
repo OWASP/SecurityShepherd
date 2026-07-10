@@ -21,6 +21,7 @@
     <color name="shepherd_light_green">#81C784</color>
     <color name="security_red">#F44336</color>
     <color name="security_red_dark">#C62828</color>
+    <color name="error_red">#F44336</color>
     <color name="warning_orange">#FF9800</color>
     <color name="warning_orange_dark">#E65100</color>
     <color name="info_blue">#2196F3</color>

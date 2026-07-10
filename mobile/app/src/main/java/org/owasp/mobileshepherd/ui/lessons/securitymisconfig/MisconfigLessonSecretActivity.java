@@ -1,4 +1,4 @@
-﻿package org.owasp.mobileshepherd.ui.lessons.securitymisconfig;
+package org.owasp.mobileshepherd.ui.lessons.securitymisconfig;
 
 import android.os.Bundle;
 import android.widget.TextView;
