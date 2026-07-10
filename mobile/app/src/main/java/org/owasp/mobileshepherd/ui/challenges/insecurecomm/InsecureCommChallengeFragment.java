@@ -1,4 +1,4 @@
-﻿package org.owasp.mobileshepherd.ui.challenges.insecurecomm;
+package org.owasp.mobileshepherd.ui.challenges.insecurecomm;
 
 import android.os.Bundle;
 import android.util.Base64;

@@ -1,4 +1,4 @@
-﻿package org.owasp.mobileshepherd.ui.lessons.insecuredata;
+package org.owasp.mobileshepherd.ui.lessons.insecuredata;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

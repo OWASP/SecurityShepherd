@@ -1,4 +1,4 @@
-﻿package org.owasp.mobileshepherd.utils;
+package org.owasp.mobileshepherd.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

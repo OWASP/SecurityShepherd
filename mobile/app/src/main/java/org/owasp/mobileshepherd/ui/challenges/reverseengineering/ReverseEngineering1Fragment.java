@@ -1,4 +1,4 @@
-﻿package org.owasp.mobileshepherd.ui.challenges.reverseengineering;
+package org.owasp.mobileshepherd.ui.challenges.reverseengineering;
 
 import android.graphics.Color;
 import android.os.Bundle;
