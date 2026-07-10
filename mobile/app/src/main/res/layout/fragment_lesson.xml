@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:padding="16dp"
     android:background="@color/background_secondary"
-    tools:context=".ui.lessons.LessonFragment">
+    tools:context=".ui.lessons.reverseengineering.ReverseEngineeringLessonFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

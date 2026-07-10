@@ -3,35 +3,22 @@
 <%@ page import="java.util.Locale, java.util.ResourceBundle"%>
 <%
 /**
- * <br/><br/>
  * This file is part of the Security Shepherd Project.
- * 
+ *
  * The Security Shepherd project is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.<br/>
- * 
- * The Security Shepherd project is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.<br/>
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Security Shepherd project.  If not, see <http://www.gnu.org/licenses/>. 
+ * (at your option) any later version.
  *
- * @author Sean Duggan
+ * @author Security Shepherd Project
  */
-//No Quotes In level Name
-String levelName = "Mobile Poor Authentication 1";
-//Alphanumeric Only
-String levelHash = "efa08298fc6a4add4b9a4bbdbbbb18ac934667971fa275bd7d234589bd8a8467";
+String levelName = "Mobile Insufficient Cryptography Challenge";
+String levelHash = "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4";
 
-//Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.poorAuthentication.poorAuthentication", locale);
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insufficientCrypto.insufficientCryptoStrings", locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 
-//Used more than once translations
 String LevelName = bundle.getString("challenge1.challengeName");
 String paragraph1 = bundle.getString("challenge1.para1");
 
@@ -39,7 +26,6 @@ ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwar
 if (request.getSession() != null)
 {
 	HttpSession ses = request.getSession();
-	//Getting CSRF Token from client
 	Cookie tokenCookie = null;
 	try
 	{
@@ -47,10 +33,8 @@ if (request.getSession() != null)
 	}
 	catch(Exception htmlE)
 	{
-		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName +".jsp: tokenCookie Error:" + htmlE.toString());
+		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + ".jsp: tokenCookie Error:" + htmlE.toString());
 	}
-	// validateSession ensures a valid session, and valid role credentials
-	// If tokenCookie == null, then the page is not going to continue loading
 	if (Validate.validateSession(ses) && tokenCookie != null)
 	{
 		ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " has been accessed by " + ses.getAttribute("userName").toString(), ses.getAttribute("userName"));
@@ -58,20 +42,16 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= levelName %></title>
-<link href="../css/lessonCss/theCss.css" rel="stylesheet"
-	type="text/css" media="screen" />
-
+<title>Security Shepherd - <%= LevelName %></title>
+<link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript"
-		src="../js/clipboard-js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
-	<script type="text/javascript"
-		src="../js/clipboard-js/clipboard-events.js"></script>
+	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%= levelName %></h2>
+		<h2 class="title"><%= LevelName %></h2>
 		<p>
 			<br />
 			<%= paragraph1 %>
@@ -79,12 +59,10 @@ if (request.getSession() != null)
 			<%= mobile.getString("mobileBlurb.appLink") %>
 		</p>
 	</div>
-
-	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %>
-	<% } %>
+	<% if(Analytics.googleAnalyticsOn) { %><%= Analytics.googleAnalyticsScript %><% } %>
 </body>
 </html>
-<% 
+<%
 	}
 	else
 	{

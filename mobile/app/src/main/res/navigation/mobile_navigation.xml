@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/nav_lesson"
-        android:name="org.owasp.mobileshepherd.ui.lessons.LessonFragment"
+        android:name="org.owasp.mobileshepherd.ui.lessons.reverseengineering.ReverseEngineeringLessonFragment"
         android:label="@string/menu_lesson"
         tools:layout="@layout/fragment_lesson" />
 

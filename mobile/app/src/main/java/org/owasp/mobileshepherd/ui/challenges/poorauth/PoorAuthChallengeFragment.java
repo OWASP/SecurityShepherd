@@ -132,8 +132,6 @@ public class PoorAuthChallengeFragment extends Fragment {
         writeWorldReadableLog("My name is Jack Meade, I'm here to kick ass and drink gravy!");
         writeWorldReadableLog("Today I had chicken again! I love Chicken! #deliciousChicken #whyDoIDoThis");
         writeWorldReadableLog("My mother just married again! Goodbye Mrs. Meade hello Mrs Jenkins!");
-        
-        Toast.makeText(getContext(), "Hint: Check logcat for interesting information!", Toast.LENGTH_LONG).show();
     }
 
     private void writeWorldReadableLog(String content) {
@@ -208,7 +206,7 @@ public class PoorAuthChallengeFragment extends Fragment {
                 binding.question2Input.setText("");
             }, 3000);
         } else {
-            Toast.makeText(getContext(), "Invalid answers. Check the logs for hints!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Invalid answers.", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Invalid password reset attempt. Answers: " + answer1 + ", " + answer2);
         }
     }

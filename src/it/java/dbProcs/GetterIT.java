@@ -37,7 +37,7 @@ public class GetterIT {
   private static String lang = "en_GB";
   private static Locale locale = new Locale(lang);
   private static String applicationRoot = new String();
-  private static final int totalNumberOfModulesInShepherd = 54;
+  private static final int totalNumberOfModulesInShepherd = 53;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
   @BeforeAll

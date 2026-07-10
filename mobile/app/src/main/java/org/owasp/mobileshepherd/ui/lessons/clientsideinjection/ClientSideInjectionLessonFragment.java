@@ -2,7 +2,7 @@ package org.owasp.mobileshepherd.ui.lessons.clientsideinjection;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,11 +36,8 @@ public class ClientSideInjectionLessonFragment extends Fragment {
     private static final String TAG = "ClientSideInjection";
     private boolean fabExpanded = false;
     private ProgressTracker progressTracker;
-
-    // The flag seeded into the SQLite DB. In offline mode this is the static
-    // plaintext value; in online mode FlagProvider replaces it with the
-    // server-generated user-specific HMAC after the view is created.
     private String currentFlag = "";
+    private String dbKey = "";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -60,6 +57,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
                 flag -> {
                     if (!isAdded()) return;
                     currentFlag = flag;
+                    dbKey = flag;
                     initializeDatabase(flag);
                 });
 
@@ -86,7 +84,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
     }
 
     private void initializeDatabase(String flagValue) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase(dbKey);
         
         // Clear existing data
         db.execSQL("DELETE FROM users");
@@ -125,7 +123,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         
         Log.d(TAG, "Executing query: " + query);
         
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase(dbKey);
         Cursor cursor = null;
         
         try {

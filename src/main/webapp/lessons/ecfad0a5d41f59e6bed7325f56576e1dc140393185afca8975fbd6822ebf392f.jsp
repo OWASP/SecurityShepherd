@@ -88,7 +88,7 @@
 		<%= bundle.getString("challenge.description") %>
 
 		<br /> <br />
-		<%= mobile.getString("mobileBlurb.vmLink.1") + " InsecureData.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
+		<%= mobile.getString("mobileBlurb.appLink") %>
 
 		<script>
 			
