@@ -3,6 +3,7 @@ package org.owasp.mobileshepherd.ui.challenges.insecuredata1;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,10 +127,13 @@ public class InsecureData1Fragment extends Fragment {
             passwordDB.execSQL("DELETE FROM passwordDB;");
             passwordDB.execSQL(
                     "INSERT INTO passwordDB (name, password) VALUES ('Admin', ?);",
-                    new Object[]{currentFlag});
-            passwordDB.execSQL("INSERT INTO passwordDB (name, password) VALUES ('john_doe', 'password123');");
-            passwordDB.execSQL("INSERT INTO passwordDB (name, password) VALUES ('alice_smith', 'welcome2024');");
-            passwordDB.execSQL("INSERT INTO passwordDB (name, password) VALUES ('bob_johnson', 'qwerty456');");
+                    new Object[]{b64(currentFlag)});
+            passwordDB.execSQL("INSERT INTO passwordDB (name, password) VALUES ('john_doe', ?);",
+                    new Object[]{b64("password123")});
+            passwordDB.execSQL("INSERT INTO passwordDB (name, password) VALUES ('alice_smith', ?);",
+                    new Object[]{b64("welcome2024")});
+            passwordDB.execSQL("INSERT INTO passwordDB (name, password) VALUES ('bob_johnson', ?);",
+                    new Object[]{b64("qwerty456")});
         } catch (Exception e) {
             Log.e("DB ERROR", "Error Inserting Users", e);
         }
@@ -180,5 +184,9 @@ public class InsecureData1Fragment extends Fragment {
             passwordDB.close();
         }
         binding = null;
+    }
+
+    private String b64(String value) {
+        return Base64.encodeToString(value.getBytes(), Base64.NO_WRAP);
     }
 }

@@ -132,7 +132,7 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
 
         Log.d(TAG, "Secret data stored in SharedPreferences");
         Log.d(TAG, "Backup is enabled for this app - data can be extracted!");
-        Log.d(TAG, "Hint: adb backup -f backup.ab -noapk org.owasp.mobileshepherd");
+        Log.d(TAG, "Secret data stored in backup-enabled SharedPreferences.");
     }
 
     private void validateFlag() {

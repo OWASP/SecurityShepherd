@@ -144,7 +144,7 @@ public class InsecureCommChallengeFragment extends Fragment {
                     binding.trafficStatus.setText("[OK] Network monitoring complete!\n\n5 requests captured. Analyze logcat to find insecure traffic.");
                     binding.trafficStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
                     binding.submitSection.setVisibility(View.VISIBLE);
-                    Toast.makeText(getContext(), "Check logcat tag: AppNetworkMonitor", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Network monitoring complete.", Toast.LENGTH_SHORT).show();
                 });
                 
             } catch (Exception e) {
@@ -276,7 +276,7 @@ public class InsecureCommChallengeFragment extends Fragment {
                 binding.flagInput.setEnabled(false);
             } else {
                 binding.flagValidationCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_bg));
-                binding.resultText.setText("\u2717 Incorrect Flag\n\nHint: Look for HTTP (not HTTPS) requests in the logs");
+                binding.resultText.setText("\u2717 Incorrect. Try again.");
                 binding.resultText.setVisibility(View.VISIBLE);
 
                 Toast.makeText(getContext(), "Incorrect flag. Keep analyzing!", Toast.LENGTH_SHORT).show();

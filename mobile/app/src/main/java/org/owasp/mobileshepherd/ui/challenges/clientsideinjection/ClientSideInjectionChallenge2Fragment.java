@@ -3,7 +3,7 @@
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +36,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
     private ProgressTracker progressTracker;
     private boolean fabExpanded = false;
     private String currentFlag = "";
+    private String dbKey = "";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,6 +55,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
                 flag -> {
                     if (!isAdded()) return;
                     currentFlag = flag;
+                    dbKey = flag;
                     initializeDatabase(flag);
                 });
 
@@ -85,7 +87,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
     }
 
     private void initializeDatabase(String flagValue) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase(dbKey);
 
         // Clear existing data
         db.execSQL("DELETE FROM products");
@@ -134,7 +136,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         
         Log.d(TAG, "Executing query: " + query);
         
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase(dbKey);
         Cursor cursor = null;
         
         try {
@@ -172,9 +174,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
             }
             
         } catch (Exception e) {
-            binding.resultText.setText("Error: " + e.getMessage() + 
-                    "\n\nHint: The secrets table has columns: secret_key, secret_value" +
-                    "\nTry using UNION SELECT to query multiple tables!");
+            binding.resultText.setText("Error: " + e.getMessage());
             Log.e(TAG, "SQL Error", e);
         } finally {
             if (cursor != null) {
