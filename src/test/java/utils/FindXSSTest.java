@@ -52,6 +52,15 @@ class FindXSSTest {
   }
 
   @Test
+  void search_detectsOnpointeroverAlert() {
+    assertTrue(FindXSS.search("<div onpointerover=\"alert('DANK')\">MOVE HERE</div>"));
+  }
+  @Test
+  void search_detectsOnpointerenterAlert() {
+    assertTrue(FindXSS.search("<div onpointerenter=\"alert(1)\">hover</div>"));
+  }
+
+  @Test
   void search_eventWithoutAlertNotDetected() {
     assertFalse(FindXSS.search("<div onclick=\"doSomething()\">click</div>"));
   }
