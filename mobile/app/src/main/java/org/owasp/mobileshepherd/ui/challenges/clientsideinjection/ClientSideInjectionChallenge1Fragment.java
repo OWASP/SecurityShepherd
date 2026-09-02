@@ -86,7 +86,7 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
 
     private String applySloppyFilter(String input) {
         String upper = input.toUpperCase();
-        upper = upper
+        String filtered = upper
                 .replace("SELECT", ".")
                 .replace("WHERE",  ".")
                 .replace("FROM",   ".")
@@ -98,7 +98,13 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
                 .replace(" OR ",   " . ")
                 .replace(" AND ",  " . ")
                 .replace("--",     ".");
-        return upper;
+        // Keywords are matched case-insensitively (via the uppercase copy above), but
+        // only exact single-space/keyword matches are stripped. If nothing matched,
+        // pass the original input through unchanged instead of the uppercased copy -
+        // otherwise every legitimate credential would be case-mangled before it ever
+        // reaches the query. Non-standard spacing (double space, tabs) around a
+        // keyword, and the raw quote character itself, still slip past untouched.
+        return filtered.equals(upper) ? input : filtered;
     }
 
     private void attemptLogin() {
@@ -112,7 +118,8 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
             return;
         }
 
-        // Apply the sloppy filter (easily bypassed by case variation)
+        // Apply the sloppy filter (bypassable via non-standard whitespace around a
+        // keyword, or the unfiltered quote character itself)
         String filteredUser = applySloppyFilter(rawUser);
         String filteredPass = applySloppyFilter(rawPass);
 

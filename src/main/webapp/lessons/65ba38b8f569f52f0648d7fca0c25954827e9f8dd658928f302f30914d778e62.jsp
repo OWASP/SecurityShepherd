@@ -5,8 +5,10 @@
 String levelName = "What is Mobile Input Validation?";
 String levelHash = "65ba38b8f569f52f0648d7fca0c25954827e9f8dd658928f302f30914d778e62";
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_input_validation." + levelHash, locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
+String translatedLevelName = bundle.getString("title.question.m_input_validation");
 String owaspMoreInfo = generic.getString("module.generic.owasp.more.info");
 String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
 String owaspUrl = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.mobile.m4.insufficientInputValidation");
@@ -42,7 +44,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= levelName %></title>
+<title>Security Shepherd - <%= translatedLevelName %></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
@@ -51,32 +53,22 @@ if (request.getSession() != null)
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%= levelName %></h2>
+		<h2 class="title"><%= translatedLevelName %></h2>
 		<p>
 		<div id="lessonIntro">
-			Input validation on mobile applications is intended to prevent malicious or malformed data
-			from being processed. However, when an app performs its filtering logic client-side only,
-			an attacker can bypass those checks entirely by intercepting requests with a <a href="https://portswigger.net/burp" target="_blank">proxy tool</a> and
-			modifying the data before it reaches the server.
+			<%= bundle.getString("paragraph.info.1") %>
 			<br /><br />
-			This lesson demonstrates how to identify and exploit client-side input validation weaknesses
-			using the Security Shepherd mobile app.
+			<%= bundle.getString("paragraph.info.2") %>
 			<br /><br />
-			Configure a proxy tool (e.g. <a href="https://portswigger.net/burp" target="_blank">Burp Suite</a>) on your Android device.
-			With the app connected, trigger the input validation and observe the HTTP request.
-			Modify the request parameters to send values that bypass the app's local checks.
+			<%= bundle.getString("paragraph.info.3") %>
 			<br /><br />
-			OWASP highlights that insufficient input/output validation is not just a client-side
-			problem: the same unvalidated data reaching a backend server can trigger SQL injection,
-			command injection, XSS or path traversal. The correct fix is server-side validation using
-			parameterised queries and strict input length and type checks — never relying on the
-			client to enforce constraints.
+			<%= bundle.getString("paragraph.info.4") %>
 			<br /><br />
 			<%= owaspMoreInfo %> <a href="<%= owaspUrl %>" target="_blank"><%= owaspGuideTo %> Input/Output Validation (M4)</a>
 			<br /> </br> </br>
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson" />
+			<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
 		</div>
-		<input type="button" value="Show Lesson Introduction" id="showLesson" style="display: none;" />
+		<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson" style="display: none;" />
 		<br />
 		<br /> <br />
 		<%= mobile.getString("mobileBlurb.appLink") %>

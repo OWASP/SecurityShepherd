@@ -12,26 +12,27 @@ import static org.junit.Assert.*;
 public class InsufficientCryptoLessonTest {
 
     @Test
-    public void testAlgorithmConstantExists() throws Exception {
-        Field algoField = InsufficientCryptoLessonFragment.class.getDeclaredField("ALGORITHM");
-        algoField.setAccessible(true);
-        String algorithm = (String) algoField.get(null);
-        assertNotNull("ALGORITHM constant should exist", algorithm);
-        assertFalse("ALGORITHM should not be empty", algorithm.isEmpty());
+    public void testWeakDesKeyConstantExists() throws Exception {
+        Field keyField = InsufficientCryptoLessonFragment.class.getDeclaredField("WEAK_DES_KEY");
+        keyField.setAccessible(true);
+        String key = (String) keyField.get(null);
+        assertNotNull("WEAK_DES_KEY constant should exist", key);
+        assertFalse("WEAK_DES_KEY should not be empty", key.isEmpty());
     }
 
     @Test
-    public void testAlgorithmIsDes() throws Exception {
-        Field algoField = InsufficientCryptoLessonFragment.class.getDeclaredField("ALGORITHM");
-        algoField.setAccessible(true);
-        String algorithm = (String) algoField.get(null);
-        assertEquals("Algorithm should be DES (weak 56-bit cipher)", "DES", algorithm);
+    public void testWeakDesKeyValue() throws Exception {
+        Field keyField = InsufficientCryptoLessonFragment.class.getDeclaredField("WEAK_DES_KEY");
+        keyField.setAccessible(true);
+        String key = (String) keyField.get(null);
+        assertEquals("Hardcoded DES key should match the value visible in the decompiled APK",
+                "SHEPHERD", key);
     }
 
     @Test
-    public void testAlgorithmIsStaticFinal() throws Exception {
-        Field algoField = InsufficientCryptoLessonFragment.class.getDeclaredField("ALGORITHM");
-        assertTrue("ALGORITHM should be static", Modifier.isStatic(algoField.getModifiers()));
-        assertTrue("ALGORITHM should be final", Modifier.isFinal(algoField.getModifiers()));
+    public void testWeakDesKeyIsStaticFinal() throws Exception {
+        Field keyField = InsufficientCryptoLessonFragment.class.getDeclaredField("WEAK_DES_KEY");
+        assertTrue("WEAK_DES_KEY should be static", Modifier.isStatic(keyField.getModifiers()));
+        assertTrue("WEAK_DES_KEY should be final", Modifier.isFinal(keyField.getModifiers()));
     }
 }

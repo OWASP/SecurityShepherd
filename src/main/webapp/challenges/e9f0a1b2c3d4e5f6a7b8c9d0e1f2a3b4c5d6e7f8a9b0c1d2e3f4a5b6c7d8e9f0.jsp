@@ -16,7 +16,11 @@ String levelName = "Mobile Security Misconfiguration Challenge";
 String levelHash = "e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0";
 
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.securityMisconfig.securityMisconfigStrings", locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
+
+String LevelName = bundle.getString("challenge1.challengeName");
+String paragraph1 = bundle.getString("challenge1.para1");
 
 ShepherdLogManager.logEvent(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"), levelName + " Accessed");
 if (request.getSession() != null)
@@ -38,7 +42,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= levelName %></title>
+<title>Security Shepherd - <%= LevelName %></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
@@ -47,15 +51,10 @@ if (request.getSession() != null)
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%= levelName %></h2>
+		<h2 class="title"><%= LevelName %></h2>
 		<p>
 			<br />
-			An Activity within the Security Shepherd mobile app is exported without proper access
-			controls. Use ADB to invoke the exported Activity directly from the command line and
-			retrieve the flag it exposes.
-			<br /><br />
-			Hint: Use <code>adb shell am start</code> to invoke the target component by its
-			fully-qualified class name.
+			<%= paragraph1 %>
 			<br /> <br />
 			<%= mobile.getString("mobileBlurb.appLink") %>
 		</p>

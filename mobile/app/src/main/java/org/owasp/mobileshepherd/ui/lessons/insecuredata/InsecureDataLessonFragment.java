@@ -155,6 +155,8 @@ public class InsecureDataLessonFragment extends Fragment {
             progressTracker.markCompleted(FlagValidator.Module.IDS_LESSON);
             Toast.makeText(getContext(), "Correct! Lesson complete.", Toast.LENGTH_LONG).show();
             Log.d(TAG, "Admin credentials verified. Flag: " + currentFlag);
+            FlagValidator.validateFlag(requireContext(), FlagValidator.Module.IDS_LESSON,
+                    currentFlag, correct -> Log.d(TAG, "Server submission result: " + correct));
         } else {
             binding.textCredentialResult.setVisibility(View.VISIBLE);
             binding.textCredentialResult.setText("Incorrect credentials. Try extracting the DB via ADB.");

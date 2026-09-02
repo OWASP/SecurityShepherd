@@ -5,8 +5,10 @@
 String levelName = "What is Mobile Security Misconfiguration?";
 String levelHash = "1d20d7c58bf71e8014840816e57bdca64ada0a6586a53a76ee23a30a06f75a80";
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_security_misconfiguration." + levelHash, locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
+String translatedLevelName = bundle.getString("title.question.m_security_misconfiguration");
 String owaspMoreInfo = generic.getString("module.generic.owasp.more.info");
 String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
 String owaspUrl = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.mobile.m8.securityMisconfiguration");
@@ -42,7 +44,7 @@ if (request.getSession() != null)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Security Shepherd - <%= levelName %></title>
+<title>Security Shepherd - <%= translatedLevelName %></title>
 <link href="../css/lessonCss/theCss.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <body>
@@ -51,34 +53,22 @@ if (request.getSession() != null)
 	<script type="text/javascript" src="../js/clipboard-js/tooltips.js"></script>
 	<script type="text/javascript" src="../js/clipboard-js/clipboard-events.js"></script>
 	<div id="contentDiv">
-		<h2 class="title"><%= levelName %></h2>
+		<h2 class="title"><%= translatedLevelName %></h2>
 		<p>
 		<div id="lessonIntro">
-			Android components — Activities, Services, BroadcastReceivers and ContentProviders —
-			can be declared as exported in the <a href="https://developer.android.com/guide/topics/manifest/manifest-intro" target="_blank">application manifest</a>. An exported component can be
-			invoked by any other application installed on the device, without requiring any
-			permissions. When an exported Activity performs a sensitive operation or displays
-			sensitive data, this becomes a security vulnerability.
+			<%= bundle.getString("paragraph.info.1") %>
 			<br /><br />
-			This lesson demonstrates how to identify exported components in the Security Shepherd
-			mobile app using <a href="https://developer.android.com/tools/adb" target="_blank">ADB</a>, and how to invoke them directly to leak sensitive information.
+			<%= bundle.getString("paragraph.info.2") %>
 			<br /><br />
-			Use <a href="https://developer.android.com/tools/adb" target="_blank">ADB</a> to list all exported Activities in the app:
-			<code>adb shell dumpsys package org.owasp.mobileshepherd | grep -A1 'Activity'</code>
-			Look for an Activity that is exported. Invoke it directly:
-			<code>adb shell am start -n org.owasp.mobileshepherd/.ui.&lt;ActivityName&gt;</code>
+			<%= bundle.getString("paragraph.info.3") %>
 			<br /><br />
-			OWASP notes that apps should apply the principle of least privilege to their component
-			exports: only export Activities, Services and ContentProviders that genuinely need to be
-			reachable by other apps. Developers sometimes export components assuming they will only
-			be accessed through the intended UI — but any exported component is reachable by any
-			app on the device, regardless of how it is reached.
+			<%= bundle.getString("paragraph.info.4") %>
 			<br /><br />
 			<%= owaspMoreInfo %> <a href="<%= owaspUrl %>" target="_blank"><%= owaspGuideTo %> Security Misconfiguration (M8)</a>
 			<br /> </br> </br>
-			<input type="button" value="Hide Lesson Introduction" id="hideLesson" />
+			<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
 		</div>
-		<input type="button" value="Show Lesson Introduction" id="showLesson" style="display: none;" />
+		<input type="button" value="<%= bundle.getString("button.showIntro") %>" id="showLesson" style="display: none;" />
 		<br />
 		<br /> <br />
 		<%= mobile.getString("mobileBlurb.appLink") %>

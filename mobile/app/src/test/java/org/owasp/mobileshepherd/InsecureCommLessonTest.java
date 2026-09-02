@@ -31,7 +31,7 @@ public class InsecureCommLessonTest {
         Field tagField = InsecureCommLessonFragment.class.getDeclaredField("TAG");
         tagField.setAccessible(true);
         String tag = (String) tagField.get(null);
-        assertEquals("TAG should identify network traffic", "NetworkTraffic", tag);
+        assertEquals("TAG should identify the lesson for logcat filtering", "InsecureCommLesson", tag);
     }
 
     @Test

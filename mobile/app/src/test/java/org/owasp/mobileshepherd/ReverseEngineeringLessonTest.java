@@ -1,6 +1,6 @@
 package org.owasp.mobileshepherd;
 
-import org.owasp.mobileshepherd.ui.lessons.LessonFragment;
+import org.owasp.mobileshepherd.ui.lessons.reverseengineering.ReverseEngineeringLessonFragment;
 import org.junit.Test;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -8,24 +8,24 @@ import java.lang.reflect.Modifier;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for LessonFragment (Reverse Engineering Lesson)
+ * Unit tests for ReverseEngineeringLessonFragment (Reverse Engineering Lesson)
  */
 public class ReverseEngineeringLessonTest {
 
     @Test
     public void lesson_ClassExists() {
-        assertNotNull("LessonFragment class should exist", LessonFragment.class);
+        assertNotNull("ReverseEngineeringLessonFragment class should exist", ReverseEngineeringLessonFragment.class);
     }
 
     @Test
     public void lesson_FragmentExtendsAndroidXFragment() {
-        assertTrue("LessonFragment should extend androidx Fragment",
-                androidx.fragment.app.Fragment.class.isAssignableFrom(LessonFragment.class));
+        assertTrue("ReverseEngineeringLessonFragment should extend androidx Fragment",
+                androidx.fragment.app.Fragment.class.isAssignableFrom(ReverseEngineeringLessonFragment.class));
     }
 
     @Test
     public void lesson_HasCurrentFlagField() throws Exception {
-        Field flagField = LessonFragment.class.getDeclaredField("currentFlag");
+        Field flagField = ReverseEngineeringLessonFragment.class.getDeclaredField("currentFlag");
         assertEquals("currentFlag should be of type String", String.class, flagField.getType());
         assertFalse("currentFlag should be an instance field",
                 Modifier.isStatic(flagField.getModifiers()));
@@ -33,7 +33,7 @@ public class ReverseEngineeringLessonTest {
 
     @Test
     public void lesson_HasBindingField() throws Exception {
-        Field bindingField = LessonFragment.class.getDeclaredField("binding");
+        Field bindingField = ReverseEngineeringLessonFragment.class.getDeclaredField("binding");
         assertNotNull("binding field should exist", bindingField);
         assertFalse("binding should be an instance field",
                 Modifier.isStatic(bindingField.getModifiers()));
@@ -41,7 +41,7 @@ public class ReverseEngineeringLessonTest {
 
     @Test
     public void lesson_OnCreateViewMethodExists() throws Exception {
-        Method method = LessonFragment.class.getMethod("onCreateView",
+        Method method = ReverseEngineeringLessonFragment.class.getMethod("onCreateView",
                 android.view.LayoutInflater.class,
                 android.view.ViewGroup.class,
                 android.os.Bundle.class);
@@ -50,8 +50,8 @@ public class ReverseEngineeringLessonTest {
 
     @Test
     public void lesson_HasAtLeastTwoFields() {
-        Field[] fields = LessonFragment.class.getDeclaredFields();
-        assertTrue("LessonFragment should have at least 2 declared fields",
+        Field[] fields = ReverseEngineeringLessonFragment.class.getDeclaredFields();
+        assertTrue("ReverseEngineeringLessonFragment should have at least 2 declared fields",
                 fields.length >= 2);
     }
 }

@@ -77,6 +77,18 @@ public class InputValidationLessonFragment extends Fragment {
             });
         }
 
+        // Real deep link entry point: myapp://open?url=<target_url>, delivered via
+        // adb shell am start -a android.intent.action.VIEW -d "myapp://open?url=..."
+        Intent launchIntent = requireActivity().getIntent();
+        Uri deepLinkData = launchIntent.getData();
+        if (deepLinkData != null) {
+            launchIntent.setData(null);
+            String targetUrl = deepLinkData.getQueryParameter("url");
+            if (targetUrl != null) {
+                binding.urlInput.setText(targetUrl);
+                processDeepLink(targetUrl);
+            }
+        }
 
         return root;
     }
@@ -96,14 +108,24 @@ public class InputValidationLessonFragment extends Fragment {
     }
     
     /**
-     * VULNERABILITY: Uses contains() instead of proper domain validation
-     * Can be bypassed with: https://evil.com?ref=example.com
-     * Or: https://example.com.evil.com
-     * Or: https://evil.com#example.com
+     * VULNERABILITY: Uses contains() on the host instead of proper domain validation
+     * Can be bypassed with a crafted host such as: https://example.com.admin.internal/dashboard
+     * (host "example.com.admin.internal" contains "example.com")
      */
     private boolean isUrlAllowed(String url) {
-        // Weak validation - checks if trusted domain appears anywhere in URL
-        return url.contains("example.com") || url.contains("trusted-site.com") || url.contains("owasp.org");
+        String host = Uri.parse(url).getHost();
+        if (host == null) return false;
+        // Weak validation - checks if trusted domain appears anywhere in the host
+        return host.contains("example.com") || host.contains("trusted-site.com") || host.contains("owasp.org");
+    }
+
+    /**
+     * VULNERABILITY: Same weak contains()-on-host check guarding the hidden admin content.
+     * A host like "example.com.admin.internal" satisfies both this check and isUrlAllowed().
+     */
+    private boolean isAdminHost(String url) {
+        String host = Uri.parse(url).getHost();
+        return host != null && host.contains("admin.internal");
     }
     
     private void loadContent(String url) {
@@ -124,14 +146,14 @@ public class InputValidationLessonFragment extends Fragment {
             title = "OWASP.org - About";
             body = "About OWASP\n\nThe Open Web Application Security Project (OWASP) is a nonprofit foundation that works to improve the security of software.\n\nThis is approved security education content.";
             
-        } else if (url.contains("admin.internal")) {
+        } else if (isAdminHost(url)) {
             // Hidden admin content - only accessible via validation bypass!
             String flag = currentFlag;
             title = "Admin Dashboard";
             body = "ACCESS GRANTED\n\n"
                    + "You successfully bypassed the URL validation!\n\n"
                    + "The validation only checks if 'example.com' or 'trusted-site.com' appears "
-                   + "anywhere in the URL string, instead of properly validating the domain.\n\n"
+                   + "anywhere in the host, instead of properly validating the domain.\n\n"
                    + "This allowed you to access restricted admin.internal content.\n\n"
                    + "FLAG: " + flag;
             cardColor = ContextCompat.getColor(requireContext(), R.color.success_bg);

@@ -251,10 +251,13 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
 
     <!-- Challenge 1 - SQLite hash cracking -->
     <string name="insecure_data_storage_1">Insecure Data Storage 1</string>
-    <string name="insecure_data1_description">This app stores a password in a local SQLite database. The password has been hashed, but the algorithm is weak. Extract the database and crack the hash to find the key.</string>
-    <string name="insecure_data1_db_path">\nPasswords are hidden here but stored in plaintext in:\n/data/data/org.owasp.mobileshepherd/databases/passwordDB</string>
+    <string name="insecure_data1_description">This app stores the Admin\'s password in a local SQLite database as an unsalted MD5 hash — a fast, rainbow-table-crackable algorithm. Extract the database, crack the hash to recover the plaintext password, then verify it below to claim the key.</string>
+    <string name="insecure_data1_db_path">\nPasswords are masked here but stored as unsalted MD5 hashes in:\n/data/data/org.owasp.mobileshepherd/databases/passwordDB</string>
     <string name="this_challenge_shows_password_hash_crack">This challenge shows password hash cracking. The app stores a password hash in a database - your goal is to crack the hash and find the original password.</string>
     <string name="extract_sensitive_data_from_unencrypted">Data is stored in plaintext in a local SQLite database. Get access to this data to find the key.</string>
+    <string name="enter_cracked_password">Enter the cracked password</string>
+    <string name="verify_password_button">Verify Password</string>
+    <string name="verify_password_card_title">Verify Password</string>
     <string name="database_users">Database Users</string>
     <string name="members_stored_in_unencrypted_sqlite_dat">Members stored in unencrypted SQLite database:</string>
     <string name="npasswords_are_hidden_here_but_stored_in">\nPasswords are hidden here but stored in plaintext in:\n/data/data/org.owasp.mobileshepherd/databases/Members.db</string>
@@ -267,21 +270,22 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
 
     <!-- Lesson -->
     <string name="poor_auth_intro">Poor authentication is one of the most critical mobile vulnerabilities. Authentication is the cornerstone of app security - if attackers bypass it, all other security measures become irrelevant.</string>
-    <string name="poor_auth_vulnerabilities">- Weak security questions (easily guessable)\n- Passwords logged in plaintext\n- Credentials in world-readable files\n- Weak temporary passwords\n- Verbose error messages\n- Debug logs in production</string>
+    <string name="poor_auth_vulnerabilities">- Password reset tokens derived from predictable, observable data\n- Reset tokens computed from a hardcoded app secret\n- No server-side randomness in the reset flow\n- Verbose error messages\n- Debug logs in production</string>
 
     <!-- Challenge 1 -->
-    <string name="poor_auth_challenge_description">An account in this app is locked. The password reset workflow leaks the answers to its security questions through logs and local files. Recover the answers, reset the password, and authenticate to retrieve the key.</string>
+    <string name="poor_auth_challenge_description">An account in this app is locked. Its password reset flow issues a token that is meant to be unpredictable, but is actually derived entirely from data available to the app itself. Work out how the token is generated and reconstruct it to regain access and retrieve the key.</string>
+    <string name="poor_auth_reset_confirmation">A password reset token has been generated for this account and is required to complete the reset.</string>
     <string name="poor_authentication">Poor Authentication</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="password_reset">Password Reset</string>
-    <string name="answer_these_security_questions_to_reset">Answer these security questions to reset your password:</string>
-    <string name="what_is_your_favorite_food">What is your favorite food?</string>
-    <string name="what_is_your_mothers_maiden_name">What is your mother\'s maiden name?</string>
-    <string name="reset_password">Reset Password</string>
+    <string name="poor_auth_reset_subtitle">Request a password reset token, then enter it below to regain access to this account.</string>
+    <string name="request_reset_token">Request Reset Token</string>
+    <string name="reset_token_hint">Reset Token</string>
+    <string name="verify_token">Verify Token</string>
     <string name="login_successful">Login Successful!</string>
     <string name="find_hardcoded_credentials_in_the_app_ch">This app protects a secret behind a PIN. The authentication mechanism has a fundamental weakness that makes it possible to bypass. Find the PIN to retrieve the key.</string>
     <string name="validate_pin">Validate Pin</string>
-    <string name="this_exercise_shows_hardcoded_credential">This exercise shows hardcoded credentials and insecure logging. Try to find the PIN by exploiting these vulnerabilities!</string>
+    <string name="this_exercise_shows_hardcoded_credential">Enter a valid pin number to obtain the Key.</string>
     <string name="enter_pin">Enter PIN</string>
     <string name="verify_pin">Verify PIN</string>
     <string name="device_information">Device Information</string>
@@ -318,7 +322,6 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="supply_chain_intro">Inadequate supply chain security occurs when mobile apps use vulnerable third-party libraries, SDKs, or dependencies. Attackers exploit these weak links to compromise entire applications, affecting millions of users.</string>
     <string name="supply_chain_vulnerabilities">Common Issues:\n\n- Using dependencies with known vulnerabilities\n- Not verifying SDK authenticity\n- Hardcoded API keys in libraries\n- Insecure data collection by third parties\n- Excessive permissions requested by SDKs\n- Outdated dependencies not updated for years</string>
 
-    <string name="owasp_mobile_top_10_m6_insufficient_supp">OWASP Mobile Top 10: M6 - Insufficient Supply Chain Security</string>
     <string name="this_application_uses_several_thirdparty">This app bundles a third-party library that has a known vulnerability. Identify the vulnerable dependency and exploit it to retrieve the key.</string>
     <string name="vulnerable_sdk">Vulnerable SDK</string>
     <string name="sdk_investigation">SDK Investigation</string>
@@ -370,7 +373,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="insufficient_cryptography_challenge">Insufficient Cryptography Challenge</string>
     <string name="once_youve_identified_all_cryptographic">Once you\'ve identified all cryptographic vulnerabilities and extracted the hidden flag, submit it below.</string>
     <string name="enter_flag_format_key">Enter flag (format: KEY{...})</string>
-    <string name="use_des_encryption_56bit_key_each_secret">Sensitive data in this app is encrypted, but the encryption algorithm and key length are weak. Break the encryption to recover the hidden secrets.</string>
+    <string name="use_des_encryption_56bit_key_each_secret">The key in this app is encrypted, but the encryption algorithm and key length are weak. Break the encryption to recover the hidden secrets.</string>
     <string name="encrypt_decrypt_data">Encrypt / Decrypt Data</string>
     <string name="enter_a_key_08_characters_text_and_optio">Enter a key (0-8 characters), text, and optional hint. Click on secrets below to decrypt them.</string>
     <string name="enter_key_08_characters">Enter key (0-8 characters)</string>
@@ -443,6 +446,8 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="loaded_content">Loaded Content</string>
     <string name="no_content_loaded">No content loaded</string>
     <string name="use_the_buttons_above_or_enter_a_custom">Use the buttons above or enter a custom deep link to load content.</string>
+    <string name="adb_shell_am_start_a_view_d_myappopenurlt">adb shell am start -a android.intent.action.VIEW -d "myapp://open?url=&lt;TARGET_URL&gt;"</string>
+    <string name="craft_a_target_url_whose_host_satisfies">Craft a TARGET_URL whose host satisfies both the allow-list check and the hidden admin check at the same time.</string>
 
 
     <!-- =========================================================== -->

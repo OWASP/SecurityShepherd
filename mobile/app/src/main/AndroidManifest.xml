@@ -29,11 +29,21 @@
             </intent-filter>
         </activity>
 
+        <!-- Input Validation Lesson: real external deep link entry point -->
         <activity
             android:name=".MainActivity"
-            android:exported="false"
+            android:exported="true"
+            android:launchMode="singleTask"
             android:label="@string/app_name"
             android:theme="@style/Theme.Reverser.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="myapp" android:host="open" />
+            </intent-filter>
         </activity>
 
         <activity

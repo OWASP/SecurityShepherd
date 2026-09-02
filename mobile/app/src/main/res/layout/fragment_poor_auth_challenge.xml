@@ -142,48 +142,24 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/answer_these_security_questions_to_reset"
+                    android:text="@string/poor_auth_reset_subtitle"
                     android:textSize="14sp"
                     android:layout_marginBottom="16dp" />
 
-                <com.google.android.material.textfield.TextInputLayout
+                <Button
+                    android:id="@+id/request_token_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/what_is_your_favorite_food"
-                    android:layout_marginBottom="12dp"
-                    app:boxBackgroundMode="outline">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/question1_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:singleLine="true" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/what_is_your_mothers_maiden_name"
-                    android:layout_marginBottom="16dp"
-                    app:boxBackgroundMode="outline">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/question2_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:singleLine="true" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/request_reset_token"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="16dp" />
 
                 <TextView
-                    android:id="@+id/temp_password_text"
+                    android:id="@+id/reset_status_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/success_green"
                     android:padding="12dp"
@@ -191,13 +167,32 @@
                     android:visibility="gone"
                     android:layout_marginBottom="16dp" />
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/token_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/reset_token_hint"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone"
+                    app:boxBackgroundMode="outline">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/token_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:singleLine="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <Button
                     android:id="@+id/reset_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/reset_password"
+                    android:text="@string/verify_token"
                     android:textSize="16sp"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/cancel_button"
@@ -246,56 +241,6 @@
                     android:textColor="@color/success_text"
                     android:fontFamily="monospace"
                     android:layout_marginBottom="16dp" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Flag Validation Section -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/flag_validation_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="4dp"
-            app:cardCornerRadius="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/submit_flag"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:layout_marginBottom="12dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/enter_flag"
-                    android:layout_marginBottom="12dp"
-                    app:boxBackgroundMode="outline">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/flag_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:singleLine="true" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <Button
-                    android:id="@+id/validate_flag_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/validate_flag"
-                    android:textSize="16sp" />
 
             </LinearLayout>
 

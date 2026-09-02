@@ -27,9 +27,9 @@ public class InsufficientCryptoChallengeTest {
     }
 
     @Test
-    public void testShowVulnerabilityInfoMethodExists() throws Exception {
-        Method method = InsufficientCryptoChallengeFragment.class.getDeclaredMethod("showVulnerabilityInfo");
-        assertNotNull("showVulnerabilityInfo method should exist", method);
+    public void testShowHintsMethodExists() throws Exception {
+        Method method = InsufficientCryptoChallengeFragment.class.getDeclaredMethod("showHints");
+        assertNotNull("showHints method should exist", method);
     }
 
     @Test
