@@ -4,7 +4,7 @@
 
 <%
 	//No Quotes In level Name
-	String levelName = "Client Side Injection Lesson";
+	String levelName = "What is Mobile Client Side Injection?";
 	//Alphanumeric Only
 	String levelHash = "f758a97011ec4452cc0707e546a7c0f68abc6ef2ab747ea87e0892767152eae1";
 	
@@ -91,7 +91,7 @@
 
 		<%= bundle.getString("challenge.description") %>
 		<br /> <br>
-		<%= mobile.getString("mobileBlurb.vmLink.1") + " CSInjection.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
+		<%= mobile.getString("mobileBlurb.appLink") %>
 
 		<script>
 				

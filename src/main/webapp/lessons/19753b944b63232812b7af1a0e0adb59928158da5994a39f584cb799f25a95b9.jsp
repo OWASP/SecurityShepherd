@@ -94,7 +94,7 @@
 			style="display: none;" /> <br /> <br />
 		<%= bundle.getString("challenge.description") %>
 		<br /> <br />
-		<%= mobile.getString("mobileBlurb.vmLink.1") + " ReverseEngineer.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
+		<%= mobile.getString("mobileBlurb.appLink") %>
 		<script>
 				$('#hideLesson').click(function(){
 					$("#lessonIntro").hide("slow", function(){
