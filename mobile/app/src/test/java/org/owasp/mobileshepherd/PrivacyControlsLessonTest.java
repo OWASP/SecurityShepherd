@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.File;
 import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
@@ -42,38 +41,27 @@ public class PrivacyControlsLessonTest {
     }
 
     @Test
-    public void testPreloadedImageConstantExists() throws Exception {
+    public void testSampleImageNameConstantExists() throws Exception {
         Class<?> fragmentClass = Class.forName("org.owasp.mobileshepherd.ui.lessons.privacycontrols.PrivacyControlsLessonFragment");
-        
-        Field preloadedImageField = fragmentClass.getDeclaredField("PRELOADED_IMAGE");
-        preloadedImageField.setAccessible(true);
-        String preloadedImageValue = (String) preloadedImageField.get(null);
-        
-        assertNotNull("PRELOADED_IMAGE constant should not be null", preloadedImageValue);
-        assertTrue("PRELOADED_IMAGE should be a valid filename", preloadedImageValue.endsWith(".jpg") || preloadedImageValue.endsWith(".jpeg"));
-    }
 
-    @Test
-    public void testShowDetailedInfoMethodExists() throws Exception {
-        Class<?> fragmentClass = Class.forName("org.owasp.mobileshepherd.ui.lessons.privacycontrols.PrivacyControlsLessonFragment");
-        
-        try {
-            fragmentClass.getDeclaredMethod("showDetailedInfo");
-        } catch (NoSuchMethodException e) {
-            fail("showDetailedInfo() method should exist for FAB functionality");
-        }
+        Field sampleImageField = fragmentClass.getDeclaredField("SAMPLE_IMAGE_NAME");
+        sampleImageField.setAccessible(true);
+        String sampleImageValue = (String) sampleImageField.get(null);
+
+        assertNotNull("SAMPLE_IMAGE_NAME constant should not be null", sampleImageValue);
+        assertTrue("SAMPLE_IMAGE_NAME should be a valid filename", sampleImageValue.endsWith(".jpg") || sampleImageValue.endsWith(".jpeg"));
     }
 
     @Test
     public void testRequiredMethodsExist() throws Exception {
         Class<?> fragmentClass = Class.forName("org.owasp.mobileshepherd.ui.lessons.privacycontrols.PrivacyControlsLessonFragment");
-        
+
         // Check for key methods
-        assertNotNull("loadPreloadedImage method should exist", 
-            fragmentClass.getDeclaredMethod("loadPreloadedImage"));
-        assertNotNull("analyzeCurrentImage method should exist", 
-            fragmentClass.getDeclaredMethod("analyzeCurrentImage"));
-        assertNotNull("createPreloadedImageWithFlag method should exist", 
-            fragmentClass.getDeclaredMethod("createPreloadedImageWithFlag", File.class));
+        assertNotNull("prepareSampleImage method should exist",
+            fragmentClass.getDeclaredMethod("prepareSampleImage", String.class));
+        assertNotNull("loadSampleImage method should exist",
+            fragmentClass.getDeclaredMethod("loadSampleImage"));
+        assertNotNull("launchCamera method should exist",
+            fragmentClass.getDeclaredMethod("launchCamera"));
     }
 }

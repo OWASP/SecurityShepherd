@@ -3,6 +3,7 @@ package org.owasp.mobileshepherd;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -218,6 +219,30 @@ public class MainActivity extends AppCompatActivity {
                 binding.appBarMain.fab.show();
             }
         });
+
+        handleDeepLinkIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleDeepLinkIntent(intent);
+    }
+
+    /**
+     * Input Validation Lesson: real external deep link entry point.
+     * Routes myapp://open?url=... intents straight to the lesson so it can be
+     * triggered via adb shell am start, not just typed into the in-app field.
+     */
+    private void handleDeepLinkIntent(Intent intent) {
+        if (intent == null) return;
+        Uri data = intent.getData();
+        if (data == null) return;
+        if ("myapp".equals(data.getScheme()) && "open".equals(data.getHost())) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+            navController.navigate(R.id.nav_input_validation_lesson);
+        }
     }
 
     private List<NavigationItem> createNavigationItems() {
@@ -246,12 +271,12 @@ public class MainActivity extends AppCompatActivity {
         
         // Reverse Engineering sub-group
         NavigationItem reverseEngGroup = new NavigationItem(40, "Reverse Engineering", 0);
-        addChildIfNotCompleted(reverseEngGroup, new NavigationItem(41, "Challenge 1", 0, R.id.nav_challenge1));
+        addChildIfNotCompleted(reverseEngGroup, new NavigationItem(41, "Reverse Engineering 1", 0, R.id.nav_challenge1));
         if (reverseEngGroup.getChildren().size() > 0) challengesGroup.addChild(reverseEngGroup);
         
         // Insecure Data Storage sub-group
         NavigationItem insecureDataGroup = new NavigationItem(44, "Insecure Data Storage", 0);
-        addChildIfNotCompleted(insecureDataGroup, new NavigationItem(45, "Challenge 1", 0, R.id.nav_insecure_data1));
+        addChildIfNotCompleted(insecureDataGroup, new NavigationItem(45, "Insecure Data Storage 1", 0, R.id.nav_insecure_data1));
         if (insecureDataGroup.getChildren().size() > 0) challengesGroup.addChild(insecureDataGroup);
         
         // Individual challenges
@@ -261,13 +286,13 @@ public class MainActivity extends AppCompatActivity {
         
         // Security Misconfiguration sub-group
         NavigationItem securityMisconfigGroup = new NavigationItem(51, "Security Misconfiguration", 0);
-        addChildIfNotCompleted(securityMisconfigGroup, new NavigationItem(52, "Challenge 1", 0, R.id.nav_security_misconfig_challenge2));
+        addChildIfNotCompleted(securityMisconfigGroup, new NavigationItem(52, "Security Misconfiguration 1", 0, R.id.nav_security_misconfig_challenge2));
         if (securityMisconfigGroup.getChildren().size() > 0) challengesGroup.addChild(securityMisconfigGroup);
         
         // Client-Side Injection sub-group
         NavigationItem clientSideGroup = new NavigationItem(55, "Client-Side Injection", 0);
-        addChildIfNotCompleted(clientSideGroup, new NavigationItem(56, "Challenge 1", 0, R.id.nav_client_side_injection_challenge1));
-        addChildIfNotCompleted(clientSideGroup, new NavigationItem(57, "Challenge 2", 0, R.id.nav_client_side_injection_challenge2));
+        addChildIfNotCompleted(clientSideGroup, new NavigationItem(56, "Client-Side Injection 1", 0, R.id.nav_client_side_injection_challenge1));
+        addChildIfNotCompleted(clientSideGroup, new NavigationItem(57, "Client-Side Injection 2", 0, R.id.nav_client_side_injection_challenge2));
         if (clientSideGroup.getChildren().size() > 0) challengesGroup.addChild(clientSideGroup);
         
         if (challengesGroup.getChildren().size() > 0) items.add(challengesGroup);
@@ -312,14 +337,14 @@ public class MainActivity extends AppCompatActivity {
         if (navId == R.id.nav_input_validation_lesson) return "Input Validation";
         if (navId == R.id.nav_privacy_lesson) return "Privacy Controls";
         if (navId == R.id.nav_client_side_injection_lesson) return "Client-Side Injection";
-        if (navId == R.id.nav_challenge1) return "RE Challenge 1";
-        if (navId == R.id.nav_insecure_data1) return "IDS Challenge 1";
+        if (navId == R.id.nav_challenge1) return "Reverse Engineering 1";
+        if (navId == R.id.nav_insecure_data1) return "Insecure Data Storage 1";
         if (navId == R.id.nav_poor_auth_challenge) return "Poor Auth Challenge";
         if (navId == R.id.nav_insecure_comm_challenge) return "Insecure Comm Challenge";
         if (navId == R.id.nav_insufficient_crypto_challenge) return "Crypto Challenge";
-        if (navId == R.id.nav_security_misconfig_challenge2) return "Security Misconfig Challenge";
-        if (navId == R.id.nav_client_side_injection_challenge1) return "Client Injection Challenge 1";
-        if (navId == R.id.nav_client_side_injection_challenge2) return "Client Injection Challenge 2";
+        if (navId == R.id.nav_security_misconfig_challenge2) return "Security Misconfiguration 1";
+        if (navId == R.id.nav_client_side_injection_challenge1) return "Client-Side Injection 1";
+        if (navId == R.id.nav_client_side_injection_challenge2) return "Client-Side Injection 2";
         return "Module";
     }
     

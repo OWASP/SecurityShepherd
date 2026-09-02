@@ -51,6 +51,7 @@
     <color name="card_background">#FF2C2C2C</color>
     <color name="card_bg">#FF2C2C2C</color>
     <color name="card_stroke">#FF616161</color>
+    <color name="card_lesson_bg">#3A2E42</color>
     
     <color name="code_bg">#FF2C2C2C</color>
     <color name="error_bg">#4A1A1A</color>

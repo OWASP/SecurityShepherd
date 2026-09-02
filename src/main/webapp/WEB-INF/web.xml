@@ -110,6 +110,42 @@
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>/mobileRegister</servlet-name>
+		<servlet-class>servlets.MobileRegister</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/mobileRegister</servlet-name>
+		<url-pattern>/mobileRegister</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/mobileModuleStart</servlet-name>
+		<servlet-class>servlets.MobileModuleStart</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/mobileModuleStart</servlet-name>
+		<url-pattern>/mobileModuleStart</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/mobileFlagGet</servlet-name>
+		<servlet-class>servlets.MobileFlagGet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/mobileFlagGet</servlet-name>
+		<url-pattern>/mobileFlagGet</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>/mobileFlagSubmit</servlet-name>
+		<servlet-class>servlets.MobileFlagSubmit</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/mobileFlagSubmit</servlet-name>
+		<url-pattern>/mobileFlagSubmit</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>/register</servlet-name>
 		<servlet-class>servlets.Register</servlet-class>
 	</servlet>

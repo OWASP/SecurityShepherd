@@ -141,7 +141,7 @@ public class InsecureCommChallengeFragment extends Fragment {
                 makeSecureAuthRequest();
                 
                 requireActivity().runOnUiThread(() -> {
-                    binding.trafficStatus.setText("[OK] Network monitoring complete!\n\n5 requests captured. Analyze logcat to find insecure traffic.");
+                    binding.trafficStatus.setText("[OK] Network monitoring complete!\n\n5 requests captured. Route device traffic through a proxy (e.g. mitmproxy) and inspect the plaintext HTTP request to find the key.");
                     binding.trafficStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
                     binding.submitSection.setVisibility(View.VISIBLE);
                     Toast.makeText(getContext(), "Network monitoring complete.", Toast.LENGTH_SHORT).show();
@@ -177,7 +177,7 @@ public class InsecureCommChallengeFragment extends Fragment {
         Log.d(TAG, "Headers:");
         Log.d(TAG, "  Host: api.legacy-backend.com");
         Log.d(TAG, "  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9");
-        Log.d(TAG, "  X-Session-Token: " + flag);
+        Log.d(TAG, "  X-Session-Token: [REDACTED - inspect the actual request, not this log]");
         Log.d(TAG, "  User-Agent: MobileApp/2.1.4");
         Log.d(TAG, "  Accept: application/json");
         Log.d(TAG, "");

@@ -18,21 +18,22 @@ public class InsecureDataLessonTest {
     }
 
     @Test
-    public void testCreateDatabaseMethodExists() throws Exception {
-        Method method = InsecureDataLessonFragment.class.getDeclaredMethod("createDatabase");
-        assertNotNull("createDatabase method should exist", method);
+    public void testOpenDatabaseMethodExists() throws Exception {
+        Method method = InsecureDataLessonFragment.class.getDeclaredMethod("openDatabase");
+        assertNotNull("openDatabase method should exist", method);
     }
 
     @Test
-    public void testInsertUsersMethodExists() throws Exception {
-        Method method = InsecureDataLessonFragment.class.getDeclaredMethod("insertUsers");
-        assertNotNull("insertUsers method should exist", method);
+    public void testInsertUserMethodExists() throws Exception {
+        Method method = InsecureDataLessonFragment.class.getDeclaredMethod(
+                "insertUser", String.class, String.class, String.class);
+        assertNotNull("insertUser method should exist", method);
     }
 
     @Test
-    public void testShowDetailedInfoMethodExists() throws Exception {
-        Method method = InsecureDataLessonFragment.class.getDeclaredMethod("showDetailedInfo");
-        assertNotNull("showDetailedInfo method should exist", method);
+    public void testDisplayUsersMethodExists() throws Exception {
+        Method method = InsecureDataLessonFragment.class.getDeclaredMethod("displayUsers");
+        assertNotNull("displayUsers method should exist", method);
     }
     
     @Test

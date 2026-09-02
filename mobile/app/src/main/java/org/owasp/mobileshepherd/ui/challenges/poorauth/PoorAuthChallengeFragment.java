@@ -1,6 +1,5 @@
 package org.owasp.mobileshepherd.ui.challenges.poorauth;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,12 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.content.Intent;
-import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,19 +20,20 @@ import org.owasp.mobileshepherd.utils.FlagValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
+import java.util.Locale;
 
 public class PoorAuthChallengeFragment extends Fragment {
 
     private FragmentPoorAuthChallengeBinding binding;
-    private static String tempPassword;
-    private boolean passwordReset = false;
+    private static String expectedResetToken;
     private static final String TAG = "PoorAuthChallenge";
     private static final String USERNAME = "Jack";
+    // Hardcoded salt baked into the APK - visible to anyone who decompiles the app.
+    private static final String RESET_TOKEN_SALT = "sh3ph3rd-reset-2024";
     private ProgressTracker progressTracker;
     private boolean fabExpanded = false;
 
@@ -64,13 +60,8 @@ public class PoorAuthChallengeFragment extends Fragment {
         }
 
 
-        // Set initial FAB appearance based on completion status
-
-        // Write insecure logs revealing security question answers
-        writeInsecureLogs();
-
         // Setup forgot password button
-        binding.forgotPasswordButton.setOnClickListener(v -> showPasswordResetDialog());
+        binding.forgotPasswordButton.setOnClickListener(v -> openResetSection());
 
         // Setup login button
         binding.loginButton.setOnClickListener(v -> handleLogin());
@@ -120,94 +111,80 @@ public class PoorAuthChallengeFragment extends Fragment {
                 .show();
     }
 
-    private void writeInsecureLogs() {
-        // Log sensitive information that reveals security answers
-        Log.d(TAG, "My name is Jack Meade, I'm here to kick ass and drink gravy!");
-        Log.d(TAG, "Today I had chicken again! I love Chicken! #deliciousChicken");
-        Log.d(TAG, "The house is flooded... uh oh");
-        Log.d(TAG, "Misplaced my phone again, found it in the microwave.");
-        Log.d(TAG, "My mother just married again! Goodbye Mrs. Meade hello Mrs Jenkins!");
-        
-        // Write to world-readable files (intentionally insecure)
-        writeWorldReadableLog("My name is Jack Meade, I'm here to kick ass and drink gravy!");
-        writeWorldReadableLog("Today I had chicken again! I love Chicken! #deliciousChicken #whyDoIDoThis");
-        writeWorldReadableLog("My mother just married again! Goodbye Mrs. Meade hello Mrs Jenkins!");
-    }
-
-    private void writeWorldReadableLog(String content) {
-        Date date = new Date();
-        Random rand = new Random(5);
-        String filename = "PoorAuthLog" + rand.nextInt(100);
-        String EOL = System.getProperty("line.separator");
-        BufferedWriter writer = null;
-        
-        try {
-            writer = new BufferedWriter(
-                new OutputStreamWriter(
-                    requireContext().openFileOutput(filename, Context.MODE_PRIVATE)
-                )
-            );
-            writer.write(content + EOL);
-            writer.write(date.toString() + EOL);
-        } catch (Exception e) {
-            Log.e(TAG, "Error writing log", e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    Log.e(TAG, "Error closing writer", e);
-                }
-            }
-        }
-    }
-
-    private void showPasswordResetDialog() {
-        // Show password reset section
+    private void openResetSection() {
         binding.loginSection.setVisibility(View.GONE);
         binding.resetSection.setVisibility(View.VISIBLE);
 
-        binding.resetButton.setOnClickListener(v -> handlePasswordReset());
-        binding.cancelButton.setOnClickListener(v -> {
-            binding.loginSection.setVisibility(View.VISIBLE);
-            binding.resetSection.setVisibility(View.GONE);
-            binding.question1Input.setText("");
-            binding.question2Input.setText("");
-        });
+        binding.requestTokenButton.setOnClickListener(v -> handleRequestToken());
+        binding.resetButton.setOnClickListener(v -> handleVerifyToken());
+        binding.cancelButton.setOnClickListener(v -> resetSectionToInitialState());
     }
 
-    private void handlePasswordReset() {
-        String answer1 = binding.question1Input.getText().toString().trim();
-        String answer2 = binding.question2Input.getText().toString().trim();
+    private void resetSectionToInitialState() {
+        binding.loginSection.setVisibility(View.VISIBLE);
+        binding.resetSection.setVisibility(View.GONE);
+        binding.requestTokenButton.setVisibility(View.VISIBLE);
+        binding.resetStatusText.setVisibility(View.GONE);
+        binding.tokenInputLayout.setVisibility(View.GONE);
+        binding.resetButton.setVisibility(View.GONE);
+        binding.tokenInput.setText("");
+    }
 
-        if (answer1.isEmpty() || answer2.isEmpty()) {
+    private void handleRequestToken() {
+        String today = getTodayDateString();
+        expectedResetToken = generateResetToken(USERNAME, today);
+
+        // Looks like ordinary audit logging of a password-reset request.
+        // VULNERABLE (CWE-341/CWE-330): the token itself is never logged, but it
+        // is fully derived from public/observable inputs (username + today's date)
+        // plus a value hardcoded in the app binary.
+        Log.d(TAG, "Password reset requested for user=" + USERNAME + " date=" + today);
+
+        binding.requestTokenButton.setVisibility(View.GONE);
+        binding.resetStatusText.setText(getString(R.string.poor_auth_reset_confirmation));
+        binding.resetStatusText.setVisibility(View.VISIBLE);
+        binding.tokenInputLayout.setVisibility(View.VISIBLE);
+        binding.resetButton.setVisibility(View.VISIBLE);
+
+        Toast.makeText(getContext(), "A password reset token has been generated for this account.", Toast.LENGTH_LONG).show();
+    }
+
+    private void handleVerifyToken() {
+        String enteredToken = binding.tokenInput.getText().toString().trim();
+        if (enteredToken.isEmpty()) {
             Toast.makeText(getContext(), "Empty Fields Detected.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Check security answers (intentionally weak questions)
-        if (answer1.equalsIgnoreCase("Chicken") && answer2.equalsIgnoreCase("Meade")) {
-            // Generate weak temporary password
-            tempPassword = generateWeakTempPassword(6);
-            passwordReset = true;
+        if (expectedResetToken != null && enteredToken.equalsIgnoreCase(expectedResetToken)) {
+            binding.loginSection.setVisibility(View.GONE);
+            binding.resetSection.setVisibility(View.GONE);
+            binding.successSection.setVisibility(View.VISIBLE);
+            binding.flagText.setText("Fetching your flag...");
 
-            Log.d(TAG, "Password reset successful! Temp password: " + tempPassword);
-            
-            binding.tempPasswordText.setText("Your temporary password is: " + tempPassword);
-            binding.tempPasswordText.setVisibility(View.VISIBLE);
-            
-            Toast.makeText(getContext(), "Password Reset! Use the temporary password to login.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Reset token verified! Access granted.", Toast.LENGTH_LONG).show();
 
-            // Return to login screen after delay
-            binding.getRoot().postDelayed(() -> {
-                binding.loginSection.setVisibility(View.VISIBLE);
-                binding.resetSection.setVisibility(View.GONE);
-                binding.question1Input.setText("");
-                binding.question2Input.setText("");
-            }, 3000);
+            FlagProvider.getFlag(requireContext(), FlagValidator.Module.POOR_AUTH_CHALLENGE, flag -> {
+                binding.flagText.setText("Congratulations! Here's your flag:\n\n" + flag);
+
+                FlagValidator.validateFlag(requireContext(), FlagValidator.Module.POOR_AUTH_CHALLENGE, flag, isValid -> {
+                    if (isValid) {
+                        progressTracker.markCompleted(FlagValidator.Module.POOR_AUTH_CHALLENGE);
+                        int completionCount = progressTracker.getCompletionCount(FlagValidator.Module.POOR_AUTH_CHALLENGE);
+                        String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
+
+                        new AlertDialog.Builder(requireContext())
+                            .setTitle("🎉 Success!")
+                            .setMessage("Congratulations! You exploited weak authentication.\n\nFlag: " + flag + completionText)
+                            .setPositiveButton("OK", null)
+                            .show();
+                    }
+                });
+            });
         } else {
-            Toast.makeText(getContext(), "Invalid answers.", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Invalid password reset attempt. Answers: " + answer1 + ", " + answer2);
+            Toast.makeText(getContext(), "Invalid reset token.", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Invalid reset token attempt for user=" + USERNAME);
+            binding.tokenInput.setText("");
         }
     }
 
@@ -220,69 +197,26 @@ public class PoorAuthChallengeFragment extends Fragment {
             return;
         }
 
-        Log.d(TAG, "Login attempt - Username: " + username + ", Password: " + password);
-        Log.d(TAG, "Password reset status: " + passwordReset + ", Temp password: " + tempPassword);
-
-        if (!passwordReset) {
-            Toast.makeText(getContext(), "Your account has been locked! Use password reset.", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (username.equals(USERNAME) && password.equals(tempPassword)) {
-            binding.loginSection.setVisibility(View.GONE);
-            binding.successSection.setVisibility(View.VISIBLE);
-            binding.flagText.setText("Fetching your flag...");
-
-            Toast.makeText(getContext(), "Logged in successfully!", Toast.LENGTH_LONG).show();
-
-            FlagProvider.getFlag(requireContext(), FlagValidator.Module.POOR_AUTH_CHALLENGE, flag -> {
-                binding.flagText.setText("Congratulations! Here's your flag:\n\n" + flag);
-            });
-
-            binding.validateFlagButton.setOnClickListener(v -> validateFlag());
-        } else {
-            Toast.makeText(getContext(), "Invalid Credentials!", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Login failed. Expected: " + USERNAME + "/" + tempPassword);
-            binding.passwordInput.setText("");
-        }
+        Log.d(TAG, "Login attempt - Username: " + username);
+        Toast.makeText(getContext(), "Your account has been locked! Use password reset.", Toast.LENGTH_LONG).show();
     }
 
-    private void validateFlag() {
-        String enteredFlag = binding.flagInput.getText().toString().trim();
-        FlagValidator.validateFlag(requireContext(), FlagValidator.Module.POOR_AUTH_CHALLENGE, enteredFlag, isValid -> {
-            if (isValid) {
-                progressTracker.markCompleted(FlagValidator.Module.POOR_AUTH_CHALLENGE);
-                int completionCount = progressTracker.getCompletionCount(FlagValidator.Module.POOR_AUTH_CHALLENGE);
-                String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
-
-                Toast.makeText(getContext(), "Flag validated successfully! Challenge complete!", Toast.LENGTH_LONG).show();
-                binding.flagValidationCard.setCardBackgroundColor(
-                    ContextCompat.getColor(requireContext(), R.color.success_bg)
-                );
-
-                new AlertDialog.Builder(requireContext())
-                    .setTitle("\uD83C\uDF89 Success!")
-                    .setMessage("Congratulations! You exploited weak authentication.\n\nFlag: " + enteredFlag + completionText)
-                    .setPositiveButton("OK", null)
-                    .show();
-            } else {
-                Toast.makeText(getContext(), "Incorrect flag!", Toast.LENGTH_SHORT).show();
-                binding.flagValidationCard.setCardBackgroundColor(
-                    ContextCompat.getColor(requireContext(), R.color.error_bg)
-                );
-                binding.flagInput.setText("");
+    private String generateResetToken(String username, String dateStr) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest((username + ":" + dateStr + ":" + RESET_TOKEN_SALT).getBytes());
+            StringBuilder hex = new StringBuilder();
+            for (byte b : hash) {
+                hex.append(String.format("%02x", b));
             }
-        });
+            return hex.substring(0, 6).toUpperCase(Locale.US);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private String generateWeakTempPassword(int length) {
-        // Intentionally weak: only numeric, predictable
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            sb.append(random.nextInt(10));
-        }
-        return sb.toString();
+    private String getTodayDateString() {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
     }
 
     @Override

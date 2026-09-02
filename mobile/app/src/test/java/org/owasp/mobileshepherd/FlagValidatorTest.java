@@ -19,32 +19,33 @@ public class FlagValidatorTest {
     }
 
     @Test
-    public void testClientSideInjectionLessonOfflineFlag() {
-        assertTrue(FlagValidator.validateFlag(
+    public void testClientSideInjectionLessonHasNoOfflineHash() {
+        // No offline hash exists for this module — even the correct flag is rejected locally.
+        assertFalse(FlagValidator.validateFlag(
                 FlagValidator.Module.CLIENT_SIDE_INJECTION_LESSON, "Marble_Rolls_Past_The_Cat"));
     }
 
     @Test
-    public void testInsecureAuthLessonOfflineFlag() {
-        assertTrue(FlagValidator.validateFlag(
+    public void testInsecureAuthLessonHasNoOfflineHash() {
+        assertFalse(FlagValidator.validateFlag(
                 FlagValidator.Module.INSECURE_AUTH_LESSON, "Iron_Gate_Opens_By_Silence"));
     }
 
     @Test
-    public void testInsecureCommLessonOfflineFlag() {
-        assertTrue(FlagValidator.validateFlag(
+    public void testInsecureCommLessonHasNoOfflineHash() {
+        assertFalse(FlagValidator.validateFlag(
                 FlagValidator.Module.INSECURE_COMM_LESSON, "Signal_Lost_In_The_Fog"));
     }
 
     @Test
-    public void testPrivacyLessonOfflineFlag() {
-        assertTrue(FlagValidator.validateFlag(
+    public void testPrivacyLessonHasNoOfflineHash() {
+        assertFalse(FlagValidator.validateFlag(
                 FlagValidator.Module.PRIVACY_LESSON, "Photo_Leaks_GPS_Data"));
     }
 
     @Test
-    public void testInsufficientCryptoLessonOfflineFlag() {
-        assertTrue(FlagValidator.validateFlag(
+    public void testInsufficientCryptoLessonHasNoOfflineHash() {
+        assertFalse(FlagValidator.validateFlag(
                 FlagValidator.Module.INSUFFICIENT_CRYPTO_LESSON, "Weak_Key_Fails_The_Lock"));
     }
 

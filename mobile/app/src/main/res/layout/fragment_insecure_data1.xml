@@ -101,7 +101,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/submit_flag"
+                    android:text="@string/verify_password_card_title"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
@@ -110,7 +110,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/enter_flag"
+                    android:hint="@string/enter_cracked_password"
                     android:layout_marginBottom="12dp"
                     app:boxBackgroundMode="outline">
 
@@ -127,7 +127,7 @@
                     android:id="@+id/validate_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/validate_flag"
+                    android:text="@string/verify_password_button"
                     android:textSize="16sp" />
 
             </LinearLayout>
