@@ -18,7 +18,7 @@ public class GetJson {
         jb.append(line);
       }
     } catch (Exception e) {
-      log.error("Unable to buffer JSON array from request.");
+      throw new RuntimeException("Unable to buffer JSON array from request.", e);
     }
     try {
       JSONArray jsonArray = new JSONArray(jb.toString());

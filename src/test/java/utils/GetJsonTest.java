@@ -2,8 +2,10 @@ package utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import org.json.JSONArray;
 import org.junit.jupiter.api.Test;
@@ -53,5 +55,22 @@ class GetJsonTest {
   void getJsonArrayFromPost_multilineInput() {
     JSONArray result = GetJson.getJssonArrayFromPost(readerOf("[\n  1,\n  2\n]"));
     assertEquals(2, result.length());
+  }
+
+  @Test
+  void getJsonArrayFromPost_readerFailureThrowsRuntimeException() {
+    BufferedReader failingReader =
+        new BufferedReader(new StringReader("")) {
+          @Override
+          public String readLine() throws IOException {
+            throw new IOException("Simulated reader failure");
+          }
+        };
+
+    RuntimeException exception =
+        assertThrows(RuntimeException.class, () -> GetJson.getJssonArrayFromPost(failingReader));
+
+    assertEquals("Unable to buffer JSON array from request.", exception.getMessage());
+    assertEquals("Simulated reader failure", exception.getCause().getMessage());
   }
 }
