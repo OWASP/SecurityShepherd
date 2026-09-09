@@ -68,11 +68,11 @@
 			<artifactId>jtidy</artifactId>
 			<version>r938</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<!-- Jakarta Mail (was com.sun.mail:javax.mail) - jakarta.mail namespace -->
 		<dependency>
-		<groupId>com.sun.mail</groupId>
-		<artifactId>javax.mail</artifactId>
-		<version>1.6.2</version>
+		<groupId>org.eclipse.angus</groupId>
+		<artifactId>angus-mail</artifactId>
+		<version>2.0.3</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
@@ -81,23 +81,26 @@
 			<artifactId>mongo-java-driver</artifactId>
 		<version>3.12.14</version>
 		</dependency>
+		<!-- Jakarta Servlet 6.0 (Tomcat 10.1) - was javax.servlet:javax.servlet-api.
+		     The javax:javaee-api umbrella dependency was removed: it pulls the
+		     legacy javax.* namespace back onto the classpath. -->
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>8.0.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>4.0.1</version>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Jakarta JSTL 3.0 (jakarta.tags.*) - was jstl:jstl:1.2 -->
 		<dependency>
-			<groupId>jstl</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
@@ -147,7 +150,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>5.3.31</version>
+			<version>6.1.21</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -155,30 +158,21 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>6.0.2</version>
+			<version>6.1.21</version>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-mock -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-mock</artifactId>
-			<version>2.0.8</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.fakemongo</groupId>
-			<artifactId>fongo</artifactId>
-			<version>2.1.1</version>
-			<scope>test</scope>
-		</dependency>
+		<!-- spring-mock:2.0.8 removed: javax-era standalone mock (2008).
+		     Spring 6 spring-test provides the Jakarta MockHttpServletRequest /
+		     MockServletConfig that supersedes it.
+		     fongo removed: unmaintained and unused (its only tests are @Disabled);
+		     test rescue tracked in #876. -->
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>5.3.31</version>
+			<version>6.1.21</version>
 		</dependency>
 
 		<!-- Test -->
