@@ -199,12 +199,23 @@ else
 	var theRefreshError = "Could not Refresh Menu";
 
 	$('#getStarted').slideDown("slow");
-	$('#cantSee').html("<iframe class='levelIframe' frameborder='no' id='theStart' src='readyToPlay.jsp'></iframe>");
-	$('#cantSee').html(function(){
-		$("#theStart").load(function(){
-			$("#contentDiv").slideDown("slow");
-		});
+	// Issue 914: keep same-origin sandboxed frame for readyToPlay welcome view.
+	// readyToPlay is a full document with its own session check, so it stays
+	// isolated in the frame while dashboard navigation and session handling
+	// stay outside. Replaces deprecated frameborder string injection.
+	$("#cantSee").empty();
+	var startFrame = document.createElement("iframe");
+	startFrame.setAttribute("id", "theStart");
+	startFrame.setAttribute("class", "levelIframe");
+	startFrame.setAttribute("title", "Security Shepherd getting started");
+	startFrame.setAttribute("loading", "lazy");
+	startFrame.setAttribute("referrerpolicy", "same-origin");
+	startFrame.setAttribute("sandbox", "allow-same-origin allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads");
+	startFrame.setAttribute("src", "readyToPlay.jsp");
+	$(startFrame).on("load", function(){
+		$("#contentDiv").slideDown("slow");
 	});
+	$("#cantSee").append(startFrame);
 	<% if (isAdmin) { %>
 	$("#allApplication").click(function(){
         if ($('#unsafeLevels').is(":checked"))
