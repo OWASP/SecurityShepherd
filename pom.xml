@@ -269,12 +269,6 @@
 									</resources>
 								</configuration>
 							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>3.5.0</version>
-						<executions>
 							<execution>
 								<id>copy-mongo-scripts</id>
 								<phase>validate</phase>
