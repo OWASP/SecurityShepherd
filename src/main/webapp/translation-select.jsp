@@ -9,5 +9,6 @@
 		<option value="ga" ${lang == 'ga' ? 'selected' : ''}>Gaeilge</option>
 		<option value="zh" ${lang == 'zh' ? 'selected' : ''}>中文</option>
 		<option value="hi" ${lang == 'hi' ? 'selected' : ''}>Hindi(Hinglish)</option>
+		<option value="ru" ${lang == 'ru' ? 'selected' : ''}>Русский</option>
 	</select>
 </form>
