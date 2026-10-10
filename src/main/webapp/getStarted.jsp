@@ -208,7 +208,8 @@ else
 	startFrame.setAttribute("id", "theStart");
 	startFrame.setAttribute("class", "levelIframe");
 	startFrame.setAttribute("title", "Security Shepherd getting started");
-	startFrame.setAttribute("loading", "lazy");
+	// no loading="lazy" here: the frame sits in a hidden div until it fires load
+	// itself, so lazy loading never triggers and the welcome view stays blank
 	startFrame.setAttribute("referrerpolicy", "same-origin");
 	startFrame.setAttribute("sandbox", "allow-same-origin allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads");
 	startFrame.setAttribute("src", "readyToPlay.jsp");

@@ -801,7 +801,8 @@ if (request.getSession() != null)
 				frame.setAttribute("id", frameId);
 				frame.setAttribute("class", "levelIframe");
 				frame.setAttribute("title", title);
-				frame.setAttribute("loading", "lazy");
+				// no loading="lazy" here: these frames start hidden and lazy loading never
+				// triggers for a hidden element, so the lesson never loads (issue 914 review)
 				frame.setAttribute("referrerpolicy", "same-origin");
 				frame.setAttribute("sandbox", SHEPHERD_FRAME_SANDBOX);
 				frame.setAttribute("src", src);
