@@ -199,10 +199,6 @@ else
 	var theRefreshError = "Could not Refresh Menu";
 
 	$('#getStarted').slideDown("slow");
-	// Issue 914: keep same-origin sandboxed frame for readyToPlay welcome view.
-	// readyToPlay is a full document with its own session check, so it stays
-	// isolated in the frame while dashboard navigation and session handling
-	// stay outside. Replaces deprecated frameborder string injection.
 	$("#cantSee").empty();
 	var startFrame = document.createElement("iframe");
 	startFrame.setAttribute("id", "theStart");

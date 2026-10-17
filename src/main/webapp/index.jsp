@@ -770,14 +770,6 @@ if (request.getSession() != null)
 	%>
 
 	<script>
-			// Issue 914 bounded iframe handling: lesson and challenge views are full
-			// documents with their own scripts and relative paths, while result
-			// submission stays in this dashboard. Keep a same-origin sandboxed frame
-			// so navigation, authentication, session handling and lesson behaviour
-			// are preserved. Top-level navigation stays blocked so untrusted module
-			// content cannot break out of the dashboard. Popups, modals, forms and
-			// downloads stay allowed because existing lessons use target blank
-			// external links, alert based training flows and file references.
 			var SHEPHERD_FRAME_SANDBOX = "allow-same-origin allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads";
 			function isSafeModuleSrc(src) {
 				if (!src || typeof src !== "string") {
@@ -830,7 +822,7 @@ if (request.getSession() != null)
 						{
 							theActualFile = ajaxCall.responseText;
 							if (!isSafeModuleSrc(theActualFile)) {
-								$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: invalid module address</p>");
+								$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: <fmt:message key="generic.text.invalidModuleAddress" /></p>");
 								$("#contentDiv").slideDown("slow");
 							} else {
 							$("#contentDiv").empty();
@@ -893,7 +885,7 @@ if (request.getSession() != null)
 						{
 							theActualFile = ajaxCall.responseText;
 							if (!isSafeModuleSrc(theActualFile)) {
-								$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: invalid module address</p>");
+								$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: <fmt:message key="generic.text.invalidModuleAddress" /></p>");
 								$("#contentDiv").slideDown("slow");
 							} else {
 							$("#contentDiv").empty();
@@ -971,7 +963,7 @@ if (request.getSession() != null)
 						if(ajaxCall.status == 200) {
 							theActualFile = ajaxCall.responseText;
 							if (!isSafeModuleSrc(theActualFile)) {
-								$('#contentDiv').html("<p> " + theErrorMessage + ": invalid module address</p>");
+								$('#contentDiv').html("<p> " + theErrorMessage + ": <fmt:message key="generic.text.invalidModuleAddress" /></p>");
 								$("#contentDiv").slideDown("slow");
 							} else {
 							$("#contentDiv").empty();
