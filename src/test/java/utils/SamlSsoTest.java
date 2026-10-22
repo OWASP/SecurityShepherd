@@ -23,6 +23,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opensaml.saml.saml2.core.AuthnContext;
 import org.pac4j.saml.profile.SAML2Profile;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -322,6 +323,61 @@ public class SamlSsoTest {
     IllegalStateException e = assertThrows(IllegalStateException.class, () -> SamlSso.build(props));
 
     assertThat(e.getMessage(), containsString("or neither"));
+  }
+
+  private Optional<SAML2Profile> authenticateWithRequestedContexts(
+      String requested, String comparison, String returned) throws Exception {
+    Properties props = saml.properties();
+    props.setProperty(SamlSso.REQUESTED_AUTHN_CONTEXT, requested);
+    if (comparison != null) {
+      props.setProperty(SamlSso.REQUESTED_AUTHN_CONTEXT_COMPARISON, comparison);
+    }
+    SamlTestSupport.install(props);
+    saml.authnContextClassRef = returned;
+    try {
+      String samlResponse =
+          saml.signedResponse("user-123", studentAttributes(), saml.idpKeys, saml.idpCert);
+      return SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse());
+    } finally {
+      saml.authnContextClassRef = AuthnContext.PPT_AUTHN_CTX;
+    }
+  }
+
+  @Test
+  public void authenticate_OneOfSeveralRequestedContexts_IsAccepted() throws Exception {
+    assertTrue(
+        authenticateWithRequestedContexts(
+                AuthnContext.PPT_AUTHN_CTX + ", " + AuthnContext.X509_AUTHN_CTX,
+                null,
+                AuthnContext.X509_AUTHN_CTX)
+            .isPresent());
+  }
+
+  @Test
+  public void authenticate_ExactComparison_UnrequestedContext_IsRejected() throws Exception {
+    assertFalse(
+        authenticateWithRequestedContexts(
+                AuthnContext.PPT_AUTHN_CTX + ", " + AuthnContext.X509_AUTHN_CTX,
+                "exact",
+                AuthnContext.KERBEROS_AUTHN_CTX)
+            .isPresent());
+  }
+
+  @Test
+  public void authenticate_MinimumComparison_StrongerUnlistedContext_IsAccepted() throws Exception {
+    assertTrue(
+        authenticateWithRequestedContexts(
+                AuthnContext.PPT_AUTHN_CTX, "minimum", AuthnContext.X509_AUTHN_CTX)
+            .isPresent());
+  }
+
+  @Test
+  public void authenticate_NoRequestedContext_AcceptsAnyContext() throws Exception {
+    String samlResponse =
+        saml.signedResponse("user-123", studentAttributes(), saml.idpKeys, saml.idpCert);
+
+    assertTrue(
+        SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse()).isPresent());
   }
 
   @Test
