@@ -67,8 +67,10 @@ import org.pac4j.saml.client.SAML2Client;
 import org.pac4j.saml.config.SAML2Configuration;
 import org.pac4j.saml.context.SAML2MessageContext;
 import org.pac4j.saml.credentials.SAML2Credentials;
+import org.pac4j.saml.exceptions.SAMLAuthnContextClassRefException;
 import org.pac4j.saml.metadata.SAML2FileSystemMetadataGenerator;
 import org.pac4j.saml.profile.SAML2Profile;
+import org.pac4j.saml.sso.impl.SAML2AuthnResponseValidator;
 import org.springframework.core.io.ByteArrayResource;
 
 /**
@@ -648,7 +650,7 @@ public class SamlSso {
             buildIdentityProviderMetadata(props).getBytes(StandardCharsets.UTF_8),
             "identity provider metadata from " + PROPERTIES_FILE));
 
-    SAML2Client saml = new SAML2Client(config);
+    SAML2Client saml = new AlternativeAuthnContextClient(config);
     // The ACS URL is registered with the IdP as-is, so don't append ?client_name=...
     saml.setCallbackUrlResolver(new NoParameterCallbackUrlResolver());
     saml.setCallbackUrl(required(props, SP_ACS_URL));
@@ -668,6 +670,51 @@ public class SamlSso {
         singleLogoutUrl,
         required(props, IDP_ENTITY_ID),
         required(props, SP_ENTITY_ID));
+  }
+
+  /**
+   * pac4j requires every requested AuthnContextClassRef to appear in the response, but SAML treats
+   * the requested classes as alternatives (SAML Core 3.3.2.2.1). With "exact" comparison, at least
+   * one returned class must be one of those requested. With minimum / better / maximum the IdP
+   * judges relative strength, which an SP can't check in general (a stronger class may be one that
+   * wasn't listed), so the returned class is accepted, as java-saml did.
+   */
+  private static final class AlternativeAuthnContextClient extends SAML2Client {
+    AlternativeAuthnContextClient(SAML2Configuration configuration) {
+      super(configuration);
+    }
+
+    @Override
+    protected void initSAMLResponseValidator(boolean forceReinit) {
+      if (authnResponseValidator == null || forceReinit) {
+        String comparison = configuration.getComparisonType();
+        authnResponseValidator =
+            new SAML2AuthnResponseValidator(
+                signatureTrustEngineProvider,
+                decrypter,
+                replayCache,
+                configuration,
+                findSessionLogoutHandler()) {
+              @Override
+              protected void validateAuthnContextClassRefs(
+                  SAML2MessageContext context, List<String> provided) {
+                List<String> requested = configuration.getAuthnContextClassRefs();
+                if (requested.isEmpty()
+                    || (comparison != null && !"exact".equalsIgnoreCase(comparison))) {
+                  return;
+                }
+                if (provided.stream().noneMatch(requested::contains)) {
+                  throw new SAMLAuthnContextClassRefException(
+                      "None of the requested authentication context classes "
+                          + requested
+                          + " is in the IdP's authentication statements "
+                          + provided);
+                }
+              }
+            };
+        authnResponseValidator.setAcceptedSkew(configuration.getAcceptedSkew());
+      }
+    }
   }
 
   /**

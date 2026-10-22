@@ -72,6 +72,9 @@ public class SamlTestSupport {
   public static final String IDP_SSO_URL = "https://idp.test/sso";
   public static final String IDP_SLO_URL = "https://idp.test/slo";
 
+  /** The AuthnContextClassRef that {@link #signedResponse} reports */
+  public String authnContextClassRef = AuthnContext.PPT_AUTHN_CTX;
+
   public final KeyPair spKeys;
   public final X509Certificate spCert;
   public final KeyPair idpKeys;
@@ -202,7 +205,7 @@ public class SamlTestSupport {
     authn.setSessionIndex("_session-" + nameId);
     AuthnContext authnContext = build(AuthnContext.DEFAULT_ELEMENT_NAME);
     AuthnContextClassRef classRef = build(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
-    classRef.setURI(AuthnContext.PPT_AUTHN_CTX);
+    classRef.setURI(authnContextClassRef);
     authnContext.setAuthnContextClassRef(classRef);
     authn.setAuthnContext(authnContext);
     assertion.getAuthnStatements().add(authn);
