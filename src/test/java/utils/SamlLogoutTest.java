@@ -9,12 +9,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.KeyPair;
 import java.security.cert.X509Certificate;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Properties;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
@@ -287,6 +290,95 @@ public class SamlLogoutTest {
 
     assertEquals(SamlSso.LogoutMessage.INVALID, process(request));
     assertFalse(loggedIn.isInvalid());
+  }
+
+  private static String signedRedirect(LogoutRequest request) throws Exception {
+    return SamlTestSupport.redirectQuery(
+        "SAMLRequest", SamlTestSupport.toXml(request, null, null), saml.idpKeys);
+  }
+
+  @Test
+  public void signedLogoutRequest_ForAnotherSp_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setDestination("https://other-sp.test/saml/sls");
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void signedLogoutRequest_WithoutDestination_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setDestination(null);
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void staleLogoutRequest_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setIssueInstant(Instant.now().minus(Duration.ofMinutes(20)));
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void futureDatedLogoutRequest_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setIssueInstant(Instant.now().plus(Duration.ofMinutes(20)));
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void expiredLogoutRequest_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setNotOnOrAfter(Instant.now().minus(Duration.ofMinutes(10)));
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void replayedLogoutRequest_DoesNotEndALaterLogin() throws Exception {
+    String query = signedRedirect(saml.logoutRequest("user-123", (String) null));
+    assertEquals(SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST, process(SamlTestSupport.slsGet(query)));
+    assertTrue(loggedIn.isInvalid());
+    // The user logs in again
+    MockHttpSession newLogin = new MockHttpSession();
+    SamlSessionRegistry.register(newLogin, "user-123", "_session-new");
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(query)));
+    assertFalse(newLogin.isInvalid());
+    newLogin.invalidate();
+  }
+
+  /** XML-DSig ecdsa-sha256 signatures are raw r || s, not the DER that SHA256withECDSA expects */
+  @Test
+  public void ecdsaSignedRedirectLogoutResponse_FromEcIdp_IsAccepted() throws Exception {
+    KeyPair ecKeys = SamlTestSupport.newEcKeyPair();
+    Properties props = signedLogoutProperties(true);
+    props.setProperty(
+        SamlSso.IDP_CERT,
+        SamlTestSupport.certificatePem(SamlTestSupport.selfSigned(ecKeys, "idp.test")));
+    SamlTestSupport.install(props);
+    String query =
+        SamlTestSupport.redirectQuery(
+            "SAMLResponse",
+            logoutResponseXml(),
+            ecKeys,
+            "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256",
+            "SHA256withECDSAinP1363Format");
+
+    assertEquals(SamlSso.LogoutMessage.LOGOUT_RESPONSE, process(SamlTestSupport.slsGet(query)));
   }
 
   @Test

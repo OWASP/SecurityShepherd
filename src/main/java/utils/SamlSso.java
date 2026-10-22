@@ -18,6 +18,8 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.DERNull;
@@ -119,7 +122,10 @@ public class SamlSso {
   private static final String HTTP_POST_BINDING = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST";
   private static final String SP_KEY_ALIAS = "shepherd-sp";
 
-  /** HTTP-Redirect binding signature algorithms accepted on logout messages (no SHA-1) */
+  /**
+   * HTTP-Redirect binding signature algorithms accepted on logout messages (no SHA-1). XML-DSig
+   * ECDSA signatures are the raw r || s concatenation (IEEE P1363), not ASN.1 DER.
+   */
   private static final Map<String, String> REDIRECT_SIGNATURE_ALGORITHMS = new HashMap<>();
 
   static {
@@ -130,15 +136,31 @@ public class SamlSso {
     REDIRECT_SIGNATURE_ALGORITHMS.put(
         "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512", "SHA512withRSA");
     REDIRECT_SIGNATURE_ALGORITHMS.put(
-        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256", "SHA256withECDSA");
+        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256", "SHA256withECDSAinP1363Format");
     REDIRECT_SIGNATURE_ALGORITHMS.put(
-        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384", "SHA384withECDSA");
+        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384", "SHA384withECDSAinP1363Format");
     REDIRECT_SIGNATURE_ALGORITHMS.put(
-        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512", "SHA512withECDSA");
+        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512", "SHA512withECDSAinP1363Format");
   }
 
   private static final Set<String> REDIRECT_SIGNED_PARAMETERS =
       Set.of("SAMLRequest", "SAMLResponse", "RelayState", "SigAlg", "Signature");
+
+  /** How long after its IssueInstant an IdP LogoutRequest is accepted (plus clock skew) */
+  static final Duration LOGOUT_REQUEST_LIFETIME = Duration.ofMinutes(5);
+
+  /** Allowed clock difference between the IdP and this server */
+  static final Duration CLOCK_SKEW = Duration.ofMinutes(5);
+
+  /** Upper bound on remembered LogoutRequest IDs; beyond it new requests are refused */
+  private static final int MAX_REMEMBERED_LOGOUT_REQUESTS = 10000;
+
+  /**
+   * IDs of LogoutRequests already acted on, with when they can be forgotten. An entry outlives the
+   * window in which its request would be accepted, so a replay is always caught here or by the age
+   * check.
+   */
+  private static final Map<String, Instant> seenLogoutRequests = new ConcurrentHashMap<>();
 
   /** The configured SAML client and the settings SamlSso enforces itself */
   static final class Sso {
@@ -148,10 +170,18 @@ public class SamlSso {
     /** want_messages_signed: logout messages must carry a valid IdP signature */
     final boolean requireSignedLogout;
 
-    Sso(SAML2Client client, X509Certificate idpCertificate, boolean requireSignedLogout) {
+    /** This SP's single logout endpoint, which IdP LogoutRequests must be addressed to */
+    final String singleLogoutUrl;
+
+    Sso(
+        SAML2Client client,
+        X509Certificate idpCertificate,
+        boolean requireSignedLogout,
+        String singleLogoutUrl) {
       this.client = client;
       this.idpCertificate = idpCertificate;
       this.requireSignedLogout = requireSignedLogout;
+      this.singleLogoutUrl = singleLogoutUrl;
     }
   }
 
@@ -303,6 +333,12 @@ public class SamlSso {
         return LogoutMessage.LOGOUT_RESPONSE;
       }
       LogoutRequest logoutRequest = (LogoutRequest) message;
+      // pac4j checks none of these for LogoutRequests
+      String rejection = checkLogoutRequest(logoutRequest, signed, config.singleLogoutUrl);
+      if (rejection != null) {
+        log.error("SAML LogoutRequest rejected: " + rejection);
+        return LogoutMessage.INVALID;
+      }
       NameID nameId = logoutRequest.getNameID();
       if (nameId == null && logoutRequest.getEncryptedID() != null) {
         nameId = (NameID) saml.getDecrypter().decrypt(logoutRequest.getEncryptedID());
@@ -334,6 +370,44 @@ public class SamlSso {
       log.debug("SAML logout message rejected", e);
       return LogoutMessage.INVALID;
     }
+  }
+
+  /**
+   * Checks an IdP LogoutRequest's addressing, freshness and uniqueness before it may end sessions,
+   * and records its ID. A signed request must name this SP's logout endpoint as its Destination
+   * (SAML Bindings 3.4.5.2 / 3.5.5.2); any Destination given must match.
+   *
+   * @return why the request is rejected, or null if it may be acted on
+   */
+  static String checkLogoutRequest(LogoutRequest request, boolean signed, String singleLogoutUrl) {
+    String destination = request.getDestination();
+    if (destination == null ? signed : !destination.equals(singleLogoutUrl)) {
+      return "Destination " + destination + " is not " + singleLogoutUrl;
+    }
+    Instant now = Instant.now();
+    Instant issued = request.getIssueInstant();
+    if (issued == null
+        || issued.isAfter(now.plus(CLOCK_SKEW))
+        || issued.isBefore(now.minus(LOGOUT_REQUEST_LIFETIME).minus(CLOCK_SKEW))) {
+      return "IssueInstant " + issued + " is outside the accepted window";
+    }
+    Instant notOnOrAfter = request.getNotOnOrAfter();
+    if (notOnOrAfter != null && !now.minus(CLOCK_SKEW).isBefore(notOnOrAfter)) {
+      return "expired at " + notOnOrAfter;
+    }
+    if (request.getID() == null) {
+      return "no ID";
+    }
+    String issuer = request.getIssuer() == null ? "" : request.getIssuer().getValue();
+    seenLogoutRequests.values().removeIf(forgetAt -> forgetAt.isBefore(now));
+    if (seenLogoutRequests.size() >= MAX_REMEMBERED_LOGOUT_REQUESTS) {
+      return "too many recent logout requests to check for replay";
+    }
+    Instant forgetAt = now.plus(LOGOUT_REQUEST_LIFETIME).plus(CLOCK_SKEW.multipliedBy(2));
+    if (seenLogoutRequests.putIfAbsent(issuer + "|" + request.getID(), forgetAt) != null) {
+      return "replay of " + request.getID();
+    }
+    return null;
   }
 
   /**
@@ -511,7 +585,9 @@ public class SamlSso {
     } catch (GeneralSecurityException | IllegalArgumentException e) {
       throw new IllegalStateException("Cannot load " + IDP_CERT + ": " + e.getMessage(), e);
     }
-    return new Sso(saml, idpCertificate, flag(props, WANT_MESSAGES_SIGNED, false));
+    // pac4j advertises the ACS URL as the logout endpoint when no SLS URL is configured
+    String singleLogoutUrl = optional(props, SP_SLS_URL, required(props, SP_ACS_URL));
+    return new Sso(saml, idpCertificate, flag(props, WANT_MESSAGES_SIGNED, false), singleLogoutUrl);
   }
 
   /**
