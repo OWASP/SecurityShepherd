@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.GetterIT;
 import dbProcs.Setter;
+import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.sql.SQLException;
-import jakarta.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;

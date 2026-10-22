@@ -1,15 +1,15 @@
 package servlets.module.challenge;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
