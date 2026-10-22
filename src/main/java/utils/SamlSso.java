@@ -6,11 +6,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.PrivateKey;
+import java.security.Signature;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -18,7 +20,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
@@ -30,6 +34,9 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.opensaml.saml.saml2.core.LogoutRequest;
+import org.opensaml.saml.saml2.core.NameID;
+import org.opensaml.saml.saml2.core.SessionIndex;
+import org.opensaml.xmlsec.encryption.support.DecryptionException;
 import org.owasp.encoder.Encode;
 import org.pac4j.core.context.CallContext;
 import org.pac4j.core.credentials.Credentials;
@@ -42,6 +49,7 @@ import org.pac4j.jee.context.session.JEESessionStore;
 import org.pac4j.jee.http.adapter.JEEHttpActionAdapter;
 import org.pac4j.saml.client.SAML2Client;
 import org.pac4j.saml.config.SAML2Configuration;
+import org.pac4j.saml.context.SAML2MessageContext;
 import org.pac4j.saml.credentials.SAML2Credentials;
 import org.pac4j.saml.profile.SAML2Profile;
 import org.springframework.core.io.ByteArrayResource;
@@ -98,6 +106,11 @@ public class SamlSso {
   static final String REQUESTED_AUTHN_CONTEXT = "onelogin.saml2.security.requested_authncontext";
   static final String REQUESTED_AUTHN_CONTEXT_COMPARISON =
       "onelogin.saml2.security.requested_authncontextcomparison";
+
+  /** The key as misspelled in the pre-pac4j sample file, still accepted */
+  static final String LEGACY_REQUESTED_AUTHN_CONTEXT_COMPARISON =
+      "onelogin.saml2.security.onelogin.saml2.security.requested_authncontextcomparison";
+
   static final String SIGNATURE_ALGORITHM = "onelogin.saml2.security.signature_algorithm";
 
   private static final String HTTP_REDIRECT_BINDING =
@@ -105,7 +118,59 @@ public class SamlSso {
   private static final String HTTP_POST_BINDING = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST";
   private static final String SP_KEY_ALIAS = "shepherd-sp";
 
-  private static volatile SAML2Client client;
+  /** HTTP-Redirect binding signature algorithms accepted on logout messages (no SHA-1) */
+  private static final Map<String, String> REDIRECT_SIGNATURE_ALGORITHMS = new HashMap<>();
+
+  static {
+    REDIRECT_SIGNATURE_ALGORITHMS.put(
+        "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", "SHA256withRSA");
+    REDIRECT_SIGNATURE_ALGORITHMS.put(
+        "http://www.w3.org/2001/04/xmldsig-more#rsa-sha384", "SHA384withRSA");
+    REDIRECT_SIGNATURE_ALGORITHMS.put(
+        "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512", "SHA512withRSA");
+    REDIRECT_SIGNATURE_ALGORITHMS.put(
+        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256", "SHA256withECDSA");
+    REDIRECT_SIGNATURE_ALGORITHMS.put(
+        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384", "SHA384withECDSA");
+    REDIRECT_SIGNATURE_ALGORITHMS.put(
+        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512", "SHA512withECDSA");
+  }
+
+  /** The configured SAML client and the settings SamlSso enforces itself */
+  static final class Sso {
+    final SAML2Client client;
+    final X509Certificate idpCertificate;
+
+    /** want_messages_signed: logout messages must carry a valid IdP signature */
+    final boolean requireSignedLogout;
+
+    Sso(SAML2Client client, X509Certificate idpCertificate, boolean requireSignedLogout) {
+      this.client = client;
+      this.idpCertificate = idpCertificate;
+      this.requireSignedLogout = requireSignedLogout;
+    }
+  }
+
+  private static volatile Sso sso;
+
+  private static Sso get() {
+    Sso result = sso;
+    if (result == null) {
+      synchronized (SamlSso.class) {
+        result = sso;
+        if (result == null) {
+          result = build(loadProperties());
+          sso = result;
+        }
+      }
+    }
+    return result;
+  }
+
+  /** Replaces the configuration built from onelogin.saml.properties; for tests. */
+  static void set(Sso replacement) {
+    sso = replacement;
+  }
 
   /**
    * Returns the SAML client, building it from onelogin.saml.properties on first use.
@@ -113,22 +178,7 @@ public class SamlSso {
    * @return The initialised SAML client
    */
   public static SAML2Client getClient() {
-    SAML2Client result = client;
-    if (result == null) {
-      synchronized (SamlSso.class) {
-        result = client;
-        if (result == null) {
-          result = buildClient(loadProperties());
-          client = result;
-        }
-      }
-    }
-    return result;
-  }
-
-  /** Replaces the client built from onelogin.saml.properties; for tests. */
-  static void setClient(SAML2Client saml) {
-    client = saml;
+    return get().client;
   }
 
   /**
@@ -196,17 +246,27 @@ public class SamlSso {
 
   /** Outcome of a message received on the single logout service */
   public enum LogoutMessage {
-    /** The IdP asked to end this session; a LogoutResponse has been sent back to the IdP */
+    /**
+     * The IdP asked to end a login: the matching sessions were invalidated and a LogoutResponse has
+     * been sent back to the IdP
+     */
     IDP_LOGOUT_REQUEST,
     /** The IdP confirmed an SP-initiated logout */
     LOGOUT_RESPONSE,
-    /** The message was missing or failed validation */
+    /** The message was missing, unsigned when a signature is required, or failed validation */
     INVALID
   }
 
   /**
-   * Validates a LogoutRequest or LogoutResponse received on the single logout service. For an
-   * IdP-initiated LogoutRequest the LogoutResponse is written to the response.
+   * Validates a LogoutRequest or LogoutResponse received on the single logout service.
+   *
+   * <p>When want_messages_signed is set, the message must be signed by the configured IdP: either
+   * an XML signature (HTTP-POST binding) or a query-string signature (HTTP-Redirect binding).
+   *
+   * <p>For an IdP-initiated LogoutRequest, the sessions created by the login it names (NameID and
+   * SessionIndex) are invalidated, whichever browser delivered the request, and the LogoutResponse
+   * is written to the response. A LogoutResponse ends nothing itself: the local session was already
+   * ended when the SP-initiated logout started.
    *
    * @param request The SLS request
    * @param response The SLS response
@@ -214,7 +274,8 @@ public class SamlSso {
    */
   public static LogoutMessage processLogoutMessage(
       HttpServletRequest request, HttpServletResponse response) {
-    SAML2Client saml = getClient();
+    Sso config = get();
+    SAML2Client saml = config.client;
     CallContext ctx = callContext(request, response);
     try {
       Optional<Credentials> credentials =
@@ -222,18 +283,98 @@ public class SamlSso {
       if (credentials.isEmpty() || !(credentials.get() instanceof SAML2Credentials)) {
         return LogoutMessage.INVALID;
       }
-      Object message =
-          ((SAML2Credentials) credentials.get()).getContext().getMessageContext().getMessage();
-      if (message instanceof LogoutRequest) {
-        HttpAction action = saml.processLogout(ctx, credentials.get());
-        JEEHttpActionAdapter.INSTANCE.adapt(action, ctx.webContext());
-        return LogoutMessage.IDP_LOGOUT_REQUEST;
+      SAML2MessageContext messageContext = ((SAML2Credentials) credentials.get()).getContext();
+      // pac4j validates an XML signature when one is present, but never requires one and does not
+      // check HTTP-Redirect query-string signatures
+      boolean signed =
+          messageContext.getSAMLPeerEntityContext().isAuthenticated()
+              || hasValidRedirectSignature(request, config.idpCertificate);
+      if (config.requireSignedLogout && !signed) {
+        log.error("SAML logout message rejected: no valid IdP signature");
+        return LogoutMessage.INVALID;
       }
-      return LogoutMessage.LOGOUT_RESPONSE;
-    } catch (RuntimeException e) {
+
+      Object message = messageContext.getMessageContext().getMessage();
+      if (!(message instanceof LogoutRequest)) {
+        return LogoutMessage.LOGOUT_RESPONSE;
+      }
+      LogoutRequest logoutRequest = (LogoutRequest) message;
+      NameID nameId = logoutRequest.getNameID();
+      if (nameId == null && logoutRequest.getEncryptedID() != null) {
+        nameId = (NameID) saml.getDecrypter().decrypt(logoutRequest.getEncryptedID());
+      }
+      String sessionIndex = null;
+      for (SessionIndex index : logoutRequest.getSessionIndexes()) {
+        if (index != null && index.getValue() != null) {
+          sessionIndex = index.getValue();
+          break;
+        }
+      }
+      if (sessionIndex == null && !signed) {
+        // A NameID alone is guessable, so only a signed request may end all of a user's sessions
+        log.error("Unsigned SAML LogoutRequest without a SessionIndex; no sessions ended");
+      } else {
+        int ended =
+            SamlSessionRegistry.invalidate(nameId == null ? null : nameId.getValue(), sessionIndex);
+        log.debug("IdP-initiated SAML logout ended " + ended + " session(s)");
+      }
+      HttpAction action = saml.processLogout(ctx, credentials.get());
+      JEEHttpActionAdapter.INSTANCE.adapt(action, ctx.webContext());
+      return LogoutMessage.IDP_LOGOUT_REQUEST;
+    } catch (RuntimeException | DecryptionException e) {
       log.error("SAML logout message rejected: " + e.getMessage());
       log.debug("SAML logout message rejected", e);
       return LogoutMessage.INVALID;
+    }
+  }
+
+  /**
+   * Verifies an HTTP-Redirect binding signature (SAML Bindings 3.4.4.1): the signature covers
+   * SAMLRequest/SAMLResponse, RelayState and SigAlg exactly as they appear, URL-encoded, in the
+   * query string.
+   */
+  static boolean hasValidRedirectSignature(HttpServletRequest request, X509Certificate idpCert) {
+    String query = request.getQueryString();
+    if (query == null || idpCert == null) {
+      return false;
+    }
+    Map<String, String> raw = new HashMap<>();
+    for (String pair : query.split("&")) {
+      int eq = pair.indexOf('=');
+      if (eq > 0) {
+        raw.putIfAbsent(pair.substring(0, eq), pair.substring(eq + 1));
+      }
+    }
+    String messageParam =
+        raw.containsKey("SAMLRequest")
+            ? "SAMLRequest"
+            : raw.containsKey("SAMLResponse") ? "SAMLResponse" : null;
+    String sigAlg = raw.get("SigAlg");
+    String signature = raw.get("Signature");
+    if (messageParam == null || sigAlg == null || signature == null) {
+      return false;
+    }
+    String algorithm =
+        REDIRECT_SIGNATURE_ALGORITHMS.get(URLDecoder.decode(sigAlg, StandardCharsets.UTF_8));
+    if (algorithm == null) {
+      log.error("Unsupported SAML redirect signature algorithm: " + sigAlg);
+      return false;
+    }
+    StringBuilder signedContent = new StringBuilder();
+    signedContent.append(messageParam).append('=').append(raw.get(messageParam));
+    if (raw.containsKey("RelayState")) {
+      signedContent.append("&RelayState=").append(raw.get("RelayState"));
+    }
+    signedContent.append("&SigAlg=").append(sigAlg);
+    try {
+      Signature verifier = Signature.getInstance(algorithm);
+      verifier.initVerify(idpCert.getPublicKey());
+      verifier.update(signedContent.toString().getBytes(StandardCharsets.UTF_8));
+      return verifier.verify(
+          Base64.getDecoder().decode(URLDecoder.decode(signature, StandardCharsets.UTF_8)));
+    } catch (GeneralSecurityException | IllegalArgumentException e) {
+      log.debug("SAML redirect signature verification failed", e);
+      return false;
     }
   }
 
@@ -266,12 +407,12 @@ public class SamlSso {
   }
 
   /**
-   * Builds and initialises a SAML client from java-saml style properties.
+   * Builds and initialises the SAML client from java-saml style properties.
    *
    * @param props onelogin.saml.properties contents
-   * @return The initialised client
+   * @return The initialised client and the settings SamlSso enforces itself
    */
-  static SAML2Client buildClient(Properties props) {
+  static Sso build(Properties props) {
     if (!flag(props, STRICT, true)) {
       log.warn(STRICT + "=false is ignored: SAML messages are always validated strictly");
     }
@@ -286,6 +427,9 @@ public class SamlSso {
     config.setSpLogoutRequestBindingType(sloBinding);
     config.setSpLogoutResponseBindingType(sloBinding);
     config.setNameIdPolicyFormat(optional(props, SP_NAMEID_FORMAT));
+    // Send NameQualifier / SPNameQualifier back in LogoutRequests, so IdPs that issue qualified
+    // NameIDs can match the logout to the login
+    config.setUseNameQualifier(true);
 
     config.setAuthnRequestSigned(flag(props, AUTHN_REQUEST_SIGNED, false));
     config.setSpLogoutRequestSigned(flag(props, LOGOUT_REQUEST_SIGNED, false));
@@ -296,7 +440,13 @@ public class SamlSso {
     String authnContext = optional(props, REQUESTED_AUTHN_CONTEXT);
     if (authnContext != null) {
       config.setAuthnContextClassRefs(splitList(authnContext));
-      config.setComparisonType(optional(props, REQUESTED_AUTHN_CONTEXT_COMPARISON));
+      // pac4j drops RequestedAuthnContext entirely when no comparison is set
+      String comparison =
+          optional(
+              props,
+              REQUESTED_AUTHN_CONTEXT_COMPARISON,
+              optional(props, LEGACY_REQUESTED_AUTHN_CONTEXT_COMPARISON, "exact"));
+      config.setComparisonType(comparison);
     }
     String signatureAlgorithm = optional(props, SIGNATURE_ALGORITHM);
     if (signatureAlgorithm != null) {
@@ -314,7 +464,13 @@ public class SamlSso {
     saml.setCallbackUrlResolver(new NoParameterCallbackUrlResolver());
     saml.setCallbackUrl(required(props, SP_ACS_URL));
     saml.init();
-    return saml;
+    X509Certificate idpCertificate;
+    try {
+      idpCertificate = parseCertificate(required(props, IDP_CERT));
+    } catch (GeneralSecurityException | IllegalArgumentException e) {
+      throw new IllegalStateException("Cannot load " + IDP_CERT + ": " + e.getMessage(), e);
+    }
+    return new Sso(saml, idpCertificate, flag(props, WANT_MESSAGES_SIGNED, false));
   }
 
   /**
