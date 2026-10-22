@@ -90,8 +90,7 @@ public class SamlSsoTest {
     props.remove(SamlSso.IDP_CERT);
     props.setProperty(SamlSso.IDP_CERT_FINGERPRINT, "AB:CD");
 
-    IllegalStateException e =
-        assertThrows(IllegalStateException.class, () -> SamlSso.buildClient(props));
+    IllegalStateException e = assertThrows(IllegalStateException.class, () -> SamlSso.build(props));
 
     assertThat(e.getMessage(), containsString(SamlSso.IDP_CERT));
     assertThat(e.getMessage(), containsString("not supported"));
@@ -102,8 +101,7 @@ public class SamlSsoTest {
     Properties props = saml.properties();
     props.setProperty(SamlSso.SP_ACS_URL, " ");
 
-    IllegalStateException e =
-        assertThrows(IllegalStateException.class, () -> SamlSso.buildClient(props));
+    IllegalStateException e = assertThrows(IllegalStateException.class, () -> SamlSso.build(props));
 
     assertThat(e.getMessage(), containsString(SamlSso.SP_ACS_URL));
   }
@@ -219,6 +217,61 @@ public class SamlSsoTest {
     assertThat(logoutRequest, containsString("LogoutRequest"));
     assertThat(logoutRequest, containsString(">user-123<"));
     assertThat(logoutRequest, containsString("_session-user-123"));
+  }
+
+  @Test
+  public void logout_KeepsNameIdQualifiers() throws Exception {
+    String samlResponse =
+        saml.signedResponse(
+            "user-123",
+            SamlTestSupport.IDP_ENTITY_ID,
+            SamlTestSupport.SP_ENTITY_ID,
+            studentAttributes(),
+            saml.idpKeys,
+            saml.idpCert);
+    SAML2Profile profile =
+        SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse()).get();
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    SamlSso.logout(new MockHttpServletRequest("GET", "/logout"), response, profile);
+
+    String logoutRequest = SamlTestSupport.decodeRedirectRequest(response.getRedirectedUrl());
+    assertThat(
+        logoutRequest, containsString("NameQualifier=\"" + SamlTestSupport.IDP_ENTITY_ID + "\""));
+    assertThat(
+        logoutRequest, containsString("SPNameQualifier=\"" + SamlTestSupport.SP_ENTITY_ID + "\""));
+  }
+
+  @Test
+  public void login_RequestedAuthnContextWithoutComparison_DefaultsToExact() throws Exception {
+    Properties props = saml.properties();
+    props.setProperty(
+        SamlSso.REQUESTED_AUTHN_CONTEXT,
+        "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+    SamlTestSupport.install(props);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    SamlSso.login(new MockHttpServletRequest("GET", "/saml/dologin"), response);
+
+    String authnRequest = SamlTestSupport.decodeRedirectRequest(response.getRedirectedUrl());
+    assertThat(authnRequest, containsString("Comparison=\"exact\""));
+    assertThat(authnRequest, containsString("PasswordProtectedTransport"));
+  }
+
+  @Test
+  public void login_LegacyComparisonKey_IsRead() throws Exception {
+    Properties props = saml.properties();
+    props.setProperty(
+        SamlSso.REQUESTED_AUTHN_CONTEXT,
+        "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+    props.setProperty(SamlSso.LEGACY_REQUESTED_AUTHN_CONTEXT_COMPARISON, "minimum");
+    SamlTestSupport.install(props);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    SamlSso.login(new MockHttpServletRequest("GET", "/saml/dologin"), response);
+
+    String authnRequest = SamlTestSupport.decodeRedirectRequest(response.getRedirectedUrl());
+    assertThat(authnRequest, containsString("Comparison=\"minimum\""));
   }
 
   @Test

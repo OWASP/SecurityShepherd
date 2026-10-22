@@ -3,6 +3,7 @@ package utils;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 import javax.xml.namespace.QName;
 import net.shibboleth.shared.xml.SerializeSupport;
@@ -27,6 +29,7 @@ import org.opensaml.core.xml.XMLObject;
 import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
 import org.opensaml.core.xml.schema.XSString;
 import org.opensaml.saml.common.SAMLVersion;
+import org.opensaml.saml.common.SignableSAMLObject;
 import org.opensaml.saml.saml2.core.Assertion;
 import org.opensaml.saml.saml2.core.Attribute;
 import org.opensaml.saml.saml2.core.AttributeStatement;
@@ -38,9 +41,12 @@ import org.opensaml.saml.saml2.core.AuthnContextClassRef;
 import org.opensaml.saml.saml2.core.AuthnStatement;
 import org.opensaml.saml.saml2.core.Conditions;
 import org.opensaml.saml.saml2.core.Issuer;
+import org.opensaml.saml.saml2.core.LogoutRequest;
+import org.opensaml.saml.saml2.core.LogoutResponse;
 import org.opensaml.saml.saml2.core.NameID;
 import org.opensaml.saml.saml2.core.NameIDType;
 import org.opensaml.saml.saml2.core.Response;
+import org.opensaml.saml.saml2.core.SessionIndex;
 import org.opensaml.saml.saml2.core.Status;
 import org.opensaml.saml.saml2.core.StatusCode;
 import org.opensaml.saml.saml2.core.Subject;
@@ -51,6 +57,7 @@ import org.opensaml.xmlsec.signature.Signature;
 import org.opensaml.xmlsec.signature.support.SignatureConstants;
 import org.opensaml.xmlsec.signature.support.Signer;
 import org.pac4j.saml.client.SAML2Client;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
  * Test fixtures for SAML SSO: generated SP/IdP key pairs, onelogin.saml.properties contents for
@@ -107,14 +114,19 @@ public class SamlTestSupport {
 
   /** Builds a client from {@link #properties()} and makes it the one SamlSso uses */
   public SAML2Client installClient() throws Exception {
-    SAML2Client client = SamlSso.buildClient(properties());
-    SamlSso.setClient(client);
-    return client;
+    return install(properties());
+  }
+
+  /** Builds a client from the given properties and makes it the one SamlSso uses */
+  public static SAML2Client install(Properties props) {
+    SamlSso.Sso sso = SamlSso.build(props);
+    SamlSso.set(sso);
+    return sso.client;
   }
 
   /** Clears the client installed by {@link #installClient()} */
   public static void uninstallClient() {
-    SamlSso.setClient(null);
+    SamlSso.set(null);
   }
 
   /**
@@ -123,6 +135,18 @@ public class SamlTestSupport {
    */
   public String signedResponse(
       String nameId,
+      Map<String, List<String>> attributes,
+      KeyPair signingKeys,
+      X509Certificate signingCert)
+      throws Exception {
+    return signedResponse(nameId, null, null, attributes, signingKeys, signingCert);
+  }
+
+  /** As {@link #signedResponse}, with NameQualifier / SPNameQualifier on the NameID */
+  public String signedResponse(
+      String nameId,
+      String nameQualifier,
+      String spNameQualifier,
       Map<String, List<String>> attributes,
       KeyPair signingKeys,
       X509Certificate signingCert)
@@ -151,6 +175,8 @@ public class SamlTestSupport {
     NameID name = build(NameID.DEFAULT_ELEMENT_NAME);
     name.setValue(nameId);
     name.setFormat(NameIDType.PERSISTENT);
+    name.setNameQualifier(nameQualifier);
+    name.setSPNameQualifier(spNameQualifier);
     subject.setNameID(name);
     SubjectConfirmation confirmation = build(SubjectConfirmation.DEFAULT_ELEMENT_NAME);
     confirmation.setMethod(SubjectConfirmation.METHOD_BEARER);
@@ -212,6 +238,128 @@ public class SamlTestSupport {
 
     String xml = SerializeSupport.nodeToString(response.getDOM());
     return Base64.getEncoder().encodeToString(xml.getBytes(StandardCharsets.UTF_8));
+  }
+
+  /** An IdP LogoutResponse to an SP-initiated logout */
+  public LogoutResponse logoutResponse() {
+    LogoutResponse response = build(LogoutResponse.DEFAULT_ELEMENT_NAME);
+    response.setID("_" + UUID.randomUUID());
+    response.setIssueInstant(Instant.now());
+    response.setVersion(SAMLVersion.VERSION_20);
+    response.setDestination(SLS_URL);
+    response.setIssuer(issuer());
+    Status status = build(Status.DEFAULT_ELEMENT_NAME);
+    StatusCode statusCode = build(StatusCode.DEFAULT_ELEMENT_NAME);
+    statusCode.setValue(StatusCode.SUCCESS);
+    status.setStatusCode(statusCode);
+    response.setStatus(status);
+    return response;
+  }
+
+  /** An IdP-initiated LogoutRequest for a login */
+  public LogoutRequest logoutRequest(String nameId, String sessionIndex) {
+    LogoutRequest request = build(LogoutRequest.DEFAULT_ELEMENT_NAME);
+    request.setID("_" + UUID.randomUUID());
+    request.setIssueInstant(Instant.now());
+    request.setVersion(SAMLVersion.VERSION_20);
+    request.setDestination(SLS_URL);
+    request.setIssuer(issuer());
+    NameID name = build(NameID.DEFAULT_ELEMENT_NAME);
+    name.setValue(nameId);
+    name.setFormat(NameIDType.PERSISTENT);
+    request.setNameID(name);
+    if (sessionIndex != null) {
+      SessionIndex index = build(SessionIndex.DEFAULT_ELEMENT_NAME);
+      index.setValue(sessionIndex);
+      request.getSessionIndexes().add(index);
+    }
+    return request;
+  }
+
+  /** Serialises a SAML message, with an enveloped XML signature when signing keys are given */
+  public static String toXml(
+      SignableSAMLObject message, KeyPair signingKeys, X509Certificate signingCert)
+      throws Exception {
+    Signature signature = null;
+    if (signingKeys != null) {
+      signature = build(Signature.DEFAULT_ELEMENT_NAME);
+      signature.setSigningCredential(
+          new BasicX509Credential(signingCert, signingKeys.getPrivate()));
+      signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256);
+      signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
+      message.setSignature(signature);
+    }
+    XMLObjectProviderRegistrySupport.getMarshallerFactory()
+        .getMarshaller(message)
+        .marshall(message);
+    if (signature != null) {
+      Signer.signObject(signature);
+    }
+    return SerializeSupport.nodeToString(message.getDOM());
+  }
+
+  /**
+   * Builds an HTTP-Redirect binding query string carrying a SAML message, with a query-string
+   * signature when signing keys are given.
+   */
+  public static String redirectQuery(String param, String xml, KeyPair signingKeys)
+      throws Exception {
+    Deflater deflater = new Deflater(Deflater.DEFLATED, true);
+    deflater.setInput(xml.getBytes(StandardCharsets.UTF_8));
+    deflater.finish();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    byte[] buffer = new byte[4096];
+    while (!deflater.finished()) {
+      out.write(buffer, 0, deflater.deflate(buffer));
+    }
+    String query =
+        param
+            + "="
+            + URLEncoder.encode(
+                Base64.getEncoder().encodeToString(out.toByteArray()), StandardCharsets.UTF_8);
+    if (signingKeys == null) {
+      return query;
+    }
+    query +=
+        "&SigAlg="
+            + URLEncoder.encode(
+                SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256, StandardCharsets.UTF_8);
+    java.security.Signature signer = java.security.Signature.getInstance("SHA256withRSA");
+    signer.initSign(signingKeys.getPrivate());
+    signer.update(query.getBytes(StandardCharsets.UTF_8));
+    return query
+        + "&Signature="
+        + URLEncoder.encode(
+            Base64.getEncoder().encodeToString(signer.sign()), StandardCharsets.UTF_8);
+  }
+
+  /** A request to the single logout service carrying the given HTTP-Redirect query string */
+  public static MockHttpServletRequest slsGet(String query) {
+    MockHttpServletRequest request = slsRequest("GET");
+    request.setQueryString(query);
+    for (String pair : query.split("&")) {
+      int eq = pair.indexOf('=');
+      request.addParameter(
+          pair.substring(0, eq), URLDecoder.decode(pair.substring(eq + 1), StandardCharsets.UTF_8));
+    }
+    return request;
+  }
+
+  /** A request to the single logout service carrying an HTTP-POST binding message */
+  public static MockHttpServletRequest slsPost(String param, String xml) {
+    MockHttpServletRequest request = slsRequest("POST");
+    request.addParameter(
+        param, Base64.getEncoder().encodeToString(xml.getBytes(StandardCharsets.UTF_8)));
+    return request;
+  }
+
+  private static MockHttpServletRequest slsRequest(String method) {
+    MockHttpServletRequest request = new MockHttpServletRequest(method, "/saml/sls");
+    request.setScheme("https");
+    request.setSecure(true);
+    request.setServerName("shepherd.test");
+    request.setServerPort(443);
+    return request;
   }
 
   /** Decodes the SAMLRequest parameter of an HTTP-Redirect binding URL */

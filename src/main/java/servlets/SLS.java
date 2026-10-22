@@ -1,11 +1,9 @@
 package servlets;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,12 +34,14 @@ public class SLS extends HttpServlet {
   private static final Logger log = LogManager.getLogger(SLS.class);
 
   /** IdP logout messages arrive here over the HTTP-Redirect binding */
+  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     handleRequest(request, response);
   }
 
   /** IdP logout messages arrive here over the HTTP-POST binding */
+  @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     handleRequest(request, response);
@@ -49,9 +49,13 @@ public class SLS extends HttpServlet {
 
   /**
    * Single logout service. Handles the IdP's LogoutResponse to an SP-initiated logout (see Logout),
-   * and IdP-initiated LogoutRequests, answering them with a LogoutResponse. Either way the local
-   * session is ended. The SAML message's signature and issuer are validated, so no CSRF token is
+   * and IdP-initiated LogoutRequests, answering them with a LogoutResponse. The SAML message is
+   * validated (including its IdP signature when want_messages_signed is set), so no CSRF token is
    * needed: the request originates from the IdP, not from a Security Shepherd page.
+   *
+   * <p>Sessions are ended by SamlSso for the login an IdP LogoutRequest names, not by whichever
+   * session the delivering browser happens to have. A LogoutResponse ends nothing: Logout already
+   * ended the local session before sending the user to the IdP.
    */
   public void handleRequest(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -64,17 +68,6 @@ public class SLS extends HttpServlet {
 
     SamlSso.LogoutMessage message = SamlSso.processLogoutMessage(request, response);
     log.debug("SAML logout message: " + message);
-
-    if (message != SamlSso.LogoutMessage.INVALID) {
-      HttpSession ses = request.getSession(false);
-      if (ses != null) {
-        ses.invalidate();
-      }
-      Cookie emptyCookie = new Cookie("token", "");
-      emptyCookie.setPath("/");
-      response.addCookie(emptyCookie);
-      log.debug("User Logged Out");
-    }
 
     // For an IdP LogoutRequest the LogoutResponse back to the IdP has already been written
     if (message != SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST) {

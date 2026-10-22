@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pac4j.saml.profile.SAML2Profile;
 import utils.Hash;
+import utils.SamlSessionRegistry;
 import utils.SamlSso;
 import utils.ShepherdLogManager;
 import utils.SsoUserMapper;
@@ -100,6 +101,8 @@ public class ACS extends HttpServlet {
         ses.setAttribute("lang", language);
         // Kept for single logout, which needs the NameID and session index
         ses.setAttribute(SamlSso.PROFILE_SESSION_ATTRIBUTE, profile.get());
+        // Lets an IdP-initiated logout end this session
+        SamlSessionRegistry.register(ses, profile.get().getId(), profile.get().getSessionIndex());
         log.debug("userClassId = " + user[4]);
 
         ses.setAttribute("userClass", user[4]);
