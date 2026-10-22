@@ -156,7 +156,15 @@ public class AddPlayer extends HttpServlet {
               log.error("Invalid Addresses Detected");
               errorMessage += "Invalid Addresses Detected";
             } else if (!userValidate) {
-              log.error("JavaScript validation bypassed");
+              log.warn(
+                  "Server-side user validation failed for new player (username length="
+                      + userName.length()
+                      + ", password length="
+                      + passWord.length()
+                      + ", address length="
+                      + userAddress.length()
+                      + "); expected: username 3-32 chars, password 8-512 chars, address <=128"
+                      + " chars");
               errorMessage += "Invalid Request. Please try again";
             } else {
               log.debug("Class Not Found");
