@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.KeyPair;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.Properties;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -232,6 +233,59 @@ public class SamlLogoutTest {
 
     process(request);
 
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void idpLogoutRequest_EndsEverySessionIndexItNames() throws Exception {
+    MockHttpSession secondLogin = new MockHttpSession();
+    SamlSessionRegistry.register(secondLogin, "user-123", "_session-3");
+    String xml =
+        SamlTestSupport.toXml(
+            saml.logoutRequest("user-123", Arrays.asList("_session-1", "_session-3")), null, null);
+    String query = SamlTestSupport.redirectQuery("SAMLRequest", xml, saml.idpKeys);
+
+    assertEquals(SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST, process(SamlTestSupport.slsGet(query)));
+    assertTrue(loggedIn.isInvalid());
+    assertTrue(secondLogin.isInvalid());
+    assertFalse(otherUser.isInvalid());
+  }
+
+  /**
+   * A captured signed query with an unsigned message prepended under a percent-encoded name: the
+   * container decodes the alias to SAMLRequest and serves it first, so it must not borrow the
+   * signature of the real SAMLRequest.
+   */
+  @Test
+  public void unsignedMessageUnderEncodedAlias_DoesNotBorrowSignature() throws Exception {
+    String signed = logoutRequestQuery("user-456", "_session-2", saml.idpKeys);
+    String unsigned = logoutRequestQuery("user-123", null, null);
+    String smuggled = "%53AMLRequest" + unsigned.substring("SAMLRequest".length()) + "&" + signed;
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(smuggled)));
+    assertFalse(loggedIn.isInvalid());
+    assertFalse(otherUser.isInvalid());
+  }
+
+  @Test
+  public void repeatedSignedParameter_IsRejected() throws Exception {
+    String signed = logoutRequestQuery("user-456", "_session-2", saml.idpKeys);
+    String unsigned = logoutRequestQuery("user-123", null, null);
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(unsigned + "&" + signed)));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void redirectSignatureOnPostRequest_IsNotAccepted() throws Exception {
+    String signed = logoutRequestQuery("user-456", "_session-2", saml.idpKeys);
+    String unsignedXml =
+        SamlTestSupport.toXml(saml.logoutRequest("user-123", (String) null), null, null);
+    MockHttpServletRequest request = SamlTestSupport.slsPost("SAMLRequest", unsignedXml);
+    request.setQueryString(signed);
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(request));
     assertFalse(loggedIn.isInvalid());
   }
 
