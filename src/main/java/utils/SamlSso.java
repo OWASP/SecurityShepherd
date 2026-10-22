@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -135,6 +136,9 @@ public class SamlSso {
     REDIRECT_SIGNATURE_ALGORITHMS.put(
         "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512", "SHA512withECDSA");
   }
+
+  private static final Set<String> REDIRECT_SIGNED_PARAMETERS =
+      Set.of("SAMLRequest", "SAMLResponse", "RelayState", "SigAlg", "Signature");
 
   /** The configured SAML client and the settings SamlSso enforces itself */
   static final class Sso {
@@ -303,21 +307,25 @@ public class SamlSso {
       if (nameId == null && logoutRequest.getEncryptedID() != null) {
         nameId = (NameID) saml.getDecrypter().decrypt(logoutRequest.getEncryptedID());
       }
-      String sessionIndex = null;
+      String nameIdValue = nameId == null ? null : nameId.getValue();
+      List<String> sessionIndexes = new ArrayList<>();
       for (SessionIndex index : logoutRequest.getSessionIndexes()) {
         if (index != null && index.getValue() != null) {
-          sessionIndex = index.getValue();
-          break;
+          sessionIndexes.add(index.getValue());
         }
       }
-      if (sessionIndex == null && !signed) {
+      int ended = 0;
+      if (!sessionIndexes.isEmpty()) {
+        for (String sessionIndex : sessionIndexes) {
+          ended += SamlSessionRegistry.invalidate(nameIdValue, sessionIndex);
+        }
+      } else if (signed) {
+        ended = SamlSessionRegistry.invalidate(nameIdValue, null);
+      } else {
         // A NameID alone is guessable, so only a signed request may end all of a user's sessions
         log.error("Unsigned SAML LogoutRequest without a SessionIndex; no sessions ended");
-      } else {
-        int ended =
-            SamlSessionRegistry.invalidate(nameId == null ? null : nameId.getValue(), sessionIndex);
-        log.debug("IdP-initiated SAML logout ended " + ended + " session(s)");
       }
+      log.debug("IdP-initiated SAML logout ended " + ended + " session(s)");
       HttpAction action = saml.processLogout(ctx, credentials.get());
       JEEHttpActionAdapter.INSTANCE.adapt(action, ctx.webContext());
       return LogoutMessage.IDP_LOGOUT_REQUEST;
@@ -332,26 +340,59 @@ public class SamlSso {
    * Verifies an HTTP-Redirect binding signature (SAML Bindings 3.4.4.1): the signature covers
    * SAMLRequest/SAMLResponse, RelayState and SigAlg exactly as they appear, URL-encoded, in the
    * query string.
+   *
+   * <p>The signed values must be the ones the servlet container (and so pac4j) reads: only a GET is
+   * accepted, each signed parameter must appear exactly once under its literal name (no
+   * percent-encoded aliases, no duplicates, nothing extra in a request body), and its decoded value
+   * must equal the container's.
    */
   static boolean hasValidRedirectSignature(HttpServletRequest request, X509Certificate idpCert) {
     String query = request.getQueryString();
-    if (query == null || idpCert == null) {
+    if (!"GET".equalsIgnoreCase(request.getMethod()) || query == null || idpCert == null) {
       return false;
     }
     Map<String, String> raw = new HashMap<>();
     for (String pair : query.split("&")) {
+      if (pair.isEmpty()) {
+        continue;
+      }
       int eq = pair.indexOf('=');
-      if (eq > 0) {
-        raw.putIfAbsent(pair.substring(0, eq), pair.substring(eq + 1));
+      String rawName = eq < 0 ? pair : pair.substring(0, eq);
+      String name;
+      try {
+        name = URLDecoder.decode(rawName, StandardCharsets.UTF_8);
+      } catch (IllegalArgumentException e) {
+        return false;
+      }
+      if (!REDIRECT_SIGNED_PARAMETERS.contains(name)) {
+        continue;
+      }
+      if (!name.equals(rawName)
+          || raw.putIfAbsent(name, eq < 0 ? "" : pair.substring(eq + 1)) != null) {
+        log.error("SAML redirect query has an encoded or repeated " + name + " parameter");
+        return false;
       }
     }
-    String messageParam =
-        raw.containsKey("SAMLRequest")
-            ? "SAMLRequest"
-            : raw.containsKey("SAMLResponse") ? "SAMLResponse" : null;
+    if (raw.containsKey("SAMLRequest") == raw.containsKey("SAMLResponse")) {
+      return false;
+    }
+    for (Map.Entry<String, String> param : raw.entrySet()) {
+      String[] values = request.getParameterValues(param.getKey());
+      String decoded;
+      try {
+        decoded = URLDecoder.decode(param.getValue(), StandardCharsets.UTF_8);
+      } catch (IllegalArgumentException e) {
+        return false;
+      }
+      if (values == null || values.length != 1 || !decoded.equals(values[0])) {
+        log.error("SAML redirect parameter " + param.getKey() + " does not match the signed query");
+        return false;
+      }
+    }
+    String messageParam = raw.containsKey("SAMLRequest") ? "SAMLRequest" : "SAMLResponse";
     String sigAlg = raw.get("SigAlg");
     String signature = raw.get("Signature");
-    if (messageParam == null || sigAlg == null || signature == null) {
+    if (sigAlg == null || signature == null) {
       return false;
     }
     String algorithm =
