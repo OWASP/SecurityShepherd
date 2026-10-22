@@ -51,8 +51,10 @@ The `conf` volume also holds the TLS keystore and the `database.properties` / `m
 ```console
 docker-compose down
 # The volume is named <project>_conf; check with: docker volume ls
-docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine \
-  tar czf /backup/shepherd-conf-backup.tgz -C /conf .
+# The archive holds the TLS private key and database password: keep it readable by you only
+docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine sh -c \
+  'umask 077 && touch /backup/shepherd-conf-backup.tgz && chmod 600 /backup/shepherd-conf-backup.tgz \
+   && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'
 docker volume rm securityshepherd_conf
 mvn -Pdocker clean install -DskipTests
 docker-compose up --build
@@ -70,6 +72,8 @@ docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine \
   tar xzf /backup/shepherd-conf-backup.tgz -C /conf ./<your keystore file>
 docker-compose restart web
 ```
+
+Delete `shepherd-conf-backup.tgz` (or move it somewhere safe) once the upgrade is working. On Linux hosts it is owned by root.
 
 If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, ports, ciphers and so on), re-apply those edits to the new Tomcat 11 files, using the backup as a reference. Don't copy the old files back.
 
