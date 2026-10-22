@@ -68,7 +68,8 @@ public class SamlSessionRegistry {
    * Records that a session belongs to a SAML login.
    *
    * @param session The post-login session
-   * @param nameId The NameID from the assertion
+   * @param nameId The complete NameID identity from the assertion (see
+   *     SamlSso.registerLoginSession)
    * @param sessionIndex The SessionIndex from the assertion, if any
    */
   public static void register(HttpSession session, String nameId, String sessionIndex) {
@@ -80,7 +81,7 @@ public class SamlSessionRegistry {
   /**
    * Invalidates the sessions belonging to a SAML login.
    *
-   * @param nameId The NameID named in the logout request
+   * @param nameId The complete NameID identity named in the logout request
    * @param sessionIndex The SessionIndex named in the logout request, or null to end every session
    *     for the NameID
    * @return How many sessions were invalidated

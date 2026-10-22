@@ -43,8 +43,9 @@ onelogin.saml2.sp.single_logout_service.binding = urn:oasis:names:tc:SAML:2.0:bi
 # Take a look on lib/Saml2/Constants.php to see the NameIdFormat supported
 onelogin.saml2.sp.nameidformat = urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
 
-# Usually x509cert and privateKey of the SP are provided by files placed at
-# the certs folder. But we can also provide them with the following parameters
+# The SP's certificate and private key. Both may be left empty if the SP signs
+# nothing (authnrequest_signed, logoutrequest_signed and sign_metadata all false):
+# a temporary in-memory key is then used, and encrypted assertions can't be used.
 
 onelogin.saml2.sp.x509cert = 
 

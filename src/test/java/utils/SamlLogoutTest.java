@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opensaml.saml.saml2.core.LogoutRequest;
+import org.opensaml.saml.saml2.core.NameIDType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
@@ -44,9 +45,9 @@ public class SamlLogoutTest {
   public void setUp() throws Exception {
     SamlTestSupport.install(signedLogoutProperties(true));
     loggedIn = new MockHttpSession();
-    SamlSessionRegistry.register(loggedIn, "user-123", "_session-1");
+    register(loggedIn, "user-123", "_session-1");
     otherUser = new MockHttpSession();
-    SamlSessionRegistry.register(otherUser, "user-456", "_session-2");
+    register(otherUser, "user-456", "_session-2");
   }
 
   @AfterEach
@@ -57,6 +58,12 @@ public class SamlLogoutTest {
       }
     }
     SamlTestSupport.uninstallClient();
+  }
+
+  /** Registers a session for a persistent NameID with default qualifiers, as ACS would */
+  private static void register(MockHttpSession session, String nameId, String sessionIndex) {
+    SamlSessionRegistry.register(
+        session, SamlSso.nameIdKey(nameId, NameIDType.PERSISTENT, null, null), sessionIndex);
   }
 
   private static Properties signedLogoutProperties(boolean wantMessagesSigned) throws Exception {
@@ -242,7 +249,7 @@ public class SamlLogoutTest {
   @Test
   public void idpLogoutRequest_EndsEverySessionIndexItNames() throws Exception {
     MockHttpSession secondLogin = new MockHttpSession();
-    SamlSessionRegistry.register(secondLogin, "user-123", "_session-3");
+    register(secondLogin, "user-123", "_session-3");
     String xml =
         SamlTestSupport.toXml(
             saml.logoutRequest("user-123", Arrays.asList("_session-1", "_session-3")), null, null);
@@ -354,7 +361,7 @@ public class SamlLogoutTest {
     assertTrue(loggedIn.isInvalid());
     // The user logs in again
     MockHttpSession newLogin = new MockHttpSession();
-    SamlSessionRegistry.register(newLogin, "user-123", "_session-new");
+    register(newLogin, "user-123", "_session-new");
 
     assertEquals(SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(query)));
     assertFalse(newLogin.isInvalid());
@@ -379,6 +386,42 @@ public class SamlLogoutTest {
             "SHA256withECDSAinP1363Format");
 
     assertEquals(SamlSso.LogoutMessage.LOGOUT_RESPONSE, process(SamlTestSupport.slsGet(query)));
+  }
+
+  @Test
+  public void nameIdOnlyLogout_DoesNotEndSameValueWithDifferentFormatOrQualifier()
+      throws Exception {
+    MockHttpSession emailFormat = new MockHttpSession();
+    SamlSessionRegistry.register(
+        emailFormat, SamlSso.nameIdKey("user-123", NameIDType.EMAIL, null, null), "_e");
+    MockHttpSession otherIdp = new MockHttpSession();
+    SamlSessionRegistry.register(
+        otherIdp,
+        SamlSso.nameIdKey("user-123", NameIDType.PERSISTENT, "https://other-idp.test", null),
+        "_o");
+
+    assertEquals(
+        SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST,
+        process(
+            SamlTestSupport.slsGet(signedRedirect(saml.logoutRequest("user-123", (String) null)))));
+
+    assertTrue(loggedIn.isInvalid());
+    assertFalse(emailFormat.isInvalid());
+    assertFalse(otherIdp.isInvalid());
+    emailFormat.invalidate();
+    otherIdp.invalidate();
+  }
+
+  @Test
+  public void explicitDefaultQualifiers_MatchOmittedOnes() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.getNameID().setNameQualifier(SamlTestSupport.IDP_ENTITY_ID);
+    request.getNameID().setSPNameQualifier(SamlTestSupport.SP_ENTITY_ID);
+
+    assertEquals(
+        SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST,
+        process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertTrue(loggedIn.isInvalid());
   }
 
   @Test
