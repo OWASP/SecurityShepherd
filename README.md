@@ -43,6 +43,19 @@ To login use the following credentials (you will be asked to update after login)
 
 Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
 
+#### Upgrading an existing Docker environment
+Security Shepherd now runs on Tomcat 11. Tomcat's `conf` directory lives in the `conf` Docker volume, and Docker only copies the image's files into a volume when the volume is first created. An existing environment would therefore start Tomcat 11 with its old Tomcat 9/10.1 `server.xml` and `web.xml`. Remove that volume before bringing up the new version. Database data is in the separate `data` and `mongodata` volumes, so it is kept.
+
+```console
+docker-compose down
+# The volume is named <project>_conf; check with: docker volume ls
+docker volume rm securityshepherd_conf
+mvn -Pdocker clean install -DskipTests
+docker-compose up --build
+```
+
+If you changed the database connection through the setup page, enter it again afterwards. Choose not to overwrite the database.
+
 #### Full Guide
 [Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
 

@@ -90,6 +90,14 @@ TEST_MYSQL_PASSWORD=CowSaysMoo mvn test -B
 
 Do not commit `.env` changes that break CI.
 
+### Upgrading a local Docker environment to Tomcat 11
+
+The Tomcat container mounts a named `conf` volume over `/usr/local/tomcat/conf`. A volume created by an older Tomcat 9/10.1 image keeps its old `server.xml` and `web.xml`, and Tomcat 11 will not see the new image's config. Run `docker compose down && docker volume rm securityshepherd_conf` before `docker compose up --build`. Data volumes are unaffected.
+
+### Integration tests fail building the Mongo image (`chown ... Operation not permitted`)
+
+The `it-test` profile (`-DmongoDocker`) tags the image it builds as `mongo:${MONGODB_VERSION}`. That overwrites the official image's local tag, so the next build uses the previous custom image (which runs as `mongodb`) as its base. Restore the official image with `docker rmi mongo:4.1.13 && docker pull mongo:4.1.13`. CI starts from a clean Docker and is unaffected.
+
 ### First-time app setup
 
 After `docker compose up`, the app redirects to `https://localhost/setup.jsp` for initial database configuration. **Ask the user before performing setup** — they may prefer to configure it themselves via the browser. If they ask you to do it:
