@@ -71,6 +71,8 @@ docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine \
 docker-compose restart web
 ```
 
+If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, ports, ciphers and so on), re-apply those edits to the new Tomcat 11 files, using the backup as a reference. Don't copy the old files back.
+
 #### Full Guide
 [Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
 

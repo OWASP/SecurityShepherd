@@ -94,7 +94,7 @@ Do not commit `.env` changes that break CI.
 
 The Tomcat container mounts a named `conf` volume over `/usr/local/tomcat/conf`. A volume created by an older Tomcat 9/10.1 image keeps its old `server.xml` and `web.xml`, and Tomcat 11 will not see the new image's config, so the volume has to be recreated. Data volumes are unaffected.
 
-The volume also holds the TLS keystore and `database.properties` / `mongo.properties`. Back it up before removing it (`docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine tar czf /backup/shepherd-conf-backup.tgz -C /conf .`), then `docker compose down && docker volume rm securityshepherd_conf` and `docker compose up --build`. Restore only customised keystore or `.properties` files from the backup, never the old `server.xml` / `web.xml`. The full steps are in the README.
+The volume also holds the TLS keystore and `database.properties` / `mongo.properties`. Back it up before removing it (`docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine tar czf /backup/shepherd-conf-backup.tgz -C /conf .`), then `docker compose down && docker volume rm securityshepherd_conf` and `docker compose up --build`. Restore only customised keystore or `.properties` files from the backup. Never restore the old `server.xml` / `web.xml`: re-apply any hand edits to the new Tomcat 11 files instead. The full steps are in the README.
 
 ### Integration tests fail building the Mongo image (`chown ... Operation not permitted`)
 
