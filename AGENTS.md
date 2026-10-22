@@ -34,7 +34,10 @@ The web app runs on **Jakarta EE 11**: Servlet 6.1 on **Tomcat 11** (`TOMCAT_DOC
 
 - Use `jakarta.servlet.*`, `jakarta.mail.*`, etc. Never add `javax.servlet` or other Java EE `javax.*` dependencies; they will not run on Tomcat 11. JDK packages that keep the `javax` name (`javax.crypto`, `javax.xml.parsers`, `javax.sql`) are fine.
 - JSTL taglibs use the `jakarta.tags.*` URIs (declared once in `src/main/webapp/translation.jsp`).
-- Spring 7 is used **only in tests**, for `spring-test`'s `MockHttpServletRequest` / `MockHttpServletResponse` / `MockServletConfig`. Its version is set once by the `spring.version` property, which also drives the `spring-framework-bom` import that pins the Spring modules pac4j pulls in.
+- Spring 7 is used in two places:
+  - **Runtime:** pac4j-saml pulls in Spring core, beans, JDBC, TX and ORM at compile scope, and `utils/SamlSso.java` uses spring-core's `ByteArrayResource`. Don't remove or test-scope these, or SSO breaks in the WAR.
+  - **Tests:** `spring-test`'s `MockHttpServletRequest` / `MockHttpServletResponse` / `MockServletConfig`. `spring-web` and `spring-context` are test-scoped and only support those mocks. Never declare `spring-core` test-scoped: a test-scoped direct declaration overrides pac4j's compile-scope copy and drops it from the WAR.
+  - The version is set once by the `spring.version` property, which also drives the `spring-framework-bom` import that pins every Spring module, direct or transitive.
 
 ## Build and test
 
