@@ -1,16 +1,13 @@
 package servlets;
 
-import com.onelogin.saml2.Auth;
-import com.onelogin.saml2.settings.Saml2Settings;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utils.SamlSso;
 import utils.ShepherdLogManager;
 
 /**
@@ -48,26 +45,9 @@ public class SSOMetadata extends HttpServlet {
     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 
     try {
-      Auth auth = new Auth();
-
-      Saml2Settings settings = auth.getSettings();
-      settings.setSPValidationOnly(true);
-      String metadata = settings.getSPMetadata();
-      List<String> errors = Saml2Settings.validateMetadata(metadata);
-
-      PrintWriter out = response.getWriter();
-
-      if (errors.isEmpty()) {
-        response.setContentType("application/xml; charset=UTF-8");
-
-        out.println(metadata);
-      } else {
-        response.setContentType("text/html; charset=UTF-8");
-
-        for (String error : errors) {
-          out.println("<p>" + error + "</p>");
-        }
-      }
+      String metadata = SamlSso.getServiceProviderMetadata();
+      response.setContentType("application/xml; charset=UTF-8");
+      response.getWriter().println(metadata);
     } catch (Exception e) {
       log.error("Caught exception when initializing SSO: " + e.toString());
       throw new RuntimeException(e);

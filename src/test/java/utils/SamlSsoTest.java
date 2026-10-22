@@ -1,0 +1,242 @@
+package utils;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.pac4j.saml.profile.SAML2Profile;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+public class SamlSsoTest {
+
+  private static SamlTestSupport saml;
+
+  @BeforeAll
+  public static void generateKeys() throws Exception {
+    saml = new SamlTestSupport();
+  }
+
+  @BeforeEach
+  public void installClient() throws Exception {
+    saml.installClient();
+  }
+
+  @AfterEach
+  public void uninstallClient() {
+    SamlTestSupport.uninstallClient();
+  }
+
+  private static Map<String, List<String>> studentAttributes() {
+    Map<String, List<String>> attributes = new LinkedHashMap<>();
+    attributes.put("uid", Collections.singletonList("jdoe"));
+    attributes.put("displayName", Collections.singletonList("Jane Doe"));
+    attributes.put("groups", Arrays.asList("students", "chess-club"));
+    return attributes;
+  }
+
+  private static MockHttpServletRequest acsPost(String samlResponse) {
+    MockHttpServletRequest request = new MockHttpServletRequest("POST", "/saml/acs");
+    request.setScheme("https");
+    request.setSecure(true);
+    request.setServerName("shepherd.test");
+    request.setServerPort(443);
+    request.addParameter("SAMLResponse", samlResponse);
+    return request;
+  }
+
+  @Test
+  public void parsePrivateKey_AcceptsPkcs8AndPkcs1() throws Exception {
+    KeyPair keys = SamlTestSupport.newKeyPair();
+
+    PrivateKey fromPkcs8 = SamlSso.parsePrivateKey(SamlTestSupport.pkcs8Pem(keys));
+    PrivateKey fromPkcs1 = SamlSso.parsePrivateKey(SamlTestSupport.pkcs1Pem(keys));
+
+    assertEquals(keys.getPrivate(), fromPkcs8);
+    assertEquals(keys.getPrivate(), fromPkcs1);
+  }
+
+  @Test
+  public void parseCertificate_AcceptsBareBase64() throws Exception {
+    String bare = Base64.getEncoder().encodeToString(saml.idpCert.getEncoded());
+
+    X509Certificate cert = SamlSso.parseCertificate(bare);
+
+    assertEquals(saml.idpCert, cert);
+  }
+
+  @Test
+  public void buildClient_MissingIdpCertificate_NamesTheSetting() throws Exception {
+    Properties props = saml.properties();
+    props.remove(SamlSso.IDP_CERT);
+    props.setProperty(SamlSso.IDP_CERT_FINGERPRINT, "AB:CD");
+
+    IllegalStateException e =
+        assertThrows(IllegalStateException.class, () -> SamlSso.buildClient(props));
+
+    assertThat(e.getMessage(), containsString(SamlSso.IDP_CERT));
+    assertThat(e.getMessage(), containsString("not supported"));
+  }
+
+  @Test
+  public void buildClient_MissingAcsUrl_NamesTheSetting() throws Exception {
+    Properties props = saml.properties();
+    props.setProperty(SamlSso.SP_ACS_URL, " ");
+
+    IllegalStateException e =
+        assertThrows(IllegalStateException.class, () -> SamlSso.buildClient(props));
+
+    assertThat(e.getMessage(), containsString(SamlSso.SP_ACS_URL));
+  }
+
+  @Test
+  public void login_RedirectsToIdpWithAuthnRequest() throws Exception {
+    MockHttpServletRequest request = new MockHttpServletRequest("GET", "/saml/dologin");
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    SamlSso.login(request, response);
+
+    assertEquals(302, response.getStatus());
+    String location = response.getRedirectedUrl();
+    assertThat(location, startsWith(SamlTestSupport.IDP_SSO_URL + "?"));
+    assertThat(location, containsString("Signature="));
+    String authnRequest = SamlTestSupport.decodeRedirectRequest(location);
+    assertThat(authnRequest, containsString("AuthnRequest"));
+    assertThat(authnRequest, containsString(SamlTestSupport.ACS_URL));
+    assertThat(authnRequest, containsString(SamlTestSupport.SP_ENTITY_ID));
+  }
+
+  @Test
+  public void getServiceProviderMetadata_DescribesConfiguredEndpoints() throws Exception {
+    String metadata = SamlSso.getServiceProviderMetadata();
+
+    assertThat(metadata, containsString("entityID=\"" + SamlTestSupport.SP_ENTITY_ID + "\""));
+    assertThat(metadata, containsString("Location=\"" + SamlTestSupport.ACS_URL + "\""));
+    assertThat(metadata, containsString("Location=\"" + SamlTestSupport.SLS_URL + "\""));
+    // The ACS URL must be exactly what the IdP has registered
+    assertFalse(metadata.contains("client_name="));
+    String spCertBase64 = Base64.getEncoder().encodeToString(saml.spCert.getEncoded());
+    assertThat(metadata.replaceAll("\\s", ""), containsString(spCertBase64));
+  }
+
+  @Test
+  public void authenticate_ValidSignedResponse_ReturnsProfile() throws Exception {
+    String samlResponse =
+        saml.signedResponse("user-123", studentAttributes(), saml.idpKeys, saml.idpCert);
+
+    Optional<SAML2Profile> profile =
+        SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse());
+
+    assertTrue(profile.isPresent());
+    assertEquals("user-123", profile.get().getId());
+    assertEquals("_session-user-123", profile.get().getSessionIndex());
+    SsoUserMapper.Result user = SsoUserMapper.map(profile.get().getAttributes(), ssoProperties());
+    assertTrue(user.isValid());
+    assertEquals("jdoe", user.ssoName);
+    assertEquals("Jane Doe", user.userName);
+    assertEquals("player", user.userRole);
+  }
+
+  @Test
+  public void authenticate_TamperedResponse_IsRejected() throws Exception {
+    String signed =
+        saml.signedResponse("user-123", studentAttributes(), saml.idpKeys, saml.idpCert);
+    String xml = new String(Base64.getDecoder().decode(signed), "UTF-8");
+    String tampered =
+        Base64.getEncoder().encodeToString(xml.replace("students", "teachers").getBytes("UTF-8"));
+
+    Optional<SAML2Profile> profile =
+        SamlSso.authenticate(acsPost(tampered), new MockHttpServletResponse());
+
+    assertFalse(profile.isPresent());
+  }
+
+  @Test
+  public void authenticate_SignedByUnknownKey_IsRejected() throws Exception {
+    KeyPair attackerKeys = SamlTestSupport.newKeyPair();
+    X509Certificate attackerCert = SamlTestSupport.selfSigned(attackerKeys, "idp.test");
+    String samlResponse =
+        saml.signedResponse("user-123", studentAttributes(), attackerKeys, attackerCert);
+
+    Optional<SAML2Profile> profile =
+        SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse());
+
+    assertFalse(profile.isPresent());
+  }
+
+  @Test
+  public void authenticate_ReplayedResponse_IsRejected() throws Exception {
+    String samlResponse =
+        saml.signedResponse("user-123", studentAttributes(), saml.idpKeys, saml.idpCert);
+
+    assertTrue(
+        SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse()).isPresent());
+    assertFalse(
+        SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse()).isPresent());
+  }
+
+  @Test
+  public void authenticate_NoSamlResponse_ReturnsEmpty() {
+    MockHttpServletRequest request = new MockHttpServletRequest("POST", "/saml/acs");
+
+    assertFalse(SamlSso.authenticate(request, new MockHttpServletResponse()).isPresent());
+  }
+
+  @Test
+  public void logout_SendsLogoutRequestWithNameIdAndSessionIndex() throws Exception {
+    String samlResponse =
+        saml.signedResponse("user-123", studentAttributes(), saml.idpKeys, saml.idpCert);
+    SAML2Profile profile =
+        SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse()).get();
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    boolean started =
+        SamlSso.logout(new MockHttpServletRequest("GET", "/logout"), response, profile);
+
+    assertTrue(started);
+    String location = response.getRedirectedUrl();
+    assertThat(location, startsWith(SamlTestSupport.IDP_SLO_URL + "?"));
+    String logoutRequest = SamlTestSupport.decodeRedirectRequest(location);
+    assertThat(logoutRequest, containsString("LogoutRequest"));
+    assertThat(logoutRequest, containsString(">user-123<"));
+    assertThat(logoutRequest, containsString("_session-user-123"));
+  }
+
+  @Test
+  public void processLogoutMessage_NoMessage_IsInvalid() {
+    MockHttpServletRequest request = new MockHttpServletRequest("GET", "/saml/sls");
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID,
+        SamlSso.processLogoutMessage(request, new MockHttpServletResponse()));
+  }
+
+  private static Properties ssoProperties() {
+    Properties props = new Properties();
+    props.setProperty("sso.saml.ssoName", "uid");
+    props.setProperty("sso.saml.userName", "displayName");
+    props.setProperty("sso.saml.affiliation", "groups");
+    props.setProperty("sso.saml.adminAffiliation", "staff");
+    props.setProperty("sso.saml.playerAffiliation", "students");
+    return props;
+  }
+}

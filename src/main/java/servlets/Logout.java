@@ -1,8 +1,5 @@
 package servlets;
 
-import com.onelogin.saml2.Auth;
-import com.onelogin.saml2.exception.Error;
-import com.onelogin.saml2.exception.SettingsException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -12,7 +9,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.pac4j.saml.profile.SAML2Profile;
 import utils.LoginMethod;
+import utils.SamlSso;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -62,6 +61,10 @@ public class Logout extends HttpServlet {
       Object tokenParmeter = request.getParameter("csrfToken");
       if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
 
+        // Read before the session is invalidated: single logout needs the NameID and
+        // session index captured at login
+        Object samlProfile = ses.getAttribute(SamlSso.PROFILE_SESSION_ATTRIBUTE);
+
         // Remove Everything
         ses.removeAttribute("userStamp");
         ses.removeAttribute("userName");
@@ -77,51 +80,12 @@ public class Logout extends HttpServlet {
         response.addCookie(emptyCookie);
         log.debug("User Logged Out");
 
-        if (LoginMethod.isSaml()) {
-
-          Auth auth;
-          try {
-            auth = new Auth(request, response);
-          } catch (SettingsException e) {
-            throw new RuntimeException("SAML not configured: " + e.toString());
-          } catch (Error e) {
-            throw new RuntimeException("SAML error : " + e.toString());
+        if (LoginMethod.isSaml() && samlProfile instanceof SAML2Profile) {
+          if (!SamlSso.logout(request, response, (SAML2Profile) samlProfile)) {
+            log.debug("No IdP single logout URL configured, ending local session only");
+            response.sendRedirect("login.jsp");
           }
-
-          String nameId = null;
-          if (ses.getAttribute("nameId") != null) {
-            nameId = ses.getAttribute("nameId").toString();
-          }
-          String nameIdFormat = null;
-          if (ses.getAttribute("nameIdFormat") != null) {
-            nameIdFormat = ses.getAttribute("nameIdFormat").toString();
-          }
-          String nameidNameQualifier = null;
-          if (ses.getAttribute("nameidNameQualifier") != null) {
-            nameIdFormat = ses.getAttribute("nameidNameQualifier").toString();
-          }
-          String nameidSPNameQualifier = null;
-          if (ses.getAttribute("nameidSPNameQualifier") != null) {
-            nameidSPNameQualifier = ses.getAttribute("nameidSPNameQualifier").toString();
-          }
-          String sessionIndex = null;
-          if (ses.getAttribute("sessionIndex") != null) {
-            sessionIndex = ses.getAttribute("sessionIndex").toString();
-          }
-          try {
-            auth.logout(
-                null,
-                nameId,
-                sessionIndex,
-                nameIdFormat,
-                nameidNameQualifier,
-                nameidSPNameQualifier);
-          } catch (SettingsException e) {
-            throw new RuntimeException("SAML settings error : " + e.toString());
-          }
-
         } else {
-
           response.sendRedirect("login.jsp");
         }
 

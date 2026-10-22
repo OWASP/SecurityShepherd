@@ -16,13 +16,41 @@
 		<!-- Spring is only used for the servlet mocks in spring-test. Spring 7
 		     tracks Jakarta EE 11 (Servlet 6.1), matching the Tomcat 11 runtime. -->
 		<spring.version>7.0.10</spring.version>
+		<pac4j.version>6.6.0</pac4j.version>
 	</properties>
 
+	<dependencyManagement>
+		<dependencies>
+			<!-- pac4j-saml pulls in Spring at compile scope; keep every Spring
+			     module (direct or transitive) on one version. -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
+		<!-- SAML SSO (was com.onelogin:java-saml, which has no Jakarta release).
+		     pac4j-saml 6.x is Jakarta-native and built on OpenSAML 5. -->
 		<dependency>
-			<groupId>com.onelogin</groupId>
-			<artifactId>java-saml</artifactId>
-		<version>2.9.0</version>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-saml</artifactId>
+			<version>${pac4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-jakartaee</artifactId>
+			<version>${pac4j.version}</version>
+		</dependency>
+		<!-- Routes pac4j / OpenSAML SLF4J logging into log4j2 -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j2-impl</artifactId>
+			<version>2.25.4</version>
 		</dependency>
 		<dependency>
 			<groupId>de.mkammerer</groupId>
@@ -50,7 +78,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-		<version>2.18.0</version>
+		<version>2.22.0</version>
 	</dependency>
 
 	<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
@@ -157,13 +185,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- spring-mock:2.0.8 removed: javax-era standalone mock (2008).
 		     Spring 7 spring-test provides the Jakarta MockHttpServletRequest /

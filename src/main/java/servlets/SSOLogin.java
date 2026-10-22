@@ -1,8 +1,5 @@
 package servlets;
 
-import com.onelogin.saml2.Auth;
-import com.onelogin.saml2.exception.Error;
-import com.onelogin.saml2.exception.SettingsException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utils.SamlSso;
 import utils.ShepherdLogManager;
 
 /**
@@ -47,13 +45,11 @@ public class SSOLogin extends HttpServlet {
     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
     log.debug("**** servlets.SSOLogin ***");
     request.setCharacterEncoding("UTF-8");
-    Auth auth;
     try {
-      auth = new Auth(request, response);
-      auth.login();
-    } catch (SettingsException | Error e) {
+      SamlSso.login(request, response);
+    } catch (RuntimeException e) {
       log.error("Caught exception when initializing SSO: " + e.toString());
-      throw new RuntimeException(e);
+      throw e;
     }
 
     log.debug("**** End servlets.SSOLogin ***");
