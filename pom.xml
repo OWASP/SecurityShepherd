@@ -13,8 +13,9 @@
 		<skipTests>false</skipTests>
 		<skipITs>${skipTests}</skipITs>
 		<skipUTs>${skipTests}</skipUTs>
-		<!-- Spring is only used for the servlet mocks in spring-test. Spring 7
-		     tracks Jakarta EE 11 (Servlet 6.1), matching the Tomcat 11 runtime. -->
+		<!-- Spring 7 (Jakarta EE 11 / Servlet 6.1, matching Tomcat 11). Used at runtime by
+		     pac4j-saml and SamlSso (spring-core Resource), and in tests for spring-test's
+		     servlet mocks. -->
 		<spring.version>7.0.10</spring.version>
 		<pac4j.version>6.6.0</pac4j.version>
 	</properties>
