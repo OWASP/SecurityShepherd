@@ -315,6 +315,14 @@ public class SamlTestSupport {
    */
   public static String redirectQuery(String param, String xml, KeyPair signingKeys)
       throws Exception {
+    return redirectQuery(
+        param, xml, signingKeys, SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256, "SHA256withRSA");
+  }
+
+  /** As {@link #redirectQuery(String, String, KeyPair)}, with a chosen signature algorithm */
+  public static String redirectQuery(
+      String param, String xml, KeyPair signingKeys, String sigAlgUri, String jcaAlgorithm)
+      throws Exception {
     Deflater deflater = new Deflater(Deflater.DEFLATED, true);
     deflater.setInput(xml.getBytes(StandardCharsets.UTF_8));
     deflater.finish();
@@ -331,11 +339,8 @@ public class SamlTestSupport {
     if (signingKeys == null) {
       return query;
     }
-    query +=
-        "&SigAlg="
-            + URLEncoder.encode(
-                SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256, StandardCharsets.UTF_8);
-    java.security.Signature signer = java.security.Signature.getInstance("SHA256withRSA");
+    query += "&SigAlg=" + URLEncoder.encode(sigAlgUri, StandardCharsets.UTF_8);
+    java.security.Signature signer = java.security.Signature.getInstance(jcaAlgorithm);
     signer.initSign(signingKeys.getPrivate());
     signer.update(query.getBytes(StandardCharsets.UTF_8));
     return query
@@ -398,6 +403,13 @@ public class SamlTestSupport {
     throw new IllegalArgumentException("No SAMLRequest in " + location);
   }
 
+  /** An EC P-256 key pair, as used by IdPs that sign with ecdsa-sha256 */
+  public static KeyPair newEcKeyPair() throws Exception {
+    KeyPairGenerator generator = KeyPairGenerator.getInstance("EC");
+    generator.initialize(256);
+    return generator.generateKeyPair();
+  }
+
   public static KeyPair newKeyPair() throws Exception {
     KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
     generator.initialize(2048);
@@ -417,7 +429,12 @@ public class SamlTestSupport {
             keys.getPublic());
     return new JcaX509CertificateConverter()
         .getCertificate(
-            builder.build(new JcaContentSignerBuilder("SHA256withRSA").build(keys.getPrivate())));
+            builder.build(
+                new JcaContentSignerBuilder(
+                        "EC".equals(keys.getPrivate().getAlgorithm())
+                            ? "SHA256withECDSA"
+                            : "SHA256withRSA")
+                    .build(keys.getPrivate())));
   }
 
   public static String certificatePem(X509Certificate cert) throws Exception {
