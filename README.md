@@ -44,17 +44,32 @@ To login use the following credentials (you will be asked to update after login)
 Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
 
 #### Upgrading an existing Docker environment
-Security Shepherd now runs on Tomcat 11. Tomcat's `conf` directory lives in the `conf` Docker volume, and Docker only copies the image's files into a volume when the volume is first created. An existing environment would therefore start Tomcat 11 with its old Tomcat 9/10.1 `server.xml` and `web.xml`. Remove that volume before bringing up the new version. Database data is in the separate `data` and `mongodata` volumes, so it is kept.
+Security Shepherd now runs on Tomcat 11. Tomcat's `conf` directory lives in the `conf` Docker volume, and Docker only copies the image's files into a volume when the volume is first created. An existing environment would therefore start Tomcat 11 with its old Tomcat 9/10.1 `server.xml` and `web.xml`. That volume has to be recreated. Database data is in the separate `data` and `mongodata` volumes, so it is kept.
+
+The `conf` volume also holds the TLS keystore and the `database.properties` / `mongo.properties` connection settings, so **back it up first**:
 
 ```console
 docker-compose down
 # The volume is named <project>_conf; check with: docker volume ls
+docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine \
+  tar czf /backup/shepherd-conf-backup.tgz -C /conf .
 docker volume rm securityshepherd_conf
 mvn -Pdocker clean install -DskipTests
 docker-compose up --build
 ```
 
-If you changed the database connection through the setup page, enter it again afterwards. Choose not to overwrite the database.
+The new volume starts from the image: a freshly built keystore, and connection settings taken from `.env`. If you had customised either, copy just those files back from the backup. Leave `server.xml` and `web.xml` alone, because they are the Tomcat 11 versions.
+
+```console
+# Connection settings changed through the setup page:
+docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine \
+  tar xzf /backup/shepherd-conf-backup.tgz -C /conf ./database.properties ./mongo.properties
+# Your own TLS certificate: restore the keystore file named by TLS_KEYSTORE_FILE, and make sure
+# TLS_KEYSTORE_PASS and ALIAS in .env match it before building
+docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine \
+  tar xzf /backup/shepherd-conf-backup.tgz -C /conf ./<your keystore file>
+docker-compose restart web
+```
 
 #### Full Guide
 [Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)

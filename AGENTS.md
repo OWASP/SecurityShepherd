@@ -92,7 +92,9 @@ Do not commit `.env` changes that break CI.
 
 ### Upgrading a local Docker environment to Tomcat 11
 
-The Tomcat container mounts a named `conf` volume over `/usr/local/tomcat/conf`. A volume created by an older Tomcat 9/10.1 image keeps its old `server.xml` and `web.xml`, and Tomcat 11 will not see the new image's config. Run `docker compose down && docker volume rm securityshepherd_conf` before `docker compose up --build`. Data volumes are unaffected.
+The Tomcat container mounts a named `conf` volume over `/usr/local/tomcat/conf`. A volume created by an older Tomcat 9/10.1 image keeps its old `server.xml` and `web.xml`, and Tomcat 11 will not see the new image's config, so the volume has to be recreated. Data volumes are unaffected.
+
+The volume also holds the TLS keystore and `database.properties` / `mongo.properties`. Back it up before removing it (`docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine tar czf /backup/shepherd-conf-backup.tgz -C /conf .`), then `docker compose down && docker volume rm securityshepherd_conf` and `docker compose up --build`. Restore only customised keystore or `.properties` files from the backup, never the old `server.xml` / `web.xml`. The full steps are in the README.
 
 ### Integration tests fail building the Mongo image (`chown ... Operation not permitted`)
 
