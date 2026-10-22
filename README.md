@@ -51,8 +51,11 @@ The `conf` volume also holds the TLS keystore and the `database.properties` / `m
 ```console
 docker-compose down
 # The volume is named <project>_conf; check with: docker volume ls
-# The archive holds the TLS private key and database password: keep it readable by you only
-docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine sh -c \
+# The archive holds the TLS private key and database password. Keep it outside the repository
+# (the repository root is the Docker build context) and readable by you only
+BACKUP_DIR="$HOME/shepherd-conf-backup"
+mkdir -p "$BACKUP_DIR" && chmod 700 "$BACKUP_DIR"
+docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine sh -c \
   'umask 077 && touch /backup/shepherd-conf-backup.tgz && chmod 600 /backup/shepherd-conf-backup.tgz \
    && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'
 docker volume rm securityshepherd_conf
@@ -64,17 +67,18 @@ docker-compose up -d --build
 The new volume starts from the image: a freshly built keystore, and connection settings taken from `.env`. If you had customised either, copy just those files back from the backup. Leave `server.xml` and `web.xml` alone, because they are the Tomcat 11 versions.
 
 ```console
+BACKUP_DIR="$HOME/shepherd-conf-backup"
 # Connection settings changed through the setup page:
-docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine \
+docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine \
   tar xzf /backup/shepherd-conf-backup.tgz -C /conf ./database.properties ./mongo.properties
 # Your own TLS certificate: restore the keystore file named by TLS_KEYSTORE_FILE, and make sure
 # TLS_KEYSTORE_PASS and ALIAS in .env match it before building
-docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine \
+docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine \
   tar xzf /backup/shepherd-conf-backup.tgz -C /conf ./<your keystore file>
 docker-compose restart web
 ```
 
-Delete `shepherd-conf-backup.tgz` (or move it somewhere safe) once the upgrade is working. On Linux hosts it is owned by root.
+Delete `$BACKUP_DIR` (or move it somewhere safe) once the upgrade is working. On Linux hosts the archive is owned by root, but you can still delete it because you own the directory.
 
 If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, ports, ciphers and so on), re-apply those edits to the new Tomcat 11 files, using the backup as a reference. Don't copy the old files back.
 
