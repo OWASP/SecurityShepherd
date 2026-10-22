@@ -185,7 +185,10 @@ public class SamlSso {
     /** want_messages_signed: logout messages must carry a valid IdP signature */
     final boolean requireSignedLogout;
 
-    /** This SP's single logout endpoint, which IdP LogoutRequests must be addressed to */
+    /**
+     * This SP's single logout endpoint, which IdP LogoutRequests must be addressed to; null when
+     * single logout isn't configured
+     */
     final String singleLogoutUrl;
 
     /** Defaults for omitted NameQualifier / SPNameQualifier (SAML Core 8.3.7) */
@@ -455,6 +458,9 @@ public class SamlSso {
    * @return why the request is rejected, or null if it may be acted on
    */
   static String checkLogoutRequest(LogoutRequest request, boolean signed, String singleLogoutUrl) {
+    if (singleLogoutUrl == null) {
+      return "no single logout endpoint is configured (" + SP_SLS_URL + ")";
+    }
     String destination = request.getDestination();
     if (destination == null ? signed : !destination.equals(singleLogoutUrl)) {
       return "Destination " + destination + " is not " + singleLogoutUrl;
@@ -644,7 +650,8 @@ public class SamlSso {
     }
 
     configureKeystore(config, spCredentials(props));
-    config.setMetadataGenerator(new SupportedBindingsMetadataGenerator());
+    config.setMetadataGenerator(
+        new SupportedBindingsMetadataGenerator(optional(props, SP_SLS_URL) != null));
     config.setIdentityProviderMetadataResource(
         new ByteArrayResource(
             buildIdentityProviderMetadata(props).getBytes(StandardCharsets.UTF_8),
@@ -661,8 +668,9 @@ public class SamlSso {
     } catch (GeneralSecurityException | IllegalArgumentException e) {
       throw new IllegalStateException("Cannot load " + IDP_CERT + ": " + e.getMessage(), e);
     }
-    // pac4j advertises the ACS URL as the logout endpoint when no SLS URL is configured
-    String singleLogoutUrl = optional(props, SP_SLS_URL, required(props, SP_ACS_URL));
+    // Null when no SLS URL is configured: no logout endpoint is advertised, and IdP
+    // LogoutRequests are refused
+    String singleLogoutUrl = optional(props, SP_SLS_URL);
     return new Sso(
         saml,
         idpCertificate,
@@ -720,12 +728,17 @@ public class SamlSso {
   /**
    * pac4j advertises HTTP-POST, HTTP-POST-SimpleSign, HTTP-Redirect and SOAP single logout
    * endpoints. SamlSso can only verify signatures for HTTP-POST (XML signature) and HTTP-Redirect
-   * (query-string signature), so advertise just those; the descriptor is signed afterwards.
+   * (query-string signature), so advertise just those. With no SLS URL configured pac4j would
+   * advertise the ACS URL, which doesn't process logout messages, so advertise none. The descriptor
+   * is signed afterwards.
    */
   private static final class SupportedBindingsMetadataGenerator
       extends SAML2FileSystemMetadataGenerator {
-    SupportedBindingsMetadataGenerator() {
+    private final boolean advertiseSingleLogout;
+
+    SupportedBindingsMetadataGenerator(boolean advertiseSingleLogout) {
       super(null);
+      this.advertiseSingleLogout = advertiseSingleLogout;
     }
 
     @Override
@@ -735,8 +748,9 @@ public class SamlSso {
           .getSingleLogoutServices()
           .removeIf(
               service ->
-                  !HTTP_POST_BINDING.equals(service.getBinding())
-                      && !HTTP_REDIRECT_BINDING.equals(service.getBinding()));
+                  !advertiseSingleLogout
+                      || (!HTTP_POST_BINDING.equals(service.getBinding())
+                          && !HTTP_REDIRECT_BINDING.equals(service.getBinding())));
       return descriptor;
     }
   }
