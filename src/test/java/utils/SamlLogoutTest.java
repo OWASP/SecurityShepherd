@@ -425,6 +425,19 @@ public class SamlLogoutTest {
   }
 
   @Test
+  public void withoutSlsUrl_IdpLogoutRequestIsRefusedAndEndsNothing() throws Exception {
+    Properties props = signedLogoutProperties(true);
+    props.remove(SamlSso.SP_SLS_URL);
+    SamlTestSupport.install(props);
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setDestination(SamlTestSupport.ACS_URL);
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
   public void endedSession_IsRemovedFromRegistry() {
     int before = SamlSessionRegistry.size();
 

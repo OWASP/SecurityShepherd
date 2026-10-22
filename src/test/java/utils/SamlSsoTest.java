@@ -381,6 +381,19 @@ public class SamlSsoTest {
   }
 
   @Test
+  public void getServiceProviderMetadata_WithoutSlsUrl_AdvertisesNoLogoutEndpoint()
+      throws Exception {
+    Properties props = saml.properties();
+    props.remove(SamlSso.SP_SLS_URL);
+    SamlTestSupport.install(props);
+
+    String metadata = SamlSso.getServiceProviderMetadata();
+
+    assertFalse(metadata.contains("SingleLogoutService"));
+    assertThat(metadata, containsString("Location=\"" + SamlTestSupport.ACS_URL + "\""));
+  }
+
+  @Test
   public void processLogoutMessage_NoMessage_IsInvalid() {
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/saml/sls");
 

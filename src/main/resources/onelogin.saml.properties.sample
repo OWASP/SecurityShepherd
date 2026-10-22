@@ -30,7 +30,8 @@ onelogin.saml2.sp.assertion_consumer_service.url = https://localhost/saml/acs
 onelogin.saml2.sp.assertion_consumer_service.binding = urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
 
 # Specifies info about where and how the <Logout Response> message MUST be
-# returned to the requester, in this case our SP.
+# returned to the requester, in this case our SP. Leave empty to disable
+# IdP-initiated single logout: no logout endpoint is then advertised.
 onelogin.saml2.sp.single_logout_service.url = https://localhost/saml/sls
 
 # SAML protocol binding to be used when returning the <LogoutResponse> or sending the <LogoutRequest>
