@@ -26,9 +26,15 @@ Before committing Java changes, run:
 mvn spotless:apply
 ```
 
-## Java version
+## Java version and platform
 
-The project targets **Java 8**. All code must compile against Java 8, even though CI uses Java 17 for linting and building. Do not use Java 9+ APIs or language features.
+The project targets **Java 17** (`<release>17</release>` in `pom.xml`). Java 17 APIs and language features are fine; do not use anything newer.
+
+The web app runs on **Jakarta EE 11**: Servlet 6.1 on **Tomcat 11** (`TOMCAT_DOCKER_VERSION` in `.env`).
+
+- Use `jakarta.servlet.*`, `jakarta.mail.*`, etc. Never add `javax.servlet` or other Java EE `javax.*` dependencies; they will not run on Tomcat 11. JDK packages that keep the `javax` name (`javax.crypto`, `javax.xml.parsers`, `javax.sql`) are fine.
+- JSTL taglibs use the `jakarta.tags.*` URIs (declared once in `src/main/webapp/translation.jsp`).
+- Spring 7 is used **only in tests**, for `spring-test`'s `MockHttpServletRequest` / `MockHttpServletResponse` / `MockServletConfig`. Its version is set once by the `spring.version` property, which also drives the `spring-framework-bom` import that pins the Spring modules pac4j pulls in.
 
 ## Build and test
 
@@ -126,7 +132,7 @@ The hostname must be the **Docker container name** (e.g. `secshep_mariadb`), not
   - `servlets/` — platform servlets (Login, Register, Setup, etc.)
   - `servlets/admin/` — admin servlets (`config/`, `moduleManagement/`, `userManagement/`)
   - `servlets/module/` — module framework (`SolutionSubmit.java`, `GetModule.java`, etc.) plus `challenge/` and `lesson/` (intentionally vulnerable — do not fix)
-  - `utils/` — shared utilities (validation, hashing, scoring, XSS/SQL filters)
+  - `utils/` — shared utilities (validation, hashing, scoring, XSS/SQL filters, SAML SSO via `SamlSso`)
 - `src/main/resources/` — config and challenge properties files
 - `src/test/java/` — unit tests
 - `src/it/java/` — integration tests (require running DB containers)
@@ -139,6 +145,14 @@ The hostname must be the **Docker container name** (e.g. `secshep_mariadb`), not
 - Each challenge uses isolated DB credentials scoped to its own schema — do not consolidate challenge DB users
 - Encoding must be `utf8mb4` (not `utf8`) for full Unicode support
 - Password hashing uses Argon2 (requires `libargon2` native library)
+
+### SAML single sign-on
+
+SSO is optional, and is turned on by `sso.enabled=true` in `sso.properties`. It is implemented in `utils/SamlSso.java` on **pac4j-saml 6.x** (OpenSAML 5). The five servlets `SSOLogin`, `ACS`, `SLS`, `SSOMetadata` and `Logout` delegate to it.
+
+- Configuration lives in `onelogin.saml.properties`, which keeps the key names of the java-saml toolkit used previously; see `src/main/resources/onelogin.saml.properties.sample`. The SP's PEM certificate and key are loaded into an in-memory keystore. The IdP settings are turned into an IdP metadata document. Nothing is written to disk.
+- `sso.properties` maps IdP attributes to users and roles (`utils/SsoUserMapper.java`).
+- Tests generate their own key pairs and signed SAML responses (`src/test/java/utils/SamlTestSupport.java`). Do not commit private keys.
 
 ### SQL schema files
 
