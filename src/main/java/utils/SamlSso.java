@@ -2,14 +2,18 @@ package utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Signature;
@@ -22,6 +26,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +41,17 @@ import org.bouncycastle.asn1.DERNull;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
+import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.opensaml.saml.saml2.core.NameID;
+import org.opensaml.saml.saml2.core.NameIDType;
 import org.opensaml.saml.saml2.core.SessionIndex;
+import org.opensaml.saml.saml2.metadata.SPSSODescriptor;
 import org.opensaml.xmlsec.encryption.support.DecryptionException;
 import org.owasp.encoder.Encode;
 import org.pac4j.core.context.CallContext;
@@ -55,6 +67,7 @@ import org.pac4j.saml.client.SAML2Client;
 import org.pac4j.saml.config.SAML2Configuration;
 import org.pac4j.saml.context.SAML2MessageContext;
 import org.pac4j.saml.credentials.SAML2Credentials;
+import org.pac4j.saml.metadata.SAML2FileSystemMetadataGenerator;
 import org.pac4j.saml.profile.SAML2Profile;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -173,15 +186,24 @@ public class SamlSso {
     /** This SP's single logout endpoint, which IdP LogoutRequests must be addressed to */
     final String singleLogoutUrl;
 
+    /** Defaults for omitted NameQualifier / SPNameQualifier (SAML Core 8.3.7) */
+    final String idpEntityId;
+
+    final String spEntityId;
+
     Sso(
         SAML2Client client,
         X509Certificate idpCertificate,
         boolean requireSignedLogout,
-        String singleLogoutUrl) {
+        String singleLogoutUrl,
+        String idpEntityId,
+        String spEntityId) {
       this.client = client;
       this.idpCertificate = idpCertificate;
       this.requireSignedLogout = requireSignedLogout;
       this.singleLogoutUrl = singleLogoutUrl;
+      this.idpEntityId = idpEntityId;
+      this.spEntityId = spEntityId;
     }
   }
 
@@ -278,6 +300,49 @@ public class SamlSso {
     return true;
   }
 
+  /**
+   * Records a post-login session against the SAML login that created it, so an IdP-initiated logout
+   * naming that login can end it.
+   *
+   * @param session The post-login session
+   * @param profile The profile from the validated assertion
+   */
+  public static void registerLoginSession(HttpSession session, SAML2Profile profile) {
+    SamlSessionRegistry.register(
+        session,
+        nameIdKey(
+            get(),
+            profile.getId(),
+            profile.getSamlNameIdFormat(),
+            profile.getSamlNameIdNameQualifier(),
+            profile.getSamlNameIdSpNameQualifier()),
+        profile.getSessionIndex());
+  }
+
+  /** The complete identity of a NameID, as {@link SamlSessionRegistry} matches it */
+  static String nameIdKey(
+      String value, String format, String nameQualifier, String spNameQualifier) {
+    return nameIdKey(get(), value, format, nameQualifier, spNameQualifier);
+  }
+
+  /**
+   * Two NameIDs identify the same principal only if value, Format, NameQualifier and
+   * SPNameQualifier all match. Omitted fields take their SAML defaults: unspecified format, and the
+   * IdP / SP entity IDs as qualifiers (SAML Core 8.3.7).
+   */
+  private static String nameIdKey(
+      Sso config, String value, String format, String nameQualifier, String spNameQualifier) {
+    if (value == null) {
+      return null;
+    }
+    return String.join(
+        "\u0000",
+        value,
+        format == null || format.isEmpty() ? NameIDType.UNSPECIFIED : format,
+        nameQualifier == null || nameQualifier.isEmpty() ? config.idpEntityId : nameQualifier,
+        spNameQualifier == null || spNameQualifier.isEmpty() ? config.spEntityId : spNameQualifier);
+  }
+
   /** Outcome of a message received on the single logout service */
   public enum LogoutMessage {
     /**
@@ -343,7 +408,15 @@ public class SamlSso {
       if (nameId == null && logoutRequest.getEncryptedID() != null) {
         nameId = (NameID) saml.getDecrypter().decrypt(logoutRequest.getEncryptedID());
       }
-      String nameIdValue = nameId == null ? null : nameId.getValue();
+      String nameIdKey =
+          nameId == null
+              ? null
+              : nameIdKey(
+                  config,
+                  nameId.getValue(),
+                  nameId.getFormat(),
+                  nameId.getNameQualifier(),
+                  nameId.getSPNameQualifier());
       List<String> sessionIndexes = new ArrayList<>();
       for (SessionIndex index : logoutRequest.getSessionIndexes()) {
         if (index != null && index.getValue() != null) {
@@ -353,10 +426,10 @@ public class SamlSso {
       int ended = 0;
       if (!sessionIndexes.isEmpty()) {
         for (String sessionIndex : sessionIndexes) {
-          ended += SamlSessionRegistry.invalidate(nameIdValue, sessionIndex);
+          ended += SamlSessionRegistry.invalidate(nameIdKey, sessionIndex);
         }
       } else if (signed) {
-        ended = SamlSessionRegistry.invalidate(nameIdValue, null);
+        ended = SamlSessionRegistry.invalidate(nameIdKey, null);
       } else {
         // A NameID alone is guessable, so only a signed request may end all of a user's sessions
         log.error("Unsigned SAML LogoutRequest without a SessionIndex; no sessions ended");
@@ -568,7 +641,8 @@ public class SamlSso {
       config.setSignatureAlgorithms(List.of(signatureAlgorithm));
     }
 
-    configureKeystore(config, required(props, SP_CERT), required(props, SP_KEY));
+    configureKeystore(config, spCredentials(props));
+    config.setMetadataGenerator(new SupportedBindingsMetadataGenerator());
     config.setIdentityProviderMetadataResource(
         new ByteArrayResource(
             buildIdentityProviderMetadata(props).getBytes(StandardCharsets.UTF_8),
@@ -587,14 +661,108 @@ public class SamlSso {
     }
     // pac4j advertises the ACS URL as the logout endpoint when no SLS URL is configured
     String singleLogoutUrl = optional(props, SP_SLS_URL, required(props, SP_ACS_URL));
-    return new Sso(saml, idpCertificate, flag(props, WANT_MESSAGES_SIGNED, false), singleLogoutUrl);
+    return new Sso(
+        saml,
+        idpCertificate,
+        flag(props, WANT_MESSAGES_SIGNED, false),
+        singleLogoutUrl,
+        required(props, IDP_ENTITY_ID),
+        required(props, SP_ENTITY_ID));
   }
 
   /**
-   * Loads the SP's PEM certificate and private key into an in-memory keystore, so pac4j neither
-   * reads nor generates a keystore file.
+   * pac4j advertises HTTP-POST, HTTP-POST-SimpleSign, HTTP-Redirect and SOAP single logout
+   * endpoints. SamlSso can only verify signatures for HTTP-POST (XML signature) and HTTP-Redirect
+   * (query-string signature), so advertise just those; the descriptor is signed afterwards.
    */
-  private static void configureKeystore(SAML2Configuration config, String certPem, String keyPem) {
+  private static final class SupportedBindingsMetadataGenerator
+      extends SAML2FileSystemMetadataGenerator {
+    SupportedBindingsMetadataGenerator() {
+      super(null);
+    }
+
+    @Override
+    protected SPSSODescriptor buildSPSSODescriptor() {
+      SPSSODescriptor descriptor = super.buildSPSSODescriptor();
+      descriptor
+          .getSingleLogoutServices()
+          .removeIf(
+              service ->
+                  !HTTP_POST_BINDING.equals(service.getBinding())
+                      && !HTTP_REDIRECT_BINDING.equals(service.getBinding()));
+      return descriptor;
+    }
+  }
+
+  /**
+   * The SP's signing/decryption key and certificate. Like java-saml, both settings may be left out
+   * when the SP signs nothing (authnrequest_signed, logoutrequest_signed and sign_metadata all
+   * false): pac4j still needs a key pair, so a temporary one is generated in memory. Encrypted
+   * assertions then can't be used, since the key changes on every restart.
+   */
+  private static KeyStore.PrivateKeyEntry spCredentials(Properties props) {
+    String certPem = optional(props, SP_CERT);
+    String keyPem = optional(props, SP_KEY);
+    try {
+      if (certPem != null && keyPem != null) {
+        return new KeyStore.PrivateKeyEntry(
+            parsePrivateKey(keyPem), new Certificate[] {parseCertificate(certPem)});
+      }
+      if (certPem != null || keyPem != null) {
+        throw new IllegalStateException("Set both " + SP_CERT + " and " + SP_KEY + ", or neither");
+      }
+      List<String> signingSettings = new ArrayList<>();
+      for (String setting : List.of(AUTHN_REQUEST_SIGNED, LOGOUT_REQUEST_SIGNED, SIGN_METADATA)) {
+        if (flag(props, setting, false)) {
+          signingSettings.add(setting);
+        }
+      }
+      if (!signingSettings.isEmpty()) {
+        throw new IllegalStateException(
+            "Missing SAML setting "
+                + SP_CERT
+                + " / "
+                + SP_KEY
+                + ", required by "
+                + String.join(", ", signingSettings));
+      }
+      log.info(
+          "No SP certificate configured: using a temporary in-memory key pair. SP signing and"
+              + " encrypted assertions are unavailable.");
+      return temporaryCredentials();
+    } catch (GeneralSecurityException | IOException | OperatorCreationException e) {
+      throw new IllegalStateException(
+          "Cannot load " + SP_CERT + " / " + SP_KEY + ": " + e.getMessage(), e);
+    }
+  }
+
+  private static KeyStore.PrivateKeyEntry temporaryCredentials()
+      throws GeneralSecurityException, OperatorCreationException {
+    KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+    generator.initialize(2048);
+    KeyPair keys = generator.generateKeyPair();
+    X500Name name = new X500Name("CN=Security Shepherd SAML SP (temporary)");
+    Instant now = Instant.now();
+    X509Certificate cert =
+        new JcaX509CertificateConverter()
+            .getCertificate(
+                new JcaX509v3CertificateBuilder(
+                        name,
+                        BigInteger.valueOf(now.toEpochMilli()),
+                        Date.from(now.minus(Duration.ofDays(1))),
+                        Date.from(now.plus(Duration.ofDays(3650))),
+                        name,
+                        keys.getPublic())
+                    .build(new JcaContentSignerBuilder("SHA256withRSA").build(keys.getPrivate())));
+    return new KeyStore.PrivateKeyEntry(keys.getPrivate(), new Certificate[] {cert});
+  }
+
+  /**
+   * Loads the SP's private key and certificate into an in-memory keystore, so pac4j neither reads
+   * nor generates a keystore file.
+   */
+  private static void configureKeystore(
+      SAML2Configuration config, KeyStore.PrivateKeyEntry credentials) {
     String password = UUID.randomUUID().toString();
     byte[] keystore;
     try {
@@ -602,15 +770,14 @@ public class SamlSso {
       ks.load(null, null);
       ks.setKeyEntry(
           SP_KEY_ALIAS,
-          parsePrivateKey(keyPem),
+          credentials.getPrivateKey(),
           password.toCharArray(),
-          new Certificate[] {parseCertificate(certPem)});
+          credentials.getCertificateChain());
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       ks.store(out, password.toCharArray());
       keystore = out.toByteArray();
     } catch (GeneralSecurityException | IOException e) {
-      throw new IllegalStateException(
-          "Cannot load " + SP_CERT + " / " + SP_KEY + ": " + e.getMessage(), e);
+      throw new IllegalStateException("Cannot build the SP keystore: " + e.getMessage(), e);
     }
 
     config.getKeystore().setKeystoreResource(new ByteArrayResource(keystore, "SP keystore"));

@@ -275,6 +275,56 @@ public class SamlSsoTest {
   }
 
   @Test
+  public void getServiceProviderMetadata_AdvertisesOnlyVerifiableLogoutBindings() {
+    String metadata = SamlSso.getServiceProviderMetadata();
+
+    assertThat(metadata, containsString("bindings:HTTP-POST\""));
+    assertThat(metadata, containsString("bindings:HTTP-Redirect\""));
+    assertFalse(metadata.contains("HTTP-POST-SimpleSign"));
+    assertFalse(metadata.contains("bindings:SOAP"));
+  }
+
+  @Test
+  public void build_WithoutSpKeyPair_AuthenticatesSignedAssertions() throws Exception {
+    Properties props = saml.properties();
+    props.remove(SamlSso.SP_CERT);
+    props.remove(SamlSso.SP_KEY);
+    props.setProperty(SamlSso.AUTHN_REQUEST_SIGNED, "false");
+    props.setProperty(SamlSso.LOGOUT_REQUEST_SIGNED, "false");
+    SamlTestSupport.install(props);
+    String samlResponse =
+        saml.signedResponse("user-123", studentAttributes(), saml.idpKeys, saml.idpCert);
+
+    Optional<SAML2Profile> profile =
+        SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse());
+
+    assertTrue(profile.isPresent());
+    assertEquals("user-123", profile.get().getId());
+  }
+
+  @Test
+  public void build_WithoutSpKeyPair_WhenSigningRequired_NamesTheSettings() throws Exception {
+    Properties props = saml.properties();
+    props.remove(SamlSso.SP_CERT);
+    props.remove(SamlSso.SP_KEY);
+
+    IllegalStateException e = assertThrows(IllegalStateException.class, () -> SamlSso.build(props));
+
+    assertThat(e.getMessage(), containsString(SamlSso.SP_CERT));
+    assertThat(e.getMessage(), containsString(SamlSso.AUTHN_REQUEST_SIGNED));
+  }
+
+  @Test
+  public void build_OnlyOneOfSpCertAndKey_IsRejected() throws Exception {
+    Properties props = saml.properties();
+    props.remove(SamlSso.SP_KEY);
+
+    IllegalStateException e = assertThrows(IllegalStateException.class, () -> SamlSso.build(props));
+
+    assertThat(e.getMessage(), containsString("or neither"));
+  }
+
+  @Test
   public void processLogoutMessage_NoMessage_IsInvalid() {
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/saml/sls");
 
