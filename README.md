@@ -57,7 +57,8 @@ docker run --rm -v securityshepherd_conf:/conf -v "$PWD":/backup alpine sh -c \
    && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'
 docker volume rm securityshepherd_conf
 mvn -Pdocker clean install -DskipTests
-docker-compose up --build
+# Detached, so the databases keep running while you restore files below
+docker-compose up -d --build
 ```
 
 The new volume starts from the image: a freshly built keystore, and connection settings taken from `.env`. If you had customised either, copy just those files back from the backup. Leave `server.xml` and `web.xml` alone, because they are the Tomcat 11 versions.
