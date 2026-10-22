@@ -256,6 +256,17 @@ public class SamlTestSupport {
     return response;
   }
 
+  /** An IdP-initiated LogoutRequest naming several logins of one user */
+  public LogoutRequest logoutRequest(String nameId, List<String> sessionIndexes) {
+    LogoutRequest request = logoutRequest(nameId, (String) null);
+    for (String value : sessionIndexes) {
+      SessionIndex index = build(SessionIndex.DEFAULT_ELEMENT_NAME);
+      index.setValue(value);
+      request.getSessionIndexes().add(index);
+    }
+    return request;
+  }
+
   /** An IdP-initiated LogoutRequest for a login */
   public LogoutRequest logoutRequest(String nameId, String sessionIndex) {
     LogoutRequest request = build(LogoutRequest.DEFAULT_ELEMENT_NAME);
@@ -333,14 +344,18 @@ public class SamlTestSupport {
             Base64.getEncoder().encodeToString(signer.sign()), StandardCharsets.UTF_8);
   }
 
-  /** A request to the single logout service carrying the given HTTP-Redirect query string */
+  /**
+   * A request to the single logout service carrying the given HTTP-Redirect query string. Like a
+   * servlet container, parameter names and values are both URL-decoded, in order.
+   */
   public static MockHttpServletRequest slsGet(String query) {
     MockHttpServletRequest request = slsRequest("GET");
     request.setQueryString(query);
     for (String pair : query.split("&")) {
       int eq = pair.indexOf('=');
       request.addParameter(
-          pair.substring(0, eq), URLDecoder.decode(pair.substring(eq + 1), StandardCharsets.UTF_8));
+          URLDecoder.decode(pair.substring(0, eq), StandardCharsets.UTF_8),
+          URLDecoder.decode(pair.substring(eq + 1), StandardCharsets.UTF_8));
     }
     return request;
   }
