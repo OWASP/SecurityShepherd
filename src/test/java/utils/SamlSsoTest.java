@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import jakarta.servlet.http.Cookie;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
@@ -62,9 +63,10 @@ public class SamlSsoTest {
     request.setServerName("shepherd.test");
     request.setServerPort(443);
     request.addParameter("SAMLResponse", samlResponse);
-    // Delivered by the browser that started the login (see SamlTestSupport#startLogin)
-    if (saml.browserCookie() != null) {
-      request.setCookies(saml.browserCookie());
+    // Delivered by the browser that started the login, with the cookies it sends to the ACS
+    Cookie[] cookies = SamlTestSupport.cookiesFor("/saml/acs");
+    if (cookies.length > 0) {
+      request.setCookies(cookies);
     }
     return request;
   }
@@ -417,6 +419,36 @@ public class SamlSsoTest {
     assertThat(metadata, containsString("Location=\"" + SamlTestSupport.ACS_URL + "\""));
   }
 
+  /** Two tabs start a login before either finishes: both callbacks must succeed */
+  @Test
+  public void overlappingLogins_InOneBrowser_BothSucceed() throws Exception {
+    saml.startLogin();
+    String first = SamlTestSupport.lastRequestId();
+    saml.startLogin();
+    String second = SamlTestSupport.lastRequestId();
+
+    assertTrue(
+        SamlSso.authenticate(
+                acsPost(saml.signedResponseTo(first, "user-123", studentAttributes())),
+                new MockHttpServletResponse())
+            .isPresent());
+    assertTrue(
+        SamlSso.authenticate(
+                acsPost(saml.signedResponseTo(second, "user-123", studentAttributes())),
+                new MockHttpServletResponse())
+            .isPresent());
+  }
+
+  @Test
+  public void bindingCookie_IsScopedToTheSamlDirectory() throws Exception {
+    Cookie cookie = saml.startLogin();
+
+    assertEquals("/saml/", cookie.getPath());
+    assertTrue(cookie.isHttpOnly());
+    assertTrue(cookie.getSecure());
+    assertEquals("None", cookie.getAttribute("SameSite"));
+  }
+
   @Test
   public void authenticate_UnsolicitedResponse_IsRejected() throws Exception {
     saml.unsolicited = true;
@@ -454,7 +486,8 @@ public class SamlSsoTest {
     saml.startLogin();
     String samlResponse =
         saml.signedResponse("attacker", studentAttributes(), saml.idpKeys, saml.idpCert);
-    // The victim's browser has started a login of its own, with its own binding cookie
+    // The victim's (different) browser has started a login of its own, with its own cookie
+    SamlTestSupport.newBrowser();
     jakarta.servlet.http.Cookie victimCookie = saml.startLogin();
     MockHttpServletRequest victim = acsPost(samlResponse);
     victim.setCookies(victimCookie);
