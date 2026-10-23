@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.GetterIT;
+import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import javax.servlet.ServletException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

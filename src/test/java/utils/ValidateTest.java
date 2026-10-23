@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import jakarta.servlet.http.Cookie;
 import java.util.Arrays;
 import java.util.List;
-import javax.servlet.http.Cookie;
 import org.apache.logging.log4j.Level;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpSession;

@@ -13,13 +13,65 @@
 		<skipTests>false</skipTests>
 		<skipITs>${skipTests}</skipITs>
 		<skipUTs>${skipTests}</skipUTs>
+		<!-- Spring 7 (Jakarta EE 11 / Servlet 6.1, matching Tomcat 11). Used at runtime by
+		     pac4j-saml and SamlSso (spring-core Resource), and in tests for spring-test's
+		     servlet mocks. -->
+		<spring.version>7.0.10</spring.version>
+		<pac4j.version>6.6.0</pac4j.version>
+		<!-- Overridable only so src/test/scripts/pgp-verification-test.sh can try a wrong key -->
+		<pgp.keysMap>${project.basedir}/.mvn/pgp-keys.map</pgp.keysMap>
 	</properties>
 
+	<repositories>
+		<!-- OpenSAML 5 (pulled in by pac4j-saml) is published only to Shibboleth's
+		     repository, not Maven Central. pac4j-saml's POM declares it too; it is
+		     declared here so the dependency is visible and checksums are enforced. -->
+		<repository>
+			<id>shibboleth-releases</id>
+			<name>Shibboleth Releases Repository</name>
+			<url>https://build.shibboleth.net/maven/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>fail</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- pac4j-saml pulls in Spring at compile scope; keep every Spring
+			     module (direct or transitive) on one version. -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
+		<!-- SAML SSO (was com.onelogin:java-saml, which has no Jakarta release).
+		     pac4j-saml 6.x is Jakarta-native and built on OpenSAML 5. -->
 		<dependency>
-			<groupId>com.onelogin</groupId>
-			<artifactId>java-saml</artifactId>
-		<version>2.9.0</version>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-saml</artifactId>
+			<version>${pac4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-jakartaee</artifactId>
+			<version>${pac4j.version}</version>
+		</dependency>
+		<!-- Routes pac4j / OpenSAML SLF4J logging into log4j2 -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j2-impl</artifactId>
+			<version>2.25.4</version>
 		</dependency>
 		<dependency>
 			<groupId>de.mkammerer</groupId>
@@ -47,7 +99,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-		<version>2.18.0</version>
+		<version>2.22.0</version>
 	</dependency>
 
 	<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
@@ -68,11 +120,11 @@
 			<artifactId>jtidy</artifactId>
 			<version>r938</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<!-- Jakarta Mail (was com.sun.mail:javax.mail) - jakarta.mail namespace -->
 		<dependency>
-		<groupId>com.sun.mail</groupId>
-		<artifactId>javax.mail</artifactId>
-		<version>1.6.2</version>
+		<groupId>org.eclipse.angus</groupId>
+		<artifactId>angus-mail</artifactId>
+		<version>2.0.5</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
@@ -81,23 +133,26 @@
 			<artifactId>mongo-java-driver</artifactId>
 		<version>3.12.14</version>
 		</dependency>
+		<!-- Jakarta Servlet 6.1 (Jakarta EE 11 / Tomcat 11) - was javax.servlet:javax.servlet-api.
+		     The javax:javaee-api umbrella dependency was removed: it pulls the
+		     legacy javax.* namespace back onto the classpath. -->
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>8.0.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>4.0.1</version>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Jakarta JSTL 3.0 (jakarta.tags.*) - was jstl:jstl:1.2 -->
 		<dependency>
-			<groupId>jstl</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
@@ -139,7 +194,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>6.1.21</version>
+			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -147,38 +202,23 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>5.3.31</version>
+			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>6.0.2</version>
-			<scope>test</scope>
-		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-mock -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-mock</artifactId>
-			<version>2.0.8</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.fakemongo</groupId>
-			<artifactId>fongo</artifactId>
-			<version>2.1.1</version>
-			<scope>test</scope>
-		</dependency>
+		<!-- spring-mock:2.0.8 removed: javax-era standalone mock (2008).
+		     Spring 7 spring-test provides the Jakarta MockHttpServletRequest /
+		     MockServletConfig that supersedes it.
+		     fongo removed: unmaintained and unused (its only tests are @Disabled);
+		     test rescue tracked in #876. -->
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>5.3.31</version>
+			<version>${spring.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- Test -->
@@ -405,6 +445,51 @@
 		</resources>
 
 		<plugins>
+			<!-- Must stay first: runs before anything resolves dependencies -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.6.3</version>
+				<executions>
+					<execution>
+						<id>require-maven-for-repository-filter</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<!-- Maven before 3.9.2 does not expand the path in .mvn/maven.config,
+								     so the Shibboleth repository filter silently does nothing -->
+								<requireMavenVersion>
+									<version>[3.9.2,)</version>
+									<message>Maven 3.9.2 or newer is required: older versions ignore the Shibboleth repository restriction in .mvn/maven.config.</message>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.simplify4u.plugins</groupId>
+				<artifactId>pgpverify-maven-plugin</artifactId>
+				<version>1.19.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<keysMapLocation>${pgp.keysMap}</keysMapLocation>
+					<verifyPomFiles>true</verifyPomFiles>
+					<!-- Re-verify every build: the default skips verification when the
+					     artifact list is unchanged, which would miss a jar tampered with
+					     in the local repository after a successful run -->
+					<disableChecksum>true</disableChecksum>
+					<pgpKeyServer>hkps://keys.openpgp.org,hkps://keyserver.ubuntu.com</pgpKeyServer>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>properties-maven-plugin</artifactId>

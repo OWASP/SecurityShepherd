@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.GetterIT;
 import dbProcs.Setter;
+import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.servlet.ServletException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
