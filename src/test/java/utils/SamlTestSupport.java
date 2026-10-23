@@ -128,6 +128,9 @@ public class SamlTestSupport {
   public static SAML2Client install(Properties props) {
     SamlSso.Sso sso = SamlSso.build(props);
     SamlSso.set(sso);
+    // A fresh client has an empty request store: forget the previous browser's login state
+    pendingRequestId = null;
+    browserCookie = null;
     LoginMethod.setSaml(true);
     return sso.client;
   }
@@ -146,11 +149,16 @@ public class SamlTestSupport {
   /** When true, {@link #signedResponse} builds an unsolicited response (no InResponseTo) */
   public boolean unsolicited;
 
-  private String pendingRequestId;
-  private Cookie browserCookie;
+  /*
+   * One simulated browser, matching the single installed client: the AuthnRequest ID of its most
+   * recent login, and its binding cookie. Reset by install().
+   */
+  private static String pendingRequestId;
+  private static Cookie browserCookie;
 
   /**
-   * Starts an SP-initiated login as a browser would. The next {@link #signedResponse} answers it.
+   * Starts an SP-initiated login as a browser would, sending its binding cookie if the cookie's
+   * Path covers the login URL. The next {@link #signedResponse} answers it.
    *
    * @return the browser's request-binding cookie, which the ACS request must carry
    */
@@ -160,6 +168,10 @@ public class SamlTestSupport {
     request.setSecure(true);
     request.setServerName("shepherd.test");
     request.setServerPort(443);
+    Cookie[] sent = cookiesFor("/saml/dologin");
+    if (sent.length > 0) {
+      request.setCookies(sent);
+    }
     MockHttpServletResponse response = new MockHttpServletResponse();
     SamlSso.login(request, response);
     Matcher id =
@@ -169,13 +181,43 @@ public class SamlTestSupport {
       throw new IllegalStateException("No ID in AuthnRequest");
     }
     pendingRequestId = id.group(1);
-    browserCookie = response.getCookie(SamlRequestStore.COOKIE);
+    Cookie issued = response.getCookie(SamlRequestStore.COOKIE);
+    if (issued != null) {
+      browserCookie = issued;
+    }
     return browserCookie;
+  }
+
+  /** Switches to a different browser, with no binding cookie and no login in progress */
+  public static void newBrowser() {
+    pendingRequestId = null;
+    browserCookie = null;
+  }
+
+  /** The AuthnRequest ID of the most recently started login */
+  public static String lastRequestId() {
+    return pendingRequestId;
   }
 
   /** The binding cookie of the browser that started the most recent login, if any */
   public Cookie browserCookie() {
     return browserCookie;
+  }
+
+  /** The cookies the browser sends to a URL path, following the cookie Path rule */
+  public static Cookie[] cookiesFor(String requestPath) {
+    if (browserCookie == null) {
+      return new Cookie[0];
+    }
+    String path = browserCookie.getPath() == null ? "/" : browserCookie.getPath();
+    return requestPath.startsWith(path) ? new Cookie[] {browserCookie} : new Cookie[0];
+  }
+
+  /** As {@link #signedResponse}, answering the given AuthnRequest ID */
+  public String signedResponseTo(
+      String requestId, String nameId, Map<String, List<String>> attributes) throws Exception {
+    pendingRequestId = requestId;
+    return signedResponse(nameId, attributes, idpKeys, idpCert);
   }
 
   /**
