@@ -18,7 +18,27 @@
 		     servlet mocks. -->
 		<spring.version>7.0.10</spring.version>
 		<pac4j.version>6.6.0</pac4j.version>
+		<!-- Overridable only so src/test/scripts/pgp-verification-test.sh can try a wrong key -->
+		<pgp.keysMap>${project.basedir}/.mvn/pgp-keys.map</pgp.keysMap>
 	</properties>
+
+	<repositories>
+		<!-- OpenSAML 5 (pulled in by pac4j-saml) is published only to Shibboleth's
+		     repository, not Maven Central. pac4j-saml's POM declares it too; it is
+		     declared here so the dependency is visible and checksums are enforced. -->
+		<repository>
+			<id>shibboleth-releases</id>
+			<name>Shibboleth Releases Repository</name>
+			<url>https://build.shibboleth.net/maven/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>fail</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<dependencyManagement>
 		<dependencies>
@@ -425,6 +445,27 @@
 		</resources>
 
 		<plugins>
+			<plugin>
+				<groupId>org.simplify4u.plugins</groupId>
+				<artifactId>pgpverify-maven-plugin</artifactId>
+				<version>1.19.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<keysMapLocation>${pgp.keysMap}</keysMapLocation>
+					<verifyPomFiles>true</verifyPomFiles>
+					<!-- Re-verify every build: the default skips verification when the
+					     artifact list is unchanged, which would miss a jar tampered with
+					     in the local repository after a successful run -->
+					<disableChecksum>true</disableChecksum>
+					<pgpKeyServer>hkps://keys.openpgp.org,hkps://keyserver.ubuntu.com</pgpKeyServer>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>properties-maven-plugin</artifactId>
