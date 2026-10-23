@@ -164,7 +164,9 @@ The hostname must be the **Docker container name** (e.g. `secshep_mariadb`), not
 SSO is optional, and is turned on by `sso.enabled=true` in `sso.properties`. It is implemented in `utils/SamlSso.java` on **pac4j-saml 6.x** (OpenSAML 5). The five servlets `SSOLogin`, `ACS`, `SLS`, `SSOMetadata` and `Logout` delegate to it.
 
 - Configuration lives in `onelogin.saml.properties`, which keeps the key names of the java-saml toolkit used previously; see `src/main/resources/onelogin.saml.properties.sample`. The SP's PEM certificate and key are loaded into an in-memory keystore. The IdP settings are turned into an IdP metadata document. Nothing is written to disk.
-- `sso.properties` maps IdP attributes to users and roles (`utils/SsoUserMapper.java`).
+- `sso.properties` maps IdP attributes to users and roles (`utils/SsoUserMapper.java`). Blank identifiers are rejected.
+- The SSO endpoints answer 404 unless `sso.enabled=true`, even when a SAML configuration is present.
+- **Only SP-initiated login is supported.** `utils/SamlRequestStore.java` binds each AuthnRequest to the browser through the `shepherd_saml_request` cookie (HttpOnly, Secure, SameSite=None, ACS path). Responses without a matching `InResponseTo` from that browser are refused, which blocks login CSRF, and so are unsolicited IdP-initiated responses.
 
 ### Dependency trust: OpenSAML and PGP verification
 
