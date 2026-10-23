@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
@@ -26,10 +27,12 @@ import org.pac4j.saml.store.SAMLMessageStoreFactory;
  * only accepts a Response whose InResponseTo names a request started in the same browser. This
  * stops login CSRF: a valid response for one account can't be replayed through another browser's
  * assertion consumer service. <br>
- * The binding is a random token in a dedicated cookie ({@value #COOKIE}), HttpOnly, Secure and
- * SameSite=None so it survives the IdP's cross-site POST back, and scoped to the SAML endpoint
- * directory (the ACS URL's directory, e.g. /saml/), so a second login in the same browser (another
- * tab) reuses the token instead of replacing it. The session cookie's policy is left alone. <br>
+ * Each request gets its own random token, in its own cookie (named {@value #COOKIE} plus a hash of
+ * the request ID), so logins started at once in several tabs can't overwrite each other's binding.
+ * The cookie is HttpOnly, Secure and SameSite=None so it survives the IdP's cross-site POST back,
+ * scoped to the SAML endpoint directory (the ACS URL's directory, e.g. /saml/), lives as long as
+ * its request and is deleted once the login completes. The session cookie's policy is left alone.
+ * <br>
  * This file is part of the Security Shepherd Project.
  *
  * <p>The Security Shepherd project is free software: you can redistribute it and/or modify it under
@@ -45,6 +48,7 @@ import org.pac4j.saml.store.SAMLMessageStoreFactory;
  */
 public class SamlRequestStore implements SAMLMessageStoreFactory {
 
+  /** Prefix of the binding cookies' names */
   static final String COOKIE = "shepherd_saml_request";
 
   /** How long a started login may take at the IdP */
@@ -93,11 +97,42 @@ public class SamlRequestStore implements SAMLMessageStoreFactory {
     return new BoundStore(jee.getNativeRequest(), jee.getNativeResponse());
   }
 
+  /** The name of the cookie binding a request to its browser */
+  static String cookieName(String requestId) {
+    try {
+      byte[] digest =
+          MessageDigest.getInstance("SHA-256").digest(requestId.getBytes(StandardCharsets.UTF_8));
+      return COOKIE
+          + "_"
+          + Base64.getUrlEncoder().withoutPadding().encodeToString(digest).substring(0, 22);
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException("SHA-256 is unavailable", e);
+    }
+  }
+
   /** Forgets a request once its response has been accepted, so each request is used once */
   void forget(String requestId) {
     if (requestId != null) {
       pending.remove(requestId);
     }
+  }
+
+  /** As {@link #forget(String)}, also deleting the request's binding cookie from the browser */
+  void complete(String requestId, HttpServletResponse response) {
+    forget(requestId);
+    if (requestId != null) {
+      response.addCookie(bindingCookie(requestId, "", 0));
+    }
+  }
+
+  private Cookie bindingCookie(String requestId, String token, int maxAge) {
+    Cookie cookie = new Cookie(cookieName(requestId), token);
+    cookie.setPath(cookiePath);
+    cookie.setHttpOnly(true);
+    cookie.setSecure(true);
+    cookie.setMaxAge(maxAge);
+    cookie.setAttribute("SameSite", "None");
+    return cookie;
   }
 
   private final class BoundStore implements SAMLMessageStore {
@@ -118,13 +153,17 @@ public class SamlRequestStore implements SAMLMessageStoreFactory {
             .min(Comparator.comparing(e -> e.getValue().expires))
             .ifPresent(oldest -> pending.remove(oldest.getKey()));
       }
-      pending.put(id, new Pending(bindingToken(), message, now.plus(LIFETIME)));
+      byte[] bytes = new byte[32];
+      random.nextBytes(bytes);
+      String token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+      response.addCookie(bindingCookie(id, token, (int) LIFETIME.getSeconds()));
+      pending.put(id, new Pending(token, message, now.plus(LIFETIME)));
     }
 
     @Override
     public Optional<XMLObject> get(String id) {
       Pending entry = id == null ? null : pending.get(id);
-      String token = cookieToken();
+      String token = id == null ? null : cookieToken(cookieName(id));
       if (entry == null || token == null || entry.expires.isBefore(Instant.now())) {
         return Optional.empty();
       }
@@ -140,40 +179,13 @@ public class SamlRequestStore implements SAMLMessageStoreFactory {
       forget(id);
     }
 
-    /**
-     * This browser's binding token, creating one if it has none yet. The cookie is (re)sent either
-     * way, so it lasts as long as the newest pending request and an earlier one's expiry can't drop
-     * it while a later login is still in progress.
-     */
-    private String bindingToken() {
-      Object issued = request.getAttribute(COOKIE);
-      if (issued instanceof String) {
-        return (String) issued;
-      }
-      String token = cookieToken();
-      if (token == null) {
-        byte[] bytes = new byte[32];
-        random.nextBytes(bytes);
-        token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-      }
-      Cookie cookie = new Cookie(COOKIE, token);
-      cookie.setPath(cookiePath);
-      cookie.setHttpOnly(true);
-      cookie.setSecure(true);
-      cookie.setMaxAge((int) LIFETIME.getSeconds());
-      cookie.setAttribute("SameSite", "None");
-      response.addCookie(cookie);
-      request.setAttribute(COOKIE, token);
-      return token;
-    }
-
-    private String cookieToken() {
+    private String cookieToken(String name) {
       Cookie[] cookies = request.getCookies();
       if (cookies == null) {
         return null;
       }
       for (Cookie cookie : cookies) {
-        if (COOKIE.equals(cookie.getName()) && !cookie.getValue().isEmpty()) {
+        if (name.equals(cookie.getName()) && !cookie.getValue().isEmpty()) {
           return cookie.getValue();
         }
       }
