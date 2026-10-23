@@ -108,6 +108,25 @@ public class SamlSessionRegistry {
     return invalidated;
   }
 
+  /**
+   * Whether a session is tracked for this login.
+   *
+   * @param nameId The complete NameID identity
+   * @param sessionIndex The SessionIndex
+   * @return true if a live session was registered for exactly this NameID and SessionIndex
+   */
+  public static boolean isRegistered(String nameId, String sessionIndex) {
+    if (nameId == null || sessionIndex == null) {
+      return false;
+    }
+    for (Entry entry : sessions.values()) {
+      if (nameId.equals(entry.nameId) && sessionIndex.equals(entry.sessionIndex)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /** Number of tracked sessions; for tests */
   static int size() {
     return sessions.size();
