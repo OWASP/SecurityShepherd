@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -459,6 +460,39 @@ public class SamlSsoTest {
             .isPresent());
   }
 
+  /** Two tabs open the login page before the browser holds any binding cookie: both must work */
+  @Test
+  public void concurrentFirstLogins_InOneBrowser_BothSucceed() throws Exception {
+    List<String> requests = SamlTestSupport.startConcurrentLogins(2);
+
+    assertTrue(
+        SamlSso.authenticate(
+                acsPost(saml.signedResponseTo(requests.get(0), "user-123", studentAttributes())),
+                new MockHttpServletResponse())
+            .isPresent());
+    assertTrue(
+        SamlSso.authenticate(
+                acsPost(saml.signedResponseTo(requests.get(1), "user-123", studentAttributes())),
+                new MockHttpServletResponse())
+            .isPresent());
+  }
+
+  /** A completed login deletes its binding cookie, so cookies don't pile up in the browser */
+  @Test
+  public void authenticate_Success_DeletesThatLoginsCookie() throws Exception {
+    Cookie cookie = saml.startLogin();
+    String samlResponse =
+        saml.signedResponse("user-123", studentAttributes(), saml.idpKeys, saml.idpCert);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    assertTrue(SamlSso.authenticate(acsPost(samlResponse), response).isPresent());
+
+    Cookie deleted = response.getCookie(cookie.getName());
+    assertNotNull(deleted);
+    assertEquals(0, deleted.getMaxAge());
+    assertEquals(cookie.getPath(), deleted.getPath());
+  }
+
   @Test
   public void bindingCookie_IsScopedToTheSamlDirectory() throws Exception {
     Cookie cookie = saml.startLogin();
@@ -530,13 +564,14 @@ public class SamlSsoTest {
   @Test
   public void authenticate_ResponseDeliveredThroughAnotherBrowser_IsRejected() throws Exception {
     saml.startLogin();
+    String request = SamlTestSupport.lastRequestId();
     String samlResponse =
         saml.signedResponse("attacker", studentAttributes(), saml.idpKeys, saml.idpCert);
     MockHttpServletRequest victimWithoutCookie = acsPost(samlResponse);
     victimWithoutCookie.setCookies();
     MockHttpServletRequest victimWithOwnCookie = acsPost(samlResponse);
     victimWithOwnCookie.setCookies(
-        new jakarta.servlet.http.Cookie(SamlRequestStore.COOKIE, "victims-own-token"));
+        new jakarta.servlet.http.Cookie(SamlRequestStore.cookieName(request), "victims-own-token"));
 
     assertFalse(
         SamlSso.authenticate(victimWithoutCookie, new MockHttpServletResponse()).isPresent());

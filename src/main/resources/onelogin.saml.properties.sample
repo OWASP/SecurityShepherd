@@ -15,9 +15,10 @@
 #  Only SP-initiated login is supported (users start at /saml/dologin).
 #  IdP-initiated (unsolicited) responses are refused: they can't be tied to the
 #  browser that is logging in, which would allow login CSRF. Each login is bound
-#  to the browser by the shepherd_saml_request cookie (HttpOnly, Secure,
-#  SameSite=None, path of the ACS URL's directory, e.g. /saml/), so the ACS must
-#  be served over HTTPS. Logins started in several tabs at once all work.
+#  to the browser by a cookie of its own, shepherd_saml_request_<hash> (HttpOnly,
+#  Secure, SameSite=None, path of the ACS URL's directory, e.g. /saml/), deleted
+#  once the login completes, so the ACS must be served over HTTPS. Logins started
+#  in several tabs at once all work.
 #  The assertion's bearer SubjectConfirmationData must carry the AuthnRequest's
 #  ID in InResponseTo, as the SAML profile requires (standard IdPs do this), so
 #  the binding holds even when the Response itself is unsigned.
