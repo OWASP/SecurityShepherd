@@ -4,12 +4,12 @@
      -->
      <Connector port="8080" protocol="HTTP/1.1"
                 connectionTimeout="20000"
--               redirectPort="8443"
-+               redirectPort="HTTPS_PORT"
-                maxParameterCount="1000"
-                />
+-               redirectPort="8443" />
++               redirectPort="HTTPS_PORT" />
      <!-- A "Connector" using the shared thread pool-->
-@@ -101,6 +101,15 @@
+     <!--
+     <Connector executor="tomcatThreadPool"
+@@ -95,6 +95,15 @@
      </Connector>
      -->
  

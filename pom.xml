@@ -13,6 +13,9 @@
 		<skipTests>false</skipTests>
 		<skipITs>${skipTests}</skipITs>
 		<skipUTs>${skipTests}</skipUTs>
+		<!-- Spring is only used for the servlet mocks in spring-test. Spring 7
+		     tracks Jakarta EE 11 (Servlet 6.1), matching the Tomcat 11 runtime. -->
+		<spring.version>7.0.10</spring.version>
 	</properties>
 
 	<dependencies>
@@ -70,7 +73,7 @@
 		<dependency>
 		<groupId>org.eclipse.angus</groupId>
 		<artifactId>angus-mail</artifactId>
-		<version>2.0.3</version>
+		<version>2.0.5</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
@@ -79,13 +82,13 @@
 			<artifactId>mongo-java-driver</artifactId>
 		<version>3.12.14</version>
 		</dependency>
-		<!-- Jakarta Servlet 6.0 (Tomcat 10.1) - was javax.servlet:javax.servlet-api.
+		<!-- Jakarta Servlet 6.1 (Jakarta EE 11 / Tomcat 11) - was javax.servlet:javax.servlet-api.
 		     The javax:javaee-api umbrella dependency was removed: it pulls the
 		     legacy javax.* namespace back onto the classpath. -->
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
-			<version>6.0.0</version>
+			<version>6.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -93,7 +96,7 @@
 		<dependency>
 			<groupId>jakarta.servlet.jsp.jstl</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.web</groupId>
@@ -140,7 +143,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>6.1.21</version>
+			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -148,7 +151,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>6.1.21</version>
+			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -156,12 +159,12 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>6.1.21</version>
+			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<!-- spring-mock:2.0.8 removed: javax-era standalone mock (2008).
-		     Spring 6 spring-test provides the Jakarta MockHttpServletRequest /
+		     Spring 7 spring-test provides the Jakarta MockHttpServletRequest /
 		     MockServletConfig that supersedes it.
 		     fongo removed: unmaintained and unused (its only tests are @Disabled);
 		     test rescue tracked in #876. -->
@@ -170,7 +173,8 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>6.1.21</version>
+			<version>${spring.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- Test -->
