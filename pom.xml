@@ -445,6 +445,30 @@
 		</resources>
 
 		<plugins>
+			<!-- Must stay first: runs before anything resolves dependencies -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.6.3</version>
+				<executions>
+					<execution>
+						<id>require-maven-for-repository-filter</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<!-- Maven before 3.9.2 does not expand the path in .mvn/maven.config,
+								     so the Shibboleth repository filter silently does nothing -->
+								<requireMavenVersion>
+									<version>[3.9.2,)</version>
+									<message>Maven 3.9.2 or newer is required: older versions ignore the Shibboleth repository restriction in .mvn/maven.config.</message>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.simplify4u.plugins</groupId>
 				<artifactId>pgpverify-maven-plugin</artifactId>
