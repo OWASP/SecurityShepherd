@@ -12,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
@@ -432,6 +433,25 @@ public class SamlSsoTest {
                 acsPost(saml.signedResponseTo(first, "user-123", studentAttributes())),
                 new MockHttpServletResponse())
             .isPresent());
+    assertTrue(
+        SamlSso.authenticate(
+                acsPost(saml.signedResponseTo(second, "user-123", studentAttributes())),
+                new MockHttpServletResponse())
+            .isPresent());
+  }
+
+  /**
+   * A second tab starts a login just before the first tab's cookie would expire: the cookie must
+   * last as long as the newest login, or that login's callback arrives without it
+   */
+  @Test
+  public void overlappingLogins_LaterLoginKeepsTheCookieAlive() throws Exception {
+    saml.startLogin();
+    SamlTestSupport.advanceBrowserClock(Duration.ofMinutes(9));
+    saml.startLogin();
+    String second = SamlTestSupport.lastRequestId();
+    SamlTestSupport.advanceBrowserClock(Duration.ofMinutes(2));
+
     assertTrue(
         SamlSso.authenticate(
                 acsPost(saml.signedResponseTo(second, "user-123", studentAttributes())),

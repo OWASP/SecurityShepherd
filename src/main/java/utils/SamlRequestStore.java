@@ -140,7 +140,11 @@ public class SamlRequestStore implements SAMLMessageStoreFactory {
       forget(id);
     }
 
-    /** This browser's binding token, issuing a new cookie if it has none yet */
+    /**
+     * This browser's binding token, creating one if it has none yet. The cookie is (re)sent either
+     * way, so it lasts as long as the newest pending request and an earlier one's expiry can't drop
+     * it while a later login is still in progress.
+     */
     private String bindingToken() {
       Object issued = request.getAttribute(COOKIE);
       if (issued instanceof String) {
@@ -151,14 +155,14 @@ public class SamlRequestStore implements SAMLMessageStoreFactory {
         byte[] bytes = new byte[32];
         random.nextBytes(bytes);
         token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-        Cookie cookie = new Cookie(COOKIE, token);
-        cookie.setPath(cookiePath);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setMaxAge((int) LIFETIME.getSeconds());
-        cookie.setAttribute("SameSite", "None");
-        response.addCookie(cookie);
       }
+      Cookie cookie = new Cookie(COOKIE, token);
+      cookie.setPath(cookiePath);
+      cookie.setHttpOnly(true);
+      cookie.setSecure(true);
+      cookie.setMaxAge((int) LIFETIME.getSeconds());
+      cookie.setAttribute("SameSite", "None");
+      response.addCookie(cookie);
       request.setAttribute(COOKIE, token);
       return token;
     }
