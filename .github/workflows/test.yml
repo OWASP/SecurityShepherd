@@ -80,6 +80,8 @@ jobs:
         run: bash src/test/scripts/pgp-verification-test.sh
       - name: Docker Compose Build
         run: docker compose build
+      - name: Check Tomcat config placeholders were substituted
+        run: bash src/test/scripts/tomcat-config-test.sh
 
   unit-tests:
     needs: detect-changes
