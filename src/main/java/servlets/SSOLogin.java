@@ -1,16 +1,12 @@
 package servlets;
 
-import com.onelogin.saml2.Auth;
-import com.onelogin.saml2.exception.Error;
-import com.onelogin.saml2.exception.SettingsException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import utils.ShepherdLogManager;
 
 /**
  * Does SSO login. <br>
@@ -35,27 +31,25 @@ public class SSOLogin extends HttpServlet {
   private static final long serialVersionUID = 1488140446224058032L;
   private static final Logger log = LogManager.getLogger(SSOLogin.class);
 
-  /** Redirects user to index.jsp */
-  public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-
-    response.sendRedirect("index.jsp");
+  /**
+   * SAML SSO is unavailable at this step of the Jakarta migration (#861): java-saml has no Jakarta
+   * release, and the pac4j-based replacement follows in the next pull request of the stack.
+   */
+  private void unavailable(HttpServletResponse response) throws IOException {
+    log.error("SAML SSO is unavailable during the Jakarta migration (#861)");
+    response.sendError(
+        HttpServletResponse.SC_SERVICE_UNAVAILABLE, "SAML SSO is unavailable during migration");
   }
 
+  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
-    log.debug("**** servlets.SSOLogin ***");
-    request.setCharacterEncoding("UTF-8");
-    Auth auth;
-    try {
-      auth = new Auth(request, response);
-      auth.login();
-    } catch (SettingsException | Error e) {
-      log.error("Caught exception when initializing SSO: " + e.toString());
-      throw new RuntimeException(e);
-    }
+    unavailable(response);
+  }
 
-    log.debug("**** End servlets.SSOLogin ***");
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    unavailable(response);
   }
 }
