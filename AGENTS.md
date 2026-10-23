@@ -66,6 +66,41 @@ docker run -d --name secshep_test_db \
 
 The docker-compose `db` service is **not suitable for quick test runs** — it requires `mvn -Pdocker validate` first to generate SQL init scripts, and those scripts run on first container startup to create all challenge schemas.
 
+### Running the full CI pipeline locally
+
+Before pushing, run every step of `.github/workflows/test.yml` in the same order, not just the unit tests. Running only `mvn test` misses compile failures on other branches, Docker image problems and integration-test failures, and those then show up in CI instead. In a stack of PRs, run them on each branch whose content changes (at least the bottom branch you changed and the top of the stack).
+
+Use JDK 17 (`export JAVA_HOME=$(/usr/libexec/java_home -v 17)` on macOS). Spotless fails on newer JDKs.
+
+Run the pipeline in a throwaway worktree of the exact commit you will push, for example `git worktree add --detach ../shepherd-ci HEAD`, then `cd` into it and remove it afterwards with `git worktree remove --force ../shepherd-ci`. Running Maven in your main checkout while the pipeline runs rebuilds `target/` under it and breaks the run. The worktree also keeps the `moduleSchemas.sql` edit below out of your checkout.
+
+```bash
+mvn spotless:check -B                                # lint-java
+mvn clean install -Pdocker -DskipTests -B            # build
+bash src/test/scripts/pgp-verification-test.sh       # build
+docker compose build                                 # build
+bash src/test/scripts/tomcat-config-test.sh          # build
+TEST_MYSQL_PASSWORD=CowSaysMoo mvn test -B -e        # unit-tests
+```
+
+For the integration tests, start the `secshep_test_db` container above, then repeat what CI does before running them:
+
+```bash
+# CI rewrites the challenge DB users to accept connections from any host. The test DB runs in Docker,
+# so without this the challenge tests fail with "Access denied for user 'csrfChalFour'@'192.168.65.1'".
+# Never commit this change.
+sed -i.bak "s/'@'localhost'/'@'%'/g" src/main/resources/database/moduleSchemas.sql
+docker ps -aq --filter 'name=^mongo-[0-9]+$' | xargs -r docker rm -f   # leftovers hold port 27017
+mvn -Pdocker validate -B
+TEST_MYSQL_PASSWORD=CowSaysMoo mvn verify -DskipUTs=true -DmongoDocker -B
+```
+
+Each integration-test run overwrites the local `mongo:4.1.13` tag (see "Integration tests fail building the Mongo image" below). Restore the official image before `docker compose build` and before every integration-test run, not only after a failure.
+
+When a step fails, look at the full Maven output for the root cause. `-q` and filtered output can hide it.
+
+Only infrastructure outages (Docker Hub errors, `build.shibboleth.net` timeouts) are acceptable reasons to learn about a failure from CI rather than locally.
+
 ### Docker DB init fails with SQL syntax error
 
 If the MariaDB container exits immediately with `ERROR 1064 (42000) at line 181` referencing a `CREATE PROCEDURE` statement, this is a **stale Docker image cache** issue, not a bug in the SQL.
@@ -200,7 +235,9 @@ Stored procedures use `DELIMITER` statements that are commented out in the sourc
 
 ### Always run tests before pushing
 
-Run `mvn test -B` locally before pushing any code changes. If integration tests are relevant to your changes, run those too. Do not rely solely on CI to catch failures.
+Before pushing any code change, run the whole CI pipeline locally, as described in "Running the full CI pipeline locally", and push only once every step passes. Do not rely on CI to catch failures.
+
+Also review your own diff for edge cases before pushing, especially in authentication and SAML code: expiry, overlapping or concurrent requests, cookie scope, and which fields are signed. Automated reviewers should not be the first to find them.
 
 ### Bug fixes must include tests
 
