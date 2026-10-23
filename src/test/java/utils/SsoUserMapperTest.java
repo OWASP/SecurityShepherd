@@ -97,6 +97,35 @@ public class SsoUserMapperTest {
   }
 
   @Test
+  public void map_BlankSsoName_IsRejected() {
+    for (String blank : new String[] {"", "   "}) {
+      Map<String, Object> attributes = attributes(Collections.singletonList("staff"));
+      attributes.put("uid", Collections.singletonList(blank));
+
+      SsoUserMapper.Result result = SsoUserMapper.map(attributes, ssoProperties());
+
+      assertFalse(result.isValid());
+      assertEquals("Required SSO attributes are missing", result.error);
+    }
+  }
+
+  @Test
+  public void map_BlankUserName_IsRejected() {
+    Map<String, Object> attributes = attributes(Collections.singletonList("staff"));
+    attributes.put("displayName", " ");
+
+    assertFalse(SsoUserMapper.map(attributes, ssoProperties()).isValid());
+  }
+
+  @Test
+  public void map_NonBlankValue_IsKeptAsSent() {
+    Map<String, Object> attributes = attributes(Collections.singletonList("staff"));
+    attributes.put("uid", Collections.singletonList(" jdoe "));
+
+    assertEquals(" jdoe ", SsoUserMapper.map(attributes, ssoProperties()).ssoName);
+  }
+
+  @Test
   public void map_NoAttributes_IsRejected() {
     SsoUserMapper.Result result = SsoUserMapper.map(Collections.emptyMap(), ssoProperties());
 

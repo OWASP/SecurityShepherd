@@ -1,5 +1,6 @@
 package utils;
 
+import jakarta.servlet.http.Cookie;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.net.URLDecoder;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 import javax.xml.namespace.QName;
@@ -58,6 +61,7 @@ import org.opensaml.xmlsec.signature.support.SignatureConstants;
 import org.opensaml.xmlsec.signature.support.Signer;
 import org.pac4j.saml.client.SAML2Client;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * Test fixtures for SAML SSO: generated SP/IdP key pairs, onelogin.saml.properties contents for
@@ -124,12 +128,54 @@ public class SamlTestSupport {
   public static SAML2Client install(Properties props) {
     SamlSso.Sso sso = SamlSso.build(props);
     SamlSso.set(sso);
+    LoginMethod.setSaml(true);
     return sso.client;
   }
 
   /** Clears the client installed by {@link #installClient()} */
   public static void uninstallClient() {
     SamlSso.set(null);
+    LoginMethod.setSaml(null);
+  }
+
+  /** Switches SSO (sso.enabled) on or off without touching the installed client */
+  public static void setSsoEnabled(boolean enabled) {
+    LoginMethod.setSaml(enabled);
+  }
+
+  /** When true, {@link #signedResponse} builds an unsolicited response (no InResponseTo) */
+  public boolean unsolicited;
+
+  private String pendingRequestId;
+  private Cookie browserCookie;
+
+  /**
+   * Starts an SP-initiated login as a browser would. The next {@link #signedResponse} answers it.
+   *
+   * @return the browser's request-binding cookie, which the ACS request must carry
+   */
+  public Cookie startLogin() throws Exception {
+    MockHttpServletRequest request = new MockHttpServletRequest("GET", "/saml/dologin");
+    request.setScheme("https");
+    request.setSecure(true);
+    request.setServerName("shepherd.test");
+    request.setServerPort(443);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+    SamlSso.login(request, response);
+    Matcher id =
+        Pattern.compile(" ID=\"([^\"]+)\"")
+            .matcher(decodeRedirectRequest(response.getRedirectedUrl()));
+    if (!id.find()) {
+      throw new IllegalStateException("No ID in AuthnRequest");
+    }
+    pendingRequestId = id.group(1);
+    browserCookie = response.getCookie(SamlRequestStore.COOKIE);
+    return browserCookie;
+  }
+
+  /** The binding cookie of the browser that started the most recent login, if any */
+  public Cookie browserCookie() {
+    return browserCookie;
   }
 
   /**
@@ -161,6 +207,15 @@ public class SamlTestSupport {
     response.setIssueInstant(now);
     response.setVersion(SAMLVersion.VERSION_20);
     response.setDestination(ACS_URL);
+    String inResponseTo = null;
+    if (!unsolicited) {
+      if (pendingRequestId == null) {
+        startLogin();
+      }
+      inResponseTo = pendingRequestId;
+      pendingRequestId = null;
+      response.setInResponseTo(inResponseTo);
+    }
     response.setIssuer(issuer());
     Status status = build(Status.DEFAULT_ELEMENT_NAME);
     StatusCode statusCode = build(StatusCode.DEFAULT_ELEMENT_NAME);
@@ -185,6 +240,7 @@ public class SamlTestSupport {
     confirmation.setMethod(SubjectConfirmation.METHOD_BEARER);
     SubjectConfirmationData confirmationData = build(SubjectConfirmationData.DEFAULT_ELEMENT_NAME);
     confirmationData.setRecipient(ACS_URL);
+    confirmationData.setInResponseTo(inResponseTo);
     confirmationData.setNotOnOrAfter(now.plus(Duration.ofMinutes(5)));
     confirmation.setSubjectConfirmationData(confirmationData);
     subject.getSubjectConfirmations().add(confirmation);

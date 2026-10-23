@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pac4j.saml.profile.SAML2Profile;
 import utils.Hash;
+import utils.LoginMethod;
 import utils.SamlSso;
 import utils.ShepherdLogManager;
 import utils.SsoUserMapper;
@@ -45,6 +46,12 @@ public class ACS extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    if (!LoginMethod.isSaml()) {
+      // SSO is off (sso.enabled in sso.properties): this endpoint must not authenticate anyone,
+      // even if a SAML configuration is present
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
 
     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
     log.debug("**** servlets.ACS ***");
