@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utils.LoginMethod;
+import utils.SamlSso;
+import utils.ShepherdLogManager;
 
 /**
  * Does SSO login. <br>
@@ -31,25 +34,30 @@ public class SSOMetadata extends HttpServlet {
   private static final long serialVersionUID = 3679066677850981985L;
   private static final Logger log = LogManager.getLogger(SSOMetadata.class);
 
-  /**
-   * SAML SSO is unavailable at this step of the Jakarta migration (#861): java-saml has no Jakarta
-   * release, and the pac4j-based replacement follows in the next pull request of the stack.
-   */
-  private void unavailable(HttpServletResponse response) throws IOException {
-    log.error("SAML SSO is unavailable during the Jakarta migration (#861)");
-    response.sendError(
-        HttpServletResponse.SC_SERVICE_UNAVAILABLE, "SAML SSO is unavailable during migration");
-  }
-
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    unavailable(response);
-  }
-
-  @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    unavailable(response);
+
+    /** Redirects user to index.jsp */
+    response.sendRedirect("index.jsp");
+  }
+
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    if (!LoginMethod.isSaml()) {
+      // SSO is off (sso.enabled in sso.properties): this endpoint must not authenticate anyone,
+      // even if a SAML configuration is present
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
+    ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+
+    try {
+      String metadata = SamlSso.getServiceProviderMetadata();
+      response.setContentType("application/xml; charset=UTF-8");
+      response.getWriter().println(metadata);
+    } catch (Exception e) {
+      log.error("Caught exception when initializing SSO: " + e.toString());
+      throw new RuntimeException(e);
+    }
   }
 }

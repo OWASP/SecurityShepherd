@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.pac4j.saml.profile.SAML2Profile;
+import utils.LoginMethod;
+import utils.SamlSso;
 import utils.ShepherdLogManager;
 import utils.Validate;
 
@@ -58,6 +61,10 @@ public class Logout extends HttpServlet {
       Object tokenParmeter = request.getParameter("csrfToken");
       if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
 
+        // Read before the session is invalidated: single logout needs the NameID and
+        // session index captured at login
+        Object samlProfile = ses.getAttribute(SamlSso.PROFILE_SESSION_ATTRIBUTE);
+
         // Remove Everything
         ses.removeAttribute("userStamp");
         ses.removeAttribute("userName");
@@ -73,8 +80,14 @@ public class Logout extends HttpServlet {
         response.addCookie(emptyCookie);
         log.debug("User Logged Out");
 
-        // SAML single logout is unavailable during the Jakarta migration (#861)
-        response.sendRedirect("login.jsp");
+        if (LoginMethod.isSaml() && samlProfile instanceof SAML2Profile) {
+          if (!SamlSso.logout(request, response, (SAML2Profile) samlProfile)) {
+            log.debug("No IdP single logout URL configured, ending local session only");
+            response.sendRedirect("login.jsp");
+          }
+        } else {
+          response.sendRedirect("login.jsp");
+        }
 
       } else {
         log.error("CSRF Attack Detected");

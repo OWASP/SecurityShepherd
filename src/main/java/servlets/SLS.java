@@ -4,9 +4,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utils.LoginMethod;
+import utils.SamlSso;
+import utils.ShepherdLogManager;
 
 /**
  * Control class for the SSO logout operation <br>
@@ -31,25 +35,61 @@ public class SLS extends HttpServlet {
   private static final long serialVersionUID = -5824919455464886874L;
   private static final Logger log = LogManager.getLogger(SLS.class);
 
-  /**
-   * SAML SSO is unavailable at this step of the Jakarta migration (#861): java-saml has no Jakarta
-   * release, and the pac4j-based replacement follows in the next pull request of the stack.
-   */
-  private void unavailable(HttpServletResponse response) throws IOException {
-    log.error("SAML SSO is unavailable during the Jakarta migration (#861)");
-    response.sendError(
-        HttpServletResponse.SC_SERVICE_UNAVAILABLE, "SAML SSO is unavailable during migration");
-  }
-
+  /** IdP logout messages arrive here over the HTTP-Redirect binding */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    unavailable(response);
+    handleRequest(request, response);
   }
 
+  /** IdP logout messages arrive here over the HTTP-POST binding */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    unavailable(response);
+    handleRequest(request, response);
+  }
+
+  /**
+   * Single logout service. Handles the IdP's LogoutResponse to an SP-initiated logout (see Logout),
+   * and IdP-initiated LogoutRequests, answering them with a LogoutResponse. The SAML message is
+   * validated (including its IdP signature when want_messages_signed is set), so no CSRF token is
+   * needed: the request originates from the IdP, not from a Security Shepherd page.
+   *
+   * <p>Sessions are ended by SamlSso for the login an IdP LogoutRequest names, not by whichever
+   * session the delivering browser happens to have. A LogoutResponse ends nothing: Logout already
+   * ended the local session before sending the user to the IdP. An invalid message gets a 400,
+   * never a redirect to login.jsp (which would end the browser's session).
+   */
+  public void handleRequest(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    if (!LoginMethod.isSaml()) {
+      // SSO is off (sso.enabled in sso.properties): this endpoint must not authenticate anyone,
+      // even if a SAML configuration is present
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
+    // Setting IpAddress To Log and taking header for original IP if forwarded from
+    // proxy
+    ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
+    log.debug("**** servlets.SLS ***");
+    response.setCharacterEncoding("UTF-8");
+    request.setCharacterEncoding("UTF-8");
+
+    SamlSso.LogoutMessage message = SamlSso.processLogoutMessage(request, response);
+    log.debug("SAML logout message: " + message);
+
+    if (message == SamlSso.LogoutMessage.INVALID) {
+      // No redirect: login.jsp invalidates the current session, so redirecting there would let
+      // any page log a user out by sending their browser here with a bogus message
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    } else if (message == SamlSso.LogoutMessage.LOGOUT_RESPONSE) {
+      // Logout already ended this browser's session; if it still has one (e.g. the response was
+      // delivered to a different browser), don't end it via login.jsp
+      HttpSession ses = request.getSession(false);
+      boolean loggedIn = ses != null && ses.getAttribute("userRole") != null;
+      response.sendRedirect(loggedIn ? "../index.jsp" : "../login.jsp");
+    }
+    // For an IdP LogoutRequest the LogoutResponse back to the IdP has already been written
+    log.debug("*** END SLS ***");
   }
 }
