@@ -43,6 +43,7 @@ public class SamlLogoutTest {
   /** Installs a client that requires signed logout messages, as the sample configuration does */
   @BeforeEach
   public void setUp() throws Exception {
+    SamlSso.clearRememberedLogoutRequests();
     SamlTestSupport.install(signedLogoutProperties(true));
     loggedIn = new MockHttpSession();
     register(loggedIn, "user-123", "_session-1");
@@ -58,6 +59,8 @@ public class SamlLogoutTest {
       }
     }
     SamlTestSupport.uninstallClient();
+    SamlSso.maxRememberedLogoutRequests = 10000;
+    SamlSso.clearRememberedLogoutRequests();
   }
 
   /** Registers a session for a persistent NameID with default qualifiers, as ACS would */
@@ -435,6 +438,36 @@ public class SamlLogoutTest {
     assertEquals(
         SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
     assertFalse(loggedIn.isInvalid());
+  }
+
+  /**
+   * Unsigned requests that end nothing must not take replay-cache slots; otherwise flooding them
+   * would make genuine signed logouts be refused as "too many".
+   */
+  @Test
+  public void floodOfUnsignedNoOpLogouts_DoesNotBlockSignedLogout() throws Exception {
+    SamlSso.maxRememberedLogoutRequests = 5;
+    SamlTestSupport.install(signedLogoutProperties(false));
+    for (int i = 0; i < 10; i++) {
+      process(SamlTestSupport.slsGet(logoutRequestQuery("user-" + i, null, null)));
+    }
+
+    MockHttpServletRequest signed =
+        SamlTestSupport.slsGet(logoutRequestQuery("user-123", "_session-1", saml.idpKeys));
+
+    assertEquals(SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST, process(signed));
+    assertTrue(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void unsignedLogoutNamingATrackedLogin_StillEndsIt() throws Exception {
+    SamlTestSupport.install(signedLogoutProperties(false));
+
+    assertEquals(
+        SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST,
+        process(SamlTestSupport.slsGet(logoutRequestQuery("user-123", "_session-1", null))));
+    assertTrue(loggedIn.isInvalid());
+    assertFalse(otherUser.isInvalid());
   }
 
   @Test
