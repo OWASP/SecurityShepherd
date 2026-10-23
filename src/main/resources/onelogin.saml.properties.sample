@@ -18,6 +18,9 @@
 #  to the browser by the shepherd_saml_request cookie (HttpOnly, Secure,
 #  SameSite=None, path of the ACS URL's directory, e.g. /saml/), so the ACS must
 #  be served over HTTPS. Logins started in several tabs at once all work.
+#  The assertion's bearer SubjectConfirmationData must carry the AuthnRequest's
+#  ID in InResponseTo, as the SAML profile requires (standard IdPs do this), so
+#  the binding holds even when the Response itself is unsigned.
 
 onelogin.saml2.strict =  true
 
