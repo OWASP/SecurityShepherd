@@ -105,14 +105,22 @@ public class SsoUserMapper {
     Object value = key == null ? null : attributes.get(key);
     if (value instanceof Collection) {
       for (Object item : (Collection<?>) value) {
-        if (item != null) {
-          values.add(item.toString());
-        }
+        addIfNotBlank(values, item);
       }
-    } else if (value != null) {
-      values.add(value.toString());
+    } else {
+      addIfNotBlank(values, value);
     }
     return values;
+  }
+
+  /**
+   * Blank values count as missing: a blank ssoName would let different principals share one
+   * account, since accounts are looked up by it.
+   */
+  private static void addIfNotBlank(List<String> values, Object value) {
+    if (value != null && !value.toString().trim().isEmpty()) {
+      values.add(value.toString());
+    }
   }
 
   private static List<String> splitList(String value) {

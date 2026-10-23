@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utils.LoginMethod;
 import utils.SamlSso;
 import utils.ShepherdLogManager;
 
@@ -42,6 +43,12 @@ public class SSOMetadata extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    if (!LoginMethod.isSaml()) {
+      // SSO is off (sso.enabled in sso.properties): this endpoint must not authenticate anyone,
+      // even if a SAML configuration is present
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
 
     try {
