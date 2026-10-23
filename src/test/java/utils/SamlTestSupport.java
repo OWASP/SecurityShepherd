@@ -129,8 +129,7 @@ public class SamlTestSupport {
     SamlSso.Sso sso = SamlSso.build(props);
     SamlSso.set(sso);
     // A fresh client has an empty request store: forget the previous browser's login state
-    pendingRequestId = null;
-    browserCookie = null;
+    newBrowser();
     LoginMethod.setSaml(true);
     return sso.client;
   }
@@ -151,10 +150,13 @@ public class SamlTestSupport {
 
   /*
    * One simulated browser, matching the single installed client: the AuthnRequest ID of its most
-   * recent login, and its binding cookie. Reset by install().
+   * recent login, its binding cookie and when the browser drops that cookie (by its Max-Age),
+   * measured on a browser clock that tests can move forward. Reset by install().
    */
   private static String pendingRequestId;
   private static Cookie browserCookie;
+  private static Instant browserCookieExpires;
+  private static Duration browserClock = Duration.ZERO;
 
   /**
    * Starts an SP-initiated login as a browser would, sending its binding cookie if the cookie's
@@ -184,6 +186,7 @@ public class SamlTestSupport {
     Cookie issued = response.getCookie(SamlRequestStore.COOKIE);
     if (issued != null) {
       browserCookie = issued;
+      browserCookieExpires = browserNow().plusSeconds(issued.getMaxAge());
     }
     return browserCookie;
   }
@@ -192,6 +195,20 @@ public class SamlTestSupport {
   public static void newBrowser() {
     pendingRequestId = null;
     browserCookie = null;
+    browserCookieExpires = null;
+    browserClock = Duration.ZERO;
+  }
+
+  /**
+   * Moves the browser's clock forward, so its binding cookie expires as its Max-Age says. The
+   * server's own clock is not moved.
+   */
+  public static void advanceBrowserClock(Duration elapsed) {
+    browserClock = browserClock.plus(elapsed);
+  }
+
+  private static Instant browserNow() {
+    return Instant.now().plus(browserClock);
   }
 
   /** The AuthnRequest ID of the most recently started login */
@@ -204,8 +221,11 @@ public class SamlTestSupport {
     return browserCookie;
   }
 
-  /** The cookies the browser sends to a URL path, following the cookie Path rule */
+  /** The cookies the browser sends to a URL path, following the cookie Path and Max-Age rules */
   public static Cookie[] cookiesFor(String requestPath) {
+    if (browserCookie != null && !browserNow().isBefore(browserCookieExpires)) {
+      browserCookie = null;
+    }
     if (browserCookie == null) {
       return new Cookie[0];
     }
