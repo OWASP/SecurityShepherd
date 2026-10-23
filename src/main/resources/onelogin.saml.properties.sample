@@ -11,6 +11,12 @@
 #      (encrypted assertions and NameIDs are still decrypted when received)
 #  onelogin.saml2.idp.certfingerprint alone is not supported: set
 #  onelogin.saml2.idp.x509cert to the IdP's full signing certificate.
+#
+#  Only SP-initiated login is supported (users start at /saml/dologin).
+#  IdP-initiated (unsolicited) responses are refused: they can't be tied to the
+#  browser that is logging in, which would allow login CSRF. Each login is bound
+#  to the browser by the shepherd_saml_request cookie (HttpOnly, Secure,
+#  SameSite=None, path of the ACS URL), so the ACS must be served over HTTPS.
 
 onelogin.saml2.strict =  true
 
