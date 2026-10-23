@@ -165,6 +165,20 @@ SSO is optional, and is turned on by `sso.enabled=true` in `sso.properties`. It 
 
 - Configuration lives in `onelogin.saml.properties`, which keeps the key names of the java-saml toolkit used previously; see `src/main/resources/onelogin.saml.properties.sample`. The SP's PEM certificate and key are loaded into an in-memory keystore. The IdP settings are turned into an IdP metadata document. Nothing is written to disk.
 - `sso.properties` maps IdP attributes to users and roles (`utils/SsoUserMapper.java`).
+
+### Dependency trust: OpenSAML and PGP verification
+
+pac4j-saml depends on **OpenSAML 5, which is not on Maven Central**. Shibboleth, its maintainer, publishes it only to its own repository (`build.shibboleth.net`, declared in `pom.xml` with checksum failures enforced). Three controls apply:
+
+- **Repository filtering** (`.mvn/maven.config`, `.mvn/rrf/groupId-shibboleth-releases.txt`): the Shibboleth repository may serve only the `org.opensaml` and `net.shibboleth` groupIds. Everything else comes from Central only.
+- **PGP signature verification** (`pgpverify-maven-plugin` in `pom.xml`, rules in `.mvn/pgp-keys.map`): every dependency's signature is checked on every build.
+  - `org.opensaml` / `net.shibboleth` are pinned to the Shibboleth release key `B5B5DD332142AD657E8D87AC7D27E610B8A3DC52`, from https://shibboleth.net/downloads/PGP_KEYS. Verify any new key there before changing the pin.
+  - Every other groupId is listed by name and needs a valid signature. A new dependency from an unlisted groupId fails with `Not allowed artifact`: review it, then add its groupId.
+  - **Never add a wildcard rule** (`*`, `org.*`, …): any matching rule lets an artifact pass, so a broad rule would silently undo the Shibboleth pin.
+  - Keys are fetched from `keys.openpgp.org` / `keyserver.ubuntu.com` and cached in the local repository.
+- **Test:** `bash src/test/scripts/pgp-verification-test.sh` (run in CI's build job) proves a tampered OpenSAML jar and an OpenSAML artifact signed by another key both fail the build.
+
+A build failing with `Could not find artifact org.opensaml:...` / `build.shibboleth.net failed to respond` means that repository was unreachable. Re-run the build.
 - Tests generate their own key pairs and signed SAML responses (`src/test/java/utils/SamlTestSupport.java`). Do not commit private keys.
 
 ### SQL schema files
