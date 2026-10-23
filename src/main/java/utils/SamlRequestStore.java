@@ -27,8 +27,9 @@ import org.pac4j.saml.store.SAMLMessageStoreFactory;
  * stops login CSRF: a valid response for one account can't be replayed through another browser's
  * assertion consumer service. <br>
  * The binding is a random token in a dedicated cookie ({@value #COOKIE}), HttpOnly, Secure and
- * SameSite=None so it survives the IdP's cross-site POST back, and scoped to the ACS path only. The
- * session cookie's policy is left alone. <br>
+ * SameSite=None so it survives the IdP's cross-site POST back, and scoped to the SAML endpoint
+ * directory (the ACS URL's directory, e.g. /saml/), so a second login in the same browser (another
+ * tab) reuses the token instead of replacing it. The session cookie's policy is left alone. <br>
  * This file is part of the Security Shepherd Project.
  *
  * <p>The Security Shepherd project is free software: you can redistribute it and/or modify it under
@@ -70,11 +71,20 @@ public class SamlRequestStore implements SAMLMessageStoreFactory {
   private final String cookiePath;
 
   /**
-   * @param assertionConsumerServiceUrl The ACS URL, whose path scopes the binding cookie
+   * @param assertionConsumerServiceUrl The ACS URL, whose directory (including any context prefix)
+   *     scopes the binding cookie, so both the login start and the ACS receive it
    */
   public SamlRequestStore(String assertionConsumerServiceUrl) {
     String path = URI.create(assertionConsumerServiceUrl).getPath();
-    this.cookiePath = path == null || path.isEmpty() ? "/" : path;
+    this.cookiePath =
+        path == null || path.lastIndexOf('/') < 0
+            ? "/"
+            : path.substring(0, path.lastIndexOf('/') + 1);
+  }
+
+  /** The binding cookie's Path */
+  String cookiePath() {
+    return cookiePath;
   }
 
   @Override
