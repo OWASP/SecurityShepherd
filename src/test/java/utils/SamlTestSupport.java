@@ -148,6 +148,19 @@ public class SamlTestSupport {
   /** When true, {@link #signedResponse} builds an unsolicited response (no InResponseTo) */
   public boolean unsolicited;
 
+  /**
+   * When set, {@link #signedResponse} puts this request ID in the Response envelope's InResponseTo
+   * (which isn't signed unless the whole message is) while the signed assertion's bearer
+   * confirmation keeps the request it answers: an attacker editing the envelope
+   */
+  public String envelopeInResponseTo;
+
+  /**
+   * When true, {@link #signedResponse} leaves InResponseTo out of the bearer confirmation, as in an
+   * assertion issued without a request (IdP-initiated)
+   */
+  public boolean omitConfirmationInResponseTo;
+
   /*
    * One simulated browser, matching the single installed client: the AuthnRequest ID of its most
    * recent login, its binding cookie and when the browser drops that cookie (by its Max-Age),
@@ -276,7 +289,7 @@ public class SamlTestSupport {
       }
       inResponseTo = pendingRequestId;
       pendingRequestId = null;
-      response.setInResponseTo(inResponseTo);
+      response.setInResponseTo(envelopeInResponseTo != null ? envelopeInResponseTo : inResponseTo);
     }
     response.setIssuer(issuer());
     Status status = build(Status.DEFAULT_ELEMENT_NAME);
@@ -302,7 +315,7 @@ public class SamlTestSupport {
     confirmation.setMethod(SubjectConfirmation.METHOD_BEARER);
     SubjectConfirmationData confirmationData = build(SubjectConfirmationData.DEFAULT_ELEMENT_NAME);
     confirmationData.setRecipient(ACS_URL);
-    confirmationData.setInResponseTo(inResponseTo);
+    confirmationData.setInResponseTo(omitConfirmationInResponseTo ? null : inResponseTo);
     confirmationData.setNotOnOrAfter(now.plus(Duration.ofMinutes(5)));
     confirmation.setSubjectConfirmationData(confirmationData);
     subject.getSubjectConfirmations().add(confirmation);
