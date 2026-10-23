@@ -16,11 +16,9 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.onelogin</groupId>
-			<artifactId>java-saml</artifactId>
-		<version>2.9.0</version>
-		</dependency>
+		<!-- com.onelogin:java-saml removed: it has no Jakarta release. SAML SSO is
+		     unavailable at this step of the Jakarta migration (#861) and is
+		     reimplemented on pac4j-saml later in the stack. -->
 		<dependency>
 			<groupId>de.mkammerer</groupId>
 			<artifactId>argon2-jvm</artifactId>
