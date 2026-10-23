@@ -119,6 +119,13 @@ The hostname must be the **Docker container name** (e.g. `secshep_mariadb`), not
 - Branch naming: `dev#{issueNumber}` (e.g. `dev#536`)
 - PRs always target `dev`, not `master`
 
+## Versioning and releases
+
+- [Semantic Versioning 2.0.0](https://semver.org/). Release tags are plain `X.Y.Z` (e.g. `4.0.1`), with no `v` prefix, pre-release suffix or build metadata. A tag ruleset rejects any other format.
+- `pom.xml` on `dev` is always `X.Y.Z-SNAPSHOT`. Don't change the version as part of unrelated work.
+- Tags can't be moved or deleted, and only admins can create them. Never create or push tags unless the user explicitly asks.
+- The release steps are in `docs/releasing.md`.
+
 ## Project structure
 
 - `src/main/java/` — web app source
