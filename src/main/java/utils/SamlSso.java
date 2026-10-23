@@ -168,7 +168,7 @@ public class SamlSso {
   static final Duration CLOCK_SKEW = Duration.ofMinutes(5);
 
   /** Upper bound on remembered LogoutRequest IDs; beyond it new requests are refused */
-  private static final int MAX_REMEMBERED_LOGOUT_REQUESTS = 10000;
+  static int maxRememberedLogoutRequests = 10000;
 
   /**
    * IDs of LogoutRequests already acted on, with when they can be forgotten. An entry outlives the
@@ -428,16 +428,30 @@ public class SamlSso {
           sessionIndexes.add(index.getValue());
         }
       }
+      // Only a request that will end something takes a slot in the replay cache: a signed request,
+      // or an unsigned one naming a login we track. Otherwise unauthenticated no-op requests could
+      // fill the cache and lock out genuine signed logouts. (A NameID alone is guessable, so only
+      // a signed request may end all of a user's sessions.)
+      boolean acts =
+          signed
+              || sessionIndexes.stream()
+                  .anyMatch(index -> SamlSessionRegistry.isRegistered(nameIdKey, index));
       int ended = 0;
-      if (!sessionIndexes.isEmpty()) {
-        for (String sessionIndex : sessionIndexes) {
-          ended += SamlSessionRegistry.invalidate(nameIdKey, sessionIndex);
+      if (acts) {
+        String replay = recordLogoutRequest(logoutRequest);
+        if (replay != null) {
+          log.error("SAML LogoutRequest rejected: " + replay);
+          return LogoutMessage.INVALID;
         }
-      } else if (signed) {
-        ended = SamlSessionRegistry.invalidate(nameIdKey, null);
+        if (!sessionIndexes.isEmpty()) {
+          for (String sessionIndex : sessionIndexes) {
+            ended += SamlSessionRegistry.invalidate(nameIdKey, sessionIndex);
+          }
+        } else {
+          ended = SamlSessionRegistry.invalidate(nameIdKey, null);
+        }
       } else {
-        // A NameID alone is guessable, so only a signed request may end all of a user's sessions
-        log.error("Unsigned SAML LogoutRequest without a SessionIndex; no sessions ended");
+        log.error("Unsigned SAML LogoutRequest names no tracked login; no sessions ended");
       }
       log.debug("IdP-initiated SAML logout ended " + ended + " session(s)");
       HttpAction action = saml.processLogout(ctx, credentials.get());
@@ -451,9 +465,10 @@ public class SamlSso {
   }
 
   /**
-   * Checks an IdP LogoutRequest's addressing, freshness and uniqueness before it may end sessions,
-   * and records its ID. A signed request must name this SP's logout endpoint as its Destination
-   * (SAML Bindings 3.4.5.2 / 3.5.5.2); any Destination given must match.
+   * Checks an IdP LogoutRequest's addressing and freshness before it may end sessions. A signed
+   * request must name this SP's logout endpoint as its Destination (SAML Bindings 3.4.5.2 /
+   * 3.5.5.2); any Destination given must match. Replay is checked by {@link #recordLogoutRequest},
+   * only for requests that will act.
    *
    * @return why the request is rejected, or null if it may be acted on
    */
@@ -479,9 +494,20 @@ public class SamlSso {
     if (request.getID() == null) {
       return "no ID";
     }
+    return null;
+  }
+
+  /**
+   * Records a LogoutRequest's ID (per issuer) before it ends sessions, rejecting a replay. Fails
+   * closed when the cache is full.
+   *
+   * @return why the request is rejected, or null if it was recorded
+   */
+  static String recordLogoutRequest(LogoutRequest request) {
+    Instant now = Instant.now();
     String issuer = request.getIssuer() == null ? "" : request.getIssuer().getValue();
     seenLogoutRequests.values().removeIf(forgetAt -> forgetAt.isBefore(now));
-    if (seenLogoutRequests.size() >= MAX_REMEMBERED_LOGOUT_REQUESTS) {
+    if (seenLogoutRequests.size() >= maxRememberedLogoutRequests) {
       return "too many recent logout requests to check for replay";
     }
     Instant forgetAt = now.plus(LOGOUT_REQUEST_LIFETIME).plus(CLOCK_SKEW.multipliedBy(2));
@@ -489,6 +515,11 @@ public class SamlSso {
       return "replay of " + request.getID();
     }
     return null;
+  }
+
+  /** Empties the replay cache; for tests. */
+  static void clearRememberedLogoutRequests() {
+    seenLogoutRequests.clear();
   }
 
   /**
@@ -651,7 +682,8 @@ public class SamlSso {
 
     configureKeystore(config, spCredentials(props));
     config.setMetadataGenerator(
-        new SupportedBindingsMetadataGenerator(optional(props, SP_SLS_URL) != null));
+        new SupportedBindingsMetadataGenerator(
+            optional(props, SP_SLS_URL) != null, optional(props, SP_CERT) != null));
     config.setIdentityProviderMetadataResource(
         new ByteArrayResource(
             buildIdentityProviderMetadata(props).getBytes(StandardCharsets.UTF_8),
@@ -729,16 +761,19 @@ public class SamlSso {
    * pac4j advertises HTTP-POST, HTTP-POST-SimpleSign, HTTP-Redirect and SOAP single logout
    * endpoints. SamlSso can only verify signatures for HTTP-POST (XML signature) and HTTP-Redirect
    * (query-string signature), so advertise just those. With no SLS URL configured pac4j would
-   * advertise the ACS URL, which doesn't process logout messages, so advertise none. The descriptor
-   * is signed afterwards.
+   * advertise the ACS URL, which doesn't process logout messages, so advertise none. Without a
+   * configured SP certificate the key is temporary, so publish no KeyDescriptor. The descriptor is
+   * signed afterwards.
    */
   private static final class SupportedBindingsMetadataGenerator
       extends SAML2FileSystemMetadataGenerator {
     private final boolean advertiseSingleLogout;
+    private final boolean publishKeys;
 
-    SupportedBindingsMetadataGenerator(boolean advertiseSingleLogout) {
+    SupportedBindingsMetadataGenerator(boolean advertiseSingleLogout, boolean publishKeys) {
       super(null);
       this.advertiseSingleLogout = advertiseSingleLogout;
+      this.publishKeys = publishKeys;
     }
 
     @Override
@@ -751,6 +786,10 @@ public class SamlSso {
                   !advertiseSingleLogout
                       || (!HTTP_POST_BINDING.equals(service.getBinding())
                           && !HTTP_REDIRECT_BINDING.equals(service.getBinding())));
+      if (!publishKeys) {
+        // A temporary key changes on every restart, so an IdP must not sign-verify or encrypt to it
+        descriptor.getKeyDescriptors().clear();
+      }
       return descriptor;
     }
   }
