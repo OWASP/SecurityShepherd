@@ -246,6 +246,14 @@ Before pushing any code change, run the whole CI pipeline locally, as described 
 
 Also review your own diff for edge cases before pushing, especially in authentication and SAML code: expiry, overlapping or concurrent requests, cookie scope, and which fields are signed. Automated reviewers should not be the first to find them.
 
+### Fix only what your change introduces
+
+For every problem you find while working on a change, including comments from automated reviewers, first check whether the base branch already has it (`git show origin/dev:<file>`):
+- **Introduced by your change:** fix it in the same PR, with a test.
+- **Already on the base branch:** open a GitHub issue ("Discovered during #NNN", with the repo's labels) and leave it out of the PR, even when the fix is one line in a file the PR touches.
+
+This keeps large changes, such as the Jakarta migration (#861), focused and reviewable.
+
 ### Bug fixes must include tests
 
 When fixing a bug, always write a test that reproduces the bug first, then apply the fix. The test should fail without the fix and pass with it.
