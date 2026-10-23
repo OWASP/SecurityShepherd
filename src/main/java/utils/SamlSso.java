@@ -293,7 +293,7 @@ public class SamlSso {
       if (credentials.isEmpty()) {
         return Optional.empty();
       }
-      config.requestStore.forget(inResponseTo);
+      config.requestStore.complete(inResponseTo, response);
       Optional<UserProfile> profile = saml.getUserProfile(ctx, credentials.get());
       return profile.filter(SAML2Profile.class::isInstance).map(SAML2Profile.class::cast);
     } catch (RuntimeException e) {

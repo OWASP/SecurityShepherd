@@ -11,8 +11,11 @@ import java.security.KeyPairGenerator;
 import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -163,58 +166,94 @@ public class SamlTestSupport {
 
   /*
    * One simulated browser, matching the single installed client: the AuthnRequest ID of its most
-   * recent login, its binding cookie and when the browser drops that cookie (by its Max-Age),
-   * measured on a browser clock that tests can move forward. Reset by install().
+   * recent login, and its cookie jar, where each cookie is dropped when its Max-Age runs out on a
+   * browser clock that tests can move forward. Reset by install().
    */
   private static String pendingRequestId;
-  private static Cookie browserCookie;
-  private static Instant browserCookieExpires;
+  private static final Map<String, Cookie> cookieJar = new LinkedHashMap<>();
+  private static final Map<String, Instant> cookieExpires = new HashMap<>();
+  private static Cookie lastLoginCookie;
   private static Duration browserClock = Duration.ZERO;
 
   /**
-   * Starts an SP-initiated login as a browser would, sending its binding cookie if the cookie's
-   * Path covers the login URL. The next {@link #signedResponse} answers it.
+   * Starts an SP-initiated login as a browser would, sending the cookies whose Path covers the
+   * login URL. The next {@link #signedResponse} answers it.
    *
-   * @return the browser's request-binding cookie, which the ACS request must carry
+   * @return the request-binding cookie this login set, which the ACS request must carry
    */
   public Cookie startLogin() throws Exception {
-    MockHttpServletRequest request = new MockHttpServletRequest("GET", "/saml/dologin");
-    request.setScheme("https");
-    request.setSecure(true);
-    request.setServerName("shepherd.test");
-    request.setServerPort(443);
-    Cookie[] sent = cookiesFor("/saml/dologin");
-    if (sent.length > 0) {
-      request.setCookies(sent);
-    }
-    MockHttpServletResponse response = new MockHttpServletResponse();
-    SamlSso.login(request, response);
-    Matcher id =
-        Pattern.compile(" ID=\"([^\"]+)\"")
-            .matcher(decodeRedirectRequest(response.getRedirectedUrl()));
-    if (!id.find()) {
-      throw new IllegalStateException("No ID in AuthnRequest");
-    }
-    pendingRequestId = id.group(1);
-    Cookie issued = response.getCookie(SamlRequestStore.COOKIE);
-    if (issued != null) {
-      browserCookie = issued;
-      browserCookieExpires = browserNow().plusSeconds(issued.getMaxAge());
-    }
-    return browserCookie;
+    startConcurrentLogins(1);
+    return lastLoginCookie;
   }
 
-  /** Switches to a different browser, with no binding cookie and no login in progress */
+  /**
+   * Starts logins in several tabs at once: every request leaves with the cookies the browser held
+   * before any of them, and only then are the responses' cookies stored, in order. The next {@link
+   * #signedResponse} answers the last one.
+   *
+   * @return the AuthnRequest IDs, in the order the logins were started
+   */
+  public static List<String> startConcurrentLogins(int tabs) throws Exception {
+    List<String> ids = new ArrayList<>();
+    List<MockHttpServletResponse> responses = new ArrayList<>();
+    for (int i = 0; i < tabs; i++) {
+      MockHttpServletRequest request = new MockHttpServletRequest("GET", "/saml/dologin");
+      request.setScheme("https");
+      request.setSecure(true);
+      request.setServerName("shepherd.test");
+      request.setServerPort(443);
+      Cookie[] sent = cookiesFor("/saml/dologin");
+      if (sent.length > 0) {
+        request.setCookies(sent);
+      }
+      MockHttpServletResponse response = new MockHttpServletResponse();
+      SamlSso.login(request, response);
+      Matcher id =
+          Pattern.compile(" ID=\"([^\"]+)\"")
+              .matcher(decodeRedirectRequest(response.getRedirectedUrl()));
+      if (!id.find()) {
+        throw new IllegalStateException("No ID in AuthnRequest");
+      }
+      ids.add(id.group(1));
+      responses.add(response);
+    }
+    for (MockHttpServletResponse response : responses) {
+      for (Cookie cookie : response.getCookies()) {
+        storeCookie(cookie);
+        if (cookie.getName().startsWith(SamlRequestStore.COOKIE) && cookie.getMaxAge() != 0) {
+          lastLoginCookie = cookie;
+        }
+      }
+    }
+    pendingRequestId = ids.get(ids.size() - 1);
+    return ids;
+  }
+
+  /** Stores a Set-Cookie as a browser does: replacing any cookie of that name, or deleting it */
+  private static void storeCookie(Cookie cookie) {
+    if (cookie.getMaxAge() == 0) {
+      cookieJar.remove(cookie.getName());
+      cookieExpires.remove(cookie.getName());
+      return;
+    }
+    cookieJar.put(cookie.getName(), cookie);
+    cookieExpires.put(
+        cookie.getName(),
+        cookie.getMaxAge() < 0 ? Instant.MAX : browserNow().plusSeconds(cookie.getMaxAge()));
+  }
+
+  /** Switches to a different browser, with no cookies and no login in progress */
   public static void newBrowser() {
     pendingRequestId = null;
-    browserCookie = null;
-    browserCookieExpires = null;
+    cookieJar.clear();
+    cookieExpires.clear();
+    lastLoginCookie = null;
     browserClock = Duration.ZERO;
   }
 
   /**
-   * Moves the browser's clock forward, so its binding cookie expires as its Max-Age says. The
-   * server's own clock is not moved.
+   * Moves the browser's clock forward, so its cookies expire as their Max-Age says. The server's
+   * own clock is not moved.
    */
   public static void advanceBrowserClock(Duration elapsed) {
     browserClock = browserClock.plus(elapsed);
@@ -229,21 +268,17 @@ public class SamlTestSupport {
     return pendingRequestId;
   }
 
-  /** The binding cookie of the browser that started the most recent login, if any */
+  /** The binding cookie set by the most recently started login, if any */
   public Cookie browserCookie() {
-    return browserCookie;
+    return lastLoginCookie;
   }
 
   /** The cookies the browser sends to a URL path, following the cookie Path and Max-Age rules */
   public static Cookie[] cookiesFor(String requestPath) {
-    if (browserCookie != null && !browserNow().isBefore(browserCookieExpires)) {
-      browserCookie = null;
-    }
-    if (browserCookie == null) {
-      return new Cookie[0];
-    }
-    String path = browserCookie.getPath() == null ? "/" : browserCookie.getPath();
-    return requestPath.startsWith(path) ? new Cookie[] {browserCookie} : new Cookie[0];
+    cookieJar.keySet().removeIf(name -> !browserNow().isBefore(cookieExpires.get(name)));
+    return cookieJar.values().stream()
+        .filter(c -> requestPath.startsWith(c.getPath() == null ? "/" : c.getPath()))
+        .toArray(Cookie[]::new);
   }
 
   /** As {@link #signedResponse}, answering the given AuthnRequest ID */
