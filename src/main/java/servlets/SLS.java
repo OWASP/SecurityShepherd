@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +56,8 @@ public class SLS extends HttpServlet {
    *
    * <p>Sessions are ended by SamlSso for the login an IdP LogoutRequest names, not by whichever
    * session the delivering browser happens to have. A LogoutResponse ends nothing: Logout already
-   * ended the local session before sending the user to the IdP.
+   * ended the local session before sending the user to the IdP. An invalid message gets a 400,
+   * never a redirect to login.jsp (which would end the browser's session).
    */
   public void handleRequest(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -69,10 +71,18 @@ public class SLS extends HttpServlet {
     SamlSso.LogoutMessage message = SamlSso.processLogoutMessage(request, response);
     log.debug("SAML logout message: " + message);
 
-    // For an IdP LogoutRequest the LogoutResponse back to the IdP has already been written
-    if (message != SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST) {
-      response.sendRedirect("../login.jsp");
+    if (message == SamlSso.LogoutMessage.INVALID) {
+      // No redirect: login.jsp invalidates the current session, so redirecting there would let
+      // any page log a user out by sending their browser here with a bogus message
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    } else if (message == SamlSso.LogoutMessage.LOGOUT_RESPONSE) {
+      // Logout already ended this browser's session; if it still has one (e.g. the response was
+      // delivered to a different browser), don't end it via login.jsp
+      HttpSession ses = request.getSession(false);
+      boolean loggedIn = ses != null && ses.getAttribute("userRole") != null;
+      response.sendRedirect(loggedIn ? "../index.jsp" : "../login.jsp");
     }
+    // For an IdP LogoutRequest the LogoutResponse back to the IdP has already been written
     log.debug("*** END SLS ***");
   }
 }
