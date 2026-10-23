@@ -483,6 +483,49 @@ public class SamlSsoTest {
     }
   }
 
+  /**
+   * Login CSRF: the attacker's own valid assertion, with only the unsigned envelope's InResponseTo
+   * changed to the victim browser's pending request, must not log the victim's browser in
+   */
+  @Test
+  public void authenticate_EnvelopeRetargetedToAnotherBrowsersRequest_IsRejected()
+      throws Exception {
+    saml.startLogin();
+    String attackersRequest = SamlTestSupport.lastRequestId();
+    SamlTestSupport.newBrowser();
+    saml.startLogin();
+    String victimsRequest = SamlTestSupport.lastRequestId();
+
+    saml.envelopeInResponseTo = victimsRequest;
+    try {
+      String forged = saml.signedResponseTo(attackersRequest, "attacker", studentAttributes());
+
+      assertFalse(SamlSso.authenticate(acsPost(forged), new MockHttpServletResponse()).isPresent());
+    } finally {
+      saml.envelopeInResponseTo = null;
+    }
+  }
+
+  /**
+   * An assertion whose bearer confirmation names no request (as an IdP-initiated one) can't be
+   * bound to a login, even inside an envelope that names this browser's pending request
+   */
+  @Test
+  public void authenticate_ConfirmationWithoutInResponseTo_IsRejected() throws Exception {
+    saml.startLogin();
+    String request = SamlTestSupport.lastRequestId();
+
+    saml.omitConfirmationInResponseTo = true;
+    try {
+      String samlResponse = saml.signedResponseTo(request, "user-123", studentAttributes());
+
+      assertFalse(
+          SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse()).isPresent());
+    } finally {
+      saml.omitConfirmationInResponseTo = false;
+    }
+  }
+
   /** Login CSRF: a valid response must not log in a browser other than the one that asked */
   @Test
   public void authenticate_ResponseDeliveredThroughAnotherBrowser_IsRejected() throws Exception {

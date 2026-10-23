@@ -52,6 +52,7 @@ import org.opensaml.saml.saml2.core.NameID;
 import org.opensaml.saml.saml2.core.NameIDType;
 import org.opensaml.saml.saml2.core.Response;
 import org.opensaml.saml.saml2.core.SessionIndex;
+import org.opensaml.saml.saml2.core.SubjectConfirmationData;
 import org.opensaml.saml.saml2.metadata.SPSSODescriptor;
 import org.opensaml.xmlsec.encryption.support.DecryptionException;
 import org.owasp.encoder.Encode;
@@ -782,6 +783,32 @@ public class SamlSso {
                           + " is in the IdP's authentication statements "
                           + provided);
                 }
+              }
+
+              /**
+               * pac4j binds a response to this browser's request only through the Response's
+               * InResponseTo, which isn't signed unless the whole message is. The bearer
+               * confirmation sits inside the signed assertion and must name the same request (SAML
+               * Profiles 4.1.4.3), so an assertion can't be moved into an envelope naming another
+               * request. Only SP-initiated login is supported, so it must name one. This runs on
+               * decrypted assertions too.
+               */
+              @Override
+              protected boolean isValidBearerSubjectConfirmationData(
+                  SubjectConfirmationData data, SAML2MessageContext context) {
+                if (!super.isValidBearerSubjectConfirmationData(data, context)) {
+                  return false;
+                }
+                Object message = context.getMessageContext().getMessage();
+                String requestId =
+                    message instanceof Response ? ((Response) message).getInResponseTo() : null;
+                if (requestId == null || !requestId.equals(data.getInResponseTo())) {
+                  log.error(
+                      "SAML response rejected: the assertion's bearer confirmation doesn't answer"
+                          + " the request named by the response");
+                  return false;
+                }
+                return true;
               }
             };
         authnResponseValidator.setAcceptedSkew(configuration.getAcceptedSkew());
