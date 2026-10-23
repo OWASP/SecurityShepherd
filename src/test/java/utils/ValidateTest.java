@@ -6,7 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
+import java.util.List;
+import javax.servlet.http.Cookie;
+import org.apache.logging.log4j.Level;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpSession;
+import testUtils.LogCapture;
 
 class ValidateTest {
 
@@ -266,5 +271,55 @@ class ValidateTest {
   @Test
   void isValidClassYear_nonNumericFourChars() {
     assertThrows(RuntimeException.class, () -> Validate.isValidClassYear("abcd"));
+  }
+
+  // isAdminSession
+
+  private static MockHttpSession sessionWithRole(String role) {
+    MockHttpSession ses = new MockHttpSession();
+    ses.setAttribute("userName", "someone");
+    ses.setAttribute("userRole", role);
+    return ses;
+  }
+
+  @Test
+  void isAdminSession_admin() {
+    assertTrue(Validate.isAdminSession(sessionWithRole("admin")));
+  }
+
+  @Test
+  void isAdminSession_player() {
+    assertFalse(Validate.isAdminSession(sessionWithRole("player")));
+  }
+
+  @Test
+  void isAdminSession_noRole() {
+    assertFalse(Validate.isAdminSession(new MockHttpSession()));
+  }
+
+  @Test
+  void isAdminSession_nullSession() {
+    assertFalse(Validate.isAdminSession(null));
+  }
+
+  @Test
+  void isAdminSession_playerLogsNoAlert() {
+    try (LogCapture logs = LogCapture.of(Validate.class)) {
+      Validate.isAdminSession(sessionWithRole("player"));
+      assertEquals(List.of(), logs.messagesAtOrAbove(Level.WARN));
+    }
+  }
+
+  @Test
+  void validateAdminSession_playerWithValidTokensStillAlerts() {
+    // Admin servlets rely on this alert, so it must stay
+    Cookie token = new Cookie("token", "abc");
+    try (LogCapture logs = LogCapture.of(Validate.class)) {
+      assertFalse(Validate.validateAdminSession(sessionWithRole("player"), token, "abc"));
+      assertEquals(
+          List.of(
+              "FATAL User account someone Attempting Admin functions! (With Valid CSRF Tokens)"),
+          logs.messagesAtOrAbove(Level.WARN));
+    }
   }
 }
