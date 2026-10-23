@@ -77,6 +77,8 @@ jobs:
         run: mvn clean install -Pdocker -DskipTests -B
       - name: Docker Compose Build
         run: docker compose build
+      - name: Check Tomcat config placeholders were substituted
+        run: bash src/test/scripts/tomcat-config-test.sh
 
   unit-tests:
     needs: detect-changes
