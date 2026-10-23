@@ -31,7 +31,7 @@ RUN sed -i \
       -e 's/certificateKeystoreFile="conf\/TLS_KEYSTORE_FILE"/certificateKeystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'"/' \
       -e 's/certificateKeystorePassword="TLS_KEYSTORE_PASS"/certificateKeystorePassword="'"$TLS_KEYSTORE_PASS"'"/' \
       -e 's/certificateKeyAlias="ALIAS"/certificateKeyAlias="'"$ALIAS"'"/' \
-      -e 's/redirectPort="HTTPS_PORT" \/>/redirectPort="'"$HTTPS_PORT"'" \/>/' \
+      -e 's/redirectPort="HTTPS_PORT"/redirectPort="'"$HTTPS_PORT"'"/' \
       serverxml.patch
 
 FROM tomcat:${TOMCAT_DOCKER_VERSION}
