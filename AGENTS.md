@@ -165,6 +165,9 @@ SSO is optional, and is turned on by `sso.enabled=true` in `sso.properties`. It 
 
 - Configuration lives in `onelogin.saml.properties`, which keeps the key names of the java-saml toolkit used previously; see `src/main/resources/onelogin.saml.properties.sample`. The SP's PEM certificate and key are loaded into an in-memory keystore. The IdP settings are turned into an IdP metadata document. Nothing is written to disk.
 - `sso.properties` maps IdP attributes to users and roles (`utils/SsoUserMapper.java`).
+- pac4j-saml depends on **OpenSAML 5, which is not on Maven Central**. Shibboleth, its maintainer, publishes it only to its own repository (`build.shibboleth.net`, declared in `pom.xml` with checksum failures enforced).
+  - Remote repository filtering (`.mvn/maven.config`, `.mvn/rrf/groupId-shibboleth-releases.txt`) lets that repository serve **only** the `org.opensaml` and `net.shibboleth` groupIds. Everything else must come from Central, which blocks dependency confusion via that repository. If an OpenSAML upgrade needs another Shibboleth groupId, add it to that file deliberately.
+  - A build failing with `Could not find artifact org.opensaml:...` / `build.shibboleth.net failed to respond` means that repository was unreachable. Re-run the build.
 - Tests generate their own key pairs and signed SAML responses (`src/test/java/utils/SamlTestSupport.java`). Do not commit private keys.
 
 ### SQL schema files

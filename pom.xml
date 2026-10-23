@@ -20,6 +20,24 @@
 		<pac4j.version>6.6.0</pac4j.version>
 	</properties>
 
+	<repositories>
+		<!-- OpenSAML 5 (pulled in by pac4j-saml) is published only to Shibboleth's
+		     repository, not Maven Central. pac4j-saml's POM declares it too; it is
+		     declared here so the dependency is visible and checksums are enforced. -->
+		<repository>
+			<id>shibboleth-releases</id>
+			<name>Shibboleth Releases Repository</name>
+			<url>https://build.shibboleth.net/maven/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>fail</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- pac4j-saml pulls in Spring at compile scope; keep every Spring
