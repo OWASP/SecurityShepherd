@@ -61,6 +61,9 @@ See [docs/testing.md](docs/testing.md) for instructions on running unit and inte
 ## Database Configuration
 See [docs/database-configuration.md](docs/database-configuration.md) for connection pooling configuration and database setup.
 
+## Versioning and Releases
+Shepherd follows [Semantic Versioning](https://semver.org/). Releases are tagged as plain `X.Y.Z` (e.g. `4.0.0`, with no `v` prefix), and `dev` always carries an `X.Y.Z-SNAPSHOT` version. See [docs/releasing.md](docs/releasing.md) for the release steps.
+
 ## Is there a Definition of Done?
 *Work in Progess*  
 - [ ] New Code has 'Good' JUnit Tests that cover it

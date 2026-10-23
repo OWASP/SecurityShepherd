@@ -2,6 +2,8 @@ name: Release to Dockerhub
 on:
   push:
     branches: [master, dev]
+    # Release tags are plain SemVer X.Y.Z (no "v" prefix), see docs/releasing.md
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
     paths-ignore:
       - '**.md'
       - '.github/'
@@ -25,6 +27,14 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Check release tag matches pom.xml version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          POM_VERSION=$(mvn -B -q org.apache.maven.plugins:maven-help-plugin:3.5.1:evaluate -Dexpression=project.version -DforceStdout)
+          if [ "$POM_VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match pom.xml version $POM_VERSION"
+            exit 1
+          fi
       - name: Build Maven with Docker Profile and Generate SBOM
         run: mvn clean install -Pdocker -DskipTests -B -DexcludeTestProject=true cyclonedx:makeBom
       - name: Upload WAR File
@@ -90,6 +100,13 @@ jobs:
         uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
         with:
           images: owasp/security-shepherd
+          # Branch pushes publish :dev / :master. A release tag such as 4.1.0
+          # publishes :4.1.0, :4.1, :4 and :latest.
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
 
       - name: Restore Cached Maven packages
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
