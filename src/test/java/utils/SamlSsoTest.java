@@ -304,6 +304,26 @@ public class SamlSsoTest {
   }
 
   @Test
+  public void getServiceProviderMetadata_WithoutSpKeyPair_PublishesNoKey() throws Exception {
+    Properties props = saml.properties();
+    props.remove(SamlSso.SP_CERT);
+    props.remove(SamlSso.SP_KEY);
+    props.setProperty(SamlSso.AUTHN_REQUEST_SIGNED, "false");
+    props.setProperty(SamlSso.LOGOUT_REQUEST_SIGNED, "false");
+    SamlTestSupport.install(props);
+
+    String metadata = SamlSso.getServiceProviderMetadata();
+
+    assertFalse(metadata.contains("KeyDescriptor"));
+    assertFalse(metadata.contains("X509Certificate"));
+  }
+
+  @Test
+  public void getServiceProviderMetadata_WithSpKeyPair_PublishesIt() {
+    assertThat(SamlSso.getServiceProviderMetadata(), containsString("KeyDescriptor"));
+  }
+
+  @Test
   public void build_WithoutSpKeyPair_WhenSigningRequired_NamesTheSettings() throws Exception {
     Properties props = saml.properties();
     props.remove(SamlSso.SP_CERT);
