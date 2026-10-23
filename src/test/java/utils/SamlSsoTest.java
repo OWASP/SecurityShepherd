@@ -62,6 +62,10 @@ public class SamlSsoTest {
     request.setServerName("shepherd.test");
     request.setServerPort(443);
     request.addParameter("SAMLResponse", samlResponse);
+    // Delivered by the browser that started the login (see SamlTestSupport#startLogin)
+    if (saml.browserCookie() != null) {
+      request.setCookies(saml.browserCookie());
+    }
     return request;
   }
 
@@ -411,6 +415,51 @@ public class SamlSsoTest {
 
     assertFalse(metadata.contains("SingleLogoutService"));
     assertThat(metadata, containsString("Location=\"" + SamlTestSupport.ACS_URL + "\""));
+  }
+
+  @Test
+  public void authenticate_UnsolicitedResponse_IsRejected() throws Exception {
+    saml.unsolicited = true;
+    try {
+      String samlResponse =
+          saml.signedResponse("user-123", studentAttributes(), saml.idpKeys, saml.idpCert);
+
+      assertFalse(
+          SamlSso.authenticate(acsPost(samlResponse), new MockHttpServletResponse()).isPresent());
+    } finally {
+      saml.unsolicited = false;
+    }
+  }
+
+  /** Login CSRF: a valid response must not log in a browser other than the one that asked */
+  @Test
+  public void authenticate_ResponseDeliveredThroughAnotherBrowser_IsRejected() throws Exception {
+    saml.startLogin();
+    String samlResponse =
+        saml.signedResponse("attacker", studentAttributes(), saml.idpKeys, saml.idpCert);
+    MockHttpServletRequest victimWithoutCookie = acsPost(samlResponse);
+    victimWithoutCookie.setCookies();
+    MockHttpServletRequest victimWithOwnCookie = acsPost(samlResponse);
+    victimWithOwnCookie.setCookies(
+        new jakarta.servlet.http.Cookie(SamlRequestStore.COOKIE, "victims-own-token"));
+
+    assertFalse(
+        SamlSso.authenticate(victimWithoutCookie, new MockHttpServletResponse()).isPresent());
+    assertFalse(
+        SamlSso.authenticate(victimWithOwnCookie, new MockHttpServletResponse()).isPresent());
+  }
+
+  @Test
+  public void authenticate_ResponseToAnotherBrowsersLogin_IsRejected() throws Exception {
+    saml.startLogin();
+    String samlResponse =
+        saml.signedResponse("attacker", studentAttributes(), saml.idpKeys, saml.idpCert);
+    // The victim's browser has started a login of its own, with its own binding cookie
+    jakarta.servlet.http.Cookie victimCookie = saml.startLogin();
+    MockHttpServletRequest victim = acsPost(samlResponse);
+    victim.setCookies(victimCookie);
+
+    assertFalse(SamlSso.authenticate(victim, new MockHttpServletResponse()).isPresent());
   }
 
   @Test

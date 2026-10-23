@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utils.LoginMethod;
 import utils.SamlSso;
 import utils.ShepherdLogManager;
 
@@ -61,6 +62,12 @@ public class SLS extends HttpServlet {
    */
   public void handleRequest(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    if (!LoginMethod.isSaml()) {
+      // SSO is off (sso.enabled in sso.properties): this endpoint must not authenticate anyone,
+      // even if a SAML configuration is present
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
     // Setting IpAddress To Log and taking header for original IP if forwarded from
     // proxy
     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));

@@ -50,6 +50,7 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.opensaml.saml.saml2.core.NameID;
 import org.opensaml.saml.saml2.core.NameIDType;
+import org.opensaml.saml.saml2.core.Response;
 import org.opensaml.saml.saml2.core.SessionIndex;
 import org.opensaml.saml.saml2.metadata.SPSSODescriptor;
 import org.opensaml.xmlsec.encryption.support.DecryptionException;
@@ -196,19 +197,24 @@ public class SamlSso {
 
     final String spEntityId;
 
+    /** Binds each sent AuthnRequest to the browser that started the login */
+    final SamlRequestStore requestStore;
+
     Sso(
         SAML2Client client,
         X509Certificate idpCertificate,
         boolean requireSignedLogout,
         String singleLogoutUrl,
         String idpEntityId,
-        String spEntityId) {
+        String spEntityId,
+        SamlRequestStore requestStore) {
       this.client = client;
       this.idpCertificate = idpCertificate;
       this.requireSignedLogout = requireSignedLogout;
       this.singleLogoutUrl = singleLogoutUrl;
       this.idpEntityId = idpEntityId;
       this.spEntityId = spEntityId;
+      this.requestStore = requestStore;
     }
   }
 
@@ -266,14 +272,27 @@ public class SamlSso {
    */
   public static Optional<SAML2Profile> authenticate(
       HttpServletRequest request, HttpServletResponse response) {
-    SAML2Client saml = getClient();
+    Sso config = get();
+    SAML2Client saml = config.client;
     CallContext ctx = callContext(request, response);
     try {
-      Optional<Credentials> credentials =
-          saml.getCredentials(ctx).flatMap(c -> saml.validateCredentials(ctx, c));
+      Optional<Credentials> extracted = saml.getCredentials(ctx);
+      if (extracted.isEmpty()) {
+        return Optional.empty();
+      }
+      // Only answers to a login started in this browser are accepted (login CSRF): an unsolicited
+      // (IdP-initiated) Response has no InResponseTo to bind it to a browser, so it is refused;
+      // otherwise pac4j checks InResponseTo against this browser's pending requests
+      String inResponseTo = inResponseTo(extracted.get());
+      if (inResponseTo == null) {
+        log.error("SAML response rejected: unsolicited (no InResponseTo)");
+        return Optional.empty();
+      }
+      Optional<Credentials> credentials = saml.validateCredentials(ctx, extracted.get());
       if (credentials.isEmpty()) {
         return Optional.empty();
       }
+      config.requestStore.forget(inResponseTo);
       Optional<UserProfile> profile = saml.getUserProfile(ctx, credentials.get());
       return profile.filter(SAML2Profile.class::isInstance).map(SAML2Profile.class::cast);
     } catch (RuntimeException e) {
@@ -282,6 +301,14 @@ public class SamlSso {
       log.debug("SAML response rejected", e);
       return Optional.empty();
     }
+  }
+
+  private static String inResponseTo(Credentials credentials) {
+    if (!(credentials instanceof SAML2Credentials)) {
+      return null;
+    }
+    Object message = ((SAML2Credentials) credentials).getContext().getMessageContext().getMessage();
+    return message instanceof Response ? ((Response) message).getInResponseTo() : null;
   }
 
   /**
@@ -689,6 +716,10 @@ public class SamlSso {
             buildIdentityProviderMetadata(props).getBytes(StandardCharsets.UTF_8),
             "identity provider metadata from " + PROPERTIES_FILE));
 
+    // pac4j's default store keeps nothing, so a Response's InResponseTo was never checked
+    SamlRequestStore requestStore = new SamlRequestStore(required(props, SP_ACS_URL));
+    config.setSamlMessageStoreFactory(requestStore);
+
     SAML2Client saml = new AlternativeAuthnContextClient(config);
     // The ACS URL is registered with the IdP as-is, so don't append ?client_name=...
     saml.setCallbackUrlResolver(new NoParameterCallbackUrlResolver());
@@ -709,7 +740,8 @@ public class SamlSso {
         flag(props, WANT_MESSAGES_SIGNED, false),
         singleLogoutUrl,
         required(props, IDP_ENTITY_ID),
-        required(props, SP_ENTITY_ID));
+        required(props, SP_ENTITY_ID),
+        requestStore);
   }
 
   /**
