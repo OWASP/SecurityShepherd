@@ -116,67 +116,72 @@ public class SessionManagement6 extends HttpServlet {
             log.debug("Getting ApplicationRoot");
             String ApplicationRoot = getServletContext().getRealPath("");
 
-            Connection conn =
-                Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalSix");
-            log.debug("Checking credentials");
-            PreparedStatement callstmt;
+            try (Connection conn =
+                Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalSix")) {
+              log.debug("Checking credentials");
 
-            log.debug("Committing changes made to database");
-            callstmt = conn.prepareStatement("COMMIT");
-            callstmt.execute();
-            log.debug("Changes committed.");
-
-            // Filtering password for !, so that it is impossible for users to sign in
-            subPass = subPass.replaceAll("!", "");
-
-            callstmt =
-                conn.prepareStatement(
-                    "SELECT userName, userAddress FROM users WHERE userName = ? AND userPassword ="
-                        + " SHA(?)");
-            callstmt.setString(1, subName);
-            callstmt.setString(2, subPass);
-            log.debug("Executing authUser");
-            ResultSet resultSet = callstmt.executeQuery();
-            if (resultSet.next()) {
-              // This should never happen. But just in case;
-              log.debug("Successful Login");
-              // Get key and add it to the output
-              String userKey =
-                  Hash.generateUserSolution(
-                      Getter.getModuleResultFromHash(ApplicationRoot, levelHash),
-                      (String) ses.getAttribute("userName"));
-              htmlOutput =
-                  "<h2 class='title'>"
-                      + bundle.getString("response.welcome")
-                      + " "
-                      + Encode.forHtml(resultSet.getString(1))
-                      + "</h2>"
-                      + "<p>"
-                      + bundle.getString("response.resultKey")
-                      + " <a>"
-                      + userKey
-                      + "</a>"
-                      + "</p>";
-            } else {
-              log.debug("Incorrect credentials, checking if user name correct");
-              callstmt = conn.prepareStatement("SELECT userAddress FROM users WHERE userName = ?");
-              callstmt.setString(1, subName);
-              log.debug("Executing getAddress");
-              resultSet = callstmt.executeQuery();
-              if (resultSet.next()) {
-                log.debug("User Found");
-                userAddress =
-                    ""
-                        + bundle.getString("response.badPass")
-                        + " <a>"
-                        + Encode.forHtml(resultSet.getString(1))
-                        + "</a><br/>";
-              } else {
-                userAddress = "" + bundle.getString("response.badUser") + "<br/>";
+              log.debug("Committing changes made to database");
+              try (PreparedStatement commitStmt = conn.prepareStatement("COMMIT")) {
+                commitStmt.execute();
               }
-              htmlOutput = makeTable(userAddress, bundle);
+              log.debug("Changes committed.");
+
+              // Filtering password for !, so that it is impossible for users to sign in
+              subPass = subPass.replaceAll("!", "");
+
+              try (PreparedStatement callstmt =
+                  conn.prepareStatement(
+                      "SELECT userName, userAddress FROM users WHERE userName = ? AND userPassword ="
+                          + " SHA(?)")) {
+                callstmt.setString(1, subName);
+                callstmt.setString(2, subPass);
+                log.debug("Executing authUser");
+                try (ResultSet resultSet = callstmt.executeQuery()) {
+                  if (resultSet.next()) {
+                    // This should never happen. But just in case;
+                    log.debug("Successful Login");
+                    // Get key and add it to the output
+                    String userKey =
+                        Hash.generateUserSolution(
+                            Getter.getModuleResultFromHash(ApplicationRoot, levelHash),
+                            (String) ses.getAttribute("userName"));
+                    htmlOutput =
+                        "<h2 class='title'>"
+                            + bundle.getString("response.welcome")
+                            + " "
+                            + Encode.forHtml(resultSet.getString(1))
+                            + "</h2>"
+                            + "<p>"
+                            + bundle.getString("response.resultKey")
+                            + " <a>"
+                            + userKey
+                            + "</a>"
+                            + "</p>";
+                  } else {
+                    log.debug("Incorrect credentials, checking if user name correct");
+                    try (PreparedStatement addressStmt =
+                        conn.prepareStatement("SELECT userAddress FROM users WHERE userName = ?")) {
+                      addressStmt.setString(1, subName);
+                      log.debug("Executing getAddress");
+                      try (ResultSet addressResult = addressStmt.executeQuery()) {
+                        if (addressResult.next()) {
+                          log.debug("User Found");
+                          userAddress =
+                              ""
+                                  + bundle.getString("response.badPass")
+                                  + " <a>"
+                                  + Encode.forHtml(addressResult.getString(1))
+                                  + "</a><br/>";
+                        } else {
+                          userAddress = "" + bundle.getString("response.badUser") + "<br/>";
+                        }
+                      }
+                    }
+                    htmlOutput = makeTable(userAddress, bundle);
+                  }
+                }
+              }
             }
-            Database.closeConnection(conn);
             log.debug("Outputting HTML");
           } else {
             log.debug("Tampered cookie detected");

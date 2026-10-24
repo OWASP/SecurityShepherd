@@ -106,47 +106,48 @@ public class SessionManagement7SecretQuestion extends HttpServlet {
           String ApplicationRoot = getServletContext().getRealPath("");
           try {
             if (Validate.isValidEmailAddress(subEmail) && subAns.length() > 5) {
-              Connection conn =
-                  Database.getChallengeConnection(
-                      ApplicationRoot, "BrokenAuthAndSessMangChalFlowers");
-              log.debug("Checking Secret Answer");
-              PreparedStatement callstmt =
-                  conn.prepareStatement(
-                      "SELECT userName FROM users WHERE userAddress = ? AND secretAnswer = ?");
-              callstmt.setString(1, subEmail);
-              callstmt.setString(2, subAns);
-              log.debug("Running secret Answer Check");
-              ResultSet rs = callstmt.executeQuery();
-              if (rs.next()) {
-                log.debug("Correct Answer Submitted");
-                // Get key and add it to the output
-                String userKey =
-                    Hash.generateUserSolution(
-                        Getter.getModuleResultFromHash(ApplicationRoot, levelHash),
-                        (String) ses.getAttribute("userName"));
-                htmlOutput =
-                    "<h2 class='title'>"
-                        + bundle.getString("response.welcome")
-                        + " "
-                        + Encode.forHtml(rs.getString(1))
-                        + "</h2>"
-                        + "<p>"
-                        + bundle.getString("response.resultKey")
-                        + " <a>"
-                        + userKey
-                        + "</a>"
-                        + "</p>";
-              } else {
-                log.debug("Bad Answer Submitted");
-                htmlOutput =
-                    new String(
+              try (Connection conn =
+                      Database.getChallengeConnection(
+                          ApplicationRoot, "BrokenAuthAndSessMangChalFlowers");
+                  PreparedStatement callstmt =
+                      conn.prepareStatement(
+                          "SELECT userName FROM users WHERE userAddress = ? AND secretAnswer = ?")) {
+                log.debug("Checking Secret Answer");
+                callstmt.setString(1, subEmail);
+                callstmt.setString(2, subAns);
+                log.debug("Running secret Answer Check");
+                try (ResultSet rs = callstmt.executeQuery()) {
+                  if (rs.next()) {
+                    log.debug("Correct Answer Submitted");
+                    // Get key and add it to the output
+                    String userKey =
+                        Hash.generateUserSolution(
+                            Getter.getModuleResultFromHash(ApplicationRoot, levelHash),
+                            (String) ses.getAttribute("userName"));
+                    htmlOutput =
                         "<h2 class='title'>"
-                            + bundle.getString("question.badAnswer")
-                            + "</h2><p>"
-                            + bundle.getString("question.whoAreYou")
-                            + "</p>");
+                            + bundle.getString("response.welcome")
+                            + " "
+                            + Encode.forHtml(rs.getString(1))
+                            + "</h2>"
+                            + "<p>"
+                            + bundle.getString("response.resultKey")
+                            + " <a>"
+                            + userKey
+                            + "</a>"
+                            + "</p>";
+                  } else {
+                    log.debug("Bad Answer Submitted");
+                    htmlOutput =
+                        new String(
+                            "<h2 class='title'>"
+                                + bundle.getString("question.badAnswer")
+                                + "</h2><p>"
+                                + bundle.getString("question.whoAreYou")
+                                + "</p>");
+                  }
+                }
               }
-              Database.closeConnection(conn);
             } else {
               log.debug("Invalid data submitted");
               htmlOutput = new String("<b>" + bundle.getString("question.invalidData") + ": </b>");
