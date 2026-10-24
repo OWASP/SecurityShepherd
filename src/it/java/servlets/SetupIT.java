@@ -13,7 +13,10 @@ import jakarta.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,9 +49,11 @@ public class SetupIT {
    * Posts setup on an instance that is not installed yet, with the database settings from .env and
    * only the given optional parameters
    */
-  private MockHttpServletResponse postSetupWithoutDatabaseProps(String... optionalParams)
+  private MockHttpServletResponse postSetupWithoutDatabaseProps(Map<String, String> optionalParams)
       throws Exception {
     TestProperties.setTestPropertiesFileDirectory(log);
+    // Setup writes its auth file here, and on a clean build nothing else has created it yet
+    Files.createDirectories(Paths.get(Constants.SETUP_AUTH).getParent());
     removeDatabaseProps();
     Setup.resetInstalledCache();
     assertFalse(Setup.isInstalled());
@@ -64,9 +69,7 @@ public class SetupIT {
     request.addParameter("dbauth", authData);
     request.addParameter("mhost", "localhost");
     request.addParameter("mport", "27017");
-    for (int i = 0; i < optionalParams.length; i += 2) {
-      request.addParameter(optionalParams[i], optionalParams[i + 1]);
-    }
+    optionalParams.forEach(request::addParameter);
     MockHttpServletResponse response = new MockHttpServletResponse();
     Setup servlet = new Setup();
     servlet.init(new MockServletConfig("Setup"));
@@ -78,7 +81,7 @@ public class SetupIT {
   /** Leaving out enableMongoChallenge and unsafeLevels means "not enabled" (#956) */
   @Test
   public void doPost_WithoutMongoAndUnsafeLevelsParams_Succeeds() throws Exception {
-    MockHttpServletResponse response = postSetupWithoutDatabaseProps("dboverride", "none");
+    MockHttpServletResponse response = postSetupWithoutDatabaseProps(Map.of("dboverride", "none"));
 
     assertEquals(200, response.getStatus());
     assertTrue(
@@ -89,7 +92,7 @@ public class SetupIT {
   /** Leaving out dboverride means "neither override nor upgrade" (#956) */
   @Test
   public void doPost_WithoutDbOverrideParam_Succeeds() throws Exception {
-    MockHttpServletResponse response = postSetupWithoutDatabaseProps();
+    MockHttpServletResponse response = postSetupWithoutDatabaseProps(Map.of());
 
     assertEquals(200, response.getStatus());
     assertTrue(
