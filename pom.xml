@@ -139,11 +139,12 @@
 		<version>2.0.5</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+		<!-- MongoDB synchronous driver. Replaces the legacy mongo-java-driver 3.12 uber-jar, whose
+		     com.mongodb.DB API was removed in driver 4.0 and which cannot talk to MongoDB 6.0+ -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
-		<version>3.12.14</version>
+			<artifactId>mongodb-driver-sync</artifactId>
+			<version>5.13.0</version>
 		</dependency>
 		<!-- Jakarta Servlet 6.1 (Jakarta EE 11 / Tomcat 11) - was javax.servlet:javax.servlet-api.
 		     The javax:javaee-api umbrella dependency was removed: it pulls the
@@ -222,8 +223,8 @@
 		<!-- spring-mock:2.0.8 removed: javax-era standalone mock (2008).
 		     Spring 7 spring-test provides the Jakarta MockHttpServletRequest /
 		     MockServletConfig that supersedes it.
-		     fongo removed: unmaintained and unused (its only tests are @Disabled);
-		     test rescue tracked in #876. -->
+		     fongo removed: unmaintained, and incompatible with current MongoDB drivers. The Mongo
+		     tests (src/it) run against the real MongoDB that the it-test profile starts. -->
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
