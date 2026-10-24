@@ -484,8 +484,7 @@ public class Setup extends HttpServlet {
 
   private synchronized void executeSqlScript() throws IOException, SQLException {
 
-    File file =
-        resourceToFile(getClass().getClassLoader().getResource("/database/coreSchema.sql"));
+    File file = resourceToFile(getClass().getClassLoader().getResource("/database/coreSchema.sql"));
     String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
     log.debug("Initializing core database");
@@ -494,8 +493,7 @@ public class Setup extends HttpServlet {
         psProcToexecute.executeUpdate(data);
       }
 
-      file =
-          resourceToFile(getClass().getClassLoader().getResource("/database/moduleSchemas.sql"));
+      file = resourceToFile(getClass().getClassLoader().getResource("/database/moduleSchemas.sql"));
       data = FileUtils.readFileToString(file, Charset.defaultCharset());
       log.debug("Initializing module database");
 
@@ -524,8 +522,7 @@ public class Setup extends HttpServlet {
   private synchronized void executeUpdateScript() throws IOException, SQLException {
 
     File file =
-        resourceToFile(
-            getClass().getClassLoader().getResource("/database/updatev3_0tov3_1.sql"));
+        resourceToFile(getClass().getClassLoader().getResource("/database/updatev3_0tov3_1.sql"));
 
     String data;
 
