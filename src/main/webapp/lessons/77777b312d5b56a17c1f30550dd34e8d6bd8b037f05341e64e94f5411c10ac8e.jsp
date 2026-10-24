@@ -75,14 +75,20 @@ if (request.getSession() != null)
 		<h2 class="title"><%= translatedLevelName  %></h2>
 		<p>
 		<div id="lessonIntro">
-			<%= bundle.getString("paragraph.info") %>
-			<br /> </br> </br> <input type="button"
+			<%= bundle.getString("paragraph.info.1") %>
+			<br /><br />
+			<%= bundle.getString("paragraph.info.2") %>
+			<br /><br />
+			<%= bundle.getString("paragraph.info.3") %>
+			<br /> <input type="button"
 				value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
 		</div>
 		<input type="button"
-			value="<%= bundle.getString("button.hideIntro") %>" id="showLesson"
+			value="<%= bundle.getString("button.showIntro") %>" id="showLesson"
 			style="display: none;" /> <br /> <br> <br />
-		<%= mobile.getString("mobileBlurb.vmLink.1") + " PoorAuthentication.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
+		<%= bundle.getString("challenge.description") %>
+		<br /> <br />
+		<%= mobile.getString("mobileBlurb.appLink") %>
 		</p>
 		<script>
 				$('#hideLesson').click(function(){
