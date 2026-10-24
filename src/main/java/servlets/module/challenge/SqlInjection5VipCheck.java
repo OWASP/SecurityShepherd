@@ -73,41 +73,42 @@ public class SqlInjection5VipCheck extends HttpServlet {
         }
 
         htmlOutput = new String("");
-        Connection conn =
-            Database.getChallengeConnection(applicationRoot, "SqlInjectionChallenge5ShopVipCoupon");
         log.debug("Looking for VipCoupons Insecurely");
-        PreparedStatement prepstmt =
-            conn.prepareStatement(
-                "SELECT itemId, perCentOff, itemName FROM vipCoupons JOIN items USING (itemId)"
-                    + " WHERE couponCode = '"
-                    + couponCode
-                    + "';");
-        ResultSet coupons = prepstmt.executeQuery();
-        try {
-          if (coupons.next()) {
-            htmlOutput = new String("Valid Coupon for ");
-            log.debug("Found coupon for %" + coupons.getInt(2));
-            log.debug("For Item Name " + coupons.getString(3));
-            htmlOutput +=
-                ""
-                    + bundle.getString("response.percent")
-                    + ""
-                    + coupons.getInt(2)
-                    + " "
-                    + bundle.getString("response.off")
-                    + " "
-                    + Encode.forHtml(coupons.getString(3))
-                    + " "
-                    + bundle.getString("response.items")
-                    + "";
-          } else {
-            htmlOutput = "" + bundle.getString("response.noCoupon") + "";
+        try (Connection conn =
+                Database.getChallengeConnection(
+                    applicationRoot, "SqlInjectionChallenge5ShopVipCoupon");
+            PreparedStatement prepstmt =
+                conn.prepareStatement(
+                    "SELECT itemId, perCentOff, itemName FROM vipCoupons JOIN items USING (itemId)"
+                        + " WHERE couponCode = '"
+                        + couponCode
+                        + "';");
+            ResultSet coupons = prepstmt.executeQuery()) {
+          try {
+            if (coupons.next()) {
+              htmlOutput = new String("Valid Coupon for ");
+              log.debug("Found coupon for %" + coupons.getInt(2));
+              log.debug("For Item Name " + coupons.getString(3));
+              htmlOutput +=
+                  ""
+                      + bundle.getString("response.percent")
+                      + ""
+                      + coupons.getInt(2)
+                      + " "
+                      + bundle.getString("response.off")
+                      + " "
+                      + Encode.forHtml(coupons.getString(3))
+                      + " "
+                      + bundle.getString("response.items")
+                      + "";
+            } else {
+              htmlOutput = "" + bundle.getString("response.noCoupon") + "";
+            }
+          } catch (Exception e) {
+            log.debug("Could Not Find VIP Coupon: " + e.toString());
+            htmlOutput += "<p> " + bundle.getString("response.checkFailed") + "</p>";
           }
-        } catch (Exception e) {
-          log.debug("Could Not Find VIP Coupon: " + e.toString());
-          htmlOutput += "<p> " + bundle.getString("response.checkFailed") + "</p>";
         }
-        conn.close();
       } catch (Exception e) {
         log.debug("Did complete VIP Check: " + e.toString());
         htmlOutput += "<p> " + bundle.getString("response.checkFailed") + "</p>";

@@ -84,47 +84,48 @@ public class SqlInjection6 extends HttpServlet {
             java.net.URLDecoder.decode(
                 userPin.replaceAll("\\\\\\\\x", "%"), "UTF-8"); // Decode \x encoding
         log.debug("searchTerm decoded to - " + userPin);
-        Connection conn = Database.getChallengeConnection(applicationRoot, "SqlChallengeSix");
         log.debug("Looking for users");
-        PreparedStatement prepstmt =
-            conn.prepareStatement("SELECT userName FROM users WHERE userPin = '" + userPin + "'");
-        ResultSet users = prepstmt.executeQuery();
-        try {
-          if (users.next()) {
-            htmlOutput =
-                "<h3>"
-                    + bundle.getString("response.welcomeBack")
-                    + ""
-                    + Encode.forHtml(users.getString(1))
-                    + "</h3>"
-                    + "<p>"
-                    + bundle.getString("response.authNumber")
-                    + ""
-                    + Encode.forHtml(Hash.randomString())
-                    + "</p>";
-          } else {
+        try (Connection conn = Database.getChallengeConnection(applicationRoot, "SqlChallengeSix");
+            PreparedStatement prepstmt =
+                conn.prepareStatement(
+                    "SELECT userName FROM users WHERE userPin = '" + userPin + "'");
+            ResultSet users = prepstmt.executeQuery()) {
+          try {
+            if (users.next()) {
+              htmlOutput =
+                  "<h3>"
+                      + bundle.getString("response.welcomeBack")
+                      + ""
+                      + Encode.forHtml(users.getString(1))
+                      + "</h3>"
+                      + "<p>"
+                      + bundle.getString("response.authNumber")
+                      + ""
+                      + Encode.forHtml(Hash.randomString())
+                      + "</p>";
+            } else {
+              htmlOutput =
+                  "<h3>"
+                      + bundle.getString("response.incorrectCreds")
+                      + "</h3><p>"
+                      + bundle.getString("response.carefulNow")
+                      + "</p>";
+            }
+          } catch (Exception e) {
             htmlOutput =
                 "<h3>"
                     + bundle.getString("response.incorrectCreds")
                     + "</h3><p>"
                     + bundle.getString("response.carefulNow")
                     + "</p>";
-          }
-        } catch (Exception e) {
-          htmlOutput =
-              "<h3>"
-                  + bundle.getString("response.incorrectCreds")
-                  + "</h3><p>"
-                  + bundle.getString("response.carefulNow")
-                  + "</p>";
-          log.debug("Could Not Find User: " + e.toString());
-          try {
-            Thread.sleep(1000);
-          } catch (Exception e1) {
-            log.error("Failed to Pause: " + e1.toString());
+            log.debug("Could Not Find User: " + e.toString());
+            try {
+              Thread.sleep(1000);
+            } catch (Exception e1) {
+              log.error("Failed to Pause: " + e1.toString());
+            }
           }
         }
-        conn.close();
       } catch (Exception e) {
         log.debug("Could not Search for User: " + e.toString());
         htmlOutput += "<p>" + bundle.getString("response.badRequest") + "</p>";
