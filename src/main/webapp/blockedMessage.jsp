@@ -51,7 +51,7 @@
 	type="text/css" media="screen" />
 </head>
 <body>
-	<script type="text/javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" src="../js/jquery-3.7.1.min.js"></script>
 	<div id="contentDiv">
 		<h2 class="title">
 			<fmt:message key="generic.text.pleaseWait" />
