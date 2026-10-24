@@ -61,7 +61,7 @@ docker run -d --name secshep_test_db \
   -e MYSQL_ROOT_PASSWORD=CowSaysMoo \
   -e MYSQL_DATABASE=core \
   -p 3306:3306 \
-  mariadb:10.6.11
+  mariadb:12.3
 ```
 
 The docker-compose `db` service is **not suitable for quick test runs** — it requires `mvn -Pdocker validate` first to generate SQL init scripts, and those scripts run on first container startup to create all challenge schemas.

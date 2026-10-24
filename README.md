@@ -82,6 +82,13 @@ Delete `$BACKUP_DIR` (or move it somewhere safe) once the upgrade is working. On
 
 If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, ports, ciphers and so on), re-apply those edits to the new Tomcat 11 files, using the backup as a reference. Don't copy the old files back.
 
+##### MariaDB 12.3
+The database image now runs MariaDB 12.3 (long-term support) instead of 10.6, which is no longer supported. The `data` volume is kept. On its first start, `MARIADB_AUTO_UPGRADE=1` in `docker-compose.yml` upgrades the volume's system tables, after taking a backup of them inside the volume. Back up your data before rebuilding anyway, because a volume can't be moved back to 10.6 once 12.3 has opened it:
+
+```console
+docker exec secshep_mariadb sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" --all-databases --routines' > shepherd-db-backup.sql
+```
+
 #### Full Guide
 [Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
 

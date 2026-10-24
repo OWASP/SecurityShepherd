@@ -6,7 +6,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 DROP SCHEMA IF EXISTS `core` ;
-CREATE SCHEMA IF NOT EXISTS `core` DEFAULT CHARACTER SET utf8mb4 ;
+-- Collation named explicitly: MariaDB 11.5+ defaults utf8mb4 to utf8mb4_uca1400_ai_ci, which
+-- compares and sorts differently from the utf8mb4_general_ci core has always had
+CREATE SCHEMA IF NOT EXISTS `core` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 USE `core` ;
 
 SELECT "Creating Tables" FROM DUAL;
@@ -1749,7 +1751,9 @@ call userCreate(null, 'admin', '$argon2i$v=19$m=65536,t=10,p=1$7oxgR8QkdOd4tsHFi
 SELECT "Creating BackUp Schema" FROM DUAL;
 
 DROP DATABASE IF EXISTS backup;
-CREATE DATABASE backup;
+-- Same character set as core, whose tables it copies; it used to take the server default (latin1 on
+-- MariaDB 10.6)
+CREATE DATABASE backup DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 SET GLOBAL event_scheduler = ON;
 SET @@global.event_scheduler = ON;

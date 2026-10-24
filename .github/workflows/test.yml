@@ -102,14 +102,15 @@ jobs:
     if: needs.detect-changes.outputs.src == 'true'
     runs-on: ubuntu-latest
     services:
+      # Keep in step with DB_VERSION in .env, the MariaDB the Docker image runs
       mysql:
-        image: mysql:5.7
+        image: mariadb:12.3
         env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: core
+          MARIADB_ROOT_PASSWORD: password
+          MARIADB_DATABASE: core
         ports:
           - '8888:3306'
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
