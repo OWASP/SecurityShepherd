@@ -16,6 +16,8 @@ services:
         DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      # Upgrades the system tables of a data volume created by an older MariaDB (e.g. 10.6)
+      - MARIADB_AUTO_UPGRADE=1
     ports:
       - "${DB_SERVER_MAPPED_HOST}:${DB_PORT_MAPPED_HOST}:3306"
   mongo:
