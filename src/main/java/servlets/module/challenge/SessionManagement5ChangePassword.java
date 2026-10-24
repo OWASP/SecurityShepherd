@@ -136,26 +136,29 @@ public class SessionManagement5ChangePassword extends HttpServlet {
               String ApplicationRoot = getServletContext().getRealPath("");
               log.debug("Servlet root = " + ApplicationRoot);
 
-              Connection conn =
-                  Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
-              log.debug("Changing password for user: " + userName);
-              log.debug("Changing password to: " + newPass);
-              PreparedStatement callstmt;
+              try (Connection conn =
+                  Database.getChallengeConnection(
+                      ApplicationRoot, "BrokenAuthAndSessMangChalFive")) {
+                log.debug("Changing password for user: " + userName);
+                log.debug("Changing password to: " + newPass);
 
-              callstmt =
-                  conn.prepareStatement(
-                      "UPDATE users SET userPassword = SHA(?) WHERE userName = ?");
+                try (PreparedStatement callstmt =
+                    conn.prepareStatement(
+                        "UPDATE users SET userPassword = SHA(?) WHERE userName = ?")) {
 
-              callstmt.setString(1, newPass);
-              callstmt.setString(2, userName);
+                  callstmt.setString(1, newPass);
+                  callstmt.setString(2, userName);
 
-              log.debug("Executing changePassword");
-              callstmt.execute();
+                  log.debug("Executing changePassword");
+                  callstmt.execute();
+                }
 
-              log.debug("Committing changes made to database");
-              callstmt = conn.prepareStatement("COMMIT");
-              callstmt.execute();
-              log.debug("Changes committed.");
+                log.debug("Committing changes made to database");
+                try (PreparedStatement commitStmt = conn.prepareStatement("COMMIT")) {
+                  commitStmt.execute();
+                }
+                log.debug("Changes committed.");
+              }
 
               htmlOutput = "<p>" + bundle.getString("changePass.success") + "</p>";
             } else {
