@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Calculate SHA-256 hashes for all KEY{} format flags.
-Converts from OWASP{} to KEY{} format and generates new hashes for FlagValidator.java
+Calculate SHA-256 hashes for all KEY{} format keys.
+Converts from OWASP{} to KEY{} format and generates new hashes for KeyValidator.java
 """
 
 import hashlib
@@ -10,8 +10,8 @@ def sha256_hash(text):
     """Calculate SHA-256 hash of text"""
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
-# All flags in KEY{} format (converted from OWASP{})
-flags = {
+# All keys in KEY{} format (converted from OWASP{})
+keys = {
     # Lessons (11)
     "RE_LESSON": "KEY{R3v3rs3_Eng1n33r1ng_M4st3r_2024}",
     "IDS_LESSON": "KEY{1ns3cur3_D4t4_St0r4g3_L34k}",
@@ -24,7 +24,7 @@ flags = {
     "INPUT_VALIDATION_LESSON": "KEY{1nput_V4l1d4t10n_Byp4ss3d}",
     "PRIVACY_LESSON": "KEY{3x1f_M3t4d4t4_L34k5_L0c4t10n}",
     "CLIENT_SIDE_INJECTION_LESSON": "KEY{CL13NT_S1D3_SQL_1NJ3CT10N}",
-    
+
     # Challenges (10)
     "RE_CHALLENGE_1": "KEY{S1mpl3_Fl4g_34sy_T0_F1nd}",
     "IDS_CHALLENGE_1": "KEY{SQLit3_D4t4_3xtr4ct3d}",
@@ -37,17 +37,17 @@ flags = {
 }
 
 print("=" * 80)
-print("KEY{} FLAG SHA-256 HASHES")
+print("KEY{} KEY SHA-256 HASHES")
 print("=" * 80)
 print()
 
 print("// Lessons (11)")
-for module in ["RE_LESSON", "IDS_LESSON", "POOR_AUTH_LESSON", "INSECURE_AUTH_LESSON", 
+for module in ["RE_LESSON", "IDS_LESSON", "POOR_AUTH_LESSON", "INSECURE_AUTH_LESSON",
                "SUPPLY_CHAIN_LESSON", "INSECURE_COMM_LESSON", "INSUFFICIENT_CRYPTO_LESSON",
                "SECURITY_MISCONFIG_LESSON", "INPUT_VALIDATION_LESSON", "PRIVACY_LESSON",
                "CLIENT_SIDE_INJECTION_LESSON"]:
-    flag = flags[module]
-    hash_value = sha256_hash(flag)
+    key = keys[module]
+    hash_value = sha256_hash(key)
     print(f'put(Module.{module}, "{hash_value}");')
 
 print()
@@ -58,15 +58,15 @@ for module in ["RE_CHALLENGE_1",
                "INSECURE_COMM_CHALLENGE", "INSUFFICIENT_CRYPTO_CHALLENGE",
                "SECURITY_MISCONFIG_CHALLENGE_2",
                "CLIENT_SIDE_INJECTION_CHALLENGE_1", "CLIENT_SIDE_INJECTION_CHALLENGE_2"]:
-    flag = flags[module]
-    hash_value = sha256_hash(flag)
+    key = keys[module]
+    hash_value = sha256_hash(key)
     print(f'put(Module.{module}, "{hash_value}");')
 
 print()
 print("=" * 80)
 print("VERIFICATION TABLE")
 print("=" * 80)
-print(f"{'Module':<40} {'Flag':<50}")
+print(f"{'Module':<40} {'Key':<50}")
 print("-" * 90)
-for module, flag in flags.items():
-    print(f"{module:<40} {flag:<50}")
+for module, key in keys.items():
+    print(f"{module:<40} {key:<50}")

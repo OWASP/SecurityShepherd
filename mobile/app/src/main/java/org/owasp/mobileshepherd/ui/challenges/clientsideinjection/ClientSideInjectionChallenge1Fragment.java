@@ -19,8 +19,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentClientSideInjectionChallenge1Binding;
 import org.owasp.mobileshepherd.ui.challenges.clientsideinjection.helpers.Challenge1DatabaseHelper;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -31,7 +31,7 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
     private Challenge1DatabaseHelper dbHelper;
     private static final String TAG = "CSI_Challenge1";
     private ProgressTracker progressTracker;
-    private String currentFlag = "";
+    private String currentKey = "";
     private String dbKey = "";
 
     @Override
@@ -44,35 +44,35 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
         progressTracker = new ProgressTracker(requireContext());
         dbHelper = new Challenge1DatabaseHelper(requireContext());
 
-        FlagProvider.getFlag(requireContext(),
-                FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1, flag -> {
+        KeyProvider.getKey(requireContext(),
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1, key -> {
                     if (!isAdded()) return;
-                    currentFlag = flag;
-                    dbKey = flag;
-                    seedDatabase(flag);
+                    currentKey = key;
+                    dbKey = key;
+                    seedDatabase(key);
                 });
 
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(
-                    requireContext(), FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1));
+                    requireContext(), KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1));
         }
 
         binding.loginButton.setOnClickListener(v -> attemptLogin());
-        binding.submitFlagButton.setOnClickListener(v -> submitFlag());
+        binding.submitKeyButton.setOnClickListener(v -> submitKey());
 
         return root;
     }
 
-    private void seedDatabase(String flagValue) {
+    private void seedDatabase(String keyValue) {
         SQLiteDatabase db = dbHelper.getWritableDatabase(dbKey);
         db.execSQL("DELETE FROM accounts");
-        insertAccount(db, "admin",   flagValue,     "admin",  9999);
+        insertAccount(db, "admin",   keyValue,     "admin",  9999);
         insertAccount(db, "alice",   "alicePass99", "user",   100);
         insertAccount(db, "bob",     "B0bR0cks!",   "user",   50);
         insertAccount(db, "charlie", "charlie123",  "user",   25);
         db.close();
-        Log.d(TAG, "Accounts DB seeded. admin password = flag.");
+        Log.d(TAG, "Accounts DB seeded. admin password = key.");
     }
 
     private void insertAccount(SQLiteDatabase db, String user, String pass, String role, int balance) {
@@ -141,12 +141,13 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
                 Log.d(TAG, "Login success: user=" + loggedInUser + " role=" + role);
 
                 if ("admin".equals(loggedInUser)) {
-                    // Admin login â€” reveal the flag
+                    // Admin login â€” reveal the key and submit it automatically
                     binding.resultText.setText(
-                            "ACCESS GRANTED â€” Admin\n\nFlag: " + currentFlag
+                            "ACCESS GRANTED â€” Admin\n\nKey: " + currentKey
                             + "\n\nYou bypassed the filter using SQL injection!");
                     binding.resultText.setTextColor(
                             ContextCompat.getColor(requireContext(), R.color.success_green));
+                    submitKeyToServer(currentKey);
                 } else {
                     binding.resultText.setText(
                             "Logged in as: " + loggedInUser
@@ -170,24 +171,40 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
         }
     }
 
-    private void submitFlag() {
-        String entered = binding.flagInput.getText() != null
-                ? binding.flagInput.getText().toString().trim() : "";
+    /**
+     * Submits the discovered key to the Shepherd server as soon as the injection
+     * reveals it, so the player doesn't need to manually copy it into the key field.
+     */
+    private void submitKeyToServer(String key) {
+        KeyValidator.validateKey(requireContext(),
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1,
+                key, correct -> {
+                    if (!isAdded()) return;
+                    if (correct) {
+                        progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1);
+                        Toast.makeText(getContext(), "Correct! Challenge complete.", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void submitKey() {
+        String entered = binding.keyInput.getText() != null
+                ? binding.keyInput.getText().toString().trim() : "";
         if (entered.isEmpty()) {
-            Toast.makeText(getContext(), "Enter the flag", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Enter the key", Toast.LENGTH_SHORT).show();
             return;
         }
-        binding.submitFlagButton.setEnabled(false);
-        FlagValidator.validateFlag(requireContext(),
-                FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1,
+        binding.submitKeyButton.setEnabled(false);
+        KeyValidator.validateKey(requireContext(),
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1,
                 entered, correct -> {
                     if (correct) {
-                        progressTracker.markCompleted(FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1);
+                        progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1);
                         Toast.makeText(getContext(), "Correct! Challenge complete.", Toast.LENGTH_LONG).show();
                     } else {
-                        binding.submitFlagButton.setEnabled(true);
-                        Toast.makeText(getContext(), "Incorrect flag.", Toast.LENGTH_SHORT).show();
-                        binding.flagInput.setText("");
+                        binding.submitKeyButton.setEnabled(true);
+                        Toast.makeText(getContext(), "Incorrect key.", Toast.LENGTH_SHORT).show();
+                        binding.keyInput.setText("");
                     }
                 });
     }

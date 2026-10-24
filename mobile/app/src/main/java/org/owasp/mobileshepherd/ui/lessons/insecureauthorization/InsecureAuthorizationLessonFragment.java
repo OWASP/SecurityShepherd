@@ -22,8 +22,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentInsecureAuthorizationLessonBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -34,7 +34,7 @@ public class InsecureAuthorizationLessonFragment extends Fragment {
     private static final String PREFS_NAME = "UserSession";
     private boolean fabExpanded = false;
     private ProgressTracker progressTracker;
-    private String currentFlag = "";
+    private String currentKey = "";
     
     // Demo credentials
     private static final String DEMO_USERNAME = "testuser";
@@ -47,10 +47,10 @@ public class InsecureAuthorizationLessonFragment extends Fragment {
 
         prefs = requireContext().getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
         progressTracker = new ProgressTracker(requireContext());
-        FlagProvider.getFlag(
+        KeyProvider.getKey(
                 requireContext(),
-                FlagValidator.Module.INSECURE_AUTH_LESSON,
-                flagValue -> currentFlag = flagValue);
+                KeyValidator.Module.INSECURE_AUTH_LESSON,
+                keyValue -> currentKey = keyValue);
 
         // Setup expandable FAB with command reference and OWASP link
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
@@ -58,7 +58,7 @@ public class InsecureAuthorizationLessonFragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.INSECURE_AUTH_LESSON));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.INSECURE_AUTH_LESSON));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -146,25 +146,25 @@ public class InsecureAuthorizationLessonFragment extends Fragment {
         // INSECURE: Authorization check relies on client-controlled value
         if ("admin".equals(role)) {
             // Admin access granted
-            String flag = currentFlag;
+            String key = currentKey;
             binding.adminContentCard.setVisibility(View.VISIBLE);
-            binding.flagText.setText("Admin Flag: " + flag);
+            binding.keyText.setText("Admin Key: " + key);
             binding.accessDeniedText.setVisibility(View.GONE);
-            
-            Toast.makeText(getContext(), "Admin access granted! Flag revealed!", Toast.LENGTH_LONG).show();
-            Log.i("Authorization", "ADMIN ACCESS GRANTED - Flag revealed");
 
-            FlagValidator.validateFlag(requireContext(), FlagValidator.Module.INSECURE_AUTH_LESSON,
-                    flag, correct -> {
+            Toast.makeText(getContext(), "Admin access granted! Key revealed!", Toast.LENGTH_LONG).show();
+            Log.i("Authorization", "ADMIN ACCESS GRANTED - Key revealed");
+
+            KeyValidator.validateKey(requireContext(), KeyValidator.Module.INSECURE_AUTH_LESSON,
+                    key, correct -> {
                         if (!isAdded()) return;
                         if (correct) {
-                            progressTracker.markCompleted(FlagValidator.Module.INSECURE_AUTH_LESSON);
+                            progressTracker.markCompleted(KeyValidator.Module.INSECURE_AUTH_LESSON);
                         }
                     });
         } else {
             // Access denied
             binding.adminContentCard.setVisibility(View.VISIBLE);
-            binding.flagText.setText("");
+            binding.keyText.setText("");
             binding.accessDeniedText.setVisibility(View.VISIBLE);
             
             Toast.makeText(getContext(), "Access Denied: Admin privileges required", Toast.LENGTH_SHORT).show();

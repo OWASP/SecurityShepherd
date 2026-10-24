@@ -22,7 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentReverseEngineering1Binding;
 import org.owasp.mobileshepherd.ui.challenges.reverseengineering.ReverseEngineering1Model;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -48,7 +48,7 @@ public class ReverseEngineering1Fragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.RE_CHALLENGE_1));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.RE_CHALLENGE_1));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -60,25 +60,25 @@ public class ReverseEngineering1Fragment extends Fragment {
 
         // Set initial FAB appearance based on completion status
 
-        final EditText inputFlag = binding.inputFlag;
+        final EditText inputKey = binding.inputKey;
         final Button btnValidate = binding.btnValidate;
         final Button btnClear = binding.btnClear;
         final TextView textResult = binding.textResult;
 
         btnValidate.setOnClickListener(v -> {
-            String userInput = inputFlag.getText().toString().trim();
-            if (challengeModel.validateFlag(userInput)) {
-                progressTracker.markCompleted(FlagValidator.Module.RE_CHALLENGE_1);
-                int completionCount = progressTracker.getCompletionCount(FlagValidator.Module.RE_CHALLENGE_1);
+            String userInput = inputKey.getText().toString().trim();
+            if (challengeModel.validateKey(userInput)) {
+                progressTracker.markCompleted(KeyValidator.Module.RE_CHALLENGE_1);
+                int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.RE_CHALLENGE_1);
                 String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
-                
+
                 textResult.setText(R.string.reverse_engineering_1_success);
                 textResult.setTextColor(ContextCompat.getColor(requireContext(), R.color.success_green));
                 textResult.setVisibility(View.VISIBLE);
-                
+
                 new AlertDialog.Builder(requireContext())
                     .setTitle(" Success!")
-                    .setMessage("Congratulations! You found the flag.\n\nFlag: " + userInput + completionText)
+                    .setMessage("Congratulations! You found the key.\n\nKey: " + userInput + completionText)
                     .setPositiveButton("OK", null)
                     .show();
             } else {
@@ -89,7 +89,7 @@ public class ReverseEngineering1Fragment extends Fragment {
         });
 
         btnClear.setOnClickListener(v -> {
-            inputFlag.setText("");
+            inputKey.setText("");
             textResult.setVisibility(View.GONE);
         });
 

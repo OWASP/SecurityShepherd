@@ -92,7 +92,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Flag submission card -->
+        <!-- Key submission card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_flag"
+                        android:id="@+id/edit_key"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -131,14 +131,14 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_submit_flag"
+                    android:id="@+id/btn_submit_key"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Submit"
                     android:layout_marginBottom="12dp" />
 
                 <TextView
-                    android:id="@+id/text_flag_result"
+                    android:id="@+id/text_key_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"

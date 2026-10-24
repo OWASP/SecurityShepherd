@@ -43,83 +43,83 @@ public final class ModuleInfoHelper {
         }
     }
 
-    private static final Map<FlagValidator.Module, ModuleInfo> REGISTRY =
-            new EnumMap<>(FlagValidator.Module.class);
+    private static final Map<KeyValidator.Module, ModuleInfo> REGISTRY =
+            new EnumMap<>(KeyValidator.Module.class);
 
     static {
         // Lessons
         REGISTRY.put(
-                FlagValidator.Module.RE_LESSON,
+                KeyValidator.Module.RE_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Reverse Engineering",
                         "M7",
                         "org.owasp.mobileshepherd.ui.lessons"));
         REGISTRY.put(
-                FlagValidator.Module.IDS_LESSON,
+                KeyValidator.Module.IDS_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Insecure Data Storage",
                         "M9",
                         "org.owasp.mobileshepherd.ui.lessons.insecuredata"));
         REGISTRY.put(
-                FlagValidator.Module.POOR_AUTH_LESSON,
+                KeyValidator.Module.POOR_AUTH_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Poor Authentication",
                         "M3",
                         "org.owasp.mobileshepherd.ui.lessons.poorauth"));
         REGISTRY.put(
-                FlagValidator.Module.INSECURE_AUTH_LESSON,
+                KeyValidator.Module.INSECURE_AUTH_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Insecure Authorization",
                         "M3",
                         "org.owasp.mobileshepherd.ui.lessons.insecureauthorization"));
         REGISTRY.put(
-                FlagValidator.Module.SUPPLY_CHAIN_LESSON,
+                KeyValidator.Module.SUPPLY_CHAIN_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Supply Chain Security",
                         "M2",
                         "org.owasp.mobileshepherd.ui.lessons.supplychain"));
         REGISTRY.put(
-                FlagValidator.Module.INSECURE_COMM_LESSON,
+                KeyValidator.Module.INSECURE_COMM_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Insecure Communication",
                         "M5",
                         "org.owasp.mobileshepherd.ui.lessons.insecurecomm"));
         REGISTRY.put(
-                FlagValidator.Module.INSUFFICIENT_CRYPTO_LESSON,
+                KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Insufficient Cryptography",
                         "M10",
                         "org.owasp.mobileshepherd.ui.lessons.crypto"));
         REGISTRY.put(
-                FlagValidator.Module.SECURITY_MISCONFIG_LESSON,
+                KeyValidator.Module.SECURITY_MISCONFIG_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Security Misconfiguration",
                         "M8",
                         "org.owasp.mobileshepherd.ui.lessons.securitymisconfig"));
         REGISTRY.put(
-                FlagValidator.Module.INPUT_VALIDATION_LESSON,
+                KeyValidator.Module.INPUT_VALIDATION_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Input Validation",
                         "M4",
                         "org.owasp.mobileshepherd.ui.lessons"));
         REGISTRY.put(
-                FlagValidator.Module.PRIVACY_LESSON,
+                KeyValidator.Module.PRIVACY_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Privacy Controls",
                         "M6",
                         "org.owasp.mobileshepherd.ui.lessons.privacycontrols"));
         REGISTRY.put(
-                FlagValidator.Module.CLIENT_SIDE_INJECTION_LESSON,
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON,
                 new ModuleInfo(
                         "lesson",
                         "Client-Side Injection",
@@ -128,56 +128,56 @@ public final class ModuleInfoHelper {
 
         // Challenges
         REGISTRY.put(
-                FlagValidator.Module.RE_CHALLENGE_1,
+                KeyValidator.Module.RE_CHALLENGE_1,
                 new ModuleInfo(
                         "challenge",
                         "Reverse Engineering 1",
                         "M7",
                         "org.owasp.mobileshepherd.ui.challenges.reverseengineering"));
         REGISTRY.put(
-                FlagValidator.Module.IDS_CHALLENGE_1,
+                KeyValidator.Module.IDS_CHALLENGE_1,
                 new ModuleInfo(
                         "challenge",
                         "Insecure Data Storage 1",
                         "M9",
                         "org.owasp.mobileshepherd.ui.challenges.insecuredata1"));
         REGISTRY.put(
-                FlagValidator.Module.POOR_AUTH_CHALLENGE,
+                KeyValidator.Module.POOR_AUTH_CHALLENGE,
                 new ModuleInfo(
                         "challenge",
                         "Poor Authentication",
                         "M3",
                         "org.owasp.mobileshepherd.ui.challenges.poorauth"));
         REGISTRY.put(
-                FlagValidator.Module.INSECURE_COMM_CHALLENGE,
+                KeyValidator.Module.INSECURE_COMM_CHALLENGE,
                 new ModuleInfo(
                         "challenge",
                         "Insecure Communication 1",
                         "M5",
                         "org.owasp.mobileshepherd.ui.challenges.insecurecomm"));
         REGISTRY.put(
-                FlagValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE,
+                KeyValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE,
                 new ModuleInfo(
                         "challenge",
                         "Insufficient Cryptography 1",
                         "M10",
                         "org.owasp.mobileshepherd.ui.challenges.crypto"));
         REGISTRY.put(
-                FlagValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2,
+                KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2,
                 new ModuleInfo(
                         "challenge",
                         "Security Misconfiguration",
                         "M8",
                         "org.owasp.mobileshepherd.ui.challenges.securitymisconfig"));
         REGISTRY.put(
-                FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1,
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1,
                 new ModuleInfo(
                         "challenge",
                         "Client-Side Injection 1",
                         "M4",
                         "org.owasp.mobileshepherd.ui.challenges.clientsideinjection"));
         REGISTRY.put(
-                FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
                 new ModuleInfo(
                         "challenge",
                         "Client-Side Injection 2",
@@ -185,7 +185,7 @@ public final class ModuleInfoHelper {
                         "org.owasp.mobileshepherd.ui.challenges.clientsideinjection"));
     }
 
-    public static void showDialog(Context context, FlagValidator.Module module) {
+    public static void showDialog(Context context, KeyValidator.Module module) {
         ModuleInfo info = REGISTRY.get(module);
         String json =
                 info != null ? info.toJson() : "{\n  \"error\": \"Module info not found\"\n}";

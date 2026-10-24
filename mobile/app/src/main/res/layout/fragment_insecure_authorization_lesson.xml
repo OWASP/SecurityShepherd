@@ -183,7 +183,9 @@
             android:visibility="gone"
             app:cardElevation="4dp"
             app:cardCornerRadius="16dp"
-            app:cardBackgroundColor="@color/card_bg">
+            app:cardBackgroundColor="@color/card_bg"
+            app:strokeColor="@color/card_danger_stroke"
+            app:strokeWidth="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -213,7 +215,7 @@
                     android:layout_marginBottom="16dp" />
 
                 <TextView
-                    android:id="@+id/flag_text"
+                    android:id="@+id/key_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text=""

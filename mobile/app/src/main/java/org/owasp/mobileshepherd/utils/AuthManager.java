@@ -24,12 +24,12 @@ import java.util.Map;
  * Manages online/offline authentication state for the Security Shepherd mobile app.
  *
  * <p>When a server URL, username, and password are configured in the app preferences and a
- * successful login has been completed, the app operates in <em>online mode</em>: flag values are
+ * successful login has been completed, the app operates in <em>online mode</em>: key values are
  * fetched from the server as user-specific dynamic strings, and completion is validated
  * server-side.
  *
  * <p>When no credentials are configured, or when the user explicitly logs out, the app operates in
- * <em>offline mode</em>: static flag values are used and progress is tracked only on-device.
+ * <em>offline mode</em>: static key values are used and progress is tracked only on-device.
  */
 public class AuthManager {
 
@@ -158,21 +158,45 @@ public class AuthManager {
 
                 String responseBody = sb.toString();
                 if (status == HttpURLConnection.HTTP_OK && !responseBody.startsWith("ERROR")) {
-                    // Capture the JSESSIONID for subsequent mobile API calls — avoids re-sending
-                    // the raw password on every flag request.
-                    String mobileCookie = "";
+                    // Capture the JSESSIONID (for subsequent mobile API calls, avoiding
+                    // re-sending the raw password on every key request) AND the CSRF
+                    // "token" cookie — the scoreboard WebView requires both to be replayed
+                    // together, since the server rejects requests with a valid session but
+                    // no CSRF token.
+                    String jsessionCookie = "";
+                    String tokenCookie = "";
                     Map<String, List<String>> respHeaders = conn.getHeaderFields();
                     if (respHeaders != null) {
                         List<String> setCookies = respHeaders.get("Set-Cookie");
                         if (setCookies != null) {
                             for (String c : setCookies) {
                                 if (c.regionMatches(true, 0, "JSESSIONID=", 0, 11)) {
-                                    mobileCookie = c.split(";")[0];
-                                    break;
+                                    jsessionCookie = c.split(";")[0];
+                                } else if (c.regionMatches(true, 0, "token=", 0, 6)) {
+                                    tokenCookie = c.split(";")[0];
                                 }
                             }
                         }
                     }
+                    // The server returns JSESSIONID in the JSON body rather than via a
+                    // Set-Cookie header, so fall back to that if needed.
+                    if (jsessionCookie.isEmpty()) {
+                        try {
+                            String sessionId = new JSONObject(responseBody).optString("JSESSIONID", "");
+                            if (!sessionId.isEmpty()) {
+                                jsessionCookie = "JSESSIONID=" + sessionId;
+                            }
+                        } catch (Exception ignored) {
+                            // responseBody wasn't JSON; nothing more we can do
+                        }
+                    }
+                    StringBuilder cookieBuilder = new StringBuilder();
+                    if (!jsessionCookie.isEmpty()) cookieBuilder.append(jsessionCookie);
+                    if (!tokenCookie.isEmpty()) {
+                        if (cookieBuilder.length() > 0) cookieBuilder.append("; ");
+                        cookieBuilder.append(tokenCookie);
+                    }
+                    String mobileCookie = cookieBuilder.toString();
                     // Persist server URL, username (for display), and session cookie
                     PreferenceManager.getDefaultSharedPreferences(ctx).edit()
                             .putString("server_preference", serverUrl.trim())

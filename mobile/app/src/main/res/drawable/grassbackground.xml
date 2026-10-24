@@ -12,4 +12,11 @@
             android:tileMode="repeat"
             android:gravity="fill" />
     </item>
+
+    <!-- Lone grazing sheep -->
+    <item android:gravity="top|right">
+        <bitmap
+            android:src="@drawable/grazing_sheep"
+            android:gravity="top|right" />
+    </item>
 </layer-list>

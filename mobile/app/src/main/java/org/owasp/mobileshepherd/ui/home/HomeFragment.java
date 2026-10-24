@@ -45,14 +45,14 @@ public class HomeFragment extends Fragment {
 
         if (AuthManager.isAuthenticated(requireContext())) {
             String username = AuthManager.getUsername(requireContext());
-            statusText.setText("Signed in as " + username + " — flags update from server");
+            statusText.setText("Signed in as " + username + " — keys update from server");
             authButton.setText("Sign Out");
             authButton.setOnClickListener(v -> {
                 AuthManager.logout(requireContext());
                 updateAuthCard();
             });
         } else {
-            statusText.setText("Offline mode — sign in for server-validated flags");
+            statusText.setText("Offline mode — sign in for server-validated keys");
             authButton.setText("Sign In to Server");
             authButton.setOnClickListener(v -> {
                 Intent intent = new Intent(requireActivity(), LoginActivity.class);

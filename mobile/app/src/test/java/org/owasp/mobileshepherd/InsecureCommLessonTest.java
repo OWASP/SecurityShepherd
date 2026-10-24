@@ -48,18 +48,18 @@ public class InsecureCommLessonTest {
     }
 
     @Test
-    public void testCurrentFlagFieldExists() throws Exception {
-        Field flagField = InsecureCommLessonFragment.class.getDeclaredField("currentFlag");
-        assertNotNull("currentFlag field should exist", flagField);
-        assertEquals("currentFlag should be of type String", String.class, flagField.getType());
-        assertFalse("currentFlag should be an instance field",
-                Modifier.isStatic(flagField.getModifiers()));
+    public void testCurrentKeyFieldExists() throws Exception {
+        Field keyField = InsecureCommLessonFragment.class.getDeclaredField("currentKey");
+        assertNotNull("currentKey field should exist", keyField);
+        assertEquals("currentKey should be of type String", String.class, keyField.getType());
+        assertFalse("currentKey should be an instance field",
+                Modifier.isStatic(keyField.getModifiers()));
     }
 
     @Test
-    public void testCurrentFlagDefaultIsEmpty() throws Exception {
-        Field flagField = InsecureCommLessonFragment.class.getDeclaredField("currentFlag");
+    public void testCurrentKeyDefaultIsEmpty() throws Exception {
+        Field keyField = InsecureCommLessonFragment.class.getDeclaredField("currentKey");
         // Verify the initializer value in the class by checking the field type
-        assertEquals("currentFlag should be String type", String.class, flagField.getType());
+        assertEquals("currentKey should be String type", String.class, keyField.getType());
     }
 }

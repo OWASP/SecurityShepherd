@@ -16,8 +16,8 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentSupplyChainLessonBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -39,7 +39,7 @@ public class SupplyChainLessonFragment extends Fragment {
     
     private boolean fabExpanded = false;
     private ProgressTracker progressTracker;
-    private String currentFlag = "";
+    private String currentKey = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,10 +48,10 @@ public class SupplyChainLessonFragment extends Fragment {
         View root = binding.getRoot();
         
         progressTracker = new ProgressTracker(requireContext());
-        FlagProvider.getFlag(
+        KeyProvider.getKey(
                 requireContext(),
-                FlagValidator.Module.SUPPLY_CHAIN_LESSON,
-                flagValue -> currentFlag = flagValue);
+                KeyValidator.Module.SUPPLY_CHAIN_LESSON,
+                keyValue -> currentKey = keyValue);
 
         // Setup expandable FAB with command reference and OWASP link
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
@@ -59,7 +59,7 @@ public class SupplyChainLessonFragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.SUPPLY_CHAIN_LESSON));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.SUPPLY_CHAIN_LESSON));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -72,8 +72,8 @@ public class SupplyChainLessonFragment extends Fragment {
         // Initialize vulnerable Analytics SDK - logs hardcoded API key
         initializeAnalyticsSDK();
         
-        // Setup flag submission
-        binding.submitButton.setOnClickListener(v -> submitFlag());
+        // Setup key submission
+        binding.submitButton.setOnClickListener(v -> submitKey());
 
         return root;
     }
@@ -96,40 +96,40 @@ public class SupplyChainLessonFragment extends Fragment {
         Log.d(TAG, "=================================================");
     }
     
-    private void submitFlag() {
-        String enteredFlag = binding.flagInput.getText().toString().trim();
+    private void submitKey() {
+        String enteredKey = binding.keyInput.getText().toString().trim();
 
-        if (enteredFlag.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a flag", Toast.LENGTH_SHORT).show();
+        if (enteredKey.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a key", Toast.LENGTH_SHORT).show();
             return;
         }
 
         binding.submitButton.setEnabled(false);
 
-        FlagValidator.validateFlag(
+        KeyValidator.validateKey(
                 requireContext(),
-                FlagValidator.Module.SUPPLY_CHAIN_LESSON,
-                enteredFlag,
+                KeyValidator.Module.SUPPLY_CHAIN_LESSON,
+                enteredKey,
                 correct -> {
                     if (correct) {
                         binding.submissionCard.setCardBackgroundColor(
                                 ContextCompat.getColor(requireContext(), R.color.success_bg));
                         binding.resultText.setText(
-                                "SUCCESS!\n\nFlag: " + enteredFlag + "\n\nYou successfully identified"
+                                "SUCCESS!\n\nKey: " + enteredKey + "\n\nYou successfully identified"
                                 + " the vulnerable dependency (" + VULNERABLE_LIB + ") which had"
                                 + " debug mode enabled, exposing internal processing keys.\n\n"
                                 + "OWASP Mobile Top 10 M6: Insufficient Supply Chain Security");
                         binding.resultText.setVisibility(View.VISIBLE);
-                        Toast.makeText(getContext(), "Correct flag! Lesson completed!", Toast.LENGTH_LONG).show();
-                        progressTracker.markCompleted(FlagValidator.Module.SUPPLY_CHAIN_LESSON);
-                        binding.flagInput.setEnabled(false);
+                        Toast.makeText(getContext(), "Correct key! Lesson completed!", Toast.LENGTH_LONG).show();
+                        progressTracker.markCompleted(KeyValidator.Module.SUPPLY_CHAIN_LESSON);
+                        binding.keyInput.setEnabled(false);
                     } else {
                         binding.submitButton.setEnabled(true);
                         binding.submissionCard.setCardBackgroundColor(
                                 ContextCompat.getColor(requireContext(), R.color.error_bg));
                         binding.resultText.setVisibility(View.GONE);
-                        Toast.makeText(getContext(), "Incorrect flag", Toast.LENGTH_SHORT).show();
-                        binding.flagInput.setText("");
+                        Toast.makeText(getContext(), "Incorrect key", Toast.LENGTH_SHORT).show();
+                        binding.keyInput.setText("");
                         binding.getRoot().postDelayed(() ->
                                 binding.submissionCard.setCardBackgroundColor(
                                         getResources().getColor(R.color.card_bg)), 2000);

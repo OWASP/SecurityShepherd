@@ -12,7 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
@@ -143,7 +146,7 @@ public class Setup extends HttpServlet {
       String mongodbHost = request.getParameter("mhost");
       String mongodbPort = request.getParameter("mport");
       String nosqlprops =
-          new File(Database.class.getResource("/challenges/NoSqlInjection1.properties").getFile())
+          resourceToFile(Database.class.getResource("/challenges/NoSqlInjection1.properties"))
               .getAbsolutePath();
 
       try (InputStream mongo_input = new FileInputStream(nosqlprops)) {
@@ -216,6 +219,12 @@ public class Setup extends HttpServlet {
         // appear to freeze.
         Boolean connectionSuccess = false;
         log.debug("Attempting to connect to database");
+
+        try {
+          Class.forName(driverType);
+        } catch (ClassNotFoundException e) {
+          log.error("Could not load JDBC driver " + driverType, e);
+        }
 
         String testJdbcUrl;
         if (dbOptions != null && !dbOptions.isEmpty()) {
@@ -469,10 +478,14 @@ public class Setup extends HttpServlet {
     }
   }
 
+  private static File resourceToFile(URL resourceUrl) {
+    return new File(URLDecoder.decode(resourceUrl.getFile(), StandardCharsets.UTF_8));
+  }
+
   private synchronized void executeSqlScript() throws IOException, SQLException {
 
     File file =
-        new File(getClass().getClassLoader().getResource("/database/coreSchema.sql").getFile());
+        resourceToFile(getClass().getClassLoader().getResource("/database/coreSchema.sql"));
     String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
     log.debug("Initializing core database");
@@ -482,8 +495,7 @@ public class Setup extends HttpServlet {
       }
 
       file =
-          new File(
-              getClass().getClassLoader().getResource("/database/moduleSchemas.sql").getFile());
+          resourceToFile(getClass().getClassLoader().getResource("/database/moduleSchemas.sql"));
       data = FileUtils.readFileToString(file, Charset.defaultCharset());
       log.debug("Initializing module database");
 
@@ -499,7 +511,7 @@ public class Setup extends HttpServlet {
 
     try {
       File file =
-          new File(getClass().getClassLoader().getResource("/mongodb/moduleSchemas.js").getFile());
+          resourceToFile(getClass().getClassLoader().getResource("/mongodb/moduleSchemas.js"));
       mongoConnection = MongoDatabase.getMongoDbConnection(null);
       MongoDatabase.executeMongoScript(file, mongoConnection);
     } catch (IOException e) {
@@ -512,8 +524,8 @@ public class Setup extends HttpServlet {
   private synchronized void executeUpdateScript() throws IOException, SQLException {
 
     File file =
-        new File(
-            getClass().getClassLoader().getResource("/database/updatev3_0tov3_1.sql").getFile());
+        resourceToFile(
+            getClass().getClassLoader().getResource("/database/updatev3_0tov3_1.sql"));
 
     String data;
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -8,38 +9,72 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
 
-    <EditText
-        android:id="@+id/auth_server_url"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/auth_hint_server"
-        android:inputType="textUri"
-        android:maxLines="1" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="12dp">
 
-    <EditText
-        android:id="@+id/auth_username"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/auth_server_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/username_title"
-        android:inputType="text"
-        android:maxLines="1" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="12dp">
 
-    <EditText
-        android:id="@+id/auth_password"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/auth_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password_title"
-        android:inputType="textPassword"
-        android:maxLines="1" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        app:endIconMode="password_toggle"
+        android:layout_marginBottom="12dp">
 
-    <EditText
-        android:id="@+id/auth_email"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/auth_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/auth_email_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/auth_hint_email"
-        android:inputType="textEmailAddress"
-        android:maxLines="1"
-        android:visibility="gone" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/auth_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/auth_email_label"

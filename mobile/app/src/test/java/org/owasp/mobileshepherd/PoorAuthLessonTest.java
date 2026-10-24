@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 /**
  * Unit tests for PoorAuthLessonFragment
- * The fragment stores a hashed PIN and an obfuscated flag (XOR + Base64 encoded).
+ * The fragment stores a hashed PIN and an obfuscated key (XOR + Base64 encoded).
  */
 public class PoorAuthLessonTest {
 
@@ -38,11 +38,11 @@ public class PoorAuthLessonTest {
     }
 
     @Test
-    public void testObfuscatedFlagArrayExists() throws Exception {
+    public void testObfuscatedKeyArrayExists() throws Exception {
         Field fField = PoorAuthLessonFragment.class.getDeclaredField("F");
         fField.setAccessible(true);
         Object value = fField.get(null);
-        assertNotNull("Obfuscated flag array F should exist", value);
+        assertNotNull("Obfuscated key array F should exist", value);
         assertTrue("F should be a String array", value instanceof String[]);
         assertTrue("F array should not be empty", ((String[]) value).length > 0);
     }

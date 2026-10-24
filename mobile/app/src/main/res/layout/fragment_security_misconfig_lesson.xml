@@ -19,7 +19,7 @@
             app:cardElevation="2dp"
             app:cardCornerRadius="16dp"
             app:cardBackgroundColor="@color/card_warning_bg"
-            app:strokeColor="#FFC107"
+            app:strokeColor="@color/warning_orange"
             app:strokeWidth="2dp">
 
             <LinearLayout
@@ -46,7 +46,7 @@
             app:cardElevation="4dp"
             app:cardCornerRadius="16dp"
             app:cardBackgroundColor="@color/card_bg"
-            app:strokeColor="#FFC107"
+            app:strokeColor="@color/warning_orange"
             app:strokeWidth="2dp">
 
             <LinearLayout
@@ -288,9 +288,9 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Flag Submission Card -->
+        <!-- Key Submission Card -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/flag_card_misconfig"
+            android:id="@+id/key_card_misconfig"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -306,7 +306,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/submit_flag"
+                    android:text="@string/submit_key"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
@@ -315,7 +315,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Run the configuration check above — the flag is exposed in the debug output."
+                    android:text="Run the configuration check above — the key is exposed in the debug output."
                     android:textSize="13sp"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginBottom="12dp" />
@@ -323,12 +323,12 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/enter_flag"
+                    android:hint="@string/enter_key"
                     android:layout_marginBottom="12dp"
                     app:boxBackgroundMode="outline">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/flag_input_misconfig"
+                        android:id="@+id/key_input_misconfig"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -337,15 +337,15 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/submit_flag_misconfig"
+                    android:id="@+id/submit_key_misconfig"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/validate_flag"
+                    android:text="@string/validate_key"
                     android:textSize="16sp"
                     android:layout_marginBottom="8dp" />
 
                 <TextView
-                    android:id="@+id/flag_result_misconfig"
+                    android:id="@+id/key_result_misconfig"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"

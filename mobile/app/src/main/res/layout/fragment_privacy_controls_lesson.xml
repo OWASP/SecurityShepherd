@@ -47,7 +47,7 @@
             app:cardElevation="2dp"
             app:cardCornerRadius="16dp"
             app:cardBackgroundColor="@color/card_warning_bg"
-            app:strokeColor="#FF9800"
+            app:strokeColor="@color/warning_orange"
             app:strokeWidth="2dp">
 
             <LinearLayout
@@ -142,7 +142,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/privacy_btn_load_sample"
                     android:textColor="@android:color/white"
-                    app:backgroundTint="@color/colorPrimary"
+                    app:backgroundTint="@color/primary_blue"
                     app:icon="@android:drawable/ic_menu_gallery"
                     app:iconGravity="textStart" />
 
@@ -152,13 +152,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/privacy_btn_take_photo"
                     android:textColor="@android:color/white"
-                    app:backgroundTint="@color/colorAccent"
+                    app:backgroundTint="@color/primary_blue"
                     app:icon="@android:drawable/ic_menu_camera"
                     app:iconGravity="textStart" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Flag submission card -->
+        <!-- Key submission card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -175,19 +175,19 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Enter the flag found in the image metadata:"
+                    android:text="Enter the key found in the image metadata:"
                     android:textSize="14sp"
                     android:layout_marginBottom="8dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Flag from EXIF Description field"
+                    android:hint="Key from EXIF Description field"
                     android:layout_marginBottom="12dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_flag"
+                        android:id="@+id/edit_key"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -197,14 +197,14 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_submit_flag"
+                    android:id="@+id/btn_submit_key"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Submit"
                     android:layout_marginBottom="12dp" />
 
                 <TextView
-                    android:id="@+id/text_flag_result"
+                    android:id="@+id/text_key_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"

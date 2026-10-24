@@ -19,8 +19,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentInsufficientCryptoChallengeBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 public class InsufficientCryptoChallengeFragment extends Fragment {
 
     private FragmentInsufficientCryptoChallengeBinding binding;
-    private String currentFlag = "";
+    private String currentKey = "";
     private static final String TAG = "RecoveryVault";
     private ProgressTracker progressTracker;
     private boolean fabExpanded = false;
@@ -53,7 +53,7 @@ public class InsufficientCryptoChallengeFragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -62,11 +62,11 @@ public class InsufficientCryptoChallengeFragment extends Fragment {
             });
         }
 
-        FlagProvider.getFlag(requireContext(), FlagValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE,
-                flagValue -> currentFlag = flagValue);
+        KeyProvider.getKey(requireContext(), KeyValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE,
+                keyValue -> currentKey = keyValue);
 
         binding.saveButton.setOnClickListener(v -> saveVault());
-        binding.validateButton.setOnClickListener(v -> validateFlag());
+        binding.validateButton.setOnClickListener(v -> validateKey());
 
         return root;
     }
@@ -80,18 +80,18 @@ public class InsufficientCryptoChallengeFragment extends Fragment {
             return;
         }
 
-        if (currentFlag.isEmpty()) {
+        if (currentKey.isEmpty()) {
             Toast.makeText(getContext(), "Loading vault data, please wait...", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Build JSON -- flag is hidden as "session_token" among legitimate-looking fields
+        // Build JSON -- key is hidden as "session_token" among legitimate-looking fields
         String json = "{"
                 + "\"version\":1,"
                 + "\"recovery_key_1\":\"" + key1 + "\","
                 + "\"recovery_key_2\":\"" + key2 + "\","
                 + "\"account_id\":\"usr_" + Integer.toHexString(key1.hashCode() & 0xFFFF) + "\","
-                + "\"session_token\":\"" + currentFlag + "\","
+                + "\"session_token\":\"" + currentKey + "\","
                 + "\"backup_timestamp\":" + System.currentTimeMillis()
                 + "}";
 
@@ -118,25 +118,25 @@ public class InsufficientCryptoChallengeFragment extends Fragment {
         binding.saveButton.setEnabled(false);
     }
 
-    private void validateFlag() {
-        String enteredFlag = binding.flagInput.getText().toString().trim();
+    private void validateKey() {
+        String enteredKey = binding.keyInput.getText().toString().trim();
 
-        if (enteredFlag.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a flag", Toast.LENGTH_SHORT).show();
+        if (enteredKey.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a key", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        FlagValidator.validateFlag(requireContext(), FlagValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE,
-                enteredFlag, isValid -> {
+        KeyValidator.validateKey(requireContext(), KeyValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE,
+                enteredKey, isValid -> {
             if (isValid) {
-                progressTracker.markCompleted(FlagValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE);
+                progressTracker.markCompleted(KeyValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE);
 
                 binding.resultCard.setCardBackgroundColor(
                         ContextCompat.getColor(requireContext(), R.color.success_bg));
-                binding.resultText.setText("\u2713 Correct!\n\nYou recovered the flag from insecurely stored data.");
+                binding.resultText.setText("\u2713 Correct!\n\nYou recovered the key from insecurely stored data.");
                 binding.resultText.setVisibility(View.VISIBLE);
                 binding.validateButton.setEnabled(false);
-                binding.flagInput.setEnabled(false);
+                binding.keyInput.setEnabled(false);
 
                 new AlertDialog.Builder(requireContext())
                     .setTitle("\uD83C\uDF89 Challenge Complete!")
@@ -150,9 +150,9 @@ public class InsufficientCryptoChallengeFragment extends Fragment {
             } else {
                 binding.resultCard.setCardBackgroundColor(
                         ContextCompat.getColor(requireContext(), R.color.error_bg));
-                binding.resultText.setText("\u2717 Incorrect flag. Pull the vault data from SharedPreferences and decode it.");
+                binding.resultText.setText("\u2717 Incorrect key. Pull the vault data from SharedPreferences and decode it.");
                 binding.resultText.setVisibility(View.VISIBLE);
-                binding.flagInput.setText("");
+                binding.keyInput.setText("");
             }
         });
     }
@@ -195,7 +195,7 @@ public class InsufficientCryptoChallengeFragment extends Fragment {
         additionalSection.setVisibility(View.GONE);
 
         new AlertDialog.Builder(requireContext())
-                .setTitle("Hints -- OWASP M6: Insufficient Cryptography")
+                .setTitle("Hints -- OWASP M10: Insufficient Cryptography")
                 .setView(dialogView)
                 .setPositiveButton("Close", null)
                 .show();

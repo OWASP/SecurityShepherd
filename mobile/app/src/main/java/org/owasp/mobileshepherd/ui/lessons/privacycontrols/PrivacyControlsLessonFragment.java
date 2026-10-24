@@ -24,8 +24,8 @@ import androidx.exifinterface.media.ExifInterface;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentPrivacyControlsLessonBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -38,7 +38,7 @@ public class PrivacyControlsLessonFragment extends Fragment {
     private static final String TAG = "PrivacyControls";
     private static final String SAMPLE_IMAGE_NAME = "sample_photo.jpg";
 
-    private String currentFlag = "";
+    private String currentKey = "";
     private ProgressTracker progressTracker;
     private File imageFile;
 
@@ -50,31 +50,31 @@ public class PrivacyControlsLessonFragment extends Fragment {
 
         progressTracker = new ProgressTracker(requireContext());
 
-        FlagProvider.getFlag(requireContext(), FlagValidator.Module.PRIVACY_LESSON, flagValue -> {
+        KeyProvider.getKey(requireContext(), KeyValidator.Module.PRIVACY_LESSON, keyValue -> {
             if (!isAdded()) return;
-            currentFlag = flagValue;
-            prepareSampleImage(flagValue);
+            currentKey = keyValue;
+            prepareSampleImage(keyValue);
         });
 
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(v ->
-                    ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.PRIVACY_LESSON));
+                    ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.PRIVACY_LESSON));
         }
 
         binding.btnLoadSample.setOnClickListener(v -> loadSampleImage());
         binding.btnTakePhoto.setOnClickListener(v -> launchCamera());
-        binding.btnSubmitFlag.setOnClickListener(v -> submitFlag());
+        binding.btnSubmitKey.setOnClickListener(v -> submitKey());
 
         return root;
     }
 
     /**
-     * Creates a JPEG in the app's files directory and writes the flag into the
-     * EXIF ImageDescription tag.  The flag is deliberately embedded in metadata
+     * Creates a JPEG in the app's files directory and writes the key into the
+     * EXIF ImageDescription tag.  The key is deliberately embedded in metadata
      * that many developers forget to strip before sharing images.
      */
-    private void prepareSampleImage(String flag) {
+    private void prepareSampleImage(String key) {
         try {
             imageFile = new File(requireContext().getFilesDir(), SAMPLE_IMAGE_NAME);
 
@@ -93,9 +93,9 @@ public class PrivacyControlsLessonFragment extends Fragment {
                 bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             }
 
-            // Write the flag into EXIF ImageDescription
+            // Write the key into EXIF ImageDescription
             ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
-            exif.setAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION, flag);
+            exif.setAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION, key);
             exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE,  "53/1,20/1,30/1");
             exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, "-6/1,15/1,45/1");
             exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF,  "N");
@@ -105,7 +105,7 @@ public class PrivacyControlsLessonFragment extends Fragment {
             exif.setAttribute(ExifInterface.TAG_DATETIME, "2024:01:15 09:32:00");
             exif.saveAttributes();
 
-            Log.d(TAG, "Sample image prepared. Flag embedded in EXIF ImageDescription.");
+            Log.d(TAG, "Sample image prepared. Key embedded in EXIF ImageDescription.");
         } catch (Exception e) {
             Log.e(TAG, "Error preparing sample image: " + e.getMessage());
         }
@@ -159,30 +159,30 @@ public class PrivacyControlsLessonFragment extends Fragment {
         }
     }
 
-    private void submitFlag() {
-        String entered = binding.editFlag.getText() != null
-                ? binding.editFlag.getText().toString().trim() : "";
+    private void submitKey() {
+        String entered = binding.editKey.getText() != null
+                ? binding.editKey.getText().toString().trim() : "";
         if (entered.isEmpty()) {
-            Toast.makeText(getContext(), "Enter the flag from the EXIF Description field", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Enter the key from the EXIF Description field", Toast.LENGTH_SHORT).show();
             return;
         }
-        binding.btnSubmitFlag.setEnabled(false);
-        FlagValidator.validateFlag(requireContext(), FlagValidator.Module.PRIVACY_LESSON,
+        binding.btnSubmitKey.setEnabled(false);
+        KeyValidator.validateKey(requireContext(), KeyValidator.Module.PRIVACY_LESSON,
                 entered, correct -> {
                     if (correct) {
-                        binding.textFlagResult.setVisibility(View.VISIBLE);
-                        binding.textFlagResult.setText("Correct! You found the flag hidden in the EXIF metadata.");
-                        binding.textFlagResult.setTextColor(
+                        binding.textKeyResult.setVisibility(View.VISIBLE);
+                        binding.textKeyResult.setText("Correct! You found the key hidden in the EXIF metadata.");
+                        binding.textKeyResult.setTextColor(
                                 ContextCompat.getColor(requireContext(), R.color.success_green));
-                        progressTracker.markCompleted(FlagValidator.Module.PRIVACY_LESSON);
+                        progressTracker.markCompleted(KeyValidator.Module.PRIVACY_LESSON);
                         Toast.makeText(getContext(), "Lesson complete!", Toast.LENGTH_LONG).show();
                     } else {
-                        binding.btnSubmitFlag.setEnabled(true);
-                        binding.textFlagResult.setVisibility(View.VISIBLE);
-                        binding.textFlagResult.setText("Incorrect. Load the sample image and check the ImageDescription tag.");
-                        binding.textFlagResult.setTextColor(
+                        binding.btnSubmitKey.setEnabled(true);
+                        binding.textKeyResult.setVisibility(View.VISIBLE);
+                        binding.textKeyResult.setText("Incorrect. Load the sample image and check the ImageDescription tag.");
+                        binding.textKeyResult.setTextColor(
                                 ContextCompat.getColor(requireContext(), R.color.error_red));
-                        binding.editFlag.setText("");
+                        binding.editKey.setText("");
                     }
                 });
     }

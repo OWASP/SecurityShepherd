@@ -68,7 +68,7 @@
                     app:boxBackgroundMode="outline">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_flag"
+                        android:id="@+id/input_key"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"

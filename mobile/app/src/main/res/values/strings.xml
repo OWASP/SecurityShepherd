@@ -126,10 +126,10 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <!-- Common UI -->
     <string name="validate_button">Validate Key</string>
     <string name="clear_button">Clear</string>
-    <string name="validate_flag">Validate Flag</string>
-    <string name="submit_flag">Submit Flag</string>
-    <string name="enter_flag">Enter Flag</string>
-    <string name="flag">Flag</string>
+    <string name="validate_key">Validate Key</string>
+    <string name="submit_key">Submit Key</string>
+    <string name="enter_key">Enter Key</string>
+    <string name="key_label">Key</string>
     <string name="results">Results</string>
     <string name="challenge_info">Challenge Info</string>
     <string name="help_and_information">Help and Information</string>
@@ -224,15 +224,15 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <!-- Lesson -->
     <string name="lesson_intro">The Reverse Engineering module introduces techniques for extracting hidden information from Android applications.</string>
     <string name="lesson_tools">- APKTool - Decompiles APK files\n- Jadx - Java decompiler\n- dex2jar - Converts DEX to JAR\n- JD-GUI - Java class viewer\n- Android Studio - APK Analyzer</string>
-    <string name="lesson_hint">Step-by-Step Guide:\n\n1. EXTRACT THE APK\n   - Connect device via ADB\n   - Run: adb shell pm list packages | grep reverser\n   - Run: adb shell pm path org.owasp.mobileshepherd\n   - Run: adb pull /data/app/[path]/base.apk\n\n2. DECOMPILE WITH JADX\n   - Download JADX from GitHub\n   - Run: jadx base.apk\n   - Or use JADX-GUI for visual interface\n\n3. NAVIGATE TO TARGET FILE\n   - Open: sources/org/owasp/mobileshepherd/ui/lessons/reverseengineering/ReverseEngineeringLessonFragment.java\n   - Look in the class body for string variables\n   - Search for keywords: flag, key, secret, password\n\n4. ALTERNATIVE TOOLS\n   - APKTool: apktool d base.apk (produces smali)\n   - dex2jar + JD-GUI: For JAR decompilation\n   - Ghidra: Advanced static analysis\n   - Frida: Dynamic runtime inspection\n\n5. WHAT TO LOOK FOR\n   - Hardcoded strings in class fields\n   - Static final String variables\n   - Suspicious base64 or hex strings\n   - Comments or debug messages\n\nTarget: ReverseEngineeringLessonFragment.java in package org.owasp.mobileshepherd.ui.lessons.reverseengineering</string>
+    <string name="lesson_hint">Step-by-Step Guide:\n\n1. EXTRACT THE APK\n   - Connect device via ADB\n   - Run: adb shell pm list packages | grep reverser\n   - Run: adb shell pm path org.owasp.mobileshepherd\n   - Run: adb pull /data/app/[path]/base.apk\n\n2. DECOMPILE WITH JADX\n   - Download JADX from GitHub\n   - Run: jadx base.apk\n   - Or use JADX-GUI for visual interface\n\n3. NAVIGATE TO TARGET FILE\n   - Open: sources/org/owasp/mobileshepherd/ui/lessons/reverseengineering/ReverseEngineeringLessonFragment.java\n   - Look in the class body for string variables\n   - Search for keywords: key, secret, password\n\n4. ALTERNATIVE TOOLS\n   - APKTool: apktool d base.apk (produces smali)\n   - dex2jar + JD-GUI: For JAR decompilation\n   - Ghidra: Advanced static analysis\n   - Frida: Dynamic runtime inspection\n\n5. WHAT TO LOOK FOR\n   - Hardcoded strings in class fields\n   - Static final String variables\n   - Suspicious base64 or hex strings\n   - Comments or debug messages\n\nTarget: ReverseEngineeringLessonFragment.java in package org.owasp.mobileshepherd.ui.lessons.reverseengineering</string>
     <string name="where_to_find_the_key">Where to Find the Key</string>
-    <string name="the_key_is_hardcoded_in_the_java_source">The key is hardcoded in the Java source code of this lesson fragment:\n\nFile: ReverseEngineeringLessonFragment.java\nPackage: org.owasp.mobileshepherd.ui.lessons.reverseengineering\nLocation: Inside FlagProvider.java as a static offline flag</string>
+    <string name="the_key_is_hardcoded_in_the_java_source">The key is hardcoded in the Java source code of this lesson fragment:\n\nFile: ReverseEngineeringLessonFragment.java\nPackage: org.owasp.mobileshepherd.ui.lessons.reverseengineering\nLocation: Inside KeyProvider.java as a static offline key</string>
     <string name="verify_key">Verify Key</string>
     <string name="enter_the_key_you_found">Enter the key you found</string>
 
     <!-- Challenge 1 -->
     <string name="reverse_engineering_1_description">The key is hardcoded in the Java source code of this app. Decompile the APK to find it.</string>
-    <string name="reverse_engineering_1_hint">Hint: The key is stored as a simple string constant in one of the Java classes. Try searching for "flag" or "key" in the decompiled code.</string>
+    <string name="reverse_engineering_1_hint">Hint: The key is stored as a simple string constant in one of the Java classes. Try searching for "key" in the decompiled code.</string>
     <string name="reverse_engineering_1_input_hint">Enter key here</string>
     <string name="reverse_engineering_1_success">Key validated successfully.</string>
     <string name="reverse_engineering_1_failure">The key is incorrect. Please try again.</string>
@@ -328,7 +328,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="the_app_uses_a_vulnerable_thirdparty_ana">The app uses a vulnerable third-party analytics SDK. Analyze the SDK initialization, check logs, and inspect the filesystem to find security issues.</string>
     <string name="analyze_sdk">Analyze SDK</string>
     <string name="analysis_results">Analysis Results</string>
-    <string name="once_youve_exploited_the_supply_chain_vu">Once you\'ve exploited the supply chain vulnerability, enter the flag below:</string>
+    <string name="once_youve_exploited_the_supply_chain_vu">Once you\'ve exploited the supply chain vulnerability, enter the key below:</string>
     <string name="thirdparty_dependencies">Third-Party Dependencies</string>
     <string name="androidxappcompatappcompat161">androidx.appcompat:appcompat:1.6.1</string>
     <string name="comgoogleandroidmaterialmaterial1110">com.google.android.material:material:1.11.0</string>
@@ -371,8 +371,8 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <!-- Challenge 1 - DES/ECB cracking -->
     <string name="insufficient_crypto_challenge_desc">This app stores your recovery keys in local storage using a custom encoding scheme. Save your keys, then investigate how the data is actually stored on the device. Can you recover the hidden session token from the vault?</string>
     <string name="insufficient_cryptography_challenge">Insufficient Cryptography Challenge</string>
-    <string name="once_youve_identified_all_cryptographic">Once you\'ve identified all cryptographic vulnerabilities and extracted the hidden flag, submit it below.</string>
-    <string name="enter_flag_format_key">Enter flag (format: KEY{...})</string>
+    <string name="once_youve_identified_all_cryptographic">Once you\'ve identified all cryptographic vulnerabilities and extracted the hidden key, submit it below.</string>
+    <string name="enter_key_format">Enter key (format: KEY{...})</string>
     <string name="use_des_encryption_56bit_key_each_secret">The key in this app is encrypted, but the encryption algorithm and key length are weak. Break the encryption to recover the hidden secrets.</string>
     <string name="encrypt_decrypt_data">Encrypt / Decrypt Data</string>
     <string name="enter_a_key_08_characters_text_and_optio">Enter a key (0-8 characters), text, and optional hint. Click on secrets below to decrypt them.</string>
@@ -418,7 +418,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="username_admin">Username: admin</string>
     <string name="theme_dark_mode">Theme: Dark Mode</string>
     <string name="language_english">Language: English</string>
-    <string name="secret_flag_encrypted">Secret Flag: [Encrypted]</string>
+    <string name="secret_key_encrypted">Secret Key: [Encrypted]</string>
     <string name="hint_this_app_allows_backups_use_adb_to">Hint: This app allows backups. Use ADB to extract the app data and examine the backup file for stored preferences.</string>
 
 
@@ -486,7 +486,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="account_login">Account Login</string>
     <string name="login_to_access_your_account_can_you_byp">Login to access your account. Can you bypass the authentication and retrieve the admin password?</string>
     <string name="login_results_will_appear_here">Login results will appear here...</string>
-    <string name="once_youve_retrieved_the_admin_password">Once you\'ve retrieved the admin password, submit it as the flag:</string>
+    <string name="once_youve_retrieved_the_admin_password">Once you\'ve retrieved the admin password, submit it as the key:</string>
 
     <!-- Challenge 2 - UNION injection -->
     <string name="clientside_injection_2">Client-Side Injection 2</string>
@@ -497,7 +497,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="search_the_product_database_can_you_disc">Search the product database. Can you discover the hidden \'secrets\' table and extract the admin token?</string>
     <string name="search_products">Search products</string>
     <string name="search_results_will_appear_here">Search results will appear here...</string>
-    <string name="once_youve_extracted_the_admin_token_fro">Once you\'ve extracted the admin token from the secrets table, submit it as the flag:</string>
+    <string name="once_youve_extracted_the_admin_token_fro">Once you\'ve extracted the admin token from the secrets table, submit it as the key:</string>
 
     <!-- Challenge 3 - User search injection -->
     <string name="user_search">User Search</string>

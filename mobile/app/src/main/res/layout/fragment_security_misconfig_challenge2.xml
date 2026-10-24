@@ -78,7 +78,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/secret_flag_encrypted"
+                        android:text="@string/secret_key_encrypted"
                         android:textSize="13sp"
                         android:fontFamily="monospace"
                         android:textColor="@color/error_text" />
@@ -87,12 +87,12 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/enter_flag"
+                    android:hint="@string/enter_key"
                     android:layout_marginBottom="12dp"
                     app:boxBackgroundMode="outline">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/flag_input"
+                        android:id="@+id/key_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -104,7 +104,7 @@
                     android:id="@+id/validate_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/validate_flag"
+                    android:text="@string/validate_key"
                     android:textSize="16sp"
                     android:layout_marginBottom="8dp" />
 

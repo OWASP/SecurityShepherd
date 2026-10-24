@@ -18,69 +18,69 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Provides the correct flag string for each mobile module in both offline and online modes.
+ * Provides the correct key string for each mobile module in both offline and online modes.
  *
  * <p><b>Offline mode</b> — when no server credentials are configured, an empty string is returned
- * for all modules except the Reverse Engineering lesson, which retains a static offline flag for
- * introductory use. Lessons are still explorable offline, but flag submission requires a server
+ * for all modules except the Reverse Engineering lesson, which retains a static offline key for
+ * introductory use. Lessons are still explorable offline, but key submission requires a server
  * login so that completion is validated server-side.
  *
- * <p><b>Online mode</b> — when the student is signed in, the server-generated user-specific flag
- * is fetched from {@code /mobileFlagGet}. This flag is an HMAC of the base flag keyed with the
+ * <p><b>Online mode</b> — when the student is signed in, the server-generated user-specific key
+ * is fetched from {@code /mobileFlagGet}. This key is an HMAC of the base key keyed with the
  * server's ephemeral key and the student's username — unique per user, per server session, and
  * unreachable via APK inspection.
  *
- * <p>In online mode the challenge DB is seeded with the dynamic flag before the student begins
- * searching, so the value they discover via exploitation is always the server-validated flag.
+ * <p>In online mode the challenge DB is seeded with the dynamic key before the student begins
+ * searching, so the value they discover via exploitation is always the server-validated key.
  */
-public class FlagProvider {
+public class KeyProvider {
 
-    private static final String TAG = "FlagProvider";
+    private static final String TAG = "KeyProvider";
 
     /**
-     * Offline (static) flag values — only the Reverse Engineering lesson retains a static flag;
+     * Offline (static) key values — only the Reverse Engineering lesson retains a static key;
      * its SHA-256 hash in the APK is the target of the reverse-engineering challenge itself.
      * All other modules return an empty string when offline; a live server session is required.
      */
-    private static final Map<FlagValidator.Module, String> OFFLINE_FLAGS = new HashMap<>();
+    private static final Map<KeyValidator.Module, String> OFFLINE_KEYS = new HashMap<>();
 
     static {
-        OFFLINE_FLAGS.put(
-                FlagValidator.Module.RE_LESSON,
+        OFFLINE_KEYS.put(
+                KeyValidator.Module.RE_LESSON,
                 "Frozen_Clock_Melts_By_Noon");
     }
 
-    public interface FlagCallback {
+    public interface KeyCallback {
         /** Always invoked on the main thread. */
-        void onFlag(String flag);
+        void onKey(String key);
     }
 
     /**
-     * Returns the flag for the given module.
+     * Returns the key for the given module.
      *
      * <ul>
      *   <li>If the student is authenticated ({@link AuthManager#isAuthenticated}), a background
-     *       HTTP request fetches the user-specific dynamic flag. On network failure the offline
-     *       flag is returned as a fallback so the lesson remains usable.
-     *   <li>Otherwise the offline static flag is returned synchronously (still via the main thread
+     *       HTTP request fetches the user-specific dynamic key. On network failure the offline
+     *       key is returned as a fallback so the lesson remains usable.
+     *   <li>Otherwise the offline static key is returned synchronously (still via the main thread
      *       for API consistency).
      * </ul>
      *
      * @param ctx      Context used to read credentials.
-     * @param module   The module whose flag is needed.
-     * @param callback Receives the flag string on the main thread.
+     * @param module   The module whose key is needed.
+     * @param callback Receives the key string on the main thread.
      */
-    public static void getFlag(Context ctx, FlagValidator.Module module, FlagCallback callback) {
-        String offlineFlag = OFFLINE_FLAGS.containsKey(module) ? OFFLINE_FLAGS.get(module) : "";
+    public static void getKey(Context ctx, KeyValidator.Module module, KeyCallback callback) {
+        String offlineKey = OFFLINE_KEYS.containsKey(module) ? OFFLINE_KEYS.get(module) : "";
 
         if (!AuthManager.isAuthenticated(ctx)) {
-            if (offlineFlag.isEmpty()) {
-                Log.d(TAG, "Offline mode — no static flag for " + module.getId()
-                        + "; sign in to a Shepherd server to obtain a flag");
+            if (offlineKey.isEmpty()) {
+                Log.d(TAG, "Offline mode — no static key for " + module.getId()
+                        + "; sign in to a Shepherd server to obtain a key");
             } else {
-                Log.d(TAG, "Offline mode — returning static flag for " + module.getId());
+                Log.d(TAG, "Offline mode — returning static key for " + module.getId());
             }
-            new Handler(Looper.getMainLooper()).post(() -> callback.onFlag(offlineFlag));
+            new Handler(Looper.getMainLooper()).post(() -> callback.onKey(offlineKey));
             return;
         }
 
@@ -91,11 +91,11 @@ public class FlagProvider {
         final Handler mainHandler = new Handler(Looper.getMainLooper());
 
         new Thread(() -> {
-            String resultFlag = offlineFlag;
+            String resultKey = offlineKey;
             HttpURLConnection conn = null;
             try {
                 // Notify the server that this module has been opened. This must succeed
-                // before /mobileFlagGet will return a flag (prevents bulk API farming).
+                // before /mobileFlagGet will return a key (prevents bulk API farming).
                 try {
                     String startBody = "moduleId=" + URLEncoder.encode(module.getId(), "UTF-8");
                     HttpURLConnection startConn =
@@ -144,24 +144,24 @@ public class FlagProvider {
                         while ((line = reader.readLine()) != null) sb.append(line);
                     }
                     JSONObject json = new JSONObject(sb.toString());
-                    String fetchedFlag = json.optString("flag", "");
-                    if (!fetchedFlag.isEmpty()) {
-                        resultFlag = fetchedFlag;
-                        Log.d(TAG, "Dynamic flag fetched for " + module.getId());
+                    String fetchedKey = json.optString("flag", "");
+                    if (!fetchedKey.isEmpty()) {
+                        resultKey = fetchedKey;
+                        Log.d(TAG, "Dynamic key fetched for " + module.getId());
                     }
                 } else {
-                    Log.w(TAG, "Flag fetch HTTP " + status + " for " + module.getId()
-                            + " — using offline flag");
+                    Log.w(TAG, "Key fetch HTTP " + status + " for " + module.getId()
+                            + " — using offline key");
                 }
             } catch (Exception e) {
-                Log.w(TAG, "Flag fetch failed for " + module.getId()
-                        + ": " + e.getMessage() + " — using offline flag");
+                Log.w(TAG, "Key fetch failed for " + module.getId()
+                        + ": " + e.getMessage() + " — using offline key");
             } finally {
                 if (conn != null) conn.disconnect();
             }
 
-            final String flag = resultFlag;
-            mainHandler.post(() -> callback.onFlag(flag));
+            final String key = resultKey;
+            mainHandler.post(() -> callback.onKey(key));
         }).start();
     }
 }

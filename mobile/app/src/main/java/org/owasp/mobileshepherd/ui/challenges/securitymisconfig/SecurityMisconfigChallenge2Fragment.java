@@ -21,8 +21,8 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import org.owasp.mobileshepherd.R;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -30,9 +30,9 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
 
     private static final String TAG = "BackupChallenge";
     private static final String PREFS_NAME = "BackupChallengePrefs";
-    
-    private String currentFlag = "";
-    private TextInputEditText flagInput;
+
+    private String currentKey = "";
+    private TextInputEditText keyInput;
     private TextView resultText;
     private ProgressTracker progressTracker;
     private boolean fabExpanded = false;
@@ -50,7 +50,7 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -60,15 +60,15 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
         }
 
 
-        flagInput = root.findViewById(R.id.flag_input);
+        keyInput = root.findViewById(R.id.key_input);
         resultText = root.findViewById(R.id.result_text);
-        
-        Button validateButton = root.findViewById(R.id.validate_button);
-        validateButton.setOnClickListener(v -> validateFlag());
 
-        // Fetch server flag, then store it in SharedPreferences (will be backed up)
-        FlagProvider.getFlag(requireContext(), FlagValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2, flagValue -> {
-            currentFlag = flagValue;
+        Button validateButton = root.findViewById(R.id.validate_button);
+        validateButton.setOnClickListener(v -> validateKey());
+
+        // Fetch server key, then store it in SharedPreferences (will be backed up)
+        KeyProvider.getKey(requireContext(), KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2, keyValue -> {
+            currentKey = keyValue;
             storeSecretData();
         });
 
@@ -124,9 +124,9 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
         editor.putString("theme", "dark");
         editor.putString("language", "en");
 
-        // Store the flag - this will be in the backup!
-        editor.putString("secret_flag", currentFlag);
-        editor.putString("flag_hint", "Extract me with adb backup!");
+        // Store the key - this will be in the backup!
+        editor.putString("secret_key", currentKey);
+        editor.putString("key_hint", "Extract me with adb backup!");
 
         editor.apply();
 
@@ -135,39 +135,39 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
         Log.d(TAG, "Secret data stored in backup-enabled SharedPreferences.");
     }
 
-    private void validateFlag() {
-        String userInput = flagInput.getText().toString().trim();
+    private void validateKey() {
+        String userInput = keyInput.getText().toString().trim();
 
         if (userInput.isEmpty()) {
             resultText.setVisibility(View.VISIBLE);
-            resultText.setText("Please enter a flag");
+            resultText.setText("Please enter a key");
             resultText.setTextColor(ContextCompat.getColor(requireContext(), R.color.card_warning_text));
             resultText.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.card_warning_bg));
             return;
         }
 
-        FlagValidator.validateFlag(requireContext(), FlagValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2,
+        KeyValidator.validateKey(requireContext(), KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2,
                 userInput, isValid -> {
             resultText.setVisibility(View.VISIBLE);
             if (isValid) {
-                progressTracker.markCompleted(FlagValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2);
-                int completionCount = progressTracker.getCompletionCount(FlagValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2);
+                progressTracker.markCompleted(KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2);
+                int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2);
                 String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
 
-                resultText.setText("\u2713 SUCCESS!\n\nYou successfully extracted the backup and found the flag in SharedPreferences!");
+                resultText.setText("\u2713 SUCCESS!\n\nYou successfully extracted the backup and found the key in SharedPreferences!");
                 resultText.setTextColor(ContextCompat.getColor(requireContext(), R.color.success_text));
                 resultText.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.success_bg));
 
                 new AlertDialog.Builder(requireContext())
                     .setTitle("\uD83C\uDF89 Success!")
-                    .setMessage("Congratulations! You extracted data from the app backup.\n\nFlag: " + userInput + completionText)
+                    .setMessage("Congratulations! You extracted data from the app backup.\n\nKey: " + userInput + completionText)
                     .setPositiveButton("OK", null)
                     .show();
             } else {
-                resultText.setText("\u2717 INCORRECT\n\nThat's not the right flag. Try extracting the app backup using ADB.");
+                resultText.setText("\u2717 INCORRECT\n\nThat's not the right key. Try extracting the app backup using ADB.");
                 resultText.setTextColor(ContextCompat.getColor(requireContext(), R.color.error_text));
                 resultText.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_bg));
-                Log.d(TAG, "Incorrect flag attempt: " + userInput);
+                Log.d(TAG, "Incorrect key attempt: " + userInput);
             }
         });
     }

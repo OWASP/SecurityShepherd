@@ -19,8 +19,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentInsecureData1Binding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -32,7 +32,7 @@ public class InsecureData1Fragment extends Fragment {
 
     private FragmentInsecureData1Binding binding;
     private SQLiteDatabase passwordDB = null;
-    private String currentFlag = "";
+    private String currentKey = "";
     private ProgressTracker progressTracker;
     // Deliberately weak, unsalted password - tops common breach wordlists (e.g. rockyou.txt).
     private static final String ADMIN_PASSWORD = "Password1";
@@ -47,39 +47,39 @@ public class InsecureData1Fragment extends Fragment {
         // Setup FAB for vulnerability information
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.IDS_CHALLENGE_1));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.IDS_CHALLENGE_1));
         }
 
-        // Create the vulnerable database, then seed it once the server flag is available
+        // Create the vulnerable database, then seed it once the server key is available
         createDatabase();
-        FlagProvider.getFlag(requireContext(), FlagValidator.Module.IDS_CHALLENGE_1, flagValue -> {
-            currentFlag = flagValue;
+        KeyProvider.getKey(requireContext(), KeyValidator.Module.IDS_CHALLENGE_1, keyValue -> {
+            currentKey = keyValue;
             insertUsers();
             displayUsers();
         });
 
-        // Wire up local password verification, then auto-fetch/validate the real flag
+        // Wire up local password verification, then auto-fetch/validate the real key
         binding.validateButton.setOnClickListener(v -> {
-            String enteredPassword = binding.flagInput.getText().toString().trim();
+            String enteredPassword = binding.keyInput.getText().toString().trim();
             if (md5(enteredPassword).equals(md5(ADMIN_PASSWORD))) {
-                FlagValidator.validateFlag(requireContext(), FlagValidator.Module.IDS_CHALLENGE_1,
-                        currentFlag, isValid -> {
+                KeyValidator.validateKey(requireContext(), KeyValidator.Module.IDS_CHALLENGE_1,
+                        currentKey, isValid -> {
                     if (isValid) {
-                        progressTracker.markCompleted(FlagValidator.Module.IDS_CHALLENGE_1);
-                        int completionCount = progressTracker.getCompletionCount(FlagValidator.Module.IDS_CHALLENGE_1);
+                        progressTracker.markCompleted(KeyValidator.Module.IDS_CHALLENGE_1);
+                        int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.IDS_CHALLENGE_1);
                         String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
 
-                        Toast.makeText(getContext(), "Correct! Flag validated!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Correct! Key validated!", Toast.LENGTH_LONG).show();
                         binding.resultCard.setCardBackgroundColor(
                                 ContextCompat.getColor(requireContext(), R.color.success_bg));
 
                         new AlertDialog.Builder(requireContext())
                             .setTitle("\uD83C\uDF89 Success!")
-                            .setMessage("Congratulations! You cracked the password hash.\n\nFlag: " + currentFlag + completionText)
+                            .setMessage("Congratulations! You cracked the password hash.\n\nKey: " + currentKey + completionText)
                             .setPositiveButton("OK", null)
                             .show();
                     } else {
-                        Toast.makeText(getContext(), "Password correct, but flag validation failed. Are you logged in?", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Password correct, but key validation failed. Are you logged in?", Toast.LENGTH_LONG).show();
                         binding.resultCard.setCardBackgroundColor(
                                 ContextCompat.getColor(requireContext(), R.color.error_bg));
                     }
@@ -88,7 +88,7 @@ public class InsecureData1Fragment extends Fragment {
                 Toast.makeText(getContext(), "Incorrect password. Keep cracking!", Toast.LENGTH_SHORT).show();
                 binding.resultCard.setCardBackgroundColor(
                         ContextCompat.getColor(requireContext(), R.color.error_bg));
-                binding.flagInput.setText("");
+                binding.keyInput.setText("");
             }
         });
 

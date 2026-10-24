@@ -1,6 +1,8 @@
 package org.owasp.mobileshepherd.ui.lessons.crypto;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,16 +13,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentInsufficientCryptoLessonBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -32,11 +39,29 @@ public class InsufficientCryptoLessonFragment extends Fragment {
     private FragmentInsufficientCryptoLessonBinding binding;
     private static final String TAG = "InsufficientCrypto";
 
-    // Intentionally weak, hardcoded DES key — visible to anyone who decompiles the APK
-    private static final String WEAK_DES_KEY = "SHEPHERD";
+    // Each secret is "encrypted" with its own short, guessable word — reusing
+    // a single key across secrets would itself be the vulnerability, so the
+    // lesson instead shows why ANY weak, dictionary-guessable DES key is unsafe.
+    private static final String[] SECRET_KEYS = {"sheep", "shepherd", "grass", "wool"};
 
-    private String currentFlag = "";
+    private String currentKey = "";
     private ProgressTracker progressTracker;
+    private List<EncryptedSecret> encryptedSecrets;
+    private int userSecretCount = 0;
+
+    private static class EncryptedSecret {
+        final String label;
+        final String hint;
+        final String encryptedValue;
+        String decryptedValue;
+
+        EncryptedSecret(String label, String hint, String encryptedValue) {
+            this.label = label;
+            this.hint = hint;
+            this.encryptedValue = encryptedValue;
+            this.decryptedValue = null;
+        }
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -46,85 +71,222 @@ public class InsufficientCryptoLessonFragment extends Fragment {
 
         progressTracker = new ProgressTracker(requireContext());
 
-        FlagProvider.getFlag(requireContext(), FlagValidator.Module.INSUFFICIENT_CRYPTO_LESSON,
-                flagValue -> {
+        KeyProvider.getKey(requireContext(), KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON,
+                keyValue -> {
                     if (!isAdded()) return;
-                    currentFlag = flagValue;
-                    populateSecrets(flagValue);
+                    currentKey = keyValue;
+                    initializeSecrets();
+                    displaySecrets();
                 });
 
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(v ->
-                    ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.INSUFFICIENT_CRYPTO_LESSON));
+                    ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON));
         }
 
-        binding.encryptButton.setOnClickListener(v -> performCrypto(true));
-        binding.decryptButton.setOnClickListener(v -> performCrypto(false));
+        binding.encryptButton.setOnClickListener(v -> encryptText());
+        binding.decryptButton.setOnClickListener(v -> decryptText());
 
         return root;
     }
 
     /**
-     * Pre-populate the encrypted secrets list.  The first two are decoys; the
-     * third is the lesson flag encrypted with the WEAK_DES_KEY above.
+     * Seed the encrypted secrets list. The first three are decoys; the last
+     * ("wool") encrypts the real lesson key.
      */
-    private void populateSecrets(String flag) {
-        String encryptedPassword = desEncrypt("SuperSecret123", WEAK_DES_KEY);
-        String encryptedApiKey   = desEncrypt("prod-api-key-456", WEAK_DES_KEY);
-        String encryptedFlag     = desEncrypt(flag, WEAK_DES_KEY);
-
-        Log.d(TAG, "DES key used: " + WEAK_DES_KEY);
-        Log.d(TAG, "Encrypted flag: " + encryptedFlag);
-
-        addSecretRow("password_store",    encryptedPassword, "hint: common word");
-        addSecretRow("prod_api_key",      encryptedApiKey,   "hint: prod-api-key-NNN");
-        addSecretRow("admin_secret_flag", encryptedFlag,     "hint: key is hardcoded in source");
+    private void initializeSecrets() {
+        encryptedSecrets = new ArrayList<>();
+        encryptedSecrets.add(new EncryptedSecret("Secret 1", "Animal",
+                desEncrypt("Some sheep have gone missing", SECRET_KEYS[0])));
+        encryptedSecrets.add(new EncryptedSecret("Secret 2", "Role",
+                desEncrypt("Reallocating budget for new staff", SECRET_KEYS[1])));
+        encryptedSecrets.add(new EncryptedSecret("Secret 3", "Not Human Food",
+                desEncrypt("Grass is turning blue.", SECRET_KEYS[2])));
+        encryptedSecrets.add(new EncryptedSecret("Secret 4", "Material for warmth",
+                desEncrypt(currentKey, SECRET_KEYS[3])));
     }
 
-    private void addSecretRow(String label, String ciphertext, String hint) {
+    private void displaySecrets() {
         LinearLayout container = binding.secretsContainer;
-        TextView tv = new TextView(getContext());
-        tv.setPadding(0, 12, 0, 12);
-        tv.setTextSize(12f);
-        tv.setTypeface(android.graphics.Typeface.MONOSPACE);
-        tv.setText(label + ":\n" + ciphertext + "\n(" + hint + ")");
-        container.addView(tv);
+        container.removeAllViews();
+        for (EncryptedSecret secret : encryptedSecrets) {
+            container.addView(createSecretView(secret));
+        }
     }
 
-    private void performCrypto(boolean encrypt) {
-        String key  = binding.keyInput.getText() != null
-                ? binding.keyInput.getText().toString().trim() : "";
-        String text = binding.plaintextInput.getText() != null
-                ? binding.plaintextInput.getText().toString().trim() : "";
+    private View createSecretView(EncryptedSecret secret) {
+        Context context = requireContext();
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(0, 12, 0, 12);
+        layout.setClickable(true);
+        layout.setFocusable(true);
+        layout.setOnClickListener(v -> promptToDecryptSecret(secret));
 
-        if (key.isEmpty() || text.isEmpty()) {
+        TextView labelView = new TextView(context);
+        labelView.setText(secret.label);
+        labelView.setTextSize(13f);
+        labelView.setTypeface(null, android.graphics.Typeface.BOLD);
+        layout.addView(labelView);
+
+        TextView hintView = new TextView(context);
+        hintView.setText("Hint: " + secret.hint);
+        hintView.setTextSize(12f);
+        hintView.setPadding(0, 4, 0, 4);
+        layout.addView(hintView);
+
+        TextView encryptedView = new TextView(context);
+        encryptedView.setText("Encrypted: " + secret.encryptedValue);
+        encryptedView.setTextSize(12f);
+        encryptedView.setTypeface(android.graphics.Typeface.MONOSPACE);
+        layout.addView(encryptedView);
+
+        TextView decryptedView = new TextView(context);
+        decryptedView.setTextSize(12f);
+        decryptedView.setTypeface(android.graphics.Typeface.MONOSPACE);
+        if (secret.decryptedValue != null) {
+            decryptedView.setText("Decrypted: " + secret.decryptedValue);
+            decryptedView.setTextColor(ContextCompat.getColor(context, R.color.success_green));
+        } else {
+            decryptedView.setText("Decrypted: ???");
+            TextView tapHint = new TextView(context);
+            tapHint.setText("→ Tap to decrypt");
+            tapHint.setTextSize(11f);
+            tapHint.setTypeface(null, android.graphics.Typeface.ITALIC);
+            layout.addView(decryptedView);
+            layout.addView(tapHint);
+            return layout;
+        }
+        layout.addView(decryptedView);
+        return layout;
+    }
+
+    private void promptToDecryptSecret(EncryptedSecret secret) {
+        if (secret.decryptedValue != null) {
+            Toast.makeText(getContext(), "Already decrypted: " + secret.decryptedValue, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        TextInputEditText input = new TextInputEditText(requireContext());
+        input.setHint("Enter key (up to 8 characters)");
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setMaxLines(1);
+
+        LinearLayout container = new LinearLayout(requireContext());
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setPadding(50, 20, 50, 20);
+        container.addView(input);
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Decrypt " + secret.label)
+                .setMessage("Hint: " + secret.hint + "\n\nEnter the decryption key:")
+                .setView(container)
+                .setPositiveButton("Decrypt", (dialog, which) ->
+                        attemptDecryptSecret(secret, input.getText() != null ? input.getText().toString().trim() : ""))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void attemptDecryptSecret(EncryptedSecret secret, String key) {
+        if (key.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a key", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String decrypted = desDecrypt(secret.encryptedValue, key);
+        if (decrypted.startsWith("[")) {
+            Toast.makeText(getContext(), "Incorrect key. Try again!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        secret.decryptedValue = decrypted;
+        displaySecrets();
+        Toast.makeText(getContext(), "Successfully decrypted!", Toast.LENGTH_SHORT).show();
+        checkForCompletion(decrypted);
+    }
+
+    private void encryptText() {
+        String plaintext = binding.plaintextInput.getText() != null
+                ? binding.plaintextInput.getText().toString().trim() : "";
+        String key = binding.keyInput.getText() != null
+                ? binding.keyInput.getText().toString().trim() : "";
+        String hint = binding.hintInput.getText() != null
+                ? binding.hintInput.getText().toString().trim() : "";
+
+        if (plaintext.isEmpty() || key.isEmpty()) {
             Toast.makeText(getContext(), "Enter both a key and text", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (key.length() < 8) {
-            Toast.makeText(getContext(), "DES key must be exactly 8 characters", Toast.LENGTH_SHORT).show();
+        if (key.length() > 8) {
+            Toast.makeText(getContext(), "DES key must be 8 characters or less", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (key.length() > 8) key = key.substring(0, 8);
 
-        String result;
-        try {
-            result = encrypt ? desEncrypt(text, key) : desDecrypt(text, key);
-        } catch (Exception e) {
-            result = "Error: " + e.getMessage();
+        String encrypted = desEncrypt(plaintext, key);
+        binding.cryptoOutput.setVisibility(View.VISIBLE);
+        binding.cryptoOutput.setText("Encrypted:\n" + encrypted);
+
+        userSecretCount++;
+        String label = "User Secret " + userSecretCount;
+        String finalHint = hint.isEmpty() ? "No hint provided" : hint;
+        encryptedSecrets.add(new EncryptedSecret(label, finalHint, encrypted));
+        displaySecrets();
+
+        binding.plaintextInput.setText("");
+        binding.hintInput.setText("");
+        Toast.makeText(getContext(), "Added to encrypted secrets list!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void decryptText() {
+        String ciphertext = binding.plaintextInput.getText() != null
+                ? binding.plaintextInput.getText().toString().trim() : "";
+        String key = binding.keyInput.getText() != null
+                ? binding.keyInput.getText().toString().trim() : "";
+
+        if (ciphertext.isEmpty() || key.isEmpty()) {
+            Toast.makeText(getContext(), "Enter both a key and text", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (key.length() > 8) {
+            Toast.makeText(getContext(), "DES key must be 8 characters or less", Toast.LENGTH_SHORT).show();
+            return;
         }
 
+        String decrypted = desDecrypt(ciphertext, key);
         binding.cryptoOutput.setVisibility(View.VISIBLE);
-        binding.cryptoOutput.setText(result);
+        binding.cryptoOutput.setText("Decrypted:\n" + decrypted);
 
-        // Auto-validate: if the student successfully decrypts the flag
-        if (!encrypt && result.equals(currentFlag) && !currentFlag.isEmpty()) {
-            binding.cryptoOutput.setTextColor(
-                    ContextCompat.getColor(requireContext(), R.color.success_green));
-            progressTracker.markCompleted(FlagValidator.Module.INSUFFICIENT_CRYPTO_LESSON);
-            Toast.makeText(getContext(), "Flag found! Lesson complete.", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "Flag successfully decrypted: " + result);
+        if (!decrypted.startsWith("[")) {
+            checkForCompletion(decrypted);
+            tryDecryptSecretsWithKey(key);
+        } else {
+            Toast.makeText(getContext(), "Decryption failed: invalid key or ciphertext", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void checkForCompletion(String decryptedText) {
+        if (!currentKey.isEmpty() && decryptedText.equals(currentKey)) {
+            progressTracker.markCompleted(KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON);
+            KeyValidator.validateKey(requireContext(), KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON,
+                    currentKey, correct -> Log.d(TAG, "Server submission: " + correct));
+            Toast.makeText(getContext(), "Key found! Lesson complete.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void tryDecryptSecretsWithKey(String key) {
+        boolean anyDecrypted = false;
+        for (EncryptedSecret secret : encryptedSecrets) {
+            if (secret.decryptedValue == null) {
+                String decrypted = desDecrypt(secret.encryptedValue, key);
+                if (!decrypted.startsWith("[")) {
+                    secret.decryptedValue = decrypted;
+                    anyDecrypted = true;
+                }
+            }
+        }
+        if (anyDecrypted) {
+            displaySecrets();
         }
     }
 

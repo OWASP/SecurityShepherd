@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentProgressBinding;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
 import java.text.SimpleDateFormat;
@@ -45,7 +45,7 @@ public class ProgressFragment extends Fragment {
     }
 
     private void setupProgressOverview() {
-        int totalModules = FlagValidator.Module.values().length;
+        int totalModules = KeyValidator.Module.values().length;
         int completedModules = progressTracker.getTotalCompletedCount();
         int completionPercentage = progressTracker.getCompletionPercentage();
 
@@ -70,7 +70,7 @@ public class ProgressFragment extends Fragment {
     private void setupModuleList() {
         List<ModuleItem> modules = new ArrayList<>();
 
-        for (FlagValidator.Module module : FlagValidator.Module.values()) {
+        for (KeyValidator.Module module : KeyValidator.Module.values()) {
             boolean isCompleted = progressTracker.isCompleted(module);
             long completionTime = progressTracker.getFirstCompletionTime(module);
             int completionCount = progressTracker.getCompletionCount(module);
@@ -90,7 +90,7 @@ public class ProgressFragment extends Fragment {
         binding.moduleRecyclerView.setAdapter(adapter);
     }
 
-    private String getModuleDisplayName(FlagValidator.Module module) {
+    private String getModuleDisplayName(KeyValidator.Module module) {
         // Convert enum name to readable format
         String name = module.name().replace("_", " ");
         StringBuilder result = new StringBuilder();
@@ -112,14 +112,14 @@ public class ProgressFragment extends Fragment {
 
     // Data class for module items
     static class ModuleItem {
-        FlagValidator.Module module;
+        KeyValidator.Module module;
         String displayName;
         String type;
         boolean isCompleted;
         long completionTime;
         int completionCount;
 
-        ModuleItem(FlagValidator.Module module, String displayName, String type,
+        ModuleItem(KeyValidator.Module module, String displayName, String type,
                    boolean isCompleted, long completionTime, int completionCount) {
             this.module = module;
             this.displayName = displayName;
@@ -182,7 +182,7 @@ public class ProgressFragment extends Fragment {
             }
 
             // Set background for challenge vs lesson
-            if (item.type.equals(FlagValidator.TYPE_CHALLENGE)) {
+            if (item.type.equals(KeyValidator.TYPE_CHALLENGE)) {
                 holder.typeText.setBackgroundColor(holder.itemView.getContext()
                         .getColor(R.color.challenge_badge));
             } else {

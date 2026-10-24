@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import org.owasp.mobileshepherd.databinding.ActivityMainBinding;
 import org.owasp.mobileshepherd.utils.AuthManager;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
 import java.util.ArrayList;
@@ -45,31 +45,31 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ProgressTracker progressTracker;
     private NavigationAdapter navigationAdapter;
-    private static final Map<Integer, FlagValidator.Module> NAV_TO_MODULE_MAP = new HashMap<>();
-    
+    private static final Map<Integer, KeyValidator.Module> NAV_TO_MODULE_MAP = new HashMap<>();
+
     static {
         // Lessons
-        NAV_TO_MODULE_MAP.put(R.id.nav_lesson, FlagValidator.Module.RE_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_data_lesson, FlagValidator.Module.IDS_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_poor_auth_lesson, FlagValidator.Module.POOR_AUTH_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_authorization_lesson, FlagValidator.Module.INSECURE_AUTH_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_supply_chain_lesson, FlagValidator.Module.SUPPLY_CHAIN_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_comm_lesson, FlagValidator.Module.INSECURE_COMM_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insufficient_crypto_lesson, FlagValidator.Module.INSUFFICIENT_CRYPTO_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_security_misconfig_lesson, FlagValidator.Module.SECURITY_MISCONFIG_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_input_validation_lesson, FlagValidator.Module.INPUT_VALIDATION_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_privacy_lesson, FlagValidator.Module.PRIVACY_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_client_side_injection_lesson, FlagValidator.Module.CLIENT_SIDE_INJECTION_LESSON);
-        
+        NAV_TO_MODULE_MAP.put(R.id.nav_lesson, KeyValidator.Module.RE_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_data_lesson, KeyValidator.Module.IDS_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_poor_auth_lesson, KeyValidator.Module.POOR_AUTH_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_authorization_lesson, KeyValidator.Module.INSECURE_AUTH_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_supply_chain_lesson, KeyValidator.Module.SUPPLY_CHAIN_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_comm_lesson, KeyValidator.Module.INSECURE_COMM_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_insufficient_crypto_lesson, KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_security_misconfig_lesson, KeyValidator.Module.SECURITY_MISCONFIG_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_input_validation_lesson, KeyValidator.Module.INPUT_VALIDATION_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_privacy_lesson, KeyValidator.Module.PRIVACY_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_client_side_injection_lesson, KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON);
+
         // Challenges
-        NAV_TO_MODULE_MAP.put(R.id.nav_challenge1, FlagValidator.Module.RE_CHALLENGE_1);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_data1, FlagValidator.Module.IDS_CHALLENGE_1);
-        NAV_TO_MODULE_MAP.put(R.id.nav_poor_auth_challenge, FlagValidator.Module.POOR_AUTH_CHALLENGE);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_comm_challenge, FlagValidator.Module.INSECURE_COMM_CHALLENGE);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insufficient_crypto_challenge, FlagValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE);
-        NAV_TO_MODULE_MAP.put(R.id.nav_security_misconfig_challenge2, FlagValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2);
-        NAV_TO_MODULE_MAP.put(R.id.nav_client_side_injection_challenge1, FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1);
-        NAV_TO_MODULE_MAP.put(R.id.nav_client_side_injection_challenge2, FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
+        NAV_TO_MODULE_MAP.put(R.id.nav_challenge1, KeyValidator.Module.RE_CHALLENGE_1);
+        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_data1, KeyValidator.Module.IDS_CHALLENGE_1);
+        NAV_TO_MODULE_MAP.put(R.id.nav_poor_auth_challenge, KeyValidator.Module.POOR_AUTH_CHALLENGE);
+        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_comm_challenge, KeyValidator.Module.INSECURE_COMM_CHALLENGE);
+        NAV_TO_MODULE_MAP.put(R.id.nav_insufficient_crypto_challenge, KeyValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE);
+        NAV_TO_MODULE_MAP.put(R.id.nav_security_misconfig_challenge2, KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2);
+        NAV_TO_MODULE_MAP.put(R.id.nav_client_side_injection_challenge1, KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1);
+        NAV_TO_MODULE_MAP.put(R.id.nav_client_side_injection_challenge2, KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
     }
 
     @Override
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationItem completedGroup = new NavigationItem(5, "Completed", R.drawable.ic_menu_camera);
         boolean hasCompleted = false;
         
-        for (Map.Entry<Integer, FlagValidator.Module> entry : NAV_TO_MODULE_MAP.entrySet()) {
+        for (Map.Entry<Integer, KeyValidator.Module> entry : NAV_TO_MODULE_MAP.entrySet()) {
             if (progressTracker.isCompleted(entry.getValue())) {
                 hasCompleted = true;
                 String title = getTitleForNavId(entry.getKey());
@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
     private void addChildIfNotCompleted(NavigationItem parent, NavigationItem child) {
         // Only add the child if it's not completed
         if (child.getNavigationId() != 0) {
-            FlagValidator.Module module = NAV_TO_MODULE_MAP.get(child.getNavigationId());
+            KeyValidator.Module module = NAV_TO_MODULE_MAP.get(child.getNavigationId());
             if (module != null && progressTracker.isCompleted(module)) {
                 return; // Skip completed items
             }
@@ -425,6 +425,7 @@ public class MainActivity extends AppCompatActivity {
         EditText usernameField = dialogView.findViewById(R.id.auth_username);
         EditText passwordField = dialogView.findViewById(R.id.auth_password);
         EditText emailField   = dialogView.findViewById(R.id.auth_email);
+        View emailFieldLayout = dialogView.findViewById(R.id.auth_email_layout);
         View emailLabel       = dialogView.findViewById(R.id.auth_email_label);
         TextView statusText   = dialogView.findViewById(R.id.auth_status_text);
 
@@ -490,13 +491,13 @@ public class MainActivity extends AppCompatActivity {
                     dialog.setTitle(getString(R.string.auth_dialog_title_register));
                     positive.setText(R.string.auth_dialog_title_register);
                     neutral.setText(R.string.auth_switch_to_login);
-                    emailField.setVisibility(View.VISIBLE);
+                    emailFieldLayout.setVisibility(View.VISIBLE);
                     emailLabel.setVisibility(View.VISIBLE);
                 } else {
                     dialog.setTitle(getString(R.string.auth_dialog_title_login));
                     positive.setText(R.string.auth_button_sign_in);
                     neutral.setText(R.string.auth_switch_to_register);
-                    emailField.setVisibility(View.GONE);
+                    emailFieldLayout.setVisibility(View.GONE);
                     emailLabel.setVisibility(View.GONE);
                 }
                 statusText.setVisibility(View.GONE);

@@ -127,7 +127,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Flag Submission Card -->
+        <!-- Key Submission Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/resultCard"
             android:layout_width="match_parent"
@@ -145,7 +145,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/submit_flag"
+                    android:text="@string/submit_key"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
@@ -164,11 +164,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:hint="@string/enter_flag_format_key"
+                    android:hint="@string/enter_key_format"
                     app:boxBackgroundMode="outline">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/flagInput"
+                        android:id="@+id/keyInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text" />

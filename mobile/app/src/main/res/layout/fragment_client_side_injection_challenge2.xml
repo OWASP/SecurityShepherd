@@ -124,7 +124,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Flag Submission Section -->
+        <!-- Key Submission Section -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/submit_flag"
+                    android:text="@string/submit_key"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
@@ -149,12 +149,12 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/flag"
+                    android:hint="@string/key_label"
                     android:layout_marginBottom="12dp"
                     app:boxBackgroundMode="outline">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/flag_input"
+                        android:id="@+id/key_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -163,10 +163,10 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/submit_flag_button"
+                    android:id="@+id/submit_key_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/submit_flag"
+                    android:text="@string/submit_key"
                     android:textSize="16sp"
                     app:backgroundTint="@color/success_green" />
 

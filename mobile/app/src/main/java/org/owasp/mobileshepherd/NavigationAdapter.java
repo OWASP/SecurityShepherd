@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
 import java.util.ArrayList;
@@ -22,14 +22,14 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Vi
     private List<NavigationItem> displayedItems;
     private OnItemClickListener listener;
     private ProgressTracker progressTracker;
-    private Map<Integer, FlagValidator.Module> navToModuleMap;
+    private Map<Integer, KeyValidator.Module> navToModuleMap;
 
     public interface OnItemClickListener {
         void onItemClick(NavigationItem item);
     }
 
-    public NavigationAdapter(List<NavigationItem> items, OnItemClickListener listener, 
-                           ProgressTracker progressTracker, Map<Integer, FlagValidator.Module> navToModuleMap) {
+    public NavigationAdapter(List<NavigationItem> items, OnItemClickListener listener,
+                           ProgressTracker progressTracker, Map<Integer, KeyValidator.Module> navToModuleMap) {
         this.items = items;
         this.displayedItems = new ArrayList<>();
         this.listener = listener;
@@ -120,7 +120,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Vi
             // Check if this item is completed
             boolean isCompleted = false;
             if (item.getNavigationId() != 0 && navToModuleMap != null) {
-                FlagValidator.Module module = navToModuleMap.get(item.getNavigationId());
+                KeyValidator.Module module = navToModuleMap.get(item.getNavigationId());
                 if (module != null && progressTracker != null) {
                     isCompleted = progressTracker.isCompleted(module);
                 }

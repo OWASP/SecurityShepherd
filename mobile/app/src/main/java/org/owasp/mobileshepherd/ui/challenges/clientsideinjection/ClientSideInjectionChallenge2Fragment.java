@@ -22,8 +22,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentClientSideInjectionChallenge2Binding;
 import org.owasp.mobileshepherd.ui.challenges.clientsideinjection.helpers.Challenge2DatabaseHelper;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -35,7 +35,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
     private static final String TAG = "CSI_Challenge2";
     private ProgressTracker progressTracker;
     private boolean fabExpanded = false;
-    private String currentFlag = "";
+    private String currentKey = "";
     private String dbKey = "";
 
     @Override
@@ -49,14 +49,14 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
 
         // Initialize database
         dbHelper = new Challenge2DatabaseHelper(requireContext());
-        FlagProvider.getFlag(
+        KeyProvider.getKey(
                 requireContext(),
-                FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
-                flag -> {
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
+                key -> {
                     if (!isAdded()) return;
-                    currentFlag = flag;
-                    dbKey = flag;
-                    initializeDatabase(flag);
+                    currentKey = key;
+                    dbKey = key;
+                    initializeDatabase(key);
                 });
 
         // Setup expandable FAB with command reference and OWASP link
@@ -65,7 +65,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -80,13 +80,13 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         // Setup search button
         binding.searchProductButton.setOnClickListener(v -> searchProducts());
 
-        // Setup submit flag button
-        binding.submitFlagButton.setOnClickListener(v -> submitFlag());
+        // Setup submit key button
+        binding.submitKeyButton.setOnClickListener(v -> submitKey());
 
         return root;
     }
 
-    private void initializeDatabase(String flagValue) {
+    private void initializeDatabase(String keyValue) {
         SQLiteDatabase db = dbHelper.getWritableDatabase(dbKey);
 
         // Clear existing data
@@ -100,8 +100,8 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         insertProduct(db, "Monitor", "Electronics", 299.99, 20);
         insertProduct(db, "Desk", "Furniture", 199.99, 10);
 
-        // Insert secret table — admin_token value is the user-specific HMAC flag
-        insertSecret(db, "admin_token", flagValue);
+        // Insert secret table — admin_token value is the user-specific HMAC key
+        insertSecret(db, "admin_token", keyValue);
         insertSecret(db, "api_key", "sk_test_1234567890");
 
         db.close();
@@ -156,12 +156,13 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
                     
                     results.append(columnName).append(": ").append(value).append("\n");
                     
-                    // Check if flag was extracted
-                    if (value != null && !currentFlag.isEmpty() && value.equals(currentFlag)) {
+                    // Check if key was extracted
+                    if (value != null && !currentKey.isEmpty() && value.equals(currentKey)) {
                         results.append("\n SECRET DISCOVERED!\n");
                         results.append("You've extracted data from the hidden 'secrets' table!\n");
-                        results.append("Flag: ").append(value).append("\n\n");
-                        results.append("Submit this flag to complete the challenge!\n");
+                        results.append("Key: ").append(value).append("\n\n");
+                        results.append("Submitting key automatically...\n");
+                        submitKeyToServer(value);
                     }
                 }
                 results.append("---\n");
@@ -184,33 +185,59 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         }
     }
 
-    private void submitFlag() {
-        String submittedFlag = binding.flagInput.getText().toString();
-        
-        if (submittedFlag.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter the flag", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        FlagValidator.validateFlag(
+    /**
+     * Submits the discovered key to the Shepherd server as soon as the UNION
+     * injection surfaces it, so the player doesn't need to manually copy it into
+     * the key field.
+     */
+    private void submitKeyToServer(String key) {
+        KeyValidator.validateKey(
                 requireContext(),
-                FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
-                submittedFlag,
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
+                key,
                 correct -> {
                     if (!isAdded()) return;
                     if (correct) {
-                        progressTracker.markCompleted(FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
-                        int completionCount = progressTracker.getCompletionCount(FlagValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
+                        progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
+                        int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
                         String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
 
                         new AlertDialog.Builder(requireContext())
                                 .setTitle(" Success!")
-                                .setMessage("Congratulations! You've successfully used UNION-based SQL injection to extract data from the hidden 'secrets' table.\n\nFlag: " + submittedFlag + completionText)
+                                .setMessage("Congratulations! You've successfully used UNION-based SQL injection to extract data from the hidden 'secrets' table.\n\nKey: " + key + completionText)
                                 .setPositiveButton("OK", null)
                                 .show();
-                        binding.flagInput.setText("");
+                    }
+                });
+    }
+
+    private void submitKey() {
+        String submittedKey = binding.keyInput.getText().toString();
+
+        if (submittedKey.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter the key", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        KeyValidator.validateKey(
+                requireContext(),
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
+                submittedKey,
+                correct -> {
+                    if (!isAdded()) return;
+                    if (correct) {
+                        progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
+                        int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
+                        String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
+
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle(" Success!")
+                                .setMessage("Congratulations! You've successfully used UNION-based SQL injection to extract data from the hidden 'secrets' table.\n\nKey: " + submittedKey + completionText)
+                                .setPositiveButton("OK", null)
+                                .show();
+                        binding.keyInput.setText("");
                     } else {
-                        Toast.makeText(getContext(), "Incorrect flag. Keep trying!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Incorrect key. Keep trying!", Toast.LENGTH_LONG).show();
                     }
                 });
     }

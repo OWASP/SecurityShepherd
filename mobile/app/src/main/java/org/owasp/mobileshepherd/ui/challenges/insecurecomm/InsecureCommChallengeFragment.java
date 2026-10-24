@@ -20,8 +20,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentInsecureCommChallengeBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -34,7 +34,7 @@ import java.util.Random;
 public class InsecureCommChallengeFragment extends Fragment {
 
     private FragmentInsecureCommChallengeBinding binding;
-    private String currentFlag = "";
+    private String currentKey = "";
     private static final String TAG = "AppNetworkMonitor";
     private ProgressTracker progressTracker;
     private boolean fabExpanded = false;
@@ -48,9 +48,9 @@ public class InsecureCommChallengeFragment extends Fragment {
 
         progressTracker = new ProgressTracker(requireContext());
 
-        // Fetch server flag so it is ready when simulateAppTraffic() is triggered
-        FlagProvider.getFlag(requireContext(), FlagValidator.Module.INSECURE_COMM_CHALLENGE, flagValue -> {
-            currentFlag = flagValue;
+        // Fetch server key so it is ready when simulateAppTraffic() is triggered
+        KeyProvider.getKey(requireContext(), KeyValidator.Module.INSECURE_COMM_CHALLENGE, keyValue -> {
+            currentKey = keyValue;
         });
 
         // Setup expandable FAB with command reference and OWASP link
@@ -59,7 +59,7 @@ public class InsecureCommChallengeFragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.INSECURE_COMM_CHALLENGE));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.INSECURE_COMM_CHALLENGE));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -72,7 +72,7 @@ public class InsecureCommChallengeFragment extends Fragment {
         // Set initial FAB appearance based on completion status
 
         binding.startAppButton.setOnClickListener(v -> simulateAppTraffic());
-        binding.submitFlagButton.setOnClickListener(v -> submitFlag());
+        binding.submitKeyButton.setOnClickListener(v -> submitKey());
 
         return root;
     }
@@ -129,7 +129,7 @@ public class InsecureCommChallengeFragment extends Fragment {
                 makeSecureAnalyticsRequest();
                 
                 Thread.sleep(800);
-                makeInsecureApiRequest(); // This one contains the flag
+                makeInsecureApiRequest(); // This one contains the key
                 
                 Thread.sleep(600);
                 makeSecureImageRequest();
@@ -166,7 +166,7 @@ public class InsecureCommChallengeFragment extends Fragment {
     }
 
     private void makeInsecureApiRequest() {
-        String flag = currentFlag.isEmpty() ? "[connect to server to load flag]" : currentFlag;
+        String key = currentKey.isEmpty() ? "[connect to server to load key]" : currentKey;
         
         Log.d(TAG, "───────────────────────────────────");
         Log.d(TAG, "[Request #2] User Session Endpoint");
@@ -188,7 +188,7 @@ public class InsecureCommChallengeFragment extends Fragment {
             URL url = new URL("http://api.legacy-backend.com/user/session");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("X-Session-Token", flag);
+            conn.setRequestProperty("X-Session-Token", key);
             conn.setRequestProperty("User-Agent", "MobileApp/2.1.4");
             conn.setConnectTimeout(2000);
             conn.setReadTimeout(2000);
@@ -245,43 +245,43 @@ public class InsecureCommChallengeFragment extends Fragment {
         Log.d(TAG, "═══════════════════════════════════");
     }
 
-    private void submitFlag() {
-        String enteredFlag = binding.flagInput.getText().toString().trim();
+    private void submitKey() {
+        String enteredKey = binding.keyInput.getText().toString().trim();
 
-        if (enteredFlag.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a flag", Toast.LENGTH_SHORT).show();
+        if (enteredKey.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a key", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        FlagValidator.validateFlag(requireContext(), FlagValidator.Module.INSECURE_COMM_CHALLENGE,
-                enteredFlag, isValid -> {
+        KeyValidator.validateKey(requireContext(), KeyValidator.Module.INSECURE_COMM_CHALLENGE,
+                enteredKey, isValid -> {
             if (isValid) {
-                progressTracker.markCompleted(FlagValidator.Module.INSECURE_COMM_CHALLENGE);
-                int completionCount = progressTracker.getCompletionCount(FlagValidator.Module.INSECURE_COMM_CHALLENGE);
+                progressTracker.markCompleted(KeyValidator.Module.INSECURE_COMM_CHALLENGE);
+                int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.INSECURE_COMM_CHALLENGE);
                 String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
 
-                binding.flagValidationCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.success_bg));
-                binding.resultText.setText("\u2713 Correct Flag!\n\nYou successfully intercepted the insecure HTTP traffic and found the session token!");
+                binding.keyValidationCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.success_bg));
+                binding.resultText.setText("\u2713 Correct Key!\n\nYou successfully intercepted the insecure HTTP traffic and found the session token!");
                 binding.resultText.setVisibility(View.VISIBLE);
 
                 Toast.makeText(getContext(), "Challenge Complete!", Toast.LENGTH_LONG).show();
 
                 new AlertDialog.Builder(requireContext())
                     .setTitle("\uD83C\uDF89 Success!")
-                    .setMessage("Congratulations! You intercepted insecure network traffic.\n\nFlag: " + enteredFlag + completionText)
+                    .setMessage("Congratulations! You intercepted insecure network traffic.\n\nKey: " + enteredKey + completionText)
                     .setPositiveButton("OK", null)
                     .show();
 
-                binding.submitFlagButton.setEnabled(false);
-                binding.flagInput.setEnabled(false);
+                binding.submitKeyButton.setEnabled(false);
+                binding.keyInput.setEnabled(false);
             } else {
-                binding.flagValidationCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_bg));
+                binding.keyValidationCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_bg));
                 binding.resultText.setText("\u2717 Incorrect. Try again.");
                 binding.resultText.setVisibility(View.VISIBLE);
 
-                Toast.makeText(getContext(), "Incorrect flag. Keep analyzing!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Incorrect key. Keep analyzing!", Toast.LENGTH_SHORT).show();
 
-                binding.flagInput.setText("");
+                binding.keyInput.setText("");
             }
         });
     }

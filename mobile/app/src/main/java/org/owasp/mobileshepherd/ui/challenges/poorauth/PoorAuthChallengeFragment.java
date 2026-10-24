@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentPoorAuthChallengeBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -50,7 +50,7 @@ public class PoorAuthChallengeFragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.POOR_AUTH_CHALLENGE));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.POOR_AUTH_CHALLENGE));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -160,22 +160,22 @@ public class PoorAuthChallengeFragment extends Fragment {
             binding.loginSection.setVisibility(View.GONE);
             binding.resetSection.setVisibility(View.GONE);
             binding.successSection.setVisibility(View.VISIBLE);
-            binding.flagText.setText("Fetching your flag...");
+            binding.keyText.setText("Fetching your key...");
 
             Toast.makeText(getContext(), "Reset token verified! Access granted.", Toast.LENGTH_LONG).show();
 
-            FlagProvider.getFlag(requireContext(), FlagValidator.Module.POOR_AUTH_CHALLENGE, flag -> {
-                binding.flagText.setText("Congratulations! Here's your flag:\n\n" + flag);
+            KeyProvider.getKey(requireContext(), KeyValidator.Module.POOR_AUTH_CHALLENGE, key -> {
+                binding.keyText.setText("Congratulations! Here's your key:\n\n" + key);
 
-                FlagValidator.validateFlag(requireContext(), FlagValidator.Module.POOR_AUTH_CHALLENGE, flag, isValid -> {
+                KeyValidator.validateKey(requireContext(), KeyValidator.Module.POOR_AUTH_CHALLENGE, key, isValid -> {
                     if (isValid) {
-                        progressTracker.markCompleted(FlagValidator.Module.POOR_AUTH_CHALLENGE);
-                        int completionCount = progressTracker.getCompletionCount(FlagValidator.Module.POOR_AUTH_CHALLENGE);
+                        progressTracker.markCompleted(KeyValidator.Module.POOR_AUTH_CHALLENGE);
+                        int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.POOR_AUTH_CHALLENGE);
                         String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
 
                         new AlertDialog.Builder(requireContext())
                             .setTitle("🎉 Success!")
-                            .setMessage("Congratulations! You exploited weak authentication.\n\nFlag: " + flag + completionText)
+                            .setMessage("Congratulations! You exploited weak authentication.\n\nKey: " + key + completionText)
                             .setPositiveButton("OK", null)
                             .show();
                     }

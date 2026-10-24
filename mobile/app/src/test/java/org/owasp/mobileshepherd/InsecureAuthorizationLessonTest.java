@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for InsecureAuthorizationLessonFragment - testing demo credentials and admin flag
+ * Unit tests for InsecureAuthorizationLessonFragment - testing demo credentials and admin key
  */
 public class InsecureAuthorizationLessonTest {
 

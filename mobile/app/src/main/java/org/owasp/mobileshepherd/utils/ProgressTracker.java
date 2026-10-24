@@ -42,7 +42,7 @@ public class ProgressTracker {
      * 
      * @param module The module that was completed
      */
-    public void markCompleted(FlagValidator.Module module) {
+    public void markCompleted(KeyValidator.Module module) {
         Set<String> completed = getCompletedModules();
         boolean wasNew = completed.add(module.getId());
         
@@ -76,7 +76,7 @@ public class ProgressTracker {
      * 
      * @param module The module to unmark
      */
-    public void unmarkCompleted(FlagValidator.Module module) {
+    public void unmarkCompleted(KeyValidator.Module module) {
         Set<String> completed = getCompletedModules();
         completed.remove(module.getId());
         
@@ -96,7 +96,7 @@ public class ProgressTracker {
      * @param module The module to toggle
      * @return true if now marked as completed, false if now marked as incomplete
      */
-    public boolean toggleCompleted(FlagValidator.Module module) {
+    public boolean toggleCompleted(KeyValidator.Module module) {
         if (isCompleted(module)) {
             unmarkCompleted(module);
             return false;
@@ -112,7 +112,7 @@ public class ProgressTracker {
      * @param module The module to check
      * @return true if completed, false otherwise
      */
-    public boolean isCompleted(FlagValidator.Module module) {
+    public boolean isCompleted(KeyValidator.Module module) {
         Set<String> completed = getCompletedModules();
         return completed.contains(module.getId());
     }
@@ -132,7 +132,7 @@ public class ProgressTracker {
      * @param module The module to check
      * @return Timestamp in milliseconds, or 0 if not completed
      */
-    public long getFirstCompletionTime(FlagValidator.Module module) {
+    public long getFirstCompletionTime(KeyValidator.Module module) {
         return prefs.getLong(KEY_FIRST_COMPLETION_TIME + module.getId(), 0);
     }
     
@@ -142,7 +142,7 @@ public class ProgressTracker {
      * @param module The module to check
      * @return Timestamp in milliseconds, or 0 if not completed
      */
-    public long getLastCompletionTime(FlagValidator.Module module) {
+    public long getLastCompletionTime(KeyValidator.Module module) {
         return prefs.getLong(KEY_LAST_COMPLETION_TIME + module.getId(), 0);
     }
     
@@ -152,7 +152,7 @@ public class ProgressTracker {
      * @param module The module to check
      * @return Completion count
      */
-    public int getCompletionCount(FlagValidator.Module module) {
+    public int getCompletionCount(KeyValidator.Module module) {
         return prefs.getInt(KEY_COMPLETION_COUNT + module.getId(), 0);
     }
     
@@ -174,9 +174,9 @@ public class ProgressTracker {
         int count = 0;
         for (String moduleId : getCompletedModules()) {
             // Check if module is a challenge by looking it up
-            for (FlagValidator.Module module : FlagValidator.Module.values()) {
-                if (module.getId().equals(moduleId) && 
-                    module.getType().equals(FlagValidator.TYPE_CHALLENGE)) {
+            for (KeyValidator.Module module : KeyValidator.Module.values()) {
+                if (module.getId().equals(moduleId) &&
+                    module.getType().equals(KeyValidator.TYPE_CHALLENGE)) {
                     count++;
                     break;
                 }
@@ -184,19 +184,19 @@ public class ProgressTracker {
         }
         return count;
     }
-    
+
     /**
      * Gets the total number of completed lessons.
-     * 
+     *
      * @return Count of completed lessons
      */
     public int getCompletedLessonsCount() {
         int count = 0;
         for (String moduleId : getCompletedModules()) {
             // Check if module is a lesson by looking it up
-            for (FlagValidator.Module module : FlagValidator.Module.values()) {
-                if (module.getId().equals(moduleId) && 
-                    module.getType().equals(FlagValidator.TYPE_LESSON)) {
+            for (KeyValidator.Module module : KeyValidator.Module.values()) {
+                if (module.getId().equals(moduleId) &&
+                    module.getType().equals(KeyValidator.TYPE_LESSON)) {
                     count++;
                     break;
                 }
@@ -212,8 +212,8 @@ public class ProgressTracker {
      */
     public int getTotalChallengesCount() {
         int count = 0;
-        for (FlagValidator.Module module : FlagValidator.Module.values()) {
-            if (module.getType().equals(FlagValidator.TYPE_CHALLENGE)) {
+        for (KeyValidator.Module module : KeyValidator.Module.values()) {
+            if (module.getType().equals(KeyValidator.TYPE_CHALLENGE)) {
                 count++;
             }
         }
@@ -227,8 +227,8 @@ public class ProgressTracker {
      */
     public int getTotalLessonsCount() {
         int count = 0;
-        for (FlagValidator.Module module : FlagValidator.Module.values()) {
-            if (module.getType().equals(FlagValidator.TYPE_LESSON)) {
+        for (KeyValidator.Module module : KeyValidator.Module.values()) {
+            if (module.getType().equals(KeyValidator.TYPE_LESSON)) {
                 count++;
             }
         }
@@ -241,7 +241,7 @@ public class ProgressTracker {
      * @return Percentage (0-100)
      */
     public int getCompletionPercentage() {
-        int total = FlagValidator.Module.values().length;
+        int total = KeyValidator.Module.values().length;
         int completed = getTotalCompletedCount();
         if (total == 0) return 0;
         return (int) ((completed * 100.0) / total);
@@ -267,7 +267,7 @@ public class ProgressTracker {
      * 
      * @param module The module to reset
      */
-    public void resetModule(FlagValidator.Module module) {
+    public void resetModule(KeyValidator.Module module) {
         Set<String> completed = getCompletedModules();
         completed.remove(module.getId());
         

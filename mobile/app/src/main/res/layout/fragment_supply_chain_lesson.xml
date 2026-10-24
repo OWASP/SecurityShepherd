@@ -19,7 +19,7 @@
             app:cardElevation="2dp"
             app:cardCornerRadius="16dp"
             app:cardBackgroundColor="@color/card_lesson_bg"
-            app:strokeColor="#9C27B0"
+            app:strokeColor="@color/card_lesson_stroke"
             app:strokeWidth="2dp">
 
             <LinearLayout
@@ -46,7 +46,7 @@
             app:cardElevation="4dp"
             app:cardCornerRadius="16dp"
             app:cardBackgroundColor="@color/card_bg"
-            app:strokeColor="#757575"
+            app:strokeColor="@color/card_stroke"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -121,7 +121,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Flag Submission -->
+        <!-- Key Submission -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/submission_card"
             android:layout_width="match_parent"
@@ -129,7 +129,7 @@
             app:cardElevation="4dp"
             app:cardCornerRadius="16dp"
             app:cardBackgroundColor="@color/card_bg"
-            app:strokeColor="#9C27B0"
+            app:strokeColor="@color/primary_light_blue"
             app:strokeWidth="2dp">
 
             <LinearLayout
@@ -141,7 +141,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/submit_flag"
+                    android:text="@string/submit_key"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
@@ -150,12 +150,12 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/enter_flag"
+                    android:hint="@string/enter_key"
                     android:layout_marginBottom="12dp"
                     app:boxBackgroundMode="outline">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/flag_input"
+                        android:id="@+id/key_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -167,7 +167,7 @@
                     android:id="@+id/submit_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/submit_flag"
+                    android:text="@string/submit_key"
                     android:textSize="16sp"
                     android:layout_marginBottom="16dp" />
 

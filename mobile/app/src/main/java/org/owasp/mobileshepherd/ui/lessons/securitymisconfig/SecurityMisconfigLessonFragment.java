@@ -24,8 +24,8 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -34,10 +34,10 @@ public class SecurityMisconfigLessonFragment extends Fragment {
     private static final String TAG = "SecurityMisconfig";
     private boolean fabExpanded = false;
     private ProgressTracker progressTracker;
-    private String currentFlag = "";
+    private String currentKey = "";
 
-    private com.google.android.material.textfield.TextInputEditText flagInputView;
-    private TextView flagResultView;
+    private com.google.android.material.textfield.TextInputEditText keyInputView;
+    private TextView keyResultView;
     
     private TextView debugStatus;
     private TextView backupStatus;
@@ -71,17 +71,17 @@ public class SecurityMisconfigLessonFragment extends Fragment {
         Button scanComponentsButton = root.findViewById(R.id.scan_components_button);
         scanComponentsButton.setOnClickListener(v -> scanComponents());
 
-        // Flag submission
-        flagInputView = root.findViewById(R.id.flag_input_misconfig);
-        flagResultView = root.findViewById(R.id.flag_result_misconfig);
-        Button submitFlagButton = root.findViewById(R.id.submit_flag_misconfig);
-        if (submitFlagButton != null) {
-            submitFlagButton.setOnClickListener(v -> submitFlag());
+        // Key submission
+        keyInputView = root.findViewById(R.id.key_input_misconfig);
+        keyResultView = root.findViewById(R.id.key_result_misconfig);
+        Button submitKeyButton = root.findViewById(R.id.submit_key_misconfig);
+        if (submitKeyButton != null) {
+            submitKeyButton.setOnClickListener(v -> submitKey());
         }
 
-        // Fetch server flag (exposed via debug log during checkConfiguration)
-        FlagProvider.getFlag(requireContext(), FlagValidator.Module.SECURITY_MISCONFIG_LESSON, flagValue -> {
-            currentFlag = flagValue;
+        // Fetch server key (exposed via debug log during checkConfiguration)
+        KeyProvider.getKey(requireContext(), KeyValidator.Module.SECURITY_MISCONFIG_LESSON, keyValue -> {
+            currentKey = keyValue;
         });
 
         // Setup expandable FAB with command reference and OWASP link
@@ -90,7 +90,7 @@ public class SecurityMisconfigLessonFragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.SECURITY_MISCONFIG_LESSON));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.SECURITY_MISCONFIG_LESSON));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -116,7 +116,7 @@ public class SecurityMisconfigLessonFragment extends Fragment {
                 debugStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.error_text));
                 issues++;
                 Log.w(TAG, "Security Issue: Debug mode is enabled in production");
-                Log.w(TAG, "DEBUG_SECRET=" + currentFlag);
+                Log.w(TAG, "DEBUG_SECRET=" + currentKey);
             } else {
                 debugStatus.setText("[OK] Debug Mode: Disabled (Secure)");
                 debugStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.success_text));
@@ -186,33 +186,33 @@ public class SecurityMisconfigLessonFragment extends Fragment {
         Log.i(TAG, "Configuration check complete. Issues found: " + issues);
     }
 
-    private void submitFlag() {
-        if (flagInputView == null || flagResultView == null) return;
-        String entered = flagInputView.getText() != null ? flagInputView.getText().toString().trim() : "";
+    private void submitKey() {
+        if (keyInputView == null || keyResultView == null) return;
+        String entered = keyInputView.getText() != null ? keyInputView.getText().toString().trim() : "";
         if (entered.isEmpty()) {
-            flagResultView.setVisibility(View.VISIBLE);
-            flagResultView.setText("Please enter a flag.");
-            flagResultView.setTextColor(ContextCompat.getColor(requireContext(), R.color.card_warning_text));
+            keyResultView.setVisibility(View.VISIBLE);
+            keyResultView.setText("Please enter a key.");
+            keyResultView.setTextColor(ContextCompat.getColor(requireContext(), R.color.card_warning_text));
             return;
         }
-        FlagValidator.validateFlag(requireContext(), FlagValidator.Module.SECURITY_MISCONFIG_LESSON,
+        KeyValidator.validateKey(requireContext(), KeyValidator.Module.SECURITY_MISCONFIG_LESSON,
                 entered, isValid -> {
-            flagResultView.setVisibility(View.VISIBLE);
+            keyResultView.setVisibility(View.VISIBLE);
             if (isValid) {
-                progressTracker.markCompleted(FlagValidator.Module.SECURITY_MISCONFIG_LESSON);
-                int completionCount = progressTracker.getCompletionCount(FlagValidator.Module.SECURITY_MISCONFIG_LESSON);
+                progressTracker.markCompleted(KeyValidator.Module.SECURITY_MISCONFIG_LESSON);
+                int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.SECURITY_MISCONFIG_LESSON);
                 String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
-                flagResultView.setText("\u2713 Correct!");
-                flagResultView.setTextColor(ContextCompat.getColor(requireContext(), R.color.success_text));
+                keyResultView.setText("\u2713 Correct!");
+                keyResultView.setTextColor(ContextCompat.getColor(requireContext(), R.color.success_text));
                 new AlertDialog.Builder(requireContext())
                     .setTitle("\uD83C\uDF89 Lesson Complete!")
-                    .setMessage("You found the flag exposed in the debug logs.\n\nFlag: " + entered + completionText)
+                    .setMessage("You found the key exposed in the debug logs.\n\nKey: " + entered + completionText)
                     .setPositiveButton("OK", null)
                     .show();
             } else {
-                flagResultView.setText("\u2717 Incorrect. Run the config check and inspect logcat for the DEBUG_SECRET line.");
-                flagResultView.setTextColor(ContextCompat.getColor(requireContext(), R.color.error_text));
-                flagInputView.setText("");
+                keyResultView.setText("\u2717 Incorrect. Run the config check and inspect logcat for the DEBUG_SECRET line.");
+                keyResultView.setTextColor(ContextCompat.getColor(requireContext(), R.color.error_text));
+                keyInputView.setText("");
             }
         });
     }

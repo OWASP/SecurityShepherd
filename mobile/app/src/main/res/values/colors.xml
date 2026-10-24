@@ -91,4 +91,11 @@
     <color name="progress_background">#E0E0E0</color>
     <color name="challenge_badge">#FF5722</color>
     <color name="lesson_badge">#2196F3</color>
+
+    <!-- Scoreboard colors (matches the web scoreboard's theCss.css palette) -->
+    <color name="scoreboard_header_purple">#A878EF</color>
+    <color name="scoreboard_bar_purple">#965BED</color>
+    <color name="medal_gold">#FFD700</color>
+    <color name="medal_silver">#C0C0C0</color>
+    <color name="medal_bronze">#CD7F32</color>
 </resources>

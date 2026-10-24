@@ -6,7 +6,7 @@ import net.sqlcipher.database.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "client_injection.db";
+    public static final String DATABASE_NAME = "client_injection.db";
     private static final int DATABASE_VERSION = 1;
 
     public DatabaseHelper(Context context) {

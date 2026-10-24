@@ -233,7 +233,7 @@
                     android:layout_marginBottom="16dp" />
 
                 <TextView
-                    android:id="@+id/flag_text"
+                    android:id="@+id/key_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text=""

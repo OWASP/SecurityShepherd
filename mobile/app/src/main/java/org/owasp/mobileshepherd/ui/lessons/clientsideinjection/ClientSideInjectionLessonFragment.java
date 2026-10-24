@@ -24,8 +24,8 @@ import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentClientSideInjectionLessonBinding;
 import org.owasp.mobileshepherd.ui.lessons.clientsideinjection.helpers.DatabaseHelper;
 import org.owasp.mobileshepherd.utils.AuthManager;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -36,7 +36,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
     private static final String TAG = "ClientSideInjection";
     private boolean fabExpanded = false;
     private ProgressTracker progressTracker;
-    private String currentFlag = "";
+    private String currentKey = "";
     private String dbKey = "";
 
     @Override
@@ -49,16 +49,16 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         dbHelper = new DatabaseHelper(requireContext());
         progressTracker = new ProgressTracker(requireContext());
 
-        // Seed with offline flag immediately so the lesson is usable right away,
-        // then asynchronously replace with the dynamic server flag if online.
-        FlagProvider.getFlag(
+        // Seed with offline key immediately so the lesson is usable right away,
+        // then asynchronously replace with the dynamic server key if online.
+        KeyProvider.getKey(
                 requireContext(),
-                FlagValidator.Module.CLIENT_SIDE_INJECTION_LESSON,
-                flag -> {
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON,
+                key -> {
                     if (!isAdded()) return;
-                    currentFlag = flag;
-                    dbKey = flag;
-                    initializeDatabase(flag);
+                    currentKey = key;
+                    dbKey = key;
+                    initializeDatabase(key);
                 });
 
         // Setup expandable FAB with command reference and OWASP link
@@ -67,7 +67,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.CLIENT_SIDE_INJECTION_LESSON));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -83,9 +83,19 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         return root;
     }
 
-    private void initializeDatabase(String flagValue) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase(dbKey);
-        
+    private void initializeDatabase(String keyValue) {
+        SQLiteDatabase db;
+        try {
+            db = dbHelper.getWritableDatabase(dbKey);
+        } catch (android.database.sqlite.SQLiteException e) {
+            // Key no longer matches the previously-encrypted file (e.g. key changed
+            // between offline and server-fetched values). The data here is regenerated
+            // on every open, so just recreate the file with the new key.
+            Log.w(TAG, "DB key mismatch, recreating database", e);
+            requireContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
+            db = dbHelper.getWritableDatabase(dbKey);
+        }
+
         // Clear existing data
         db.execSQL("DELETE FROM users");
         
@@ -95,8 +105,8 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         insertUser(db, "bob", "bob@app.com", "Bob Jones", false);
         insertUser(db, "charlie", "charlie@app.com", "Charlie Brown", false);
         
-        // Insert hidden admin user with flag (obscure username)
-        insertUser(db, "sys_root", "root@system.internal", flagValue, true);
+        // Insert hidden admin user with key (obscure username)
+        insertUser(db, "sys_root", "root@system.internal", keyValue, true);
         
         db.close();
     }
@@ -158,10 +168,10 @@ public class ClientSideInjectionLessonFragment extends Fragment {
                 }
                 container.addView(row);
 
-                // Check if this is the hidden flag row
-                if (fullName != null && !currentFlag.isEmpty()
-                        && fullName.equals(currentFlag)) {
-                    submitFlagToServer(fullName);
+                // Check if this is the hidden key row
+                if (fullName != null && !currentKey.isEmpty()
+                        && fullName.equals(currentKey)) {
+                    submitKeyToServer(fullName);
                 }
             }
 
@@ -228,31 +238,31 @@ public class ClientSideInjectionLessonFragment extends Fragment {
     }
     
     /**
-     * Submits the discovered flag to the Shepherd server for validation.
+     * Submits the discovered key to the Shepherd server for validation.
      * Falls back to local SHA-256 comparison when no server is configured.
      * Marks the lesson complete and updates the FAB appearance on success.
      */
-    private void submitFlagToServer(String flag) {
-        // In case the DB was seeded before FlagProvider returned, use the
-        // most recent flag value rather than the one passed by the search results.
-        String flagToSubmit = currentFlag.isEmpty() ? flag : currentFlag;
-        FlagValidator.validateFlag(
+    private void submitKeyToServer(String key) {
+        // In case the DB was seeded before KeyProvider returned, use the
+        // most recent key value rather than the one passed by the search results.
+        String keyToSubmit = currentKey.isEmpty() ? key : currentKey;
+        KeyValidator.validateKey(
                 requireContext(),
-                FlagValidator.Module.CLIENT_SIDE_INJECTION_LESSON,
-                flagToSubmit,
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON,
+                keyToSubmit,
                 correct -> {
                     if (!isAdded()) return;
                     if (correct) {
-                        progressTracker.markCompleted(FlagValidator.Module.CLIENT_SIDE_INJECTION_LESSON);
+                        progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON);
                         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                                 .setTitle("Lesson Complete")
-                                .setMessage("Correct flag validated! You have successfully demonstrated "
+                                .setMessage("Correct key validated! You have successfully demonstrated "
                                         + "a client-side SQL injection attack.")
                                 .setPositiveButton("OK", null)
                                 .show();
                     } else {
                         Toast.makeText(requireContext(),
-                                "Flag incorrect — keep trying!", Toast.LENGTH_SHORT).show();
+                                "Key incorrect — keep trying!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

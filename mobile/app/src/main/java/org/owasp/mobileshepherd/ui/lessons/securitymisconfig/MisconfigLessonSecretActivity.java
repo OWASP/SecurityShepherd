@@ -5,8 +5,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import org.owasp.mobileshepherd.R;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
 public class MisconfigLessonSecretActivity extends AppCompatActivity {
@@ -18,18 +18,18 @@ public class MisconfigLessonSecretActivity extends AppCompatActivity {
         
         // Mark lesson as complete when exploited component is accessed
         ProgressTracker progressTracker = new ProgressTracker(this);
-        progressTracker.markCompleted(FlagValidator.Module.SECURITY_MISCONFIG_LESSON);
-        
+        progressTracker.markCompleted(KeyValidator.Module.SECURITY_MISCONFIG_LESSON);
+
         TextView keyText = findViewById(R.id.secret_key_text);
         TextView messageText = findViewById(R.id.secret_message_text);
-        
+
         keyText.setText("Loading...");
-        FlagProvider.getFlag(this, FlagValidator.Module.SECURITY_MISCONFIG_LESSON,
-                flagValue -> {
-                    keyText.setText(flagValue);
-                    FlagValidator.validateFlag(MisconfigLessonSecretActivity.this,
-                            FlagValidator.Module.SECURITY_MISCONFIG_LESSON,
-                            flagValue,
+        KeyProvider.getKey(this, KeyValidator.Module.SECURITY_MISCONFIG_LESSON,
+                keyValue -> {
+                    keyText.setText(keyValue);
+                    KeyValidator.validateKey(MisconfigLessonSecretActivity.this,
+                            KeyValidator.Module.SECURITY_MISCONFIG_LESSON,
+                            keyValue,
                             correct -> android.util.Log.d("MisconfigLesson", "Server submission: " + correct));
                 });
         

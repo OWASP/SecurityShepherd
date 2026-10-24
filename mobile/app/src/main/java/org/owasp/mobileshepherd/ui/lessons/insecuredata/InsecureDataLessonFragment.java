@@ -20,8 +20,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentInsecureDataLessonBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -31,7 +31,7 @@ public class InsecureDataLessonFragment extends Fragment {
     private static final String TAG = "InsecureDataLesson";
     private static final String DB_NAME = "lesson_users.db";
     private SQLiteDatabase db;
-    private String currentFlag = "";
+    private String currentKey = "";
     private ProgressTracker progressTracker;
 
     @Override
@@ -45,15 +45,15 @@ public class InsecureDataLessonFragment extends Fragment {
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(v ->
-                    ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.IDS_LESSON));
+                    ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.IDS_LESSON));
         }
 
         openDatabase();
 
-        FlagProvider.getFlag(requireContext(), FlagValidator.Module.IDS_LESSON, flagValue -> {
+        KeyProvider.getKey(requireContext(), KeyValidator.Module.IDS_LESSON, keyValue -> {
             if (!isAdded()) return;
-            currentFlag = flagValue;
-            seedDatabase(flagValue);
+            currentKey = keyValue;
+            seedDatabase(keyValue);
             displayUsers();
         });
 
@@ -84,9 +84,9 @@ public class InsecureDataLessonFragment extends Fragment {
         Log.d(TAG, "Database opened at: " + requireContext().getDatabasePath(DB_NAME).getAbsolutePath());
     }
 
-    private void seedDatabase(String flagValue) {
+    private void seedDatabase(String keyValue) {
         db.execSQL("DELETE FROM users");
-        insertUser("admin", flagValue, "admin");
+        insertUser("admin", keyValue, "admin");
         insertUser("alice", "alice_pass_99", "user");
         insertUser("bob", "B0b$ecure!", "user");
         insertUser("charlie", "Ch4rl1e#2024", "user");
@@ -149,14 +149,14 @@ public class InsecureDataLessonFragment extends Fragment {
 
         if (success) {
             binding.textCredentialResult.setVisibility(View.VISIBLE);
-            binding.textCredentialResult.setText("Access granted!\n\nFlag: " + currentFlag);
+            binding.textCredentialResult.setText("Access granted!\n\nKey: " + currentKey);
             binding.textCredentialResult.setTextColor(
                     ContextCompat.getColor(requireContext(), R.color.success_green));
-            progressTracker.markCompleted(FlagValidator.Module.IDS_LESSON);
+            progressTracker.markCompleted(KeyValidator.Module.IDS_LESSON);
             Toast.makeText(getContext(), "Correct! Lesson complete.", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "Admin credentials verified. Flag: " + currentFlag);
-            FlagValidator.validateFlag(requireContext(), FlagValidator.Module.IDS_LESSON,
-                    currentFlag, correct -> Log.d(TAG, "Server submission result: " + correct));
+            Log.d(TAG, "Admin credentials verified. Key: " + currentKey);
+            KeyValidator.validateKey(requireContext(), KeyValidator.Module.IDS_LESSON,
+                    currentKey, correct -> Log.d(TAG, "Server submission result: " + correct));
         } else {
             binding.textCredentialResult.setVisibility(View.VISIBLE);
             binding.textCredentialResult.setText("Incorrect credentials. Try extracting the DB via ADB.");

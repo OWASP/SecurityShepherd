@@ -24,11 +24,11 @@ public class ReverseEngineeringLessonTest {
     }
 
     @Test
-    public void lesson_HasCurrentFlagField() throws Exception {
-        Field flagField = ReverseEngineeringLessonFragment.class.getDeclaredField("currentFlag");
-        assertEquals("currentFlag should be of type String", String.class, flagField.getType());
-        assertFalse("currentFlag should be an instance field",
-                Modifier.isStatic(flagField.getModifiers()));
+    public void lesson_HasCurrentKeyField() throws Exception {
+        Field keyField = ReverseEngineeringLessonFragment.class.getDeclaredField("currentKey");
+        assertEquals("currentKey should be of type String", String.class, keyField.getType());
+        assertFalse("currentKey should be an instance field",
+                Modifier.isStatic(keyField.getModifiers()));
     }
 
     @Test

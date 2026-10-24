@@ -23,9 +23,9 @@ public class ReverseEngineeringChallenge1Test {
     }
 
     @Test
-    public void challenge1_ValidateFlagMethodExists() throws Exception {
-        Method validateMethod = ReverseEngineering1Model.class.getDeclaredMethod("validateFlag", String.class);
-        assertNotNull("validateFlag method should exist", validateMethod);
+    public void challenge1_ValidateKeyMethodExists() throws Exception {
+        Method validateMethod = ReverseEngineering1Model.class.getDeclaredMethod("validateKey", String.class);
+        assertNotNull("validateKey method should exist", validateMethod);
     }
 
     @Test

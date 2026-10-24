@@ -97,7 +97,7 @@ public class CompletionBadge {
         int total = 0;
         int completed = 0;
         
-        for (FlagValidator.Module module : FlagValidator.Module.values()) {
+        for (KeyValidator.Module module : KeyValidator.Module.values()) {
             if (module.getId().contains(category)) {
                 total++;
                 if (progressTracker.isCompleted(module)) {
@@ -122,7 +122,7 @@ public class CompletionBadge {
      */
     public String getProgressSummary() {
         int completed = progressTracker.getTotalCompletedCount();
-        int total = FlagValidator.Module.values().length;
+        int total = KeyValidator.Module.values().length;
         int percentage = progressTracker.getCompletionPercentage();
         
         StringBuilder summary = new StringBuilder();

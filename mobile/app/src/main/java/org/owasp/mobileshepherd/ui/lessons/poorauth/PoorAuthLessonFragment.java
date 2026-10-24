@@ -18,8 +18,8 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentPoorAuthLessonBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -35,7 +35,7 @@ public class PoorAuthLessonFragment extends Fragment {
     // SHA-256 hash of "654321"
     private static final String HARDCODED_PIN_HASH = "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5";
     
-    // Obfuscated flag - "Taco_Snores_On_A_Couch"
+    // Obfuscated key - "Taco_Snores_On_A_Couch"
     // XOR encoded with key 0x42, then Base64 encoded, then split
     private static final String[] F = {
         "FiMhLR", "0RLC0w", "JzEdDS", "wdAx", 
@@ -46,7 +46,7 @@ public class PoorAuthLessonFragment extends Fragment {
     private int attemptCount = 0;
     private boolean fabExpanded = false;
     private ProgressTracker progressTracker;
-    private String currentFlag = "";
+    private String currentKey = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,10 +55,10 @@ public class PoorAuthLessonFragment extends Fragment {
         View root = binding.getRoot();
         
         progressTracker = new ProgressTracker(requireContext());
-        FlagProvider.getFlag(
+        KeyProvider.getKey(
                 requireContext(),
-                FlagValidator.Module.POOR_AUTH_LESSON,
-                flagValue -> currentFlag = flagValue);
+                KeyValidator.Module.POOR_AUTH_LESSON,
+                keyValue -> currentKey = keyValue);
 
         // Setup FAB expansion
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
@@ -66,7 +66,7 @@ public class PoorAuthLessonFragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
         
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.POOR_AUTH_LESSON));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.POOR_AUTH_LESSON));
         }
         
         if (fabCommandRef != null) {
@@ -108,25 +108,25 @@ public class PoorAuthLessonFragment extends Fragment {
 
         if (enteredPinHash != null && enteredPinHash.equals(HARDCODED_PIN_HASH)) {
             // Successful authentication
-            String flag = currentFlag.isEmpty() ? d() : currentFlag;
-            
+            String key = currentKey.isEmpty() ? d() : currentKey;
+
             binding.demoCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.success_bg));
-            binding.flagText.setText("\u2713 Authentication Successful!\n\nFlag: " + flag);
-            binding.flagText.setVisibility(View.VISIBLE);
-            
-            Toast.makeText(getContext(), "Access Granted! Flag revealed!", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "Authentication successful! Flag: " + flag);
-            
-            progressTracker.markCompleted(FlagValidator.Module.POOR_AUTH_LESSON);
-            FlagValidator.validateFlag(requireContext(), FlagValidator.Module.POOR_AUTH_LESSON,
-                    flag, correct -> Log.d(TAG, "Server submission result: " + correct));
-            
+            binding.keyText.setText("\u2713 Authentication Successful!\n\nKey: " + key);
+            binding.keyText.setVisibility(View.VISIBLE);
+
+            Toast.makeText(getContext(), "Access Granted! Key revealed!", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "Authentication successful! Key: " + key);
+
+            progressTracker.markCompleted(KeyValidator.Module.POOR_AUTH_LESSON);
+            KeyValidator.validateKey(requireContext(), KeyValidator.Module.POOR_AUTH_LESSON,
+                    key, correct -> Log.d(TAG, "Server submission result: " + correct));
+
             binding.verifyButton.setEnabled(false);
             binding.pinInput.setEnabled(false);
         } else {
             // Failed authentication
             binding.demoCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_bg));
-            binding.flagText.setVisibility(View.GONE);
+            binding.keyText.setVisibility(View.GONE);
             
             Toast.makeText(getContext(), "Access Denied! Incorrect PIN", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Authentication failed. Invalid PIN provided.");
@@ -155,7 +155,7 @@ public class PoorAuthLessonFragment extends Fragment {
     }
 
 
-    // Decode obfuscated flag - resist static analysis
+    // Decode obfuscated key - resist static analysis
     private String d() {
         try {
             StringBuilder sb = new StringBuilder();
@@ -172,7 +172,7 @@ public class PoorAuthLessonFragment extends Fragment {
             
             return new String(result, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            Log.e(TAG, "Flag decode error", e);
+            Log.e(TAG, "Key decode error", e);
             return "[DECODE_ERROR]";
         }
     }

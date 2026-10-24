@@ -14,8 +14,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentLessonBinding;
 import org.owasp.mobileshepherd.ui.lessons.LessonModel;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -24,7 +24,7 @@ public class ReverseEngineeringLessonFragment extends Fragment {
     private FragmentLessonBinding binding;
     private LessonModel lessonViewModel;
     private ProgressTracker progressTracker;
-    private String currentFlag = "";
+    private String currentKey = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -35,11 +35,11 @@ public class ReverseEngineeringLessonFragment extends Fragment {
         lessonViewModel = new ViewModelProvider(this).get(LessonModel.class);
         progressTracker = new ProgressTracker(requireContext());
 
-        // FlagProvider returns the static offline flag for RE_LESSON ("Frozen_Clock_Melts_By_Noon").
-        // This value is hardcoded inside FlagProvider and is discoverable by decompiling the APK —
+        // KeyProvider returns the static offline key for RE_LESSON ("Frozen_Clock_Melts_By_Noon").
+        // This value is hardcoded inside KeyProvider and is discoverable by decompiling the APK —
         // that is the intended attack surface for the reverse engineering lesson.
-        FlagProvider.getFlag(requireContext(), FlagValidator.Module.RE_LESSON,
-                flagValue -> currentFlag = flagValue);
+        KeyProvider.getKey(requireContext(), KeyValidator.Module.RE_LESSON,
+                keyValue -> currentKey = keyValue);
 
         // Observe and display device info
         lessonViewModel.getSerialText().observe(getViewLifecycleOwner(),
@@ -56,7 +56,7 @@ public class ReverseEngineeringLessonFragment extends Fragment {
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(v ->
-                    ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.RE_LESSON));
+                    ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.RE_LESSON));
         }
 
         binding.verifyKeyButton.setOnClickListener(v -> verifyKey());
@@ -72,15 +72,15 @@ public class ReverseEngineeringLessonFragment extends Fragment {
             return;
         }
         binding.verifyKeyButton.setEnabled(false);
-        FlagValidator.validateFlag(requireContext(), FlagValidator.Module.RE_LESSON,
+        KeyValidator.validateKey(requireContext(), KeyValidator.Module.RE_LESSON,
                 entered, correct -> {
                     if (correct) {
-                        progressTracker.markCompleted(FlagValidator.Module.RE_LESSON);
+                        progressTracker.markCompleted(KeyValidator.Module.RE_LESSON);
                         Toast.makeText(getContext(), "Correct! Lesson complete.", Toast.LENGTH_LONG).show();
                     } else {
                         binding.verifyKeyButton.setEnabled(true);
                         Toast.makeText(getContext(),
-                                "Incorrect. Decompile the APK and look in FlagProvider.java",
+                                "Incorrect. Decompile the APK and look in KeyProvider.java",
                                 Toast.LENGTH_SHORT).show();
                         binding.keyInput.setText("");
                     }

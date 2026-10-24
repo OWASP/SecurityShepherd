@@ -2,11 +2,11 @@ package org.owasp.mobileshepherd.ui.challenges.insecuredata1;
 
 import androidx.lifecycle.ViewModel;
 
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 
 public class InsecureData1Model extends ViewModel {
 
-    public boolean validateFlag(String flag) {
-        return FlagValidator.validateFlag(FlagValidator.Module.IDS_CHALLENGE_1, flag);
+    public boolean validateKey(String key) {
+        return KeyValidator.validateKey(KeyValidator.Module.IDS_CHALLENGE_1, key);
     }
 }

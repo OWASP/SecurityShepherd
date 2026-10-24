@@ -16,8 +16,8 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentInputValidationLessonBinding;
-import org.owasp.mobileshepherd.utils.FlagProvider;
-import org.owasp.mobileshepherd.utils.FlagValidator;
+import org.owasp.mobileshepherd.utils.KeyProvider;
+import org.owasp.mobileshepherd.utils.KeyValidator;
 import org.owasp.mobileshepherd.utils.ModuleInfoHelper;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
@@ -27,7 +27,7 @@ public class InputValidationLessonFragment extends Fragment {
     private static final String TAG = "DeepLinkLoader";
     private boolean fabExpanded = false;
     private ProgressTracker progressTracker;
-    private String currentFlag = "";
+    private String currentKey = "";
     
     private static final String ADMIN_URL = "https://admin.internal/dashboard";
 
@@ -37,10 +37,10 @@ public class InputValidationLessonFragment extends Fragment {
         View root = binding.getRoot();
         
         progressTracker = new ProgressTracker(requireContext());
-        FlagProvider.getFlag(
+        KeyProvider.getKey(
                 requireContext(),
-                FlagValidator.Module.INPUT_VALIDATION_LESSON,
-                flagValue -> currentFlag = flagValue);
+                KeyValidator.Module.INPUT_VALIDATION_LESSON,
+                keyValue -> currentKey = keyValue);
 
         // Quick link buttons
         binding.loadExampleButton.setOnClickListener(v -> 
@@ -68,7 +68,7 @@ public class InputValidationLessonFragment extends Fragment {
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
-            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), FlagValidator.Module.INPUT_VALIDATION_LESSON));
+            fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.INPUT_VALIDATION_LESSON));
         }
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
@@ -148,20 +148,20 @@ public class InputValidationLessonFragment extends Fragment {
             
         } else if (isAdminHost(url)) {
             // Hidden admin content - only accessible via validation bypass!
-            String flag = currentFlag;
+            String key = currentKey;
             title = "Admin Dashboard";
             body = "ACCESS GRANTED\n\n"
                    + "You successfully bypassed the URL validation!\n\n"
                    + "The validation only checks if 'example.com' or 'trusted-site.com' appears "
                    + "anywhere in the host, instead of properly validating the domain.\n\n"
                    + "This allowed you to access restricted admin.internal content.\n\n"
-                   + "FLAG: " + flag;
+                   + "KEY: " + key;
             cardColor = ContextCompat.getColor(requireContext(), R.color.success_bg);
             Log.i(TAG, "Admin content accessed via bypass!");
 
-            progressTracker.markCompleted(FlagValidator.Module.INPUT_VALIDATION_LESSON);
-            FlagValidator.validateFlag(requireContext(), FlagValidator.Module.INPUT_VALIDATION_LESSON,
-                    currentFlag, correct -> Log.d(TAG, "Server submission: " + correct));
+            progressTracker.markCompleted(KeyValidator.Module.INPUT_VALIDATION_LESSON);
+            KeyValidator.validateKey(requireContext(), KeyValidator.Module.INPUT_VALIDATION_LESSON,
+                    currentKey, correct -> Log.d(TAG, "Server submission: " + correct));
             
         } else {
             // Generic external content

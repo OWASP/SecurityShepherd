@@ -83,7 +83,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Flag Submission -->
+        <!-- Key Submission -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/result_card"
             android:layout_width="match_parent"
@@ -115,7 +115,7 @@
                     app:boxBackgroundMode="outline">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/flag_input"
+                        android:id="@+id/key_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
