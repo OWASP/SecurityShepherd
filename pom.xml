@@ -18,6 +18,7 @@
 		     servlet mocks. -->
 		<spring.version>7.0.10</spring.version>
 		<pac4j.version>6.6.0</pac4j.version>
+		<log4j.version>2.26.1</log4j.version>
 		<!-- Overridable only so src/test/scripts/pgp-verification-test.sh can try a wrong key -->
 		<pgp.keysMap>${project.basedir}/.mvn/pgp-keys.map</pgp.keysMap>
 	</properties>
@@ -51,6 +52,21 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<!-- Keeps log4j-api (pulled in transitively) on the same version as log4j-core -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
+				<version>${log4j.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- net.shibboleth:shib-networking (via pac4j-saml) pulls in httpcore5 5.2.5, which
+			     has GHSA-hf6x-8p5f-cgmf. Match the httpcore5-h2 that httpclient5 brings in. -->
+			<dependency>
+				<groupId>org.apache.httpcomponents.core5</groupId>
+				<artifactId>httpcore5</artifactId>
+				<version>5.4.4</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -71,7 +87,7 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j2-impl</artifactId>
-			<version>2.25.4</version>
+			<version>${log4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.mkammerer</groupId>
@@ -82,19 +98,13 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.25.4</version>
+			<version>${log4j.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20260522</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -112,7 +122,7 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.22.1</version>
+			<version>1.23.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.sf.jtidy/jtidy -->
 		<dependency>
@@ -166,7 +176,7 @@
 <dependency>
 	<groupId>org.mariadb.jdbc</groupId>
 	<artifactId>mariadb-java-client</artifactId>
-	<version>3.3.2</version>
+	<version>3.5.11</version>
 </dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
