@@ -83,11 +83,17 @@ Delete `$BACKUP_DIR` (or move it somewhere safe) once the upgrade is working. On
 If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, ports, ciphers and so on), re-apply those edits to the new Tomcat 11 files, using the backup as a reference. Don't copy the old files back.
 
 ##### MariaDB 12.3
-The database image now runs MariaDB 12.3 (long-term support) instead of 10.6, which is no longer supported. The `data` volume is kept. On its first start, `MARIADB_AUTO_UPGRADE=1` in `docker-compose.yml` upgrades the volume's system tables, after taking a backup of them inside the volume. Back up your data before rebuilding anyway, because a volume can't be moved back to 10.6 once 12.3 has opened it:
+The database image now runs MariaDB 12.3 (long-term support) instead of 10.6, which is no longer supported. The `data` volume is kept. On its first start, `MARIADB_AUTO_UPGRADE=1` in `docker-compose.yml` upgrades the volume's system tables, after taking a backup of them inside the volume. Back up your data before rebuilding anyway, because a volume can't be moved back to 10.6 once 12.3 has opened it. Run this while the old container is still up. The dump holds every user's password hash, so like the `conf` backup above it goes outside the repository and is readable by you only:
 
 ```console
-docker exec secshep_mariadb sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" --all-databases --routines' > shepherd-db-backup.sql
+BACKUP_DIR="$HOME/shepherd-db-backup"
+mkdir -p "$BACKUP_DIR" && chmod 700 "$BACKUP_DIR"
+(umask 077 && docker exec secshep_mariadb sh -c \
+  'export MYSQL_PWD="$MYSQL_ROOT_PASSWORD"; exec mysqldump -uroot --all-databases --routines --events' \
+  > "$BACKUP_DIR/shepherd-db-backup.sql")
 ```
+
+Delete `$BACKUP_DIR` (or move it somewhere safe) once the upgrade is working.
 
 #### Full Guide
 [Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
