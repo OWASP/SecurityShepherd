@@ -27,8 +27,12 @@ COPY docker/tomcat/webxml.patch webxml.patch
 
 RUN printf "databaseConnectionURL=$MARIADB_URI/\nDriverType=$DB_DRIVER\ndatabaseSchema=$DB_SCHEMA\ndatabaseUsername=$DB_USER\ndatabasePassword=$DB_PASS\ndatabaseOptions=useUnicode=true&character_set_server=utf8mb4\n" >> database.properties
 RUN printf "connectionHost=$MONGO_HOST\nconnectionPort=$MONGO_PORT\ndatabaseName=shepherdGames\nconnectTimeout=$MONGO_CONN_TIMEOUT\nsocketTimeout=$MONGO_SOCK_TIMEOUT\nserverSelectionTimeout=$MONGO_SVR_TIMEOUT"  >> mongo.properties
-RUN sed -i 's/keystoreFile="conf\/TLS_KEYSTORE_FILE" keystorePass="TLS_KEYSTORE_PASS" keyAlias="ALIAS">/keystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'" keystorePass="'"$TLS_KEYSTORE_PASS"'" keyAlias="'"$ALIAS"'">/g' serverxml.patch &&\
-    sed -i 's/redirectPort="HTTPS_PORT" \/>/redirectPort="'"$HTTPS_PORT"'" \/>/g' serverxml.patch
+RUN sed -i \
+      -e 's/certificateKeystoreFile="conf\/TLS_KEYSTORE_FILE"/certificateKeystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'"/' \
+      -e 's/certificateKeystorePassword="TLS_KEYSTORE_PASS"/certificateKeystorePassword="'"$TLS_KEYSTORE_PASS"'"/' \
+      -e 's/certificateKeyAlias="ALIAS"/certificateKeyAlias="'"$ALIAS"'"/' \
+      -e 's/redirectPort="HTTPS_PORT"/redirectPort="'"$HTTPS_PORT"'"/' \
+      serverxml.patch
 
 FROM tomcat:${TOMCAT_DOCKER_VERSION}
 COPY --from=builder /workdir/ROOT.war /usr/local/tomcat/webapps/
