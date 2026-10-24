@@ -390,6 +390,7 @@ a:hover {
 	word-wrap: break-word;
 	width: 100%;
 	height: 2056px;
+	border: 0;
 }
 
 .levelList {

@@ -199,12 +199,20 @@ else
 	var theRefreshError = "Could not Refresh Menu";
 
 	$('#getStarted').slideDown("slow");
-	$('#cantSee').html("<iframe class='levelIframe' frameborder='no' id='theStart' src='readyToPlay.jsp'></iframe>");
-	$('#cantSee').html(function(){
-		$("#theStart").load(function(){
-			$("#contentDiv").slideDown("slow");
-		});
+	$("#cantSee").empty();
+	var startFrame = document.createElement("iframe");
+	startFrame.setAttribute("id", "theStart");
+	startFrame.setAttribute("class", "levelIframe");
+	startFrame.setAttribute("title", "Security Shepherd getting started");
+	// no loading="lazy" here: the frame sits in a hidden div until it fires load
+	// itself, so lazy loading never triggers and the welcome view stays blank
+	startFrame.setAttribute("referrerpolicy", "same-origin");
+	startFrame.setAttribute("sandbox", "allow-same-origin allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads");
+	startFrame.setAttribute("src", "readyToPlay.jsp");
+	$(startFrame).on("load", function(){
+		$("#contentDiv").slideDown("slow");
 	});
+	$("#cantSee").append(startFrame);
 	<% if (isAdmin) { %>
 	$("#allApplication").click(function(){
         if ($('#unsafeLevels').is(":checked"))
