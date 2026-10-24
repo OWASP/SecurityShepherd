@@ -217,10 +217,9 @@ pac4j-saml depends on **OpenSAML 5, which is not on Maven Central**. Shibboleth,
 - **Repository filtering** (`.mvn/maven.config`, `.mvn/rrf/groupId-shibboleth-releases.txt`): the Shibboleth repository may serve only the `org.opensaml` and `net.shibboleth` groupIds. Everything else comes from Central only.
   - This needs **Maven 3.9.2 or newer**: older versions don't expand the path in `.mvn/maven.config` and silently skip the filter. `maven-enforcer-plugin` refuses to build on older Maven.
   - The enforcer itself resolves dependencies before it fails, so if an older Maven was ever used on a machine, delete its local repository (`~/.m2/repository`) before building again.
-- **PGP signature verification** (`pgpverify-maven-plugin` in `pom.xml`, rules in `.mvn/pgp-keys.map`): every dependency's signature is checked on every build (with the one unsigned exception below).
+- **PGP signature verification** (`pgpverify-maven-plugin` in `pom.xml`, rules in `.mvn/pgp-keys.map`): every dependency's signature is checked on every build. There are no `noSig` exceptions; don't add one without reviewing why the artifact is unsigned.
   - `org.opensaml` / `net.shibboleth` are pinned to the Shibboleth release key `B5B5DD332142AD657E8D87AC7D27E610B8A3DC52`, from https://shibboleth.net/downloads/PGP_KEYS. Verify any new key there before changing the pin.
   - Every other groupId is listed by name and needs a valid signature. A new dependency from an unlisted groupId fails with `Not allowed artifact`: review it, then add its groupId.
-  - **One exception:** `org.hamcrest:hamcrest-core:1.1` is unsigned and allowed with `noSig` for that exact version only. It arrives through `json-simple` → JUnit 4.10, and is to be removed with #944. Don't add `noSig` rules for anything else without the same scrutiny.
   - **Never add a wildcard rule** (`*`, `org.*`, …): any matching rule lets an artifact pass, so a broad rule would silently undo the Shibboleth pin.
   - Keys are fetched from `keys.openpgp.org` / `keyserver.ubuntu.com` and cached in the local repository.
 - **Test:** `bash src/test/scripts/pgp-verification-test.sh` (run in CI's build job) proves three things on the Maven that runs it: the repository filter is enforced, a tampered OpenSAML jar fails the build, and an OpenSAML artifact signed by another key fails the build.
