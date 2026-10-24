@@ -6,8 +6,10 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 DROP SCHEMA IF EXISTS `core` ;
--- Collation named explicitly: MariaDB 11.5+ defaults utf8mb4 to utf8mb4_uca1400_ai_ci, which
--- compares and sorts differently from the utf8mb4_general_ci core has always had
+-- Collation named explicitly, here and on every table: MariaDB 11.5+ defaults utf8mb4 to
+-- utf8mb4_uca1400_ai_ci, which compares and sorts differently from the utf8mb4_general_ci core has
+-- always had. A table that differs from the schema breaks the stored procedures ("Illegal mix of
+-- collations"), because their parameters take the schema's collation.
 CREATE SCHEMA IF NOT EXISTS `core` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 USE `core` ;
 
@@ -22,7 +24,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`class` (
   `classYear` VARCHAR(5) NOT NULL ,
   PRIMARY KEY (`classId`) )
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- -----------------------------------------------------
 -- Table `core`.`users`
@@ -55,7 +57,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`users` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- -----------------------------------------------------
 -- Table `core`.`modules`
@@ -76,7 +78,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`modules` (
   `isUnsafe`  TINYINT(1) NOT NULL DEFAULT TRUE,
   PRIMARY KEY (`moduleId`) )
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- -----------------------------------------------------
 -- Table `core`.`medals`
@@ -102,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `core`.`medals` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- -----------------------------------------------------
 -- Table `core`.`results`
@@ -132,7 +134,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`results` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- -----------------------------------------------------
 -- Table `core`.`cheatsheet`
@@ -150,7 +152,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`cheatsheet` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- -----------------------------------------------------
 -- Table `core`.`sequence`
@@ -160,7 +162,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`sequence` (
   `currVal` BIGINT(20) NOT NULL DEFAULT 282475249 ,
   PRIMARY KEY (`tableName`) )
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- -----------------------------------------------------
 -- Table `core`.`settings`
@@ -170,7 +172,7 @@ CREATE  TABLE IF NOT EXISTS `core`.`settings` (
   `value` VARCHAR(64) NOT NULL ,
   PRIMARY KEY (`setting`) )
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 SELECT "Creating Procedures" FROM DUAL;
 
