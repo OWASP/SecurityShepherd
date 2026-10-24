@@ -94,38 +94,41 @@ public class BrokenCrypto4 extends HttpServlet {
         int perCentOffBanana = 0; // Will search for coupons in DB and update this int
 
         htmlOutput = new String();
-        Connection conn = Database.getChallengeConnection(applicationRoot, "CryptoChallengeShop");
         log.debug("Looking for Coupons");
-        PreparedStatement prepstmt =
-            conn.prepareStatement("SELECT itemId, perCentOff FROM coupons WHERE couponCode = ?");
-        prepstmt.setString(1, couponCode);
-        ResultSet coupons = prepstmt.executeQuery();
-        try {
-          if (coupons.next()) {
-            if (coupons.getInt(1) == 1) // Pineapple
-            {
-              log.debug("Found coupon for %" + coupons.getInt(2) + " off Pineapple");
-              perCentOffPineapple = coupons.getInt(2);
-            } else if (coupons.getInt(1) == 2) // Orange
-            {
-              log.debug("Found coupon for %" + coupons.getInt(2) + " off Orange");
-              perCentOffOrange = coupons.getInt(2);
-            } else if (coupons.getInt(1) == 3) // Apple
-            {
-              log.debug("Found coupon for %" + coupons.getInt(2) + " off Apple");
-              perCentOffApple = coupons.getInt(2);
-            } else if (coupons.getInt(1) == 4) // Banana
-            {
-              log.debug("Found coupon for %" + coupons.getInt(2) + " off Banana");
-              perCentOffBanana = coupons.getInt(2);
+        try (Connection conn =
+                Database.getChallengeConnection(applicationRoot, "CryptoChallengeShop");
+            PreparedStatement prepstmt =
+                conn.prepareStatement(
+                    "SELECT itemId, perCentOff FROM coupons WHERE couponCode = ?")) {
+          prepstmt.setString(1, couponCode);
+          try (ResultSet coupons = prepstmt.executeQuery()) {
+            try {
+              if (coupons.next()) {
+                if (coupons.getInt(1) == 1) // Pineapple
+                {
+                  log.debug("Found coupon for %" + coupons.getInt(2) + " off Pineapple");
+                  perCentOffPineapple = coupons.getInt(2);
+                } else if (coupons.getInt(1) == 2) // Orange
+                {
+                  log.debug("Found coupon for %" + coupons.getInt(2) + " off Orange");
+                  perCentOffOrange = coupons.getInt(2);
+                } else if (coupons.getInt(1) == 3) // Apple
+                {
+                  log.debug("Found coupon for %" + coupons.getInt(2) + " off Apple");
+                  perCentOffApple = coupons.getInt(2);
+                } else if (coupons.getInt(1) == 4) // Banana
+                {
+                  log.debug("Found coupon for %" + coupons.getInt(2) + " off Banana");
+                  perCentOffBanana = coupons.getInt(2);
+                }
+              } else {
+                log.debug("Invalid Coupon Code");
+              }
+            } catch (Exception e) {
+              log.debug("Could Not Find Coupon: " + e.toString());
             }
-          } else {
-            log.debug("Invalid Coupon Code");
           }
-        } catch (Exception e) {
-          log.debug("Could Not Find Coupon: " + e.toString());
         }
-        conn.close();
 
         // Work Out Final Cost
         pineappleCost = pineappleCost - (pineappleCost * (perCentOffPineapple / 100));
