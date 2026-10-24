@@ -429,11 +429,18 @@
 						<configuration>
 							<images>
 								<image>
-									<name>mongo:${MONGODB_VERSION}</name>
+									<!-- Its own name: tagging it mongo:${MONGODB_VERSION} would overwrite the
+									     official image the Dockerfile builds FROM (#938) -->
+									<name>${IMAGE_MONGO}:it</name>
+									<alias>mongo</alias>
 									<build>
 										<dockerFile>${project.basedir}/docker/mongo/Dockerfile</dockerFile>
 									</build>
 									<run>
+										<!-- Name the container mongo-1, as before: the default pattern names it
+										     after the image (security-shepherd_mongo-1), which the clean-up
+										     command in AGENTS.md doesn't match -->
+										<containerNamePattern>%a-%i</containerNamePattern>
 										<ports>
 											<port>27017:27017</port>
 										</ports>
