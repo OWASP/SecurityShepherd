@@ -5,6 +5,10 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    ignore:
+      # Its strict Base64 decoder breaks SAML login (see the commons-codec comment in pom.xml)
+      - dependency-name: "commons-codec:commons-codec"
+        versions: ["1.23.0"]
 
   - package-ecosystem: github-actions
     directory: "/"
