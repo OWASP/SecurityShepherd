@@ -9,6 +9,13 @@ updates:
       # Its strict Base64 decoder breaks SAML login (see the commons-codec comment in pom.xml)
       - dependency-name: "commons-codec:commons-codec"
         versions: ["1.23.0"]
+      # 4.0 turns TLS on by default and the Docker database has it off. Remove once #977 is done.
+      - dependency-name: "org.mariadb.jdbc:mariadb-java-client"
+        update-types: ["version-update:semver-major"]
+      # Stay on the long-term support line (9.7): later majors such as 26.x are short-lived
+      # innovation releases. Patch releases still come through.
+      - dependency-name: "com.mysql:mysql-connector-j"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: "/"
