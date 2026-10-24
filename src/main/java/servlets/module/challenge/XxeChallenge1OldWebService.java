@@ -1,11 +1,15 @@
 package servlets.module.challenge;
 
 import dbProcs.Getter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import javax.servlet.ServletException;
-import javax.servlet.http.*;
 import javax.xml.parsers.DocumentBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
