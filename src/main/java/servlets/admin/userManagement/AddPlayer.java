@@ -2,14 +2,14 @@ package servlets.admin.userManagement;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.owasp.encoder.Encode;
@@ -156,7 +156,15 @@ public class AddPlayer extends HttpServlet {
               log.error("Invalid Addresses Detected");
               errorMessage += "Invalid Addresses Detected";
             } else if (!userValidate) {
-              log.error("JavaScript validation bypassed");
+              log.warn(
+                  "Server-side user validation failed for new player (username length="
+                      + userName.length()
+                      + ", password length="
+                      + passWord.length()
+                      + ", address length="
+                      + userAddress.length()
+                      + "); expected: username 3-32 chars, password 8-512 chars, address <=128"
+                      + " chars");
               errorMessage += "Invalid Request. Please try again";
             } else {
               log.debug("Class Not Found");

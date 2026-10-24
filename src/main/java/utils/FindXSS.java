@@ -160,7 +160,27 @@ public class FindXSS {
     "onvolumechange",
     "onwaiting",
     "onshow",
-    "ontoggle"
+    "ontoggle",
+    "onpointerdown",
+    "onpointerup",
+    "onpointercancel",
+    "onpointermove",
+    "onpointerover",
+    "onpointerout",
+    "onpointerenter",
+    "onpointerleave",
+    "ongotpointercapture",
+    "onlostpointercapture",
+    "onpointerrawupdate",
+    "onanimationcancel",
+    "onanimationend",
+    "onanimationiteration",
+    "onanimationstart",
+    "ontransitioncancel",
+    "ontransitionend",
+    "ontransitionrun",
+    "ontransitionstart",
+    "onauxclick"
   };
 
   public static String[] uriAttributes = {"href", "src", "action"};
