@@ -3,12 +3,13 @@ package org.owasp.mobileshepherd;
 import org.owasp.mobileshepherd.ui.lessons.poorauth.PoorAuthLessonFragment;
 import org.junit.Test;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import static org.junit.Assert.*;
 
 /**
  * Unit tests for PoorAuthLessonFragment
- * The fragment stores a hashed PIN and an obfuscated key (XOR + Base64 encoded).
+ * The fragment stores a hashed 6-digit PIN; the key itself is issued by the server.
  */
 public class PoorAuthLessonTest {
 
@@ -38,20 +39,23 @@ public class PoorAuthLessonTest {
     }
 
     @Test
-    public void testObfuscatedKeyArrayExists() throws Exception {
-        Field fField = PoorAuthLessonFragment.class.getDeclaredField("F");
-        fField.setAccessible(true);
-        Object value = fField.get(null);
-        assertNotNull("Obfuscated key array F should exist", value);
-        assertTrue("F should be a String array", value instanceof String[]);
-        assertTrue("F array should not be empty", ((String[]) value).length > 0);
+    public void testHardcodedPinHashIsSha256OfExpectedPin() throws Exception {
+        Field hashField = PoorAuthLessonFragment.class.getDeclaredField("HARDCODED_PIN_HASH");
+        hashField.setAccessible(true);
+        String hash = (String) hashField.get(null);
+        byte[] digest = MessageDigest.getInstance("SHA-256").digest("654321".getBytes(StandardCharsets.UTF_8));
+        StringBuilder expected = new StringBuilder();
+        for (byte b : digest) {
+            expected.append(String.format("%02x", b));
+        }
+        assertEquals("Hardcoded hash should be the SHA-256 of the 6-digit PIN", expected.toString(), hash);
     }
 
     @Test
-    public void testXorKeyExists() throws Exception {
-        Field kField = PoorAuthLessonFragment.class.getDeclaredField("K");
-        assertEquals("K field should be of type byte", byte.class, kField.getType());
-        assertTrue("K should be static", Modifier.isStatic(kField.getModifiers()));
-        assertTrue("K should be final", Modifier.isFinal(kField.getModifiers()));
+    public void testNoClientSideKeyFallback() {
+        for (Field f : PoorAuthLessonFragment.class.getDeclaredFields()) {
+            assertFalse("Key must come from the server, not an embedded fallback: " + f.getName(),
+                    f.getName().equals("F") || f.getName().equals("K"));
+        }
     }
 }

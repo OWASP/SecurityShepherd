@@ -280,9 +280,9 @@ public class MainActivity extends AppCompatActivity {
         if (insecureDataGroup.getChildren().size() > 0) challengesGroup.addChild(insecureDataGroup);
         
         // Individual challenges
-        addChildIfNotCompleted(challengesGroup, new NavigationItem(47, "Poor Authentication", 0, R.id.nav_poor_auth_challenge));
-        addChildIfNotCompleted(challengesGroup, new NavigationItem(49, "Insecure Communication", 0, R.id.nav_insecure_comm_challenge));
-        addChildIfNotCompleted(challengesGroup, new NavigationItem(50, "Insufficient Cryptography", 0, R.id.nav_insufficient_crypto_challenge));
+        addChildIfNotCompleted(challengesGroup, new NavigationItem(47, "Poor Authentication 1", 0, R.id.nav_poor_auth_challenge));
+        addChildIfNotCompleted(challengesGroup, new NavigationItem(49, "Insecure Communication 1", 0, R.id.nav_insecure_comm_challenge));
+        addChildIfNotCompleted(challengesGroup, new NavigationItem(50, "Insufficient Cryptography 1", 0, R.id.nav_insufficient_crypto_challenge));
         
         // Security Misconfiguration sub-group
         NavigationItem securityMisconfigGroup = new NavigationItem(51, "Security Misconfiguration", 0);
@@ -326,22 +326,22 @@ public class MainActivity extends AppCompatActivity {
     
     private String getTitleForNavId(int navId) {
         // Map navigation IDs to readable titles
-        if (navId == R.id.nav_lesson) return "Reverse Engineering";
-        if (navId == R.id.nav_insecure_data_lesson) return "Insecure Data Storage";
-        if (navId == R.id.nav_poor_auth_lesson) return "Poor Authentication";
-        if (navId == R.id.nav_insecure_authorization_lesson) return "Insecure Authorization";
-        if (navId == R.id.nav_supply_chain_lesson) return "Supply Chain Security";
-        if (navId == R.id.nav_insecure_comm_lesson) return "Insecure Communication";
-        if (navId == R.id.nav_insufficient_crypto_lesson) return "Insufficient Cryptography";
-        if (navId == R.id.nav_security_misconfig_lesson) return "Security Misconfiguration";
-        if (navId == R.id.nav_input_validation_lesson) return "Input Validation";
-        if (navId == R.id.nav_privacy_lesson) return "Privacy Controls";
-        if (navId == R.id.nav_client_side_injection_lesson) return "Client-Side Injection";
+        if (navId == R.id.nav_lesson) return "Reverse Engineering Lesson";
+        if (navId == R.id.nav_insecure_data_lesson) return "Insecure Data Storage Lesson";
+        if (navId == R.id.nav_poor_auth_lesson) return "Poor Authentication Lesson";
+        if (navId == R.id.nav_insecure_authorization_lesson) return "Insecure Authorization Lesson";
+        if (navId == R.id.nav_supply_chain_lesson) return "Supply Chain Security Lesson";
+        if (navId == R.id.nav_insecure_comm_lesson) return "Insecure Communication Lesson";
+        if (navId == R.id.nav_insufficient_crypto_lesson) return "Insufficient Cryptography Lesson";
+        if (navId == R.id.nav_security_misconfig_lesson) return "Security Misconfiguration Lesson";
+        if (navId == R.id.nav_input_validation_lesson) return "Input Validation Lesson";
+        if (navId == R.id.nav_privacy_lesson) return "Privacy Controls Lesson";
+        if (navId == R.id.nav_client_side_injection_lesson) return "Client-Side Injection Lesson";
         if (navId == R.id.nav_challenge1) return "Reverse Engineering 1";
         if (navId == R.id.nav_insecure_data1) return "Insecure Data Storage 1";
-        if (navId == R.id.nav_poor_auth_challenge) return "Poor Auth Challenge";
-        if (navId == R.id.nav_insecure_comm_challenge) return "Insecure Comm Challenge";
-        if (navId == R.id.nav_insufficient_crypto_challenge) return "Crypto Challenge";
+        if (navId == R.id.nav_poor_auth_challenge) return "Poor Authentication 1";
+        if (navId == R.id.nav_insecure_comm_challenge) return "Insecure Communication 1";
+        if (navId == R.id.nav_insufficient_crypto_challenge) return "Insufficient Cryptography 1";
         if (navId == R.id.nav_security_misconfig_challenge2) return "Security Misconfiguration 1";
         if (navId == R.id.nav_client_side_injection_challenge1) return "Client-Side Injection 1";
         if (navId == R.id.nav_client_side_injection_challenge2) return "Client-Side Injection 2";

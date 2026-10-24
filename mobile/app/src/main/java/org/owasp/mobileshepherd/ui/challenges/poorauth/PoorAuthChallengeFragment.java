@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,80 +34,23 @@ public class PoorAuthChallengeFragment extends Fragment {
     // Hardcoded salt baked into the APK - visible to anyone who decompiles the app.
     private static final String RESET_TOKEN_SALT = "sh3ph3rd-reset-2024";
     private ProgressTracker progressTracker;
-    private boolean fabExpanded = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPoorAuthChallengeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        
+
         progressTracker = new ProgressTracker(requireContext());
 
-        // Setup expandable FAB with command reference and OWASP link
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
-        FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
-
         if (fab != null) {
             fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.POOR_AUTH_CHALLENGE));
         }
-        if (fabCommandRef != null) {
-            fabCommandRef.setOnClickListener(v -> {
-                showVulnerabilityInfo();
-                collapseFab(fab, fabCommandRef, fabOwaspLink);
-            });
-        }
 
-
-        // Setup forgot password button
         binding.forgotPasswordButton.setOnClickListener(v -> openResetSection());
-
-        // Setup login button
         binding.loginButton.setOnClickListener(v -> handleLogin());
 
         return root;
-    }
-
-    private void toggleFabExpansion(FloatingActionButton mainFab, FloatingActionButton fab1, FloatingActionButton fab2) {
-        fabExpanded = !fabExpanded;
-        if (fabExpanded) {
-            if (fab1 != null) fab1.setVisibility(View.VISIBLE);
-
-                        if (mainFab != null) mainFab.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
-        } else {
-            collapseFab(mainFab, fab1, fab2);
-        }
-    }
-
-    private void collapseFab(FloatingActionButton mainFab, FloatingActionButton fab1, FloatingActionButton fab2) {
-        fabExpanded = false;
-        if (fab1 != null) fab1.setVisibility(View.GONE);
-        if (fab2 != null) fab2.setVisibility(View.GONE);
-                if (mainFab != null) mainFab.setImageResource(android.R.drawable.ic_menu_help);
-    }
-
-
-    private void showVulnerabilityInfo() {
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_lesson_info, null);
-        
-        TextView introText = dialogView.findViewById(R.id.intro_text);
-        // TextView vulnerabilitiesText = dialogView.findViewById(R.id.vulnerabilities_text);
-        View hintsSection = dialogView.findViewById(R.id.hints_section);
-        TextView hintsText = dialogView.findViewById(R.id.hints_text);
-        View additionalSection = dialogView.findViewById(R.id.additional_section);
-        
-        introText.setText(R.string.poor_auth_intro);
-        // vulnerabilitiesText.setText(R.string.poor_auth_vulnerabilities);
-        
-        hintsSection.setVisibility(View.GONE);
-        
-        additionalSection.setVisibility(View.GONE);
-        
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Poor Authentication Challenge\nOWASP M3: Insecure Authentication/Authorization")
-                .setView(dialogView)
-                .setPositiveButton("Close", null)
-                .show();
     }
 
     private void openResetSection() {
@@ -121,6 +63,8 @@ public class PoorAuthChallengeFragment extends Fragment {
     }
 
     private void resetSectionToInitialState() {
+        binding.headerCard.setVisibility(View.VISIBLE);
+        binding.successSection.setVisibility(View.GONE);
         binding.loginSection.setVisibility(View.VISIBLE);
         binding.resetSection.setVisibility(View.GONE);
         binding.requestTokenButton.setVisibility(View.VISIBLE);
@@ -146,46 +90,61 @@ public class PoorAuthChallengeFragment extends Fragment {
         binding.tokenInputLayout.setVisibility(View.VISIBLE);
         binding.resetButton.setVisibility(View.VISIBLE);
 
-        Toast.makeText(getContext(), "A password reset token has been generated for this account.", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), R.string.poor_auth_token_generated, Toast.LENGTH_LONG).show();
     }
 
     private void handleVerifyToken() {
         String enteredToken = binding.tokenInput.getText().toString().trim();
         if (enteredToken.isEmpty()) {
-            Toast.makeText(getContext(), "Empty Fields Detected.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.poor_auth_empty_fields, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (expectedResetToken != null && enteredToken.equalsIgnoreCase(expectedResetToken)) {
+            binding.headerCard.setVisibility(View.GONE);
             binding.loginSection.setVisibility(View.GONE);
             binding.resetSection.setVisibility(View.GONE);
             binding.successSection.setVisibility(View.VISIBLE);
-            binding.keyText.setText("Fetching your key...");
-
-            Toast.makeText(getContext(), "Reset token verified! Access granted.", Toast.LENGTH_LONG).show();
+            binding.keyText.setText(R.string.poor_auth_fetching_key);
 
             KeyProvider.getKey(requireContext(), KeyValidator.Module.POOR_AUTH_CHALLENGE, key -> {
-                binding.keyText.setText("Congratulations! Here's your key:\n\n" + key);
+                if (!isAdded()) return;
+                if (key == null || key.isEmpty()) {
+                    showKeyError(R.string.poor_auth_key_unavailable);
+                    return;
+                }
 
                 KeyValidator.validateKey(requireContext(), KeyValidator.Module.POOR_AUTH_CHALLENGE, key, isValid -> {
+                    if (!isAdded()) return;
                     if (isValid) {
                         progressTracker.markCompleted(KeyValidator.Module.POOR_AUTH_CHALLENGE);
                         int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.POOR_AUTH_CHALLENGE);
-                        String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
+                        String completionText = completionCount > 1
+                                ? getString(R.string.poor_auth_completed_times, completionCount) : "";
+
+                        binding.keyText.setText(getString(R.string.poor_auth_key_result, key, completionText));
 
                         new AlertDialog.Builder(requireContext())
-                            .setTitle("🎉 Success!")
-                            .setMessage("Congratulations! You exploited weak authentication.\n\nKey: " + key + completionText)
-                            .setPositiveButton("OK", null)
+                            .setTitle(R.string.poor_auth_challenge_success_title)
+                            .setMessage(getString(R.string.poor_auth_challenge_success_message, key, completionText))
+                            .setPositiveButton(R.string.csi_ok, null)
                             .show();
+                    } else {
+                        showKeyError(R.string.poor_auth_key_validation_failed);
                     }
                 });
             });
         } else {
-            Toast.makeText(getContext(), "Invalid reset token.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.poor_auth_invalid_token, Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Invalid reset token attempt for user=" + USERNAME);
             binding.tokenInput.setText("");
         }
+    }
+
+    private void showKeyError(int messageRes) {
+        resetSectionToInitialState();
+        openResetSection();
+        Toast.makeText(getContext(), messageRes, Toast.LENGTH_LONG).show();
     }
 
     private void handleLogin() {
@@ -193,12 +152,12 @@ public class PoorAuthChallengeFragment extends Fragment {
         String password = binding.passwordInput.getText().toString().trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(getContext(), "Empty Fields Detected.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.poor_auth_empty_fields, Toast.LENGTH_SHORT).show();
             return;
         }
 
         Log.d(TAG, "Login attempt - Username: " + username);
-        Toast.makeText(getContext(), "Your account has been locked! Use password reset.", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), R.string.poor_auth_account_locked, Toast.LENGTH_LONG).show();
     }
 
     private String generateResetToken(String username, String dateStr) {
@@ -222,10 +181,6 @@ public class PoorAuthChallengeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
-        FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
-        collapseFab(fab, fabCommandRef, fabOwaspLink);
         binding = null;
     }
 }

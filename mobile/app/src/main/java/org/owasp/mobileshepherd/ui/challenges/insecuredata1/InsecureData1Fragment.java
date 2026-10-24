@@ -53,39 +53,42 @@ public class InsecureData1Fragment extends Fragment {
         // Create the vulnerable database, then seed it once the server key is available
         createDatabase();
         KeyProvider.getKey(requireContext(), KeyValidator.Module.IDS_CHALLENGE_1, keyValue -> {
+            if (!isAdded()) return;
             currentKey = keyValue;
             insertUsers();
             displayUsers();
         });
 
-        // Wire up local password verification, then auto-fetch/validate the real key
+        // The player cracks the hash from the extracted database and enters the plaintext here
         binding.validateButton.setOnClickListener(v -> {
             String enteredPassword = binding.keyInput.getText().toString().trim();
             if (md5(enteredPassword).equals(md5(ADMIN_PASSWORD))) {
+                binding.headerCard.setVisibility(View.GONE);
                 KeyValidator.validateKey(requireContext(), KeyValidator.Module.IDS_CHALLENGE_1,
                         currentKey, isValid -> {
+                    if (!isAdded()) return;
                     if (isValid) {
                         progressTracker.markCompleted(KeyValidator.Module.IDS_CHALLENGE_1);
                         int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.IDS_CHALLENGE_1);
-                        String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
+                        String completionText = completionCount > 1
+                                ? getString(R.string.ids_completed_times, completionCount) : "";
 
-                        Toast.makeText(getContext(), "Correct! Key validated!", Toast.LENGTH_LONG).show();
                         binding.resultCard.setCardBackgroundColor(
                                 ContextCompat.getColor(requireContext(), R.color.success_bg));
 
                         new AlertDialog.Builder(requireContext())
-                            .setTitle("\uD83C\uDF89 Success!")
-                            .setMessage("Congratulations! You cracked the password hash.\n\nKey: " + currentKey + completionText)
-                            .setPositiveButton("OK", null)
+                            .setTitle(R.string.ids_success_title)
+                            .setMessage(getString(R.string.ids_success_message, currentKey, completionText))
+                            .setPositiveButton(R.string.csi_ok, null)
                             .show();
                     } else {
-                        Toast.makeText(getContext(), "Password correct, but key validation failed. Are you logged in?", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), R.string.ids_key_validation_failed, Toast.LENGTH_LONG).show();
                         binding.resultCard.setCardBackgroundColor(
                                 ContextCompat.getColor(requireContext(), R.color.error_bg));
                     }
                 });
             } else {
-                Toast.makeText(getContext(), "Incorrect password. Keep cracking!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.ids_incorrect_password, Toast.LENGTH_SHORT).show();
                 binding.resultCard.setCardBackgroundColor(
                         ContextCompat.getColor(requireContext(), R.color.error_bg));
                 binding.keyInput.setText("");
@@ -93,31 +96,6 @@ public class InsecureData1Fragment extends Fragment {
         });
 
         return root;
-    }
-
-    private void showVulnerabilityInfo() {
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_lesson_info, null);
-        
-        TextView introText = dialogView.findViewById(R.id.intro_text);
-        // TextView vulnerabilitiesText = dialogView.findViewById(R.id.vulnerabilities_text);
-        View hintsSection = dialogView.findViewById(R.id.hints_section);
-        TextView hintsText = dialogView.findViewById(R.id.hints_text);
-        // View bestPracticesSection = dialogView.findViewById(R.id.best_practices_section);
-        View additionalSection = dialogView.findViewById(R.id.additional_section);
-        
-        introText.setText(R.string.insecure_data_intro);
-        // vulnerabilitiesText.setText(R.string.insecure_data_vulns);
-        
-        hintsSection.setVisibility(View.GONE);
-        
-        // bestPracticesSection.setVisibility(View.GONE);
-        additionalSection.setVisibility(View.GONE);
-        
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Insecure Data Storage - SQLite")
-                .setView(dialogView)
-                .setPositiveButton("Close", null)
-                .show();
     }
 
     private void createDatabase() {
@@ -172,7 +150,7 @@ public class InsecureData1Fragment extends Fragment {
                 userName.setTextSize(16);
 
                 TextView passwordHidden = new TextView(requireContext());
-                passwordHidden.setText("  \u2022  Password: ******");
+                passwordHidden.setText(R.string.ids_password_masked);
                 passwordHidden.setTextSize(14);
                 passwordHidden.setTextColor(
                         ContextCompat.getColor(requireContext(), R.color.text_secondary));

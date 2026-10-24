@@ -27,9 +27,9 @@ public class PoorAuthChallengeTest {
     }
 
     @Test
-    public void testShowVulnerabilityInfoMethodExists() throws Exception {
-        Method method = PoorAuthChallengeFragment.class.getDeclaredMethod("showVulnerabilityInfo");
-        assertNotNull("showVulnerabilityInfo method should exist", method);
+    public void testGenerateResetTokenMethodExists() throws Exception {
+        Method method = PoorAuthChallengeFragment.class.getDeclaredMethod("generateResetToken", String.class, String.class);
+        assertNotNull("generateResetToken method should exist", method);
     }
 
     @Test

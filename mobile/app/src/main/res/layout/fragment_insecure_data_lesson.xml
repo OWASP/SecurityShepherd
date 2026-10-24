@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:background="?attr/colorSurface"
     android:padding="16dp"
-    tools:context=".ui.insecuredata.InsecureDataLessonFragment">
+    tools:context=".ui.lessons.insecuredata.InsecureDataLessonFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,6 +15,7 @@
         android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/header_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -104,14 +105,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Enter credentials you found in the database:"
+                    android:text="@string/ids_enter_credentials_label"
                     android:textSize="14sp"
                     android:layout_marginBottom="8dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="username:password"
+                    android:hint="@string/ids_credentials_hint"
                     android:layout_marginBottom="12dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -129,7 +130,7 @@
                     android:id="@+id/btn_submit_credentials"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Submit"
+                    android:text="@string/ids_submit"
                     android:layout_marginBottom="12dp" />
 
                 <TextView

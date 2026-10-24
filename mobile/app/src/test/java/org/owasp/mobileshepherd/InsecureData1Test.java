@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 /**
  * Unit tests for Insecure Data Storage Challenge 1
- * Tests SharedPreferences vulnerability
+ * Tests the unsalted MD5 password hash in a world-extractable SQLite database
  */
 public class InsecureData1Test {
 
@@ -24,12 +24,6 @@ public class InsecureData1Test {
                 android.view.ViewGroup.class,
                 android.os.Bundle.class);
         assertNotNull("onCreateView method should exist", method);
-    }
-
-    @Test
-    public void testShowVulnerabilityInfoMethodExists() throws Exception {
-        Method method = InsecureData1Fragment.class.getDeclaredMethod("showVulnerabilityInfo");
-        assertNotNull("showVulnerabilityInfo method should exist", method);
     }
 
     @Test

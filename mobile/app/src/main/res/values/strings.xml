@@ -245,22 +245,35 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <!-- =========================================================== -->
 
     <!-- Lesson -->
-    <string name="insecure_data_intro">Learn about insecure data storage vulnerabilities in mobile applications. This is one of the most common security issues in mobile apps where sensitive information is stored without proper protection.</string>
+    <string name="ids_enter_credentials_label">Enter the credentials you found in the database:</string>
+    <string name="ids_credentials_hint">username:password</string>
+    <string name="ids_submit">Submit</string>
+    <string name="ids_enter_credentials">Enter credentials in username:password format</string>
+    <string name="ids_credentials_format">Format: username:password</string>
+    <string name="ids_credentials_incorrect">Incorrect credentials.</string>
+    <string name="ids_key_validation_failed">The key could not be validated. Check that you are signed in.</string>
+    <string name="ids_key_result">Key: %1$s%2$s</string>
+    <string name="ids_user_row">• %1$s  [%2$s]  password: •••••</string>
+    <string name="ids_password_masked">  •  Password: ******</string>
+    <string name="ids_incorrect_password">Incorrect password.</string>
+    <string name="ids_success_title">Success!</string>
+    <string name="ids_success_message">Challenge complete.\n\nKey: %1$s%2$s</string>
+    <string name="ids_completed_times">\n(Completed %1$d times)</string>
     <string name="insecure_data_locations">- SQLite Databases (unencrypted)\n- SharedPreferences (plain text)\n- Internal Storage files\n- External Storage (SD card)\n- Application logs\n- Temporary files\n- Cloud storage backups</string>
     <string name="insecure_data_vulns">1. Physical Access - Anyone with the device can extract data\n2. Backup Exposure - Data in cloud backups\n3. Malware - Other apps can access unprotected data\n4. Forensics - Data persists even after app deletion\n5. Rooted Devices - Full filesystem access</string>
 
     <!-- Challenge 1 - SQLite hash cracking -->
     <string name="insecure_data_storage_1">Insecure Data Storage 1</string>
-    <string name="insecure_data1_description">This app stores the Admin\'s password in a local SQLite database as an unsalted MD5 hash — a fast, rainbow-table-crackable algorithm. Extract the database, crack the hash to recover the plaintext password, then verify it below to claim the key.</string>
+    <string name="insecure_data1_description">This app stores the Admin\'s password in a local SQLite database as an unsalted MD5 hash — a fast, rainbow-table-crackable algorithm. Extract the database, crack the hash to recover the plaintext password, then enter it below.</string>
     <string name="insecure_data1_db_path">\nPasswords are masked here but stored as unsalted MD5 hashes in:\n/data/data/org.owasp.mobileshepherd/databases/passwordDB</string>
     <string name="this_challenge_shows_password_hash_crack">This challenge shows password hash cracking. The app stores a password hash in a database - your goal is to crack the hash and find the original password.</string>
     <string name="extract_sensitive_data_from_unencrypted">Data is stored in plaintext in a local SQLite database. Get access to this data to find the key.</string>
     <string name="enter_cracked_password">Enter the cracked password</string>
-    <string name="verify_password_button">Verify Password</string>
-    <string name="verify_password_card_title">Verify Password</string>
+    <string name="verify_password_button">Submit</string>
+    <string name="verify_password_card_title">Cracked Password</string>
     <string name="database_users">Database Users</string>
     <string name="members_stored_in_unencrypted_sqlite_dat">Members stored in unencrypted SQLite database:</string>
-    <string name="npasswords_are_hidden_here_but_stored_in">\nPasswords are hidden here but stored in plaintext in:\n/data/data/org.owasp.mobileshepherd/databases/Members.db</string>
+    <string name="npasswords_are_hidden_here_but_stored_in">\nPasswords are hidden here but stored in plaintext in:\n/data/data/org.owasp.mobileshepherd/databases/lesson_users.db</string>
 
 
 
@@ -269,21 +282,31 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <!-- =========================================================== -->
 
     <!-- Lesson -->
-    <string name="poor_auth_intro">Poor authentication is one of the most critical mobile vulnerabilities. Authentication is the cornerstone of app security - if attackers bypass it, all other security measures become irrelevant.</string>
-    <string name="poor_auth_vulnerabilities">- Password reset tokens derived from predictable, observable data\n- Reset tokens computed from a hardcoded app secret\n- No server-side randomness in the reset flow\n- Verbose error messages\n- Debug logs in production</string>
+    <string name="poor_auth_enter_pin">Please enter a PIN</string>
+    <string name="poor_auth_incorrect_pin">Incorrect PIN</string>
+    <string name="poor_auth_key_unavailable">The key could not be retrieved. Sign out, sign back in and reopen this module.</string>
+    <string name="poor_auth_key_validation_failed">The key could not be validated. Check that you are signed in.</string>
+    <string name="poor_auth_key_result">Key: %1$s%2$s</string>
+    <string name="poor_auth_completed_times">\n(Completed %1$d times)</string>
 
     <!-- Challenge 1 -->
-    <string name="poor_auth_challenge_description">An account in this app is locked. Its password reset flow issues a token that is meant to be unpredictable, but is actually derived entirely from data available to the app itself. Work out how the token is generated and reconstruct it to regain access and retrieve the key.</string>
+    <string name="poor_auth_challenge_description">An account in this app is locked. Reset its password to regain access and retrieve the key.</string>
     <string name="poor_auth_reset_confirmation">A password reset token has been generated for this account and is required to complete the reset.</string>
-    <string name="poor_authentication">Poor Authentication</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="password_reset">Password Reset</string>
     <string name="poor_auth_reset_subtitle">Request a password reset token, then enter it below to regain access to this account.</string>
     <string name="request_reset_token">Request Reset Token</string>
     <string name="reset_token_hint">Reset Token</string>
     <string name="verify_token">Verify Token</string>
-    <string name="login_successful">Login Successful!</string>
-    <string name="find_hardcoded_credentials_in_the_app_ch">This app protects a secret behind a PIN. The authentication mechanism has a fundamental weakness that makes it possible to bypass. Find the PIN to retrieve the key.</string>
+    <string name="poor_auth_account_recovered">Account Recovered</string>
+    <string name="poor_auth_empty_fields">Please fill in all fields</string>
+    <string name="poor_auth_invalid_token">Invalid reset token</string>
+    <string name="poor_auth_token_generated">A password reset token has been generated for this account.</string>
+    <string name="poor_auth_account_locked">This account has been locked. Use password reset.</string>
+    <string name="poor_auth_fetching_key">Retrieving key...</string>
+    <string name="poor_auth_challenge_success_title">Challenge complete</string>
+    <string name="poor_auth_challenge_success_message">Key: %1$s%2$s</string>
+    <string name="find_hardcoded_credentials_in_the_app_ch">This app protects a secret behind a PIN. Find the PIN to retrieve the key.</string>
     <string name="validate_pin">Validate Pin</string>
     <string name="this_exercise_shows_hardcoded_credential">Enter a valid pin number to obtain the Key.</string>
     <string name="enter_pin">Enter PIN</string>

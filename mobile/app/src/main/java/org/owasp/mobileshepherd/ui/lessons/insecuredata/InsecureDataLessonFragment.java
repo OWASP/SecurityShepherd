@@ -112,7 +112,7 @@ public class InsecureDataLessonFragment extends Fragment {
             TextView tv = new TextView(getContext());
             tv.setPadding(0, 8, 0, 8);
             tv.setTextSize(14f);
-            tv.setText("• " + username + "  [" + role + "]  password: •••••");
+            tv.setText(getString(R.string.ids_user_row, username, role));
             container.addView(tv);
         }
         cursor.close();
@@ -122,13 +122,13 @@ public class InsecureDataLessonFragment extends Fragment {
         String input = binding.editCredentials.getText() != null
                 ? binding.editCredentials.getText().toString().trim() : "";
         if (input.isEmpty()) {
-            Toast.makeText(getContext(), "Enter credentials in username:password format", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.ids_enter_credentials, Toast.LENGTH_SHORT).show();
             return;
         }
 
         String[] parts = input.split(":", 2);
         if (parts.length < 2) {
-            Toast.makeText(getContext(), "Format: username:password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.ids_credentials_format, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -147,22 +147,35 @@ public class InsecureDataLessonFragment extends Fragment {
         }
         cursor.close();
 
+        binding.textCredentialResult.setVisibility(View.VISIBLE);
         if (success) {
-            binding.textCredentialResult.setVisibility(View.VISIBLE);
-            binding.textCredentialResult.setText("Access granted!\n\nKey: " + currentKey);
-            binding.textCredentialResult.setTextColor(
-                    ContextCompat.getColor(requireContext(), R.color.success_green));
-            progressTracker.markCompleted(KeyValidator.Module.IDS_LESSON);
-            Toast.makeText(getContext(), "Correct! Lesson complete.", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "Admin credentials verified. Key: " + currentKey);
-            KeyValidator.validateKey(requireContext(), KeyValidator.Module.IDS_LESSON,
-                    currentKey, correct -> Log.d(TAG, "Server submission result: " + correct));
+            binding.headerCard.setVisibility(View.GONE);
+            submitKeyToServer(currentKey);
         } else {
-            binding.textCredentialResult.setVisibility(View.VISIBLE);
-            binding.textCredentialResult.setText("Incorrect credentials. Try extracting the DB via ADB.");
+            binding.textCredentialResult.setText(R.string.ids_credentials_incorrect);
             binding.textCredentialResult.setTextColor(
                     ContextCompat.getColor(requireContext(), R.color.error_red));
         }
+    }
+
+    private void submitKeyToServer(String key) {
+        KeyValidator.validateKey(requireContext(), KeyValidator.Module.IDS_LESSON, key, correct -> {
+            if (!isAdded()) return;
+            if (correct) {
+                progressTracker.markCompleted(KeyValidator.Module.IDS_LESSON);
+                int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.IDS_LESSON);
+                String completionText = completionCount > 1
+                        ? getString(R.string.ids_completed_times, completionCount) : "";
+                binding.textCredentialResult.setText(
+                        getString(R.string.ids_key_result, key, completionText));
+                binding.textCredentialResult.setTextColor(
+                        ContextCompat.getColor(requireContext(), R.color.success_green));
+            } else {
+                binding.textCredentialResult.setText(R.string.ids_key_validation_failed);
+                binding.textCredentialResult.setTextColor(
+                        ContextCompat.getColor(requireContext(), R.color.error_red));
+            }
+        });
     }
 
     @Override

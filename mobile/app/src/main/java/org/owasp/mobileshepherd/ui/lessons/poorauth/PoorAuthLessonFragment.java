@@ -1,19 +1,15 @@
 package org.owasp.mobileshepherd.ui.lessons.poorauth;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.owasp.mobileshepherd.R;
@@ -26,7 +22,6 @@ import org.owasp.mobileshepherd.utils.ProgressTracker;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 public class PoorAuthLessonFragment extends Fragment {
 
@@ -34,17 +29,8 @@ public class PoorAuthLessonFragment extends Fragment {
     private static final String TAG = "PoorAuthLesson";
     // SHA-256 hash of "654321"
     private static final String HARDCODED_PIN_HASH = "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5";
-    
-    // Obfuscated key - "Taco_Snores_On_A_Couch"
-    // XOR encoded with key 0x42, then Base64 encoded, then split
-    private static final String[] F = {
-        "FiMhLR", "0RLC0w", "JzEdDS", "wdAx", 
-        "0BLTch", "Kg", "=="
-    };
-    private static final byte K = 0x42; // XOR key
-    
+
     private int attemptCount = 0;
-    private boolean fabExpanded = false;
     private ProgressTracker progressTracker;
     private String currentKey = "";
 
@@ -53,33 +39,17 @@ public class PoorAuthLessonFragment extends Fragment {
 
         binding = FragmentPoorAuthLessonBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        
+
         progressTracker = new ProgressTracker(requireContext());
         KeyProvider.getKey(
                 requireContext(),
                 KeyValidator.Module.POOR_AUTH_LESSON,
                 keyValue -> currentKey = keyValue);
 
-        // Setup FAB expansion
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
-        FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
-        
         if (fab != null) {
             fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.POOR_AUTH_LESSON));
         }
-        
-        if (fabCommandRef != null) {
-            fabCommandRef.setOnClickListener(v -> {
-                showDetailedInfo();
-                collapseFab(fab, fabCommandRef, fabOwaspLink);
-            });
-        }
-        
-
-        
-
-        // Set initial FAB appearance based on completion status
 
         // Log the hardcoded PIN hash (intentionally insecure for demonstration)
         Log.d(TAG, "Initializing authentication system...");
@@ -96,7 +66,7 @@ public class PoorAuthLessonFragment extends Fragment {
         attemptCount++;
 
         if (enteredPin.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a PIN", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.poor_auth_enter_pin, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -107,73 +77,43 @@ public class PoorAuthLessonFragment extends Fragment {
         Log.d(TAG, "Expected PIN hash: " + HARDCODED_PIN_HASH);
 
         if (enteredPinHash != null && enteredPinHash.equals(HARDCODED_PIN_HASH)) {
-            // Successful authentication
-            String key = currentKey.isEmpty() ? d() : currentKey;
+            if (currentKey == null || currentKey.isEmpty()) {
+                Toast.makeText(getContext(), R.string.poor_auth_key_unavailable, Toast.LENGTH_LONG).show();
+                return;
+            }
 
-            binding.demoCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.success_bg));
-            binding.keyText.setText("\u2713 Authentication Successful!\n\nKey: " + key);
-            binding.keyText.setVisibility(View.VISIBLE);
-
-            Toast.makeText(getContext(), "Access Granted! Key revealed!", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "Authentication successful! Key: " + key);
-
-            progressTracker.markCompleted(KeyValidator.Module.POOR_AUTH_LESSON);
-            KeyValidator.validateKey(requireContext(), KeyValidator.Module.POOR_AUTH_LESSON,
-                    key, correct -> Log.d(TAG, "Server submission result: " + correct));
-
+            binding.headerCard.setVisibility(View.GONE);
             binding.verifyButton.setEnabled(false);
             binding.pinInput.setEnabled(false);
+
+            KeyValidator.validateKey(requireContext(), KeyValidator.Module.POOR_AUTH_LESSON,
+                    currentKey, correct -> {
+                if (!isAdded()) return;
+                if (correct) {
+                    progressTracker.markCompleted(KeyValidator.Module.POOR_AUTH_LESSON);
+                    int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.POOR_AUTH_LESSON);
+                    String completionText = completionCount > 1
+                            ? getString(R.string.poor_auth_completed_times, completionCount) : "";
+                    binding.demoCard.setCardBackgroundColor(
+                            ContextCompat.getColor(requireContext(), R.color.success_bg));
+                    binding.keyText.setText(getString(R.string.poor_auth_key_result, currentKey, completionText));
+                } else {
+                    binding.demoCard.setCardBackgroundColor(
+                            ContextCompat.getColor(requireContext(), R.color.error_bg));
+                    binding.keyText.setText(R.string.poor_auth_key_validation_failed);
+                    binding.verifyButton.setEnabled(true);
+                    binding.pinInput.setEnabled(true);
+                }
+                binding.keyText.setVisibility(View.VISIBLE);
+            });
         } else {
-            // Failed authentication
             binding.demoCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_bg));
             binding.keyText.setVisibility(View.GONE);
-            
-            Toast.makeText(getContext(), "Access Denied! Incorrect PIN", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getContext(), R.string.poor_auth_incorrect_pin, Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Authentication failed. Invalid PIN provided.");
-            
+
             binding.pinInput.setText("");
-        }
-    }
-
-    private void toggleFabExpansion(FloatingActionButton mainFab, FloatingActionButton fab1, FloatingActionButton fab2) {
-        fabExpanded = !fabExpanded;
-        
-        if (fabExpanded) {
-            if (fab1 != null) fab1.setVisibility(View.VISIBLE);
-
-                        if (mainFab != null) mainFab.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
-        } else {
-            collapseFab(mainFab, fab1, fab2);
-        }
-    }
-
-    private void collapseFab(FloatingActionButton mainFab, FloatingActionButton fab1, FloatingActionButton fab2) {
-        fabExpanded = false;
-        if (fab1 != null) fab1.setVisibility(View.GONE);
-        if (fab2 != null) fab2.setVisibility(View.GONE);
-                if (mainFab != null) mainFab.setImageResource(android.R.drawable.ic_menu_help);
-    }
-
-
-    // Decode obfuscated key - resist static analysis
-    private String d() {
-        try {
-            StringBuilder sb = new StringBuilder();
-            for (String p : F) {
-                sb.append(p);
-            }
-            
-            byte[] decoded = Base64.getDecoder().decode(sb.toString());
-            
-            byte[] result = new byte[decoded.length];
-            for (int i = 0; i < decoded.length; i++) {
-                result[i] = (byte) (decoded[i] ^ K);
-            }
-            
-            return new String(result, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            Log.e(TAG, "Key decode error", e);
-            return "[DECODE_ERROR]";
         }
     }
 
@@ -181,15 +121,10 @@ public class PoorAuthLessonFragment extends Fragment {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(pin.getBytes(StandardCharsets.UTF_8));
-            
-            // Convert byte array to hex string
+
             StringBuilder hexString = new StringBuilder();
             for (byte b : hashBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
+                hexString.append(String.format("%02x", b));
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
@@ -198,42 +133,9 @@ public class PoorAuthLessonFragment extends Fragment {
         }
     }
 
-    private void showDetailedInfo() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_lesson_info, null);
-        TextView moduleBanner = dialogView.findViewById(R.id.module_path_banner);
-        if (moduleBanner != null) moduleBanner.setVisibility(View.VISIBLE);
-        if (moduleBanner != null) moduleBanner.setText("com.owasp.poor_authentication");
-        
-        TextView introText = dialogView.findViewById(R.id.intro_text);
-        // TextView vulnerabilitiesText = dialogView.findViewById(R.id.vulnerabilities_text);
-        View hintsSection = dialogView.findViewById(R.id.hints_section);
-        TextView hintsText = dialogView.findViewById(R.id.hints_text);
-        View additionalSection = dialogView.findViewById(R.id.additional_section);
-        
-        introText.setText(getString(R.string.poor_auth_intro));
-        // vulnerabilitiesText.setText(getString(R.string.poor_auth_vulnerabilities));
-        
-        hintsSection.setVisibility(View.GONE);
-        
-        additionalSection.setVisibility(View.GONE);
-        
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Poor Authentication\nOWASP M3: Insecure Authentication/Authorization");
-        builder.setView(dialogView);
-        builder.setPositiveButton("Close", null);
-        builder.show();
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        
-        // Hide mini FABs when leaving fragment
-        FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
-        FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
-        collapseFab(fab, fabCommandRef, fabOwaspLink);
-        
         binding = null;
     }
 }
