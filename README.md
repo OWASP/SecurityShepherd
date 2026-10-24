@@ -95,6 +95,17 @@ mkdir -p "$BACKUP_DIR" && chmod 700 "$BACKUP_DIR"
 
 Delete `$BACKUP_DIR` (or move it somewhere safe) once the upgrade is working.
 
+##### MongoDB 8.0
+The MongoDB image now runs MongoDB 8.0 instead of 4.1, an unsupported development release. MongoDB 8.0 can't open a 4.1 data directory: the `mongo` container exits on start with `UPGRADE PROBLEM: Found an invalid featureCompatibilityVersion document`. The `mongodata` volume only holds the NoSQL challenge's seed data, which the image recreates on first start, so remove the volume instead of upgrading it. Players' progress and scores are kept in MariaDB and aren't affected. On x86-64 hosts, MongoDB 5.0 and later also need a CPU with AVX support, which some older machines and virtual machines lack.
+
+```console
+docker-compose down
+# The volume is named <project>_mongodata; check with: docker volume ls
+docker volume rm securityshepherd_mongodata
+mvn -Pdocker clean install -DskipTests
+docker-compose up -d --build
+```
+
 #### Full Guide
 [Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
 
