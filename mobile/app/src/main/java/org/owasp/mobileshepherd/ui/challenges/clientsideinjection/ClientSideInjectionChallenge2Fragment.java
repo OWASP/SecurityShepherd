@@ -80,14 +80,20 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         // Setup search button
         binding.searchProductButton.setOnClickListener(v -> searchProducts());
 
-        // Setup submit key button
-        binding.submitKeyButton.setOnClickListener(v -> submitKey());
-
         return root;
     }
 
     private void initializeDatabase(String keyValue) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase(dbKey);
+        SQLiteDatabase db;
+        try {
+            db = dbHelper.getWritableDatabase(dbKey);
+        } catch (android.database.sqlite.SQLiteException e) {
+            // Key changed (e.g. offline local key vs server-issued per-user key); data is
+            // regenerated on every open, so recreate the file with the new key.
+            Log.w(TAG, "DB key mismatch, recreating database", e);
+            requireContext().deleteDatabase(Challenge2DatabaseHelper.DATABASE_NAME);
+            db = dbHelper.getWritableDatabase(dbKey);
+        }
 
         // Clear existing data
         db.execSQL("DELETE FROM products");
@@ -127,7 +133,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         String searchTerm = binding.productSearchInput.getText().toString();
         
         if (searchTerm.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a search term", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.csi_enter_search_term, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -158,10 +164,8 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
                     
                     // Check if key was extracted
                     if (value != null && !currentKey.isEmpty() && value.equals(currentKey)) {
-                        results.append("\n SECRET DISCOVERED!\n");
-                        results.append("You've extracted data from the hidden 'secrets' table!\n");
-                        results.append("Key: ").append(value).append("\n\n");
-                        results.append("Submitting key automatically...\n");
+                        results.append(getString(R.string.csi_c2_secret_discovered, value));
+                        binding.headerCard.setVisibility(View.GONE);
                         submitKeyToServer(value);
                     }
                 }
@@ -169,13 +173,13 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
             }
             
             if (count == 0) {
-                binding.resultText.setText("No products found matching: " + searchTerm);
+                binding.resultText.setText(getString(R.string.csi_c2_no_products, searchTerm));
             } else {
                 binding.resultText.setText(results.toString());
             }
             
         } catch (Exception e) {
-            binding.resultText.setText("Error: " + e.getMessage());
+            binding.resultText.setText(getString(R.string.csi_c2_error, e.getMessage()));
             Log.e(TAG, "SQL Error", e);
         } finally {
             if (cursor != null) {
@@ -200,44 +204,14 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
                     if (correct) {
                         progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
                         int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
-                        String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
+                        String completionText = completionCount > 1
+                                ? getString(R.string.csi_c2_completed_times, completionCount) : "";
 
                         new AlertDialog.Builder(requireContext())
-                                .setTitle(" Success!")
-                                .setMessage("Congratulations! You've successfully used UNION-based SQL injection to extract data from the hidden 'secrets' table.\n\nKey: " + key + completionText)
-                                .setPositiveButton("OK", null)
+                                .setTitle(R.string.csi_c2_success_title)
+                                .setMessage(getString(R.string.csi_c2_success_message, key, completionText))
+                                .setPositiveButton(R.string.csi_ok, null)
                                 .show();
-                    }
-                });
-    }
-
-    private void submitKey() {
-        String submittedKey = binding.keyInput.getText().toString();
-
-        if (submittedKey.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter the key", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        KeyValidator.validateKey(
-                requireContext(),
-                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
-                submittedKey,
-                correct -> {
-                    if (!isAdded()) return;
-                    if (correct) {
-                        progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
-                        int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
-                        String completionText = completionCount > 1 ? " (Completed " + completionCount + " times)" : "";
-
-                        new AlertDialog.Builder(requireContext())
-                                .setTitle(" Success!")
-                                .setMessage("Congratulations! You've successfully used UNION-based SQL injection to extract data from the hidden 'secrets' table.\n\nKey: " + submittedKey + completionText)
-                                .setPositiveButton("OK", null)
-                                .show();
-                        binding.keyInput.setText("");
-                    } else {
-                        Toast.makeText(getContext(), "Incorrect key. Keep trying!", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -277,9 +251,9 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         additionalSection.setVisibility(View.GONE);
         
         new AlertDialog.Builder(requireContext())
-                .setTitle("Client-Side Injection Challenge 2\nOWASP M7: Client Code Quality")
+                .setTitle(R.string.csi_info_title_challenge2)
                 .setView(dialogView)
-                .setPositiveButton("Close", null)
+                .setPositiveButton(R.string.csi_close, null)
                 .show();
     }
 

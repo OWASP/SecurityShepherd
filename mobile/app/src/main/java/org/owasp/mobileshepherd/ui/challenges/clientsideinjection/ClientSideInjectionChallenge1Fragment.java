@@ -59,13 +59,21 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
         }
 
         binding.loginButton.setOnClickListener(v -> attemptLogin());
-        binding.submitKeyButton.setOnClickListener(v -> submitKey());
 
         return root;
     }
 
     private void seedDatabase(String keyValue) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase(dbKey);
+        SQLiteDatabase db;
+        try {
+            db = dbHelper.getWritableDatabase(dbKey);
+        } catch (android.database.sqlite.SQLiteException e) {
+            // Key changed (e.g. offline local key vs server-issued per-user key); data is
+            // regenerated on every open, so recreate the file with the new key.
+            Log.w(TAG, "DB key mismatch, recreating database", e);
+            requireContext().deleteDatabase(Challenge1DatabaseHelper.DATABASE_NAME);
+            db = dbHelper.getWritableDatabase(dbKey);
+        }
         db.execSQL("DELETE FROM accounts");
         insertAccount(db, "admin",   keyValue,     "admin",  9999);
         insertAccount(db, "alice",   "alicePass99", "user",   100);
@@ -102,8 +110,9 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
         // only exact single-space/keyword matches are stripped. If nothing matched,
         // pass the original input through unchanged instead of the uppercased copy -
         // otherwise every legitimate credential would be case-mangled before it ever
-        // reaches the query. Non-standard spacing (double space, tabs) around a
-        // keyword, and the raw quote character itself, still slip past untouched.
+        // reaches the query. Replacing the surrounding spaces with an inline SQL
+        // comment (e.g. OR written as /**/OR/**/), and the raw quote character itself,
+        // slip past untouched.
         return filtered.equals(upper) ? input : filtered;
     }
 
@@ -114,12 +123,12 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
                 ? binding.passwordInput.getText().toString() : "";
 
         if (rawUser.isEmpty() || rawPass.isEmpty()) {
-            Toast.makeText(getContext(), "Enter both username and password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.csi_c1_enter_credentials, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Apply the sloppy filter (bypassable via non-standard whitespace around a
-        // keyword, or the unfiltered quote character itself)
+        // Apply the sloppy filter (bypassable via inline SQL comments in place of the
+        // spaces around a keyword, or the unfiltered quote character itself)
         String filteredUser = applySloppyFilter(rawUser);
         String filteredPass = applySloppyFilter(rawPass);
 
@@ -141,30 +150,28 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
                 Log.d(TAG, "Login success: user=" + loggedInUser + " role=" + role);
 
                 if ("admin".equals(loggedInUser)) {
-                    // Admin login â€” reveal the key and submit it automatically
+                    // Admin login: reveal the key and submit it automatically
                     binding.resultText.setText(
-                            "ACCESS GRANTED â€” Admin\n\nKey: " + currentKey
-                            + "\n\nYou bypassed the filter using SQL injection!");
+                            getString(R.string.csi_c1_access_granted, currentKey));
                     binding.resultText.setTextColor(
                             ContextCompat.getColor(requireContext(), R.color.success_green));
                     submitKeyToServer(currentKey);
+                    binding.headerCard.setVisibility(View.GONE);
                 } else {
                     binding.resultText.setText(
-                            "Logged in as: " + loggedInUser
-                            + "\nRole: " + role + "  Balance: $" + balance
-                            + "\n\nNot admin â€” try to inject as admin.");
+                            getString(R.string.csi_c1_logged_in, loggedInUser, role, balance));
                     binding.resultText.setTextColor(
                             ContextCompat.getColor(requireContext(), R.color.colorPrimary));
                 }
             } else {
                 Log.d(TAG, "Login failed for input: " + rawUser);
-                binding.resultText.setText("Login failed.");
+                binding.resultText.setText(R.string.csi_c1_login_failed);
                 binding.resultText.setTextColor(
                         ContextCompat.getColor(requireContext(), R.color.error_red));
             }
         } catch (Exception e) {
             Log.e(TAG, "Query error: " + e.getMessage());
-            binding.resultText.setText("Query error: " + e.getMessage());
+            binding.resultText.setText(getString(R.string.csi_c1_query_error, e.getMessage()));
         } finally {
             if (cursor != null) cursor.close();
             db.close();
@@ -182,29 +189,7 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
                     if (!isAdded()) return;
                     if (correct) {
                         progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1);
-                        Toast.makeText(getContext(), "Correct! Challenge complete.", Toast.LENGTH_LONG).show();
-                    }
-                });
-    }
-
-    private void submitKey() {
-        String entered = binding.keyInput.getText() != null
-                ? binding.keyInput.getText().toString().trim() : "";
-        if (entered.isEmpty()) {
-            Toast.makeText(getContext(), "Enter the key", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        binding.submitKeyButton.setEnabled(false);
-        KeyValidator.validateKey(requireContext(),
-                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1,
-                entered, correct -> {
-                    if (correct) {
-                        progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1);
-                        Toast.makeText(getContext(), "Correct! Challenge complete.", Toast.LENGTH_LONG).show();
-                    } else {
-                        binding.submitKeyButton.setEnabled(true);
-                        Toast.makeText(getContext(), "Incorrect key.", Toast.LENGTH_SHORT).show();
-                        binding.keyInput.setText("");
+                        Toast.makeText(getContext(), R.string.csi_c1_complete, Toast.LENGTH_LONG).show();
                     }
                 });
     }

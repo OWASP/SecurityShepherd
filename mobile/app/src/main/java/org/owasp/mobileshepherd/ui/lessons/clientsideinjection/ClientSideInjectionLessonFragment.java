@@ -124,7 +124,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         String searchTerm = binding.searchInput.getText().toString();
         
         if (searchTerm.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a search term", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.csi_enter_search_term, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -158,11 +158,11 @@ public class ClientSideInjectionLessonFragment extends Fragment {
                         fullName != null ? fullName : "");
                 TextView adminView = row.findViewById(R.id.item_is_admin);
                 if (isAdmin == 1) {
-                    adminView.setText("Yes");
+                    adminView.setText(R.string.csi_yes);
                     adminView.setTextColor(getResources().getColor(
                             android.R.color.holo_red_light, null));
                 } else {
-                    adminView.setText("No");
+                    adminView.setText(R.string.csi_no);
                     adminView.setTextColor(getResources().getColor(
                             android.R.color.darker_gray, null));
                 }
@@ -172,11 +172,12 @@ public class ClientSideInjectionLessonFragment extends Fragment {
                 if (fullName != null && !currentKey.isEmpty()
                         && fullName.equals(currentKey)) {
                     submitKeyToServer(fullName);
+                    binding.headerCard.setVisibility(View.GONE);
                 }
             }
 
             if (count == 0) {
-                binding.resultEmptyText.setText("No users found matching: " + searchTerm);
+                binding.resultEmptyText.setText(getString(R.string.csi_lesson_no_users, searchTerm));
                 binding.resultEmptyText.setVisibility(View.VISIBLE);
                 binding.resultContainer.setVisibility(View.GONE);
             } else {
@@ -185,7 +186,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
             }
             
         } catch (Exception e) {
-            binding.resultEmptyText.setText("Error: " + e.getMessage() + "\n\nTip: Check your SQL syntax!");
+            binding.resultEmptyText.setText(getString(R.string.csi_lesson_error, e.getMessage()));
             binding.resultEmptyText.setVisibility(View.VISIBLE);
             binding.resultContainer.setVisibility(View.GONE);
             Log.e(TAG, "SQL Error", e);
@@ -231,9 +232,9 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         additionalSection.setVisibility(View.GONE);
         
         new AlertDialog.Builder(requireContext())
-                .setTitle("Client-Side Injection Lesson\nOWASP M7: Client Code Quality")
+                .setTitle(R.string.csi_info_title_lesson)
                 .setView(dialogView)
-                .setPositiveButton("Close", null)
+                .setPositiveButton(R.string.csi_close, null)
                 .show();
     }
     
@@ -255,14 +256,13 @@ public class ClientSideInjectionLessonFragment extends Fragment {
                     if (correct) {
                         progressTracker.markCompleted(KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON);
                         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                                .setTitle("Lesson Complete")
-                                .setMessage("Correct key validated! You have successfully demonstrated "
-                                        + "a client-side SQL injection attack.")
-                                .setPositiveButton("OK", null)
+                                .setTitle(R.string.csi_lesson_complete_title)
+                                .setMessage(R.string.csi_lesson_complete_message)
+                                .setPositiveButton(R.string.csi_ok, null)
                                 .show();
                     } else {
                         Toast.makeText(requireContext(),
-                                "Key incorrect — keep trying!", Toast.LENGTH_SHORT).show();
+                                R.string.csi_lesson_key_incorrect, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
