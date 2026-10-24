@@ -48,7 +48,6 @@ org.glassfish = any
 org.glassfish.web = any
 org.hamcrest = any
 org.jetbrains = any
-org.jetbrains.kotlin = any
 org.json = any
 org.jsoup = any
 org.jspecify = any
