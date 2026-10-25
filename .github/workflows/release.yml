@@ -14,125 +14,41 @@ on:
       - 'LICENSE'
       - 'README.md'
       - 'Vagrantfile'
+  # On pull requests that change how the images are built, build them without logging in to
+  # Docker Hub or pushing, so a broken release workflow shows up before it is merged
+  pull_request:
+    paths:
+      - '.github/workflows/release.yml'
+      - '.github/workflows/release-build.yml'
+      - 'Dockerfile'
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - '.env'
+      - 'pom.xml'
+
+# Nothing here writes to the repository. Docker Hub is reached with its own credentials, so the
+# GITHUB_TOKEN only needs to read the code.
+permissions:
+  contents: read
+
+# A newer run on the same branch or pull request cancels the older one, so an older image never
+# overwrites a newer :dev or snapshot tag. Release tag runs are never cancelled.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
-  build:
-    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
-    name: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Set up JDK 17
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Check release tag matches pom.xml version
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          POM_VERSION=$(mvn -B -q org.apache.maven.plugins:maven-help-plugin:3.5.1:evaluate -Dexpression=project.version -DforceStdout)
-          if [ "$POM_VERSION" != "$GITHUB_REF_NAME" ]; then
-            echo "::error::Tag $GITHUB_REF_NAME does not match pom.xml version $POM_VERSION"
-            exit 1
-          fi
-      - name: Build Maven with Docker Profile and Generate SBOM
-        run: mvn clean install -Pdocker -DskipTests -B -DexcludeTestProject=true cyclonedx:makeBom
-      - name: Upload WAR File
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: security_shepherd_war
-          path: target/*.war
-      - name: Docker Compose Build
-        run: docker-compose build
-      - name: Generate Tomcat Docker Image SBOM
-        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
-        id: tomcat
-        with:
-          format: cyclonedx-json
-          image: owasp/security-shepherd
-          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-tomcat.cyclonedx.json
-      - name: Generate MariaDB Docker Image SBOM
-        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
-        id: mariadb
-        with:
-          format: cyclonedx-json
-          image: owasp/security-shepherd_mariadb
-          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mariadb.cyclonedx.json
-      - name: Generate MongoDB Docker Image SBOM
-        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
-        id: mongodb
-        with:
-          format: cyclonedx-json
-          image: owasp/security-shepherd_mongo
-          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mongodb.cyclonedx.json
-      - name: Upload SBOMs
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: security_shepherd_sboms
-          path: |
-            target/*.json
-            target/*.xml
-      - name: Cache Maven packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          key: maven-output-${{ hashFiles('target/**') }}
-          path: |
-            target/
-            docker/mariadb/target
-            docker/mongo/target
-
-  release-security-shepherd:
-    needs: build
-    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
-        with:
-          images: owasp/security-shepherd
-          # Branch pushes publish :dev / :master. A release tag such as 4.1.0
-          # publishes :4.1.0, :4.1, :4 and :latest.
-          tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-
-      - name: Restore Cached Maven packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          key: maven-output-${{ hashFiles('target/**') }}
-          path: |
-            target/
-            docker/mariadb/target
-            docker/mongo/target
-
-      # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
-      - name: Set environment variables
-        uses: c-py/action-dotenv-to-setenv@925b5d99a3f1e4bd7b4e9928be4e2491e29891d9 # v5
-        with:
-          env-file: .env
-
-      - name: Build and push Tomcat
-        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            TOMCAT_DOCKER_VERSION
-            TLS_KEYSTORE_FILE
-            TLS_KEYSTORE_PASS
-            ALIAS
-            HTTPS_PORT
+  # The build, publishing and attestation steps live in release-build.yml, a reusable workflow, so
+  # that this workflow can't change them (SLSA Build Level 3)
+  release:
+    if: github.repository == 'OWASP/SecurityShepherd'
+    uses: ./.github/workflows/release-build.yml
+    permissions:
+      contents: read
+      # Only release-build.yml's attest and attest-vex jobs use these, to sign the provenance and
+      # VEX attestations
+      id-token: write
+      attestations: write
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

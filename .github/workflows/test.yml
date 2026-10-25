@@ -82,6 +82,8 @@ jobs:
         run: docker compose build
       - name: Check Tomcat config placeholders were substituted
         run: bash src/test/scripts/tomcat-config-test.sh
+      - name: Smoke test the app in the Docker images
+        run: bash src/test/scripts/image-smoke-test.sh
 
   unit-tests:
     needs: detect-changes
