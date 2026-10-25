@@ -17,12 +17,7 @@ Older tags (`2.3`, `2.4`, `v3.0`, `v3.1`) predate this scheme and are left as th
 
 Every push to `dev` publishes the `owasp/security-shepherd` image as `dev` and as the snapshot version in `pom.xml`, e.g. `4.1.0-SNAPSHOT`. Both tags move with each push. When `dev` starts the next snapshot, the previous snapshot tag stays on the last build of that version. Releases are published by the tag push described in [Release steps](#release-steps).
 
-Each pushed image carries an SPDX SBOM and a SLSA provenance attestation, stored with it on Docker Hub. Docker Scout shows them, and they can be read with:
-
-```bash
-docker buildx imagetools inspect owasp/security-shepherd:dev --format '{{ json .SBOM }}'
-docker buildx imagetools inspect owasp/security-shepherd:dev --format '{{ json .Provenance }}'
-```
+Each pushed image carries an SPDX SBOM and a SLSA provenance attestation, stored with it on Docker Hub. [Checking the Docker images](verifying-images.md) shows users how to read them.
 
 ## Tag rules
 
