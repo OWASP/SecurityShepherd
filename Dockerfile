@@ -40,7 +40,8 @@ ENV TLS_KEYSTORE_FILE=shepherdKeystore.p12 \
     DNAME="CN=localhost,OU=SecurityShepherd,O=OWASP"
 
 ENV RUN_USER tomcat
-RUN apt-get -qq update && apt-get install -y patch libargon2-1
+# upgrade picks up Ubuntu security fixes released since the base image was built (#1038)
+RUN apt-get -qq update && apt-get -y upgrade && apt-get install -y patch libargon2-1
 RUN adduser --system --group ${RUN_USER} --home ${CATALINA_HOME}
 RUN chown -R ${RUN_USER}:${RUN_GROUP} $CATALINA_HOME
 USER ${RUN_USER}
