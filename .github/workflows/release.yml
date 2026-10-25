@@ -35,6 +35,8 @@ jobs:
     if: github.repository == 'OWASP/SecurityShepherd'
     name: build
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.pom.outputs.version }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -44,10 +46,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Check release tag matches pom.xml version
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Read pom.xml version
+        id: pom
         run: |
           POM_VERSION=$(mvn -B -q org.apache.maven.plugins:maven-help-plugin:3.5.1:evaluate -Dexpression=project.version -DforceStdout)
+          echo "version=$POM_VERSION" >> "$GITHUB_OUTPUT"
+      - name: Check release tag matches pom.xml version
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          POM_VERSION: ${{ steps.pom.outputs.version }}
+        run: |
           if [ "$POM_VERSION" != "$GITHUB_REF_NAME" ]; then
             echo "::error::Tag $GITHUB_REF_NAME does not match pom.xml version $POM_VERSION"
             exit 1
@@ -121,10 +129,13 @@ jobs:
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: owasp/security-shepherd
-          # Branch pushes publish :dev / :master. A release tag such as 4.1.0
-          # publishes :4.1.0, :4.1, :4 and :latest.
+          # Branch pushes publish :dev / :master. Pushes to dev also publish the pom.xml snapshot
+          # version, e.g. :4.1.0-SNAPSHOT. A release tag such as 4.1.0 publishes :4.1.0, :4.1, :4
+          # and :latest. Pull requests compute the snapshot tag too, so it shows in this step's
+          # log, but push nothing.
           tags: |
             type=ref,event=branch
+            type=raw,value=${{ needs.build.outputs.version }},enable=${{ endsWith(needs.build.outputs.version, '-SNAPSHOT') && (github.ref == 'refs/heads/dev' || github.event_name == 'pull_request') }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
