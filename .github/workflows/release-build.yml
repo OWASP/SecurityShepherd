@@ -97,11 +97,8 @@ jobs:
   release-security-shepherd:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      # Sign the provenance attestation with Sigstore and store it with GitHub
-      id-token: write
-      attestations: write
+    outputs:
+      digest: ${{ steps.push.outputs.digest }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -137,11 +134,22 @@ jobs:
           name: tomcat_build_inputs
           path: target/
 
-      # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
-      - name: Set environment variables
-        uses: c-py/action-dotenv-to-setenv@925b5d99a3f1e4bd7b4e9928be4e2491e29891d9 # v5
-        with:
-          env-file: .env
+      # Read the Tomcat image's build arguments from .env as literal text. Nothing in .env is
+      # evaluated, and no other variable from it reaches the job.
+      - name: Read build arguments from .env
+        run: |
+          for name in TOMCAT_DOCKER_VERSION TLS_KEYSTORE_FILE TLS_KEYSTORE_PASS ALIAS HTTPS_PORT; do
+            value=$(grep -m1 "^${name}=" .env | cut -d= -f2- | tr -d '\r' || true)
+            # Like Docker Compose, drop one pair of surrounding quotes
+            case "$value" in
+              \"*\" | \'*\') value=${value:1:${#value}-2} ;;
+            esac
+            if [ -z "$value" ]; then
+              echo "::error file=.env::${name} is not set in .env"
+              exit 1
+            fi
+            echo "${name}=${value}" >> "$GITHUB_ENV"
+          done
 
       # The default docker driver can't store SBOM and provenance attestations with the image
       - name: Set up Docker Buildx
@@ -166,11 +174,19 @@ jobs:
             ALIAS
             HTTPS_PORT
 
-      # Signed SLSA build provenance, stored with GitHub and in the public Sigstore transparency
-      # log rather than pushed to Docker Hub
+  # Signs a SLSA build provenance for the pushed image, stored with GitHub and in the public
+  # Sigstore transparency log rather than pushed to Docker Hub. This is the only job with the
+  # signing identity, and it runs nothing from the repository: no checkout, no build steps.
+  attest:
+    needs: release-security-shepherd
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+    steps:
       - name: Attest Tomcat image build provenance
-        if: github.event_name != 'pull_request'
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-name: docker.io/owasp/security-shepherd
-          subject-digest: ${{ steps.push.outputs.digest }}
+          subject-digest: ${{ needs.release-security-shepherd.outputs.digest }}

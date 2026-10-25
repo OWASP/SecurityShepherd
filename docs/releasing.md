@@ -19,7 +19,7 @@ Every push to `dev` publishes the `owasp/security-shepherd` image as `dev` and a
 
 Each pushed image carries an SPDX SBOM and a SLSA provenance attestation, stored with it on Docker Hub. [Checking the Docker images](verifying-images.md) shows users how to read them.
 
-The release workflow also signs a SLSA build provenance attestation for each pushed image with [GitHub artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations), which users verify as described in [Signed provenance](verifying-images.md#signed-provenance). The build and the signing run in the reusable workflow [`release-build.yml`](../.github/workflows/release-build.yml), which `release.yml` calls but can't change. That is what makes the attestation SLSA Build Level 3, so keep build and push steps in `release-build.yml`: a step moved into `release.yml` would no longer be covered.
+The release workflow also signs a SLSA build provenance attestation for each pushed image with [GitHub artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations), which users verify as described in [Signed provenance](verifying-images.md#signed-provenance). The build and the signing run in the reusable workflow [`release-build.yml`](../.github/workflows/release-build.yml), which `release.yml` calls but can't change. That is what makes the attestation SLSA Build Level 3, so keep build and push steps in `release-build.yml`: a step moved into `release.yml` would no longer be covered. Within `release-build.yml`, only the `attest` job holds the signing identity (`id-token: write`). Keep it to the attest step alone, with no checkout and nothing that runs code or reads configuration from the repository.
 
 ## Tag rules
 
