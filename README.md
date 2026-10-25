@@ -68,6 +68,15 @@ Do this once if you ran an `owasp/security-shepherd:dev` or `4.0.0-SNAPSHOT` ima
 
 Pre-built images are published to Docker Hub as [`owasp/security-shepherd`](https://hub.docker.com/r/owasp/security-shepherd). [Checking the Docker images](docs/verifying-images.md) explains the tags and how to check an image's SBOM and provenance.
 
+#### Building an up-to-date image
+When the Tomcat image is built, it installs the Ubuntu security updates released since its base image was published. Docker caches the base image and that build step, so rebuilding with `docker-compose up --build` can reuse an old base image and old packages. To build an image with the latest updates, rebuild it without the cache and recreate the container:
+
+```console
+mvn -Pdocker clean install -DskipTests
+docker-compose build --pull --no-cache web
+docker-compose up -d
+```
+
 #### Upgrading an existing Docker environment
 Security Shepherd now runs on Tomcat 11. Tomcat's `conf` directory lives in the `conf` Docker volume, and Docker only copies the image's files into a volume when the volume is first created. An existing environment would therefore start Tomcat 11 with its old Tomcat 9/10.1 `server.xml` and `web.xml`. That volume has to be recreated. Database data is in the separate `data` and `mongodata` volumes, so it is kept.
 
@@ -85,6 +94,8 @@ docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine s
    && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'
 docker volume rm securityshepherd_conf
 mvn -Pdocker clean install -DskipTests
+# --pull and --no-cache pick up the latest base image and Ubuntu security updates
+docker-compose build --pull --no-cache web
 # Detached, so the databases keep running while you restore files below
 docker-compose up -d --build
 ```
