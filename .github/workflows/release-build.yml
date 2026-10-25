@@ -4,15 +4,15 @@ name: Release Build
 # can't change their steps, which SLSA Build Level 3 requires. Verify an image's provenance against
 # this file with `gh attestation verify --signer-workflow`, see docs/releasing.md.
 #
-# The github context (event, ref) is the caller's. Pull requests build everything but don't log in
-# to Docker Hub, push or attest.
+# The github context (event, ref) is the caller's. Pull requests build everything and dry-run the
+# push, but don't log in to Docker Hub, push or attest.
+#
+# Docker Hub is reached through the owasp organization's OIDC connection, so no Docker Hub
+# credential is stored in GitHub. The connection's ID is the DOCKERHUB_OIDC_CONNECTION_ID
+# repository variable. Its rulesets let this repository's dev, master and tag runs push to
+# owasp/security-shepherd, see docs/releasing.md.
 on:
   workflow_call:
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: false
-      DOCKERHUB_TOKEN:
-        required: false
 
 permissions:
   contents: read
@@ -92,23 +92,18 @@ jobs:
           if-no-files-found: error
           path: target/owaspSecurityShepherd.war
 
+  # Builds the Tomcat image and hands it to the push job as an OCI image layout. It runs the
+  # repository's Dockerfile, so it holds no Docker Hub credentials and no signing identity.
   release-security-shepherd:
     needs: build
     runs-on: ubuntu-latest
     outputs:
-      digest: ${{ steps.push.outputs.digest }}
+      tags: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-
-      - name: Log in to Docker Hub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -165,29 +160,105 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
-      # Pushes a multi-platform image: the tags and the digest are an image index pointing to one
-      # image per platform. sbom and provenance attach an SPDX SBOM and an (unsigned) SLSA
-      # provenance to each platform's image on Docker Hub, where Docker Scout and
-      # `docker buildx imagetools inspect` read them.
-      - name: Build and push Tomcat
-        id: push
+      # Builds a multi-platform image: an image index pointing to one image per platform. sbom and
+      # provenance attach an SPDX SBOM and an (unsigned) SLSA provenance to each platform's image,
+      # which the push job carries to Docker Hub, where Docker Scout and
+      # `docker buildx imagetools inspect` read them. The image is written as an OCI image layout
+      # rather than pushed, so this job never logs in to Docker Hub.
+      - name: Build Tomcat
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          push: false
+          outputs: type=oci,dest=${{ runner.temp }}/tomcat-oci,tar=false
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
           provenance: mode=max
           build-args: |
             TOMCAT_DOCKER_VERSION
 
+      # The layers are already compressed
+      - name: Upload Tomcat Image
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: tomcat_image_oci
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 1
+          path: ${{ runner.temp }}/tomcat-oci
+
+  # Pushes the image built by release-security-shepherd to Docker Hub with every tag, as the same
+  # image index, so its digest doesn't change. Logging in through the OIDC connection needs
+  # id-token: write, which is also the signing identity, so like attest it runs nothing from the
+  # repository: no checkout, no build steps. Pull requests run it too, as a dry run without
+  # logging in, so a broken push shows up before it is merged.
+  push:
+    needs: release-security-shepherd
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    outputs:
+      digest: ${{ steps.index.outputs.digest }}
+    steps:
+      - name: Download Tomcat Image
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: tomcat_image_oci
+          path: ${{ runner.temp }}/tomcat-oci
+
+      - name: Read the image index digest
+        id: index
+        run: |
+          digest=$(jq -r '.manifests | if length == 1 then .[0].digest else empty end' "$RUNNER_TEMP/tomcat-oci/index.json")
+          if ! [[ "$digest" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo "::error::Expected one image index in the OCI layout, got '$digest'"
+            exit 1
+          fi
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      # The token lasts 15 minutes, which covers pushing both platforms' layers
+      - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          username: owasp
+        env:
+          DOCKERHUB_OIDC_CONNECTIONID: ${{ vars.DOCKERHUB_OIDC_CONNECTION_ID }}
+          DOCKERHUB_OIDC_EXPIREIN: 900
+
+      - name: Push Tomcat
+        env:
+          TAGS: ${{ needs.release-security-shepherd.outputs.tags }}
+          DIGEST: ${{ steps.index.outputs.digest }}
+          DRY_RUN: ${{ github.event_name == 'pull_request' }}
+        run: |
+          args=()
+          while IFS= read -r tag; do
+            if [ -n "$tag" ]; then
+              args+=(-t "$tag")
+            fi
+          done <<< "$TAGS"
+          if [ "$DRY_RUN" = "true" ]; then
+            # A pull request that sets a release version has no tags
+            if [ ${#args[@]} -eq 0 ]; then
+              args+=(-t owasp/security-shepherd:dry-run)
+            fi
+            args+=(--dry-run)
+          elif [ ${#args[@]} -eq 0 ]; then
+            echo "::error::No tags to push"
+            exit 1
+          fi
+          docker buildx imagetools create "${args[@]}" "oci-layout://$RUNNER_TEMP/tomcat-oci@$DIGEST"
+
   # Signs a SLSA build provenance for the pushed image index, stored with GitHub and in the public
   # Sigstore transparency log rather than pushed to Docker Hub. It holds the signing identity, so it
   # runs nothing from the repository: no checkout, no build steps.
   attest:
-    needs: release-security-shepherd
+    needs: push
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -198,7 +269,7 @@ jobs:
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-name: docker.io/owasp/security-shepherd
-          subject-digest: ${{ needs.release-security-shepherd.outputs.digest }}
+          subject-digest: ${{ needs.push.outputs.digest }}
 
   # Signs .vex/security-shepherd.openvex.json for the pushed image index and pushes the
   # attestation to Docker Hub, where `trivy image --vex oci` finds it. The image keeps the VEX it
@@ -206,7 +277,7 @@ jobs:
   # Like attest, it holds the signing identity, so it runs nothing from the repository. It reads
   # one data file at the built commit, rather than taking it from a job that ran build steps.
   attest-vex:
-    needs: release-security-shepherd
+    needs: push
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -224,14 +295,15 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: owasp
+        env:
+          DOCKERHUB_OIDC_CONNECTIONID: ${{ vars.DOCKERHUB_OIDC_CONNECTION_ID }}
 
       - name: Attest the VEX document for the Tomcat image
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-name: docker.io/owasp/security-shepherd
-          subject-digest: ${{ needs.release-security-shepherd.outputs.digest }}
+          subject-digest: ${{ needs.push.outputs.digest }}
           predicate-type: https://openvex.dev/ns/v0.2.0
           predicate-path: .vex/security-shepherd.openvex.json
           push-to-registry: true
