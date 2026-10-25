@@ -46,11 +46,6 @@ jar=$work/cookies
 compose() {
   docker compose -p "$project" "$@"
 }
-cleanup() {
-  compose down -v --remove-orphans >/dev/null 2>&1 || true
-  rm -rf "$work"
-}
-trap cleanup EXIT
 
 # Tomcat's own SEVERE lines. Exceptions thrown by servlets go to logs/localhost.<date>.log, not to
 # the console, so this reads the log files as well as the container's output.
@@ -61,14 +56,35 @@ tomcat_severe() {
   } | grep -E -A8 '^[0-9]{2}-[A-Za-z]{3}-[0-9]{4} [0-9:.]+ SEVERE ' || true
 }
 
-fail() {
-  echo "FAIL: $1"
+diagnostics() {
   echo "---- $web output ----"
   docker logs "$web" 2>&1 | tail -60 || true
   echo "---- Tomcat SEVERE log lines ----"
   tomcat_severe | tail -60
+}
+
+reported=false
+fail() {
+  echo "FAIL: $1"
+  diagnostics
+  reported=true
   exit 1
 }
+
+# A command that fails outside fail(), such as a curl request that times out, ends the script
+# through set -e. Report it with the diagnostics too, before the containers and their logs go.
+failed_line=
+trap 'failed_line=$LINENO' ERR
+cleanup() {
+  local status=$?
+  if [ "$status" -ne 0 ] && ! $reported; then
+    echo "FAIL: exited with status $status${failed_line:+ at line $failed_line}"
+    diagnostics
+  fi
+  compose down -v --remove-orphans >/dev/null 2>&1 || true
+  rm -rf "$work"
+}
+trap cleanup EXIT
 
 # curl against the stack. The certificate is the container's own self-signed one.
 request() {
