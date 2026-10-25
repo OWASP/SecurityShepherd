@@ -90,9 +90,7 @@ jobs:
         with:
           name: tomcat_build_inputs
           if-no-files-found: error
-          path: |
-            target/owaspSecurityShepherd.war
-            target/docker/tomcat/
+          path: target/owaspSecurityShepherd.war
 
   release-security-shepherd:
     needs: build
@@ -135,10 +133,11 @@ jobs:
           path: target/
 
       # Read the Tomcat image's build arguments from .env as literal text. Nothing in .env is
-      # evaluated, and no other variable from it reaches the job.
+      # evaluated, and no other variable from it reaches the job. The TLS settings aren't build
+      # arguments: the container reads them at runtime and generates its keystore on first start.
       - name: Read build arguments from .env
         run: |
-          for name in TOMCAT_DOCKER_VERSION TLS_KEYSTORE_FILE TLS_KEYSTORE_PASS ALIAS HTTPS_PORT; do
+          for name in TOMCAT_DOCKER_VERSION; do
             value=$(grep -m1 "^${name}=" .env | cut -d= -f2- | tr -d '\r' || true)
             # Like Docker Compose, drop one pair of surrounding quotes
             case "$value" in
@@ -183,10 +182,6 @@ jobs:
           provenance: mode=max
           build-args: |
             TOMCAT_DOCKER_VERSION
-            TLS_KEYSTORE_FILE
-            TLS_KEYSTORE_PASS
-            ALIAS
-            HTTPS_PORT
 
   # Signs a SLSA build provenance for the pushed image index, stored with GitHub and in the public
   # Sigstore transparency log rather than pushed to Docker Hub. This is the only job with the
