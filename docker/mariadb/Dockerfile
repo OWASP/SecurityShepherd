@@ -41,4 +41,4 @@ COPY --from=builder /workdir/my.cnf /etc/mysql/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 3306
-CMD ["mysqld"]
+CMD ["mariadbd"]

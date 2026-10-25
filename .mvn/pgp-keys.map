@@ -1,0 +1,64 @@
+# PGP keys map for pgpverify-maven-plugin (see pom.xml). Every dependency must match a rule here.
+#
+# OpenSAML / Shibboleth come from Shibboleth's own repository (not Maven Central), so they are
+# pinned to the Shibboleth release key: Philip David Smart (Jisc), fingerprint
+# B5B5 DD33 2142 AD65 7E8D 87AC 7D27 E610 B8A3 DC52, as published at
+# https://shibboleth.net/downloads/PGP_KEYS. Never add a wildcard that could also match these
+# groups: any matching rule is enough for an artifact to pass, which would undo the pin.
+org.opensaml = 0xB5B5DD332142AD657E8D87AC7D27E610B8A3DC52
+net.shibboleth = 0xB5B5DD332142AD657E8D87AC7D27E610B8A3DC52
+
+# Everything else comes from Maven Central only (.mvn/rrf), and must carry a valid signature by
+# any key. A new dependency from an unlisted groupId fails the build ("Not allowed artifact"):
+# review it, then add its groupId here.
+com.fasterxml.jackson.core = any
+com.fasterxml.jackson.datatype = any
+com.google.code.findbugs = any
+com.google.errorprone = any
+com.google.guava = any
+com.google.j2objc = any
+com.google.protobuf = any
+com.mysql = any
+com.zaxxer = any
+commons-codec = any
+commons-io = any
+commons-logging = any
+de.mkammerer = any
+io.dropwizard.metrics = any
+io.github.cdimascio = any
+io.micrometer = any
+jakarta.activation = any
+jakarta.el = any
+jakarta.mail = any
+jakarta.servlet.jsp.jstl = any
+net.bytebuddy = any
+net.java.dev.jna = any
+net.sf.jtidy = any
+org.apache.commons = any
+org.apache.httpcomponents.client5 = any
+org.apache.httpcomponents.core5 = any
+org.apache.logging.log4j = any
+org.apache.santuario = any
+org.apache.velocity = any
+org.apiguardian = any
+org.bouncycastle = any
+org.cryptacular = any
+org.eclipse.angus = any
+org.glassfish = any
+org.glassfish.web = any
+org.hamcrest = any
+org.jetbrains = any
+org.json = any
+org.jsoup = any
+org.jspecify = any
+org.junit.jupiter = any
+org.junit.platform = any
+org.mariadb.jdbc = any
+org.mockito = any
+org.mongodb = any
+org.objenesis = any
+org.opentest4j = any
+org.owasp.encoder = any
+org.pac4j = any
+org.slf4j = any
+org.springframework = any

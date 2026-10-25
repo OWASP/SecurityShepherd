@@ -1,2 +1,16 @@
+# Copy to sso.properties to configure SAML single sign-on.
+# SAML endpoint settings live in onelogin.saml.properties.
+
+# Set to true to replace the username/password login with SAML SSO
+sso.enabled=false
+
+# Names of the SAML attributes holding the user's unique SSO id and display name
 sso.saml.ssoName=
 sso.saml.userName=
+
+# SAML attribute listing the user's groups/affiliations, and the values that
+# make a user an admin or a player (comma separated). Users with none of these
+# affiliations are refused.
+sso.saml.affiliation=
+sso.saml.adminAffiliation=
+sso.saml.playerAffiliation=

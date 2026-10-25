@@ -1,0 +1,499 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://github.com/OWASP/SecurityShepherd/blob/dev/.vex/security-shepherd.openvex.json",
+  "author": "OWASP Security Shepherd maintainers",
+  "timestamp": "2026-10-25T12:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "CVE-2026-56857",
+        "aliases": [
+          "GO-2026-6604"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "The flaw is in Windows-only code (os.Root following junctions), which isn't compiled into the linux/amd64 or linux/arm64 builds of /usr/bin/pebble; govulncheck finds none of its symbols in the binary."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-78663",
+        "aliases": [
+          "GO-2026-6612"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-97032",
+        "aliases": [
+          "GO-2026-6617"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-97031",
+        "aliases": [
+          "GO-2026-6607"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-94440",
+        "aliases": [
+          "GO-2026-6608"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-94439",
+        "aliases": [
+          "GO-2026-6613"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-78669",
+        "aliases": [
+          "GO-2026-6611"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-78667",
+        "aliases": [
+          "GO-2026-6609"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-78660",
+        "aliases": [
+          "GO-2026-6610"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-78659",
+        "aliases": [
+          "GO-2026-6603"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-56866",
+        "aliases": [
+          "GO-2026-6605"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-97030",
+        "aliases": [
+          "GO-2026-6600"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-94448",
+        "aliases": [
+          "GO-2026-6599"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-111943",
+        "aliases": [
+          "GO-2026-6809"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:oci/security-shepherd?repository_url=index.docker.io%2Fowasp%2Fsecurity-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:docker/owasp/security-shepherd",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/stdlib@1.27.1"
+            },
+            {
+              "@id": "pkg:golang/stdlib@v1.27.1"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "/usr/bin/pebble, Canonical's service manager, comes with the Ubuntu 26.04 base image and is the only Go binary in the image. Nothing ever runs it: the container's entrypoint starts Tomcat, no service or script calls pebble, and the binary is neither setuid nor given file capabilities. The vulnerable standard library code is reachable only from pebble's own HTTP API and client, which exist only while pebble is running. Running pebble needs code execution in the container already, which gives more than these flaws do."
+    }
+  ]
+}
