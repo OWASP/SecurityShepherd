@@ -47,4 +47,34 @@ Each image also carries a [SLSA](https://slsa.dev/) provenance attestation: whic
 docker buildx imagetools inspect owasp/security-shepherd:4.0.0 --format '{{ json .Provenance.SLSA }}'
 ```
 
-This SBOM and provenance are stored next to the image on Docker Hub but aren't signed, so they show how the image says it was built. They don't prove it.
+This SBOM and provenance are stored next to the image on Docker Hub but aren't signed, so they show how the image says it was built. They don't prove it. For that, check the signed provenance below.
+
+## Signed provenance
+
+The release workflow also signs a SLSA build provenance attestation for every image it pushes, using [GitHub artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations). It is signed with [Sigstore](https://www.sigstore.dev/), recorded in Sigstore's public transparency log, and stored with GitHub rather than on Docker Hub. Verifying it proves that the image was built from this repository by its release workflow, at the commit and ref it names.
+
+The image is built and signed by a reusable workflow, [`release-build.yml`](../.github/workflows/release-build.yml), that the workflow which starts the build can't change. That meets [SLSA Build Level 3](https://slsa.dev/spec/v1.0/levels#build-l3). Require that workflow as the signer when you verify.
+
+Verify with the [GitHub CLI](https://cli.github.com/). Any GitHub account will do (`gh auth login`):
+
+```bash
+gh attestation verify oci://docker.io/owasp/security-shepherd:4.0.0 \
+  --repo OWASP/SecurityShepherd \
+  --signer-workflow OWASP/SecurityShepherd/.github/workflows/release-build.yml \
+  --source-ref refs/tags/4.0.0
+```
+
+- `--signer-workflow` rejects attestations made by any other workflow, including other workflows in this repository.
+- `--source-ref` checks which ref the image was built from. For a release it's the release tag. For `dev` and snapshot images, use `--source-ref refs/heads/dev`.
+- Add `--format json` to see the whole provenance, including the commit and the Actions run that built the image.
+
+`gh` resolves the tag to the image digest and checks the attestation for that digest. To make sure you run exactly what you verified, verify by digest and run by digest:
+
+```bash
+gh attestation verify oci://docker.io/owasp/security-shepherd@sha256:<digest> \
+  --repo OWASP/SecurityShepherd \
+  --signer-workflow OWASP/SecurityShepherd/.github/workflows/release-build.yml
+docker run owasp/security-shepherd@sha256:<digest>
+```
+
+The older images (`3.0`, `3.1`, and `latest` until 4.0.0 is released) were published before any of this, and have no SBOM, provenance or signature.

@@ -19,16 +19,7 @@ Every push to `dev` publishes the `owasp/security-shepherd` image as `dev` and a
 
 Each pushed image carries an SPDX SBOM and a SLSA provenance attestation, stored with it on Docker Hub. [Checking the Docker images](verifying-images.md) shows users how to read them.
 
-The SBOM and provenance on Docker Hub are unsigned. For a check that can't be forged, the release workflow also signs a SLSA build provenance attestation with [GitHub artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations) (Sigstore). The build and the signing run in the reusable workflow [`release-build.yml`](../.github/workflows/release-build.yml), which the triggering workflow can't change, so the attestation meets SLSA Build Level 3. Verify an image with the [GitHub CLI](https://cli.github.com/):
-
-```bash
-gh attestation verify oci://docker.io/owasp/security-shepherd:4.0.0 \
-  --repo OWASP/SecurityShepherd \
-  --signer-workflow OWASP/SecurityShepherd/.github/workflows/release-build.yml \
-  --source-ref refs/tags/4.0.0
-```
-
-For a `dev` or snapshot image, use `--source-ref refs/heads/dev`. Keep the `release-build.yml` steps inside that workflow: a build or push step moved into `release.yml` would no longer be covered by this guarantee.
+The release workflow also signs a SLSA build provenance attestation for each pushed image with [GitHub artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations), which users verify as described in [Signed provenance](verifying-images.md#signed-provenance). The build and the signing run in the reusable workflow [`release-build.yml`](../.github/workflows/release-build.yml), which `release.yml` calls but can't change. That is what makes the attestation SLSA Build Level 3, so keep build and push steps in `release-build.yml`: a step moved into `release.yml` would no longer be covered.
 
 ## Tag rules
 
