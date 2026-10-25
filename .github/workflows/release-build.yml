@@ -151,17 +151,31 @@ jobs:
             echo "${name}=${value}" >> "$GITHUB_ENV"
           done
 
-      # The default docker driver can't store SBOM and provenance attestations with the image
+      # Emulates arm64 so the amd64 runner can build the linux/arm64 image. The binfmt image that
+      # installs the emulator runs with --privileged, so it is pinned by digest and pulled fresh
+      # rather than restored from the Actions cache.
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+        with:
+          image: docker.io/tonistiigi/binfmt:qemu-v10.2.3-68@sha256:400a4873b838d1b89194d982c45e5fb3cda4593fbfd7e08a02e76b03b21166f0
+          platforms: arm64
+          cache-image: false
+
+      # The default docker driver can't store SBOM and provenance attestations with the image, or
+      # build a multi-platform image
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
-      # sbom and provenance attach an SPDX SBOM and an (unsigned) SLSA provenance to the image on
-      # Docker Hub, where Docker Scout and `docker buildx imagetools inspect` read them
+      # Pushes a multi-platform image: the tags and the digest are an image index pointing to one
+      # image per platform. sbom and provenance attach an SPDX SBOM and an (unsigned) SLSA
+      # provenance to each platform's image on Docker Hub, where Docker Scout and
+      # `docker buildx imagetools inspect` read them.
       - name: Build and push Tomcat
         id: push
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -174,7 +188,7 @@ jobs:
             ALIAS
             HTTPS_PORT
 
-  # Signs a SLSA build provenance for the pushed image, stored with GitHub and in the public
+  # Signs a SLSA build provenance for the pushed image index, stored with GitHub and in the public
   # Sigstore transparency log rather than pushed to Docker Hub. This is the only job with the
   # signing identity, and it runs nothing from the repository: no checkout, no build steps.
   attest:
