@@ -184,8 +184,8 @@ jobs:
             TOMCAT_DOCKER_VERSION
 
   # Signs a SLSA build provenance for the pushed image index, stored with GitHub and in the public
-  # Sigstore transparency log rather than pushed to Docker Hub. This is the only job with the
-  # signing identity, and it runs nothing from the repository: no checkout, no build steps.
+  # Sigstore transparency log rather than pushed to Docker Hub. It holds the signing identity, so it
+  # runs nothing from the repository: no checkout, no build steps.
   attest:
     needs: release-security-shepherd
     if: github.event_name != 'pull_request'
@@ -199,3 +199,39 @@ jobs:
         with:
           subject-name: docker.io/owasp/security-shepherd
           subject-digest: ${{ needs.release-security-shepherd.outputs.digest }}
+
+  # Signs .vex/security-shepherd.openvex.json for the pushed image index and pushes the
+  # attestation to Docker Hub, where `trivy image --vex oci` finds it. The image keeps the VEX it
+  # was built with: a later VEX change reaches it through the file, never a second attestation.
+  # Like attest, it holds the signing identity, so it runs nothing from the repository. It reads
+  # one data file at the built commit, rather than taking it from a job that ran build steps.
+  attest-vex:
+    needs: release-security-shepherd
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out the VEX document
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .vex/security-shepherd.openvex.json
+          sparse-checkout-cone-mode: false
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Attest the VEX document for the Tomcat image
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-name: docker.io/owasp/security-shepherd
+          subject-digest: ${{ needs.release-security-shepherd.outputs.digest }}
+          predicate-type: https://openvex.dev/ns/v0.2.0
+          predicate-path: .vex/security-shepherd.openvex.json
+          push-to-registry: true

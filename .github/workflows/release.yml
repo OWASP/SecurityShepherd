@@ -45,7 +45,8 @@ jobs:
     uses: ./.github/workflows/release-build.yml
     permissions:
       contents: read
-      # Only release-build.yml's attest job uses these, to sign the provenance attestation
+      # Only release-build.yml's attest and attest-vex jobs use these, to sign the provenance and
+      # VEX attestations
       id-token: write
       attestations: write
     secrets:
