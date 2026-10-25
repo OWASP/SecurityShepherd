@@ -219,6 +219,8 @@ Navigate to `https://localhost/setup.jsp` and fill in:
 
 Click submit. On success you will see "Database Configuration Complete" and be redirected to the login page.
 
+Once setup succeeds, the token file is deleted and `/setup` answers 404. To run setup again, delete `/usr/local/tomcat/conf/database.properties` and restart Tomcat (`docker compose restart web`). A new token is generated when the setup page next loads.
+
 #### Alternative: setup via curl
 
 ```bash
@@ -271,12 +273,12 @@ ERROR 1064 (42000) at line 181: You have an error in your SQL syntax;
 check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 3
 ```
 
-This is a **stale Docker image cache** issue. The SQL source files in `src/main/resources/database/` have `DELIMITER` statements commented out for compatibility with tools that don't support `DELIMITER`. During the Maven build (`mvn -Pdocker`), a script (`docker/scripts/convert-sql-scripts.sh`) uncomments them in the copies under `docker/mariadb/target/`. If Docker reuses a cached image from before this conversion ran, the stored procedures fail to parse.
+The image was built from SQL scripts whose `DELIMITER` lines were never uncommented. The SQL source files in `src/main/resources/database/` have `DELIMITER` statements commented out for compatibility with tools that don't support `DELIMITER`. During the Maven build (`mvn -Pdocker`), a script (`docker/scripts/convert-sql-scripts.sh`) uncomments them in the copies under `docker/mariadb/target/`. The conversion runs in the `generate-sources` phase, so the scripts are left unconverted if they were only generated with `mvn -Pdocker validate`, or if Docker reuses a cached image from before the conversion ran. Either way, the stored procedures fail to parse.
 
 **Fix:**
 
 ```bash
-mvn -Pdocker validate                    # ensure SQL scripts are converted
+mvn -Pdocker generate-sources            # convert the SQL scripts (validate alone doesn't)
 docker compose build --no-cache db       # rebuild without cache
 docker compose down -v                   # remove old volumes with failed init
 docker compose up -d db                  # start fresh

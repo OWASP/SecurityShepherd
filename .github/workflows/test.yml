@@ -124,8 +124,8 @@ jobs:
         run: sudo /etc/init.d/mysql start
       - name: Modify MySQL Connection Variables
         run: |
-          sed -i "s/'@'localhost'/'@'%'/g" ${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql
-          sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
+          sed -i "s/'@'localhost'/'@'%'/g" "${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql"
+          sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' "${GITHUB_WORKSPACE}/.env"
       - name: Prepare Integration Tests
         run: |
           sudo apt-get -y install libargon2-1

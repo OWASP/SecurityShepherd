@@ -67,7 +67,7 @@ docker run -d --name secshep_test_db \
   mariadb:12.3
 ```
 
-The docker-compose `db` service is **not suitable for quick test runs** — it requires `mvn -Pdocker validate` first to generate SQL init scripts, and those scripts run on first container startup to create all challenge schemas.
+The docker-compose `db` service is **not suitable for quick test runs** — it requires `mvn -Pdocker generate-sources` (or the full `mvn -Pdocker clean install -DskipTests` build) first to generate SQL init scripts, and those scripts run on first container startup to create all challenge schemas. `mvn -Pdocker validate` is not enough: it only copies the SQL files, and the `DELIMITER` lines are uncommented in `generate-sources`.
 
 ### Running the full CI pipeline locally
 
@@ -110,11 +110,11 @@ Only infrastructure outages (Docker Hub errors, `build.shibboleth.net` timeouts)
 
 ### Docker DB init fails with SQL syntax error
 
-If the MariaDB container exits immediately with `ERROR 1064 (42000) at line 181` referencing a `CREATE PROCEDURE` statement, this is a **stale Docker image cache** issue, not a bug in the SQL.
+If the MariaDB container exits immediately with `ERROR 1064 (42000) at line 181` referencing a `CREATE PROCEDURE` statement, the image was built from SQL scripts whose `DELIMITER` lines were never uncommented. It is not a bug in the SQL. There are two causes: the scripts were generated with `mvn -Pdocker validate` alone, or Docker reused a **stale image cache**.
 
 The SQL source files have `DELIMITER` statements commented out (for compatibility with tools that don't support `DELIMITER`). A build script (`docker/scripts/convert-sql-scripts.sh`) uncomments them when Maven copies the files to `docker/mariadb/target/`. If Docker reuses a cached image from before the conversion ran, the procedures fail to parse.
 
-Fix: `docker compose build --no-cache db && docker compose up -d db`
+Fix: `mvn -Pdocker generate-sources`, then `docker compose build --no-cache db && docker compose up -d db`
 
 ### Test credentials
 
