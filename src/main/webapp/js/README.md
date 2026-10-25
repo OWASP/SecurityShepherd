@@ -22,5 +22,5 @@ on, `.ui-helper-hidden-accessible`, is in `css/theCss.css`.
 
 | File | Library | Version | Still loaded by |
 |---|---|---|---|
-| `jquery.js` | jQuery | 1.7.1 | lessons and challenges, until they move to `jquery-3.7.1.min.js` |
+| `jquery.js` | jQuery | 1.7.1 | challenges, until they move to `jquery-3.7.1.min.js` |
 | `tinysort.js` | TinySort | 1.3.25 | `scoreboard.jsp` |
