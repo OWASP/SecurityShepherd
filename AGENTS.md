@@ -95,7 +95,7 @@ mvn -Pdocker validate -B
 TEST_MYSQL_PASSWORD=CowSaysMoo mvn verify -DskipUTs=true -DmongoDocker -B
 ```
 
-Each integration-test run overwrites the local `mongo:8.0.32` tag (see "Integration tests fail building the Mongo image" below). Restore the official image before `docker compose build` and before every integration-test run, not only after a failure.
+The `it-test` profile (`-DmongoDocker`) builds `docker/mongo/Dockerfile` as `owasp/security-shepherd_mongo:it` (`${IMAGE_MONGO}:it`) and runs it as the `mongo-1` container on port 27017. It never retags the official `mongo:${MONGODB_VERSION}` image the Dockerfile builds from. Before #938 it did, and the next build then failed with `chown ... Operation not permitted`. If a local `mongo:<version>` tag still points at such an image, restore it with `docker rmi mongo:<version> && docker pull mongo:<version>`.
 
 When a step fails, look at the full Maven output for the root cause. `-q` and filtered output can hide it.
 
@@ -133,10 +133,6 @@ Do not commit `.env` changes that break CI.
 The Tomcat container mounts a named `conf` volume over `/usr/local/tomcat/conf`. A volume created by an older Tomcat 9/10.1 image keeps its old `server.xml` and `web.xml`, and Tomcat 11 will not see the new image's config, so the volume has to be recreated. Data volumes are unaffected.
 
 The volume also holds the TLS keystore and `database.properties` / `mongo.properties`. Back it up before removing it. The archive contains the TLS private key and the database password, so create it mode 600 in a mode-700 directory **outside the repository**. The repository root is the Tomcat image's Docker build context, and a root-owned archive there breaks the next build. Run `mkdir -p ~/shepherd-conf-backup && chmod 700 ~/shepherd-conf-backup`, then `docker run --rm -v securityshepherd_conf:/conf -v ~/shepherd-conf-backup:/backup alpine sh -c 'umask 077 && touch /backup/shepherd-conf-backup.tgz && chmod 600 /backup/shepherd-conf-backup.tgz && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'`, and delete the directory after the upgrade. Then run `docker compose down && docker volume rm securityshepherd_conf` and `docker compose up -d --build` (detached, so the databases stay up while files are restored and `web` is restarted). Restore only customised keystore or `.properties` files from the backup. Never restore the old `server.xml` / `web.xml`: re-apply any hand edits to the new Tomcat 11 files instead. The full steps are in the README.
-
-### Integration tests fail building the Mongo image (`chown ... Operation not permitted`)
-
-The `it-test` profile (`-DmongoDocker`) tags the image it builds as `mongo:${MONGODB_VERSION}`. That overwrites the official image's local tag, so the next build uses the previous custom image (which runs as `mongodb`) as its base. Restore the official image with `docker rmi mongo:8.0.32 && docker pull mongo:8.0.32`. CI starts from a clean Docker and is unaffected.
 
 ### First-time app setup
 
