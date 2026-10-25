@@ -48,7 +48,7 @@ The database, Tomcat and MongoDB containers run in the timezone set by `TZ` in `
 
 Upgrading from a release that shipped `TZ=Europe/Dublin`: unless you changed `TZ`, your environment moves to UTC on the next `docker-compose up`. To keep the old behaviour, set `TZ=Europe/Dublin` in `.env`. Otherwise:
 * Times stored during Irish summer time read an hour later than they happened. Winter times are unchanged.
-* An active suspension can last up to an hour longer. Expired ones are unaffected.
+* Suspensions stored during summer time also end an hour later. A player whose suspension ended less than an hour before the switch can be locked out again until that hour has passed.
 * A CTF schedule that is already set is read as UTC: re-enter the times, or keep your old `TZ` until the event is over.
 
 #### Upgrading an existing Docker environment
