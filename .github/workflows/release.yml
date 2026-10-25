@@ -30,6 +30,12 @@ on:
 permissions:
   contents: read
 
+# A newer run on the same branch or pull request cancels the older one, so an older image never
+# overwrites a newer :dev or snapshot tag. Release tag runs are never cancelled.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
 jobs:
   build:
     if: github.repository == 'OWASP/SecurityShepherd'
