@@ -5,7 +5,7 @@
      <Connector port="8080" protocol="HTTP/1.1"
                 connectionTimeout="20000"
 -               redirectPort="8443" />
-+               redirectPort="HTTPS_PORT" />
++               redirectPort="${HTTPS_PORT}" />
      <!-- A "Connector" using the shared thread pool-->
      <!--
      <Connector executor="tomcatThreadPool"
@@ -16,9 +16,9 @@
 +    <Connector port="8443" protocol="HTTP/1.1" maxHttpHeaderSize="65536" SSLEnabled="true"
 +               maxThreads="150" scheme="https" secure="true">
 +        <SSLHostConfig>
-+            <Certificate certificateKeystoreFile="conf/TLS_KEYSTORE_FILE"
-+                         certificateKeystorePassword="TLS_KEYSTORE_PASS"
-+                         certificateKeyAlias="ALIAS" />
++            <Certificate certificateKeystoreFile="conf/${TLS_KEYSTORE_FILE}"
++                         certificateKeystorePassword="${TLS_KEYSTORE_PASS}"
++                         certificateKeyAlias="${ALIAS}" />
 +        </SSLHostConfig>
 +    </Connector>
 +

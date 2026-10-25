@@ -2,10 +2,6 @@ ARG TOMCAT_DOCKER_VERSION
 
 
 FROM docker AS builder
-ARG TLS_KEYSTORE_FILE
-ARG TLS_KEYSTORE_PASS
-ARG ALIAS
-ARG HTTPS_PORT
 ARG DB_DRIVER=org.mariadb.jdbc.Driver
 ARG DB_SCHEMA=core
 ARG DB_USER
@@ -21,26 +17,27 @@ USER root
 WORKDIR /workdir
 
 COPY target/owaspSecurityShepherd.war ROOT.war
-COPY target/docker/tomcat/$TLS_KEYSTORE_FILE $TLS_KEYSTORE_FILE
 COPY docker/tomcat/serverxml.patch serverxml.patch
 COPY docker/tomcat/webxml.patch webxml.patch
 
 RUN printf "databaseConnectionURL=$MARIADB_URI/\nDriverType=$DB_DRIVER\ndatabaseSchema=$DB_SCHEMA\ndatabaseUsername=$DB_USER\ndatabasePassword=$DB_PASS\ndatabaseOptions=useUnicode=true&character_set_server=utf8mb4\n" >> database.properties
 RUN printf "connectionHost=$MONGO_HOST\nconnectionPort=$MONGO_PORT\ndatabaseName=shepherdGames\nconnectTimeout=$MONGO_CONN_TIMEOUT\nsocketTimeout=$MONGO_SOCK_TIMEOUT\nserverSelectionTimeout=$MONGO_SVR_TIMEOUT"  >> mongo.properties
-RUN sed -i \
-      -e 's/certificateKeystoreFile="conf\/TLS_KEYSTORE_FILE"/certificateKeystoreFile="conf\/'"$TLS_KEYSTORE_FILE"'"/' \
-      -e 's/certificateKeystorePassword="TLS_KEYSTORE_PASS"/certificateKeystorePassword="'"$TLS_KEYSTORE_PASS"'"/' \
-      -e 's/certificateKeyAlias="ALIAS"/certificateKeyAlias="'"$ALIAS"'"/' \
-      -e 's/redirectPort="HTTPS_PORT"/redirectPort="'"$HTTPS_PORT"'"/' \
-      serverxml.patch
 
 FROM tomcat:${TOMCAT_DOCKER_VERSION}
 COPY --from=builder /workdir/ROOT.war /usr/local/tomcat/webapps/
-COPY --from=builder /workdir/$TLS_KEYSTORE_FILE /usr/local/tomcat/conf/
 COPY --from=builder /workdir/serverxml.patch /usr/local/tomcat/conf/
 COPY --from=builder /workdir/webxml.patch /usr/local/tomcat/conf/
 COPY --from=builder /workdir/database.properties /usr/local/tomcat/conf/
 COPY --from=builder /workdir/mongo.properties /usr/local/tomcat/conf/
+COPY docker/tomcat/entrypoint.sh /usr/local/bin/shepherd-entrypoint.sh
+
+# The image ships no TLS keystore: shepherd-entrypoint.sh generates one in conf/ on the first start,
+# and server.xml reads these from the environment. The defaults match .env. TLS_KEYSTORE_PASS has
+# none, so the entrypoint generates a password when it isn't set.
+ENV TLS_KEYSTORE_FILE=shepherdKeystore.p12 \
+    ALIAS=tomcat \
+    HTTPS_PORT=443 \
+    DNAME="CN=localhost,OU=SecurityShepherd,O=OWASP"
 
 ENV RUN_USER tomcat
 RUN apt-get -qq update && apt-get install -y patch libargon2-1
@@ -51,6 +48,10 @@ USER ${RUN_USER}
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 RUN patch /usr/local/tomcat/conf/server.xml /usr/local/tomcat/conf/serverxml.patch
 RUN patch /usr/local/tomcat/conf/web.xml /usr/local/tomcat/conf/webxml.patch
+# Lets server.xml use ${NAME} for environment variables
+RUN echo "org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.digester.EnvironmentPropertySource" \
+      >> /usr/local/tomcat/conf/catalina.properties
 
 EXPOSE 8080 8443
+ENTRYPOINT ["/usr/local/bin/shepherd-entrypoint.sh"]
 CMD ["catalina.sh", "run"]

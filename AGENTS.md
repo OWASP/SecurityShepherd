@@ -48,7 +48,7 @@ mvn test -B                                   # unit tests
 mvn verify -DskipUTs=true -DmongoDocker -B   # integration tests (requires MySQL + MongoDB)
 ```
 
-The `-Pdocker` profile must run before `docker compose build` — it generates SQL scripts, MongoDB init scripts, and TLS keystores.
+The `-Pdocker` profile must run before `docker compose build` — it generates SQL scripts and MongoDB init scripts. The Tomcat image has no TLS keystore: `docker/tomcat/entrypoint.sh` generates one in the `conf` volume on the container's first start, and `server.xml` reads the TLS settings from the environment (#991).
 
 ### Running tests locally
 
