@@ -219,6 +219,8 @@ Navigate to `https://localhost/setup.jsp` and fill in:
 
 Click submit. On success you will see "Database Configuration Complete" and be redirected to the login page.
 
+Once setup succeeds, the token file is deleted and `/setup` answers 404. To run setup again, delete `/usr/local/tomcat/conf/database.properties` and restart Tomcat (`docker compose restart web`). A new token is generated when the setup page next loads.
+
 #### Alternative: setup via curl
 
 ```bash
