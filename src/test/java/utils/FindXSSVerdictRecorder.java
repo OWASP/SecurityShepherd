@@ -52,15 +52,29 @@ final class FindXSSVerdictRecorder {
   }
 
   static BitSet fromHex(String hex) {
+    if (hex.length() % 2 != 0) {
+      throw new IllegalArgumentException("Odd number of hex digits: " + hex);
+    }
     byte[] bytes = new byte[hex.length() / 2];
     for (int i = 0; i < bytes.length; i++) {
-      bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
+      String pair = hex.substring(2 * i, 2 * i + 2);
+      try {
+        bytes[i] = (byte) Integer.parseInt(pair, 16);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Not a hex byte: " + pair, e);
+      }
     }
     return BitSet.valueOf(bytes);
   }
 
+  static Path outputPath(String[] args) {
+    // Absolute, so that a bare file name still has a parent directory to create
+    return Paths.get(args.length > 0 ? args[0] : "src/test/resources" + VERDICTS_RESOURCE)
+        .toAbsolutePath();
+  }
+
   public static void main(String[] args) throws IOException {
-    Path out = Paths.get(args.length > 0 ? args[0] : "src/test/resources" + VERDICTS_RESOURCE);
+    Path out = outputPath(args);
     List<String> lines = new ArrayList<>();
     for (Map.Entry<String, List<String>> section : FindXSSPayloadCorpus.sections().entrySet()) {
       BitSet bits = verdicts(section.getValue());

@@ -35,6 +35,7 @@ class FindXSSVerdictRegressionTest {
 
   private static Level findXssLevel;
   private static PrintStream stderr;
+  private static PrintStream mutedStderr;
 
   @BeforeAll
   static void quietFindXss() {
@@ -43,31 +44,45 @@ class FindXSSVerdictRegressionTest {
     findXssLevel = LogManager.getLogger(FindXSS.class).getLevel();
     Configurator.setLevel(FindXSS.class.getName(), Level.INFO);
     stderr = System.err;
-    System.setErr(new PrintStream(OutputStream.nullOutputStream()));
+    mutedStderr = new PrintStream(OutputStream.nullOutputStream());
+    System.setErr(mutedStderr);
   }
 
   @AfterAll
   static void restoreFindXssOutput() {
     System.setErr(stderr);
+    mutedStderr.close();
     Configurator.setLevel(FindXSS.class.getName(), findXssLevel);
   }
 
   private static Map<String, String[]> recordedVerdicts() throws IOException {
     Map<String, String[]> recorded = new LinkedHashMap<>();
-    try (InputStream in =
+    InputStream in =
         FindXSSVerdictRegressionTest.class.getResourceAsStream(
-            FindXSSVerdictRecorder.VERDICTS_RESOURCE)) {
-      assertNotNull(in, FindXSSVerdictRecorder.VERDICTS_RESOURCE + " is missing");
-      BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+            FindXSSVerdictRecorder.VERDICTS_RESOURCE);
+    assertNotNull(in, FindXSSVerdictRecorder.VERDICTS_RESOURCE + " is missing");
+    try (BufferedReader reader =
+        new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (!line.isBlank()) {
           String[] fields = line.split("\t", -1);
+          if (fields.length != 4) {
+            throw new AssertionError("Corrupt verdicts file: " + line);
+          }
           recorded.put(fields[0], fields);
         }
       }
     }
     return recorded;
+  }
+
+  private static int parseCount(String field) {
+    try {
+      return Integer.parseInt(field);
+    } catch (NumberFormatException e) {
+      throw new AssertionError("Corrupt verdicts file: " + field + " is not a count", e);
+    }
   }
 
   @Test
@@ -82,11 +97,16 @@ class FindXSSVerdictRegressionTest {
       List<String> payloads = section.getValue();
       String[] fields = recorded.get(section.getKey());
       assertEquals(
-          Integer.parseInt(fields[1]),
+          parseCount(fields[1]),
           payloads.size(),
           "Section " + section.getKey() + " changed size: re-record the verdicts");
-      BitSet expected = FindXSSVerdictRecorder.fromHex(fields[3]);
-      assertEquals(Integer.parseInt(fields[2]), expected.cardinality(), "Corrupt verdicts file");
+      BitSet expected;
+      try {
+        expected = FindXSSVerdictRecorder.fromHex(fields[3]);
+      } catch (IllegalArgumentException e) {
+        throw new AssertionError("Corrupt verdicts file: " + section.getKey(), e);
+      }
+      assertEquals(parseCount(fields[2]), expected.cardinality(), "Corrupt verdicts file");
 
       BitSet actual = FindXSSVerdictRecorder.verdicts(payloads);
       BitSet changed = (BitSet) actual.clone();
