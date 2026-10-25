@@ -46,6 +46,14 @@ public class Setup extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    // Setup reconfigures the database, so an installed app refuses it outright (#1043). SetupFilter
+    // refuses it too; this check doesn't depend on the filter mapping.
+    if (isInstalled()) {
+      log.warn("Refused a setup request: the app is already installed");
+      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      return;
+    }
+
     // Translation Stuff
     Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 
@@ -160,7 +168,7 @@ public class Setup extends HttpServlet {
 
       log.debug("Starting database setup...");
 
-      String auth = "";
+      String auth = null;
 
       String enableMongoChallenge = request.getParameter("enableMongoChallenge");
 
@@ -189,15 +197,18 @@ public class Setup extends HttpServlet {
         log.error("Auth file could not be found: " + e.toString());
       }
 
-      if (auth == "") {
+      if (auth == null || auth.isBlank()) {
         // No auth loaded, could be because user never reloaded setup page after an
-        // error. Generate it again
+        // error. Generate it again, and refuse this request: a missing or empty token
+        // must never match the supplied one (#1043)
         log.debug("Generating auth file");
 
+        auth = null;
+        removeAuthFile();
         generateAuth();
       }
 
-      if (!auth.equals(dbAuth)) {
+      if (auth == null || !auth.equals(dbAuth)) {
         log.debug("Invalid auth supplied");
 
         // The supplied auth data was incorrect

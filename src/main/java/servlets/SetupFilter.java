@@ -36,6 +36,9 @@ public class SetupFilter implements Filter {
       } else {
         res.sendRedirect("setup.jsp");
       }
+    } else if ("/setup".equals(req.getServletPath())) {
+      // Setup reconfigures the database, so it's refused once the app is installed (#1043)
+      res.sendError(HttpServletResponse.SC_FORBIDDEN);
     } else {
       chain.doFilter(request, response);
     }

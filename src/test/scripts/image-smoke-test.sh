@@ -3,7 +3,7 @@
 # works end to end (#1039):
 # - Tomcat deploys the WAR, serves HTTPS and redirects HTTP to HTTPS, and a fresh install
 #   redirects to setup.jsp;
-# - setup configures the databases, as AGENTS.md's curl steps do;
+# - setup configures the databases, as AGENTS.md's curl steps do, and is refused once it has;
 # - the seeded admin logs in and changes the temporary password, which verifies and creates Argon2
 #   hashes in native code (argon2-jvm loads its bundled libargon2 through JNA, which needs a libc
 #   and a temp directory it can load a library from);
@@ -151,6 +151,13 @@ if ! grep -q "Database Configuration Complete" <<<"$setup" || ! grep -q "Databas
   fail "setup failed: $setup"
 fi
 echo "ok: setup configured MariaDB and Mongo"
+# An installed app refuses setup, which would otherwise reconfigure its database (#1043)
+code=$(request -o /dev/null -w '%{http_code}' --data-urlencode "dbhost=" --data-urlencode "dbport=" \
+  --data-urlencode "dbuser=" --data-urlencode "dbpass=" --data-urlencode "dboverride=override" \
+  --data-urlencode "dbauth=" --data-urlencode "mhost=$CONTAINER_MONGO" --data-urlencode "mport=27017" \
+  --data-urlencode "enableMongoChallenge=" --data-urlencode "unsafeLevels=" "$base/setup")
+[ "$code" = 403 ] || fail "the installed app answered $code to a setup request with no token, not 403"
+echo "ok: the installed app refuses setup"
 
 # 3. The login page
 page=$(request "$base/login.jsp")
