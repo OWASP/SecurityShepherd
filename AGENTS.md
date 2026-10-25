@@ -80,6 +80,7 @@ mvn clean install -Pdocker -DskipTests -B            # build
 bash src/test/scripts/pgp-verification-test.sh       # build
 docker compose build                                 # build
 bash src/test/scripts/tomcat-config-test.sh          # build
+bash src/test/scripts/image-smoke-test.sh            # build
 TEST_MYSQL_PASSWORD=CowSaysMoo mvn test -B -e        # unit-tests
 ```
 
@@ -94,6 +95,8 @@ docker ps -aq --filter 'name=^mongo-[0-9]+$' | xargs -r docker rm -f   # leftove
 mvn -Pdocker validate -B
 TEST_MYSQL_PASSWORD=CowSaysMoo mvn verify -DskipUTs=true -DmongoDocker -B
 ```
+
+`image-smoke-test.sh` runs the app from the images that `docker compose build` just built: it runs setup, logs in, changes the admin password (native Argon2) and loads a database-backed lesson. It starts them as a compose project of its own, with its own container names, volumes and host ports (18080, 18443, 13307, 27018; override with `SMOKE_HTTP_PORT`, `SMOKE_HTTPS_PORT`, `SMOKE_DB_PORT`, `SMOKE_MONGO_PORT`), and removes them afterwards, so a running `secshep_*` stack is left alone. On failure it prints Tomcat's output and SEVERE log lines.
 
 Each integration-test run overwrites the local `mongo:4.1.13` tag (see "Integration tests fail building the Mongo image" below). Restore the official image before `docker compose build` and before every integration-test run, not only after a failure.
 
