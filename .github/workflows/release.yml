@@ -45,7 +45,7 @@ jobs:
     uses: ./.github/workflows/release-build.yml
     permissions:
       contents: read
-      # Only release-build.yml's publishing job uses these, to sign the provenance attestation
+      # Only release-build.yml's attest job uses these, to sign the provenance attestation
       id-token: write
       attestations: write
     secrets:
