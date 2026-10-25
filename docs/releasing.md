@@ -5,13 +5,17 @@ Security Shepherd follows [Semantic Versioning 2.0.0](https://semver.org/).
 ## Version format
 
 - Releases are tagged as plain `MAJOR.MINOR.PATCH`, e.g. `4.0.0`, `4.0.1`, `4.1.0`. Don't use a `v` prefix, pre-release suffixes (`-rc.1`) or build metadata (`+build.1`).
-- `dev` always carries a `-SNAPSHOT` version in `pom.xml` (e.g. `4.1.0-SNAPSHOT`). Snapshot versions are never tagged.
+- `dev` always carries a `-SNAPSHOT` version in `pom.xml` (e.g. `4.1.0-SNAPSHOT`). Snapshot versions are never tagged in git, but `dev` builds publish them as Docker image tags (see [Docker images](#docker-images)).
 - Bump the version by the kind of change since the last release:
   - **MAJOR**: breaking changes, e.g. a new minimum Tomcat or Java version, removed features, or config and database changes that need manual migration.
   - **MINOR**: new modules, challenges or features that are backwards compatible.
   - **PATCH**: backwards-compatible bug fixes only.
 
 Older tags (`2.3`, `2.4`, `v3.0`, `v3.1`) predate this scheme and are left as they are.
+
+## Docker images
+
+Every push to `dev` publishes the `owasp/security-shepherd` image as `dev` and as the snapshot version in `pom.xml`, e.g. `4.1.0-SNAPSHOT`. Both tags move with each push. When `dev` starts the next snapshot, the previous snapshot tag stays on the last build of that version. Releases are published by the tag push described in [Release steps](#release-steps).
 
 ## Tag rules
 
