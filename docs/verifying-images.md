@@ -81,6 +81,25 @@ grype "sbom:./shepherd-$TAG.spdx.json"
 
 Security Shepherd is deliberately vulnerable training software. Scanners report on the image's packages and libraries, not on the lessons and challenges, which are vulnerable by design.
 
+Some findings don't affect Security Shepherd, for example a vulnerable binary that comes with the base image but never runs. Each of these is listed, with the reason, in [`.vex/security-shepherd.openvex.json`](../.vex/security-shepherd.openvex.json), an [OpenVEX](https://openvex.dev/) document. Findings that do affect Security Shepherd are fixed in the image, not listed there. Scanners only apply a VEX document when you pass it to them:
+
+```bash
+curl -sSfLO https://raw.githubusercontent.com/OWASP/SecurityShepherd/dev/.vex/security-shepherd.openvex.json
+
+# Docker Scout trusts only VEX written by Docker unless --vex-author names the author
+docker scout cves "owasp/security-shepherd:$TAG" \
+  --vex-location security-shepherd.openvex.json \
+  --vex-author 'OWASP Security Shepherd maintainers'
+
+# Grype, scanning the image itself so that the VEX document's product matches it
+grype "owasp/security-shepherd:$TAG" --vex security-shepherd.openvex.json
+
+# Trivy (https://trivy.dev/). --show-suppressed lists what the VEX document covers.
+trivy image --vex security-shepherd.openvex.json --show-suppressed "owasp/security-shepherd:$TAG"
+```
+
+Each statement names the vulnerable package and version it covers, such as `pkg:golang/stdlib@1.27.1`. A newer vulnerability in the same binary, or the same vulnerability in another version, is still reported.
+
 ## 4. See how it was built
 
 ```bash
