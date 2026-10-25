@@ -24,9 +24,9 @@ The commands below use these two variables, so set them first:
 TAG=4.0.0
 REF=refs/tags/4.0.0
 
-# Or a snapshot / dev build, built from the dev branch
-TAG=4.0.0-SNAPSHOT
-REF=refs/heads/dev
+# Or, to check a snapshot / dev build instead, uncomment these two lines
+# TAG=4.0.0-SNAPSHOT
+# REF=refs/heads/dev
 ```
 
 ## 1. Verify where it came from
