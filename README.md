@@ -43,6 +43,14 @@ To login use the following credentials (you will be asked to update after login)
 
 Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
 
+#### Timezone
+The database, Tomcat and MongoDB containers run in the timezone set by `TZ` in `.env`, which is `UTC` by default. It takes any IANA zone name, such as `TZ=Europe/Dublin`. Database timestamps (suspensions, level start and finish times) are stored in this zone without an offset, and the CTF start, lock and end times an admin enters on the schedule page are read in it too.
+
+Upgrading from a release that shipped `TZ=Europe/Dublin`: unless you changed `TZ`, your environment moves to UTC on the next `docker-compose up`. To keep the old behaviour, set `TZ=Europe/Dublin` in `.env`. Otherwise:
+* Times stored during Irish summer time read an hour later than they happened. Winter times are unchanged.
+* Suspensions stored during summer time also end an hour later. A player whose suspension ended less than an hour before the switch can be locked out again until that hour has passed.
+* A CTF schedule that is already set is read as UTC: re-enter the times, or keep your old `TZ` until the event is over.
+
 #### Upgrading an existing Docker environment
 Security Shepherd now runs on Tomcat 11. Tomcat's `conf` directory lives in the `conf` Docker volume, and Docker only copies the image's files into a volume when the volume is first created. An existing environment would therefore start Tomcat 11 with its old Tomcat 9/10.1 `server.xml` and `web.xml`. That volume has to be recreated. Database data is in the separate `data` and `mongodata` volumes, so it is kept.
 
