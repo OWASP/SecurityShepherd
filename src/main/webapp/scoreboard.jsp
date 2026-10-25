@@ -83,7 +83,6 @@
 </head>
 <body>
 	<script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
-	<script type="text/javascript" src="js/tinysort.js"></script>
 	<div id="wrapper">
 		<!-- start header -->
 		<div id="header">
@@ -249,7 +248,18 @@
 					}
 				}
 
-				//Algorithm from http://tinysort.sjeiti.com/
+				// Order the entries by the place number hidden in the first h3 of each,
+				// move them into that order and return them sorted
+				function sortByPlace($items) {
+					var sorted = $items.get().sort(function(a, b) {
+						return Number($(a).find('h3').first().text()) - Number($(b).find('h3').first().text());
+					});
+					$.each(sorted, function(i, el) {
+						$(el).parent().append(el);
+					});
+					return $(sorted);
+				}
+				//Animate the entries from their old to their new position
 				function sort() {
 					var $Ul = $('ul#leaderboard');
 					$Ul.css({position:'relative',height:$Ul.height(),display:'block'});
@@ -261,7 +271,7 @@
 						if (i===1) iLnH = iY;
 					});
 
-					$Li.tsort('h3:eq(0)',{order:'asc'}).each(function(i,el){
+					sortByPlace($Li).each(function(i,el){
 						var $El = $(el);
 						var iFr = $.data(el,'h');
 						var iTo = i*iLnH;

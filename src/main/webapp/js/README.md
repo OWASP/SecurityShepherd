@@ -18,8 +18,6 @@ jQuery UI is used only by `index.jsp` (module search autocomplete and the
 slide effect on alerts). It needs no theme stylesheet: the one rule it relies
 on, `.ui-helper-hidden-accessible`, is in `css/theCss.css`.
 
-## Older copies still being replaced (#957)
-
-| File | Library | Version | Still loaded by |
-|---|---|---|---|
-| `tinysort.js` | TinySort | 1.3.25 | `scoreboard.jsp` |
+`adminToggle.js` is Security Shepherd's own code. `clipboard-js/` holds a
+copy of clipboard.js whose version and source were not recorded; it is not
+covered by this table yet.
