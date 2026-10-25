@@ -100,6 +100,22 @@ trivy image --vex security-shepherd.openvex.json --show-suppressed "owasp/securi
 
 Each statement names the vulnerable package and version it covers, such as `pkg:golang/stdlib@1.27.1`. A newer vulnerability in the same binary, or the same vulnerability in another version, is still reported.
 
+Each image is also published with a signed copy of the VEX document as it was when the image was built. It's signed by the same release workflow as the provenance in step 1 and stored next to the image on Docker Hub. Trivy can read it from there, with no download:
+
+```bash
+# Proves the VEX document attached to the image came from this repository's release workflow
+gh attestation verify "oci://docker.io/owasp/security-shepherd:$TAG" \
+  --repo OWASP/SecurityShepherd \
+  --signer-workflow OWASP/SecurityShepherd/.github/workflows/release-build.yml \
+  --source-ref "$REF" \
+  --predicate-type https://openvex.dev/ns/v0.2.0
+
+# Trivy, applying the VEX document attached to the image
+trivy image --vex oci --show-suppressed "owasp/security-shepherd:$TAG"
+```
+
+An image's attached VEX never changes after it's published. Statements added to the file later, for vulnerabilities found since, apply only when you pass the file. Docker Scout and Grype don't read the attached copy, so use the file with them. Older images, including the 3.x releases, have no attached VEX.
+
 ## 4. See how it was built
 
 ```bash
