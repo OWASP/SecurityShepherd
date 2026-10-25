@@ -39,7 +39,8 @@ cd SecurityShepherd
 # Adds current user to the docker group (don't have to run docker with sudo)
 sudo gpasswd -a $USER docker
 
-# Run maven to generate the WAR and HTTPS Cert.
+# Run maven to generate the WAR and the database scripts. The HTTPS certificate is generated
+# when the web container first starts.
 mvn -Pdocker clean install -DskipTests
 
 # Build the docker images, docker network and bring up the environment
@@ -56,6 +57,39 @@ To login use the following credentials (you will be asked to update after login)
 * password: ```password```
 
 Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
+
+#### HTTPS certificate
+The image contains no TLS certificate or private key. On its first start, the container generates a self-signed certificate for `localhost` and keeps it in the `conf` volume, so every installation gets its own key, and it survives restarts and rebuilds. Your browser will warn about it, because it's self-signed.
+
+The keystore's file name, password and alias come from `TLS_KEYSTORE_FILE`, `TLS_KEYSTORE_PASS` and `ALIAS` in `.env`, and the certificate's subject from `DNAME`. Without `TLS_KEYSTORE_PASS`, a random password is generated and kept next to the keystore in `conf/.tls-keystore-pass`.
+
+To use your own certificate, copy a PKCS12 keystore into the `conf` volume under the name in `TLS_KEYSTORE_FILE`, set `TLS_KEYSTORE_PASS` and `ALIAS` in `.env` to match it, and recreate the container so it picks up the new `.env`:
+
+```console
+# Written by the container's tomcat user, so Tomcat can read it
+docker exec -i secshep_tomcat sh -c 'cat > /usr/local/tomcat/conf/shepherdKeystore.p12' < my-keystore.p12
+docker-compose up -d web
+```
+
+To get a new self-signed certificate, delete the keystore (and `conf/.tls-keystore-pass`, if there is one) and restart:
+
+```console
+docker exec secshep_tomcat rm -f /usr/local/tomcat/conf/shepherdKeystore.p12 /usr/local/tomcat/conf/.tls-keystore-pass
+docker-compose restart web
+```
+
+Do this once if you ran an `owasp/security-shepherd:dev` or `4.0.0-SNAPSHOT` image published on 25 October 2026. Those still shipped a keystore, the same one in every copy of the image, so anyone who pulled them has its private key. Images you built yourself had a key generated on your machine and aren't affected.
+
+Pre-built images are published to Docker Hub as [`owasp/security-shepherd`](https://hub.docker.com/r/owasp/security-shepherd). [Checking the Docker images](docs/verifying-images.md) explains the tags and how to check an image's SBOM and provenance.
+
+#### Building an up-to-date image
+When the Tomcat image is built, it installs the Ubuntu security updates released since its base image was published. Docker caches the base image and that build step, so rebuilding with `docker-compose up --build` can reuse an old base image and old packages. To build an image with the latest updates, rebuild it without the cache and recreate the container:
+
+```console
+mvn -Pdocker clean install -DskipTests
+docker-compose build --pull --no-cache web
+docker-compose up -d
+```
 
 #### Upgrading an existing Docker environment
 Security Shepherd now runs on Tomcat 11. Tomcat's `conf` directory lives in the `conf` Docker volume, and Docker only copies the image's files into a volume when the volume is first created. An existing environment would therefore start Tomcat 11 with its old Tomcat 9/10.1 `server.xml` and `web.xml`. That volume has to be recreated. Database data is in the separate `data` and `mongodata` volumes, so it is kept.
@@ -74,11 +108,13 @@ docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine s
    && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'
 docker volume rm securityshepherd_conf
 mvn -Pdocker clean install -DskipTests
+# --pull and --no-cache pick up the latest base image and Ubuntu security updates
+docker-compose build --pull --no-cache web
 # Detached, so the databases keep running while you restore files below
 docker-compose up -d --build
 ```
 
-The new volume starts from the image: a freshly built keystore, and connection settings taken from `.env`. If you had customised either, copy just those files back from the backup. Leave `server.xml` and `web.xml` alone, because they are the Tomcat 11 versions.
+The new volume starts from the image: a newly generated keystore, and connection settings taken from `.env`. If you had customised either, copy just those files back from the backup. Leave `server.xml` and `web.xml` alone, because they are the Tomcat 11 versions.
 
 ```console
 BACKUP_DIR="$HOME/shepherd-conf-backup"
@@ -86,7 +122,7 @@ BACKUP_DIR="$HOME/shepherd-conf-backup"
 docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine \
   tar xzf /backup/shepherd-conf-backup.tgz -C /conf ./database.properties ./mongo.properties
 # Your own TLS certificate: restore the keystore file named by TLS_KEYSTORE_FILE, and make sure
-# TLS_KEYSTORE_PASS and ALIAS in .env match it before building
+# TLS_KEYSTORE_PASS and ALIAS in .env match it
 docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine \
   tar xzf /backup/shepherd-conf-backup.tgz -C /conf ./<your keystore file>
 docker-compose restart web

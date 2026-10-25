@@ -46,6 +46,13 @@ docker-compose up --build
 docker-compose up -d --build
 ```
 
+The Tomcat image installs the Ubuntu security updates released since its base image was published. Docker caches the base image and that build step, so `--build` can reuse an old base image and old packages. Before testing or scanning an image, for example for a release, rebuild it without the cache:
+
+```bash
+docker-compose build --pull --no-cache web
+docker-compose up -d
+```
+
 Access the application:
 - **HTTP**: http://localhost
 - **HTTPS**: https://localhost:8443
