@@ -11,27 +11,14 @@
 #   own database user;
 # - Tomcat logs no SEVERE errors.
 #
-# Run from the project root after `docker compose build`. Reads IMAGE_TOMCAT, IMAGE_MARIADB,
-# IMAGE_MONGO, DB_USER and DB_PASS from the environment, falling back to .env, and never builds or
-# pulls an image. The stack runs as its own compose project, with its own container names, volumes
-# and host ports (SMOKE_HTTP_PORT, SMOKE_HTTPS_PORT, SMOKE_DB_PORT and SMOKE_MONGO_PORT), so it
-# leaves a running secshep_* stack alone. Everything it starts is removed on exit.
+# Run from the project root after `docker compose build`. Tests the images that docker-compose.yml
+# names (IMAGE_TOMCAT, IMAGE_MARIADB and IMAGE_MONGO, from the environment or .env), and never
+# builds or pulls one. Docker Compose reads .env itself, and setup uses the root password the
+# MariaDB container was started with, so this script parses nothing from .env. The stack runs as its own
+# compose project, with its own container names, volumes and host ports (SMOKE_HTTP_PORT,
+# SMOKE_HTTPS_PORT, SMOKE_DB_PORT and SMOKE_MONGO_PORT), so it leaves a running secshep_* stack
+# alone. Everything it starts is removed on exit.
 set -euo pipefail
-
-env_value() {
-  local name=$1
-  if [ -n "${!name:-}" ]; then
-    echo "${!name}"
-  else
-    sed -n "s/^${name}=//p" .env | tail -1
-  fi
-}
-export IMAGE_TOMCAT IMAGE_MARIADB IMAGE_MONGO
-IMAGE_TOMCAT=$(env_value IMAGE_TOMCAT)
-IMAGE_MARIADB=$(env_value IMAGE_MARIADB)
-IMAGE_MONGO=$(env_value IMAGE_MONGO)
-db_user=$(env_value DB_USER)
-db_pass=$(env_value DB_PASS)
 
 # Overrides what docker-compose.yml reads from .env, so nothing clashes with the default stack
 project=shepherd-smoke-$$
@@ -106,11 +93,15 @@ login() {
   status_of --data-urlencode "login=$1" --data-urlencode "pwd=$2" "$base/login"
 }
 
-echo "Starting $IMAGE_TOMCAT with $IMAGE_MARIADB and $IMAGE_MONGO as compose project $project"
+echo "Starting compose project $project"
 compose up -d --no-build --pull never db mongo web >"$work/up.log" 2>&1 || {
   cat "$work/up.log"
   fail "docker compose up failed"
 }
+tomcat_image=$(docker inspect -f '{{.Config.Image}}' "$web")
+for container in "$web" "$CONTAINER_MARIADB" "$CONTAINER_MONGO"; do
+  echo "  $container: $(docker inspect -f '{{.Config.Image}} ({{.Image}})' "$container")"
+done
 
 # 1. Tomcat is up and the app deployed
 code=000
@@ -146,9 +137,12 @@ for target in "$CONTAINER_MARIADB:3306" "$CONTAINER_MONGO:27017"; do
 done
 auth=$(docker exec "$web" cat /usr/local/tomcat/conf/SecurityShepherd.auth) ||
   fail "there's no setup auth token in conf/SecurityShepherd.auth"
+# docker-compose.yml starts MariaDB with MYSQL_ROOT_PASSWORD=${DB_PASS}
+db_pass=$(docker exec "$CONTAINER_MARIADB" printenv MYSQL_ROOT_PASSWORD) ||
+  fail "$CONTAINER_MARIADB has no MYSQL_ROOT_PASSWORD"
 # Sends every field the setup form sends
 setup=$(request --data-urlencode "dbhost=$CONTAINER_MARIADB" --data-urlencode "dbport=3306" \
-  --data-urlencode "dbuser=$db_user" --data-urlencode "dbpass=$db_pass" \
+  --data-urlencode "dbuser=root" --data-urlencode "dbpass=$db_pass" \
   --data-urlencode "dboverride=override" --data-urlencode "dbauth=$auth" \
   --data-urlencode "mhost=$CONTAINER_MONGO" --data-urlencode "mport=27017" \
   --data-urlencode "enableMongoChallenge=enable" --data-urlencode "unsafeLevels=disable" \
@@ -196,4 +190,4 @@ echo "ok: the SQL injection lesson loads and queries its database"
 [ -z "$(tomcat_severe)" ] || fail "Tomcat logged SEVERE errors"
 echo "ok: Tomcat logged no SEVERE errors"
 
-echo "PASS: $IMAGE_TOMCAT sets up, logs in, changes a password and serves a database-backed lesson"
+echo "PASS: $tomcat_image sets up, logs in, changes a password and serves a database-backed lesson"
