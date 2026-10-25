@@ -43,6 +43,8 @@ To login use the following credentials (you will be asked to update after login)
 
 Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
 
+Pre-built images are published to Docker Hub as [`owasp/security-shepherd`](https://hub.docker.com/r/owasp/security-shepherd). [Checking the Docker images](docs/verifying-images.md) explains the tags and how to check an image's SBOM and provenance.
+
 #### Upgrading an existing Docker environment
 Security Shepherd now runs on Tomcat 11. Tomcat's `conf` directory lives in the `conf` Docker volume, and Docker only copies the image's files into a volume when the volume is first created. An existing environment would therefore start Tomcat 11 with its old Tomcat 9/10.1 `server.xml` and `web.xml`. That volume has to be recreated. Database data is in the separate `data` and `mongodata` volumes, so it is kept.
 

@@ -75,13 +75,8 @@ jobs:
           path: target/*.war
       - name: Docker Compose Build
         run: docker compose build
-      - name: Generate Tomcat Docker Image SBOM
-        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
-        id: tomcat
-        with:
-          format: cyclonedx-json
-          image: owasp/security-shepherd
-          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-tomcat.cyclonedx.json
+      # The published Tomcat image carries its own SBOM, attached when it is pushed. The database
+      # images aren't published yet (#1025), so their SBOMs are only kept as workflow artifacts.
       - name: Generate MariaDB Docker Image SBOM
         uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
         id: mariadb
@@ -158,6 +153,12 @@ jobs:
         with:
           env-file: .env
 
+      # The default docker driver can't store SBOM and provenance attestations with the image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      # sbom and provenance attach an SPDX SBOM and an (unsigned) SLSA provenance to the image on
+      # Docker Hub, where Docker Scout and `docker buildx imagetools inspect` read them
       - name: Build and push Tomcat
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
@@ -165,6 +166,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          sbom: true
+          provenance: mode=max
           build-args: |
             TOMCAT_DOCKER_VERSION
             TLS_KEYSTORE_FILE
