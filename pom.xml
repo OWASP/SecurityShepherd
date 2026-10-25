@@ -687,6 +687,13 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- Run by the release workflow (cyclonedx:makeBom) to publish the project's SBOM.
+			     Declared here so the prefix resolves and the version is pinned. -->
+			<plugin>
+				<groupId>org.cyclonedx</groupId>
+				<artifactId>cyclonedx-maven-plugin</artifactId>
+				<version>2.9.3</version>
+			</plugin>
 
 		</plugins>
 	</build>

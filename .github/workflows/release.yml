@@ -14,10 +14,20 @@ on:
       - 'LICENSE'
       - 'README.md'
       - 'Vagrantfile'
+  # On pull requests that change how the images are built, build them without logging in to
+  # Docker Hub or pushing, so a broken release workflow shows up before it is merged
+  pull_request:
+    paths:
+      - '.github/workflows/release.yml'
+      - 'Dockerfile'
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - '.env'
+      - 'pom.xml'
 
 jobs:
   build:
-    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
+    if: github.repository == 'OWASP/SecurityShepherd'
     name: build
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +53,7 @@ jobs:
           name: security_shepherd_war
           path: target/*.war
       - name: Docker Compose Build
-        run: docker-compose build
+        run: docker compose build
       - name: Generate Tomcat Docker Image SBOM
         uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
         id: tomcat
@@ -72,24 +82,26 @@ jobs:
           path: |
             target/*.json
             target/*.xml
-      - name: Cache Maven packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      # The Tomcat image is built from these in the next job
+      - name: Upload Tomcat Image Build Inputs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          key: maven-output-${{ hashFiles('target/**') }}
+          name: tomcat_build_inputs
+          if-no-files-found: error
           path: |
-            target/
-            docker/mariadb/target
-            docker/mongo/target
+            target/owaspSecurityShepherd.war
+            target/docker/tomcat/
 
   release-security-shepherd:
     needs: build
-    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
+    if: github.repository == 'OWASP/SecurityShepherd'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -108,14 +120,11 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
-      - name: Restore Cached Maven packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      - name: Download Tomcat Image Build Inputs
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          key: maven-output-${{ hashFiles('target/**') }}
-          path: |
-            target/
-            docker/mariadb/target
-            docker/mongo/target
+          name: tomcat_build_inputs
+          path: target/
 
       # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
       - name: Set environment variables
@@ -127,7 +136,7 @@ jobs:
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
