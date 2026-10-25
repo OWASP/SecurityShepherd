@@ -18,6 +18,8 @@
 		     servlet mocks. -->
 		<spring.version>7.0.10</spring.version>
 		<pac4j.version>6.6.0</pac4j.version>
+		<log4j.version>2.26.1</log4j.version>
+		<junit.version>6.1.3</junit.version>
 		<!-- Overridable only so src/test/scripts/pgp-verification-test.sh can try a wrong key -->
 		<pgp.keysMap>${project.basedir}/.mvn/pgp-keys.map</pgp.keysMap>
 	</properties>
@@ -51,6 +53,21 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<!-- Keeps log4j-api (pulled in transitively) on the same version as log4j-core -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
+				<version>${log4j.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- net.shibboleth:shib-networking (via pac4j-saml) pulls in httpcore5 5.2.5, which
+			     has GHSA-hf6x-8p5f-cgmf. Match the httpcore5-h2 that httpclient5 brings in. -->
+			<dependency>
+				<groupId>org.apache.httpcomponents.core5</groupId>
+				<artifactId>httpcore5</artifactId>
+				<version>5.4.4</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -71,30 +88,24 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j2-impl</artifactId>
-			<version>2.25.4</version>
+			<version>${log4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.mkammerer</groupId>
 			<artifactId>argon2-jvm</artifactId>
-			<version>2.11</version>
+			<version>2.12</version>
     	</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.25.4</version>
+			<version>${log4j.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20260522</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
+			<version>20260814</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -102,17 +113,18 @@
 		<version>2.22.0</version>
 	</dependency>
 
-	<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<!-- Not 1.23.0: its strict Base64 decoder, which OpenSAML uses for SAMLResponse, rejects
+		     input that 1.22.0 accepts, and every SAML login fails (SamlSsoTest). -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.21.0</version>
+			<version>1.22.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.22.1</version>
+			<version>1.23.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.sf.jtidy/jtidy -->
 		<dependency>
@@ -166,28 +178,28 @@
 <dependency>
 	<groupId>org.mariadb.jdbc</groupId>
 	<artifactId>mariadb-java-client</artifactId>
-	<version>3.3.2</version>
+	<version>3.5.11</version>
 </dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
-			<version>4.0.3</version>
+			<version>7.1.0</version>
 		</dependency>
 
 <!-- https://mvnrepository.com/artifact/org.owasp.encoder/encoder -->
 <dependency>
 	<groupId>org.owasp.encoder</groupId>
 	<artifactId>encoder</artifactId>
-	<version>1.3.1</version>
+	<version>1.6.0</version>
 </dependency>
 
 <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
 <dependency>
 	<groupId>commons-logging</groupId>
 	<artifactId>commons-logging</artifactId>
-	<version>1.2</version>
+	<version>1.4.0</version>
 </dependency>
 
 <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
@@ -225,14 +237,14 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.11.4</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.11.4</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -248,22 +260,34 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.36</version>
+			<version>2.0.20</version>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>4.9.0</version>
+			<version>5.24.0</version>
+			<scope>test</scope>
 		</dependency>
 
-	<!-- https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv -->
+	<!-- @Nullable in XxeLesson / XxeChallenge1OldWebService. It used to arrive transitively
+	     through java-dotenv's Kotlin stdlib; only needed at compile time. -->
+	<dependency>
+		<groupId>org.jetbrains</groupId>
+		<artifactId>annotations</artifactId>
+		<version>26.1.0</version>
+		<scope>provided</scope>
+	</dependency>
+
+	<!-- Reads the TEST_MYSQL_* settings from .env in tests. Was io.github.cdimascio:java-dotenv,
+	     the old Kotlin-based artifact; dotenv-java is its pure-Java successor (same API). -->
 	<dependency>
 		<groupId>io.github.cdimascio</groupId>
-		<artifactId>java-dotenv</artifactId>
-		<version>5.2.2</version>
+		<artifactId>dotenv-java</artifactId>
+		<version>3.2.0</version>
+		<scope>test</scope>
 	</dependency>
 
 </dependencies>
@@ -329,7 +353,7 @@
 					</plugin>
 					<plugin>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>3.6.3</version>
+						<version>3.6.4</version>
 						<groupId>org.codehaus.mojo</groupId>
 						<executions>
 							<execution>
@@ -347,7 +371,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>keytool-maven-plugin</artifactId>
-						<version>1.7</version>
+						<version>2.0.2</version>
 						<executions>
 							<execution>
 								<id>generate-tls-key</id>
@@ -366,13 +390,6 @@
 							<keypass>${TLS_KEYSTORE_PASS}</keypass>
 							<deststoretype>${STORE_TYPE}</deststoretype>
 						</configuration>
-						<dependencies>
-							<dependency>
-								<groupId>org.codehaus.plexus</groupId>
-								<artifactId>plexus-utils</artifactId>
-								<version>4.0.3</version>
-							</dependency>
-						</dependencies>
 					</plugin>
 				</plugins>
 			</build>
@@ -390,7 +407,7 @@
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
-						<version>0.48.1</version>
+						<version>0.49.0</version>
 						<executions>
 							<execution>
 								<id>start</id>
@@ -493,7 +510,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.3.0</version>
+				<version>1.3.1</version>
 				<executions>
 					<execution>
 						<phase>initialize</phase>
@@ -510,7 +527,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.13.0</version>
+				<version>3.16.0</version>
 				<configuration>
 					<release>17</release>
 					<encoding>UTF-8</encoding>
@@ -518,7 +535,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.3.2</version>
+				<version>3.5.1</version>
 				<configuration>
 					<warSourceDirectory>src/main/webapp</warSourceDirectory>
 				</configuration>
@@ -569,7 +586,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.2</version>
+				<version>3.6.0</version>
 				<configuration>
 					<skipTests>${skipUTs}</skipTests>
 					<excludes>
@@ -591,9 +608,8 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.5.2</version>
+				<version>3.6.0</version>
 				<configuration>
-					<skipTests>${skipTests}</skipTests>
 					<skipITs>${skipITs}</skipITs>
 					<excludes>
 						<exclude>**/*Test*</exclude>
@@ -614,7 +630,7 @@
 			<plugin>
 				<groupId>com.diffplug.spotless</groupId>
 				<artifactId>spotless-maven-plugin</artifactId>
-				<version>3.6.0</version>
+				<version>3.10.4</version>
 				<configuration>
 					<java>
 						<includes>
@@ -622,8 +638,9 @@
 							<include>src/test/java/**/*.java</include>
 							<include>src/it/java/**/*.java</include>
 						</includes>
+						<!-- Newest release that runs on JDK 17: 1.29.0 and later fail on every file -->
 						<googleJavaFormat>
-							<version>1.25.2</version>
+							<version>1.28.0</version>
 						</googleJavaFormat>
 					</java>
 				</configuration>
@@ -640,7 +657,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.6.2</version>
 				<executions>
 					<execution>
 						<id>add-test-source</id>

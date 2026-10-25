@@ -13,14 +13,11 @@ net.shibboleth = 0xB5B5DD332142AD657E8D87AC7D27E610B8A3DC52
 # review it, then add its groupId here.
 com.fasterxml.jackson.core = any
 com.fasterxml.jackson.datatype = any
-com.github.ben-manes.caffeine = any
-com.github.waffle = any
 com.google.code.findbugs = any
 com.google.errorprone = any
 com.google.guava = any
 com.google.j2objc = any
 com.google.protobuf = any
-com.googlecode.json-simple = any
 com.mysql = any
 com.zaxxer = any
 commons-codec = any
@@ -34,7 +31,6 @@ jakarta.activation = any
 jakarta.el = any
 jakarta.mail = any
 jakarta.servlet.jsp.jstl = any
-junit = any
 net.bytebuddy = any
 net.java.dev.jna = any
 net.sf.jtidy = any
@@ -46,14 +42,12 @@ org.apache.santuario = any
 org.apache.velocity = any
 org.apiguardian = any
 org.bouncycastle = any
-org.checkerframework = any
 org.cryptacular = any
 org.eclipse.angus = any
 org.glassfish = any
 org.glassfish.web = any
 org.hamcrest = any
 org.jetbrains = any
-org.jetbrains.kotlin = any
 org.json = any
 org.jsoup = any
 org.jspecify = any
@@ -68,7 +62,3 @@ org.owasp.encoder = any
 org.pac4j = any
 org.slf4j = any
 org.springframework = any
-
-# Unsigned legacy artifact pulled in via json-simple -> junit 4.10 (to be removed, see #944).
-# Exact version only.
-org.hamcrest:hamcrest-core:1.1 = noSig
