@@ -19,8 +19,11 @@ env_value() {
   fi
 }
 image=$(env_value IMAGE_TOMCAT)
-keystore_file=$(env_value TLS_KEYSTORE_FILE)
 conf=/usr/local/tomcat/conf
+# The image's default, which the entrypoint also uses for an empty TLS_KEYSTORE_FILE
+default_keystore_file=shepherdKeystore.p12
+env_keystore_file=$(env_value TLS_KEYSTORE_FILE)
+env_keystore_file=${env_keystore_file:-$default_keystore_file}
 
 fail() {
   echo "FAIL: $1"
@@ -70,38 +73,43 @@ https_started() {
   fail "$container: the HTTPS connector didn't start"
 }
 
+# keystore_hash <container> <keystore file name>
 keystore_hash() {
-  docker exec "$1" sha256sum "$conf/$keystore_file" | cut -d' ' -f1
+  docker exec "$1" sha256sum "$conf/$2" | cut -d' ' -f1
 }
 
+# start <name suffix> [docker run options...]: starts a container and sets $started to its name.
+# Not called as $(start ...), which would run it in a subshell and hide it from the cleanup trap.
 start() {
-  local name="shepherd-tomcat-test-$1-$$"
+  started="shepherd-tomcat-test-$1-$$"
   shift
-  containers+=("$name")
-  docker run -d --name "$name" "$@" "$image" >/dev/null
-  echo "$name"
+  containers+=("$started")
+  docker run -d --name "$started" "$@" "$image" >/dev/null
 }
 
 # With TLS_KEYSTORE_PASS, as docker compose passes it from .env
-a=$(start envpass --env-file .env)
+start envpass --env-file .env -e TLS_KEYSTORE_FILE="$env_keystore_file"
+a=$started
 https_started "$a"
-hash_a=$(keystore_hash "$a")
-b=$(start envpass2 --env-file .env)
+hash_a=$(keystore_hash "$a" "$env_keystore_file")
+start envpass2 --env-file .env -e TLS_KEYSTORE_FILE="$env_keystore_file"
+b=$started
 https_started "$b"
-[ "$hash_a" != "$(keystore_hash "$b")" ] || fail "two new containers generated the same keystore"
+[ "$hash_a" != "$(keystore_hash "$b" "$env_keystore_file")" ] || fail "two new containers generated the same keystore"
 docker restart "$a" >/dev/null
 https_started "$a" 2
-[ "$hash_a" = "$(keystore_hash "$a")" ] || fail "$a generated a new keystore on restart"
+[ "$hash_a" = "$(keystore_hash "$a" "$env_keystore_file")" ] || fail "$a generated a new keystore on restart"
 
 # Without TLS_KEYSTORE_PASS: the container generates a password and stores it next to the keystore.
 # Empty values, as docker compose passes a variable missing from .env, fall back to the defaults.
-c=$(start nopass -e TLS_KEYSTORE_PASS= -e TLS_KEYSTORE_FILE= -e ALIAS= -e HTTPS_PORT=)
+start nopass -e TLS_KEYSTORE_PASS= -e TLS_KEYSTORE_FILE= -e ALIAS= -e HTTPS_PORT=
+c=$started
 https_started "$c"
 mode=$(docker exec "$c" stat -c '%a' "$conf/.tls-keystore-pass")
 [ "$mode" = "600" ] || fail "$c: the generated keystore password file has mode $mode, not 600"
-hash_c=$(keystore_hash "$c")
+hash_c=$(keystore_hash "$c" "$default_keystore_file")
 docker restart "$c" >/dev/null
 https_started "$c" 2
-[ "$hash_c" = "$(keystore_hash "$c")" ] || fail "$c generated a new keystore on restart"
+[ "$hash_c" = "$(keystore_hash "$c" "$default_keystore_file")" ] || fail "$c generated a new keystore on restart"
 
 echo "PASS: $image ships no keystore, and generates its own on first start, with and without TLS_KEYSTORE_PASS"
