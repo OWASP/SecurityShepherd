@@ -112,9 +112,20 @@ gh attestation verify "oci://docker.io/owasp/security-shepherd:$TAG" \
 
 # Trivy, applying the VEX document attached to the image
 trivy image --vex oci --show-suppressed "owasp/security-shepherd:$TAG"
+
+# Or save the image's own signed copy to use with Docker Scout or Grype, in place of the curl
+# download above. It's the version signed for this image, rather than the latest file on dev.
+gh attestation verify "oci://docker.io/owasp/security-shepherd:$TAG" \
+  --repo OWASP/SecurityShepherd \
+  --signer-workflow OWASP/SecurityShepherd/.github/workflows/release-build.yml \
+  --source-ref "$REF" \
+  --predicate-type https://openvex.dev/ns/v0.2.0 \
+  --format json --jq '.[0].verificationResult.statement.predicate' > security-shepherd.openvex.json
 ```
 
-An image's attached VEX never changes after it's published. Statements added to the file later, for vulnerabilities found since, apply only when you pass the file. Docker Scout and Grype don't read the attached copy, so use the file with them. Older images, including the 3.x releases, have no attached VEX.
+An image's attached VEX never changes after it's published. Statements added to the file later, for vulnerabilities found since, apply only when you pass the file from `dev`. Docker Scout and Grype don't read the attached copy, so pass them a file: the signed copy above, or the latest from `dev`. Older images, including the 3.x releases, have no attached VEX.
+
+If Trivy finds no VEX attached to an image that should have one, you may have an older copy of that tag pulled locally, which Trivy scans in preference. Run `docker pull "owasp/security-shepherd:$TAG"` first, or add `--image-src remote`.
 
 ## 4. See how it was built
 
