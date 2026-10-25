@@ -76,6 +76,9 @@ public class SqlInjectionPoolLeakIT {
   }
 
   private String doPost(HttpServlet servlet, String... params) throws Exception {
+    if (params.length % 2 != 0) {
+      throw new IllegalArgumentException("params must be name/value pairs");
+    }
     servlet.init(new MockServletConfig(servlet.getClass().getSimpleName()));
     MockHttpServletRequest request = new MockHttpServletRequest("POST", "/");
     request.setSession(session);
