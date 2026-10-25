@@ -1,0 +1,170 @@
+name: Release Build
+# Builds the WAR and the Docker images, and publishes and attests the Tomcat image. Called by
+# release.yml. The build and the signing run in this reusable workflow so that the calling workflow
+# can't change their steps, which SLSA Build Level 3 requires. Verify an image's provenance against
+# this file with `gh attestation verify --signer-workflow`, see docs/releasing.md.
+#
+# The github context (event, ref) is the caller's. Pull requests build everything but don't log in
+# to Docker Hub, push or attest.
+on:
+  workflow_call:
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: false
+      DOCKERHUB_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.pom.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up JDK 17
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Read pom.xml version
+        id: pom
+        run: |
+          POM_VERSION=$(mvn -B -q org.apache.maven.plugins:maven-help-plugin:3.5.1:evaluate -Dexpression=project.version -DforceStdout)
+          echo "version=$POM_VERSION" >> "$GITHUB_OUTPUT"
+      - name: Check release tag matches pom.xml version
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          POM_VERSION: ${{ steps.pom.outputs.version }}
+        run: |
+          if [ "$POM_VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match pom.xml version $POM_VERSION"
+            exit 1
+          fi
+      - name: Build Maven with Docker Profile and Generate SBOM
+        run: mvn clean install -Pdocker -DskipTests -B -DexcludeTestProject=true cyclonedx:makeBom
+      - name: Upload WAR File
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: security_shepherd_war
+          path: target/*.war
+      - name: Docker Compose Build
+        run: docker compose build
+      # The published Tomcat image carries its own SBOM, attached when it is pushed. The database
+      # images aren't published yet (#1025), so their SBOMs are only kept as workflow artifacts.
+      - name: Generate MariaDB Docker Image SBOM
+        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        id: mariadb
+        with:
+          format: cyclonedx-json
+          image: owasp/security-shepherd_mariadb
+          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mariadb.cyclonedx.json
+      - name: Generate MongoDB Docker Image SBOM
+        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        id: mongodb
+        with:
+          format: cyclonedx-json
+          image: owasp/security-shepherd_mongo
+          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mongodb.cyclonedx.json
+      - name: Upload SBOMs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: security_shepherd_sboms
+          path: |
+            target/*.json
+            target/*.xml
+      # The Tomcat image is built from these in the next job
+      - name: Upload Tomcat Image Build Inputs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: tomcat_build_inputs
+          if-no-files-found: error
+          path: |
+            target/owaspSecurityShepherd.war
+            target/docker/tomcat/
+
+  release-security-shepherd:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Sign the provenance attestation with Sigstore and store it with GitHub
+      id-token: write
+      attestations: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: owasp/security-shepherd
+          # Branch pushes publish :dev / :master. Pushes to dev also publish the pom.xml snapshot
+          # version, e.g. :4.1.0-SNAPSHOT. A release tag such as 4.1.0 publishes :4.1.0, :4.1, :4
+          # and :latest. Pull requests compute the snapshot tag too, so it shows in this step's
+          # log, but push nothing.
+          tags: |
+            type=ref,event=branch
+            type=raw,value=${{ needs.build.outputs.version }},enable=${{ endsWith(needs.build.outputs.version, '-SNAPSHOT') && (github.ref == 'refs/heads/dev' || github.event_name == 'pull_request') }}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Download Tomcat Image Build Inputs
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: tomcat_build_inputs
+          path: target/
+
+      # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
+      - name: Set environment variables
+        uses: c-py/action-dotenv-to-setenv@925b5d99a3f1e4bd7b4e9928be4e2491e29891d9 # v5
+        with:
+          env-file: .env
+
+      # The default docker driver can't store SBOM and provenance attestations with the image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      # sbom and provenance attach an SPDX SBOM and an (unsigned) SLSA provenance to the image on
+      # Docker Hub, where Docker Scout and `docker buildx imagetools inspect` read them
+      - name: Build and push Tomcat
+        id: push
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          sbom: true
+          provenance: mode=max
+          build-args: |
+            TOMCAT_DOCKER_VERSION
+            TLS_KEYSTORE_FILE
+            TLS_KEYSTORE_PASS
+            ALIAS
+            HTTPS_PORT
+
+      # Signed SLSA build provenance, stored with GitHub and in the public Sigstore transparency
+      # log rather than pushed to Docker Hub
+      - name: Attest Tomcat image build provenance
+        if: github.event_name != 'pull_request'
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-name: docker.io/owasp/security-shepherd
+          subject-digest: ${{ steps.push.outputs.digest }}
