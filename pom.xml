@@ -438,8 +438,10 @@
 											<port>27017:27017</port>
 										</ports>
 										<wait>
-											<!-- Check for this URL to return a 200 return code .... -->
-											<log>waiting for connections on port 27017</log>
+											<!-- MongoDB 4.4+ logs JSON. The entrypoint first runs a temporary
+											     mongod on 127.0.0.1 for the init scripts, so wait for the final
+											     one, which listens on all interfaces. -->
+											<log>"Listening on".*"0\.0\.0\.0:27017"</log>
 											<time>120000</time>
 										</wait>
 									</run>
