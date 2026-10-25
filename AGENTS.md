@@ -43,12 +43,15 @@ The web app runs on **Jakarta EE 11**: Servlet 6.1 on **Tomcat 11** (`TOMCAT_DOC
 
 ```bash
 mvn -Pdocker clean install -DskipTests -B   # build WAR with Docker profile (required before docker compose)
-docker compose build                          # build Docker images
+docker compose build --pull --no-cache web    # build the Tomcat image with the latest base image and Ubuntu updates
+docker compose build                          # build the other Docker images
 mvn test -B                                   # unit tests
 mvn verify -DskipUTs=true -DmongoDocker -B   # integration tests (requires MySQL + MongoDB)
 ```
 
 The `-Pdocker` profile must run before `docker compose build` — it generates SQL scripts and MongoDB init scripts. The Tomcat image has no TLS keystore: `docker/tomcat/entrypoint.sh` generates one in the `conf` volume on the container's first start, and `server.xml` reads the TLS settings from the environment (#991).
+
+The Tomcat image runs `apt-get upgrade` over its base image (#1038). Docker caches both that layer and the base image, so a plain `docker compose build` can silently produce an image without the latest Ubuntu security updates. Build it with `docker compose build --pull --no-cache web` whenever the image is tested or scanned. CI builds without a layer cache, so it always gets the updates.
 
 ### Running tests locally
 
@@ -78,6 +81,7 @@ Run the pipeline in a throwaway worktree of the exact commit you will push, for 
 mvn spotless:check -B                                # lint-java
 mvn clean install -Pdocker -DskipTests -B            # build
 bash src/test/scripts/pgp-verification-test.sh       # build
+docker compose build --pull --no-cache web           # build (CI has no layer cache)
 docker compose build                                 # build
 bash src/test/scripts/tomcat-config-test.sh          # build
 bash src/test/scripts/image-smoke-test.sh            # build
@@ -135,7 +139,7 @@ Do not commit `.env` changes that break CI.
 
 The Tomcat container mounts a named `conf` volume over `/usr/local/tomcat/conf`. A volume created by an older Tomcat 9/10.1 image keeps its old `server.xml` and `web.xml`, and Tomcat 11 will not see the new image's config, so the volume has to be recreated. Data volumes are unaffected.
 
-The volume also holds the TLS keystore and `database.properties` / `mongo.properties`. Back it up before removing it. The archive contains the TLS private key and the database password, so create it mode 600 in a mode-700 directory **outside the repository**. The repository root is the Tomcat image's Docker build context, and a root-owned archive there breaks the next build. Run `mkdir -p ~/shepherd-conf-backup && chmod 700 ~/shepherd-conf-backup`, then `docker run --rm -v securityshepherd_conf:/conf -v ~/shepherd-conf-backup:/backup alpine sh -c 'umask 077 && touch /backup/shepherd-conf-backup.tgz && chmod 600 /backup/shepherd-conf-backup.tgz && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'`, and delete the directory after the upgrade. Then run `docker compose down && docker volume rm securityshepherd_conf` and `docker compose up -d --build` (detached, so the databases stay up while files are restored and `web` is restarted). Restore only customised keystore or `.properties` files from the backup. Never restore the old `server.xml` / `web.xml`: re-apply any hand edits to the new Tomcat 11 files instead. The full steps are in the README.
+The volume also holds the TLS keystore and `database.properties` / `mongo.properties`. Back it up before removing it. The archive contains the TLS private key and the database password, so create it mode 600 in a mode-700 directory **outside the repository**. The repository root is the Tomcat image's Docker build context, and a root-owned archive there breaks the next build. Run `mkdir -p ~/shepherd-conf-backup && chmod 700 ~/shepherd-conf-backup`, then `docker run --rm -v securityshepherd_conf:/conf -v ~/shepherd-conf-backup:/backup alpine sh -c 'umask 077 && touch /backup/shepherd-conf-backup.tgz && chmod 600 /backup/shepherd-conf-backup.tgz && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'`, and delete the directory after the upgrade. Then run `docker compose down && docker volume rm securityshepherd_conf`, `docker compose build --pull --no-cache web` and `docker compose up -d --build` (detached, so the databases stay up while files are restored and `web` is restarted). Restore only customised keystore or `.properties` files from the backup. Never restore the old `server.xml` / `web.xml`: re-apply any hand edits to the new Tomcat 11 files instead. The full steps are in the README.
 
 ### Integration tests fail building the Mongo image (`chown ... Operation not permitted`)
 
