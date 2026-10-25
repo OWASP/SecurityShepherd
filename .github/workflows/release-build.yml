@@ -63,6 +63,9 @@ jobs:
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mariadb
+          # Attaching SBOMs to a GitHub release needs contents: write, which this workflow
+          # doesn't have
+          upload-release-assets: false
           output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mariadb.cyclonedx.json
       - name: Generate MongoDB Docker Image SBOM
         uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
@@ -70,6 +73,9 @@ jobs:
         with:
           format: cyclonedx-json
           image: owasp/security-shepherd_mongo
+          # Attaching SBOMs to a GitHub release needs contents: write, which this workflow
+          # doesn't have
+          upload-release-assets: false
           output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mongodb.cyclonedx.json
       - name: Upload SBOMs
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
