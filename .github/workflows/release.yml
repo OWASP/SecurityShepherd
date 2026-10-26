@@ -2,6 +2,8 @@ name: Release to Dockerhub
 on:
   push:
     branches: [master, dev]
+    # Release tags are plain SemVer X.Y.Z (no "v" prefix), see docs/releasing.md
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
     paths-ignore:
       - '**.md'
       - '.github/'
@@ -12,110 +14,70 @@ on:
       - 'LICENSE'
       - 'README.md'
       - 'Vagrantfile'
+  # On pull requests that change how the images are built, build them without logging in to
+  # Docker Hub or pushing, so a broken release workflow shows up before it is merged
+  pull_request:
+    paths:
+      - '.github/workflows/release.yml'
+      - '.github/workflows/release-build.yml'
+      - 'Dockerfile'
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - '.env'
+      - 'pom.xml'
+
+# Nothing here writes to the repository. Docker Hub is reached with its own credentials, so the
+# GITHUB_TOKEN only needs to read the code.
+permissions:
+  contents: read
+
+# A newer run on the same branch or pull request cancels the older one, so an older image never
+# overwrites a newer :dev or snapshot tag. Release tag runs are never cancelled.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
-  build:
-    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
-    name: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
-      - name: Set up JDK 17
-        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Build Maven with Docker Profile and Generate SBOM
-        run: mvn clean install -Pdocker -DskipTests -B -DexcludeTestProject=true cyclonedx:makeBom
-      - name: Upload WAR File
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: security_shepherd_war
-          path: target/*.war
-      - name: Docker Compose Build
-        run: docker-compose build
-      - name: Generate Tomcat Docker Image SBOM
-        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
-        id: tomcat
-        with:
-          format: cyclonedx-json
-          image: owasp/security-shepherd
-          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-tomcat.cyclonedx.json
-      - name: Generate MariaDB Docker Image SBOM
-        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
-        id: mariadb
-        with:
-          format: cyclonedx-json
-          image: owasp/security-shepherd_mariadb
-          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mariadb.cyclonedx.json
-      - name: Generate MongoDB Docker Image SBOM
-        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
-        id: mongodb
-        with:
-          format: cyclonedx-json
-          image: owasp/security-shepherd_mongo
-          output-file: ${{ github.workspace }}/target/owasp-security-shepherd-mongodb.cyclonedx.json
-      - name: Upload SBOMs
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: security_shepherd_sboms
-          path: |
-            target/*.json
-            target/*.xml
-      - name: Cache Maven packages
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        with:
-          key: maven-output-${{ hashFiles('target/**') }}
-          path: |
-            target/
-            docker/mariadb/target
-            docker/mongo/target
+  # The build, publishing and attestation steps live in release-build.yml, a reusable workflow, so
+  # that this workflow can't change them (SLSA Build Level 3)
+  release:
+    if: github.repository == 'OWASP/SecurityShepherd'
+    uses: ./.github/workflows/release-build.yml
+    permissions:
+      contents: read
+      # Only release-build.yml's attest and attest-vex jobs use these, to sign the provenance and
+      # VEX attestations
+      id-token: write
+      attestations: write
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  release-security-shepherd:
-    needs: build
-    if: github.event_name != 'pull_request' && github.repository == 'OWASP/SecurityShepherd'
+  # Publishes docs/docker-hub-overview.md as the Docker Hub repository overview on release tags,
+  # once the release images are pushed, so the page never describes a release that isn't there.
+  # It changes only the repository's description, not an image, so it stays out of
+  # release-build.yml. The Docker Hub account needs Admin on the repository, and the token
+  # read/write/delete scope.
+  docker-hub-description:
+    needs: release
+    if: github.repository == 'OWASP/SecurityShepherd' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - name: Check out the Docker Hub overview
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: docs/docker-hub-overview.md
+          sparse-checkout-cone-mode: false
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
+      - name: Update the Docker Hub description
+        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5.0.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
-        with:
-          images: owasp/security-shepherd
-
-      - name: Restore Cached Maven packages
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        with:
-          key: maven-output-${{ hashFiles('target/**') }}
-          path: |
-            target/
-            docker/mariadb/target
-            docker/mongo/target
-
-      # Dump the environment variables from the dotenv file so they can be used to build the tomcat server
-      - name: Set environment variables
-        uses: c-py/action-dotenv-to-setenv@925b5d99a3f1e4bd7b4e9928be4e2491e29891d9 # v5
-        with:
-          env-file: .env
-
-      - name: Build and push Tomcat
-        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            TOMCAT_DOCKER_VERSION
-            TLS_KEYSTORE_FILE
-            TLS_KEYSTORE_PASS
-            ALIAS
-            HTTPS_PORT
+          repository: owasp/security-shepherd
+          readme-filepath: docs/docker-hub-overview.md
+          # Docker Hub limits it to 100 bytes, and the overview to 25,000 bytes
+          short-description: Web app (Tomcat) for OWASP Security Shepherd, an AppSec training platform. Needs MariaDB + MongoDB.

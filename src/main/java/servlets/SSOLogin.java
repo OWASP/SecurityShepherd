@@ -1,15 +1,14 @@
 package servlets;
 
-import com.onelogin.saml2.Auth;
-import com.onelogin.saml2.exception.Error;
-import com.onelogin.saml2.exception.SettingsException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utils.LoginMethod;
+import utils.SamlSso;
 import utils.ShepherdLogManager;
 
 /**
@@ -44,16 +43,20 @@ public class SSOLogin extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    if (!LoginMethod.isSaml()) {
+      // SSO is off (sso.enabled in sso.properties): this endpoint must not authenticate anyone,
+      // even if a SAML configuration is present
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
     ShepherdLogManager.setRequestIp(request.getRemoteAddr(), request.getHeader("X-Forwarded-For"));
     log.debug("**** servlets.SSOLogin ***");
     request.setCharacterEncoding("UTF-8");
-    Auth auth;
     try {
-      auth = new Auth(request, response);
-      auth.login();
-    } catch (SettingsException | Error e) {
+      SamlSso.login(request, response);
+    } catch (RuntimeException e) {
       log.error("Caught exception when initializing SSO: " + e.toString());
-      throw new RuntimeException(e);
+      throw e;
     }
 
     log.debug("**** End servlets.SSOLogin ***");

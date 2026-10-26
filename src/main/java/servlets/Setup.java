@@ -5,6 +5,10 @@ import dbProcs.Constants;
 import dbProcs.Database;
 import dbProcs.MongoDatabase;
 import dbProcs.Setter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,11 +17,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -26,10 +31,6 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,6 +47,14 @@ public class Setup extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    // Setup can drop the core database and point the platform at another database server, so it
+    // must never run on an installed instance. Its token file is deleted after setup completes.
+    if (isInstalled()) {
+      log.warn("Refused setup request: Security Shepherd is already installed");
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
+
     // Translation Stuff
     Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 
@@ -160,8 +169,6 @@ public class Setup extends HttpServlet {
 
       log.debug("Starting database setup...");
 
-      String auth = "";
-
       String enableMongoChallenge = request.getParameter("enableMongoChallenge");
 
       String enableUnsafeLevels = request.getParameter("unsafeLevels");
@@ -181,28 +188,13 @@ public class Setup extends HttpServlet {
       mongoProp.append("serverSelectionTimeout=30000");
       mongoProp.append("\n");
 
-      try {
-        auth = new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)));
-      } catch (NoSuchFileException e) {
-        // Auth file could not be found.
-        htmlOutput += "Auth file could not be found";
-        log.error("Auth file could not be found: " + e.toString());
-      }
-
-      if (auth == "") {
-        // No auth loaded, could be because user never reloaded setup page after an
-        // error. Generate it again
-        log.debug("Generating auth file");
-
+      if (!isValidSetupAuth(dbAuth)) {
+        // The supplied auth data was incorrect. If the token file is missing, generate it again
+        // so the setup page can be reloaded and retried
         generateAuth();
-      }
 
-      if (!auth.equals(dbAuth)) {
-        log.debug("Invalid auth supplied");
-
-        // The supplied auth data was incorrect
         htmlOutput += bundle.getString("generic.text.setup.authentication.failed");
-        log.error("Authorization mismatch: " + auth + " does not equal " + dbAuth);
+        log.error("Setup authorization failed");
 
       } else {
         // Test the user's entered database properties. Use DriverManager directly instead of
@@ -380,6 +372,36 @@ public class Setup extends HttpServlet {
       return "If you override db host and db port, both must be entered!";
     }
     return null;
+  }
+
+  /**
+   * Checks the token supplied with a setup request against the one in {@link Constants#SETUP_AUTH}.
+   * Fails closed: a missing, unreadable or empty token file, or an empty supplied token, never
+   * matches.
+   */
+  static boolean isValidSetupAuth(String suppliedAuth) {
+    if (suppliedAuth == null || suppliedAuth.trim().isEmpty()) {
+      return false;
+    }
+
+    String expectedAuth;
+    try {
+      expectedAuth =
+          new String(Files.readAllBytes(Paths.get(Constants.SETUP_AUTH)), StandardCharsets.UTF_8)
+              .trim();
+    } catch (IOException e) {
+      log.error("Could not read setup auth file: " + e.toString());
+      return false;
+    }
+
+    if (expectedAuth.isEmpty()) {
+      log.error("Setup auth file " + Constants.SETUP_AUTH + " is empty");
+      return false;
+    }
+
+    return MessageDigest.isEqual(
+        expectedAuth.getBytes(StandardCharsets.UTF_8),
+        suppliedAuth.trim().getBytes(StandardCharsets.UTF_8));
   }
 
   public static boolean isInstalled() {

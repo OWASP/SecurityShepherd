@@ -2,14 +2,14 @@ package servlets;
 
 import dbProcs.Getter;
 import dbProcs.Setter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.OpenRegistration;
@@ -153,8 +153,7 @@ public class Register extends HttpServlet {
             response.sendRedirect("register.jsp");
           }
         } else {
-          log.debug("paramToken = " + paramToken);
-          log.debug("sessToken = " + sessToken);
+          log.debug("CSRF Tokens did not match");
         }
       } catch (Exception e) {
         log.error("Registration Error: " + e.toString());
