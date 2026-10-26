@@ -88,6 +88,13 @@ bash src/test/scripts/image-smoke-test.sh            # build
 TEST_MYSQL_PASSWORD=CowSaysMoo mvn test -B -e        # unit-tests
 ```
 
+When a change touches `docs/` or the site configuration, also run the `Docs` workflow's build (`.github/workflows/docs.yml`):
+
+```bash
+uv sync --locked --no-build
+uv run --locked --no-sync zensical build --clean --strict
+```
+
 For the integration tests, start the `secshep_test_db` container above, then repeat what CI does before running them:
 
 ```bash
@@ -199,6 +206,17 @@ The hostname must be the **Docker container name** (e.g. `secshep_mariadb`), not
 - `src/test/java/` — unit tests
 - `src/it/java/` — integration tests (require running DB containers)
 - `mobile/MobileShepherd/` — independent Android apps (Gradle-based, not part of Maven build)
+- `docs/` — documentation, published to https://owasp.github.io/SecurityShepherd/ (see "Documentation site" below)
+
+### Documentation site
+
+The documentation site is built from `docs/` with [Zensical](https://zensical.org/) by `.github/workflows/docs.yml`, and published to GitHub Pages from `dev` until 4.0.0 is released, then from `master` (#1070). The GitHub wiki describes 3.1 and is being retired.
+
+- `zensical.toml` holds the site configuration and the navigation. A new page in `docs/` must be added to `nav` there.
+- `pyproject.toml` pins Zensical, and `uv.lock` pins every dependency with its sha256 hash. Preview the site with `uv run zensical serve`. Update Zensical with `uv lock --upgrade-package zensical` and commit `uv.lock`. CI installs with `uv sync --locked --no-build`: it fails if the lock is stale and never builds a package from source.
+- The build runs with `--strict`, so a link to a page that doesn't exist fails the PR.
+- Write GitHub-flavoured Markdown that reads the same on github.com and on the site. Link to other pages in `docs/` with relative links to the `.md` file. Link to anything outside `docs/` with an absolute `https://github.com/OWASP/SecurityShepherd/blob/dev/…` URL, because relative `../` links break on the site.
+- `docs/docker-hub-overview.md` is the Docker Hub overview, not a site page, and is excluded in `zensical.toml`.
 
 ## Database
 

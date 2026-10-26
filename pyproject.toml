@@ -1,0 +1,13 @@
+# Builds the documentation site from docs/ with Zensical (#1070). This is not a Python package:
+# it only pins the site generator. uv.lock records the exact version and sha256 hash of every
+# dependency.
+#
+#   uv run zensical serve                      # preview the site at http://localhost:8000
+#   uv lock --upgrade-package zensical         # update Zensical, then commit uv.lock
+[project]
+name = "security-shepherd-docs"
+version = "0"
+requires-python = ">=3.12"
+dependencies = [
+    "zensical==0.0.73",
+]
