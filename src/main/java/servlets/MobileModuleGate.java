@@ -62,8 +62,8 @@ final class MobileModuleGate {
   }
 
   /**
-   * Checks whether the user may start, fetch a flag for or submit a flag for the given module. Fails
-   * closed if the platform state cannot be read.
+   * Checks whether the user may start, fetch a flag for or submit a flag for the given module.
+   * Fails closed if the platform state cannot be read.
    */
   static Decision check(String applicationRoot, String moduleId, HttpSession ses) {
     String dbModuleId = MobileModuleFlags.MODULE_DB_IDS.get(moduleId);
@@ -75,8 +75,7 @@ final class MobileModuleGate {
       boolean running = CountdownHandler.isRunning();
       Decision decision = decide(open, running, isAdmin(ses), isBlocked(dbModuleId));
       if (decision != Decision.ALLOWED) {
-        log.debug(
-            "Mobile module " + MobileModuleFlags.sanitize(moduleId) + " denied: " + decision);
+        log.debug("Mobile module " + MobileModuleFlags.sanitize(moduleId) + " denied: " + decision);
       }
       return decision;
     } catch (Exception e) {

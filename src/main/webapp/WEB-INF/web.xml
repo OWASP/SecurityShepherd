@@ -155,6 +155,15 @@
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>/mobileModuleStatus</servlet-name>
+		<servlet-class>servlets.MobileModuleStatus</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>/mobileModuleStatus</servlet-name>
+		<url-pattern>/mobileModuleStatus</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>/register</servlet-name>
 		<servlet-class>servlets.Register</servlet-class>
 	</servlet>

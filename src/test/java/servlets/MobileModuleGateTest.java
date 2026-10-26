@@ -66,7 +66,6 @@ class MobileModuleGateTest {
 
   @Test
   void offlineOnlyModule_isNeverGated() {
-    assertEquals(
-        Decision.ALLOWED, MobileModuleGate.check(null, "not_a_server_module", null));
+    assertEquals(Decision.ALLOWED, MobileModuleGate.check(null, "not_a_server_module", null));
   }
 }
