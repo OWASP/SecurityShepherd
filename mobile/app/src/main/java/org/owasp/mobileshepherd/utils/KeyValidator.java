@@ -1,12 +1,9 @@
 package org.owasp.mobileshepherd.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-
-import androidx.preference.PreferenceManager;
 
 import org.json.JSONObject;
 
@@ -188,8 +185,7 @@ public class KeyValidator {
             String key,
             ValidationCallback callback) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String serverUrl     = prefs.getString("server_preference", "").trim();
+        String serverUrl    = AuthManager.getServerUrl(context);
         String sessionCookie = AuthManager.getMobileSessionCookie(context);
 
         if (serverUrl.isEmpty() || sessionCookie.isEmpty()) {

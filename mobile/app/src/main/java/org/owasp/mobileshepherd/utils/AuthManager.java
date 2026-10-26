@@ -9,11 +9,14 @@ import android.util.Log;
 import androidx.preference.PreferenceManager;
 
 import org.json.JSONObject;
+import org.owasp.mobileshepherd.R;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -65,8 +68,22 @@ public class AuthManager {
     }
 
     public static String getServerUrl(Context ctx) {
-        return PreferenceManager.getDefaultSharedPreferences(ctx)
+        String url = PreferenceManager.getDefaultSharedPreferences(ctx)
                 .getString("server_preference", "").trim();
+        return isSecureServerUrl(url) ? url : "";
+    }
+
+    /** Returns {@code true} only for an absolute {@code https://} URL with a host. */
+    public static boolean isSecureServerUrl(String url) {
+        if (url == null) return false;
+        try {
+            URI uri = new URI(url.trim());
+            return "https".equalsIgnoreCase(uri.getScheme())
+                    && uri.getHost() != null
+                    && !uri.getHost().isEmpty();
+        } catch (URISyntaxException e) {
+            return false;
+        }
     }
 
     /** Returns the username of the currently signed-in user, or empty string if not signed in. */
@@ -117,7 +134,7 @@ public class AuthManager {
      * credentials in the default shared preferences and sets the logged-in flag.
      *
      * @param ctx      Context used to access preferences.
-     * @param serverUrl Base URL of the Shepherd server (e.g. {@code http://192.168.1.1:8080}).
+     * @param serverUrl Base URL of the Shepherd server (e.g. {@code https://shepherd.example.com}).
      * @param username  Shepherd username.
      * @param password  Shepherd password.
      * @param callback  Receives the result on the main thread.
@@ -130,6 +147,11 @@ public class AuthManager {
             AuthCallback callback) {
 
         final Handler mainHandler = new Handler(Looper.getMainLooper());
+        if (!isSecureServerUrl(serverUrl)) {
+            mainHandler.post(() -> callback.onResult(
+                    false, ctx.getString(R.string.error_https_required)));
+            return;
+        }
         new Thread(() -> {
             HttpURLConnection conn = null;
             try {
@@ -240,6 +262,11 @@ public class AuthManager {
             AuthCallback callback) {
 
         final Handler mainHandler = new Handler(Looper.getMainLooper());
+        if (!isSecureServerUrl(serverUrl)) {
+            mainHandler.post(() -> callback.onResult(
+                    false, ctx.getString(R.string.error_https_required)));
+            return;
+        }
         new Thread(() -> {
             HttpURLConnection conn = null;
             try {

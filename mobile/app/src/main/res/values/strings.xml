@@ -42,7 +42,7 @@
     <string name="dialog_based_preferences">Server Preferences</string>
     <string name="hello_blank_fragment">Preferences</string>
     <string name="server_title">Server Address</string>
-    <string name="server_summary">Enter Server address here</string>
+    <string name="server_summary">Enter server address here (https:// only)</string>
     <string name="server_dialog_title">Enter Server Address</string>
 
 
@@ -53,7 +53,8 @@
     <string name="auth_button_sign_out">Sign Out</string>
     <string name="auth_dialog_title_login">Sign In</string>
     <string name="auth_dialog_title_register">Register</string>
-    <string name="auth_hint_server">Server URL (e.g. http://10.0.2.2:8080)</string>
+    <string name="auth_hint_server">Server URL (HTTPS only, e.g. https://shepherd.example.com)</string>
+    <string name="error_https_required">The server URL must start with https://. Plain HTTP is not allowed.</string>
     <string name="auth_hint_email">Email (optional)</string>
     <string name="auth_email_label">Registration only</string>
     <string name="auth_switch_to_register">No account? Register</string>
