@@ -84,7 +84,8 @@ class MobileFlagSubmitTest {
         MockedStatic<CountdownHandler> countdown = mockStatic(CountdownHandler.class)) {
       countdown.when(CountdownHandler::isRunning).thenReturn(true);
       getter.when(() -> Getter.isModuleOpen(anyString(), anyString())).thenReturn(true);
-      getter.when(() -> Getter.checkPlayerResult(anyString(), anyString(), anyString()))
+      getter
+          .when(() -> Getter.checkPlayerResult(anyString(), anyString(), anyString()))
           .thenReturn("module.name");
       stubUpdatePlayerResult(setter, "module.name");
 
@@ -102,7 +103,8 @@ class MobileFlagSubmitTest {
         MockedStatic<CountdownHandler> countdown = mockStatic(CountdownHandler.class)) {
       countdown.when(CountdownHandler::isRunning).thenReturn(true);
       getter.when(() -> Getter.isModuleOpen(anyString(), anyString())).thenReturn(true);
-      getter.when(() -> Getter.checkPlayerResult(anyString(), anyString(), anyString()))
+      getter
+          .when(() -> Getter.checkPlayerResult(anyString(), anyString(), anyString()))
           .thenReturn("module.name");
       // updatePlayerResult returns null when the result could not be recorded.
       stubUpdatePlayerResult(setter, null);
@@ -120,7 +122,8 @@ class MobileFlagSubmitTest {
         MockedStatic<CountdownHandler> countdown = mockStatic(CountdownHandler.class)) {
       countdown.when(CountdownHandler::isRunning).thenReturn(true);
       getter.when(() -> Getter.isModuleOpen(anyString(), anyString())).thenReturn(true);
-      getter.when(() -> Getter.getModuleAddress(anyString(), anyString(), anyString()))
+      getter
+          .when(() -> Getter.getModuleAddress(anyString(), anyString(), anyString()))
           .thenThrow(new RuntimeException("db down"));
 
       run(correctFlag());
@@ -136,7 +139,8 @@ class MobileFlagSubmitTest {
         MockedStatic<CountdownHandler> countdown = mockStatic(CountdownHandler.class)) {
       countdown.when(CountdownHandler::isRunning).thenReturn(true);
       getter.when(() -> Getter.isModuleOpen(anyString(), anyString())).thenReturn(true);
-      getter.when(() -> Getter.checkPlayerResult(anyString(), anyString(), anyString()))
+      getter
+          .when(() -> Getter.checkPlayerResult(anyString(), anyString(), anyString()))
           .thenReturn(null);
 
       run(correctFlag());
