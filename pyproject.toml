@@ -2,8 +2,11 @@
 # it only pins the site generator. uv.lock records the exact version and sha256 hash of every
 # dependency.
 #
-#   uv run zensical serve                      # preview the site at http://localhost:8000
-#   uv lock --upgrade-package zensical         # update Zensical, then commit uv.lock
+#   uv run zensical serve      # preview the site at http://localhost:8000
+#
+# To update Zensical, change the version below, run `uv lock`, and commit both files. The exact
+# pin means `uv lock --upgrade-package zensical` alone can't move it. Dependabot's uv updates do
+# both.
 [project]
 name = "security-shepherd-docs"
 version = "0"

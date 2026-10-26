@@ -1,30 +1,26 @@
 name: Docs
 # Builds the documentation site from docs/ with Zensical and publishes it to GitHub Pages (#1070).
-# Pull requests only build it, in strict mode, so a broken link between pages fails the PR.
-# Pushes to dev also deploy it. When 4.0.0 is released, the deploy moves to master
-# (see docs/releasing.md).
+# Pull requests that change the site build and check it, so a broken link, a missing image or a
+# page missing from the nav fails the PR. Pushes to dev that change the site also deploy it, and
+# only if the same checks pass, so a broken site is never published. When 4.0.0 is released, the
+# deploy moves to master (see docs/releasing.md).
 on:
   push:
     branches:
       - dev
-    paths:
+    paths: &site-paths
       - 'docs/**'
       - 'zensical.toml'
       - 'zensical-overrides/**'
       - 'pyproject.toml'
       - 'uv.lock'
+      - '.github/scripts/check-docs-site.py'
       - '.github/workflows/docs.yml'
   pull_request:
     branches:
       - master
       - dev
-    paths:
-      - 'docs/**'
-      - 'zensical.toml'
-      - 'zensical-overrides/**'
-      - 'pyproject.toml'
-      - 'uv.lock'
-      - '.github/workflows/docs.yml'
+    paths: *site-paths
   workflow_dispatch:
 
 permissions: {}
@@ -35,7 +31,9 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
+  # Not called "build": the "core: required CI checks" ruleset requires test.yml's build job by
+  # that name.
+  docs-build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,8 +55,13 @@ jobs:
       # code runs.
       - name: Install Zensical
         run: uv sync --locked --no-build
+      # Strict mode fails on links to pages or anchors that don't exist
       - name: Build the site
         run: uv run --locked --no-sync zensical build --clean --strict
+      # Catches what strict mode doesn't: nav entries and pages that don't match, and links to
+      # images or other files that don't exist
+      - name: Check the built site
+        run: uv run --locked --no-sync python .github/scripts/check-docs-site.py
       - if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
@@ -66,7 +69,7 @@ jobs:
 
   deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/dev'
-    needs: build
+    needs: docs-build
     runs-on: ubuntu-latest
     permissions:
       pages: write
