@@ -43,6 +43,9 @@ public class Setup extends HttpServlet {
   private static final Logger log = LogManager.getLogger(Setup.class);
   private static final long serialVersionUID = -892181347446991016L;
 
+  static final String UPGRADE_FROM_V3_0_SCRIPT = "updatev3_0tov3_1.sql";
+  static final String UPGRADE_MOBILE_MODULES_SCRIPT = "updatev3_1_mobilemodules.sql";
+
   private static volatile Boolean installedCached = null;
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -273,11 +276,17 @@ public class Setup extends HttpServlet {
                         + " "
                         + bundle.getString("generic.text.setup.success.overwrittendb");
               } else if (dbOverride.equalsIgnoreCase("upgrade")) {
-                executeUpdateScript();
+                executeUpdateScript(UPGRADE_FROM_V3_0_SCRIPT);
                 htmlOutput =
                     bundle.getString("generic.text.setup.success")
                         + " "
                         + bundle.getString("generic.text.setup.success.updatedb");
+              } else if (dbOverride.equalsIgnoreCase("upgrade-mobile")) {
+                executeUpdateScript(UPGRADE_MOBILE_MODULES_SCRIPT);
+                htmlOutput =
+                    bundle.getString("generic.text.setup.success")
+                        + " "
+                        + bundle.getString("generic.text.setup.success.updatedbmobile");
               } else {
                 htmlOutput = bundle.getString("generic.text.setup.success");
               }
@@ -531,19 +540,26 @@ public class Setup extends HttpServlet {
     }
   }
 
-  private synchronized void executeUpdateScript() throws IOException, SQLException {
-
-    File file =
-        new File(
-            getClass().getClassLoader().getResource("/database/updatev3_0tov3_1.sql").getFile());
+  static synchronized void executeUpdateScript(String scriptName) throws IOException, SQLException {
 
     String data;
-
-    data = FileUtils.readFileToString(file, Charset.defaultCharset());
+    try (InputStream script = Setup.class.getResourceAsStream("/database/" + scriptName)) {
+      if (script == null) {
+        throw new IOException("Could not find upgrade script " + scriptName);
+      }
+      data = new String(script.readAllBytes(), StandardCharsets.UTF_8);
+    }
 
     try (Connection databaseConnection = Database.getDatabaseConnection(null, true);
         Statement psProcToexecute = databaseConnection.createStatement()) {
-      psProcToexecute.executeUpdate(data);
+      // coreSchema.sql runs SET AUTOCOMMIT=0 and leaves the pooled connection that way
+      if (!databaseConnection.getAutoCommit()) {
+        databaseConnection.setAutoCommit(true);
+      }
+      boolean isResultSet = psProcToexecute.execute(data);
+      while (isResultSet || psProcToexecute.getUpdateCount() != -1) {
+        isResultSet = psProcToexecute.getMoreResults();
+      }
     }
   }
 
