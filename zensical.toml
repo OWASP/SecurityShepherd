@@ -15,7 +15,9 @@ docker-hub-overview.md
 
 nav = [
   { "Home" = "index.md" },
+  { "Getting started" = "getting-started.md" },
   { "Running Security Shepherd" = [
+    { "Running a CTF" = "running-a-ctf.md" },
     { "Checking the Docker images" = "verifying-images.md" },
     { "Database configuration" = "database-configuration.md" },
   ] },
