@@ -182,18 +182,20 @@ public class MongoDatabase {
    * @param ApplicationRoot The running context of the application (kept for API compatibility)
    * @return A singleton MongoDb Connection
    */
-  public static MongoClient getMongoDbConnection(String ApplicationRoot) {
-    if (baseMongoClient == null) {
-      synchronized (lock) {
-        if (baseMongoClient == null) {
-          baseMongoClient = createMongoClient(null);
+    public static MongoClient getMongoDbConnection(String ApplicationRoot) {
+      MongoClient client = baseMongoClient;
+      if (client == null) {
+        synchronized (lock) {
+        client = baseMongoClient;
+        if (client == null) {
+          client = createMongoClient(null);
           log.info("Created singleton MongoClient instance");
+          baseMongoClient = client;
         }
       }
     }
-    return baseMongoClient;
+    return client;
   }
-
   /**
    * Creates a MongoClient with the configuration from properties file.
    *
