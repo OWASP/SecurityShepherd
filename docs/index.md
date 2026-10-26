@@ -2,10 +2,11 @@
 
 Security Shepherd is a web and mobile application security training platform. It helps people of any skill level, from AppSec beginners to experienced engineers, build their penetration testing skills.
 
-The source code, issues and releases are on [GitHub](https://github.com/OWASP/SecurityShepherd). To get it running with Docker, follow the [README](https://github.com/OWASP/SecurityShepherd#readme).
+The source code, issues and releases are on [GitHub](https://github.com/OWASP/SecurityShepherd). New to Security Shepherd? Start with [Getting started](getting-started.md).
 
 ## Running Security Shepherd
 
+- [Running a CTF](running-a-ctf.md): set up levels, classes, the scoreboard and rules for an event
 - [Checking the Docker images](verifying-images.md): where an image came from and what's inside it
 - [Database configuration](database-configuration.md): connection settings and connection pooling
 
