@@ -31,48 +31,9 @@ public class KeyValidator {
     public static final String TYPE_LESSON = "lesson";
     public static final String TYPE_CHALLENGE = "challenge";
 
-    // Module identifiers
+    // Module identifiers. Each lesson/challenge PR adds its own entries here.
     public enum Module {
-        // Reverse Engineering
-        RE_LESSON("re_lesson", TYPE_LESSON),
-        RE_CHALLENGE_1("re_challenge_1", TYPE_CHALLENGE),
-
-        // Insecure Data Storage
-        IDS_LESSON("ids_lesson", TYPE_LESSON),
-        IDS_CHALLENGE_1("ids_challenge_1", TYPE_CHALLENGE),
-
-        // Poor Authentication
-        POOR_AUTH_LESSON("poor_auth_lesson", TYPE_LESSON),
-        POOR_AUTH_CHALLENGE("poor_auth_challenge", TYPE_CHALLENGE),
-
-        // Insecure Authorization
-        INSECURE_AUTH_LESSON("insecure_auth_lesson", TYPE_LESSON),
-
-        // Supply Chain
-        SUPPLY_CHAIN_LESSON("supply_chain_lesson", TYPE_LESSON),
-
-        // Insecure Communication
-        INSECURE_COMM_LESSON("insecure_comm_lesson", TYPE_LESSON),
-        INSECURE_COMM_CHALLENGE("insecure_comm_challenge", TYPE_CHALLENGE),
-
-        // Insufficient Cryptography
-        INSUFFICIENT_CRYPTO_LESSON("insufficient_crypto_lesson", TYPE_LESSON),
-        INSUFFICIENT_CRYPTO_CHALLENGE("insufficient_crypto_challenge", TYPE_CHALLENGE),
-
-        // Security Misconfiguration
-        SECURITY_MISCONFIG_LESSON("security_misconfig_lesson", TYPE_LESSON),
-        SECURITY_MISCONFIG_CHALLENGE_2("security_misconfig_challenge_2", TYPE_CHALLENGE),
-
-        // Input Validation
-        INPUT_VALIDATION_LESSON("input_validation_lesson", TYPE_LESSON),
-
-        // Privacy Controls
-        PRIVACY_LESSON("privacy_lesson", TYPE_LESSON),
-
-        // Client-Side Injection
-        CLIENT_SIDE_INJECTION_LESSON("client_side_injection_lesson", TYPE_LESSON),
-        CLIENT_SIDE_INJECTION_CHALLENGE_1("client_side_injection_challenge_1", TYPE_CHALLENGE),
-        CLIENT_SIDE_INJECTION_CHALLENGE_2("client_side_injection_challenge_2", TYPE_CHALLENGE);
+        ;
 
         private final String id;
         private final String type;
@@ -91,13 +52,8 @@ public class KeyValidator {
         }
     }
 
-    // RE_LESSON and RE_CHALLENGE_1 retain local hashes — the SHA-256 in the APK is the
-    // target of the reverse-engineering challenge itself. All other modules require a live
-    // server session; no offline fallback is provided.
-    private static final Map<Module, String> KEY_HASHES = new HashMap<Module, String>() {{
-        put(Module.RE_LESSON,      "a0c066b9cd89c084709330a943fb6b333d45c932ed613e428bc52078b5722e57");
-        put(Module.RE_CHALLENGE_1, "f04a272a2d82a0168f44559f9957dc9e028ecb13195c12fce17ac08d4af91deb");
-    }};
+    // Offline hashes, if any. Modules without an entry require a live server session.
+    private static final Map<Module, String> KEY_HASHES = new HashMap<>();
 
     /**
      * Validates a key submission using SHA-256 hash comparison.
@@ -189,7 +145,7 @@ public class KeyValidator {
         String sessionCookie = AuthManager.getMobileSessionCookie(context);
 
         if (serverUrl.isEmpty() || sessionCookie.isEmpty()) {
-            // No active server session — only RE modules have offline hashes.
+            // No active server session — only modules with an offline hash can validate.
             Log.d(TAG, "No server session — offline validation for " + module.getId());
             boolean result = validateKey(module, key);
             new Handler(Looper.getMainLooper()).post(() -> callback.onResult(result));

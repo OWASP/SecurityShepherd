@@ -21,9 +21,8 @@ import java.util.Map;
  * Provides the correct key string for each mobile module in both offline and online modes.
  *
  * <p><b>Offline mode</b> — when no server credentials are configured, an empty string is returned
- * for all modules except the Reverse Engineering lesson, which retains a static offline key for
- * introductory use. Lessons are still explorable offline, but key submission requires a server
- * login so that completion is validated server-side.
+ * for modules without a static offline key. Lessons are still explorable offline, but key
+ * submission requires a server login so that completion is validated server-side.
  *
  * <p><b>Online mode</b> — when the student is signed in, the server-generated user-specific key
  * is fetched from {@code /mobileFlagGet}. This key is an HMAC of the base key keyed with the
@@ -37,18 +36,8 @@ public class KeyProvider {
 
     private static final String TAG = "KeyProvider";
 
-    /**
-     * Offline (static) key values — only the Reverse Engineering lesson retains a static key;
-     * its SHA-256 hash in the APK is the target of the reverse-engineering challenge itself.
-     * All other modules return an empty string when offline; a live server session is required.
-     */
+    /** Offline (static) keys; modules without an entry return an empty string and need a live server session. */
     private static final Map<KeyValidator.Module, String> OFFLINE_KEYS = new HashMap<>();
-
-    static {
-        OFFLINE_KEYS.put(
-                KeyValidator.Module.RE_LESSON,
-                "Frozen_Clock_Melts_By_Noon");
-    }
 
     public interface KeyCallback {
         /** Always invoked on the main thread. */

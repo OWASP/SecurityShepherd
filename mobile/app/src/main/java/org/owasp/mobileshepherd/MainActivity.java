@@ -3,7 +3,6 @@ package org.owasp.mobileshepherd;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -48,28 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private static final Map<Integer, KeyValidator.Module> NAV_TO_MODULE_MAP = new HashMap<>();
 
     static {
-        // Lessons
-        NAV_TO_MODULE_MAP.put(R.id.nav_lesson, KeyValidator.Module.RE_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_data_lesson, KeyValidator.Module.IDS_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_poor_auth_lesson, KeyValidator.Module.POOR_AUTH_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_authorization_lesson, KeyValidator.Module.INSECURE_AUTH_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_supply_chain_lesson, KeyValidator.Module.SUPPLY_CHAIN_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_comm_lesson, KeyValidator.Module.INSECURE_COMM_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insufficient_crypto_lesson, KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_security_misconfig_lesson, KeyValidator.Module.SECURITY_MISCONFIG_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_input_validation_lesson, KeyValidator.Module.INPUT_VALIDATION_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_privacy_lesson, KeyValidator.Module.PRIVACY_LESSON);
-        NAV_TO_MODULE_MAP.put(R.id.nav_client_side_injection_lesson, KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON);
-
-        // Challenges
-        NAV_TO_MODULE_MAP.put(R.id.nav_challenge1, KeyValidator.Module.RE_CHALLENGE_1);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_data1, KeyValidator.Module.IDS_CHALLENGE_1);
-        NAV_TO_MODULE_MAP.put(R.id.nav_poor_auth_challenge, KeyValidator.Module.POOR_AUTH_CHALLENGE);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_comm_challenge, KeyValidator.Module.INSECURE_COMM_CHALLENGE);
-        NAV_TO_MODULE_MAP.put(R.id.nav_insufficient_crypto_challenge, KeyValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE);
-        NAV_TO_MODULE_MAP.put(R.id.nav_security_misconfig_challenge2, KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2);
-        NAV_TO_MODULE_MAP.put(R.id.nav_client_side_injection_challenge1, KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1);
-        NAV_TO_MODULE_MAP.put(R.id.nav_client_side_injection_challenge2, KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2);
+        // Each lesson/challenge PR registers its nav destination here.
     }
 
     @Override
@@ -197,15 +175,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_lesson, R.id.nav_insecure_data_lesson, R.id.nav_poor_auth_lesson, R.id.nav_insecure_authorization_lesson, R.id.nav_supply_chain_lesson, R.id.nav_insecure_comm_lesson, R.id.nav_insufficient_crypto_lesson, R.id.nav_security_misconfig_lesson,
-                R.id.nav_challenge1,
-            R.id.nav_insecure_data1,
-                R.id.nav_poor_auth_challenge, R.id.nav_insecure_comm_challenge, R.id.nav_insufficient_crypto_challenge,
-                R.id.nav_security_misconfig_challenge2,
-                R.id.nav_input_validation_lesson,
-                R.id.nav_privacy_lesson,
-                R.id.nav_client_side_injection_lesson, R.id.nav_client_side_injection_challenge1, R.id.nav_client_side_injection_challenge2,
-                R.id.nav_adb_reference, R.id.nav_scoreboard
+                R.id.nav_home, R.id.nav_adb_reference, R.id.nav_scoreboard
         ).setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -220,29 +190,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        handleDeepLinkIntent(getIntent());
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        handleDeepLinkIntent(intent);
-    }
-
-    /**
-     * Input Validation Lesson: real external deep link entry point.
-     * Routes myapp://open?url=... intents straight to the lesson so it can be
-     * triggered via adb shell am start, not just typed into the in-app field.
-     */
-    private void handleDeepLinkIntent(Intent intent) {
-        if (intent == null) return;
-        Uri data = intent.getData();
-        if (data == null) return;
-        if ("myapp".equals(data.getScheme()) && "open".equals(data.getHost())) {
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-            navController.navigate(R.id.nav_input_validation_lesson);
-        }
     }
 
     private List<NavigationItem> createNavigationItems() {
@@ -251,52 +198,8 @@ public class MainActivity extends AppCompatActivity {
         // Home
         items.add(new NavigationItem(1, "Home", R.drawable.ic_menu_home, R.id.nav_home));
         
-        // Lessons group
-        NavigationItem lessonsGroup = new NavigationItem(2, "Lessons", R.drawable.ic_menu_camera);
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(21, "Reverse Engineering", 0, R.id.nav_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(22, "Insecure Data Storage", 0, R.id.nav_insecure_data_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(23, "Poor Authentication", 0, R.id.nav_poor_auth_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(24, "Insecure Authorization", 0, R.id.nav_insecure_authorization_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(25, "Supply Chain Security", 0, R.id.nav_supply_chain_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(26, "Insecure Communication", 0, R.id.nav_insecure_comm_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(27, "Insufficient Cryptography", 0, R.id.nav_insufficient_crypto_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(28, "Security Misconfiguration", 0, R.id.nav_security_misconfig_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(29, "Input Validation", 0, R.id.nav_input_validation_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(30, "Privacy Controls", 0, R.id.nav_privacy_lesson));
-        addChildIfNotCompleted(lessonsGroup, new NavigationItem(31, "Client-Side Injection", 0, R.id.nav_client_side_injection_lesson));
-        if (lessonsGroup.getChildren().size() > 0) items.add(lessonsGroup);
-        
-        // Challenges group
-        NavigationItem challengesGroup = new NavigationItem(3, "Challenges", R.drawable.ic_menu_code);
-        
-        // Reverse Engineering sub-group
-        NavigationItem reverseEngGroup = new NavigationItem(40, "Reverse Engineering", 0);
-        addChildIfNotCompleted(reverseEngGroup, new NavigationItem(41, "Reverse Engineering 1", 0, R.id.nav_challenge1));
-        if (reverseEngGroup.getChildren().size() > 0) challengesGroup.addChild(reverseEngGroup);
-        
-        // Insecure Data Storage sub-group
-        NavigationItem insecureDataGroup = new NavigationItem(44, "Insecure Data Storage", 0);
-        addChildIfNotCompleted(insecureDataGroup, new NavigationItem(45, "Insecure Data Storage 1", 0, R.id.nav_insecure_data1));
-        if (insecureDataGroup.getChildren().size() > 0) challengesGroup.addChild(insecureDataGroup);
-        
-        // Individual challenges
-        addChildIfNotCompleted(challengesGroup, new NavigationItem(47, "Poor Authentication 1", 0, R.id.nav_poor_auth_challenge));
-        addChildIfNotCompleted(challengesGroup, new NavigationItem(49, "Insecure Communication 1", 0, R.id.nav_insecure_comm_challenge));
-        addChildIfNotCompleted(challengesGroup, new NavigationItem(50, "Insufficient Cryptography 1", 0, R.id.nav_insufficient_crypto_challenge));
-        
-        // Security Misconfiguration sub-group
-        NavigationItem securityMisconfigGroup = new NavigationItem(51, "Security Misconfiguration", 0);
-        addChildIfNotCompleted(securityMisconfigGroup, new NavigationItem(52, "Security Misconfiguration 1", 0, R.id.nav_security_misconfig_challenge2));
-        if (securityMisconfigGroup.getChildren().size() > 0) challengesGroup.addChild(securityMisconfigGroup);
-        
-        // Client-Side Injection sub-group
-        NavigationItem clientSideGroup = new NavigationItem(55, "Client-Side Injection", 0);
-        addChildIfNotCompleted(clientSideGroup, new NavigationItem(56, "Client-Side Injection 1", 0, R.id.nav_client_side_injection_challenge1));
-        addChildIfNotCompleted(clientSideGroup, new NavigationItem(57, "Client-Side Injection 2", 0, R.id.nav_client_side_injection_challenge2));
-        if (clientSideGroup.getChildren().size() > 0) challengesGroup.addChild(clientSideGroup);
-        
-        if (challengesGroup.getChildren().size() > 0) items.add(challengesGroup);
-        
+        // Lessons and challenges are added per category.
+
         // ADB Reference
         items.add(new NavigationItem(4, "ADB Reference", R.drawable.ic_menu_code, R.id.nav_adb_reference));
 
@@ -326,25 +229,6 @@ public class MainActivity extends AppCompatActivity {
     
     private String getTitleForNavId(int navId) {
         // Map navigation IDs to readable titles
-        if (navId == R.id.nav_lesson) return "Reverse Engineering Lesson";
-        if (navId == R.id.nav_insecure_data_lesson) return "Insecure Data Storage Lesson";
-        if (navId == R.id.nav_poor_auth_lesson) return "Poor Authentication Lesson";
-        if (navId == R.id.nav_insecure_authorization_lesson) return "Insecure Authorization Lesson";
-        if (navId == R.id.nav_supply_chain_lesson) return "Supply Chain Security Lesson";
-        if (navId == R.id.nav_insecure_comm_lesson) return "Insecure Communication Lesson";
-        if (navId == R.id.nav_insufficient_crypto_lesson) return "Insufficient Cryptography Lesson";
-        if (navId == R.id.nav_security_misconfig_lesson) return "Security Misconfiguration Lesson";
-        if (navId == R.id.nav_input_validation_lesson) return "Input Validation Lesson";
-        if (navId == R.id.nav_privacy_lesson) return "Privacy Controls Lesson";
-        if (navId == R.id.nav_client_side_injection_lesson) return "Client-Side Injection Lesson";
-        if (navId == R.id.nav_challenge1) return "Reverse Engineering 1";
-        if (navId == R.id.nav_insecure_data1) return "Insecure Data Storage 1";
-        if (navId == R.id.nav_poor_auth_challenge) return "Poor Authentication 1";
-        if (navId == R.id.nav_insecure_comm_challenge) return "Insecure Communication 1";
-        if (navId == R.id.nav_insufficient_crypto_challenge) return "Insufficient Cryptography 1";
-        if (navId == R.id.nav_security_misconfig_challenge2) return "Security Misconfiguration 1";
-        if (navId == R.id.nav_client_side_injection_challenge1) return "Client-Side Injection 1";
-        if (navId == R.id.nav_client_side_injection_challenge2) return "Client-Side Injection 2";
         return "Module";
     }
     
