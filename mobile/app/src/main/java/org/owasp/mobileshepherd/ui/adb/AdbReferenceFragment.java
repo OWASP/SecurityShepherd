@@ -49,10 +49,6 @@ public class AdbReferenceFragment extends Fragment {
         setupCopyButton(binding.copyPullApk, "adb pull /data/app/org.owasp.mobileshepherd-*/base.apk");
         setupCopyButton(binding.copyClearData, "adb shell pm clear org.owasp.mobileshepherd");
 
-        setupCopyButton(binding.copyRunAsVault, "adb shell run-as org.owasp.mobileshepherd cat shared_prefs/recovery_vault.xml");
-        setupCopyButton(binding.copyPullVault, "adb pull /data/data/org.owasp.mobileshepherd/shared_prefs/recovery_vault.xml");
-        setupCopyButton(binding.copyJadx, "jadx-gui app-debug.apk");
-        setupCopyButton(binding.copyXorDecode, "python3 -c \"import base64; d=base64.b64decode('PASTE_BASE64_HERE'); print(''.join(chr(b^0x42) for b in d))\"");
 
         return root;
     }
