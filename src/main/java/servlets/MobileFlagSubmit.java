@@ -98,6 +98,13 @@ public class MobileFlagSubmit extends HttpServlet {
       return;
     }
 
+    MobileModuleGate.Decision gate = MobileModuleGate.check(applicationRoot, moduleId, ses);
+    if (gate != MobileModuleGate.Decision.ALLOWED) {
+      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      out.write(errorJson(gate.message()));
+      return;
+    }
+
     // Recompute the same HMAC that MobileFlagGet produced for this user.
     // Hash.generateUserSolutionKeyOnly uses HmacSHA512 keyed with the server`s
     // ephemeral key, which is constant for the lifetime of the server process.

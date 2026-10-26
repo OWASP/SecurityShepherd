@@ -103,6 +103,14 @@ public class MobileModuleStart extends HttpServlet {
       return;
     }
 
+    // Must run before moduleGetHash below, which inserts a results row regardless of status.
+    MobileModuleGate.Decision gate = MobileModuleGate.check(applicationRoot, moduleId, ses);
+    if (gate != MobileModuleGate.Decision.ALLOWED) {
+      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      out.write(errorJson(gate.message()));
+      return;
+    }
+
     // Record in-memory for fast gate checks within this server session.
     MobileModuleProgress.recordStart(userId, moduleId);
 

@@ -111,6 +111,14 @@ public class MobileFlagGet extends HttpServlet {
       return;
     }
 
+    MobileModuleGate.Decision gate =
+        MobileModuleGate.check(getServletContext().getRealPath(""), moduleId, ses);
+    if (gate != MobileModuleGate.Decision.ALLOWED) {
+      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      out.write(errorJson(gate.message()));
+      return;
+    }
+
     // Derive a user-specific flag. Hash.generateUserSolutionKeyOnly uses HmacSHA512
     // keyed with the server's ephemeral key — same computation as MobileFlagSubmit.
     String dynamicFlag = Hash.generateUserSolutionKeyOnly(baseFlag, userName);
