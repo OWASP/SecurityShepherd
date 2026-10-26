@@ -33,7 +33,9 @@ public class KeyValidator {
 
     // Module identifiers. Each lesson/challenge PR adds its own entries here.
     public enum Module {
-        ;
+        CLIENT_SIDE_INJECTION_LESSON("client_side_injection_lesson", TYPE_LESSON),
+        CLIENT_SIDE_INJECTION_CHALLENGE_1("client_side_injection_challenge_1", TYPE_CHALLENGE),
+        CLIENT_SIDE_INJECTION_CHALLENGE_2("client_side_injection_challenge_2", TYPE_CHALLENGE);
 
         private final String id;
         private final String type;

@@ -191,4 +191,71 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="password_title">Password</string>
     <string name="challenge">Challenge</string>
 
+
+    <!-- =========================================================== -->
+    <!--  CLIENT-SIDE INJECTION (M4 / SQLite)      -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="client_side_injection_lesson_description">This app queries a local database using unsanitised user input. Manipulate the query to expose data that isn\'t meant to be visible.</string>
+    <string name="client_side_injection_lesson_intro">Client-Side Injection occurs when mobile applications fail to properly validate and sanitize user input before using it in SQL queries, JavaScript contexts, or other interpreters on the device.\n\nTypes of Client-Side Injection:\n\n- SQL Injection in SQLite databases\n- JavaScript injection in WebViews\n- XML/JSON injection in parsers\n- Command injection in system calls\n- NoSQL injection in local databases\n- File path injection\n\nSQL Injection is particularly dangerous because:\n- SQLite databases store sensitive app data\n- Attackers can read any table\n- Authentication can be bypassed\n- Data can be modified or deleted\n- Business logic can be circumvented</string>
+    <string name="client_side_injection_lesson_vulnerabilities">SQL Injection Vulnerabilities:\n\n- String Concatenation: Building queries with user input\n  - "SELECT * FROM users WHERE name = \'" + input + "\'"\n  - Allows injection: \' OR 1=1--\n\n- Improper Escaping: Not handling special characters\n  - Single quotes (\')\n  - Comment markers (-- or /**/)\n  - SQL keywords (OR, UNION, SELECT)\n\n- Lack of Validation: Accepting any user input\n  - No input length limits\n  - No character whitelisting\n  - No pattern matching\n\nCommon Attack Patterns:\n- Authentication Bypass: \' OR \'1\'=\'1\n- UNION Attacks: \' UNION SELECT * FROM secrets--\n- Comment Injection: admin\'--\n- Always True Conditions: 1\' OR \'1\'=\'1</string>
+
+    <!-- Challenge 1 - Auth bypass -->
+    <string name="clientside_injection_1">Client-Side Injection 1</string>
+    <string name="client_side_injection_challenge1_description">This app authenticates users against a local SQLite database using a query built with string concatenation. Bypass the login to retrieve the admin password.</string>
+    <string name="client_side_injection_challenge1_intro">A vulnerable login workflow builds SQL queries through string concatenation. User accounts are stored in a SQLite database with usernames, passwords, roles, and balance data.\n\nObjective:\n1. Identify the SQL injection vulnerability\n2. Bypass the keyword filter and the authentication mechanism\n3. Retrieve the administrator account password\n4. Submit the password as the key\n\nThe weakness exists because user input is concatenated directly into SQL queries without proper validation or parameterization.</string>
+    <string name="client_side_injection_challenge1_vulnerabilities">Vulnerable Code Pattern:\n\nString query = "SELECT * FROM accounts WHERE username = \'" + username + "\' AND password = \'" + password + "\'";\n\nThis allows attackers to:\n- Break out of the query context\n- Inject their own SQL logic\n- Bypass authentication checks\n- Retrieve data from any user\n\nExample Attack:\nUsername: admin\'--\nPassword: (anything)\n\nResulting Query:\nSELECT * FROM accounts WHERE username = \'admin\'--\' AND password = \'....\'\n\nThe -- comments out the password check!\n\nNote: this app filters common SQL keywords and comment markers, so a plain \'--\' will not work. Find another way to break out of the query.</string>
+    <string name="account_login">Account Login</string>
+    <string name="login_to_access_your_account_can_you_byp">Login to access your account. Can you bypass the authentication and retrieve the admin password?</string>
+    <string name="login_results_will_appear_here">Login results will appear here...</string>
+    <string name="once_youve_retrieved_the_admin_password">Once you\'ve retrieved the admin password, submit it as the key:</string>
+
+    <!-- Challenge 2 - UNION injection -->
+    <string name="clientside_injection_2">Client-Side Injection 2</string>
+    <string name="client_side_injection_challenge2_description">This app searches a product database using unsanitised input. Use a UNION-based injection to query the hidden secrets table and extract the admin token.</string>
+    <string name="client_side_injection_challenge2_intro">A product search feature contains a SQL injection vulnerability. Unlike basic authentication bypass, this challenge requires UNION-based injection to query a separate table.\n\nDatabase Structure:\n- products table: name, category, price, stock\n- secrets table: secret_key, secret_value (HIDDEN)\n\nObjective:\n1. Identify the number of columns in the products query\n2. Use UNION SELECT to query the secrets table\n3. Extract the key value\n4. Submit it as the key\n\nRequired concepts:\n- UNION SQL operator\n- Column count matching\n- Cross-table data extraction</string>
+    <string name="client_side_injection_challenge2_vulnerabilities" formatted="false">Vulnerable Code:\n\nString query = "SELECT name, category, price, stock FROM products WHERE name LIKE \'%" + input + "%\'";\n\nUNION-Based Injection allows:\n- Combining results from multiple queries\n- Accessing tables not in original query\n- Bypassing application logic\n- Extracting data from hidden tables\n\nAttack Requirements:\n1. Match column count in UNION\n2. Match data types (use NULL for unknowns)\n3. Terminate original query properly\n4. Know or guess target table name\n\nExample Attack:\n\' UNION SELECT secret_key, secret_value, NULL, NULL FROM secrets--</string>
+    <string name="product_search">Product Search</string>
+    <string name="search_the_product_database_can_you_disc">Search the product database. Can you discover the hidden \'secrets\' table and extract the key?</string>
+    <string name="search_products">Search products</string>
+    <string name="search_results_will_appear_here">Search results will appear here...</string>
+    <string name="once_youve_extracted_the_admin_token_fro">Once you\'ve extracted the key from the secrets table, submit it below:</string>
+
+    <!-- Challenge 3 - User search injection -->
+    <string name="user_search">User Search</string>
+    <string name="find_the_hidden_admin_user">Find the hidden admin user!</string>
+    <string name="search_username">Search username</string>
+    <string name="search_users">Search Users</string>
+
+
+    <!-- Client-side injection: runtime messages and dialogs -->
+    <string name="csi_ok">OK</string>
+    <string name="csi_close">Close</string>
+    <string name="csi_yes">Yes</string>
+    <string name="csi_no">No</string>
+    <string name="csi_enter_search_term">Please enter a search term</string>
+    <string name="csi_info_title_lesson">Client-Side Injection Lesson\nOWASP M4: Insufficient Input/Output Validation</string>
+    <string name="csi_info_title_challenge2">Client-Side Injection Challenge 2\nOWASP M4: Insufficient Input/Output Validation</string>
+
+    <string name="csi_lesson_no_users">No users found matching: %1$s</string>
+    <string name="csi_lesson_error">Error: %1$s</string>
+    <string name="csi_lesson_complete_title">Lesson Complete</string>
+    <string name="csi_lesson_complete_message">Correct key validated.</string>
+    <string name="csi_lesson_key_incorrect">Key incorrect.</string>
+
+    <string name="csi_c1_enter_credentials">Enter both username and password</string>
+    <string name="csi_c1_access_granted">Logged in as: admin\nKey: %1$s</string>
+    <string name="csi_c1_logged_in">Logged in as: %1$s\nRole: %2$s  Balance: $%3$d</string>
+    <string name="csi_c1_login_failed">Login failed.</string>
+    <string name="csi_c1_query_error">Query error: %1$s</string>
+    <string name="csi_c1_complete">Correct! Challenge complete.</string>
+
+    <string name="csi_c2_no_products">No products found matching: %1$s</string>
+    <string name="csi_c2_error">Error: %1$s</string>
+    <string name="csi_c2_secret_discovered">\nKey: %1$s\n</string>
+    <string name="csi_c2_success_title">Success!</string>
+    <string name="csi_c2_success_message">Challenge complete.\n\nKey: %1$s%2$s</string>
+    <string name="csi_c2_completed_times">\n(Completed %1$d times)</string>
+
 </resources>

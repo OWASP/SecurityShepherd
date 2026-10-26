@@ -27,4 +27,22 @@
         android:label="@string/menu_scoreboard"
         tools:layout="@layout/fragment_scoreboard" />
 
+    <fragment
+        android:id="@+id/nav_client_side_injection_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.clientsideinjection.ClientSideInjectionLessonFragment"
+        android:label="Client-Side Injection Lesson"
+        tools:layout="@layout/fragment_client_side_injection_lesson" />
+
+    <fragment
+        android:id="@+id/nav_client_side_injection_challenge1"
+        android:name="org.owasp.mobileshepherd.ui.challenges.clientsideinjection.ClientSideInjectionChallenge1Fragment"
+        android:label="@string/clientside_injection_1"
+        tools:layout="@layout/fragment_client_side_injection_challenge1" />
+
+    <fragment
+        android:id="@+id/nav_client_side_injection_challenge2"
+        android:name="org.owasp.mobileshepherd.ui.challenges.clientsideinjection.ClientSideInjectionChallenge2Fragment"
+        android:label="@string/clientside_injection_2"
+        tools:layout="@layout/fragment_client_side_injection_challenge2" />
+
 </navigation>

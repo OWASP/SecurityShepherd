@@ -47,7 +47,27 @@ public final class ModuleInfoHelper {
             new EnumMap<>(KeyValidator.Module.class);
 
     static {
-        // Each lesson/challenge PR registers its module info here.
+        REGISTRY.put(
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON,
+                new ModuleInfo(
+                        "lesson",
+                        "Client-Side Injection",
+                        "M4",
+                        "org.owasp.mobileshepherd.ui.lessons.clientsideinjection"));
+        REGISTRY.put(
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1,
+                new ModuleInfo(
+                        "challenge",
+                        "Client-Side Injection 1",
+                        "M4",
+                        "org.owasp.mobileshepherd.ui.challenges.clientsideinjection"));
+        REGISTRY.put(
+                KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
+                new ModuleInfo(
+                        "challenge",
+                        "Client-Side Injection 2",
+                        "M4",
+                        "org.owasp.mobileshepherd.ui.challenges.clientsideinjection"));
     }
 
     public static void showDialog(Context context, KeyValidator.Module module) {
