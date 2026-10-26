@@ -26,6 +26,16 @@
         android:textColor="@color/text_primary" />
 
     <TextView
+        android:id="@+id/nav_item_unavailable_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/module_unavailable"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/nav_item_completed_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

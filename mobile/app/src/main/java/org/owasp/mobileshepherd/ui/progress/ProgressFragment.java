@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentProgressBinding;
 import org.owasp.mobileshepherd.utils.KeyValidator;
+import org.owasp.mobileshepherd.utils.ModuleAvailability;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
 import java.text.SimpleDateFormat;
@@ -170,15 +171,18 @@ public class ProgressFragment extends Fragment {
                 holder.dateText.setText(completionInfo);
                 holder.dateText.setVisibility(View.VISIBLE);
             } else {
+                boolean unavailable = !ModuleAvailability.isAvailable(item.module);
+                String statusLabel = holder.itemView.getContext().getString(
+                        unavailable ? R.string.module_unavailable : R.string.not_started);
                 holder.statusIcon.setImageResource(R.drawable.ic_status_incomplete);
                 holder.statusIcon.setImageTintList(ColorStateList.valueOf(
                         holder.itemView.getContext().getColor(R.color.text_secondary)));
-                holder.statusIcon.setContentDescription(
-                        holder.itemView.getContext().getString(R.string.not_started));
-                holder.statusText.setText("Not Started");
+                holder.statusIcon.setContentDescription(statusLabel);
+                holder.statusText.setText(statusLabel);
                 holder.statusText.setTextColor(holder.itemView.getContext()
                         .getColor(R.color.text_secondary));
                 holder.dateText.setVisibility(View.GONE);
+                holder.itemView.setAlpha(unavailable ? 0.5f : 1f);
             }
 
             // Set background for challenge vs lesson

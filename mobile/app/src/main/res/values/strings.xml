@@ -103,6 +103,8 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="module_details">Module Details</string>
     <string name="module_name">Module Name</string>
     <string name="not_started">Not Started</string>
+    <string name="module_unavailable">Unavailable</string>
+    <string name="module_unavailable_default_reason">This module is not available right now.</string>
 
     <!-- Common UI -->
     <string name="validate_button">Validate Key</string>

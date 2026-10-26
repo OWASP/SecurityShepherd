@@ -5,11 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.owasp.mobileshepherd.utils.KeyValidator;
+import org.owasp.mobileshepherd.utils.ModuleAvailability;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
 import java.util.ArrayList;
@@ -103,6 +105,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Vi
         private TextView title;
         private ImageView expandIcon;
         private TextView completedIndicator;
+        private TextView unavailableLabel;
         private View itemView;
 
         public ViewHolder(@NonNull View itemView) {
@@ -112,19 +115,33 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Vi
             title = itemView.findViewById(R.id.nav_item_title);
             expandIcon = itemView.findViewById(R.id.nav_item_expand_icon);
             completedIndicator = itemView.findViewById(R.id.nav_item_completed_indicator);
+            unavailableLabel = itemView.findViewById(R.id.nav_item_unavailable_label);
         }
 
         public void bind(NavigationItem item) {
             title.setText(item.getTitle());
             
-            // Check if this item is completed
+            // Check if this item is completed, and whether the server currently lets the student open it
             boolean isCompleted = false;
+            boolean isUnavailable = false;
+            String unavailableReason = "";
             if (item.getNavigationId() != 0 && navToModuleMap != null) {
                 KeyValidator.Module module = navToModuleMap.get(item.getNavigationId());
                 if (module != null && progressTracker != null) {
                     isCompleted = progressTracker.isCompleted(module);
                 }
+                if (module != null && !item.isExpandable() && !ModuleAvailability.isAvailable(module)) {
+                    isUnavailable = true;
+                    unavailableReason = ModuleAvailability.getReason(module);
+                }
             }
+            final boolean greyedOut = isUnavailable;
+            final String reason = unavailableReason.isEmpty()
+                    ? itemView.getContext().getString(R.string.module_unavailable_default_reason)
+                    : unavailableReason;
+
+            unavailableLabel.setVisibility(greyedOut ? View.VISIBLE : View.GONE);
+            itemView.setAlpha(greyedOut ? 0.5f : 1f);
             
             // Show/hide completed indicator
             if (isCompleted && !item.isExpandable()) {
@@ -164,6 +181,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<NavigationAdapter.Vi
                     item.setExpanded(!item.isExpanded());
                     updateDisplayedItems();
                     notifyDataSetChanged();
+                } else if (greyedOut) {
+                    Toast.makeText(v.getContext(), reason, Toast.LENGTH_SHORT).show();
                 } else {
                     listener.onItemClick(item);
                 }

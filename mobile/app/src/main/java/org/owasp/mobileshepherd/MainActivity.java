@@ -31,6 +31,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.owasp.mobileshepherd.databinding.ActivityMainBinding;
 import org.owasp.mobileshepherd.utils.AuthManager;
 import org.owasp.mobileshepherd.utils.KeyValidator;
+import org.owasp.mobileshepherd.utils.ModuleAvailability;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
 import java.util.ArrayList;
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             if (AuthManager.isAuthenticated(this)) {
                 AuthManager.logout(this);
                 updateNavHeader(authStatus, authButton);
-                refreshNavigation();
+                ModuleAvailability.refresh(this, this::refreshNavigation);
                 Toast.makeText(this, "Signed out", Toast.LENGTH_SHORT).show();
             } else {
                 showAuthDialog(authStatus, authButton);
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 updateNavHeader(authStatus, authButton);
+                ModuleAvailability.refresh(MainActivity.this, MainActivity.this::refreshNavigation);
             }
         });
 
@@ -246,6 +248,12 @@ public class MainActivity extends AppCompatActivity {
     public void refreshNavigation() {
         List<NavigationItem> navigationItems = createNavigationItems();
         navigationAdapter.updateItems(navigationItems);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ModuleAvailability.refresh(this, this::refreshNavigation);
     }
 
     @Override
@@ -352,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
                 AuthManager.AuthCallback callback = (success, message) -> {
                     if (success) {
                         updateNavHeader(statusView, button);
-                        refreshNavigation();
+                        ModuleAvailability.refresh(this, this::refreshNavigation);
                         dialog.dismiss();
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                     } else {
