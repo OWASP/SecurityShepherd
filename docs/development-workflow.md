@@ -107,7 +107,7 @@ When your changes are complete and tests pass:
 2. Create a Pull Request targeting the `dev` branch
 3. Ensure all CI checks pass
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md) for code formatting and PR guidelines.
+See [CONTRIBUTING.md](https://github.com/OWASP/SecurityShepherd/blob/dev/CONTRIBUTING.md) for code formatting and PR guidelines.
 
 ## Environment Configuration
 
