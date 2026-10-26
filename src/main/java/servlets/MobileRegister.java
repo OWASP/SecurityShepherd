@@ -108,7 +108,7 @@ public class MobileRegister extends HttpServlet {
       String defaultClass = Getter.getDefaultClass(applicationRoot);
       String classId = (defaultClass == null || defaultClass.isEmpty()) ? null : defaultClass;
       Setter.userCreate(applicationRoot, classId, userName, passWord, "player", userAddress, false);
-      log.debug("Mobile registration successful for: " + userName);
+      log.debug("Mobile registration successful for: " + MobileModuleFlags.sanitize(userName));
       JSONObject result = new JSONObject();
       result.put("success", true);
       out.write(result.toString());

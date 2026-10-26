@@ -29,7 +29,7 @@ import utils.ShepherdLogManager;
  * <p>Request (POST, application/x-www-form-urlencoded):
  *
  * <pre>
- *   moduleId â€" Mobile module identifier (e.g. "client_side_injection_lesson")
+ *   moduleId - Mobile module identifier (e.g. "client_side_injection_lesson")
  * </pre>
  *
  * <p>Authentication via the Shepherd session cookie (JSESSIONID) set during mobile login.
@@ -77,9 +77,7 @@ public class MobileFlagGet extends HttpServlet {
     }
 
     HttpSession ses = request.getSession(false);
-    if (ses == null
-        || ses.getAttribute("userName") == null
-        || ses.getAttribute("userStamp") == null) {
+    if (!MobileSession.isAuthenticated(ses)) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       out.write(errorJson("Not authenticated"));
       return;
@@ -96,8 +94,9 @@ public class MobileFlagGet extends HttpServlet {
       return;
     }
 
-    // Gate: only deliver a flag if the student has opened this module via the app.
-    // This prevents bulk flag farming by calling this endpoint directly after login.
+    // Gate: only deliver a flag if this user has called /mobileModuleStart for the module since
+    // the last server restart. This stops accidental or lazy bulk fetching; it is not a defence
+    // against a deliberate client, which can call start then get with no interaction.
     boolean started = MobileModuleProgress.hasStarted(userId, moduleId);
     if (!started) {
       log.debug(

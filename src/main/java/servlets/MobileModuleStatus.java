@@ -61,9 +61,7 @@ public class MobileModuleStatus extends HttpServlet {
     PrintWriter out = response.getWriter();
 
     HttpSession ses = request.getSession(false);
-    if (ses == null
-        || ses.getAttribute("userName") == null
-        || ses.getAttribute("userStamp") == null) {
+    if (!MobileSession.isAuthenticated(ses)) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       out.write(errorJson("Not authenticated"));
       return;

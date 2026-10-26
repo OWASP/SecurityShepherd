@@ -20,8 +20,10 @@ import utils.ShepherdLogManager;
  * for that user/module pair. The Android app calls this automatically when a lesson or challenge
  * fragment becomes visible, so legitimate use is transparent to the student.
  *
- * <p>This two-step requirement (start → get) prevents a student from bulk-fetching all flags via
- * direct API calls immediately after logging in without interacting with any module.
+ * <p>This two-step requirement (start → get) stops accidental or lazy bulk fetching of flags right
+ * after login. It is not a security boundary: start is just an authenticated POST, so a deliberate
+ * client can still call start, get and submit without opening or solving the module. The flag is
+ * also present on the device by design, so the platform treats mobile scoring as honour-system.
  *
  * <p>For offline-only modules (e.g. Reverse Engineering) that have no entry in {@link
  * MobileModuleFlags#BASE_FLAGS}, this endpoint silently succeeds — the gate in {@code
@@ -30,7 +32,7 @@ import utils.ShepherdLogManager;
  * <p>Request (POST, application/x-www-form-urlencoded):
  *
  * <pre>
- *   moduleId â€" Mobile module identifier (e.g. "insecure_comm_lesson")
+ *   moduleId - Mobile module identifier (e.g. "insecure_comm_lesson")
  * </pre>
  *
  * <p>Authentication via the Shepherd session cookie (JSESSIONID) set during mobile login.
@@ -78,9 +80,7 @@ public class MobileModuleStart extends HttpServlet {
     }
 
     HttpSession ses = request.getSession(false);
-    if (ses == null
-        || ses.getAttribute("userName") == null
-        || ses.getAttribute("userStamp") == null) {
+    if (!MobileSession.isAuthenticated(ses)) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       out.write(errorJson("Not authenticated"));
       return;
@@ -114,8 +114,10 @@ public class MobileModuleStart extends HttpServlet {
     // Record in-memory for fast gate checks within this server session.
     MobileModuleProgress.recordStart(userId, moduleId);
 
-    // Also DB-persist via moduleGetHash so the start survives server restarts.
+    // Also ensure a results row exists, which MobileFlagSubmit needs in order to score the module.
     // getModuleAddress is idempotent: it only inserts a results row if one doesn't exist.
+    // The flag gate itself reads only the in-memory record above, so after a server restart the
+    // app must call this endpoint again before MobileFlagGet will return a flag.
     String dbModuleId = MobileModuleFlags.MODULE_DB_IDS.get(moduleId);
     if (dbModuleId != null) {
       try {
@@ -127,7 +129,8 @@ public class MobileModuleStart extends HttpServlet {
                 + dbModuleId
                 + ")");
       } catch (Exception e) {
-        // Non-fatal: in-memory record is still set; gate will fall back to DB on next check.
+        // Non-fatal: the in-memory start is already recorded. MobileFlagSubmit creates the
+        // results row itself if it is still missing.
         log.warn(
             "DB start record failed for "
                 + MobileModuleFlags.sanitize(moduleId)

@@ -77,9 +77,7 @@ public class MobileFlagSubmit extends HttpServlet {
     }
 
     HttpSession ses = request.getSession(false);
-    if (ses == null
-        || ses.getAttribute("userName") == null
-        || ses.getAttribute("userStamp") == null) {
+    if (!MobileSession.isAuthenticated(ses)) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       out.write(errorJson("Not authenticated"));
       return;
@@ -131,8 +129,12 @@ public class MobileFlagSubmit extends HttpServlet {
           // Returns null when already completed or when there was no row (both safe to skip).
           String inProgress = Getter.checkPlayerResult(applicationRoot, dbModuleId, userId);
           if (inProgress != null) {
-            Setter.updatePlayerResult(
-                applicationRoot, dbModuleId, userId, "Mobile App Submission", 1, 1, 1);
+            // updatePlayerResult returns null when the CTF isn't running or on a SQL error.
+            if (Setter.updatePlayerResult(
+                    applicationRoot, dbModuleId, userId, "Mobile App Submission", 1, 1, 1)
+                == null) {
+              throw new IllegalStateException("updatePlayerResult did not record the result");
+            }
             log.debug(
                 "Score recorded for "
                     + MobileModuleFlags.sanitize(moduleId)
@@ -149,12 +151,17 @@ public class MobileFlagSubmit extends HttpServlet {
                     + ", no score change");
           }
         } catch (Exception e) {
-          // Scoring failure should not fail the flag validation response
+          // Don't report a correct flag as success when the score wasn't saved. A non-200 makes
+          // the app fall back to offline validation, and a retry is safe: scoring is idempotent
+          // because checkPlayerResult returns null once the module is completed.
           log.error(
               "Failed to record score for "
                   + MobileModuleFlags.sanitize(moduleId)
                   + ": "
                   + e.toString());
+          response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+          out.write(errorJson("Flag is correct but the score could not be recorded. Try again."));
+          return;
         }
       }
     }

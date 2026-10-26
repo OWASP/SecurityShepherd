@@ -61,10 +61,7 @@ public class MobileScoreboard extends HttpServlet {
     PrintWriter out = response.getWriter();
 
     HttpSession ses = request.getSession(false);
-    boolean loggedIn =
-        ses != null
-            && ses.getAttribute("userName") != null
-            && ses.getAttribute("userStamp") != null;
+    boolean loggedIn = MobileSession.isAuthenticated(ses);
 
     try {
       boolean isPublic = ScoreboardStatus.isPublicScoreboard();
