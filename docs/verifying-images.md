@@ -48,7 +48,7 @@ gh attestation verify "oci://docker.io/owasp/security-shepherd:$TAG" \
   --source-ref "$REF" --format json
 ```
 
-The image is built and signed in a reusable workflow, [`release-build.yml`](../.github/workflows/release-build.yml), that the workflow starting the build can't change. That makes the attestation [SLSA Build Level 3](https://slsa.dev/spec/v1.2/build-track-basics).
+The image is built and signed in a reusable workflow, [`release-build.yml`](https://github.com/OWASP/SecurityShepherd/blob/dev/.github/workflows/release-build.yml), that the workflow starting the build can't change. That makes the attestation [SLSA Build Level 3](https://slsa.dev/spec/v1.2/build-track-basics).
 
 ## 2. See what's inside it (SBOM)
 
@@ -81,7 +81,7 @@ grype "sbom:./shepherd-$TAG.spdx.json"
 
 Security Shepherd is deliberately vulnerable training software. Scanners report on the image's packages and libraries, not on the lessons and challenges, which are vulnerable by design.
 
-Some findings don't affect Security Shepherd, for example a vulnerable binary that comes with the base image but never runs. Each of these is listed, with the reason, in [`.vex/security-shepherd.openvex.json`](../.vex/security-shepherd.openvex.json), an [OpenVEX](https://openvex.dev/) document. Findings that do affect Security Shepherd are fixed in the image, not listed there. Scanners only apply a VEX document when you pass it to them:
+Some findings don't affect Security Shepherd, for example a vulnerable binary that comes with the base image but never runs. Each of these is listed, with the reason, in [`.vex/security-shepherd.openvex.json`](https://github.com/OWASP/SecurityShepherd/blob/dev/.vex/security-shepherd.openvex.json), an [OpenVEX](https://openvex.dev/) document. Findings that do affect Security Shepherd are fixed in the image, not listed there. Scanners only apply a VEX document when you pass it to them:
 
 ```bash
 curl -sSfLO https://raw.githubusercontent.com/OWASP/SecurityShepherd/dev/.vex/security-shepherd.openvex.json
@@ -154,4 +154,4 @@ gh attestation verify "oci://docker.io/owasp/security-shepherd@$digest" \
 docker run --rm -p 8443:8443 "owasp/security-shepherd@$digest"
 ```
 
-The image ships no TLS key: on its first start it generates its own self-signed certificate, so expect a browser warning at `https://localhost:8443`. For the full stack with its databases, use the `docker compose` quick start in the [README](../README.md).
+The image ships no TLS key: on its first start it generates its own self-signed certificate, so expect a browser warning at `https://localhost:8443`. For the full stack with its databases, use the `docker compose` quick start in the [README](https://github.com/OWASP/SecurityShepherd/blob/dev/README.md).

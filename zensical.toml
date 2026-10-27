@@ -1,0 +1,81 @@
+# Documentation site for docs/, built with Zensical and published to GitHub Pages by
+# .github/workflows/docs.yml (#1070). Preview it locally with `uv run zensical serve`.
+[project]
+site_name = "OWASP Security Shepherd"
+site_description = "Documentation for OWASP Security Shepherd, a web and mobile application security training platform."
+site_url = "https://owasp.github.io/SecurityShepherd/"
+repo_url = "https://github.com/OWASP/SecurityShepherd"
+repo_name = "OWASP/SecurityShepherd"
+edit_uri = "edit/dev/docs/"
+
+# docker-hub-overview.md is the Docker Hub repository overview, published by release.yml.
+exclude_docs = """
+docker-hub-overview.md
+"""
+
+nav = [
+  { "Home" = "index.md" },
+  { "Getting started" = "getting-started.md" },
+  { "Running Security Shepherd" = [
+    { "Running a CTF" = "running-a-ctf.md" },
+    { "Checking the Docker images" = "verifying-images.md" },
+    { "Database configuration" = "database-configuration.md" },
+  ] },
+  { "Contributing" = [
+    { "Development workflow" = "development-workflow.md" },
+    { "Running tests" = "testing.md" },
+    { "Releasing" = "releasing.md" },
+  ] },
+]
+
+[project.theme]
+# Holds the announcement bar (main.html).
+custom_dir = "zensical-overrides"
+language = "en"
+# Serve the system font stack instead of loading Google Fonts, which would share every
+# visitor's IP address with Google.
+font = false
+features = [
+  "content.action.edit",
+  "content.code.copy",
+  "navigation.footer",
+  "navigation.indexes",
+  "navigation.instant",
+  "navigation.path",
+  "navigation.sections",
+  "navigation.top",
+  "navigation.tracking",
+  "search.highlight",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+# Only extensions that match how GitHub renders Markdown, so every page reads the same on
+# github.com and on the site.
+[project.markdown_extensions]
+toc.permalink = true
+pymdownx.betterem = {}
+pymdownx.highlight.anchor_linenums = true
+pymdownx.highlight.pygments_lang_class = true
+pymdownx.inlinehilite = {}
+pymdownx.magiclink = {}
+pymdownx.superfences.custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+]
+pymdownx.tasklist.custom_checkbox = true
+pymdownx.tilde = {}
