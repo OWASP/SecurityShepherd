@@ -10,6 +10,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import org.owasp.mobileshepherd.utils.AuthManager;
 import org.owasp.mobileshepherd.utils.ProgressTracker;
 
 /**
@@ -72,6 +73,24 @@ public class Preferences extends AppCompatActivity {
                 });
             }
 
+            // Drop the stored session when the server changes so the old server's cookie is never
+            // sent to the new one.
+            EditTextPreference serverPreference = findPreference("server_preference");
+            if (serverPreference != null) {
+                serverPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    String newServer = normalizeServer((String) newValue);
+                    String oldServer = normalizeServer(AuthManager.getServerUrl(requireContext()));
+                    if (!newServer.equals(oldServer) && AuthManager.isAuthenticated(requireContext())) {
+                        AuthManager.logout(requireContext());
+                        android.widget.Toast.makeText(
+                                requireContext(),
+                                "Server changed - you have been signed out",
+                                android.widget.Toast.LENGTH_LONG).show();
+                    }
+                    return true;
+                });
+            }
+
             // Set up submit issue preference listener
             Preference submitIssuePreference = findPreference("submit_issue_preference");
             if (submitIssuePreference != null) {
@@ -111,6 +130,17 @@ public class Preferences extends AppCompatActivity {
                     return true;
                 });
             }
+        }
+
+        private static String normalizeServer(String url) {
+            if (url == null) {
+                return "";
+            }
+            String trimmed = url.trim();
+            while (trimmed.endsWith("/")) {
+                trimmed = trimmed.substring(0, trimmed.length() - 1);
+            }
+            return trimmed;
         }
 
         private void applyTheme(String themeValue) {
