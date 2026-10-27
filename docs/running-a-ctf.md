@@ -44,6 +44,10 @@ Try the levels yourself first, with cheat sheets enabled for administrators, so 
 | **Open Floor Mode** | Every open level is available, grouped by vulnerability category, with the lessons first. | Self-paced learning, where players explore topics |
 | **Tournament Mode** | Every open level is available, grouped into difficulty bands from easiest to hardest. | Competitions |
 
+The page shows the current mode, with a button to switch to each of the others:
+
+![The Change Module Layout page: Current Mode: Open Floor, with an Enable CTF Mode button, and the Module Management menu open on the left](assets/images/change-module-layout.png)
+
 **Admin → Module Management → Module Block Setup** stops players from going past a chosen level and shows them a message of your choosing. Use it to pause an event, for example to teach a topic before the levels that need it, and remove the block when you're ready.
 
 ## Players, classes and admins
@@ -70,6 +74,8 @@ These options are under **Admin → Configuration**.
 - **Feedback Configuration.** Makes players submit a feedback form before a level is marked as complete. It's useful for collecting what students understood. Read the feedback under **Admin → Module Management → View Feedback**, and follow each class's progress under **View Progress**.
 
 ## Scoring
+
+![The scoreboard: players ranked by score, each with a bar showing their points and their gold, silver and bronze medal counts](assets/images/scoreboard.png)
 
 - Each level is worth a fixed number of points, and harder levels are worth more.
 - In each class, the first five players to complete a level get a bonus on top: 5 points for the first, 4 for the second, down to 1.

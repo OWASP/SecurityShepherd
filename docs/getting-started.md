@@ -75,6 +75,8 @@ Log in with:
 - username: `admin`
 - password: `password`
 
+![The Security Shepherd login page, with Username and Password fields](assets/images/login.png)
+
 You're asked to change the password straight away, because the default one is public. You can also change the username, which is shown on the scoreboard.
 
 ## Try the levels
@@ -83,8 +85,12 @@ You need an intercepting proxy, such as [OWASP ZAP](https://www.zaproxy.org/) or
 
 The levels start closed. As an admin, the start page (**Let's Get Started**) has a **Configure Shepherd** section. To get back to it, reload the page.
 
+![The admin start page: the left menu has Admin, Scoreboard, Lessons and Challenges, with the lessons listed, and Configure Shepherd has buttons to open or close levels](assets/images/start-page.png)
+
 1. Click **Open Web App Levels Only**. The mobile levels need an Android setup, which this guide doesn't cover. Tick **Enable Unsafe Levels** first only if the machine is isolated.
 2. To see every open level at once, grouped by topic, go to **Admin → Module Management → Change Module Layout** and click **Enable Open Floor Mode**. [Running a CTF](running-a-ctf.md#choose-a-layout) describes the other layouts.
 3. Pick a lesson from the menu on the left. When you complete a level, you get a result key. Paste it into the **Submit Result Key Here** box to score the level.
+
+![The SQL Injection lesson: an explanation of the vulnerability, a form to try it on, and the Submit Result Key box at the top](assets/images/lesson-sql-injection.png)
 
 To see how to complete a level, go to **Admin → Configuration → Cheat Sheet Management** and click **Enable Cheat Sheets for Administrators**. Then reload the page. A **Cheat** button appears in the left menu, and shows the cheat sheet for the level that's open. It gives the answer away, so leave cheat sheets off if you want the challenge.
