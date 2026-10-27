@@ -244,6 +244,8 @@
 											key="generic.text.setup.wipe" /></option>
 									<option value="upgrade"><fmt:message
 											key="generic.text.setup.upgrade" /></option>
+									<option value="upgrade-mobile"><fmt:message
+											key="generic.text.setup.upgrade.mobile" /></option>
 									<option value="false"><fmt:message
 											key="generic.text.setup.dontwipe" /></option>
 								</select>
