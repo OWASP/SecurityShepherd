@@ -10,8 +10,6 @@
 .externalNativeBuild
 .cxx
 local.properties
-CHALLENGE_SOLUTIONS.txt
-missing_challenges.txt
 # Local dev notes and planning docs
 *.md
 # Environment / secrets
