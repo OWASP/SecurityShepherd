@@ -44,12 +44,21 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
         progressTracker = new ProgressTracker(requireContext());
         dbHelper = new Challenge1DatabaseHelper(requireContext());
 
+        // Login stays disabled until the key has arrived and the database is seeded.
+        binding.loginButton.setEnabled(false);
         KeyProvider.getKey(requireContext(),
                 KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_1, key -> {
-                    if (!isAdded()) return;
+                    if (!isAdded() || binding == null) return;
                     currentKey = key;
                     dbKey = key;
-                    seedDatabase(key);
+                    try {
+                        seedDatabase(key);
+                        binding.loginButton.setEnabled(true);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to prepare database", e);
+                        Toast.makeText(requireContext(), R.string.csi_db_init_failed,
+                                Toast.LENGTH_LONG).show();
+                    }
                 });
 
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
@@ -138,9 +147,10 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
 
         Log.d(TAG, "Executing query: " + query);
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase(dbKey);
+        SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
+            db = dbHelper.getReadableDatabase(dbKey);
             cursor = db.rawQuery(query, null);
             if (cursor.moveToFirst()) {
                 String loggedInUser = cursor.getString(0);
@@ -174,7 +184,7 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
             binding.resultText.setText(getString(R.string.csi_c1_query_error, e.getMessage()));
         } finally {
             if (cursor != null) cursor.close();
-            db.close();
+            if (db != null) db.close();
         }
     }
 

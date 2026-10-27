@@ -49,14 +49,23 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
 
         // Initialize database
         dbHelper = new Challenge2DatabaseHelper(requireContext());
+        // Search stays disabled until the key has arrived and the database is seeded.
+        binding.searchProductButton.setEnabled(false);
         KeyProvider.getKey(
                 requireContext(),
                 KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2,
                 key -> {
-                    if (!isAdded()) return;
+                    if (!isAdded() || binding == null) return;
                     currentKey = key;
                     dbKey = key;
-                    initializeDatabase(key);
+                    try {
+                        initializeDatabase(key);
+                        binding.searchProductButton.setEnabled(true);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to prepare database", e);
+                        Toast.makeText(requireContext(), R.string.csi_db_init_failed,
+                                Toast.LENGTH_LONG).show();
+                    }
                 });
 
         // Setup expandable FAB with command reference and OWASP link
@@ -142,10 +151,11 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         
         Log.d(TAG, "Executing query: " + query);
         
-        SQLiteDatabase db = dbHelper.getReadableDatabase(dbKey);
+        SQLiteDatabase db = null;
         Cursor cursor = null;
-        
+
         try {
+            db = dbHelper.getReadableDatabase(dbKey);
             cursor = db.rawQuery(query, null);
             
             StringBuilder results = new StringBuilder();
@@ -185,7 +195,9 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
             if (cursor != null) {
                 cursor.close();
             }
-            db.close();
+            if (db != null) {
+                db.close();
+            }
         }
     }
 

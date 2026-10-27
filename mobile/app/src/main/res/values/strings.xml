@@ -248,6 +248,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="csi_c1_access_granted">Logged in as: admin\nKey: %1$s</string>
     <string name="csi_c1_logged_in">Logged in as: %1$s\nRole: %2$s  Balance: $%3$d</string>
     <string name="csi_c1_login_failed">Login failed.</string>
+    <string name="csi_db_init_failed">Could not prepare the local database. Reopen this screen to retry.</string>
     <string name="csi_c1_query_error">Query error: %1$s</string>
     <string name="csi_c1_complete">Correct! Challenge complete.</string>
 

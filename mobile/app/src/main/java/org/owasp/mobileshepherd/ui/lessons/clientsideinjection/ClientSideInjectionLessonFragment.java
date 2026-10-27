@@ -49,16 +49,23 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         dbHelper = new DatabaseHelper(requireContext());
         progressTracker = new ProgressTracker(requireContext());
 
-        // Seed with offline key immediately so the lesson is usable right away,
-        // then asynchronously replace with the dynamic server key if online.
+        // Search stays disabled until the key has arrived and the database is seeded.
+        binding.searchButton.setEnabled(false);
         KeyProvider.getKey(
                 requireContext(),
                 KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON,
                 key -> {
-                    if (!isAdded()) return;
+                    if (!isAdded() || binding == null) return;
                     currentKey = key;
                     dbKey = key;
-                    initializeDatabase(key);
+                    try {
+                        initializeDatabase(key);
+                        binding.searchButton.setEnabled(true);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to prepare database", e);
+                        Toast.makeText(requireContext(), R.string.csi_db_init_failed,
+                                Toast.LENGTH_LONG).show();
+                    }
                 });
 
         // Setup expandable FAB with command reference and OWASP link
@@ -133,10 +140,11 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         
         Log.d(TAG, "Executing query: " + query);
         
-        SQLiteDatabase db = dbHelper.getReadableDatabase(dbKey);
+        SQLiteDatabase db = null;
         Cursor cursor = null;
-        
+
         try {
+            db = dbHelper.getReadableDatabase(dbKey);
             cursor = db.rawQuery(query, null);
 
             int count = 0;
@@ -194,7 +202,9 @@ public class ClientSideInjectionLessonFragment extends Fragment {
             if (cursor != null) {
                 cursor.close();
             }
-            db.close();
+            if (db != null) {
+                db.close();
+            }
         }
     }
 
