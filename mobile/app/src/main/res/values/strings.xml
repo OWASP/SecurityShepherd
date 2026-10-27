@@ -1,0 +1,194 @@
+<resources>
+
+    <!-- =========================================================== -->
+    <!--  APP SHELL: Navigation, menus, preferences, landing          -->
+    <!-- =========================================================== -->
+
+    <string name="app_name">MobileShepherd</string>
+    <string name="nav_header_title">OWASP Security Shepherd</string>
+    <string name="nav_header_subtitle">Mobile Security Training</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Action bar -->
+    <string name="action_settings">Settings</string>
+    <string name="action_adb_reference">ADB Commands</string>
+    <string name="action_exit">Exit</string>
+
+    <!-- Nav drawer menu labels -->
+    <string name="menu_home">Home</string>
+    <string name="menu_scoreboard">Scoreboard</string>
+
+    <!-- Preferences screen -->
+    <string name="dialog_based_preferences">Server Preferences</string>
+    <string name="hello_blank_fragment">Preferences</string>
+    <string name="server_title">Server Address</string>
+    <string name="server_summary">Enter server address here (https:// only)</string>
+    <string name="server_dialog_title">Enter Server Address</string>
+
+
+    <!-- Auth UI -->
+    <string name="auth_status_offline">Offline mode</string>
+    <string name="auth_status_online">Signed in as: %1$s</string>
+    <string name="auth_button_sign_in">Sign In</string>
+    <string name="auth_button_sign_out">Sign Out</string>
+    <string name="auth_dialog_title_login">Sign In</string>
+    <string name="auth_dialog_title_register">Register</string>
+    <string name="auth_hint_server">Server URL (HTTPS only, e.g. https://shepherd.example.com)</string>
+    <string name="error_https_required">The server URL must start with https://. Plain HTTP is not allowed.</string>
+    <string name="auth_hint_email">Email (optional)</string>
+    <string name="auth_email_label">Registration only</string>
+    <string name="auth_switch_to_register">No account? Register</string>
+    <string name="auth_switch_to_login">Already have an account? Sign In</string>
+    <string name="submit_issue_title">Submit an Issue</string>
+    <string name="submit_issue_summary">Report bugs or request features on GitHub</string>
+    <string name="license_title">License</string>
+    <string name="summary_license">This App is part of the Security Shepherd Project.
+The Security Shepherd project is free software: you can redistribute
+it and/or modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version. The Security Shepherd
+project is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General
+Public License along with the Security Shepherd project. If not, see
+http://www.gnu.org/licenses.</string>
+
+    <!-- Theme arrays -->
+    <string-array name="theme_entries">
+        <item>System Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+
+    <!-- Landing screen -->
+    <string name="landing_title">Mobile Security Shepherd</string>
+    <string name="landing_warning">WARNING: This is an intentionally vulnerable mobile application!</string>
+    <string name="landing_button">Enter App</string>
+    <string name="intro">This is a vulnerable App made to be used with the
+OWASP Security Shepherd Project. You will need to configure the server
+address in the settings to match the address of the Security Shepherd
+instance you have access to. This can be either a URL or an IP. For
+more information, please visit
+https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
+    <string name="owasp_security_shepherd_project">OWASP Security Shepherd Project</string>
+    <string name="this_application_is_designed_for_educati">This application is designed for educational purposes as part of the OWASP Security Shepherd project.</string>
+    <string name="licensed_under_gnu_gpl_v3">Licensed under GNU GPL v3</string>
+
+    <!-- Home screen -->
+    <string name="home_welcome_title">Welcome to OWASP Mobile Shepherd</string>
+    <string name="home_welcome_description">An Android App that hosts the Mobile Lesson and Challenge content from the OWASP Security Shepherd Project.</string>
+
+
+    <!-- Progress screen -->
+    <string name="your_progress">Your Progress</string>
+    <string name="track_your_learning_journey_through_mobi">Track your learning journey through MobileShepherd</string>
+    <string name="overall_progress">Overall Progress</string>
+    <string name="s_0" formatted="false">0%</string>
+    <string name="s_0_25_modules">0 / 25 modules</string>
+    <string name="congratulations_youve_completed_all_modu">Congratulations! You\'ve completed all modules!</string>
+    <string name="challenges">Challenges</string>
+    <string name="s_0_14_completed">0 / 14 completed</string>
+    <string name="s_0_of_13_challenges_completed">0 of 13 challenges completed</string>
+    <string name="lessons">Lessons</string>
+    <string name="s_0_11_completed">0 / 11 completed</string>
+    <string name="s_0_of_11_lessons_completed">0 of 11 lessons completed</string>
+    <string name="module_details">Module Details</string>
+    <string name="module_name">Module Name</string>
+    <string name="not_started">Not Started</string>
+    <string name="module_unavailable">Unavailable</string>
+    <string name="module_unavailable_default_reason">This module is not available right now.</string>
+
+    <!-- Common UI -->
+    <string name="validate_button">Validate Key</string>
+    <string name="clear_button">Clear</string>
+    <string name="validate_key">Validate Key</string>
+    <string name="submit_key">Submit Key</string>
+    <string name="enter_key">Enter Key</string>
+    <string name="key_label">Key</string>
+    <string name="results">Results</string>
+    <string name="challenge_info">Challenge Info</string>
+    <string name="help_and_information">Help and Information</string>
+    <string name="about">About</string>
+    <string name="hints">Hints</string>
+    <string name="command_reference">Command Reference</string>
+    <string name="owasp_mobile_top_10">OWASP Mobile Top 10</string>
+    <string name="lesson_key_found">Lesson Key Found:</string>
+    <string name="key">KEY{...}</string>
+    <string name="what_just_happened">What Just Happened?</string>
+    <string name="vulnerability_explanation">Vulnerability explanation...</string>
+    <string name="actions">Actions</string>
+    <string name="cancel">Cancel</string>
+    <string name="login">Login</string>
+    <!-- Login screen -->
+    <string name="login_get_started">Get Started</string>
+    <string name="login_step1">1) Ensure this App can reach the Security Shepherd Platform.</string>
+    <string name="login_step2">2) Register an account or sign in with your existing credentials.</string>
+    <string name="login_step3_signin">3) Sign in below.</string>
+    <string name="login_step3_register">3) Register below.</string>
+    <string name="login_continue_offline">Continue without signing in (offline mode)</string>
+    <string name="login_error_fill_fields">Please fill in Server URL, Username and Password.</string>
+    <string name="login_connecting">Connecting\u2026</string>
+
+    <string name="logout">Logout</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+    <!-- ADB Reference screen -->
+    <string name="adb_command_reference">ADB Command Reference</string>
+    <string name="quick_reference_for_android_debug_bridge">Quick reference for Android Debug Bridge commands used in challenges. Tap any command to copy it to clipboard.</string>
+    <string name="logcat_commands">Logcat Commands</string>
+    <string name="view_all_logs">View all logs</string>
+    <string name="adb_logcat">adb logcat</string>
+    <string name="filter_by_tag">Filter by tag</string>
+    <string name="adb_logcat_s_tagname">adb logcat -s TAG_NAME</string>
+    <string name="search_logs_powershell">Search logs (PowerShell)</string>
+    <string name="adb_logcat_grep_quotsearchtermquot">adb logcat | grep &amp;quot;search_term&amp;quot;</string>
+    <string name="clear_logs">Clear logs</string>
+    <string name="adb_logcat_c">adb logcat -c</string>
+    <string name="basic_adb_commands">Basic ADB Commands</string>
+    <string name="list_connected_devices">List connected devices</string>
+    <string name="adb_devices">adb devices</string>
+    <string name="open_device_shell">Open device shell</string>
+    <string name="adb_shell">adb shell</string>
+    <string name="install_apk">Install APK</string>
+    <string name="adb_install_appapk">adb install app.apk</string>
+    <string name="uninstall_app">Uninstall app</string>
+    <string name="adb_uninstall_compackagename">adb uninstall com.package.name</string>
+    <string name="file_operations">File Operations</string>
+    <string name="pull_database_file">Pull database file</string>
+    <string name="adb_pull_datadatacomowaspappdatabasesuse">adb pull /data/data/org.owasp.mobileshepherd/databases/Users.db</string>
+    <string name="pull_sharedpreferences">Pull SharedPreferences</string>
+    <string name="adb_pull_datadatacomowaspappsharedprefs">adb pull /data/data/org.owasp.mobileshepherd/shared_prefs/</string>
+    <string name="list_app_files">List app files</string>
+    <string name="adb_shell_ls_datadatacomowaspapp">adb shell ls /data/data/org.owasp.mobileshepherd/</string>
+    <string name="list_databases">List databases</string>
+    <string name="adb_shell_ls_datadatacomowaspappdatabase">adb shell ls /data/data/org.owasp.mobileshepherd/databases/</string>
+    <string name="database_commands">Database Commands</string>
+    <string name="open_sqlite_database">Open SQLite database</string>
+    <string name="adb_shell_sqlite3_datadatacomowaspappdat">adb shell sqlite3 /data/data/org.owasp.mobileshepherd/databases/Users.db</string>
+    <string name="query_database">Query database</string>
+    <string name="sqlite_select_from_users">sqlite&gt; SELECT * FROM users;</string>
+    <string name="view_file_contents">View file contents</string>
+    <string name="adb_shell_cat_datadatacomowaspappsharedp">adb shell cat /data/data/org.owasp.mobileshepherd/shared_prefs/UserCredentials.xml</string>
+    <string name="package_management">Package Management</string>
+    <string name="find_package_name">Find package name</string>
+    <string name="adb_shell_pm_list_packages_grep_reverser">adb shell pm list packages | grep reverser</string>
+    <string name="get_apk_path">Get APK path</string>
+    <string name="adb_shell_pm_path_comowaspapp">adb shell pm path org.owasp.mobileshepherd</string>
+    <string name="pull_apk_file">Pull APK file</string>
+    <string name="adb_pull_dataappcomowaspappbaseapk">adb pull /data/app/org.owasp.mobileshepherd-*/base.apk</string>
+    <string name="clear_app_data">Clear app data</string>
+    <string name="adb_shell_pm_clear_comowaspapp">adb shell pm clear org.owasp.mobileshepherd</string>
+    <string name="username_title">Username</string>
+    <string name="password_title">Password</string>
+    <string name="challenge">Challenge</string>
+
+</resources>

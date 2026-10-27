@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home"
+    app:enterAnim="@anim/slide_in_right"
+    app:exitAnim="@anim/slide_out_left"
+    app:popEnterAnim="@anim/slide_in_left"
+    app:popExitAnim="@anim/slide_out_right">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="org.owasp.mobileshepherd.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_adb_reference"
+        android:name="org.owasp.mobileshepherd.ui.adb.AdbReferenceFragment"
+        android:label="@string/action_adb_reference"
+        tools:layout="@layout/fragment_adb_reference" />
+
+    <fragment
+        android:id="@+id/nav_scoreboard"
+        android:name="org.owasp.mobileshepherd.ui.scoreboard.ScoreboardFragment"
+        android:label="@string/menu_scoreboard"
+        tools:layout="@layout/fragment_scoreboard" />
+
+</navigation>
