@@ -12,10 +12,8 @@
 local.properties
 CHALLENGE_SOLUTIONS.txt
 missing_challenges.txt
-MOBILE_SHEPHERD_WALKTHROUGH.md
-# Dev planning docs (local only)
-MATERIAL3_IMPLEMENTATION_SUMMARY.md
-MOBILE_UI_MODERNIZATION_PLAN.md
+# Local dev notes and planning docs
+*.md
 # Environment / secrets
 .env
 .env.*
