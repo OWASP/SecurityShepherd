@@ -47,7 +47,7 @@ Install ZenHub for your browser and click the ZenHub tab that will appear in thi
 6. *Closed* - Item is Done
 
 ## How do I setup my dev environment?
-[Like This](https://github.com/OWASP/SecurityShepherd/wiki/Create-a-Security-Shepherd-Dev-Environment)
+Install Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose. Then follow [Getting started](docs/getting-started.md) to run Security Shepherd locally, and [docs/development-workflow.md](docs/development-workflow.md) for the development cycle below.
 
 ## Development Workflow
 See [docs/development-workflow.md](docs/development-workflow.md) for the full development cycle, including how to:
@@ -59,7 +59,7 @@ See [docs/development-workflow.md](docs/development-workflow.md) for the full de
 See [docs/testing.md](docs/testing.md) for instructions on running unit and integration tests with Docker.
 
 ## Database Configuration
-See [docs/database-configuration.md](docs/database-configuration.md) for connection pooling configuration and database setup.
+See [docs/database-layer.md](docs/database-layer.md) for how Security Shepherd connects to its databases, and [docs/configuration.md](docs/configuration.md) for the connection settings.
 
 ## Versioning and Releases
 Shepherd follows [Semantic Versioning](https://semver.org/). Releases are tagged as plain `X.Y.Z` (e.g. `4.0.0`, with no `v` prefix), and `dev` always carries an `X.Y.Z-SNAPSHOT` version. See [docs/releasing.md](docs/releasing.md) for the release steps.

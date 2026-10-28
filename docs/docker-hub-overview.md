@@ -31,7 +31,7 @@ Then open <http://localhost> and accept the self-signed certificate warning. The
 docker exec secshep_tomcat cat /usr/local/tomcat/conf/SecurityShepherd.auth
 ```
 
-The [database configuration guide](https://github.com/OWASP/SecurityShepherd/blob/master/docs/database-configuration.md) explains the rest of the setup form. Once it's done, log in as `admin` / `password` (you'll be asked to change it).
+[Getting started](https://github.com/OWASP/SecurityShepherd/blob/master/docs/getting-started.md#first-time-setup) explains the rest of the setup form. Once it's done, log in as `admin` / `password` (you'll be asked to change it).
 
 The defaults (passwords in `.env`, a self-signed certificate, MongoDB without authentication) are for a quick start, not a long-lived or shared deployment.
 
@@ -60,7 +60,7 @@ The image contains no TLS private key. On first start it generates a self-signed
 
 ## Verifying the image
 
-Every image from 4.0.0 on is built by GitHub Actions from this repository and carries a signed SLSA build provenance, an SPDX SBOM and a VEX document. [Checking the Docker images](https://github.com/OWASP/SecurityShepherd/blob/master/docs/verifying-images.md) shows how to verify them with `gh attestation verify`, Docker Scout or Trivy.
+Every image from 4.0.0 on is built by GitHub Actions from this repository and carries a signed SLSA build provenance, an SPDX SBOM and a VEX document. [Verifying the images](https://github.com/OWASP/SecurityShepherd/blob/master/docs/verifying-images.md) shows how to verify them with `gh attestation verify`, and [Vulnerability management](https://github.com/OWASP/SecurityShepherd/blob/master/docs/vulnerability-management.md) how to scan them with Docker Scout, Grype or Trivy.
 
 ## Links
 

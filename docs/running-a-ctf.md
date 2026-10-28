@@ -2,22 +2,11 @@
 
 This guide is for organisers running Security Shepherd as a capture-the-flag event, for a class, a team or a conference. It assumes you have an installation running and have logged in as `admin`, as described in [Getting started](getting-started.md).
 
-Most settings are in the **Admin** menu on the left. Changes take effect immediately, and players may need to reload the page to see them.
+Most settings are in the **Admin** menu on the left, and [Admin menu reference](admin-menu.md) describes every page in it. Changes take effect immediately, and players may need to reload the page to see them.
 
 ## Before you start: secure the deployment
 
-The Docker Compose setup is a quick start. Before other people use it, change the following:
-
-- **Database password.** Set `DB_PASS` in `.env` before you first run `docker compose up`.
-    - MariaDB applies the root password only when it creates the `data` volume.
-    - The Tomcat image copies `DB_PASS` into its connection settings when it's built ([#814](https://github.com/OWASP/SecurityShepherd/issues/814)), and the `conf` volume keeps that copy from the first start.
-    - To change the password later, change MariaDB's root password and `databasePassword` in `database.properties` in the `conf` volume.
-    - Because the password is inside the image you built, don't push that image to a public registry.
-- **TLS.** Replace the self-signed certificate with your own, as the [README](https://github.com/OWASP/SecurityShepherd#https-certificate) describes, and set `TLS_KEYSTORE_PASS` in `.env`.
-- **Admin accounts.** The default `admin` password is public, and you're asked to change it at the first login. Every organiser should log in and change their own temporary password before the event.
-- **Network.** Security Shepherd is deliberately vulnerable. Run it on a network that's only for the event.
-    - The Compose file binds MariaDB and MongoDB to `127.0.0.1`, so they aren't reachable from other machines. Keep it that way.
-    - Leave the unsafe levels closed unless the server is isolated, because they make the server itself vulnerable.
+The Docker Compose setup is a quick start, with well-known default passwords and a self-signed certificate. Before other people use it, follow [Deploying into production](deploying-into-production.md): change the database password and the admin password, install your own certificate, and run it on a network that's only for the event.
 
 ## Choose the levels
 
@@ -48,6 +37,8 @@ The page shows the current mode, with a button to switch to each of the others:
 
 ![The Change Module Layout page: Current Mode: Open Floor, with an Enable CTF Mode button, and the Module Management menu open on the left](assets/images/change-module-layout.png)
 
+[How Shepherd works](how-shepherd-works.md#finding-a-level) shows what players see in each layout.
+
 **Admin → Module Management → Module Block Setup** stops players from going past a chosen level and shows them a message of your choosing. Use it to pause an event, for example to teach a topic before the levels that need it, and remove the block when you're ready.
 
 ## Players, classes and admins
@@ -73,6 +64,8 @@ These options are under **Admin → Configuration**.
 - **Cheat Sheet Management.** Cheat sheets show how to complete each level. Enable them for administrators so you can help players. Enabling them for all users gives the answers away.
 - **Feedback Configuration.** Makes players submit a feedback form before a level is marked as complete. It's useful for collecting what students understood. Read the feedback under **Admin → Module Management → View Feedback**, and follow each class's progress under **View Progress**.
 
+![The Get Progress page for the class 2026 Autumn CTF: each player's name with a bar showing how many modules they've completed](assets/images/admin-view-progress.png)
+
 ## Scoring
 
 ![The scoreboard: players ranked by score, each with a bar showing their points and their gold, silver and bronze medal counts](assets/images/scoreboard.png)
@@ -84,19 +77,11 @@ These options are under **Admin → Configuration**.
 
 You can add your own awards with **Add / Deduct Player Points**.
 
-## Settings in the database
+## Timing the event
 
-The settings are stored in the `settings` table of the `core` database. To see them all:
+Security Shepherd can open the levels at a set time, freeze the scoreboard for the last part of the event, and close the levels at the end. There's no page for this in the Admin menu: set the times in the database, as described in [Event times](configuration.md#event-times).
 
-```bash
-docker exec -it secshep_mariadb mariadb -uroot -p core -e 'SELECT * FROM settings'
-```
-
-To make `admin` change its password again at the next login:
-
-```bash
-docker exec -it secshep_mariadb mariadb -uroot -p core -e "UPDATE users SET tempPassword = 1 WHERE userName = 'admin'"
-```
+Back up the database before the event, and again afterwards if you want to keep the results. See [Backups and restore](backups.md).
 
 ## Rules for players
 

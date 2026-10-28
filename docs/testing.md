@@ -155,4 +155,4 @@ The connection pool tests (`ConnectionPoolTest`, `DatabaseLifecycleListenerTest`
 - **Skip gracefully** when database is unavailable
 - **Always run** state-management tests that don't need a database
 
-See [database-configuration.md](database-configuration.md) for connection pool configuration details.
+See [Database layer](database-layer.md) for how the connection pools work, and [Configuration](configuration.md#databaseproperties) for their settings.
