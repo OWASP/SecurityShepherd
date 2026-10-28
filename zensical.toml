@@ -16,15 +16,32 @@ docker-hub-overview.md
 nav = [
   { "Home" = "index.md" },
   { "Getting started" = "getting-started.md" },
+  { "Playing" = [
+    { "How Shepherd works" = "how-shepherd-works.md" },
+    { "Setting up your tools" = "setting-up-your-tools.md" },
+    { "The levels" = "levels.md" },
+    { "Mobile levels" = "mobile-levels.md" },
+  ] },
   { "Running Security Shepherd" = [
+    { "Deploying into production" = "deploying-into-production.md" },
+    { "Upgrading" = "upgrading.md" },
+    { "Backups and restore" = "backups.md" },
     { "Running a CTF" = "running-a-ctf.md" },
+    { "Admin menu reference" = "admin-menu.md" },
     { "Single sign-on" = "single-sign-on.md" },
-    { "Checking the Docker images" = "verifying-images.md" },
-    { "Database configuration" = "database-configuration.md" },
+    { "Translations" = "translations.md" },
+    { "Troubleshooting" = "troubleshooting.md" },
+    { "Verifying the images" = "verifying-images.md" },
+    { "Vulnerability management" = "vulnerability-management.md" },
+  ] },
+  { "Reference" = [
+    { "Configuration" = "configuration.md" },
+    { "Glossary" = "glossary.md" },
   ] },
   { "Contributing" = [
     { "Development workflow" = "development-workflow.md" },
     { "Running tests" = "testing.md" },
+    { "Database layer" = "database-layer.md" },
     { "Releasing" = "releasing.md" },
   ] },
 ]

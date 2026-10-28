@@ -19,7 +19,7 @@ mvn -Pdocker clean install -DskipTests
 docker compose up -d --build
 ```
 
-The [README](https://github.com/OWASP/SecurityShepherd#readme) covers the Docker setup in more detail, including using your own TLS certificate and upgrading an existing installation.
+[Deploying into production](deploying-into-production.md) covers using your own TLS certificate and the other changes to make before other people use it, and [Upgrading](upgrading.md) covers moving an existing installation to a new version.
 
 This setup is a quick start for a laptop or a classroom lab, not a production deployment. It uses well-known default passwords and a self-signed certificate. [Running a CTF](running-a-ctf.md#before-you-start-secure-the-deployment) lists what to change before other people use it.
 
@@ -48,6 +48,8 @@ Data is kept in Docker volumes, so it survives `docker compose down` and rebuild
 
 Open [https://localhost](https://localhost). Your browser warns about the certificate, because it's self-signed. On a fresh installation, Security Shepherd shows the **No Database Configuration** page.
 
+![The No Database Configuration page: the path of the authentication token, then fields for the database hostname, port, username and password, Override Databases, the authentication token, Enable NoSQL Challenge with the MongoDB hostname and port, and Enable Unsafe Challenges](assets/images/setup.png)
+
 1. Get the setup authentication token from the Tomcat container and paste it into **Authentication token**:
 
     ```bash
@@ -60,7 +62,7 @@ Open [https://localhost](https://localhost). Your browser warns about the certif
     |---|---|
     | Hostname, Port | `secshep_mariadb`, `3306` |
     | DB Username, DB Password | `root`, and the `DB_PASS` from `.env` (`CowSaysMoo` unless you changed it) |
-    | Override Databases | **Fresh Database** for a new installation. **Do not override** keeps the existing data, for example after you've recreated the `conf` volume. |
+    | Override Databases | **Fresh Database** for a new installation. **Do not override** keeps the data already in the database. |
 
 3. To include the NoSQL injection level, tick **Enable NoSQL Challenge**, and enter `secshep_mongo` and `27017` in the MongoDb **Hostname** and **Port** fields that appear.
 
@@ -88,8 +90,8 @@ The levels start closed. As an admin, the start page (**Let's Get Started**) has
 ![The admin start page: the left menu has Admin, Scoreboard, Lessons and Challenges, with the lessons listed, and Configure Shepherd has buttons to open or close levels](assets/images/start-page.png)
 
 1. Click **Open Web App Levels Only**. The mobile levels need an Android setup, which this guide doesn't cover. Tick **Enable Unsafe Levels** first only if the machine is isolated.
-2. To see every open level at once, grouped by topic, go to **Admin → Module Management → Change Module Layout** and click **Enable Open Floor Mode**. [Running a CTF](running-a-ctf.md#choose-a-layout) describes the other layouts.
-3. Pick a lesson from the menu on the left. When you complete a level, you get a result key. Paste it into the **Submit Result Key Here** box to score the level.
+2. To see every open level at once, grouped by topic, go to **Admin → Module Management → Change Module Layout** and click **Enable Open Floor Mode**. [How Shepherd works](how-shepherd-works.md#finding-a-level) shows each layout from a player's side.
+3. Pick a lesson from the menu on the left. When you complete a level, you get a result key. Paste it into the **Submit Result Key Here** box to score the level. [How Shepherd works](how-shepherd-works.md) explains scoring and the rest of the game.
 
 ![The SQL Injection lesson: an explanation of the vulnerability, a form to try it on, and the Submit Result Key box at the top](assets/images/lesson-sql-injection.png)
 
