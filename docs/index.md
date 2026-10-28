@@ -7,6 +7,7 @@ The source code, issues and releases are on [GitHub](https://github.com/OWASP/Se
 ## Running Security Shepherd
 
 - [Running a CTF](running-a-ctf.md): set up levels, classes, the scoreboard and rules for an event
+- [Single sign-on](single-sign-on.md): log players in through your organisation's SAML identity provider
 - [Checking the Docker images](verifying-images.md): where an image came from and what's inside it
 - [Database configuration](database-configuration.md): connection settings and connection pooling
 

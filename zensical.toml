@@ -18,6 +18,7 @@ nav = [
   { "Getting started" = "getting-started.md" },
   { "Running Security Shepherd" = [
     { "Running a CTF" = "running-a-ctf.md" },
+    { "Single sign-on" = "single-sign-on.md" },
     { "Checking the Docker images" = "verifying-images.md" },
     { "Database configuration" = "database-configuration.md" },
   ] },
