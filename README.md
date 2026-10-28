@@ -11,6 +11,20 @@ You can download Security Shepherd VM's or Manual Installation Packs from [GitHu
 
 ### Docker (Ubuntu Linux Host)
 
+> [!WARNING]
+> **The Docker Compose setup is a quick start, not a production deployment.** It is meant for trying Security Shepherd out, development, and classroom labs on a network you control. Security Shepherd is deliberately vulnerable, so never expose it to the internet.
+
+The quick start uses these defaults:
+* Login `admin` / `password` for the platform. You are asked to change it after the first login.
+* A self-signed TLS certificate for `localhost`, generated in the `conf` volume when the container first starts, with the keystore password from `.env`. Browsers warn about it.
+* The MariaDB root password from `.env` (`CowSaysMoo`), which is also built into the Tomcat image.
+* MongoDB runs without authentication. MariaDB and MongoDB are published on `127.0.0.1` only.
+
+If you run it for anything more than that, at least:
+* change `DB_PASS` in `.env`, and set `TLS_KEYSTORE_PASS` to a password of your own or leave it empty for a random one, before the first build and `docker-compose up`. These values are stored in the `data` and `conf` volumes when they are created, so changing `.env` later doesn't change an existing installation;
+* use your own TLS certificate, as described in [HTTPS certificate](#https-certificate), which works for an existing installation too. Or run Shepherd behind a reverse proxy that terminates TLS;
+* keep it on an isolated network, and only enable the unsafe levels (XXE) when you need them.
+
 #### Initial Setup
 ```console
 # Install pre-reqs
