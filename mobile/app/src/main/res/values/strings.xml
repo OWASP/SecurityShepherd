@@ -1,0 +1,262 @@
+<resources>
+
+    <!-- =========================================================== -->
+    <!--  APP SHELL: Navigation, menus, preferences, landing          -->
+    <!-- =========================================================== -->
+
+    <string name="app_name">MobileShepherd</string>
+    <string name="nav_header_title">OWASP Security Shepherd</string>
+    <string name="nav_header_subtitle">Mobile Security Training</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Action bar -->
+    <string name="action_settings">Settings</string>
+    <string name="action_adb_reference">ADB Commands</string>
+    <string name="action_exit">Exit</string>
+
+    <!-- Nav drawer menu labels -->
+    <string name="menu_home">Home</string>
+    <string name="menu_scoreboard">Scoreboard</string>
+
+    <!-- Preferences screen -->
+    <string name="dialog_based_preferences">Server Preferences</string>
+    <string name="hello_blank_fragment">Preferences</string>
+    <string name="server_title">Server Address</string>
+    <string name="server_summary">Enter server address here (https:// only)</string>
+    <string name="server_dialog_title">Enter Server Address</string>
+
+
+    <!-- Auth UI -->
+    <string name="auth_status_offline">Offline mode</string>
+    <string name="auth_status_online">Signed in as: %1$s</string>
+    <string name="auth_button_sign_in">Sign In</string>
+    <string name="auth_button_sign_out">Sign Out</string>
+    <string name="auth_dialog_title_login">Sign In</string>
+    <string name="auth_dialog_title_register">Register</string>
+    <string name="auth_hint_server">Server URL (HTTPS only, e.g. https://shepherd.example.com)</string>
+    <string name="error_https_required">The server URL must start with https://. Plain HTTP is not allowed.</string>
+    <string name="auth_hint_email">Email (optional)</string>
+    <string name="auth_email_label">Registration only</string>
+    <string name="auth_switch_to_register">No account? Register</string>
+    <string name="auth_switch_to_login">Already have an account? Sign In</string>
+    <string name="submit_issue_title">Submit an Issue</string>
+    <string name="submit_issue_summary">Report bugs or request features on GitHub</string>
+    <string name="license_title">License</string>
+    <string name="summary_license">This App is part of the Security Shepherd Project.
+The Security Shepherd project is free software: you can redistribute
+it and/or modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version. The Security Shepherd
+project is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General
+Public License along with the Security Shepherd project. If not, see
+http://www.gnu.org/licenses.</string>
+
+    <!-- Theme arrays -->
+    <string-array name="theme_entries">
+        <item>System Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+
+    <!-- Landing screen -->
+    <string name="landing_title">Mobile Security Shepherd</string>
+    <string name="landing_warning">WARNING: This is an intentionally vulnerable mobile application!</string>
+    <string name="landing_button">Enter App</string>
+    <string name="intro">This is a vulnerable App made to be used with the
+OWASP Security Shepherd Project. You will need to configure the server
+address in the settings to match the address of the Security Shepherd
+instance you have access to. This can be either a URL or an IP. For
+more information, please visit
+https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
+    <string name="owasp_security_shepherd_project">OWASP Security Shepherd Project</string>
+    <string name="this_application_is_designed_for_educati">This application is designed for educational purposes as part of the OWASP Security Shepherd project.</string>
+    <string name="licensed_under_gnu_gpl_v3">Licensed under GNU GPL v3</string>
+
+    <!-- Home screen -->
+    <string name="home_welcome_title">Welcome to OWASP Mobile Shepherd</string>
+    <string name="home_welcome_description">An Android App that hosts the Mobile Lesson and Challenge content from the OWASP Security Shepherd Project.</string>
+
+
+    <!-- Progress screen -->
+    <string name="your_progress">Your Progress</string>
+    <string name="track_your_learning_journey_through_mobi">Track your learning journey through MobileShepherd</string>
+    <string name="overall_progress">Overall Progress</string>
+    <string name="s_0" formatted="false">0%</string>
+    <string name="s_0_25_modules">0 / 25 modules</string>
+    <string name="congratulations_youve_completed_all_modu">Congratulations! You\'ve completed all modules!</string>
+    <string name="challenges">Challenges</string>
+    <string name="s_0_14_completed">0 / 14 completed</string>
+    <string name="s_0_of_13_challenges_completed">0 of 13 challenges completed</string>
+    <string name="lessons">Lessons</string>
+    <string name="s_0_11_completed">0 / 11 completed</string>
+    <string name="s_0_of_11_lessons_completed">0 of 11 lessons completed</string>
+    <string name="module_details">Module Details</string>
+    <string name="module_name">Module Name</string>
+    <string name="not_started">Not Started</string>
+    <string name="module_unavailable">Unavailable</string>
+    <string name="module_unavailable_default_reason">This module is not available right now.</string>
+
+    <!-- Common UI -->
+    <string name="validate_button">Validate Key</string>
+    <string name="clear_button">Clear</string>
+    <string name="validate_key">Validate Key</string>
+    <string name="submit_key">Submit Key</string>
+    <string name="enter_key">Enter Key</string>
+    <string name="key_label">Key</string>
+    <string name="results">Results</string>
+    <string name="challenge_info">Challenge Info</string>
+    <string name="help_and_information">Help and Information</string>
+    <string name="about">About</string>
+    <string name="hints">Hints</string>
+    <string name="command_reference">Command Reference</string>
+    <string name="owasp_mobile_top_10">OWASP Mobile Top 10</string>
+    <string name="lesson_key_found">Lesson Key Found:</string>
+    <string name="key">KEY{...}</string>
+    <string name="what_just_happened">What Just Happened?</string>
+    <string name="vulnerability_explanation">Vulnerability explanation...</string>
+    <string name="actions">Actions</string>
+    <string name="cancel">Cancel</string>
+    <string name="login">Login</string>
+    <!-- Login screen -->
+    <string name="login_get_started">Get Started</string>
+    <string name="login_step1">1) Ensure this App can reach the Security Shepherd Platform.</string>
+    <string name="login_step2">2) Register an account or sign in with your existing credentials.</string>
+    <string name="login_step3_signin">3) Sign in below.</string>
+    <string name="login_step3_register">3) Register below.</string>
+    <string name="login_continue_offline">Continue without signing in (offline mode)</string>
+    <string name="login_error_fill_fields">Please fill in Server URL, Username and Password.</string>
+    <string name="login_connecting">Connecting\u2026</string>
+
+    <string name="logout">Logout</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+    <!-- ADB Reference screen -->
+    <string name="adb_command_reference">ADB Command Reference</string>
+    <string name="quick_reference_for_android_debug_bridge">Quick reference for Android Debug Bridge commands used in challenges. Tap any command to copy it to clipboard.</string>
+    <string name="logcat_commands">Logcat Commands</string>
+    <string name="view_all_logs">View all logs</string>
+    <string name="adb_logcat">adb logcat</string>
+    <string name="filter_by_tag">Filter by tag</string>
+    <string name="adb_logcat_s_tagname">adb logcat -s TAG_NAME</string>
+    <string name="search_logs_powershell">Search logs (PowerShell)</string>
+    <string name="adb_logcat_grep_quotsearchtermquot">adb logcat | grep &amp;quot;search_term&amp;quot;</string>
+    <string name="clear_logs">Clear logs</string>
+    <string name="adb_logcat_c">adb logcat -c</string>
+    <string name="basic_adb_commands">Basic ADB Commands</string>
+    <string name="list_connected_devices">List connected devices</string>
+    <string name="adb_devices">adb devices</string>
+    <string name="open_device_shell">Open device shell</string>
+    <string name="adb_shell">adb shell</string>
+    <string name="install_apk">Install APK</string>
+    <string name="adb_install_appapk">adb install app.apk</string>
+    <string name="uninstall_app">Uninstall app</string>
+    <string name="adb_uninstall_compackagename">adb uninstall com.package.name</string>
+    <string name="file_operations">File Operations</string>
+    <string name="pull_database_file">Pull database file</string>
+    <string name="adb_pull_datadatacomowaspappdatabasesuse">adb pull /data/data/org.owasp.mobileshepherd/databases/Users.db</string>
+    <string name="pull_sharedpreferences">Pull SharedPreferences</string>
+    <string name="adb_pull_datadatacomowaspappsharedprefs">adb pull /data/data/org.owasp.mobileshepherd/shared_prefs/</string>
+    <string name="list_app_files">List app files</string>
+    <string name="adb_shell_ls_datadatacomowaspapp">adb shell ls /data/data/org.owasp.mobileshepherd/</string>
+    <string name="list_databases">List databases</string>
+    <string name="adb_shell_ls_datadatacomowaspappdatabase">adb shell ls /data/data/org.owasp.mobileshepherd/databases/</string>
+    <string name="database_commands">Database Commands</string>
+    <string name="open_sqlite_database">Open SQLite database</string>
+    <string name="adb_shell_sqlite3_datadatacomowaspappdat">adb shell sqlite3 /data/data/org.owasp.mobileshepherd/databases/Users.db</string>
+    <string name="query_database">Query database</string>
+    <string name="sqlite_select_from_users">sqlite&gt; SELECT * FROM users;</string>
+    <string name="view_file_contents">View file contents</string>
+    <string name="adb_shell_cat_datadatacomowaspappsharedp">adb shell cat /data/data/org.owasp.mobileshepherd/shared_prefs/UserCredentials.xml</string>
+    <string name="package_management">Package Management</string>
+    <string name="find_package_name">Find package name</string>
+    <string name="adb_shell_pm_list_packages_grep_reverser">adb shell pm list packages | grep reverser</string>
+    <string name="get_apk_path">Get APK path</string>
+    <string name="adb_shell_pm_path_comowaspapp">adb shell pm path org.owasp.mobileshepherd</string>
+    <string name="pull_apk_file">Pull APK file</string>
+    <string name="adb_pull_dataappcomowaspappbaseapk">adb pull /data/app/org.owasp.mobileshepherd-*/base.apk</string>
+    <string name="clear_app_data">Clear app data</string>
+    <string name="adb_shell_pm_clear_comowaspapp">adb shell pm clear org.owasp.mobileshepherd</string>
+    <string name="username_title">Username</string>
+    <string name="password_title">Password</string>
+    <string name="challenge">Challenge</string>
+
+
+    <!-- =========================================================== -->
+    <!--  CLIENT-SIDE INJECTION (M4 / SQLite)      -->
+    <!-- =========================================================== -->
+
+    <!-- Lesson -->
+    <string name="client_side_injection_lesson_description">This app queries a local database using unsanitised user input. Manipulate the query to expose data that isn\'t meant to be visible.</string>
+    <string name="client_side_injection_lesson_intro">Client-Side Injection occurs when mobile applications fail to properly validate and sanitize user input before using it in SQL queries, JavaScript contexts, or other interpreters on the device.\n\nTypes of Client-Side Injection:\n\n- SQL Injection in SQLite databases\n- JavaScript injection in WebViews\n- XML/JSON injection in parsers\n- Command injection in system calls\n- NoSQL injection in local databases\n- File path injection\n\nSQL Injection is particularly dangerous because:\n- SQLite databases store sensitive app data\n- Attackers can read any table\n- Authentication can be bypassed\n- Data can be modified or deleted\n- Business logic can be circumvented</string>
+    <string name="client_side_injection_lesson_vulnerabilities">SQL Injection Vulnerabilities:\n\n- String Concatenation: Building queries with user input\n  - "SELECT * FROM users WHERE name = \'" + input + "\'"\n  - Allows injection: \' OR 1=1--\n\n- Improper Escaping: Not handling special characters\n  - Single quotes (\')\n  - Comment markers (-- or /**/)\n  - SQL keywords (OR, UNION, SELECT)\n\n- Lack of Validation: Accepting any user input\n  - No input length limits\n  - No character whitelisting\n  - No pattern matching\n\nCommon Attack Patterns:\n- Authentication Bypass: \' OR \'1\'=\'1\n- UNION Attacks: \' UNION SELECT * FROM secrets--\n- Comment Injection: admin\'--\n- Always True Conditions: 1\' OR \'1\'=\'1</string>
+
+    <!-- Challenge 1 - Auth bypass -->
+    <string name="clientside_injection_1">Client-Side Injection 1</string>
+    <string name="client_side_injection_challenge1_description">This app authenticates users against a local SQLite database using a query built with string concatenation. Bypass the login to retrieve the admin password.</string>
+    <string name="client_side_injection_challenge1_intro">A vulnerable login workflow builds SQL queries through string concatenation. User accounts are stored in a SQLite database with usernames, passwords, roles, and balance data.\n\nObjective:\n1. Identify the SQL injection vulnerability\n2. Bypass the keyword filter and the authentication mechanism\n3. Retrieve the administrator account password\n4. Submit the password as the key\n\nThe weakness exists because user input is concatenated directly into SQL queries without proper validation or parameterization.</string>
+    <string name="client_side_injection_challenge1_vulnerabilities">Vulnerable Code Pattern:\n\nString query = "SELECT * FROM accounts WHERE username = \'" + username + "\' AND password = \'" + password + "\'";\n\nThis allows attackers to:\n- Break out of the query context\n- Inject their own SQL logic\n- Bypass authentication checks\n- Retrieve data from any user\n\nExample Attack:\nUsername: admin\'--\nPassword: (anything)\n\nResulting Query:\nSELECT * FROM accounts WHERE username = \'admin\'--\' AND password = \'....\'\n\nThe -- comments out the password check!\n\nNote: this app filters common SQL keywords and comment markers, so a plain \'--\' will not work. Find another way to break out of the query.</string>
+    <string name="account_login">Account Login</string>
+    <string name="login_to_access_your_account_can_you_byp">Login to access your account. Can you bypass the authentication and retrieve the admin password?</string>
+    <string name="login_results_will_appear_here">Login results will appear here...</string>
+    <string name="once_youve_retrieved_the_admin_password">Once you\'ve retrieved the admin password, submit it as the key:</string>
+
+    <!-- Challenge 2 - UNION injection -->
+    <string name="clientside_injection_2">Client-Side Injection 2</string>
+    <string name="client_side_injection_challenge2_description">This app searches a product database using unsanitised input. Use a UNION-based injection to query the hidden secrets table and extract the admin token.</string>
+    <string name="client_side_injection_challenge2_intro">A product search feature contains a SQL injection vulnerability. Unlike basic authentication bypass, this challenge requires UNION-based injection to query a separate table.\n\nDatabase Structure:\n- products table: name, category, price, stock\n- secrets table: secret_key, secret_value (HIDDEN)\n\nObjective:\n1. Identify the number of columns in the products query\n2. Use UNION SELECT to query the secrets table\n3. Extract the key value\n4. Submit it as the key\n\nRequired concepts:\n- UNION SQL operator\n- Column count matching\n- Cross-table data extraction</string>
+    <string name="client_side_injection_challenge2_vulnerabilities" formatted="false">Vulnerable Code:\n\nString query = "SELECT name, category, price, stock FROM products WHERE name LIKE \'%" + input + "%\'";\n\nUNION-Based Injection allows:\n- Combining results from multiple queries\n- Accessing tables not in original query\n- Bypassing application logic\n- Extracting data from hidden tables\n\nAttack Requirements:\n1. Match column count in UNION\n2. Match data types (use NULL for unknowns)\n3. Terminate original query properly\n4. Know or guess target table name\n\nExample Attack:\n\' UNION SELECT secret_key, secret_value, NULL, NULL FROM secrets--</string>
+    <string name="product_search">Product Search</string>
+    <string name="search_the_product_database_can_you_disc">Search the product database. Can you discover the hidden \'secrets\' table and extract the key?</string>
+    <string name="search_products">Search products</string>
+    <string name="search_results_will_appear_here">Search results will appear here...</string>
+    <string name="once_youve_extracted_the_admin_token_fro">Once you\'ve extracted the key from the secrets table, submit it below:</string>
+
+    <!-- Challenge 3 - User search injection -->
+    <string name="user_search">User Search</string>
+    <string name="find_the_hidden_admin_user">Find the hidden admin user!</string>
+    <string name="search_username">Search username</string>
+    <string name="search_users">Search Users</string>
+
+
+    <!-- Client-side injection: runtime messages and dialogs -->
+    <string name="csi_ok">OK</string>
+    <string name="csi_close">Close</string>
+    <string name="csi_yes">Yes</string>
+    <string name="csi_no">No</string>
+    <string name="csi_enter_search_term">Please enter a search term</string>
+    <string name="csi_info_title_lesson">Client-Side Injection Lesson\nOWASP M4: Insufficient Input/Output Validation</string>
+    <string name="csi_info_title_challenge2">Client-Side Injection Challenge 2\nOWASP M4: Insufficient Input/Output Validation</string>
+
+    <string name="csi_lesson_no_users">No users found matching: %1$s</string>
+    <string name="csi_lesson_error">Error: %1$s</string>
+    <string name="csi_lesson_complete_title">Lesson Complete</string>
+    <string name="csi_lesson_complete_message">Correct key validated.</string>
+    <string name="csi_lesson_key_incorrect">Key incorrect.</string>
+
+    <string name="csi_c1_enter_credentials">Enter both username and password</string>
+    <string name="csi_c1_access_granted">Logged in as: admin\nKey: %1$s</string>
+    <string name="csi_c1_logged_in">Logged in as: %1$s\nRole: %2$s  Balance: $%3$d</string>
+    <string name="csi_c1_login_failed">Login failed.</string>
+    <string name="csi_db_init_failed">Could not prepare the local database. Reopen this screen to retry.</string>
+    <string name="csi_c1_query_error">Query error: %1$s</string>
+    <string name="csi_c1_complete">Correct! Challenge complete.</string>
+
+    <string name="csi_c2_no_products">No products found matching: %1$s</string>
+    <string name="csi_c2_error">Error: %1$s</string>
+    <string name="csi_c2_secret_discovered">\nKey: %1$s\n</string>
+    <string name="csi_c2_success_title">Success!</string>
+    <string name="csi_c2_success_message">Challenge complete.\n\nKey: %1$s%2$s</string>
+    <string name="csi_c2_completed_times">\n(Completed %1$d times)</string>
+
+</resources>
