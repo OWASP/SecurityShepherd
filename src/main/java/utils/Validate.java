@@ -5,6 +5,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
 import java.math.BigInteger;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -332,27 +333,30 @@ public class Validate {
    * Function that will check if a valid language is set. if not, returns en (English)
    *
    * @param ses Session Language Parameter
-   * @return en by default, or the valid setting found in the submitted lang
+   * @return The supported language code in the session's lang (a picker value such as "es", or a
+   *     locale such as "es_ES"), or en_GB by default
    */
   public static String validateLanguage(HttpSession ses) {
     String result = "en_GB";
-    String lang = new String();
+    String lang = "";
 
-    try {
+    if (ses != null && ses.getAttribute("lang") != null) {
       lang = ses.getAttribute("lang").toString();
-    } catch (NullPointerException e) {
-      lang = "";
     }
-    // log.debug("lang submitted: " + lang);
-    if (lang != null) {
-      if (lang.matches(".[a-z]{2}-[A-Z]{2}$")) {
-        result = lang;
+    // A two-letter language, optionally followed by a region (es, es_ES, pt-BR)
+    if (lang.matches("^[a-z]{2}([_-][A-Za-z]{2})?$")) {
+      String language = lang.substring(0, 2);
+      if (SUPPORTED_LANGUAGES.contains(language)) {
+        result = language;
       }
     }
-    // log.debug("lang set to: " + result);
 
     return result;
   }
+
+  /** The languages offered by translation-select.jsp */
+  private static final Set<String> SUPPORTED_LANGUAGES =
+      Set.of("en", "es", "fr", "pt", "ga", "zh", "hi", "ru");
 
   /**
    * Validates objects received through a function request. Also ensures max length is not too high.
