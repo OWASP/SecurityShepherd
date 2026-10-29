@@ -64,7 +64,7 @@ The **Scoreboard** button opens the scoreboard, if your organiser has turned it 
 
 ## What you need
 
-- **A web browser and an intercepting proxy,** such as OWASP ZAP or Burp Suite. Most levels are much easier with a proxy, and some can't be done without one. [Setting up your tools](setting-up-your-tools.md) explains how.
+- **A web browser and an intercepting proxy,** such as ZAP or Burp Suite. Most levels are much easier with a proxy, and some can't be done without one. [Setting up your tools](setting-up-your-tools.md) explains how.
 - **For the CSRF challenges, another player.** A CSRF challenge is only completed when another logged-in player triggers the request you forged, so you'll need to get someone else to visit your page.
 - **For the mobile levels, an Android emulator.** See [Mobile levels](mobile-levels.md).
 
