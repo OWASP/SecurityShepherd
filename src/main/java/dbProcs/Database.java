@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -141,7 +143,10 @@ public class Database {
     // properties File
 
     String challenge_props =
-        new File(Database.class.getResource("/challenges/" + path + ".properties").getFile())
+        new File(
+                URLDecoder.decode(
+                    Database.class.getResource("/challenges/" + path + ".properties").getFile(),
+                    StandardCharsets.UTF_8))
             .getAbsolutePath();
 
     log.debug("Level Properties File = " + path + ".properties");

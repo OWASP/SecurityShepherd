@@ -1,0 +1,45 @@
+name: Android Lint
+
+on:
+  push:
+    branches: [master, dev]
+    paths:
+      - 'src/MobileShepherd/MobileShepherd/**'
+  pull_request:
+    branches: [master, dev]
+    paths:
+      - 'src/MobileShepherd/MobileShepherd/**'
+
+jobs:
+  android-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/MobileShepherd/MobileShepherd
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+      
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      - name: Run Android Lint
+        run: ./gradlew lintDebug
+      
+      - name: Upload Lint Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-lint-report
+          path: src/MobileShepherd/MobileShepherd/app/build/reports/lint-results-debug.html
+          retention-days: 30
