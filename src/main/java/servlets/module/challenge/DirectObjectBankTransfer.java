@@ -109,15 +109,16 @@ public class DirectObjectBankTransfer extends HttpServlet {
         String htmlOutput = new String();
         if (performTransfer) {
           log.debug("Valid Data Submitted, transfering Funds...");
-          Connection conn = Database.getChallengeConnection(applicationRoot, "directObjectBank");
-          CallableStatement callstmt = conn.prepareCall("CALL transferFunds(?, ?, ?)");
-          callstmt.setString(1, senderAccountNumber);
-          callstmt.setString(2, receiverAccountNumber);
-          callstmt.setFloat(3, tranferAmount);
-          callstmt.execute();
-          log.debug("Successfully ran Transfer Funds procedure.");
+          try (Connection conn =
+                  Database.getChallengeConnection(applicationRoot, "directObjectBank");
+              CallableStatement callstmt = conn.prepareCall("CALL transferFunds(?, ?, ?)")) {
+            callstmt.setString(1, senderAccountNumber);
+            callstmt.setString(2, receiverAccountNumber);
+            callstmt.setFloat(3, tranferAmount);
+            callstmt.execute();
+            log.debug("Successfully ran Transfer Funds procedure.");
+          }
           htmlOutput = bundle.getString("transfer.success");
-          Database.closeConnection(conn);
         } else {
           log.debug("Invalid Data Detected: " + errorMessage);
           htmlOutput = bundle.getString("transfer.error.occurred") + " " + errorMessage;
