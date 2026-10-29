@@ -369,6 +369,35 @@ public class FindXSS {
   }
 
   /**
+   * Most {@code '<'} characters {@link #search(String)} passes to jtidy. Input with more is
+   * reported as no XSS without being parsed.
+   *
+   * <p>jtidy r938 parses recursively with no depth limit, so deeply nested input overflows the
+   * stack (CVE-2023-34623, #960). Its tree can be far deeper than the input's own nesting: every
+   * element comes from a {@code '<'} or is implied by one, but jtidy re-opens the inline elements
+   * on its inline stack inside each new block and pushes every {@code <font>} again, so n tags can
+   * build a tree about n²/4 deep. {@code <font><map>} repeated about 80 times overflows a 1 MB
+   * stack. The deepest shapes found with 32 {@code '<'} characters run in a 256 KB stack, and XSS
+   * payloads need only a handful.
+   */
+  static final int MAX_TAG_OPENERS = 32;
+
+  /**
+   * Counts the bytes jtidy can read as {@code '<'}. jtidy decodes its input as ISO-8859-1 by
+   * default, and in every encoding it can switch to, a {@code '<'} contains the byte 0x3C, so this
+   * is an upper bound on the tags jtidy can see.
+   */
+  private static int countTagOpeners(byte[] input) {
+    int count = 0;
+    for (byte b : input) {
+      if (b == '<') {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  /**
    * Forms XSS Input for XHTML before Searching with Shepherd XSS Detector
    *
    * @param xssString Untrusted User Input
@@ -378,12 +407,18 @@ public class FindXSS {
     boolean xssDetected = false;
     log.debug("String to Search: " + xssString);
 
+    byte[] tidyInput = xssString.getBytes();
+    if (countTagOpeners(tidyInput) > MAX_TAG_OPENERS) {
+      log.debug("More than " + MAX_TAG_OPENERS + " '<' characters, treating as no XSS");
+      return false;
+    }
+
     // Need to tidy submitted string, similar to how a browser would when it interprets it
     Tidy tidy = new Tidy();
     tidy.setXHTML(true);
     tidy.setQuiet(true);
     tidy.setShowWarnings(false);
-    InputStream inputStream = new ByteArrayInputStream(xssString.getBytes());
+    InputStream inputStream = new ByteArrayInputStream(tidyInput);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     tidy.parseDOM(inputStream, outputStream);
     String tidyHtml = outputStream.toString().toLowerCase();
