@@ -465,7 +465,7 @@ public class Setup extends HttpServlet {
     }
   }
 
-  private static void generateAuth() {
+  static void generateAuth() {
     try {
       if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
         UUID randomUUID = UUID.randomUUID();
@@ -475,7 +475,7 @@ public class Setup extends HttpServlet {
             Paths.get(Constants.SETUP_AUTH),
             randomUUID.toString().getBytes(),
             StandardOpenOption.CREATE);
-        log.info("Generated UUID " + randomUUID + " in " + Constants.SETUP_AUTH);
+        log.info("Generated a new setup auth token in " + Constants.SETUP_AUTH);
       }
     } catch (IOException e) {
       log.fatal("Unable to generate auth: " + e.getMessage());
