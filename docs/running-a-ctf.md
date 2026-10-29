@@ -95,4 +95,4 @@ Publish rules before the event. A starting point:
 ## Things to know
 
 - **XSS levels.** These levels decide whether an XSS attack worked by checking the submitted input for known attack patterns, not by detecting that a script ran. Occasionally a payload that does pop an alert isn't recognised. If a player shows you one that works, help them find a variant the level accepts.
-- **Reskinning.** The logo and styles are in [`src/main/webapp/css/`](https://github.com/OWASP/SecurityShepherd/tree/dev/src/main/webapp/css) (`theCss.css`, and `images/shepherd_and_sheep_v2.png`). Change them, then rebuild the WAR and the image as in [Getting started](getting-started.md#run-it-with-docker). Changes made inside a running container are lost when it's recreated.
+- **Reskinning.** To use your own logo, colours and name, see [Reskinning](reskinning.md).

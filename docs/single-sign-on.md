@@ -14,11 +14,33 @@ This page explains what changes when SSO is on, then takes you through the setup
 - **Suspensions still work.** A suspended player can't log in through SSO until the suspension ends.
 - **Logout can log out of the IdP too.** If you configure single logout, logging out of Security Shepherd also logs the player out of the IdP, and logging out at the IdP ends their Security Shepherd session.
 
+### How a login works
+
+```mermaid
+sequenceDiagram
+    actor Player
+    participant Browser
+    participant Shepherd as Security Shepherd
+    participant IdP as Identity provider
+
+    Player->>Browser: Click Login via SAML
+    Browser->>Shepherd: /saml/dologin
+    Shepherd-->>Browser: Login request, and a cookie
+    Browser->>IdP: Login request
+    Player->>IdP: Log in
+    IdP-->>Browser: Signed response
+    Browser->>Shepherd: /saml/acs: response and cookie
+    Shepherd->>Shepherd: Check the response
+    Shepherd-->>Browser: Logged in
+```
+
+The cookie ties the login request to the browser that started it. When the response comes back, Security Shepherd checks its signature, that it answers a request from the same browser, and the player's groups, which decide whether they log in as a player or an admin. A response that doesn't answer a request from that browser, including one started from the IdP's dashboard, is refused.
+
 ## Before you start
 
 You need:
 
-- Security Shepherd running over HTTPS on its real hostname, with a certificate browsers trust. The login depends on a `Secure` cookie, so it doesn't work over plain HTTP. The [README](https://github.com/OWASP/SecurityShepherd#https-certificate) explains how to use your own certificate.
+- Security Shepherd running over HTTPS on its real hostname, with a certificate browsers trust. The login depends on a `Secure` cookie, so it doesn't work over plain HTTP. [Deploying into production](deploying-into-production.md#use-your-own-tls-certificate) explains how to use your own certificate.
 - An application (a SAML "service provider" or "relying party") registered for Security Shepherd in your IdP, or someone who can create one.
 - The source code, built as in [Getting started](getting-started.md#run-it-with-docker). The configuration files are built into the WAR, so you rebuild the image to change them.
 

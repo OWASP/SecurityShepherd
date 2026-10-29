@@ -92,6 +92,7 @@ When a change touches `docs/` or the site configuration, also run the `Docs` wor
 
 ```bash
 uv sync --locked --no-build
+uv run --locked --no-sync python .github/scripts/generate-level-catalogue.py --check
 uv run --locked --no-sync zensical build --clean --strict
 uv run --locked --no-sync python .github/scripts/check-docs-site.py
 ```
@@ -220,6 +221,9 @@ The documentation site is built from `docs/` with [Zensical](https://zensical.or
   - a `nav` entry whose file doesn't exist, a page in `docs/` that isn't in `nav`, or a link to an image or other file that doesn't exist (`.github/scripts/check-docs-site.py`).
 - Write GitHub-flavoured Markdown that reads the same on github.com and on the site. Link to other pages in `docs/` with relative links to the `.md` file. Link to anything outside `docs/` with an absolute `https://github.com/OWASP/SecurityShepherd/blob/dev/…` URL, because relative `../` links break on the site.
 - `docs/docker-hub-overview.md` is the Docker Hub overview, not a site page, and is excluded in `zensical.toml`.
+- **The level catalogue is generated.** The tables in `docs/levels.md` and `docs/mobile-levels.md`, between the `BEGIN GENERATED` and `END GENERATED` markers, come from the `INSERT INTO modules` lines in `coreSchema.sql` and each topic's OWASP Top 10 category and CWE in `.github/scripts/level-classification.toml`. Run `uv run --locked --no-sync python .github/scripts/generate-level-catalogue.py` after changing either, and commit the result. The `docs-build` job runs it with `--check` and fails if the pages are stale. A new topic needs an entry in the TOML file.
+- **Diagrams must be readable at page width.** Mermaid scales a diagram down to the content width (about 690 px), and the site can't zoom, so a wide diagram's text becomes unreadable. Sequence diagrams have at most four or five participants and short message labels. Flowcharts are `flowchart TB` unless they still read well left to right, with about eight or nine boxes at most, each a name plus a short detail, never a full path. Don't label arrows: Mermaid draws a box behind each label, visible in dark mode, and bends the arrow around it. Use `subgraph` groups only when needed, because groups of different widths knock boxes out of line and bend the arrows. Put the detail in the boxes or the surrounding text. Before finishing, render every changed diagram in the built site in light and dark mode at desktop width, and check its text is about page size and its arrows are straight apart from branches. The full rules are in CONTRIBUTING.md's "Writing Documentation" section.
+- **Mermaid is self-hosted.** The theme loads Mermaid from unpkg.com unless a `mermaid` global exists, so `docs/assets/javascripts/mermaid/mermaid.min.js` (12.2.0, with its MIT `LICENSE`) is loaded on every page through `extra_javascript` in `zensical.toml`. Dependabot doesn't update it. To update it, download the npm tarball for the new version, check it against the `dist.integrity` sha512 in `https://registry.npmjs.org/mermaid/<version>`, copy `package/dist/mermaid.min.js` and `package/LICENSE`, update the version in `zensical.toml`'s comment and here, and check a page with a diagram renders, with no request to unpkg.com.
 
 ## Database
 
