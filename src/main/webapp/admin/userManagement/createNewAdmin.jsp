@@ -127,12 +127,12 @@ if(ses.getAttribute("errorMessage") != null)
 <script>
 	$("#theForm").submit(function(){
 		//Get data
-		var theUserName = $("#userName").attr('value');
-		var thePassWord = $('#passWord').attr('value');
-		var thePassWordConfirm = $('#passWordConfirm').attr('value');
-		var theUserAddress = $('#userAddress').attr('value');
-		var theUserAddressCnf = $('#userAddressCnf').attr('value');
-		var theCsrfToken = $('#csrfToken').attr('value');
+		var theUserName = $("#userName").val();
+		var thePassWord = $('#passWord').val();
+		var thePassWordConfirm = $('#passWordConfirm').val();
+		var theUserAddress = $('#userAddress').val();
+		var theUserAddressCnf = $('#userAddressCnf').val();
+		var theCsrfToken = $('#csrfToken').val();
 		//Validation
 		if (theUserName.length == 0 ||
 			thePassWord.length == 0 ||

@@ -111,7 +111,7 @@ public class RefreshMenu extends HttpServlet {
                         userId,
                         ses.getAttribute("lang").toString(),
                         (String) tokenParmeter)
-                    + "<script>startScrollsBars();makeSearchList();</script>");
+                    + "<script>makeSearchList();</script>");
           } else if (ModulePlan.isOpenFloor()) {
             log.debug("Returning Open Floor Menu");
             try {
@@ -147,7 +147,7 @@ public class RefreshMenu extends HttpServlet {
                     + Encode.forHtml(tokenParmeter.toString())
                     + "', \""
                     + Encode.forHtml(bundle.getString("generic.text.sorryError"))
-                    + "\");tournamentToggleFunctions();startScrollsBars();makeSearchList();</script>");
+                    + "\");tournamentToggleFunctions();makeSearchList();</script>");
           }
         } else {
           log.debug("CSRF Tokens did not match");
