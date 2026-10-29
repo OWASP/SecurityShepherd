@@ -73,40 +73,41 @@ public class SqlInjection5CouponCheck extends HttpServlet {
         }
 
         htmlOutput = new String("");
-        Connection conn =
-            Database.getChallengeConnection(applicationRoot, "SqlInjectionChallenge5ShopCoupon");
         log.debug("Looking for Coupons Insecurely");
-        PreparedStatement prepstmt =
-            conn.prepareStatement(
-                "SELECT itemId, perCentOff, itemName FROM coupons JOIN items USING (itemId) WHERE"
-                    + " couponCode = '"
-                    + couponCode
-                    + "';");
-        ResultSet coupons = prepstmt.executeQuery();
-        try {
-          if (coupons.next()) {
-            htmlOutput = new String("Valid Coupon for ");
-            log.debug("Found coupon for %" + coupons.getInt(2));
-            log.debug("For Item Name " + coupons.getString(3));
-            htmlOutput +=
-                ""
-                    + bundle.getString("response.percent")
-                    + ""
-                    + coupons.getInt(2)
-                    + " "
-                    + bundle.getString("response.off")
-                    + " "
-                    + Encode.forHtml(coupons.getString(3))
-                    + " "
-                    + bundle.getString("response.items")
-                    + "";
-          } else {
-            htmlOutput = "" + bundle.getString("response.noCoupon") + "";
+        try (Connection conn =
+                Database.getChallengeConnection(
+                    applicationRoot, "SqlInjectionChallenge5ShopCoupon");
+            PreparedStatement prepstmt =
+                conn.prepareStatement(
+                    "SELECT itemId, perCentOff, itemName FROM coupons JOIN items USING (itemId) WHERE"
+                        + " couponCode = '"
+                        + couponCode
+                        + "';");
+            ResultSet coupons = prepstmt.executeQuery()) {
+          try {
+            if (coupons.next()) {
+              htmlOutput = new String("Valid Coupon for ");
+              log.debug("Found coupon for %" + coupons.getInt(2));
+              log.debug("For Item Name " + coupons.getString(3));
+              htmlOutput +=
+                  ""
+                      + bundle.getString("response.percent")
+                      + ""
+                      + coupons.getInt(2)
+                      + " "
+                      + bundle.getString("response.off")
+                      + " "
+                      + Encode.forHtml(coupons.getString(3))
+                      + " "
+                      + bundle.getString("response.items")
+                      + "";
+            } else {
+              htmlOutput = "" + bundle.getString("response.noCoupon") + "";
+            }
+          } catch (Exception e) {
+            log.debug("Could Not Find Coupon: " + e.toString());
           }
-        } catch (Exception e) {
-          log.debug("Could Not Find Coupon: " + e.toString());
         }
-        conn.close();
       } catch (Exception e) {
         log.debug("Did complete Check: " + e.toString());
         htmlOutput = "" + bundle.getString("errors.Occurred") + "" + Encode.forHtml(e.toString());
