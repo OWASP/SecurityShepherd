@@ -75,28 +75,30 @@ public class CsrfChallengeSevenGetToken extends HttpServlet {
         String htmlOutput = new String("Your csrf Token for this Challenge is: ");
         String userId = request.getParameter("userId").toString();
 
-        Connection conn =
+        try (Connection conn =
             Database.getChallengeConnection(
-                getServletContext().getRealPath(""), "csrfChallengeEnumerateTokens");
-        try {
-          log.debug("Preparing setCsrfChallengeSevenToken call");
-          PreparedStatement callstmnt =
-              conn.prepareStatement(
-                  "SELECT csrfTokenscol FROM csrfChallengeEnumTokens.csrfTokens WHERE userId LIKE"
-                      + " ?");
-          callstmnt.setString(1, userId);
-          log.debug("Executing setCsrfChallengeSevenTokenQuery");
-          ResultSet rs = callstmnt.executeQuery();
-          int i = 0;
-          while (rs.next()) {
-            i++;
-            htmlOutput += Encode.forHtml(rs.getString(1)) + " <br/>";
+                getServletContext().getRealPath(""), "csrfChallengeEnumerateTokens")) {
+          try {
+            log.debug("Preparing setCsrfChallengeSevenToken call");
+            try (PreparedStatement callstmnt =
+                conn.prepareStatement(
+                    "SELECT csrfTokenscol FROM csrfChallengeEnumTokens.csrfTokens WHERE userId LIKE"
+                        + " ?")) {
+              callstmnt.setString(1, userId);
+              log.debug("Executing setCsrfChallengeSevenTokenQuery");
+              try (ResultSet rs = callstmnt.executeQuery()) {
+                int i = 0;
+                while (rs.next()) {
+                  i++;
+                  htmlOutput += Encode.forHtml(rs.getString(1)) + " <br/>";
+                }
+                log.debug("Returned " + i + " CSRF Tokens for ID: " + userId);
+              }
+            }
+          } catch (Exception e) {
+            log.debug("Could not retrieve Challenge CSRF Tokens: " + e.toString());
+            htmlOutput = csrfGenerics.getString("error.noToken");
           }
-          log.debug("Returned " + i + " CSRF Tokens for ID: " + userId);
-          conn.close();
-        } catch (Exception e) {
-          log.debug("Could not retrieve Challenge CSRF Tokens: " + e.toString());
-          htmlOutput = csrfGenerics.getString("error.noToken");
         }
         out.write(htmlOutput);
       }
