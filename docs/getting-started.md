@@ -97,7 +97,7 @@ You're asked to change the password straight away, because the default one is pu
 
 ## Try the levels
 
-You need an intercepting proxy, such as [OWASP ZAP](https://www.zaproxy.org/) or [Burp Suite Community Edition](https://portswigger.net/burp/communitydownload). Both come with a preconfigured browser.
+You need an intercepting proxy, such as [ZAP](https://www.zaproxy.org/) or [Burp Suite Community Edition](https://portswigger.net/burp/communitydownload). Both come with a preconfigured browser.
 
 The levels start closed. As an admin, the start page (**Let's Get Started**) has a **Configure Shepherd** section. To get back to it, reload the page.
 
