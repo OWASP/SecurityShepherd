@@ -100,7 +100,7 @@ public class SqlInjection4 extends HttpServlet {
                         + theUserName
                         + "' AND userPassword = '"
                         + thePassword
-                        + "'") ) {
+                        + "'")) {
 
           log.debug("Gathering result set");
 

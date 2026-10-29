@@ -251,9 +251,10 @@ public class SqlInjectionPoolLeakIT {
     }
     // The database must remain accessible
     String output = doPost(new SqlInjection3(), "theUserName", "Mary Martin");
-    assertTrue(output.contains("Mary Martin"),"SQL Injection 3 could not retrieve an existing customer: " + output);
+    assertTrue(
+        output.contains("Mary Martin"),
+        "SQL Injection 3 could not retrieve an existing customer: " + output);
     assertFalse(output.contains(sqlError), "SQL Injection 3 returned an SQL error: " + output);
-
   }
 
   @Test

@@ -97,7 +97,7 @@ public class SqlInjection5 extends HttpServlet {
             PreparedStatement prepstmt =
                 conn.prepareStatement(
                     "SELECT itemId, perCentOff FROM coupons WHERE couponCode = ?"
-                        + "UNION SELECT itemId, perCentOff FROM vipCoupons WHERE couponCode = ?")) {
+                        + " UNION SELECT itemId, perCentOff FROM vipCoupons WHERE couponCode = ?")) {
           log.debug("Looking for Coupons");
           prepstmt.setString(1, couponCode);
           prepstmt.setString(2, couponCode);
