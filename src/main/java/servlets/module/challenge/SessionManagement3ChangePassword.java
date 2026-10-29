@@ -117,23 +117,26 @@ public class SessionManagement3ChangePassword extends HttpServlet {
           log.debug("Getting ApplicationRoot");
           String ApplicationRoot = getServletContext().getRealPath("");
 
-          Connection conn =
-              Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalThree");
-          log.debug("Changing password for user: " + subName);
-          log.debug("Changing password to: " + subNewPass);
-          PreparedStatement callstmt;
+          try (Connection conn =
+              Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalThree")) {
+            log.debug("Changing password for user: " + subName);
+            log.debug("Changing password to: " + subNewPass);
 
-          callstmt =
-              conn.prepareStatement("UPDATE users SET userPassword = SHA(?) WHERE userName = ?");
-          callstmt.setString(1, subNewPass);
-          callstmt.setString(2, subName);
-          log.debug("Executing changePassword");
-          callstmt.execute();
+            try (PreparedStatement callstmt =
+                conn.prepareStatement(
+                    "UPDATE users SET userPassword = SHA(?) WHERE userName = ?")) {
+              callstmt.setString(1, subNewPass);
+              callstmt.setString(2, subName);
+              log.debug("Executing changePassword");
+              callstmt.execute();
+            }
 
-          log.debug("Committing changes made to database");
-          callstmt = conn.prepareStatement("COMMIT");
-          callstmt.execute();
-          log.debug("Changes committed.");
+            log.debug("Committing changes made to database");
+            try (PreparedStatement commitStmt = conn.prepareStatement("COMMIT")) {
+              commitStmt.execute();
+            }
+            log.debug("Changes committed.");
+          }
 
           htmlOutput = "<p>" + bundle.getString("reset.password") + "</p>";
         } else {
