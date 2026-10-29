@@ -77,4 +77,4 @@ Your organiser sets the rules for an event, but these always apply:
 - **Don't share answers.** Explaining a concept is fine. Handing over a result key or a working attack isn't.
 - **Only attack systems you're allowed to.** What you learn here is for testing systems you have permission to test.
 
-The language menu at the top right of every page changes the language of the menus and some of the levels. See [Translations](translations.md).
+The language menu at the top right of every page changes the language of the platform's pages, as far as they're translated. The levels are shown in English for now. See [Translations](translations.md).

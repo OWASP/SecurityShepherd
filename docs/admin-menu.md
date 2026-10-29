@@ -63,7 +63,7 @@ Select levels in the **To Open** list or the **To Close** list, then click **Upd
 
 ### Module Block Setup
 
-Choose the level to block and write the message players will see, such as when the block will be lifted, then click **Enable Block**. Use it to pause an event, for example to teach a topic before the levels that need it. Come back to this page to remove the block.
+Choose the level to block and write the message players will see, such as when the block will be lifted, then click **Enable Block**. Use it to pause an event, for example to teach a topic before the levels that need it. Come back to this page to remove the block. The block isn't saved in the database, so restarting Tomcat also removes it.
 
 ![The Set a Module Blocker page: a list to choose the level to block, a Blocked Message to Give box, and an Enable Block button](assets/images/admin-module-block.png)
 

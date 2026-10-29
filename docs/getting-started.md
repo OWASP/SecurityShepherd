@@ -21,7 +21,7 @@ docker compose up -d --build
 
 [Deploying into production](deploying-into-production.md) covers using your own TLS certificate and the other changes to make before other people use it, and [Upgrading](upgrading.md) covers moving an existing installation to a new version.
 
-This setup is a quick start for a laptop or a classroom lab, not a production deployment. It uses well-known default passwords and a self-signed certificate. [Running a CTF](running-a-ctf.md#before-you-start-secure-the-deployment) lists what to change before other people use it.
+This setup is a quick start for a laptop or a classroom lab, not a production deployment. It uses well-known default passwords and a self-signed certificate. [Deploying into production](deploying-into-production.md) lists what to change before other people use it.
 
 ### What's running
 
@@ -34,6 +34,20 @@ Docker Compose builds three images and starts a container from each:
 | `secshep_mongo` | `owasp/security-shepherd_mongo` | MongoDB, for the NoSQL levels. Listens on `127.0.0.1:27017` only. |
 
 The ports come from `.env`, along with the passwords and the container names.
+
+```mermaid
+flowchart TB
+    browser["Browser"]
+    tomcat["secshep_tomcat<br/>Tomcat 11<br/>ports 443, 80<br/>volumes: conf, logs"]
+    mariadb[("secshep_mariadb<br/>MariaDB<br/>port 3306<br/>volume: data")]
+    mongo[("secshep_mongo<br/>MongoDB<br/>port 27017<br/>volumes: mongodata,<br/>mongoconfig")]
+
+    browser --> tomcat
+    tomcat --> mariadb
+    tomcat --> mongo
+```
+
+Only Tomcat is reachable from other machines. MariaDB and MongoDB are also published on `127.0.0.1`, for your own tools.
 
 Data is kept in Docker volumes, so it survives `docker compose down` and rebuilds. The volume names start with the Compose project name, which is the name of the folder you cloned into, for example `securityshepherd_data`.
 
