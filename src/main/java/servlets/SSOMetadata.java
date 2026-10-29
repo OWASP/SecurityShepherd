@@ -38,7 +38,7 @@ public class SSOMetadata extends HttpServlet {
       throws ServletException, IOException {
 
     /** Redirects user to index.jsp */
-    response.sendRedirect("index.jsp");
+    response.sendRedirect("../index.jsp");
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
