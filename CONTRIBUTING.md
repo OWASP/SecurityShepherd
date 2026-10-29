@@ -47,7 +47,7 @@ Install ZenHub for your browser and click the ZenHub tab that will appear in thi
 6. *Closed* - Item is Done
 
 ## How do I setup my dev environment?
-[Like This](https://github.com/OWASP/SecurityShepherd/wiki/Create-a-Security-Shepherd-Dev-Environment)
+Install Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose. Then follow [Getting started](docs/getting-started.md) to run Security Shepherd locally, and [docs/development-workflow.md](docs/development-workflow.md) for the development cycle below.
 
 ## Development Workflow
 See [docs/development-workflow.md](docs/development-workflow.md) for the full development cycle, including how to:
@@ -59,7 +59,34 @@ See [docs/development-workflow.md](docs/development-workflow.md) for the full de
 See [docs/testing.md](docs/testing.md) for instructions on running unit and integration tests with Docker.
 
 ## Database Configuration
-See [docs/database-configuration.md](docs/database-configuration.md) for connection pooling configuration and database setup.
+See [docs/database-layer.md](docs/database-layer.md) for how Security Shepherd connects to its databases, and [docs/configuration.md](docs/configuration.md) for the connection settings.
+
+## Writing Documentation
+The documentation in [`docs/`](docs/) is published as a site at https://owasp.github.io/SecurityShepherd/, and is also read on GitHub. Write it so that it reads the same in both places:
+
+- **GitHub-flavoured Markdown only:** headings, lists, tables, code blocks, task lists, and Mermaid diagrams in code blocks marked `mermaid`. Don't use syntax only the site understands, such as admonitions (`!!! note`), content tabs or code annotations, unless the maintainers agree to it first.
+- **Links to other pages in `docs/`** are relative links to the `.md` file, such as `[Configuration](configuration.md#event-times)`.
+- **Links to anything outside `docs/`** are absolute: `https://github.com/OWASP/SecurityShepherd/blob/dev/…`. A relative `../` link works on GitHub but breaks on the site.
+- **A new page** goes in the `nav` list in `zensical.toml`, and in `docs/index.md`. The docs build fails on a page that isn't in `nav`.
+- **Diagrams** are Mermaid, in code blocks marked `mermaid`, so they render on GitHub and on the site. A diagram is scaled down to the page's width, so a wide one ends up with text too small to read, and the site has no way to zoom in. Keep them readable at page width:
+    - **Sequence diagrams:** four or five participants at most, and message labels of a few words. Put the detail in the text around the diagram.
+    - **Flowcharts:** draw them top to bottom (`flowchart TB`) unless they still read well left to right, keep to about eight or nine boxes, and give each box a name and a short detail, not a full file path.
+    - **No labels on arrows.** Mermaid draws each arrow label on a box of its own, which shows against the page in dark mode, and bends the arrow around it. Put the detail in the boxes or in the text.
+    - **Groups (`subgraph`) only when they're needed.** Groups of different widths push boxes out of line, which bends the arrows between them. A sentence before the diagram can often say what a group would.
+    - **Check it** in the built site, in light and dark mode at a normal desktop width. Its text should be about the size of the page's text, and its arrows straight, apart from where one box branches to several.
+    - **No attacks.** Don't diagram how to exploit a level.
+- **Images** go in `docs/assets/images/`, with alt text that describes what the image shows. Screenshots must not show a level's solution or result key.
+- **No solutions.** Public pages explain how to play, not how to complete a level. Cheat sheets are for admins, in the app.
+- **The level catalogue** in `levels.md` and `mobile-levels.md` is generated, so don't edit its tables by hand. Change `coreSchema.sql` or `.github/scripts/level-classification.toml`, then run `uv run --locked --no-sync python .github/scripts/generate-level-catalogue.py`.
+
+Preview the site with `uv run zensical serve`. Before you push, run the same checks as CI:
+
+```bash
+uv sync --locked --no-build
+uv run --locked --no-sync python .github/scripts/generate-level-catalogue.py --check
+uv run --locked --no-sync zensical build --clean --strict
+uv run --locked --no-sync python .github/scripts/check-docs-site.py
+```
 
 ## Versioning and Releases
 Shepherd follows [Semantic Versioning](https://semver.org/). Releases are tagged as plain `X.Y.Z` (e.g. `4.0.0`, with no `v` prefix), and `dev` always carries an `X.Y.Z-SNAPSHOT` version. See [docs/releasing.md](docs/releasing.md) for the release steps.

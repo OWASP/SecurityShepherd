@@ -4,103 +4,31 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 
 [![Build and Test](https://github.com/OWASP/SecurityShepherd/actions/workflows/test.yml/badge.svg)](https://github.com/OWASP/SecurityShepherd/actions/workflows/test.yml)  
 
-# Where can I download Security Shepherd?
+# Documentation
 
-### Virtual Machine or Manual Setup
-You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases)
+The documentation is at **https://owasp.github.io/SecurityShepherd/**: how to play, how to run Security Shepherd and an event, and how to contribute.
 
-### Docker (Ubuntu Linux Host)
+# Quick start
 
-#### Initial Setup
+You need Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose.
+
 ```console
-# Install pre-reqs
-sudo apt install git maven docker docker-compose openjdk-17-jdk
-
-# Clone the github repository
 git clone https://github.com/OWASP/SecurityShepherd.git
-
-# Change directory into the local copy of the repository
 cd SecurityShepherd
-
-# Adds current user to the docker group (don't have to run docker with sudo)
-sudo gpasswd -a $USER docker
-
-# Run maven to generate the WAR and HTTPS Cert.
+# Build the WAR and generate the database scripts the images need
 mvn -Pdocker clean install -DskipTests
-
-# Build the docker images, docker network and bring up the environment
-docker-compose up
+# Build the images and start the containers
+docker compose up -d --build
 ```
 
-Open up an Internet Browser & type in the address bar;
+Then open [https://localhost](https://localhost) and follow [Getting started](https://owasp.github.io/SecurityShepherd/getting-started/) to configure the database and log in.
 
-* [localhost](http://localhost)
+This is a quick start for a laptop or a classroom lab, not a production deployment: it uses well-known default passwords and a self-signed certificate. Before other people use it, follow [Deploying into production](https://owasp.github.io/SecurityShepherd/deploying-into-production/). To move an existing installation to 4.0, see [Upgrading](https://owasp.github.io/SecurityShepherd/upgrading/).
 
-To login use the following credentials (you will be asked to update after login);
+Pre-built images are published to Docker Hub as [`owasp/security-shepherd`](https://hub.docker.com/r/owasp/security-shepherd). [Verifying the images](https://owasp.github.io/SecurityShepherd/verifying-images/) explains the tags and how to check an image's SBOM and provenance.
 
-* username: ```admin```
-* password: ```password```
+The 3.1 virtual machine and manual installation packs are still on the [releases page](https://github.com/OWASP/SecurityShepherd/releases), and the [wiki](https://github.com/OWASP/SecurityShepherd/wiki) describes them.
 
-Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
-
-#### Upgrading an existing Docker environment
-Security Shepherd now runs on Tomcat 11. Tomcat's `conf` directory lives in the `conf` Docker volume, and Docker only copies the image's files into a volume when the volume is first created. An existing environment would therefore start Tomcat 11 with its old Tomcat 9/10.1 `server.xml` and `web.xml`. That volume has to be recreated. Database data is in the separate `data` and `mongodata` volumes, so it is kept.
-
-The `conf` volume also holds the TLS keystore and the `database.properties` / `mongo.properties` connection settings, so **back it up first**:
-
-```console
-docker-compose down
-# The volume is named <project>_conf; check with: docker volume ls
-# The archive holds the TLS private key and database password. Keep it outside the repository
-# (the repository root is the Docker build context) and readable by you only
-BACKUP_DIR="$HOME/shepherd-conf-backup"
-mkdir -p "$BACKUP_DIR" && chmod 700 "$BACKUP_DIR"
-docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine sh -c \
-  'umask 077 && touch /backup/shepherd-conf-backup.tgz && chmod 600 /backup/shepherd-conf-backup.tgz \
-   && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'
-docker volume rm securityshepherd_conf
-mvn -Pdocker clean install -DskipTests
-# Detached, so the databases keep running while you restore files below
-docker-compose up -d --build
-```
-
-The new volume starts from the image: a freshly built keystore, and connection settings taken from `.env`. If you had customised either, copy just those files back from the backup. Leave `server.xml` and `web.xml` alone, because they are the Tomcat 11 versions.
-
-```console
-BACKUP_DIR="$HOME/shepherd-conf-backup"
-# Connection settings changed through the setup page:
-docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine \
-  tar xzf /backup/shepherd-conf-backup.tgz -C /conf ./database.properties ./mongo.properties
-# Your own TLS certificate: restore the keystore file named by TLS_KEYSTORE_FILE, and make sure
-# TLS_KEYSTORE_PASS and ALIAS in .env match it before building
-docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine \
-  tar xzf /backup/shepherd-conf-backup.tgz -C /conf ./<your keystore file>
-docker-compose restart web
-```
-
-Delete `$BACKUP_DIR` (or move it somewhere safe) once the upgrade is working. On Linux hosts the archive is owned by root, but you can still delete it because you own the directory.
-
-If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, ports, ciphers and so on), re-apply those edits to the new Tomcat 11 files, using the backup as a reference. Don't copy the old files back.
-
-##### MariaDB 12.3
-The database image now runs MariaDB 12.3 (long-term support) instead of 10.6, which is no longer supported. The `data` volume is kept. On its first start, `MARIADB_AUTO_UPGRADE=1` in `docker-compose.yml` upgrades the volume's system tables, after taking a backup of them inside the volume. Back up your data before rebuilding anyway, because a volume can't be moved back to 10.6 once 12.3 has opened it. Run this while the old container is still up. The dump holds every user's password hash, so like the `conf` backup above it goes outside the repository and is readable by you only:
-
-```console
-BACKUP_DIR="$HOME/shepherd-db-backup"
-mkdir -p "$BACKUP_DIR" && chmod 700 "$BACKUP_DIR"
-(umask 077 && docker exec secshep_mariadb sh -c \
-  'export MYSQL_PWD="$MYSQL_ROOT_PASSWORD"; exec mysqldump -uroot --all-databases --routines --events' \
-  > "$BACKUP_DIR/shepherd-db-backup.sql")
-```
-
-Delete `$BACKUP_DIR` (or move it somewhere safe) once the upgrade is working.
-
-#### Full Guide
-[Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
-
-# How do I setup Security Shepherd?
-We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.
-  
 # What can Security Shepherd be used for?
 Security Shepherd can be used as a;
 * Teaching Tool for All Application Security
