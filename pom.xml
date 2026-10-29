@@ -368,29 +368,6 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>keytool-maven-plugin</artifactId>
-						<version>2.0.2</version>
-						<executions>
-							<execution>
-								<id>generate-tls-key</id>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>generateKeyPair</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<alias>${ALIAS}</alias>
-							<keyalg>${KEY_ALG}</keyalg>
-							<keystore>${basedir}/target/docker/tomcat/${TLS_KEYSTORE_FILE}</keystore>
-							<dname>${DNAME}</dname>
-							<storepass>${TLS_KEYSTORE_PASS}</storepass>
-							<keypass>${TLS_KEYSTORE_PASS}</keypass>
-							<deststoretype>${STORE_TYPE}</deststoretype>
-						</configuration>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -686,6 +663,13 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<!-- Run by the release workflow (cyclonedx:makeBom) to publish the project's SBOM.
+			     Declared here so the prefix resolves and the version is pinned. -->
+			<plugin>
+				<groupId>org.cyclonedx</groupId>
+				<artifactId>cyclonedx-maven-plugin</artifactId>
+				<version>2.9.3</version>
 			</plugin>
 
 		</plugins>
