@@ -770,6 +770,36 @@ if (request.getSession() != null)
 	%>
 
 	<script>
+			var SHEPHERD_FRAME_SANDBOX = "allow-same-origin allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads";
+			function isSafeModuleSrc(src) {
+				if (!src || typeof src !== "string") {
+					return false;
+				}
+				var trimmed = src.replace(/^\s+|\s+$/g, "");
+				if (trimmed === "") {
+					return false;
+				}
+				var lower = trimmed.toLowerCase();
+				if (lower.indexOf("javascript:") === 0 || lower.indexOf("data:") === 0 || lower.indexOf("vbscript:") === 0) {
+					return false;
+				}
+				if (trimmed.indexOf("://") !== -1 || trimmed.indexOf("//") === 0) {
+					return false;
+				}
+				return true;
+			}
+			function createModuleFrame(frameId, src, title) {
+				var frame = document.createElement("iframe");
+				frame.setAttribute("id", frameId);
+				frame.setAttribute("class", "levelIframe");
+				frame.setAttribute("title", title);
+				// no loading="lazy" here: these frames start hidden and lazy loading never
+				// triggers for a hidden element, so the lesson never loads (issue 914 review)
+				frame.setAttribute("referrerpolicy", "same-origin");
+				frame.setAttribute("sandbox", SHEPHERD_FRAME_SANDBOX);
+				frame.setAttribute("src", src);
+				return frame;
+			}
 			function applyMenuButtonActionsOpenOrTourney(theCsrfToken, theErrorMessage){
 				console.log("Applying Menu Actions For Open/Tourney");
 				
@@ -791,8 +821,13 @@ if (request.getSession() != null)
 						if(ajaxCall.status == 200)
 						{
 							theActualFile = ajaxCall.responseText;
-							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theChallenge' src='" + theActualFile + "'></iframe>");
-							$("#theChallenge").load(function(){
+							if (!isSafeModuleSrc(theActualFile)) {
+								$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: <fmt:message key="generic.text.invalidModuleAddress" /></p>");
+								$("#contentDiv").slideDown("slow");
+							} else {
+							$("#contentDiv").empty();
+							var challengeFrame = createModuleFrame("theChallenge", theActualFile, "Security Shepherd challenge module");
+							$(challengeFrame).on("load", function(){
 								<%if (showCheatSheet) {%>
 									$("#submitResult").slideDown("fast", function(){
 										$("#cheatSheetButton").slideDown("fast", function(){
@@ -818,8 +853,10 @@ if (request.getSession() != null)
 										});
 									});
 								<%}%>
-							}).appendTo('#contentDiv');
+							});
+							$("#contentDiv").append(challengeFrame);
 							$("#theSidebarWrapper").height($("#contentDiv").height());
+							}
 						}
 						else
 						{
@@ -847,8 +884,13 @@ if (request.getSession() != null)
 						if(ajaxCall.status == 200)
 						{
 							theActualFile = ajaxCall.responseText;
-							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
-							$("#theLesson").load(function(){
+							if (!isSafeModuleSrc(theActualFile)) {
+								$('#contentDiv').html("<p> <fmt:message key="generic.text.sorryError" />: <fmt:message key="generic.text.invalidModuleAddress" /></p>");
+								$("#contentDiv").slideDown("slow");
+							} else {
+							$("#contentDiv").empty();
+							var lessonFrame = createModuleFrame("theLesson", theActualFile, "Security Shepherd lesson module");
+							$(lessonFrame).on("load", function(){
 							<%if (showCheatSheet) {%>
 								$("#submitResult").slideDown("fast", function(){
 									$("#cheatSheetButton").slideDown("fast", function(){
@@ -874,8 +916,10 @@ if (request.getSession() != null)
 									});
 								});
 							<%}%>
-							}).appendTo('#contentDiv');
+							});
+							$("#contentDiv").append(lessonFrame);
 							$("#theSidebarWrapper").height($("#contentDiv").height());
+							}
 						}
 						else
 						{
@@ -918,8 +962,13 @@ if (request.getSession() != null)
 						});
 						if(ajaxCall.status == 200) {
 							theActualFile = ajaxCall.responseText;
-							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
-							$("#theLesson").load(function(){
+							if (!isSafeModuleSrc(theActualFile)) {
+								$('#contentDiv').html("<p> " + theErrorMessage + ": <fmt:message key="generic.text.invalidModuleAddress" /></p>");
+								$("#contentDiv").slideDown("slow");
+							} else {
+							$("#contentDiv").empty();
+							var ctfLessonFrame = createModuleFrame("theLesson", theActualFile, "Security Shepherd lesson module");
+							$(ctfLessonFrame).on("load", function(){
 								<%if (showCheatSheet) {%>
 									$("#submitResult").slideDown("fast", function(){
 										$("#cheatSheetButton").slideDown("fast", function(){
@@ -945,7 +994,9 @@ if (request.getSession() != null)
 										});
 									});
 								<%}%>
-							}).appendTo('#contentDiv');
+							});
+							$("#contentDiv").append(ctfLessonFrame);
+							}
 						} else {
 							$('#contentDiv').html("<p> " + theErrorMessage + ": " + ajaxCall.status + " " + ajaxCall.statusText + "</p>");
 							$("#contentDiv").slideDown("slow");
