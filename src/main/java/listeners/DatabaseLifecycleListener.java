@@ -8,6 +8,8 @@ import jakarta.servlet.annotation.WebListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import servlets.Setup;
+import servlets.module.challenge.XxeChallenge1;
+import servlets.module.lesson.XxeLesson;
 
 /**
  * Servlet context listener for managing database connection pool lifecycle. Initializes connection
@@ -59,6 +61,16 @@ public class DatabaseLifecycleListener implements ServletContextListener {
       log.error("Failed to initialize database connection pools: " + e.getMessage(), e);
       // Don't prevent application startup, but log the error
       // Some modules may still work without database connectivity
+    }
+
+    // The XXE levels ask players to read these files from the server. Setup and "open all
+    // modules" with unsafe levels created them, but opening the levels any other way didn't
+    // (#654), so create them on every start
+    try {
+      XxeLesson.createXxeLessonSolutionFile();
+      XxeChallenge1.createXxeChallenge1SolutionFile();
+    } catch (RuntimeException e) {
+      log.error("Could not create the XXE solution files: " + e.getMessage(), e);
     }
   }
 
