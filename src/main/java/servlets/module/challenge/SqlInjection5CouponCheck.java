@@ -62,17 +62,17 @@ public class SqlInjection5CouponCheck extends HttpServlet {
       PrintWriter out = response.getWriter();
       out.print(getServletInfo());
 
-      String htmlOutput = new String();
+      String htmlOutput = "";
       String applicationRoot = getServletContext().getRealPath("");
 
       try {
         String couponCode = request.getParameter("couponCode");
         log.debug("couponCode - " + couponCode);
         if (couponCode == null || couponCode.isEmpty()) {
-          couponCode = new String();
+          couponCode = "";
         }
 
-        htmlOutput = new String("");
+        htmlOutput = "";
         Connection conn =
             Database.getChallengeConnection(applicationRoot, "SqlInjectionChallenge5ShopCoupon");
         log.debug("Looking for Coupons Insecurely");
@@ -85,7 +85,7 @@ public class SqlInjection5CouponCheck extends HttpServlet {
         ResultSet coupons = prepstmt.executeQuery();
         try {
           if (coupons.next()) {
-            htmlOutput = new String("Valid Coupon for ");
+            htmlOutput = "Valid Coupon for ";
             log.debug("Found coupon for %" + coupons.getInt(2));
             log.debug("For Item Name " + coupons.getString(3));
             htmlOutput +=
