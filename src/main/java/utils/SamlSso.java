@@ -676,7 +676,14 @@ public class SamlSso {
     config.setServiceProviderEntityId(required(props, SP_ENTITY_ID));
     config.setIdentityProviderEntityId(required(props, IDP_ENTITY_ID));
     config.setSingleSignOutServiceUrl(optional(props, SP_SLS_URL));
-    config.setResponseBindingType(optional(props, SP_ACS_BINDING, HTTP_POST_BINDING));
+    String acsBinding = optional(props, SP_ACS_BINDING, HTTP_POST_BINDING);
+    if (!HTTP_POST_BINDING.equals(acsBinding)) {
+      // ACS only authenticates on POST, so an IdP told to use another binding would deliver
+      // responses that the ACS endpoint throws away, and every login would silently fail
+      throw new IllegalStateException(
+          SP_ACS_BINDING + " must be " + HTTP_POST_BINDING + ", the only binding ACS accepts");
+    }
+    config.setResponseBindingType(acsBinding);
     config.setAuthnRequestBindingType(optional(props, IDP_SSO_BINDING, HTTP_REDIRECT_BINDING));
     String sloBinding = optional(props, IDP_SLO_BINDING, HTTP_REDIRECT_BINDING);
     config.setSpLogoutRequestBindingType(sloBinding);

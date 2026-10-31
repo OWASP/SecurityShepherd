@@ -1,5 +1,7 @@
 package servlets.module;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.GetterIT;
@@ -7,6 +9,9 @@ import dbProcs.Setter;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.List;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,8 +20,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
+import testUtils.LogCapture;
 import testUtils.TestProperties;
+import utils.CountdownHandler;
 import utils.ModuleBlock;
+import utils.Validate;
 
 public class GetModuleIT {
 
@@ -228,6 +236,70 @@ public class GetModuleIT {
         log.debug("location returned: " + moduleAddress);
         fail(message);
       }
+    }
+  }
+
+  /**
+   * Signs in through the Login servlet and returns the CSRF token, with the session cookies added
+   * to the outgoing request.
+   */
+  private String signIn(String userName) {
+    TestProperties.loginDoPost(log, request, response, userName, userName, null, lang);
+    if (response.getCookie("token") == null || response.getCookie("token").getValue().isEmpty()) {
+      fail("No CSRF Token Was Returned from Login Servlet");
+    }
+    request.setCookies(response.getCookies());
+    return response.getCookie("token").getValue();
+  }
+
+  /**
+   * Opening a module is something every player does, so it must not raise the unauthorised admin
+   * access alert (#735)
+   */
+  @Test
+  public void testGetModuleAsPlayerLogsNoAdminAlert()
+      throws SQLException, ServletException, IOException {
+    String moduleId = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; // Insecure Direct Object Ref
+    String levelHash = "fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100";
+    String userName = "getModule6";
+    GetterIT.verifyTestUser(applicationRoot, userName, userName);
+    String csrfToken = signIn(userName);
+
+    try (LogCapture validateLogs = LogCapture.of(Validate.class)) {
+      String moduleAddress = getModuleDoPost(moduleId, csrfToken);
+      assertTrue(
+          moduleAddress.endsWith("lessons/" + levelHash + ".jsp"),
+          "Unexpected module address: " + moduleAddress);
+      assertEquals(List.of(), validateLogs.messagesAtOrAbove(Level.WARN));
+    }
+  }
+
+  /** Admins can still open modules while the CTF isn't running, and players still can't */
+  @Test
+  public void testGetModuleWhenCtfEnded() throws SQLException, ServletException, IOException {
+    String moduleId = "0dbea4cb5811fff0527184f99bd5034ca9286f11"; // Insecure Direct Object Ref
+    String levelHash = "fdb94122d0f032821019c7edf09dc62ea21e25ca619ed9107bcc50e4a8dbc100";
+    String adminName = "getModuleAdmin1";
+    String userName = "getModule7";
+    GetterIT.verifyTestAdmin(applicationRoot, adminName, adminName);
+    GetterIT.verifyTestUser(applicationRoot, userName, userName);
+
+    CountdownHandler.disableStartTime();
+    CountdownHandler.disableLockTime();
+    CountdownHandler.setEndTime(LocalDateTime.now().minusDays(1));
+    try {
+      String adminToken = signIn(adminName);
+      String adminAddress = getModuleDoPost(moduleId, adminToken);
+      assertTrue(
+          adminAddress.endsWith("lessons/" + levelHash + ".jsp"),
+          "Admin should get the module while the CTF has ended, got: " + adminAddress);
+
+      request = new MockHttpServletRequest();
+      response = new MockHttpServletResponse();
+      String userToken = signIn(userName);
+      assertEquals("../blockedMessage.jsp", getModuleDoPost(moduleId, userToken));
+    } finally {
+      CountdownHandler.disableEndTime();
     }
   }
 

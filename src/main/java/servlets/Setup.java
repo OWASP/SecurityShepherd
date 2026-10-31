@@ -272,13 +272,13 @@ public class Setup extends HttpServlet {
             // Writing db file succeeded
 
             try {
-              if (dbOverride.equalsIgnoreCase("override")) {
+              if ("override".equalsIgnoreCase(dbOverride)) {
                 executeSqlScript();
                 htmlOutput =
                     bundle.getString("generic.text.setup.success")
                         + " "
                         + bundle.getString("generic.text.setup.success.overwrittendb");
-              } else if (dbOverride.equalsIgnoreCase("upgrade")) {
+              } else if ("upgrade".equalsIgnoreCase(dbOverride)) {
                 executeUpdateScript();
                 htmlOutput =
                     bundle.getString("generic.text.setup.success")
@@ -301,7 +301,7 @@ public class Setup extends HttpServlet {
             resetInstalledCache();
           }
 
-          if (enableMongoChallenge.equalsIgnoreCase("enable")) {
+          if ("enable".equalsIgnoreCase(enableMongoChallenge)) {
             if (!Validate.isValidPortNumber(mongodbPort)) {
               htmlOutput = bundle.getString("generic.text.setup.error.valid.port");
               FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
@@ -329,7 +329,7 @@ public class Setup extends HttpServlet {
             }
           }
 
-          if (enableUnsafeLevels.equalsIgnoreCase("enable")) {
+          if ("enable".equalsIgnoreCase(enableUnsafeLevels)) {
             openUnsafeLevels();
             if (!executeCreateChallengeFile()) {
               htmlOutput = bundle.getString("generic.text.setup.file.failed");
