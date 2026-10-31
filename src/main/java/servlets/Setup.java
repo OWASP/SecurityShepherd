@@ -225,7 +225,9 @@ public class Setup extends HttpServlet {
           }
         } catch (ClassNotFoundException e) {
           log.error("Could not load JDBC driver: " + driverType, e);
-          htmlOutput += bundle.getString("generic.text.setup.connection.failed") + ": Could not load JDBC driver";
+          htmlOutput =
+              bundle.getString("generic.text.setup.connection.failed")
+                  + ": Could not load JDBC driver";
         } catch (SQLException e) {
           htmlOutput += bundle.getString("generic.text.setup.connection.failed") + e.getMessage();
 
