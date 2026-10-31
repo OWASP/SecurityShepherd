@@ -216,10 +216,18 @@ public class Setup extends HttpServlet {
           testJdbcUrl = connectionURL + "?connectTimeout=5000";
         }
 
-        try (Connection conn = DriverManager.getConnection(testJdbcUrl, dbUser, dbPass)) {
-          connectionSuccess = true;
-          log.debug("Database connection successful");
+        try {
+          Class.forName(driverType);
 
+          try (Connection conn = DriverManager.getConnection(testJdbcUrl, dbUser, dbPass)) {
+            connectionSuccess = true;
+            log.debug("Database connection successful");
+          }
+        } catch (ClassNotFoundException e) {
+          log.error("Could not load JDBC driver: " + driverType, e);
+          htmlOutput =
+              bundle.getString("generic.text.setup.connection.failed")
+                  + ": Could not load JDBC driver";
         } catch (SQLException e) {
           htmlOutput += bundle.getString("generic.text.setup.connection.failed") + e.getMessage();
 
