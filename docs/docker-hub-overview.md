@@ -15,23 +15,7 @@ There are no published database images yet. The simplest way to get all three ru
 
 ## Quick start (Docker Compose)
 
-You need Git, Docker with Compose, Maven and JDK 17.
-
-```bash
-git clone https://github.com/OWASP/SecurityShepherd.git
-cd SecurityShepherd
-# Builds the WAR and generates the database init scripts
-mvn -Pdocker clean install -DskipTests
-docker compose up -d
-```
-
-Then open <http://localhost> and accept the self-signed certificate warning. The setup page asks for an auth token, which you get with:
-
-```bash
-docker exec secshep_tomcat cat /usr/local/tomcat/conf/SecurityShepherd.auth
-```
-
-[Getting started](https://github.com/OWASP/SecurityShepherd/blob/master/docs/getting-started.md#first-time-setup) explains the rest of the setup form. Once it's done, log in as `admin` / `password` (you'll be asked to change it).
+Follow [Getting started](https://owasp.github.io/SecurityShepherd/getting-started/). It lists the [prerequisites](https://owasp.github.io/SecurityShepherd/getting-started/#prerequisites), then builds the images, starts all three containers and takes you through the first login.
 
 The defaults (passwords in `.env`, a self-signed certificate, MongoDB without authentication) are for a quick start, not a long-lived or shared deployment.
 

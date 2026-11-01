@@ -2,6 +2,10 @@
 
 This guide explains the full development cycle for contributing to Security Shepherd.
 
+## Prerequisites
+
+Check the **To contribute** column of the [prerequisites](getting-started.md#prerequisites) before you start.
+
 ## 1. Create Your Branch
 
 Fork the repository or create a branch from the `dev` branch:
@@ -34,23 +38,40 @@ This generates:
 - The WAR file in `target/`
 - HTTPS certificates for Docker
 
+Each Maven command runs every step before it, so `install` includes `verify`, and `verify` includes `package`:
+
+| Step | What it does in this project | `package` | `verify` | `install` |
+|---|---|---|---|---|
+| `validate` | Checks the Maven version and dependency signatures; with `-Pdocker`, copies the SQL and Mongo scripts | ✅ | ✅ | ✅ |
+| `generate-sources` | With `-Pdocker`, uncomments `DELIMITER` in the SQL scripts | ✅ | ✅ | ✅ |
+| `compile` | Compiles the code for Java 17 | ✅ | ✅ | ✅ |
+| `test` | Runs unit tests | ✅ | ✅ | ✅ |
+| `package` | Builds `target/owaspSecurityShepherd.war` | ✅ | ✅ | ✅ |
+| `integration-test` | Runs integration tests | — | ✅ | ✅ |
+| `verify` | Runs the Spotless format check | — | ✅ | ✅ |
+| `install` | Copies the WAR into your local Maven cache, `~/.m2` | — | — | ✅ |
+
+`package` works on JDK 17 or newer. `verify` and `install` need JDK 17, because they run the Spotless format check, which fails on JDK 25 or newer.
+
+`-DskipTests` skips the two test steps, but not Spotless.
+
 ## 4. Test in Runtime Environment
 
 Start the full application stack using Docker Compose:
 
 ```bash
 # Build and start all containers (MariaDB, MongoDB, Tomcat)
-docker-compose up --build
+docker compose up --build
 
 # Or run in detached mode
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 The Tomcat image installs the Ubuntu security updates released since its base image was published. Docker caches the base image and that build step, so `--build` can reuse an old base image and old packages. Before testing or scanning an image, for example for a release, rebuild it without the cache:
 
 ```bash
-docker-compose build --pull --no-cache web
-docker-compose up -d
+docker compose build --pull --no-cache web
+docker compose up -d
 ```
 
 Access the application:
@@ -65,10 +86,10 @@ Default login credentials:
 
 ```bash
 # View all logs
-docker-compose logs -f
+docker compose logs -f
 
 # View only web container logs
-docker-compose logs -f web
+docker compose logs -f web
 ```
 
 ### Rebuilding After Code Changes
@@ -80,19 +101,19 @@ After making additional changes:
 mvn -Pdocker clean install -DskipTests
 
 # Rebuild and restart only the web container
-docker-compose up -d --build web
+docker compose up -d --build web
 ```
 
 ### Stopping the Environment
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 To also remove volumes (database data):
 
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
 
 ## 5. Run Automated Tests
@@ -135,8 +156,8 @@ lsof -i :80
 Ensure the database container is healthy:
 
 ```bash
-docker-compose ps
-docker-compose logs db
+docker compose ps
+docker compose logs db
 ```
 
 ### Changes Not Reflected
@@ -145,5 +166,5 @@ Make sure you rebuilt both the WAR and the container:
 
 ```bash
 mvn -Pdocker clean install -DskipTests
-docker-compose up -d --build web
+docker compose up -d --build web
 ```

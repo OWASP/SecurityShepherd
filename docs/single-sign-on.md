@@ -150,7 +150,7 @@ A user in both an admin group and a player group is an admin.
 Rebuild the WAR and the image, and restart the containers, as in [Getting started](getting-started.md#run-it-with-docker):
 
 ```bash
-mvn -Pdocker clean install -DskipTests
+mvn -Pdocker clean package -DskipTests
 docker compose up -d --build
 ```
 

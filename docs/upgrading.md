@@ -6,10 +6,10 @@ Back up first, as described in [Backups and restore](backups.md).
 
 ## Building an up-to-date image
 
-When the Tomcat image is built, it installs the Ubuntu security updates released since its base image was published. Docker caches the base image and that build step, so rebuilding with `docker compose up --build` can reuse an old base image and old packages. To build an image with the latest updates, rebuild it without the cache and recreate the container:
+When the Tomcat image is built, it installs the Ubuntu security updates released since its base image was published. Docker caches the base image and that build step, so rebuilding with `docker compose up --build` can reuse an old base image and old packages. To build an image with the latest updates, rebuild it without the cache and recreate the container. Maven needs JDK 17 or newer, as the [prerequisites](getting-started.md#prerequisites) explain.
 
 ```bash
-mvn -Pdocker clean install -DskipTests
+mvn -Pdocker clean package -DskipTests
 docker compose build --pull --no-cache web
 docker compose up -d
 ```
@@ -49,7 +49,7 @@ docker run --rm -v securityshepherd_conf:/conf -v "$BACKUP_DIR":/backup alpine s
   'umask 077 && touch /backup/shepherd-conf-backup.tgz && chmod 600 /backup/shepherd-conf-backup.tgz \
    && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'
 docker volume rm securityshepherd_conf
-mvn -Pdocker clean install -DskipTests
+mvn -Pdocker clean package -DskipTests
 # --pull and --no-cache pick up the latest base image and Ubuntu security updates
 docker compose build --pull --no-cache web
 # Detached, so the databases keep running while you restore files below
