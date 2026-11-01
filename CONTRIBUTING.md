@@ -1,6 +1,29 @@
 
 # OWASP Security Shepherd Contributing
 
+## How do I setup my dev environment?
+| You need | Version | Check with |
+|---|---|---|
+| Git | Any | `git --version` |
+| Docker with Docker Compose | Compose v2 or newer | `docker compose version` |
+| JDK | 17 | `mvn -v` shows "Java version" |
+| Maven | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
+
+Use JDK 17 specifically: on JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. If `mvn -v` shows another version, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+
+You also need about 3 GB of free disk space, and ports 80, 443, 3306 and 27017 free.
+
+Then build and start Security Shepherd:
+
+```bash
+git clone https://github.com/OWASP/SecurityShepherd.git
+cd SecurityShepherd
+mvn -Pdocker clean install -DskipTests
+docker compose up -d --build
+```
+
+Then open https://localhost and complete the [first-time setup](docs/getting-started.md#first-time-setup).
+
 ## GitFlow
 Shepherd uses [GitFlow](https://datasift.github.io/gitflow/IntroducingGitFlow.html). That basically means you never directly commit to master / dev.
 
@@ -47,29 +70,6 @@ Install ZenHub for your browser and click the ZenHub tab that will appear in thi
 4. *In Progess* - Items that are currently being worked
 5. *QA Review* - Issues that have pull requests and require review / approval
 6. *Closed* - Item is Done
-
-## How do I setup my dev environment?
-| You need | Version | Check with |
-|---|---|---|
-| Git | Any | `git --version` |
-| Docker with Docker Compose | Compose v2 or newer | `docker compose version` |
-| JDK | 17 | `mvn -v` shows "Java version" |
-| Maven | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
-
-Use JDK 17 specifically: on JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. If `mvn -v` shows another version, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
-
-You also need about 3 GB of free disk space, and ports 80, 443, 3306 and 27017 free.
-
-Then build and start Security Shepherd:
-
-```bash
-git clone https://github.com/OWASP/SecurityShepherd.git
-cd SecurityShepherd
-mvn -Pdocker clean install -DskipTests
-docker compose up -d --build
-```
-
-Then open https://localhost and complete the [first-time setup](docs/getting-started.md#first-time-setup).
 
 ## Development Workflow
 See [docs/development-workflow.md](docs/development-workflow.md) for the full development cycle, including how to:
