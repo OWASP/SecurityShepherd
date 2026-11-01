@@ -17,6 +17,16 @@ Errors thrown while handling a request are in `localhost.<date>.log`.
 
 ## Installation and setup
 
+### The Maven build fails on a newer JDK
+
+The build stops at its formatting check with an error like this:
+
+```text
+google-java-format(jvm-version) You are running Spotless on JVM 25.
+```
+
+`mvn install`, `mvn verify` and `mvn spotless:check` need JDK 17, and this happens on JDK 25 or newer. To run Security Shepherd without changing its code, build with `mvn -Pdocker clean package -DskipTests`, which stops before the check. To contribute, use JDK 17, as the [prerequisites](getting-started.md#prerequisites) explain.
+
 ### The browser warns about the certificate
 
 A new installation uses a self-signed certificate, so browsers warn about it. Accept the warning to continue, or install your own certificate as described in [Deploying into production](deploying-into-production.md#use-your-own-tls-certificate).

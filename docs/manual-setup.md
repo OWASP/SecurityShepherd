@@ -22,6 +22,15 @@ Tomcat 11 isn't packaged by most distributions yet. Download it from [tomcat.apa
 
 ## 1. Build the WAR
 
+The package above is only the Java runtime, so install the JDK to build the WAR. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17 and point `JAVA_HOME` at it. `export` only applies to the current terminal.
+
+```bash
+sudo apt install openjdk-17-jdk-headless
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-$(dpkg --print-architecture)
+```
+
+Then build the WAR:
+
 ```bash
 git clone https://github.com/OWASP/SecurityShepherd.git
 cd SecurityShepherd
