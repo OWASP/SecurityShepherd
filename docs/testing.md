@@ -5,7 +5,7 @@ This guide explains how to run the automated test suite for Security Shepherd.
 ## Prerequisites
 
 - **Docker** and **docker-compose** installed
-- **Maven** 3.x
+- **Maven 3.9.2 or newer** 
 - **JDK 17** (the build targets Java 17)
 - `.env` file configured (copy from project or create one)
 
