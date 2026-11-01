@@ -1,10 +1,13 @@
 package servlets.module.challenge;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dbProcs.GetterIT;
 import dbProcs.Setter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
@@ -126,6 +129,30 @@ public class NoSqlInjection1IT extends Mockito {
         log.fatal(message);
         fail(message);
       }
+    }
+  }
+
+  /** The level keeps answering after the first submission (#992) */
+  @Test
+  public void testLevelAnswersRepeatedSubmissions() throws Exception {
+    GetterIT.verifyTestUser(applicationRoot, USERNAME, USERNAME);
+    TestProperties.loginDoPost(log, request, response, USERNAME, USERNAME, null, LANG);
+    String csrfToken = response.getCookie("token").getValue();
+    Cookie[] cookies = response.getCookies();
+    HttpSession session = request.getSession();
+
+    for (int i = 1; i <= 3; i++) {
+      request = new MockHttpServletRequest();
+      request.setSession(session);
+      request.setCookies(cookies);
+      response = new MockHttpServletResponse();
+
+      // A fresh response, so 200 (the other test reuses the login response and sees its 302)
+      String servletResponse = moduleDoPost(NOSQL_ATTACK, csrfToken, 200);
+
+      assertTrue(
+          servletResponse.contains("Marlo</td><td>Baltimore</td></tr><tr><td>b6c02"),
+          "Submission " + i + " did not return the result: " + servletResponse);
     }
   }
 }
