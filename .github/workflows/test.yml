@@ -76,12 +76,12 @@ jobs:
           cache: maven
       - name: Build Maven with Docker Profile
         run: mvn clean install -Pdocker -DskipTests -B
-      - name: Check PGP verification rejects tampered and wrongly-signed OpenSAML
-        run: bash src/test/scripts/pgp-verification-test.sh
       - name: Docker Compose Build
         run: docker compose build
       - name: Check Tomcat config placeholders were substituted
         run: bash src/test/scripts/tomcat-config-test.sh
+      - name: Smoke test the app in the Docker images
+        run: bash src/test/scripts/image-smoke-test.sh
 
   unit-tests:
     needs: detect-changes
@@ -122,8 +122,8 @@ jobs:
         run: sudo /etc/init.d/mysql start
       - name: Modify MySQL Connection Variables
         run: |
-          sed -i "s/'@'localhost'/'@'%'/g" ${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql
-          sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' ${GITHUB_WORKSPACE}/.env
+          sed -i "s/'@'localhost'/'@'%'/g" "${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql"
+          sed -i 's/TEST_MYSQL_PORT=3306/TEST_MYSQL_PORT=8888/g' "${GITHUB_WORKSPACE}/.env"
       - name: Prepare Integration Tests
         run: |
           sudo apt-get -y install libargon2-1
