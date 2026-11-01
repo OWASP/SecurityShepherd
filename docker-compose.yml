@@ -43,6 +43,13 @@ services:
       - logs:/usr/local/tomcat/logs
     env_file:
       - .env
+    # Read at runtime by conf/server.xml and docker/tomcat/entrypoint.sh. Listed here as well as in
+    # env_file so that, like the port mappings below, they follow values set in the shell.
+    environment:
+      HTTPS_PORT: ${HTTPS_PORT}
+      TLS_KEYSTORE_FILE: ${TLS_KEYSTORE_FILE}
+      TLS_KEYSTORE_PASS: ${TLS_KEYSTORE_PASS}
+      ALIAS: ${ALIAS}
     build:
       context: .
       args:
@@ -55,10 +62,6 @@ services:
         MONGO_CONN_TIMEOUT: 1000
         MONGO_SOCK_TIMEOUT: 0
         MONGO_SVR_TIMEOUT: 30000
-        TLS_KEYSTORE_FILE: ${TLS_KEYSTORE_FILE}
-        TLS_KEYSTORE_PASS: ${TLS_KEYSTORE_PASS}
-        ALIAS: ${ALIAS}
-        HTTPS_PORT: ${HTTPS_PORT}
     ports:
       - $HTTP_PORT:8080
       - $HTTPS_PORT:8443
