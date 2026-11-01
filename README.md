@@ -4,51 +4,31 @@ The [OWASP Security Shepherd Project](http://bit.ly/owaspSecurityShepherd) is a 
 
 [![Build and Test](https://github.com/OWASP/SecurityShepherd/actions/workflows/test.yml/badge.svg)](https://github.com/OWASP/SecurityShepherd/actions/workflows/test.yml)  
 
-# Where can I download Security Shepherd?
+# Documentation
 
-### Virtual Machine or Manual Setup
-You can download Security Shepherd VM's or Manual Installation Packs from [GitHub](https://github.com/OWASP/SecurityShepherd/releases)
+The documentation is at **https://owasp.github.io/SecurityShepherd/**: how to play, how to run Security Shepherd and an event, and how to contribute.
 
-### Docker (Ubuntu Linux Host)
+# Quick start
 
-#### Initial Setup
+Check the [prerequisites](CONTRIBUTING.md#how-do-i-setup-my-dev-environment) first. Then build and start Security Shepherd:
+
 ```console
-# Install pre-reqs
-sudo apt install git maven docker docker-compose openjdk-17-jdk
-
-# Clone the github repository
 git clone https://github.com/OWASP/SecurityShepherd.git
-
-# Change directory into the local copy of the repository
 cd SecurityShepherd
-
-# Adds current user to the docker group (don't have to run docker with sudo)
-sudo gpasswd -a $USER docker
-
-# Run maven to generate the WAR and HTTPS Cert.
-mvn -Pdocker clean install -DskipTests
-
-# Build the docker images, docker network and bring up the environment
-docker-compose up
+# Build the WAR and generate the database scripts the images need
+mvn -Pdocker clean package -DskipTests
+# Build the images and start the containers
+docker compose up -d --build
 ```
 
-Open up an Internet Browser & type in the address bar;
+Then open [https://localhost](https://localhost) and follow [Getting started](https://owasp.github.io/SecurityShepherd/getting-started/) to configure the database and log in.
 
-* [localhost](http://localhost)
+This is a quick start for a laptop or a classroom lab, not a production deployment: it uses well-known default passwords and a self-signed certificate. Before other people use it, follow [Deploying into production](https://owasp.github.io/SecurityShepherd/deploying-into-production/). To move an existing installation to 4.0, see [Upgrading](https://owasp.github.io/SecurityShepherd/upgrading/).
 
-To login use the following credentials (you will be asked to update after login);
+Pre-built images are published to Docker Hub as [`owasp/security-shepherd`](https://hub.docker.com/r/owasp/security-shepherd). [Verifying the images](https://owasp.github.io/SecurityShepherd/verifying-images/) explains the tags and how to check an image's SBOM and provenance.
 
-* username: ```admin```
-* password: ```password```
+The 3.1 virtual machine and manual installation packs are still on the [releases page](https://github.com/OWASP/SecurityShepherd/releases), and the [wiki](https://github.com/OWASP/SecurityShepherd/wiki) describes them.
 
-Note: Environment variables can be configured in dotenv ```.env``` file in the root dir.
-
-#### Full Guide
-[Docker-Environment-Setup](https://github.com/OWASP/SecurityShepherd/wiki/Docker-Environment-Setup)
-
-# How do I setup Security Shepherd?
-We've got fully automated and step by step walkthroughs on our [wiki page](https://github.com/markdenihan/owaspSecurityShepherd/wiki) to help you get Security Shepherd up and running.
-  
 # What can Security Shepherd be used for?
 Security Shepherd can be used as a;
 * Teaching Tool for All Application Security

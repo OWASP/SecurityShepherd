@@ -1,0 +1,481 @@
+package utils;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.security.KeyPair;
+import java.security.cert.X509Certificate;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Properties;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.opensaml.saml.saml2.core.LogoutRequest;
+import org.opensaml.saml.saml2.core.NameIDType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
+
+/** Single logout service: which logout messages are trusted, and which sessions they end */
+public class SamlLogoutTest {
+
+  private static SamlTestSupport saml;
+  private static KeyPair attackerKeys;
+  private static X509Certificate attackerCert;
+
+  private MockHttpSession loggedIn;
+  private MockHttpSession otherUser;
+
+  @BeforeAll
+  public static void generateKeys() throws Exception {
+    saml = new SamlTestSupport();
+    attackerKeys = SamlTestSupport.newKeyPair();
+    attackerCert = SamlTestSupport.selfSigned(attackerKeys, "idp.test");
+  }
+
+  /** Installs a client that requires signed logout messages, as the sample configuration does */
+  @BeforeEach
+  public void setUp() throws Exception {
+    SamlSso.clearRememberedLogoutRequests();
+    SamlTestSupport.install(signedLogoutProperties(true));
+    loggedIn = new MockHttpSession();
+    register(loggedIn, "user-123", "_session-1");
+    otherUser = new MockHttpSession();
+    register(otherUser, "user-456", "_session-2");
+  }
+
+  @AfterEach
+  public void tearDown() {
+    for (MockHttpSession session : new MockHttpSession[] {loggedIn, otherUser}) {
+      if (!session.isInvalid()) {
+        session.invalidate();
+      }
+    }
+    SamlTestSupport.uninstallClient();
+    SamlSso.maxRememberedLogoutRequests = 10000;
+    SamlSso.clearRememberedLogoutRequests();
+  }
+
+  /** Registers a session for a persistent NameID with default qualifiers, as ACS would */
+  private static void register(MockHttpSession session, String nameId, String sessionIndex) {
+    SamlSessionRegistry.register(
+        session, SamlSso.nameIdKey(nameId, NameIDType.PERSISTENT, null, null), sessionIndex);
+  }
+
+  private static Properties signedLogoutProperties(boolean wantMessagesSigned) throws Exception {
+    Properties props = saml.properties();
+    props.setProperty(SamlSso.WANT_MESSAGES_SIGNED, Boolean.toString(wantMessagesSigned));
+    return props;
+  }
+
+  private static SamlSso.LogoutMessage process(MockHttpServletRequest request) {
+    return SamlSso.processLogoutMessage(request, new MockHttpServletResponse());
+  }
+
+  private String logoutResponseXml() throws Exception {
+    return SamlTestSupport.toXml(saml.logoutResponse(), null, null);
+  }
+
+  // LogoutResponse (end of an SP-initiated logout)
+
+  @Test
+  public void redirectLogoutResponse_SignedByIdp_IsAccepted() throws Exception {
+    String query = SamlTestSupport.redirectQuery("SAMLResponse", logoutResponseXml(), saml.idpKeys);
+
+    assertEquals(SamlSso.LogoutMessage.LOGOUT_RESPONSE, process(SamlTestSupport.slsGet(query)));
+  }
+
+  @Test
+  public void redirectLogoutResponse_Unsigned_IsRejected() throws Exception {
+    String query = SamlTestSupport.redirectQuery("SAMLResponse", logoutResponseXml(), null);
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(query)));
+  }
+
+  @Test
+  public void redirectLogoutResponse_SignedByUnknownKey_IsRejected() throws Exception {
+    String query = SamlTestSupport.redirectQuery("SAMLResponse", logoutResponseXml(), attackerKeys);
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(query)));
+  }
+
+  @Test
+  public void redirectLogoutResponse_MessageSwappedAfterSigning_IsRejected() throws Exception {
+    String signed =
+        SamlTestSupport.redirectQuery("SAMLResponse", logoutResponseXml(), saml.idpKeys);
+    String otherMessage = SamlTestSupport.redirectQuery("SAMLResponse", logoutResponseXml(), null);
+    String tampered = otherMessage + signed.substring(signed.indexOf("&SigAlg="));
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(tampered)));
+  }
+
+  @Test
+  public void postLogoutResponse_XmlSignedByIdp_IsAccepted() throws Exception {
+    String xml = SamlTestSupport.toXml(saml.logoutResponse(), saml.idpKeys, saml.idpCert);
+
+    assertEquals(
+        SamlSso.LogoutMessage.LOGOUT_RESPONSE,
+        process(SamlTestSupport.slsPost("SAMLResponse", xml)));
+  }
+
+  @Test
+  public void postLogoutResponse_Unsigned_IsRejected() throws Exception {
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID,
+        process(SamlTestSupport.slsPost("SAMLResponse", logoutResponseXml())));
+  }
+
+  @Test
+  public void postLogoutResponse_XmlSignedByUnknownKey_IsRejected() throws Exception {
+    String xml = SamlTestSupport.toXml(saml.logoutResponse(), attackerKeys, attackerCert);
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsPost("SAMLResponse", xml)));
+  }
+
+  @Test
+  public void logoutResponse_EndsNoSession() throws Exception {
+    String query = SamlTestSupport.redirectQuery("SAMLResponse", logoutResponseXml(), saml.idpKeys);
+    MockHttpServletRequest request = SamlTestSupport.slsGet(query);
+    request.setSession(loggedIn);
+
+    process(request);
+
+    assertFalse(loggedIn.isInvalid());
+    assertFalse(otherUser.isInvalid());
+  }
+
+  @Test
+  public void unsignedLogoutResponse_AcceptedWhenSignaturesNotRequired() throws Exception {
+    SamlTestSupport.install(signedLogoutProperties(false));
+    String query = SamlTestSupport.redirectQuery("SAMLResponse", logoutResponseXml(), null);
+
+    assertEquals(SamlSso.LogoutMessage.LOGOUT_RESPONSE, process(SamlTestSupport.slsGet(query)));
+  }
+
+  // IdP-initiated LogoutRequest
+
+  private String logoutRequestQuery(String nameId, String sessionIndex, KeyPair keys)
+      throws Exception {
+    String xml = SamlTestSupport.toXml(saml.logoutRequest(nameId, sessionIndex), null, null);
+    return SamlTestSupport.redirectQuery("SAMLRequest", xml, keys);
+  }
+
+  @Test
+  public void idpLogoutRequest_EndsOnlyTheNamedSession_RegardlessOfBrowserSession()
+      throws Exception {
+    MockHttpServletRequest request =
+        SamlTestSupport.slsGet(logoutRequestQuery("user-123", "_session-1", saml.idpKeys));
+    // Delivered through a different user's browser
+    request.setSession(otherUser);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+
+    SamlSso.LogoutMessage result = SamlSso.processLogoutMessage(request, response);
+
+    assertEquals(SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST, result);
+    assertTrue(loggedIn.isInvalid());
+    assertFalse(otherUser.isInvalid());
+    assertThat(response.getRedirectedUrl(), startsWith(SamlTestSupport.IDP_SLO_URL + "?"));
+    assertThat(response.getRedirectedUrl(), containsString("SAMLResponse="));
+  }
+
+  @Test
+  public void idpLogoutRequest_WithoutSessionCookie_StillEndsTheNamedSession() throws Exception {
+    MockHttpServletRequest request =
+        SamlTestSupport.slsGet(logoutRequestQuery("user-123", "_session-1", saml.idpKeys));
+
+    assertEquals(SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST, process(request));
+    assertTrue(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void idpLogoutRequest_DifferentSessionIndex_EndsNothing() throws Exception {
+    MockHttpServletRequest request =
+        SamlTestSupport.slsGet(logoutRequestQuery("user-123", "_other-login", saml.idpKeys));
+    request.setSession(loggedIn);
+
+    process(request);
+
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void idpLogoutRequest_Unsigned_IsRejectedAndEndsNothing() throws Exception {
+    MockHttpServletRequest request =
+        SamlTestSupport.slsGet(logoutRequestQuery("user-123", "_session-1", null));
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(request));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void idpLogoutRequest_SignedByUnknownKey_IsRejectedAndEndsNothing() throws Exception {
+    MockHttpServletRequest request =
+        SamlTestSupport.slsGet(logoutRequestQuery("user-123", "_session-1", attackerKeys));
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(request));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void postIdpLogoutRequest_XmlSignedByIdp_EndsTheNamedSession() throws Exception {
+    String xml =
+        SamlTestSupport.toXml(
+            saml.logoutRequest("user-123", "_session-1"), saml.idpKeys, saml.idpCert);
+
+    assertEquals(
+        SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST,
+        process(SamlTestSupport.slsPost("SAMLRequest", xml)));
+    assertTrue(loggedIn.isInvalid());
+    assertFalse(otherUser.isInvalid());
+  }
+
+  @Test
+  public void unsignedIdpLogoutRequestWithoutSessionIndex_EndsNothing() throws Exception {
+    // Even when signatures are not required, a bare NameID is too guessable to end sessions
+    SamlTestSupport.install(signedLogoutProperties(false));
+    MockHttpServletRequest request =
+        SamlTestSupport.slsGet(logoutRequestQuery("user-123", null, null));
+
+    process(request);
+
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void idpLogoutRequest_EndsEverySessionIndexItNames() throws Exception {
+    MockHttpSession secondLogin = new MockHttpSession();
+    register(secondLogin, "user-123", "_session-3");
+    String xml =
+        SamlTestSupport.toXml(
+            saml.logoutRequest("user-123", Arrays.asList("_session-1", "_session-3")), null, null);
+    String query = SamlTestSupport.redirectQuery("SAMLRequest", xml, saml.idpKeys);
+
+    assertEquals(SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST, process(SamlTestSupport.slsGet(query)));
+    assertTrue(loggedIn.isInvalid());
+    assertTrue(secondLogin.isInvalid());
+    assertFalse(otherUser.isInvalid());
+  }
+
+  /**
+   * A captured signed query with an unsigned message prepended under a percent-encoded name: the
+   * container decodes the alias to SAMLRequest and serves it first, so it must not borrow the
+   * signature of the real SAMLRequest.
+   */
+  @Test
+  public void unsignedMessageUnderEncodedAlias_DoesNotBorrowSignature() throws Exception {
+    String signed = logoutRequestQuery("user-456", "_session-2", saml.idpKeys);
+    String unsigned = logoutRequestQuery("user-123", null, null);
+    String smuggled = "%53AMLRequest" + unsigned.substring("SAMLRequest".length()) + "&" + signed;
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(smuggled)));
+    assertFalse(loggedIn.isInvalid());
+    assertFalse(otherUser.isInvalid());
+  }
+
+  @Test
+  public void repeatedSignedParameter_IsRejected() throws Exception {
+    String signed = logoutRequestQuery("user-456", "_session-2", saml.idpKeys);
+    String unsigned = logoutRequestQuery("user-123", null, null);
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(unsigned + "&" + signed)));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void redirectSignatureOnPostRequest_IsNotAccepted() throws Exception {
+    String signed = logoutRequestQuery("user-456", "_session-2", saml.idpKeys);
+    String unsignedXml =
+        SamlTestSupport.toXml(saml.logoutRequest("user-123", (String) null), null, null);
+    MockHttpServletRequest request = SamlTestSupport.slsPost("SAMLRequest", unsignedXml);
+    request.setQueryString(signed);
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(request));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  private static String signedRedirect(LogoutRequest request) throws Exception {
+    return SamlTestSupport.redirectQuery(
+        "SAMLRequest", SamlTestSupport.toXml(request, null, null), saml.idpKeys);
+  }
+
+  @Test
+  public void signedLogoutRequest_ForAnotherSp_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setDestination("https://other-sp.test/saml/sls");
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void signedLogoutRequest_WithoutDestination_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setDestination(null);
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void staleLogoutRequest_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setIssueInstant(Instant.now().minus(Duration.ofMinutes(20)));
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void futureDatedLogoutRequest_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setIssueInstant(Instant.now().plus(Duration.ofMinutes(20)));
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void expiredLogoutRequest_EndsNothing() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setNotOnOrAfter(Instant.now().minus(Duration.ofMinutes(10)));
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void replayedLogoutRequest_DoesNotEndALaterLogin() throws Exception {
+    String query = signedRedirect(saml.logoutRequest("user-123", (String) null));
+    assertEquals(SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST, process(SamlTestSupport.slsGet(query)));
+    assertTrue(loggedIn.isInvalid());
+    // The user logs in again
+    MockHttpSession newLogin = new MockHttpSession();
+    register(newLogin, "user-123", "_session-new");
+
+    assertEquals(SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(query)));
+    assertFalse(newLogin.isInvalid());
+    newLogin.invalidate();
+  }
+
+  /** XML-DSig ecdsa-sha256 signatures are raw r || s, not the DER that SHA256withECDSA expects */
+  @Test
+  public void ecdsaSignedRedirectLogoutResponse_FromEcIdp_IsAccepted() throws Exception {
+    KeyPair ecKeys = SamlTestSupport.newEcKeyPair();
+    Properties props = signedLogoutProperties(true);
+    props.setProperty(
+        SamlSso.IDP_CERT,
+        SamlTestSupport.certificatePem(SamlTestSupport.selfSigned(ecKeys, "idp.test")));
+    SamlTestSupport.install(props);
+    String query =
+        SamlTestSupport.redirectQuery(
+            "SAMLResponse",
+            logoutResponseXml(),
+            ecKeys,
+            "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256",
+            "SHA256withECDSAinP1363Format");
+
+    assertEquals(SamlSso.LogoutMessage.LOGOUT_RESPONSE, process(SamlTestSupport.slsGet(query)));
+  }
+
+  @Test
+  public void nameIdOnlyLogout_DoesNotEndSameValueWithDifferentFormatOrQualifier()
+      throws Exception {
+    MockHttpSession emailFormat = new MockHttpSession();
+    SamlSessionRegistry.register(
+        emailFormat, SamlSso.nameIdKey("user-123", NameIDType.EMAIL, null, null), "_e");
+    MockHttpSession otherIdp = new MockHttpSession();
+    SamlSessionRegistry.register(
+        otherIdp,
+        SamlSso.nameIdKey("user-123", NameIDType.PERSISTENT, "https://other-idp.test", null),
+        "_o");
+
+    assertEquals(
+        SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST,
+        process(
+            SamlTestSupport.slsGet(signedRedirect(saml.logoutRequest("user-123", (String) null)))));
+
+    assertTrue(loggedIn.isInvalid());
+    assertFalse(emailFormat.isInvalid());
+    assertFalse(otherIdp.isInvalid());
+    emailFormat.invalidate();
+    otherIdp.invalidate();
+  }
+
+  @Test
+  public void explicitDefaultQualifiers_MatchOmittedOnes() throws Exception {
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.getNameID().setNameQualifier(SamlTestSupport.IDP_ENTITY_ID);
+    request.getNameID().setSPNameQualifier(SamlTestSupport.SP_ENTITY_ID);
+
+    assertEquals(
+        SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST,
+        process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertTrue(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void withoutSlsUrl_IdpLogoutRequestIsRefusedAndEndsNothing() throws Exception {
+    Properties props = signedLogoutProperties(true);
+    props.remove(SamlSso.SP_SLS_URL);
+    SamlTestSupport.install(props);
+    LogoutRequest request = saml.logoutRequest("user-123", "_session-1");
+    request.setDestination(SamlTestSupport.ACS_URL);
+
+    assertEquals(
+        SamlSso.LogoutMessage.INVALID, process(SamlTestSupport.slsGet(signedRedirect(request))));
+    assertFalse(loggedIn.isInvalid());
+  }
+
+  /**
+   * Unsigned requests that end nothing must not take replay-cache slots; otherwise flooding them
+   * would make genuine signed logouts be refused as "too many".
+   */
+  @Test
+  public void floodOfUnsignedNoOpLogouts_DoesNotBlockSignedLogout() throws Exception {
+    SamlSso.maxRememberedLogoutRequests = 5;
+    SamlTestSupport.install(signedLogoutProperties(false));
+    for (int i = 0; i < 10; i++) {
+      process(SamlTestSupport.slsGet(logoutRequestQuery("user-" + i, null, null)));
+    }
+
+    MockHttpServletRequest signed =
+        SamlTestSupport.slsGet(logoutRequestQuery("user-123", "_session-1", saml.idpKeys));
+
+    assertEquals(SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST, process(signed));
+    assertTrue(loggedIn.isInvalid());
+  }
+
+  @Test
+  public void unsignedLogoutNamingATrackedLogin_StillEndsIt() throws Exception {
+    SamlTestSupport.install(signedLogoutProperties(false));
+
+    assertEquals(
+        SamlSso.LogoutMessage.IDP_LOGOUT_REQUEST,
+        process(SamlTestSupport.slsGet(logoutRequestQuery("user-123", "_session-1", null))));
+    assertTrue(loggedIn.isInvalid());
+    assertFalse(otherUser.isInvalid());
+  }
+
+  @Test
+  public void endedSession_IsRemovedFromRegistry() {
+    int before = SamlSessionRegistry.size();
+
+    loggedIn.invalidate();
+
+    assertEquals(before - 1, SamlSessionRegistry.size());
+  }
+}

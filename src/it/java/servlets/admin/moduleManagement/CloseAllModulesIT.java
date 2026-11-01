@@ -2,9 +2,9 @@ package servlets.admin.moduleManagement;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,9 +20,9 @@ import testUtils.TestProperties;
  *
  * @author Mark Denihan
  */
-public class CloseAllModulesTestIT {
+public class CloseAllModulesIT {
 
-  private static final Logger log = LogManager.getLogger(CloseAllModulesTestIT.class);
+  private static final Logger log = LogManager.getLogger(CloseAllModulesIT.class);
   private static String applicationRoot = new String();
   private static String lang = "en_GB";
   private MockHttpServletRequest request;

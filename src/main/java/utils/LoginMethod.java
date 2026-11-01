@@ -73,6 +73,12 @@ public class LoginMethod {
     }
   }
 
+  /** Overrides sso.properties; for tests. Null goes back to reading the file. */
+  static void setSaml(Boolean saml) {
+    isSet = saml != null;
+    isSaml = saml != null && saml;
+  }
+
   public static Boolean isLogin() {
     return (!isSaml());
   }

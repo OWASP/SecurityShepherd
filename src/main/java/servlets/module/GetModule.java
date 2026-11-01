@@ -1,14 +1,14 @@
 package servlets.module;
 
 import dbProcs.Getter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.owasp.encoder.Encode;
@@ -69,7 +69,6 @@ public class GetModule extends HttpServlet {
       if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
         boolean notNull = false;
         String storedResult = null;
-        boolean isAdmin = false;
         boolean isRunning = false;
 
         try {
@@ -80,16 +79,8 @@ public class GetModule extends HttpServlet {
           throw new RuntimeException(e);
         }
 
-        if (Validate.validateAdminSession(ses, tokenCookie, tokenParmeter)) {
-          ShepherdLogManager.setRequestIp(
-              request.getRemoteAddr(),
-              request.getHeader("X-Forwarded-For"),
-              ses.getAttribute("userName").toString());
-          log.debug("Current User: " + ses.getAttribute("userName").toString());
-          if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
-            isAdmin = true;
-          }
-        }
+        // Every user opens modules, so this must not raise the admin access alert (#735)
+        boolean isAdmin = Validate.isAdminSession(ses);
 
         String ApplicationRoot = getServletContext().getRealPath("");
 

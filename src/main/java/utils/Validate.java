@@ -1,10 +1,10 @@
 package utils;
 
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpSession;
 import java.math.BigInteger;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -200,6 +200,19 @@ public class Validate {
       log.debug("Transformed to: " + theUrl);
     }
     return theUrl;
+  }
+
+  /**
+   * Checks whether a session belongs to an administrator, without logging anything. Use it on pages
+   * every user may open that only show admins extra options. Admin functions must use {@link
+   * #validateAdminSession(HttpSession, Cookie, Object)}, which alerts when a non-admin calls them.
+   *
+   * @param ses HttpSession from users browser, already checked with {@link
+   *     #validateSession(HttpSession)}
+   * @return Boolean value that reflects whether the session holder is an admin
+   */
+  public static boolean isAdminSession(HttpSession ses) {
+    return ses != null && "admin".equals(ses.getAttribute("userRole"));
   }
 
   /**

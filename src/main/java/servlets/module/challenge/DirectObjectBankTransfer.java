@@ -1,6 +1,11 @@
 package servlets.module.challenge;
 
 import dbProcs.Database;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.CallableStatement;
@@ -8,11 +13,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.ShepherdLogManager;
@@ -109,15 +109,16 @@ public class DirectObjectBankTransfer extends HttpServlet {
         String htmlOutput = new String();
         if (performTransfer) {
           log.debug("Valid Data Submitted, transfering Funds...");
-          Connection conn = Database.getChallengeConnection(applicationRoot, "directObjectBank");
-          CallableStatement callstmt = conn.prepareCall("CALL transferFunds(?, ?, ?)");
-          callstmt.setString(1, senderAccountNumber);
-          callstmt.setString(2, receiverAccountNumber);
-          callstmt.setFloat(3, tranferAmount);
-          callstmt.execute();
-          log.debug("Successfully ran Transfer Funds procedure.");
+          try (Connection conn =
+                  Database.getChallengeConnection(applicationRoot, "directObjectBank");
+              CallableStatement callstmt = conn.prepareCall("CALL transferFunds(?, ?, ?)")) {
+            callstmt.setString(1, senderAccountNumber);
+            callstmt.setString(2, receiverAccountNumber);
+            callstmt.setFloat(3, tranferAmount);
+            callstmt.execute();
+            log.debug("Successfully ran Transfer Funds procedure.");
+          }
           htmlOutput = bundle.getString("transfer.success");
-          Database.closeConnection(conn);
         } else {
           log.debug("Invalid Data Detected: " + errorMessage);
           htmlOutput = bundle.getString("transfer.error.occurred") + " " + errorMessage;

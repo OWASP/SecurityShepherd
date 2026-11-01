@@ -1,6 +1,11 @@
 package servlets.module.challenge;
 
 import dbProcs.Database;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.CallableStatement;
@@ -8,11 +13,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.ShepherdLogManager;
@@ -74,16 +74,17 @@ public class DirectObjectBankRegistration extends HttpServlet {
         String applicationRoot = getServletContext().getRealPath("");
         String htmlOutput = new String();
 
-        Connection conn = Database.getChallengeConnection(applicationRoot, "directObjectBank");
-        CallableStatement callstmt = conn.prepareCall("CALL createAccount(?, ?)");
-        callstmt.setString(1, accountHolder);
-        callstmt.setString(2, accountPass);
-        callstmt.execute();
-        log.debug("Successfully ran create account procedure.");
+        try (Connection conn =
+                Database.getChallengeConnection(applicationRoot, "directObjectBank");
+            CallableStatement callstmt = conn.prepareCall("CALL createAccount(?, ?)")) {
+          callstmt.setString(1, accountHolder);
+          callstmt.setString(2, accountPass);
+          callstmt.execute();
+          log.debug("Successfully ran create account procedure.");
+        }
         log.debug("Outputting HTML");
         htmlOutput = bundle.getString("register.accountCreated");
         out.write(htmlOutput);
-        Database.closeConnection(conn);
       } catch (SQLException e) {
         out.write(errors.getString("error.funky") + " " + bundle.getString("register.error"));
         log.fatal(levelName + " SQL Error - " + e.toString());
