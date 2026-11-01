@@ -394,6 +394,37 @@ a:hover {
 
 .levelList {
 	max-height: 230px;
+	overflow-y: auto;
+	/* Thin dark scrollbar, replacing the old jQuery custom scrollbar plugin */
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0, 0, 0, 0.75) rgba(0, 0, 0, 0.15);
+}
+
+.levelList::-webkit-scrollbar {
+	width: 6px;
+}
+
+.levelList::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.15);
+	border-radius: 3px;
+}
+
+.levelList::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.75);
+	border-radius: 3px;
+}
+
+/* jQuery UI autocomplete adds a live region announcing the number of results
+   to screen readers. Hide it visually, as the jQuery UI base theme does. */
+.ui-helper-hidden-accessible {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
 }
 
 .tooltipped {

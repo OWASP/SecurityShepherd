@@ -87,9 +87,9 @@ String ApplicationRoot = getServletContext().getRealPath("");
 <script>
 	$("#theForm").submit(function(){
 		//Get Data
-		var theClassName = $("#className").attr('value');
-		var theClassYear = $('#classYear').attr('value');
-		var theCsrfToken = $('#csrfToken').attr('value');
+		var theClassName = $("#className").val();
+		var theClassYear = $('#classYear').val();
+		var theCsrfToken = $('#csrfToken').val();
 		//Validation
 		if (theClassName.length == 0 || theClassYear.length == 0)
 		{
