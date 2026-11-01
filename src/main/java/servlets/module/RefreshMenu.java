@@ -85,16 +85,8 @@ public class RefreshMenu extends HttpServlet {
         throw new RuntimeException(e);
       }
 
-      if (Validate.validateAdminSession(ses, tokenCookie, tokenParmeter)) {
-        ShepherdLogManager.setRequestIp(
-            request.getRemoteAddr(),
-            request.getHeader("X-Forwarded-For"),
-            ses.getAttribute("userName").toString());
-        log.debug("Current User: " + ses.getAttribute("userName").toString());
-        if (Validate.validateTokens(tokenCookie, tokenParmeter)) {
-          isAdmin = true;
-        }
-      }
+      // Every user refreshes the menu, so this must not raise the admin access alert (#735)
+      isAdmin = Validate.isAdminSession(ses) && Validate.validateTokens(tokenCookie, tokenParmeter);
 
       // Check if ctf has started/ended
       if (isRunning || isAdmin) {

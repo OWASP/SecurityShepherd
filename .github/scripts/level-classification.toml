@@ -1,0 +1,140 @@
+# Classification of Security Shepherd's levels, for the level catalogue in docs/levels.md and
+# docs/mobile-levels.md. generate-level-catalogue.py reads this file and the levels in
+# src/main/resources/database/coreSchema.sql, and writes the catalogue tables.
+#
+# Each topic is a moduleCategory from coreSchema.sql. Give it:
+# - name: the heading shown in the catalogue
+# - top10: the OWASP Top 10 2025 category (web) or OWASP Mobile Top 10 2024 risk (mobile)
+# - cwe: the CWE number that best describes the topic
+#
+# The CWE is chosen per topic, not per level, so the catalogue doesn't hint at how to complete a
+# level. The Top 10 category is the one OWASP maps that CWE to in its 2025 edition
+# (https://top10.owasp.org/2025/). A level whose vulnerability differs from its topic's, and whose
+# name already says so, has an entry under [levels].
+#
+# A new level in coreSchema.sql needs nothing here unless its topic is new. A new topic needs an
+# entry, or the generator fails.
+
+[top10.web]
+A01 = { name = "A01:2025 Broken Access Control", url = "https://top10.owasp.org/2025/A01_2025-Broken_Access_Control/" }
+A02 = { name = "A02:2025 Security Misconfiguration", url = "https://top10.owasp.org/2025/A02_2025-Security_Misconfiguration/" }
+A04 = { name = "A04:2025 Cryptographic Failures", url = "https://top10.owasp.org/2025/A04_2025-Cryptographic_Failures/" }
+A05 = { name = "A05:2025 Injection", url = "https://top10.owasp.org/2025/A05_2025-Injection/" }
+A07 = { name = "A07:2025 Authentication Failures", url = "https://top10.owasp.org/2025/A07_2025-Authentication_Failures/" }
+
+[top10.mobile]
+M3 = { name = "M3: Insecure Authentication/Authorization" }
+M4 = { name = "M4: Insufficient Input/Output Validation" }
+M6 = { name = "M6: Inadequate Privacy Controls" }
+M7 = { name = "M7: Insufficient Binary Protections" }
+M8 = { name = "M8: Security Misconfiguration" }
+M9 = { name = "M9: Insecure Data Storage" }
+M10 = { name = "M10: Insufficient Cryptography" }
+
+# Web topics
+
+[topics."Insecure Direct Object References"]
+name = "Insecure direct object references"
+top10 = "A01"
+cwe = 639
+
+[topics."Poor Data Validation"]
+name = "Poor data validation"
+top10 = "A05"
+cwe = 20
+
+[topics."Security Misconfigurations"]
+name = "Security misconfiguration"
+top10 = "A02"
+cwe = 16
+
+[topics."Session Management"]
+name = "Session management"
+top10 = "A07"
+cwe = 287
+
+[topics."Failure to Restrict URL Access"]
+name = "Failure to restrict URL access"
+top10 = "A01"
+cwe = 862
+
+[topics."XSS"]
+name = "Cross-site scripting (XSS)"
+top10 = "A05"
+cwe = 79
+
+[topics."Insecure Cryptographic Storage"]
+name = "Insecure cryptographic storage"
+top10 = "A04"
+cwe = 327
+
+[topics."Injection"]
+name = "Injection"
+top10 = "A05"
+cwe = 89
+
+[topics."CSRF"]
+name = "Cross-site request forgery (CSRF)"
+top10 = "A01"
+cwe = 352
+
+[topics."Unvalidated Redirects and Forwards"]
+name = "Unvalidated redirects and forwards"
+top10 = "A01"
+cwe = 601
+
+# Mobile topics
+
+[topics."Mobile Insecure Data Storage"]
+name = "Insecure data storage"
+top10 = "M9"
+cwe = 922
+
+[topics."Mobile Reverse Engineering"]
+name = "Reverse engineering"
+top10 = "M7"
+cwe = 656
+
+[topics."Mobile Data Leakage"]
+name = "Data leakage"
+top10 = "M6"
+cwe = 200
+
+[topics."Mobile Content Provider"]
+name = "Content provider leakage"
+top10 = "M8"
+cwe = 926
+
+[topics."Mobile Security Decisions via Untrusted Input"]
+name = "Security decisions via untrusted input"
+top10 = "M4"
+cwe = 807
+
+[topics."Mobile Injection"]
+name = "Client-side injection"
+top10 = "M4"
+cwe = 89
+
+[topics."Mobile Poor Authentication"]
+name = "Poor authentication"
+top10 = "M3"
+cwe = 287
+
+[topics."Mobile Broken Crypto"]
+name = "Broken cryptography"
+top10 = "M10"
+cwe = 327
+
+# Levels whose vulnerability differs from their topic's
+
+[levels."XXE Injection"]
+top10 = "A02"
+cwe = 611
+
+[levels."XXE Injection 1"]
+top10 = "A02"
+cwe = 611
+
+# NoSQL injection's CWE isn't mapped to a 2025 category, so it keeps its topic's A05
+[levels."NoSQL Injection One"]
+cwe = 943
