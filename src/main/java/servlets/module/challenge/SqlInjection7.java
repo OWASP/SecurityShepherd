@@ -76,53 +76,54 @@ public class SqlInjection7 extends HttpServlet {
         boolean validEmail =
             Validate.isValidEmailAddress(subEmail.replaceAll("\n", "")); // Ignore \n 's
         if (!subPassword.isEmpty() && !subPassword.isEmpty() && validEmail) {
-          Connection conn = Database.getChallengeConnection(applicationRoot, "SqlChallengeSeven");
-          try {
+          try (Connection conn =
+              Database.getChallengeConnection(applicationRoot, "SqlChallengeSeven")) {
             log.debug("Signing in with subitted details");
-            PreparedStatement prepstmt =
+            try (PreparedStatement prepstmt =
                 conn.prepareStatement(
                     "SELECT userName FROM users WHERE userEmail = '"
                         + subEmail
-                        + "' AND userPassword = ?;");
-            prepstmt.setString(1, subPassword);
-            ResultSet users = prepstmt.executeQuery();
-            if (users.next()) {
-              htmlOutput =
-                  "<h3>"
-                      + bundle.getString("response.welcome")
-                      + " "
-                      + Encode.forHtml(users.getString(1))
-                      + "</h3>"
-                      + "<p>"
-                      + bundle.getString("response.resultKey")
-                      + ""
-                      + Hash.generateUserSolution(
-                          Getter.getModuleResultFromHash(applicationRoot, levelHash),
-                          (String) ses.getAttribute("userName"))
-                      + "</p>";
-            } else {
+                        + "' AND userPassword = ?;")) {
+              prepstmt.setString(1, subPassword);
+              try (ResultSet users = prepstmt.executeQuery()) {
+                if (users.next()) {
+                  htmlOutput =
+                      "<h3>"
+                          + bundle.getString("response.welcome")
+                          + " "
+                          + Encode.forHtml(users.getString(1))
+                          + "</h3>"
+                          + "<p>"
+                          + bundle.getString("response.resultKey")
+                          + ""
+                          + Hash.generateUserSolution(
+                              Getter.getModuleResultFromHash(applicationRoot, levelHash),
+                              (String) ses.getAttribute("userName"))
+                          + "</p>";
+                } else {
+                  htmlOutput =
+                      "<h3>"
+                          + bundle.getString("response.incorrectCreds")
+                          + "</h3><p>"
+                          + bundle.getString("response.carefulNow")
+                          + "</p>";
+                }
+              }
+            } catch (Exception e) {
               htmlOutput =
                   "<h3>"
                       + bundle.getString("response.incorrectCreds")
                       + "</h3><p>"
                       + bundle.getString("response.carefulNow")
                       + "</p>";
-            }
-          } catch (Exception e) {
-            htmlOutput =
-                "<h3>"
-                    + bundle.getString("response.incorrectCreds")
-                    + "</h3><p>"
-                    + bundle.getString("response.carefulNow")
-                    + "</p>";
-            log.debug("Could Not Find User: " + e.toString());
-            try {
-              Thread.sleep(1000);
-            } catch (Exception e1) {
-              log.error("Failed to Pause: " + e1.toString());
+              log.debug("Could Not Find User: " + e.toString());
+              try {
+                Thread.sleep(1000);
+              } catch (Exception e1) {
+                log.error("Failed to Pause: " + e1.toString());
+              }
             }
           }
-          conn.close();
         } else {
           htmlOutput = new String("Invalid data submitted");
           if (!validEmail) {
