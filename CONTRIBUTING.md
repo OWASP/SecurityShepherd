@@ -24,9 +24,6 @@ docker compose up -d --build
 
 Then open https://localhost and complete the [first-time setup](docs/getting-started.md#first-time-setup).
 
-## GitFlow
-Shepherd uses [GitFlow](https://datasift.github.io/gitflow/IntroducingGitFlow.html). That basically means you never directly commit to master / dev.
-
 ## Where do I put new code?
 To add a new feature or fix a bug in Shepherd, create a fork or branch from the [dev branch](https://github.com/OWASP/SecurityShepherd/tree/dev). When you're branch is complete and your JUnit's have been created / run clear, create a pull request to merge your branch into dev. Squash your commits if you like, if you don't that will be done be at merge.
 
