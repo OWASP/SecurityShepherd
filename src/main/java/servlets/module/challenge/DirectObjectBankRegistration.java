@@ -74,16 +74,17 @@ public class DirectObjectBankRegistration extends HttpServlet {
         String applicationRoot = getServletContext().getRealPath("");
         String htmlOutput = new String();
 
-        Connection conn = Database.getChallengeConnection(applicationRoot, "directObjectBank");
-        CallableStatement callstmt = conn.prepareCall("CALL createAccount(?, ?)");
-        callstmt.setString(1, accountHolder);
-        callstmt.setString(2, accountPass);
-        callstmt.execute();
-        log.debug("Successfully ran create account procedure.");
+        try (Connection conn =
+                Database.getChallengeConnection(applicationRoot, "directObjectBank");
+            CallableStatement callstmt = conn.prepareCall("CALL createAccount(?, ?)")) {
+          callstmt.setString(1, accountHolder);
+          callstmt.setString(2, accountPass);
+          callstmt.execute();
+          log.debug("Successfully ran create account procedure.");
+        }
         log.debug("Outputting HTML");
         htmlOutput = bundle.getString("register.accountCreated");
         out.write(htmlOutput);
-        Database.closeConnection(conn);
       } catch (SQLException e) {
         out.write(errors.getString("error.funky") + " " + bundle.getString("register.error"));
         log.fatal(levelName + " SQL Error - " + e.toString());
