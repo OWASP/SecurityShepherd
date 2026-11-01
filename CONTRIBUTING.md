@@ -51,19 +51,7 @@ Install ZenHub for your browser and click the ZenHub tab that will appear in thi
 ## How do I setup my dev environment?
 Install Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose. Then follow [Getting started](docs/getting-started.md) to run Security Shepherd locally, and [docs/development-workflow.md](docs/development-workflow.md) for the development cycle below.
 
-Maven must run on JDK 17. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17 and point `JAVA_HOME` at it:
-
-```bash
-# macOS
-brew install --cask temurin@17
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)
-
-# Ubuntu
-sudo apt install openjdk-17-jdk-headless
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-$(dpkg --print-architecture)
-```
-
-On other systems, install JDK 17 from [Adoptium](https://adoptium.net/) and set `JAVA_HOME` to its folder. `export` only applies to the current terminal.
+Maven must run on JDK 17. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
 
 ## Development Workflow
 See [docs/development-workflow.md](docs/development-workflow.md) for the full development cycle, including how to:

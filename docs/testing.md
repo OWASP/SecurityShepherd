@@ -9,19 +9,7 @@ This guide explains how to run the automated test suite for Security Shepherd.
 - **JDK 17** (the build targets Java 17)
 - `.env` file configured (copy from project or create one)
 
-Maven must run on JDK 17. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17 and point `JAVA_HOME` at it:
-
-```bash
-# macOS
-brew install --cask temurin@17
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)
-
-# Ubuntu
-sudo apt install openjdk-17-jdk-headless
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-$(dpkg --print-architecture)
-```
-
-On other systems, install JDK 17 from [Adoptium](https://adoptium.net/) and set `JAVA_HOME` to its folder. `export` only applies to the current terminal.
+Maven must run on JDK 17. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
 
 ## Environment Variables
 
