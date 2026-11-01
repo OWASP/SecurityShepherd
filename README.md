@@ -10,17 +10,35 @@ The documentation is at **https://owasp.github.io/SecurityShepherd/**: how to pl
 
 # Quick start
 
-You need Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose.
+## Prerequisites
 
-Maven must run on JDK 17. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+Check you have these before you start:
 
-Then build and start Security Shepherd:
+| You need | Version | Check with |
+|---|---|---|
+| Git | Any | `git --version` |
+| Docker with Docker Compose | Compose v2 or newer | `docker compose version` |
+| JDK | 17 or newer | `mvn -v` shows "Java version" |
+| Maven | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
+
+If `mvn -v` shows a JDK older than 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+
+You also need:
+
+- about 3 GB of free disk space
+- ports 80, 443, 3306 and 27017 free
+
+> **Contributing is different.** These prerequisites are for running Security Shepherd. To change its code, use JDK 17 specifically: `mvn verify` and `mvn spotless:check` fail with a formatting error on JDK 25 or newer. [CONTRIBUTING.md](CONTRIBUTING.md#how-do-i-setup-my-dev-environment) covers the setup.
+
+## Build and start
+
+Build and start Security Shepherd:
 
 ```console
 git clone https://github.com/OWASP/SecurityShepherd.git
 cd SecurityShepherd
 # Build the WAR and generate the database scripts the images need
-mvn -Pdocker clean install -DskipTests
+mvn -Pdocker clean package -DskipTests
 # Build the images and start the containers
 docker compose up -d --build
 ```

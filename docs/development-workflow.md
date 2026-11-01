@@ -2,6 +2,24 @@
 
 This guide explains the full development cycle for contributing to Security Shepherd.
 
+## Prerequisites
+
+Check you have these before you start:
+
+| You need | Version | Check with |
+|---|---|---|
+| Git | Any | `git --version` |
+| Docker with Docker Compose | Compose v2 or newer | `docker compose version` |
+| JDK | 17 | `mvn -v` shows "Java version" |
+| Maven | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
+
+Contributing needs JDK 17 specifically. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. If `mvn -v` shows another version, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+
+You also need:
+
+- about 3 GB of free disk space
+- ports 80, 443, 3306 and 27017 free
+
 ## 1. Create Your Branch
 
 Fork the repository or create a branch from the `dev` branch:
@@ -23,8 +41,6 @@ Edit the code in your branch. Key directories:
 - `src/test/java/` - Unit tests
 
 ## 3. Build the WAR
-
-Maven must run on JDK 17. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
 
 Build the application with Maven:
 

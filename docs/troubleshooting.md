@@ -25,7 +25,7 @@ The build stops at its formatting check with an error like this:
 google-java-format(jvm-version) You are running Spotless on JVM 25.
 ```
 
-Maven must run on JDK 17, and this happens on JDK 25 or newer. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+`mvn install`, `mvn verify` and `mvn spotless:check` need JDK 17, and this happens on JDK 25 or newer. To run Security Shepherd without changing its code, build with `mvn -Pdocker clean package -DskipTests`, which stops before the check. To contribute, run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
 
 ### The browser warns about the certificate
 
