@@ -39,6 +39,11 @@ public class KeyProvider {
     /** Offline (static) keys; modules without an entry return an empty string and need a live server session. */
     private static final Map<KeyValidator.Module, String> OFFLINE_KEYS = new HashMap<>();
 
+    static {
+        // The Reverse Engineering lesson key is intentionally discoverable by decompiling the APK.
+        OFFLINE_KEYS.put(KeyValidator.Module.RE_LESSON, "Frozen_Clock_Melts_By_Noon");
+    }
+
     public interface KeyCallback {
         /** Always invoked on the main thread. */
         void onKey(String key);

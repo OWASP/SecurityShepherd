@@ -27,4 +27,16 @@
         android:label="@string/menu_scoreboard"
         tools:layout="@layout/fragment_scoreboard" />
 
+    <fragment
+        android:id="@+id/nav_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.reverseengineering.ReverseEngineeringLessonFragment"
+        android:label="@string/menu_lesson"
+        tools:layout="@layout/fragment_lesson" />
+
+    <fragment
+        android:id="@+id/nav_challenge1"
+        android:name="org.owasp.mobileshepherd.ui.challenges.reverseengineering.ReverseEngineering1Fragment"
+        android:label="@string/menu_reverse_engineering1"
+        tools:layout="@layout/fragment_reverse_engineering1" />
+
 </navigation>

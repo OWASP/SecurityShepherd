@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
     static {
         // Each lesson/challenge PR registers its nav destination here.
+        NAV_TO_MODULE_MAP.put(R.id.nav_lesson, KeyValidator.Module.RE_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_challenge1, KeyValidator.Module.RE_CHALLENGE_1);
     }
 
     @Override
@@ -177,7 +179,8 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_adb_reference, R.id.nav_scoreboard
+                R.id.nav_home, R.id.nav_adb_reference, R.id.nav_scoreboard,
+                R.id.nav_lesson, R.id.nav_challenge1
         ).setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -200,7 +203,25 @@ public class MainActivity extends AppCompatActivity {
         // Home
         items.add(new NavigationItem(1, "Home", R.drawable.ic_menu_home, R.id.nav_home));
         
-        // Lessons and challenges are added per category.
+        // Lessons group
+        NavigationItem lessonsGroup = new NavigationItem(2, "Lessons", R.drawable.ic_menu_camera);
+        addChildIfNotCompleted(lessonsGroup, new NavigationItem(21, "Reverse Engineering", 0, R.id.nav_lesson));
+        if (lessonsGroup.getChildren().size() > 0) {
+            items.add(lessonsGroup);
+        }
+
+        // Challenges group
+        NavigationItem challengesGroup = new NavigationItem(3, "Challenges", R.drawable.ic_menu_code);
+
+        NavigationItem reverseEngGroup = new NavigationItem(40, "Reverse Engineering", 0);
+        addChildIfNotCompleted(reverseEngGroup, new NavigationItem(41, "Reverse Engineering 1", 0, R.id.nav_challenge1));
+        if (reverseEngGroup.getChildren().size() > 0) {
+            challengesGroup.addChild(reverseEngGroup);
+        }
+
+        if (challengesGroup.getChildren().size() > 0) {
+            items.add(challengesGroup);
+        }
 
         // ADB Reference
         items.add(new NavigationItem(4, "ADB Reference", R.drawable.ic_menu_code, R.id.nav_adb_reference));
@@ -231,6 +252,8 @@ public class MainActivity extends AppCompatActivity {
     
     private String getTitleForNavId(int navId) {
         // Map navigation IDs to readable titles
+        if (navId == R.id.nav_lesson) return "Reverse Engineering Lesson";
+        if (navId == R.id.nav_challenge1) return "Reverse Engineering 1";
         return "Module";
     }
     

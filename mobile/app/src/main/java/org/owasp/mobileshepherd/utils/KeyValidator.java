@@ -33,7 +33,8 @@ public class KeyValidator {
 
     // Module identifiers. Each lesson/challenge PR adds its own entries here.
     public enum Module {
-        ;
+        RE_LESSON("re_lesson", TYPE_LESSON),
+        RE_CHALLENGE_1("re_challenge_1", TYPE_CHALLENGE);
 
         private final String id;
         private final String type;
@@ -52,8 +53,15 @@ public class KeyValidator {
         }
     }
 
-    // Offline hashes, if any. Modules without an entry require a live server session.
+    // Offline hashes. Modules without an entry require a live server session.
     private static final Map<Module, String> KEY_HASHES = new HashMap<>();
+
+    static {
+        KEY_HASHES.put(Module.RE_LESSON,
+                "a0c066b9cd89c084709330a943fb6b333d45c932ed613e428bc52078b5722e57");
+        KEY_HASHES.put(Module.RE_CHALLENGE_1,
+                "f04a272a2d82a0168f44559f9957dc9e028ecb13195c12fce17ac08d4af91deb");
+    }
 
     /**
      * Validates a key submission using SHA-256 hash comparison.

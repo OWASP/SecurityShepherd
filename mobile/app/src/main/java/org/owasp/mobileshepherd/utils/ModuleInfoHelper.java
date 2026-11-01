@@ -48,6 +48,12 @@ public final class ModuleInfoHelper {
 
     static {
         // Each lesson/challenge PR registers its module info here.
+        REGISTRY.put(KeyValidator.Module.RE_LESSON,
+                new ModuleInfo("lesson", "Reverse Engineering", "M7",
+                        "org.owasp.mobileshepherd.ui.lessons.reverseengineering"));
+        REGISTRY.put(KeyValidator.Module.RE_CHALLENGE_1,
+                new ModuleInfo("challenge", "Reverse Engineering 1", "M7",
+                        "org.owasp.mobileshepherd.ui.challenges.reverseengineering"));
     }
 
     public static void showDialog(Context context, KeyValidator.Module module) {

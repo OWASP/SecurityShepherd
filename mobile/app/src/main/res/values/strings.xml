@@ -191,4 +191,23 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="password_title">Password</string>
     <string name="challenge">Challenge</string>
 
+    <!-- Reverse Engineering -->
+    <string name="menu_lesson">Reverse Engineering Lesson</string>
+    <string name="menu_reverse_engineering1">Reverse Engineering 1</string>
+    <string name="reverse_engineering_1">Reverse Engineering 1</string>
+    <string name="lesson_intro">The Reverse Engineering module introduces techniques for extracting hidden information from Android applications.</string>
+    <string name="verify_key">Verify Key</string>
+    <string name="enter_the_key_you_found">Enter the key you found</string>
+    <string name="reverse_engineering_1_description">The key is hardcoded in the Java source code of this app. Decompile the APK to find it.</string>
+    <string name="reverse_engineering_1_hint">Hint: The key is stored as an encoded string constant in one of the Java classes. Search the decompiled code for it and work out how it is encoded.</string>
+    <string name="reverse_engineering_1_input_hint">Enter key here</string>
+    <string name="reverse_engineering_1_success">Key validated successfully.</string>
+    <string name="reverse_engineering_1_failure">The key is incorrect. Please try again.</string>
+    <string name="device_information">Device Information</string>
+    <string name="serial_loading">Serial: Loading...</string>
+    <string name="build_loading">Build: Loading...</string>
+    <string name="manufacturer_loading">Manufacturer: Loading...</string>
+    <string name="brand_loading">Brand: Loading...</string>
+    <string name="sdk_loading">SDK: Loading...</string>
+
 </resources>
