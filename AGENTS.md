@@ -73,19 +73,27 @@ The docker-compose `db` service is **not suitable for quick test runs** — it r
 
 Before pushing, run every step of `.github/workflows/test.yml` in the same order, not just the unit tests. Running only `mvn test` misses compile failures on other branches, Docker image problems and integration-test failures, and those then show up in CI instead. In a stack of PRs, run them on each branch whose content changes (at least the bottom branch you changed and the top of the stack).
 
-Use JDK 17 (`export JAVA_HOME=$(/usr/libexec/java_home -v 17)` on macOS). Spotless fails on newer JDKs.
+Use JDK 17, with `JAVA_HOME` pointing at it. Spotless fails on newer JDKs.
 
 Run the pipeline in a throwaway worktree of the exact commit you will push, for example `git worktree add --detach ../shepherd-ci HEAD`, then `cd` into it and remove it afterwards with `git worktree remove --force ../shepherd-ci`. Running Maven in your main checkout while the pipeline runs rebuilds `target/` under it and breaks the run. The worktree also keeps the `moduleSchemas.sql` edit below out of your checkout.
 
 ```bash
 mvn spotless:check -B                                # lint-java
 mvn clean install -Pdocker -DskipTests -B            # build
-bash src/test/scripts/pgp-verification-test.sh       # build
 docker compose build --pull --no-cache web           # build (CI has no layer cache)
 docker compose build                                 # build
 bash src/test/scripts/tomcat-config-test.sh          # build
 bash src/test/scripts/image-smoke-test.sh            # build
 TEST_MYSQL_PASSWORD=CowSaysMoo mvn test -B -e        # unit-tests
+```
+
+When a change touches `docs/` or the site configuration, also run the `Docs` workflow's build (`.github/workflows/docs.yml`):
+
+```bash
+uv sync --locked --no-build
+uv run --locked --no-sync python .github/scripts/generate-level-catalogue.py --check
+uv run --locked --no-sync zensical build --clean --strict
+uv run --locked --no-sync python .github/scripts/check-docs-site.py
 ```
 
 For the integration tests, start the `secshep_test_db` container above, then repeat what CI does before running them:
@@ -139,7 +147,7 @@ Do not commit `.env` changes that break CI.
 
 The Tomcat container mounts a named `conf` volume over `/usr/local/tomcat/conf`. A volume created by an older Tomcat 9/10.1 image keeps its old `server.xml` and `web.xml`, and Tomcat 11 will not see the new image's config, so the volume has to be recreated. Data volumes are unaffected.
 
-The volume also holds the TLS keystore and `database.properties` / `mongo.properties`. Back it up before removing it. The archive contains the TLS private key and the database password, so create it mode 600 in a mode-700 directory **outside the repository**. The repository root is the Tomcat image's Docker build context, and a root-owned archive there breaks the next build. Run `mkdir -p ~/shepherd-conf-backup && chmod 700 ~/shepherd-conf-backup`, then `docker run --rm -v securityshepherd_conf:/conf -v ~/shepherd-conf-backup:/backup alpine sh -c 'umask 077 && touch /backup/shepherd-conf-backup.tgz && chmod 600 /backup/shepherd-conf-backup.tgz && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'`, and delete the directory after the upgrade. Then run `docker compose down && docker volume rm securityshepherd_conf`, `docker compose build --pull --no-cache web` and `docker compose up -d --build` (detached, so the databases stay up while files are restored and `web` is restarted). Restore only customised keystore or `.properties` files from the backup. Never restore the old `server.xml` / `web.xml`: re-apply any hand edits to the new Tomcat 11 files instead. The full steps are in the README.
+The volume also holds the TLS keystore and `database.properties` / `mongo.properties`. Back it up before removing it. The archive contains the TLS private key and the database password, so create it mode 600 in a mode-700 directory **outside the repository**. The repository root is the Tomcat image's Docker build context, and a root-owned archive there breaks the next build. Run `mkdir -p ~/shepherd-conf-backup && chmod 700 ~/shepherd-conf-backup`, then `docker run --rm -v securityshepherd_conf:/conf -v ~/shepherd-conf-backup:/backup alpine sh -c 'umask 077 && touch /backup/shepherd-conf-backup.tgz && chmod 600 /backup/shepherd-conf-backup.tgz && tar czf /backup/shepherd-conf-backup.tgz -C /conf .'`, and delete the directory after the upgrade. Then run `docker compose down && docker volume rm securityshepherd_conf`, `docker compose build --pull --no-cache web` and `docker compose up -d --build` (detached, so the databases stay up while files are restored and `web` is restarted). Restore only customised keystore or `.properties` files from the backup. Never restore the old `server.xml` / `web.xml`: re-apply any hand edits to the new Tomcat 11 files instead. The full steps are in `docs/upgrading.md`.
 
 ### Integration tests fail building the Mongo image (`chown ... Operation not permitted`)
 
@@ -199,6 +207,23 @@ The hostname must be the **Docker container name** (e.g. `secshep_mariadb`), not
 - `src/test/java/` — unit tests
 - `src/it/java/` — integration tests (require running DB containers)
 - `mobile/MobileShepherd/` — independent Android apps (Gradle-based, not part of Maven build)
+- `docs/` — documentation, published to https://owasp.github.io/SecurityShepherd/ (see "Documentation site" below)
+
+### Documentation site
+
+The documentation site is built from `docs/` with [Zensical](https://zensical.org/) by `.github/workflows/docs.yml`, and published to GitHub Pages from `dev` until 4.0.0 is released, then from `master` (#1070). The GitHub wiki describes 3.1 and is being retired.
+
+- `zensical.toml` holds the site configuration and the navigation. A new page in `docs/` must be added to `nav` there.
+- `pyproject.toml` pins Zensical, and `uv.lock` pins every dependency with its sha256 hash. Preview the site with `uv run zensical serve`. To update Zensical, change its exact version in `pyproject.toml`, run `uv lock`, and commit both files (`uv lock --upgrade-package zensical` alone can't move an exact pin). Dependabot's uv updates do both. CI installs with `uv sync --locked --no-build`: it fails if the lock is stale and never builds a package from source.
+- The `docs-build` job runs on every PR that changes the site (`docs/`, the site configuration or the workflow), and the site is only deployed if it passes. It fails on:
+  - a link to a page or anchor that doesn't exist (`zensical build --strict`);
+  - a `nav` entry whose file doesn't exist, a page in `docs/` that isn't in `nav`, or a link to an image or other file that doesn't exist (`.github/scripts/check-docs-site.py`).
+- Write GitHub-flavoured Markdown that reads the same on github.com and on the site. Link to other pages in `docs/` with relative links to the `.md` file. Link to anything outside `docs/` with an absolute `https://github.com/OWASP/SecurityShepherd/blob/dev/…` URL, because relative `../` links break on the site.
+- `docs/docker-hub-overview.md` is the Docker Hub overview, not a site page, and is excluded in `zensical.toml`.
+- **The level catalogue is generated.** The tables in `docs/levels.md` and `docs/mobile-levels.md`, between the `BEGIN GENERATED` and `END GENERATED` markers, come from the `INSERT INTO modules` lines in `coreSchema.sql` and each topic's OWASP Top 10 category and CWE in `.github/scripts/level-classification.toml`. Run `uv run --locked --no-sync python .github/scripts/generate-level-catalogue.py` after changing either, and commit the result. The `docs-build` job runs it with `--check` and fails if the pages are stale. A new topic needs an entry in the TOML file.
+- **Diagrams must be readable at page width.** Mermaid scales a diagram down to the content width (about 690 px), and the site can't zoom, so a wide diagram's text becomes unreadable. Sequence diagrams have at most four or five participants and short message labels. Flowcharts are `flowchart TB` unless they still read well left to right, with about eight or nine boxes at most, each a name plus a short detail, never a full path. Don't label arrows: Mermaid draws a box behind each label, visible in dark mode, and bends the arrow around it. Use `subgraph` groups only when needed, because groups of different widths knock boxes out of line and bend the arrows. Put the detail in the boxes or the surrounding text. Before finishing, render every changed diagram in the built site in light and dark mode at desktop width, and check its text is about page size and its arrows are straight apart from branches. The full rules are in CONTRIBUTING.md's "Writing Documentation" section.
+- **Mermaid is self-hosted.** The theme loads Mermaid from unpkg.com unless a `mermaid` global exists, so `docs/assets/javascripts/mermaid/mermaid.min.js` (12.2.0, with its MIT `LICENSE`) is loaded on every page through `extra_javascript` in `zensical.toml`. Dependabot doesn't update it. To update it, download the npm tarball for the new version, check it against the `dist.integrity` sha512 in `https://registry.npmjs.org/mermaid/<version>`, copy `package/dist/mermaid.min.js` and `package/LICENSE`, update the version in `zensical.toml`'s comment and here, and check a page with a diagram renders, with no request to unpkg.com.
+- **The published site and the repo files are separate.** `docs/docker-hub-overview.md` isn't on the site, so it links to it instead of repeating it. `README.md` and `CONTRIBUTING.md` stand apart from the site. `CONTRIBUTING.md` links out for detail, but its setup section is self-contained, because contributors arrive there from GitHub. `README.md` points to that section for the prerequisites and keeps the short build commands. The prerequisites live in `docs/getting-started.md` and that section, and the build commands in `README.md` and `docs/getting-started.md`, so change both copies together, and keep them free of commands for one operating system. Only `docs/manual-setup.md`, which is written for Ubuntu, names a package. Pages for people running Security Shepherd build with `mvn -Pdocker clean package`, which stops before Spotless's `verify` phase and so works on JDK 27. Pages for contributors use `install` and need JDK 17.
 
 ## Database
 
@@ -219,7 +244,7 @@ SSO is optional, and is turned on by `sso.enabled=true` in `sso.properties`. It 
 
 ### Dependency trust: OpenSAML and PGP verification
 
-pac4j-saml depends on **OpenSAML 5, which is not on Maven Central**. Shibboleth, its maintainer, publishes it only to its own repository (`build.shibboleth.net`, declared in `pom.xml` with checksum failures enforced). Three controls apply:
+pac4j-saml depends on **OpenSAML 5, which is not on Maven Central**. Shibboleth, its maintainer, publishes it only to its own repository (`build.shibboleth.net`, declared in `pom.xml` with checksum failures enforced). Two controls apply:
 
 - **Repository filtering** (`.mvn/maven.config`, `.mvn/rrf/groupId-shibboleth-releases.txt`): the Shibboleth repository may serve only the `org.opensaml` and `net.shibboleth` groupIds. Everything else comes from Central only.
   - This needs **Maven 3.9.2 or newer**: older versions don't expand the path in `.mvn/maven.config` and silently skip the filter. `maven-enforcer-plugin` refuses to build on older Maven.
@@ -229,7 +254,6 @@ pac4j-saml depends on **OpenSAML 5, which is not on Maven Central**. Shibboleth,
   - Every other groupId is listed by name and needs a valid signature. A new dependency from an unlisted groupId fails with `Not allowed artifact`: review it, then add its groupId.
   - **Never add a wildcard rule** (`*`, `org.*`, …): any matching rule lets an artifact pass, so a broad rule would silently undo the Shibboleth pin.
   - Keys are fetched from `keys.openpgp.org` / `keyserver.ubuntu.com` and cached in the local repository.
-- **Test:** `bash src/test/scripts/pgp-verification-test.sh` (run in CI's build job) proves three things on the Maven that runs it: the repository filter is enforced, a tampered OpenSAML jar fails the build, and an OpenSAML artifact signed by another key fails the build.
 
 A build failing with `Could not find artifact org.opensaml:...` / `build.shibboleth.net failed to respond` means that repository was unreachable. Re-run the build.
 - Tests generate their own key pairs and signed SAML responses (`src/test/java/utils/SamlTestSupport.java`). Do not commit private keys.

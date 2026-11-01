@@ -34,6 +34,9 @@ docker/*/target/
 src/main/resources/onelogin.saml.properties
 src/main/resources/sso.properties
 
+# Documentation site built by `zensical build`
+/site/
+
 # Test artifacts written to project root by IT challenges
 briefcase.pulp
 json.xml
