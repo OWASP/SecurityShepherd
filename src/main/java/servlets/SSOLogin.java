@@ -38,7 +38,7 @@ public class SSOLogin extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    response.sendRedirect("index.jsp");
+    response.sendRedirect("../index.jsp");
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
