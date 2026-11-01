@@ -13,6 +13,12 @@ exclude_docs = """
 docker-hub-overview.md
 """
 
+# The theme loads Mermaid from unpkg.com, unpinned, unless a `mermaid` global already exists. This
+# self-hosted copy keeps visitors' browsers from contacting a third party, as `font = false` does
+# for fonts. It's mermaid 12.2.0 from npm, checked against the registry's sha512; AGENTS.md says
+# how to update it.
+extra_javascript = ["assets/javascripts/mermaid/mermaid.min.js"]
+
 nav = [
   { "Home" = "index.md" },
   { "Getting started" = "getting-started.md" },
@@ -24,13 +30,17 @@ nav = [
   ] },
   { "Running Security Shepherd" = [
     { "Deploying into production" = "deploying-into-production.md" },
+    { "Manual setup" = "manual-setup.md" },
     { "Upgrading" = "upgrading.md" },
     { "Backups and restore" = "backups.md" },
     { "Running a CTF" = "running-a-ctf.md" },
     { "Admin menu reference" = "admin-menu.md" },
     { "Single sign-on" = "single-sign-on.md" },
     { "Translations" = "translations.md" },
+    { "Reskinning" = "reskinning.md" },
     { "Troubleshooting" = "troubleshooting.md" },
+  ] },
+  { "Security" = [
     { "Verifying the images" = "verifying-images.md" },
     { "Vulnerability management" = "vulnerability-management.md" },
   ] },
@@ -41,7 +51,10 @@ nav = [
   { "Contributing" = [
     { "Development workflow" = "development-workflow.md" },
     { "Running tests" = "testing.md" },
+    { "Architecture" = "architecture.md" },
     { "Database layer" = "database-layer.md" },
+    { "Creating a level" = "creating-a-level.md" },
+    { "Translating Security Shepherd" = "translating.md" },
     { "Releasing" = "releasing.md" },
   ] },
 ]

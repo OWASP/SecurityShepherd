@@ -6,7 +6,7 @@ This page is for players. Security Shepherd's web levels run in your browser, bu
 
 An intercepting proxy sits between your browser and Security Shepherd. It shows you every request your browser sends and every response it gets, and lets you change a request before it's sent. Two free ones are:
 
-- [OWASP ZAP](https://www.zaproxy.org/)
+- [ZAP](https://www.zaproxy.org/) (Zed Attack Proxy)
 - [Burp Suite Community Edition](https://portswigger.net/burp/communitydownload)
 
 Both can open a browser that's already set up to use them: **Quick Start → Manual Explore** in ZAP, and **Proxy → Intercept → Open browser** in Burp. That's the easiest way to start, because the proxy's own certificate is already trusted there.

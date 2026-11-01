@@ -40,7 +40,7 @@ Some values are copied into an image or a volume when it's created, so changing 
 | `VERSION` | `3.1` | Not used | |
 | `TEST_MYSQL_HOST`, `TEST_MYSQL_PORT`, `TEST_MYSQL_PASSWORD` | | Used only by the tests, see [Running tests](testing.md) | |
 
-"Container recreate" means `docker compose up -d`, which recreates any container whose configuration changed. "Image rebuild" means `docker compose up -d --build`, after `mvn -Pdocker clean install -DskipTests` for the Tomcat image.
+"Container recreate" means `docker compose up -d`, which recreates any container whose configuration changed. "Image rebuild" means `docker compose up -d --build`, after `mvn -Pdocker clean package -DskipTests` for the Tomcat image.
 
 ## `database.properties`
 
@@ -114,6 +114,13 @@ Security Shepherd can open the levels at a set time, freeze the scoreboard, and 
 | `startTime`, with `hasStartTime = 1` | Before this time, players can't open a level or submit a result key. |
 | `lockTime`, with `hasLockTime = 1` | Players can still complete levels, but they no longer get points or medals, so the scoreboard is frozen. |
 | `endTime`, with `hasEndTime = 1` | Players can no longer open a level or submit a result key. |
+
+```mermaid
+flowchart LR
+    before["Before startTime<br/>Levels can't be opened"] --> running["startTime to lockTime<br/>Players complete levels<br/>and score"]
+    running --> locked["lockTime to endTime<br/>Completions are recorded,<br/>with no points"]
+    locked --> ended["After endTime<br/>Levels can't be opened<br/>or submitted"]
+```
 
 The times are in the format `2026-11-14T09:00:00`, in the server's time zone (`TZ` in `.env`). For example, to run an event from 09:00 to 17:00 and freeze the scoreboard for the last hour, open the database:
 

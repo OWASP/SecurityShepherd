@@ -4,16 +4,36 @@ Security Shepherd is a capture-the-flag (CTF) platform for learning web and mobi
 
 This page gets Security Shepherd running on your own machine with Docker, takes you through the first login, and shows you how to try the levels. To run an event for other people, continue with [Running a CTF](running-a-ctf.md).
 
+## Prerequisites
+
+Check you have these before you start:
+
+| You need | To run it | To contribute | Check with |
+|---|---|---|---|
+| Git | Any | Any | `git --version` |
+| Docker with Docker Compose | Compose v2 or newer | Compose v2 or newer | `docker compose version` |
+| JDK | 17 or newer | 17 | `mvn -v` shows "Java version" |
+| Maven | 3.9.2 or newer | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
+
+Contributing needs JDK 17 specifically, because `mvn verify` and `mvn spotless:check` fail with a formatting error on JDK 25 or newer. [Development workflow](development-workflow.md) covers the rest.
+
+If `mvn -v` shows a JDK you can't use, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+
+You also need:
+
+- about 3 GB of free disk space
+- ports 80, 443, 3306 and 27017 free
+
 ## Run it with Docker
 
-You need Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose.
+Build and start Security Shepherd:
 
 ```bash
 git clone https://github.com/OWASP/SecurityShepherd.git
 cd SecurityShepherd
 
 # Build the WAR and generate the database scripts the images need
-mvn -Pdocker clean install -DskipTests
+mvn -Pdocker clean package -DskipTests
 
 # Build the images and start the containers
 docker compose up -d --build
@@ -21,7 +41,7 @@ docker compose up -d --build
 
 [Deploying into production](deploying-into-production.md) covers using your own TLS certificate and the other changes to make before other people use it, and [Upgrading](upgrading.md) covers moving an existing installation to a new version.
 
-This setup is a quick start for a laptop or a classroom lab, not a production deployment. It uses well-known default passwords and a self-signed certificate. [Running a CTF](running-a-ctf.md#before-you-start-secure-the-deployment) lists what to change before other people use it.
+This setup is a quick start for a laptop or a classroom lab, not a production deployment. It uses well-known default passwords and a self-signed certificate. [Deploying into production](deploying-into-production.md) lists what to change before other people use it.
 
 ### What's running
 
@@ -34,6 +54,20 @@ Docker Compose builds three images and starts a container from each:
 | `secshep_mongo` | `owasp/security-shepherd_mongo` | MongoDB, for the NoSQL levels. Listens on `127.0.0.1:27017` only. |
 
 The ports come from `.env`, along with the passwords and the container names.
+
+```mermaid
+flowchart TB
+    browser["Browser"]
+    tomcat["secshep_tomcat<br/>Tomcat 11<br/>ports 443, 80<br/>volumes: conf, logs"]
+    mariadb[("secshep_mariadb<br/>MariaDB<br/>port 3306<br/>volume: data")]
+    mongo[("secshep_mongo<br/>MongoDB<br/>port 27017<br/>volumes: mongodata,<br/>mongoconfig")]
+
+    browser --> tomcat
+    tomcat --> mariadb
+    tomcat --> mongo
+```
+
+Only Tomcat is reachable from other machines. MariaDB and MongoDB are also published on `127.0.0.1`, for your own tools.
 
 Data is kept in Docker volumes, so it survives `docker compose down` and rebuilds. The volume names start with the Compose project name, which is the name of the folder you cloned into, for example `securityshepherd_data`.
 
@@ -83,7 +117,7 @@ You're asked to change the password straight away, because the default one is pu
 
 ## Try the levels
 
-You need an intercepting proxy, such as [OWASP ZAP](https://www.zaproxy.org/) or [Burp Suite Community Edition](https://portswigger.net/burp/communitydownload). Both come with a preconfigured browser.
+You need an intercepting proxy, such as [ZAP](https://www.zaproxy.org/) or [Burp Suite Community Edition](https://portswigger.net/burp/communitydownload). Both come with a preconfigured browser.
 
 The levels start closed. As an admin, the start page (**Let's Get Started**) has a **Configure Shepherd** section. To get back to it, reload the page.
 

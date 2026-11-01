@@ -64,7 +64,7 @@ The **Scoreboard** button opens the scoreboard, if your organiser has turned it 
 
 ## What you need
 
-- **A web browser and an intercepting proxy,** such as OWASP ZAP or Burp Suite. Most levels are much easier with a proxy, and some can't be done without one. [Setting up your tools](setting-up-your-tools.md) explains how.
+- **A web browser and an intercepting proxy,** such as ZAP or Burp Suite. Most levels are much easier with a proxy, and some can't be done without one. [Setting up your tools](setting-up-your-tools.md) explains how.
 - **For the CSRF challenges, another player.** A CSRF challenge is only completed when another logged-in player triggers the request you forged, so you'll need to get someone else to visit your page.
 - **For the mobile levels, an Android emulator.** See [Mobile levels](mobile-levels.md).
 
@@ -77,4 +77,4 @@ Your organiser sets the rules for an event, but these always apply:
 - **Don't share answers.** Explaining a concept is fine. Handing over a result key or a working attack isn't.
 - **Only attack systems you're allowed to.** What you learn here is for testing systems you have permission to test.
 
-The language menu at the top right of every page changes the language of the menus and some of the levels. See [Translations](translations.md).
+The language menu at the top right of every page changes the language of the platform's pages, as far as they're translated. The levels are shown in English for now. See [Translations](translations.md).

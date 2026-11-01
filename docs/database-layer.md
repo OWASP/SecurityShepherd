@@ -28,6 +28,15 @@ Each SQL-based level connects with a database account that can only reach that l
 
 Keep it that way: don't consolidate the levels' accounts, and don't give a level the `core` account.
 
+In Tomcat, the platform and each level get a connection pool of their own, and each pool connects to MariaDB with its own account:
+
+```mermaid
+flowchart TB
+    platform["Platform code<br/>Getter, Setter"] --> corepool["CorePool<br/>the account in<br/>database.properties"] --> core[("core<br/>database")]
+    level1["SQL injection<br/>lesson"] --> pool1["ChallengePool<br/>the lesson's account,<br/>up to 3 connections"] --> schema1[("The lesson's<br/>schema")]
+    level2["Another SQL-<br/>based level"] --> pool2["ChallengePool<br/>the level's account,<br/>up to 3 connections"] --> schema2[("The level's<br/>schema")]
+```
+
 ## Why connection pooling?
 
 Without a pool, every database operation opens a TCP connection, authenticates, runs the query and closes the connection. Opening a connection can take 20 to 50 ms, which adds up quickly when a class of players works at once.

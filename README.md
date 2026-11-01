@@ -10,13 +10,13 @@ The documentation is at **https://owasp.github.io/SecurityShepherd/**: how to pl
 
 # Quick start
 
-You need Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose.
+Check the [prerequisites](CONTRIBUTING.md#how-do-i-setup-my-dev-environment) first. Then build and start Security Shepherd:
 
 ```console
 git clone https://github.com/OWASP/SecurityShepherd.git
 cd SecurityShepherd
 # Build the WAR and generate the database scripts the images need
-mvn -Pdocker clean install -DskipTests
+mvn -Pdocker clean package -DskipTests
 # Build the images and start the containers
 docker compose up -d --build
 ```

@@ -15,6 +15,10 @@ on:
       - 'pyproject.toml'
       - 'uv.lock'
       - '.github/scripts/check-docs-site.py'
+      - '.github/scripts/generate-level-catalogue.py'
+      - '.github/scripts/level-classification.toml'
+      # The level catalogue is generated from the levels defined here
+      - 'src/main/resources/database/coreSchema.sql'
       - '.github/workflows/docs.yml'
   pull_request:
     branches:
@@ -55,6 +59,10 @@ jobs:
       # code runs.
       - name: Install Zensical
         run: uv sync --locked --no-build
+      # The level catalogue in docs/levels.md and docs/mobile-levels.md is generated from
+      # coreSchema.sql and level-classification.toml. Fails if the committed pages are out of date.
+      - name: Check the level catalogue is up to date
+        run: uv run --locked --no-sync python .github/scripts/generate-level-catalogue.py --check
       # Strict mode fails on links to pages or anchors that don't exist
       - name: Build the site
         run: uv run --locked --no-sync zensical build --clean --strict
