@@ -6,7 +6,7 @@ Back up first, as described in [Backups and restore](backups.md).
 
 ## Building an up-to-date image
 
-When the Tomcat image is built, it installs the Ubuntu security updates released since its base image was published. Docker caches the base image and that build step, so rebuilding with `docker compose up --build` can reuse an old base image and old packages. To build an image with the latest updates, rebuild it without the cache and recreate the container:
+When the Tomcat image is built, it installs the Ubuntu security updates released since its base image was published. Docker caches the base image and that build step, so rebuilding with `docker compose up --build` can reuse an old base image and old packages. To build an image with the latest updates, rebuild it without the cache and recreate the container. Maven must run on JDK 17, so run `mvn -v` first, and if it shows a different JDK, follow [The Maven build fails on a newer JDK](troubleshooting.md#the-maven-build-fails-on-a-newer-jdk).
 
 ```bash
 mvn -Pdocker clean install -DskipTests

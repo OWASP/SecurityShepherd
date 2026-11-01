@@ -27,6 +27,8 @@ mvn spotless:check
 
 `mvn verify` also runs `spotless:check` automatically, so unformatted code fails the build before you push.
 
+Run these Maven commands on JDK 17, as CI does. The pinned Google Java Format version cannot run on JDK 25 or newer, so Spotless stops with a `google-java-format(jvm-version)` error. [How do I setup my dev environment?](#how-do-i-setup-my-dev-environment) shows how to switch Maven to JDK 17.
+
 **Option 2 — IDE plugins:**
 
 - **IntelliJ IDEA / Android Studio:** Install the [google-java-format plugin](https://plugins.jetbrains.com/plugin/8527-google-java-format) and enable it under *Settings → google-java-format*.
@@ -48,6 +50,20 @@ Install ZenHub for your browser and click the ZenHub tab that will appear in thi
 
 ## How do I setup my dev environment?
 Install Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose. Then follow [Getting started](docs/getting-started.md) to run Security Shepherd locally, and [docs/development-workflow.md](docs/development-workflow.md) for the development cycle below.
+
+Maven must run on JDK 17. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17 and point `JAVA_HOME` at it:
+
+```bash
+# macOS
+brew install --cask temurin@17
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+
+# Ubuntu
+sudo apt install openjdk-17-jdk-headless
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-$(dpkg --print-architecture)
+```
+
+On other systems, install JDK 17 from [Adoptium](https://adoptium.net/) and set `JAVA_HOME` to its folder. `export` only applies to the current terminal.
 
 ## Development Workflow
 See [docs/development-workflow.md](docs/development-workflow.md) for the full development cycle, including how to:
