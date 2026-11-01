@@ -52,3 +52,32 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  # Publishes docs/docker-hub-overview.md as the Docker Hub repository overview on release tags,
+  # once the release images are pushed, so the page never describes a release that isn't there.
+  # It changes only the repository's description, not an image, so it stays out of
+  # release-build.yml. The Docker Hub account needs Admin on the repository, and the token
+  # read/write/delete scope.
+  docker-hub-description:
+    needs: release
+    if: github.repository == 'OWASP/SecurityShepherd' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the Docker Hub overview
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: docs/docker-hub-overview.md
+          sparse-checkout-cone-mode: false
+
+      - name: Update the Docker Hub description
+        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5.0.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: owasp/security-shepherd
+          readme-filepath: docs/docker-hub-overview.md
+          # Docker Hub limits it to 100 bytes, and the overview to 25,000 bytes
+          short-description: Web app (Tomcat) for OWASP Security Shepherd, an AppSec training platform. Needs MariaDB + MongoDB.
