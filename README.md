@@ -10,7 +10,7 @@ The documentation is at **https://owasp.github.io/SecurityShepherd/**: how to pl
 
 # Quick start
 
-Check the [prerequisites](https://owasp.github.io/SecurityShepherd/getting-started/#prerequisites) first. Then build and start Security Shepherd:
+Check the [prerequisites](CONTRIBUTING.md#how-do-i-setup-my-dev-environment) first. Then build and start Security Shepherd:
 
 ```console
 git clone https://github.com/OWASP/SecurityShepherd.git
