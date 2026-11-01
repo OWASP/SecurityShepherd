@@ -28,7 +28,7 @@ The login page, the start page and **About Security Shepherd** also show a "Proj
 Rebuild the WAR and the Tomcat image, and recreate the container:
 
 ```bash
-mvn -Pdocker clean install -DskipTests
+mvn -Pdocker clean package -DskipTests
 docker compose up -d --build web
 ```
 

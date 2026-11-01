@@ -40,7 +40,7 @@ Some values are copied into an image or a volume when it's created, so changing 
 | `VERSION` | `3.1` | Not used | |
 | `TEST_MYSQL_HOST`, `TEST_MYSQL_PORT`, `TEST_MYSQL_PASSWORD` | | Used only by the tests, see [Running tests](testing.md) | |
 
-"Container recreate" means `docker compose up -d`, which recreates any container whose configuration changed. "Image rebuild" means `docker compose up -d --build`, after `mvn -Pdocker clean install -DskipTests` for the Tomcat image.
+"Container recreate" means `docker compose up -d`, which recreates any container whose configuration changed. "Image rebuild" means `docker compose up -d --build`, after `mvn -Pdocker clean package -DskipTests` for the Tomcat image.
 
 ## `database.properties`
 

@@ -27,6 +27,8 @@ mvn spotless:check
 
 `mvn verify` also runs `spotless:check` automatically, so unformatted code fails the build before you push.
 
+Run these Maven commands on JDK 17, as CI does. The pinned Google Java Format version cannot run on JDK 25 or newer, so Spotless stops with a `google-java-format(jvm-version)` error. [How do I setup my dev environment?](#how-do-i-setup-my-dev-environment) shows how to switch Maven to JDK 17.
+
 **Option 2 — IDE plugins:**
 
 - **IntelliJ IDEA / Android Studio:** Install the [google-java-format plugin](https://plugins.jetbrains.com/plugin/8527-google-java-format) and enable it under *Settings → google-java-format*.
@@ -47,7 +49,27 @@ Install ZenHub for your browser and click the ZenHub tab that will appear in thi
 6. *Closed* - Item is Done
 
 ## How do I setup my dev environment?
-Install Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose. Then follow [Getting started](docs/getting-started.md) to run Security Shepherd locally, and [docs/development-workflow.md](docs/development-workflow.md) for the development cycle below.
+| You need | Version | Check with |
+|---|---|---|
+| Git | Any | `git --version` |
+| Docker with Docker Compose | Compose v2 or newer | `docker compose version` |
+| JDK | 17 | `mvn -v` shows "Java version" |
+| Maven | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
+
+Use JDK 17 specifically: on JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. If `mvn -v` shows another version, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+
+You also need about 3 GB of free disk space, and ports 80, 443, 3306 and 27017 free.
+
+Then build and start Security Shepherd:
+
+```bash
+git clone https://github.com/OWASP/SecurityShepherd.git
+cd SecurityShepherd
+mvn -Pdocker clean install -DskipTests
+docker compose up -d --build
+```
+
+Then open https://localhost and complete the [first-time setup](docs/getting-started.md#first-time-setup).
 
 ## Development Workflow
 See [docs/development-workflow.md](docs/development-workflow.md) for the full development cycle, including how to:
@@ -67,6 +89,7 @@ The documentation in [`docs/`](docs/) is published as a site at https://owasp.gi
 - **GitHub-flavoured Markdown only:** headings, lists, tables, code blocks, task lists, and Mermaid diagrams in code blocks marked `mermaid`. Don't use syntax only the site understands, such as admonitions (`!!! note`), content tabs or code annotations, unless the maintainers agree to it first.
 - **Links to other pages in `docs/`** are relative links to the `.md` file, such as `[Configuration](configuration.md#event-times)`.
 - **Links to anything outside `docs/`** are absolute: `https://github.com/OWASP/SecurityShepherd/blob/dev/…`. A relative `../` link works on GitHub but breaks on the site.
+- **The site and the repo files are separate.** `docs/docker-hub-overview.md` isn't on the site, so it links to it instead of repeating it. `README.md` and `CONTRIBUTING.md` stand apart from the site. `CONTRIBUTING.md` links out for detail, but repeats what's needed to get set up, because contributors arrive there from GitHub. `README.md` points to it for the prerequisites and keeps the short build commands. If the prerequisites or those commands change, change every copy.
 - **A new page** goes in the `nav` list in `zensical.toml`, and in `docs/index.md`. The docs build fails on a page that isn't in `nav`.
 - **Diagrams** are Mermaid, in code blocks marked `mermaid`, so they render on GitHub and on the site. A diagram is scaled down to the page's width, so a wide one ends up with text too small to read, and the site has no way to zoom in. Keep them readable at page width:
     - **Sequence diagrams:** four or five participants at most, and message labels of a few words. Put the detail in the text around the diagram.

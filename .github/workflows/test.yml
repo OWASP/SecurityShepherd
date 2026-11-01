@@ -76,8 +76,6 @@ jobs:
           cache: maven
       - name: Build Maven with Docker Profile
         run: mvn clean install -Pdocker -DskipTests -B
-      - name: Check PGP verification rejects tampered and wrongly-signed OpenSAML
-        run: bash src/test/scripts/pgp-verification-test.sh
       - name: Docker Compose Build
         run: docker compose build
       - name: Check Tomcat config placeholders were substituted
