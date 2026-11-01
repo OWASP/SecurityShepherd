@@ -24,11 +24,19 @@ docker compose up -d --build
 
 Then open https://localhost and complete the [first-time setup](docs/getting-started.md#first-time-setup).
 
-## Where do I put new code?
-To add a new feature or fix a bug in Shepherd, create a fork or branch from the [dev branch](https://github.com/OWASP/SecurityShepherd/tree/dev). When you're branch is complete and your JUnit's have been created / run clear, create a pull request to merge your branch into dev. Squash your commits if you like, if you don't that will be done be at merge.
+## Branches and pull requests
+`dev` and `master` are protected, so nobody pushes to them directly.
 
-## Branch Naming Convention
-If you're working on an issue from the backlog, call your branch dev#{issueNumber}
+Create a fork or a branch from the [dev branch](https://github.com/OWASP/SecurityShepherd/tree/dev). Name it `dev#{issueNumber}`, such as `dev#536`. If an issue needs more than one pull request, add a short suffix, such as `dev#1070-sso`.
+
+Create your JUnit tests and make sure they pass, then open a pull request to `dev`, never to `master`. To merge, it needs:
+
+- an approval (pushing again dismisses earlier approvals)
+- passing CI checks
+- your branch up to date with `dev`
+- all review threads resolved
+
+Pull requests to `dev` are squash merged, so you don't need to squash your commits. `master` only changes at a release, through a pull request from `dev` (see [docs/releasing.md](docs/releasing.md)).
 
 ## Code Format
 Shepherd enforces [Google Java Format](https://github.com/google/google-java-format) via [Spotless](https://github.com/diffplug/spotless), bound to the Maven build. The format version is pinned in `pom.xml`, so local and CI use the exact same formatter. Pull requests with incorrectly formatted Java files will fail the `lint-java` check (`mvn spotless:check`).
