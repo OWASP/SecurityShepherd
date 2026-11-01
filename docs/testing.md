@@ -28,7 +28,7 @@ Tests use the `dotenv` library to load database credentials from the `.env` file
 Start only the database containers (not the web application):
 
 ```bash
-docker-compose up -d db mongo
+docker compose up -d db mongo
 ```
 
 Wait 15-30 seconds for the databases to initialize fully.
@@ -36,7 +36,7 @@ Wait 15-30 seconds for the databases to initialize fully.
 ### Step 2: Verify Containers Are Running
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 You should see `secshep_mariadb` and `secshep_mongo` with status "Up".
@@ -52,7 +52,7 @@ mvn test
 When finished:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ## Running Specific Tests
@@ -103,8 +103,8 @@ The password in your `.env` file doesn't match what the database was created wit
 2. Or recreate the database volume:
 
 ```bash
-docker-compose down -v
-docker-compose up -d db mongo
+docker compose down -v
+docker compose up -d db mongo
 ```
 
 ### "Connection refused"
@@ -113,10 +113,10 @@ The database container isn't running or isn't ready:
 
 ```bash
 # Check container status
-docker-compose ps
+docker compose ps
 
 # Check database logs
-docker-compose logs db
+docker compose logs db
 
 # Wait and retry
 sleep 30

@@ -61,17 +61,17 @@ Start the full application stack using Docker Compose:
 
 ```bash
 # Build and start all containers (MariaDB, MongoDB, Tomcat)
-docker-compose up --build
+docker compose up --build
 
 # Or run in detached mode
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 The Tomcat image installs the Ubuntu security updates released since its base image was published. Docker caches the base image and that build step, so `--build` can reuse an old base image and old packages. Before testing or scanning an image, for example for a release, rebuild it without the cache:
 
 ```bash
-docker-compose build --pull --no-cache web
-docker-compose up -d
+docker compose build --pull --no-cache web
+docker compose up -d
 ```
 
 Access the application:
@@ -86,10 +86,10 @@ Default login credentials:
 
 ```bash
 # View all logs
-docker-compose logs -f
+docker compose logs -f
 
 # View only web container logs
-docker-compose logs -f web
+docker compose logs -f web
 ```
 
 ### Rebuilding After Code Changes
@@ -101,19 +101,19 @@ After making additional changes:
 mvn -Pdocker clean install -DskipTests
 
 # Rebuild and restart only the web container
-docker-compose up -d --build web
+docker compose up -d --build web
 ```
 
 ### Stopping the Environment
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 To also remove volumes (database data):
 
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
 
 ## 5. Run Automated Tests
@@ -156,8 +156,8 @@ lsof -i :80
 Ensure the database container is healthy:
 
 ```bash
-docker-compose ps
-docker-compose logs db
+docker compose ps
+docker compose logs db
 ```
 
 ### Changes Not Reflected
@@ -166,5 +166,5 @@ Make sure you rebuilt both the WAR and the container:
 
 ```bash
 mvn -Pdocker clean install -DskipTests
-docker-compose up -d --build web
+docker compose up -d --build web
 ```
