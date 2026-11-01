@@ -8,17 +8,23 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import dbProcs.ConnectionPool;
 import dbProcs.Constants;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import testUtils.TestProperties;
 
@@ -37,6 +43,61 @@ public class SetupIT {
 
   private void removeDatabaseProps() {
     FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
+  }
+
+  /**
+   * Posts setup on an instance that is not installed yet, with the database settings from .env and
+   * only the given optional parameters
+   */
+  private MockHttpServletResponse postSetupWithoutDatabaseProps(Map<String, String> optionalParams)
+      throws Exception {
+    TestProperties.setTestPropertiesFileDirectory(log);
+    // Setup writes its auth file here, and on a clean build nothing else has created it yet
+    Files.createDirectories(Paths.get(Constants.SETUP_AUTH).getParent());
+    removeDatabaseProps();
+    Setup.resetInstalledCache();
+    assertFalse(Setup.isInstalled());
+    String authData =
+        FileUtils.readFileToString(new File(Constants.SETUP_AUTH), StandardCharsets.UTF_8);
+
+    Dotenv dotenv = Dotenv.load();
+    MockHttpServletRequest request = new MockHttpServletRequest("POST", "/setup");
+    request.addParameter("dbhost", dotenv.get("TEST_MYSQL_HOST"));
+    request.addParameter("dbport", dotenv.get("TEST_MYSQL_PORT"));
+    request.addParameter("dbuser", "root");
+    request.addParameter("dbpass", dotenv.get("TEST_MYSQL_PASSWORD"));
+    request.addParameter("dbauth", authData);
+    request.addParameter("mhost", "localhost");
+    request.addParameter("mport", "27017");
+    optionalParams.forEach(request::addParameter);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+    Setup servlet = new Setup();
+    servlet.init(new MockServletConfig("Setup"));
+
+    servlet.doPost(request, response);
+    return response;
+  }
+
+  /** Leaving out enableMongoChallenge and unsafeLevels means "not enabled" (#956) */
+  @Test
+  public void doPost_WithoutMongoAndUnsafeLevelsParams_Succeeds() throws Exception {
+    MockHttpServletResponse response = postSetupWithoutDatabaseProps(Map.of("dboverride", "none"));
+
+    assertEquals(200, response.getStatus());
+    assertTrue(
+        response.getContentAsString().contains("Database Configuration Complete"),
+        response.getContentAsString());
+  }
+
+  /** Leaving out dboverride means "neither override nor upgrade" (#956) */
+  @Test
+  public void doPost_WithoutDbOverrideParam_Succeeds() throws Exception {
+    MockHttpServletResponse response = postSetupWithoutDatabaseProps(Map.of());
+
+    assertEquals(200, response.getStatus());
+    assertTrue(
+        response.getContentAsString().contains("Database Configuration Complete"),
+        response.getContentAsString());
   }
 
   @Disabled
