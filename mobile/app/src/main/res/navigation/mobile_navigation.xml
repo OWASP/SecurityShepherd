@@ -27,4 +27,16 @@
         android:label="@string/menu_scoreboard"
         tools:layout="@layout/fragment_scoreboard" />
 
+    <fragment
+        android:id="@+id/nav_poor_auth_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.poorauth.PoorAuthLessonFragment"
+        android:label="@string/menu_poor_auth_lesson"
+        tools:layout="@layout/fragment_poor_auth_lesson" />
+
+    <fragment
+        android:id="@+id/nav_poor_auth_challenge"
+        android:name="org.owasp.mobileshepherd.ui.challenges.poorauth.PoorAuthChallengeFragment"
+        android:label="@string/menu_poor_auth_challenge"
+        tools:layout="@layout/fragment_poor_auth_challenge" />
+
 </navigation>

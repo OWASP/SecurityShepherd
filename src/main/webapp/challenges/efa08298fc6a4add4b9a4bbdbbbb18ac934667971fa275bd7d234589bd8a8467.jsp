@@ -28,7 +28,7 @@ String levelHash = "efa08298fc6a4add4b9a4bbdbbbb18ac934667971fa275bd7d234589bd8a
 
 //Translation Stuff
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
-ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.insecureData.insecureDataStrings", locale);
+ResourceBundle bundle = ResourceBundle.getBundle("i18n.challenges.mobile.poorAuthentication.poorAuthentication", locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 
 //Used more than once translations
@@ -76,7 +76,7 @@ if (request.getSession() != null)
 			<br />
 			<%= paragraph1 %>
 			<br /> <br />
-			<%= mobile.getString("mobileBlurb.vmLink.1") + " PoorAuthentication2.apk " + mobile.getString("mobileBlurb.vmLink.2")  %>
+			<%= mobile.getString("mobileBlurb.appLink") %>
 		</p>
 	</div>
 

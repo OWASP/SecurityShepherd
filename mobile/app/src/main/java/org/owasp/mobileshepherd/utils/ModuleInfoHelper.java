@@ -47,7 +47,20 @@ public final class ModuleInfoHelper {
             new EnumMap<>(KeyValidator.Module.class);
 
     static {
-        // Each lesson/challenge PR registers its module info here.
+        REGISTRY.put(
+                KeyValidator.Module.POOR_AUTH_LESSON,
+                new ModuleInfo(
+                        "lesson",
+                        "Poor Authentication",
+                        "M3",
+                        "org.owasp.mobileshepherd.ui.lessons.poorauth"));
+        REGISTRY.put(
+                KeyValidator.Module.POOR_AUTH_CHALLENGE,
+                new ModuleInfo(
+                        "challenge",
+                        "Poor Authentication",
+                        "M3",
+                        "org.owasp.mobileshepherd.ui.challenges.poorauth"));
     }
 
     public static void showDialog(Context context, KeyValidator.Module module) {
