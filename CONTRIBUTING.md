@@ -29,7 +29,9 @@ Then open https://localhost and complete the [first-time setup](docs/getting-sta
 
 Create a fork or a branch from the [dev branch](https://github.com/OWASP/SecurityShepherd/tree/dev). Name it `dev#{issueNumber}`, such as `dev#536`. If an issue needs more than one pull request, add a short suffix, such as `dev#1070-sso`.
 
-Create your JUnit tests and make sure they pass, then open a pull request to `dev`, never to `master`. To merge, it needs:
+New code needs tests. Add JUnit tests for any feature or change you make: unit tests go in `src/test/java/`, and tests that need a database go in `src/it/java/`. When you fix a bug, write a test that reproduces it first, so it fails without your fix and passes with it. [docs/testing.md](docs/testing.md) shows how to run them.
+
+Then open a pull request to `dev`, never to `master`. To merge, it needs:
 
 - an approval (pushing again dismisses earlier approvals)
 - passing CI checks
