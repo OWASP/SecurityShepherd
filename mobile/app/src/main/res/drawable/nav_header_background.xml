@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Black background for top portion -->
+    <item>
+        <color android:color="#000000" />
+    </item>
+    
+    <!-- Grass tile at the bottom of the header -->
+    <item 
+        android:gravity="bottom"
+        android:height="40dp">
+        <bitmap
+            android:src="@drawable/grass_tile_v2"
+            android:tileMode="repeat"
+            android:gravity="bottom" />
+    </item>
+    
+    <!-- Shepherd and sheep image — anchored to bottom so sheep/grass always visible -->
+    <item 
+        android:gravity="center_horizontal|bottom"
+        android:bottom="0dp">
+        <bitmap
+            android:src="@drawable/shepherd_and_sheep_v2"
+            android:gravity="center_horizontal|bottom" />
+    </item>
+
+    <!-- Dark gradient scrim at the bottom so text is legible over the sheep image -->
+    <item
+        android:gravity="bottom"
+        android:height="140dp">
+        <shape>
+            <gradient
+                android:startColor="#22000000"
+                android:endColor="#EE000000"
+                android:angle="270" />
+        </shape>
+    </item>
+</layer-list>
