@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_home"
+            android:title="@string/menu_home" />
+    </group>
+
+    <item 
+        android:id="@+id/nav_lessons_group"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Lessons">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_lesson" />
+                <item
+                    android:id="@+id/nav_insecure_data_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_insecure_data_lesson" />
+                <item
+                    android:id="@+id/nav_poor_auth_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_poor_auth_lesson" />
+                <item
+                    android:id="@+id/nav_insecure_authorization_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_insecure_authorization_lesson" />
+                <item
+                    android:id="@+id/nav_supply_chain_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_supply_chain_lesson" />
+                <item
+                    android:id="@+id/nav_insecure_comm_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_insecure_comm_lesson" />
+                <item
+                    android:id="@+id/nav_insufficient_crypto_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_insufficient_crypto_lesson" />
+                <item
+                    android:id="@+id/nav_security_misconfig_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_security_misconfig_lesson" />
+                <item
+                    android:id="@+id/nav_input_validation_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_input_validation_lesson" />
+                <item
+                    android:id="@+id/nav_privacy_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_privacy_lesson" />
+                <item
+                    android:id="@+id/nav_client_side_injection_lesson"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="Client-Side Injection Lesson" />
+            </group>
+        </menu>
+    </item>
+
+    <item 
+        android:id="@+id/nav_challenges_group"
+        android:icon="@drawable/ic_menu_code"
+        android:title="Challenges">
+    <menu>
+        <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_challenge1"
+                android:icon="@drawable/ic_menu_code"
+                android:title="@string/menu_reverse_engineering1" />
+            <item
+                android:id="@+id/nav_insecure_data1"
+                android:icon="@drawable/ic_menu_lock"
+                android:title="@string/menu_insecure_data1" />
+            <item
+                android:id="@+id/nav_poor_auth_challenge"
+                android:icon="@drawable/ic_menu_key"
+                android:title="@string/menu_poor_auth_challenge" />
+            <item
+                android:id="@+id/nav_insecure_comm_challenge"
+                android:icon="@drawable/ic_menu_network"
+                android:title="@string/menu_insecure_comm_challenge" />
+            <item
+                android:id="@+id/nav_insufficient_crypto_challenge"
+                android:icon="@drawable/ic_menu_shield"
+                android:title="@string/menu_insufficient_crypto_challenge" />
+            <item
+                android:id="@+id/nav_security_misconfig_challenge2"
+                android:icon="@drawable/ic_menu_settings"
+                android:title="@string/menu_security_misconfig_challenge2" />
+            <item
+                android:id="@+id/nav_client_side_injection_challenge1"
+                android:icon="@drawable/ic_menu_database"
+                android:title="Client-Side Injection 1" />
+            <item
+                android:id="@+id/nav_client_side_injection_challenge2"
+                android:icon="@drawable/ic_menu_database"
+                android:title="Client-Side Injection 2" />
+        </group>
+    </menu>
+    </item>
+</menu>
