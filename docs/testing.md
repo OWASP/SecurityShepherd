@@ -4,12 +4,8 @@ This guide explains how to run the automated test suite for Security Shepherd.
 
 ## Prerequisites
 
-- **Docker** and **docker-compose** installed
-- **Maven 3.9.2 or newer** 
-- **JDK 17** (the build targets Java 17)
+- The **To contribute** column of the [prerequisites](getting-started.md#prerequisites)
 - `.env` file configured (copy from project or create one)
-
-Maven must run on JDK 17. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
 
 ## Environment Variables
 

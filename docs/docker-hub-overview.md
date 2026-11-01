@@ -15,45 +15,7 @@ There are no published database images yet. The simplest way to get all three ru
 
 ## Quick start (Docker Compose)
 
-### Prerequisites
-
-Check you have these before you start:
-
-| You need | Version | Check with |
-|---|---|---|
-| Git | Any | `git --version` |
-| Docker with Docker Compose | Compose v2 or newer | `docker compose version` |
-| JDK | 17 or newer | `mvn -v` shows "Java version" |
-| Maven | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
-
-If `mvn -v` shows a JDK older than 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
-
-You also need:
-
-- about 3 GB of free disk space
-- ports 80, 443, 3306 and 27017 free
-
-> **Contributing is different.** These prerequisites are for running Security Shepherd. To change its code, use JDK 17 specifically: `mvn verify` and `mvn spotless:check` fail with a formatting error on JDK 25 or newer. [Development workflow](https://github.com/OWASP/SecurityShepherd/blob/master/docs/development-workflow.md) covers the setup.
-
-### Build and start
-
-Build and start Security Shepherd:
-
-```bash
-git clone https://github.com/OWASP/SecurityShepherd.git
-cd SecurityShepherd
-# Builds the WAR and generates the database init scripts
-mvn -Pdocker clean package -DskipTests
-docker compose up -d
-```
-
-Then open <http://localhost> and accept the self-signed certificate warning. The setup page asks for an auth token, which you get with:
-
-```bash
-docker exec secshep_tomcat cat /usr/local/tomcat/conf/SecurityShepherd.auth
-```
-
-[Getting started](https://github.com/OWASP/SecurityShepherd/blob/master/docs/getting-started.md#first-time-setup) explains the rest of the setup form. Once it's done, log in as `admin` / `password` (you'll be asked to change it).
+Follow [Getting started](https://owasp.github.io/SecurityShepherd/getting-started/). It lists the [prerequisites](https://owasp.github.io/SecurityShepherd/getting-started/#prerequisites), then builds the images, starts all three containers and takes you through the first login.
 
 The defaults (passwords in `.env`, a self-signed certificate, MongoDB without authentication) are for a quick start, not a long-lived or shared deployment.
 

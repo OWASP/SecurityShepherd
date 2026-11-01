@@ -27,7 +27,7 @@ mvn spotless:check
 
 `mvn verify` also runs `spotless:check` automatically, so unformatted code fails the build before you push.
 
-Run these Maven commands on JDK 17, as CI does. The pinned Google Java Format version cannot run on JDK 25 or newer, so Spotless stops with a `google-java-format(jvm-version)` error. [How do I setup my dev environment?](#how-do-i-setup-my-dev-environment) shows how to switch Maven to JDK 17.
+Run these Maven commands on JDK 17, as CI does. The pinned Google Java Format version cannot run on JDK 25 or newer, so Spotless stops with a `google-java-format(jvm-version)` error. The [prerequisites](docs/getting-started.md#prerequisites) show how to switch Maven to JDK 17.
 
 **Option 2 — IDE plugins:**
 
@@ -49,9 +49,7 @@ Install ZenHub for your browser and click the ZenHub tab that will appear in thi
 6. *Closed* - Item is Done
 
 ## How do I setup my dev environment?
-Install Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose. Then follow [Getting started](docs/getting-started.md) to run Security Shepherd locally, and [docs/development-workflow.md](docs/development-workflow.md) for the development cycle below.
-
-Maven must run on JDK 17. On JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. Run `mvn -v` to see which JDK Maven is using. If it isn't 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+Follow [Getting started](docs/getting-started.md) to run Security Shepherd locally, using the **To contribute** column of its [prerequisites](docs/getting-started.md#prerequisites). Then see [docs/development-workflow.md](docs/development-workflow.md) for the development cycle below.
 
 ## Development Workflow
 See [docs/development-workflow.md](docs/development-workflow.md) for the full development cycle, including how to:
@@ -71,6 +69,7 @@ The documentation in [`docs/`](docs/) is published as a site at https://owasp.gi
 - **GitHub-flavoured Markdown only:** headings, lists, tables, code blocks, task lists, and Mermaid diagrams in code blocks marked `mermaid`. Don't use syntax only the site understands, such as admonitions (`!!! note`), content tabs or code annotations, unless the maintainers agree to it first.
 - **Links to other pages in `docs/`** are relative links to the `.md` file, such as `[Configuration](configuration.md#event-times)`.
 - **Links to anything outside `docs/`** are absolute: `https://github.com/OWASP/SecurityShepherd/blob/dev/…`. A relative `../` link works on GitHub but breaks on the site.
+- **One home for each thing.** `README.md`, `CONTRIBUTING.md` and `docs/docker-hub-overview.md` aren't on the site, so they link to it instead of repeating it. The one exception is the short build commands in the `README.md` quick start.
 - **A new page** goes in the `nav` list in `zensical.toml`, and in `docs/index.md`. The docs build fails on a page that isn't in `nav`.
 - **Diagrams** are Mermaid, in code blocks marked `mermaid`, so they render on GitHub and on the site. A diagram is scaled down to the page's width, so a wide one ends up with text too small to read, and the site has no way to zoom in. Keep them readable at page width:
     - **Sequence diagrams:** four or five participants at most, and message labels of a few words. Put the detail in the text around the diagram.

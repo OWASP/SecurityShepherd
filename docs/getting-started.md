@@ -8,21 +8,21 @@ This page gets Security Shepherd running on your own machine with Docker, takes 
 
 Check you have these before you start:
 
-| You need | Version | Check with |
-|---|---|---|
-| Git | Any | `git --version` |
-| Docker with Docker Compose | Compose v2 or newer | `docker compose version` |
-| JDK | 17 or newer | `mvn -v` shows "Java version" |
-| Maven | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
+| You need | To run it | To contribute | Check with |
+|---|---|---|---|
+| Git | Any | Any | `git --version` |
+| Docker with Docker Compose | Compose v2 or newer | Compose v2 or newer | `docker compose version` |
+| JDK | 17 or newer | 17 | `mvn -v` shows "Java version" |
+| Maven | 3.9.2 or newer | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
 
-If `mvn -v` shows a JDK older than 17, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+Contributing needs JDK 17 specifically, because `mvn verify` and `mvn spotless:check` fail with a formatting error on JDK 25 or newer. [Development workflow](development-workflow.md) covers the rest.
+
+If `mvn -v` shows a JDK you can't use, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
 
 You also need:
 
 - about 3 GB of free disk space
 - ports 80, 443, 3306 and 27017 free
-
-> **Contributing is different.** These prerequisites are for running Security Shepherd. To change its code, use JDK 17 specifically: `mvn verify` and `mvn spotless:check` fail with a formatting error on JDK 25 or newer. [Development workflow](development-workflow.md) covers the setup.
 
 ## Run it with Docker
 
