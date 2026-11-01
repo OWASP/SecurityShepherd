@@ -37,7 +37,7 @@ onelogin.saml2.sp.entityid = https://localhost/saml/metadata.xml
 onelogin.saml2.sp.assertion_consumer_service.url = https://localhost/saml/acs
 
 # SAML protocol binding to be used when returning the <Response>
-# message. HTTP-POST is the usual choice.
+# message. HTTP-POST binding only: any other value stops SSO from starting.
 onelogin.saml2.sp.assertion_consumer_service.binding = urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
 
 # Specifies info about where and how the <Logout Response> message MUST be

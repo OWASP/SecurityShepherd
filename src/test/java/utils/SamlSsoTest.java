@@ -116,6 +116,24 @@ public class SamlSsoTest {
   }
 
   @Test
+  public void build_AcsBindingOtherThanPost_IsRejected() throws Exception {
+    Properties props = saml.properties();
+    props.setProperty(SamlSso.SP_ACS_BINDING, "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect");
+
+    IllegalStateException e = assertThrows(IllegalStateException.class, () -> SamlSso.build(props));
+
+    assertThat(e.getMessage(), containsString(SamlSso.SP_ACS_BINDING));
+  }
+
+  @Test
+  public void build_AcsBindingPost_IsAccepted() throws Exception {
+    Properties props = saml.properties();
+    props.setProperty(SamlSso.SP_ACS_BINDING, "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST");
+
+    SamlSso.build(props);
+  }
+
+  @Test
   public void login_RedirectsToIdpWithAuthnRequest() throws Exception {
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/saml/dologin");
     MockHttpServletResponse response = new MockHttpServletResponse();

@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -93,14 +92,15 @@ public class Getter {
     int badLoginCount;
     boolean tempPassword;
     String classId;
-    Timestamp suspendedUntil;
+    boolean suspended;
     String loginType;
     boolean tempUsername;
     try (Connection conn = Database.getCoreConnection(ApplicationRoot);
         PreparedStatement prestmt =
             conn.prepareStatement(
                 "SELECT userId, userName, userPass, userRole, badLoginCount, tempPassword, classId,"
-                    + " suspendedUntil, loginType, tempUsername FROM `users` WHERE userName = ?")) {
+                    + " suspendedUntil > NOW() AS suspended, loginType, tempUsername FROM `users`"
+                    + " WHERE userName = ?")) {
       prestmt.setString(1, userName);
       try (ResultSet userResult = prestmt.executeQuery()) {
         if (userResult.next()) {
@@ -112,7 +112,7 @@ public class Getter {
           badLoginCount = userResult.getInt(5);
           tempPassword = userResult.getBoolean(6);
           classId = userResult.getString(7);
-          suspendedUntil = userResult.getTimestamp(8);
+          suspended = userResult.getBoolean(8);
           loginType = userResult.getString(9);
           tempUsername = userResult.getBoolean(10);
         } else {
@@ -133,8 +133,7 @@ public class Getter {
       return null;
     }
 
-    Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-    if (suspendedUntil != null && suspendedUntil.after(currentTime)) {
+    if (suspended) {
       return null;
     }
 
@@ -223,12 +222,13 @@ public class Getter {
       // Phase 1: See if the user already exists, and capture suspension data if so.
       // Each phase opens its own pooled connection in try-with-resources so the
       // connection is never held across the Setter.userCreateSSO call (Phase 2).
-      Timestamp suspendedUntil = null;
+      boolean suspended = false;
 
       try (Connection conn = Database.getCoreConnection(ApplicationRoot);
           PreparedStatement prestmt =
               conn.prepareStatement(
-                  "SELECT suspendedUntil FROM `users` WHERE ssoName = ? AND loginType='saml'")) {
+                  "SELECT suspendedUntil > NOW() AS suspended FROM `users` WHERE ssoName = ? AND"
+                      + " loginType='saml'")) {
         prestmt.setString(1, ssoName);
         log.debug("Gathering userFind ResultSet");
         try (ResultSet userResult = prestmt.executeQuery()) {
@@ -237,7 +237,7 @@ public class Getter {
             // User found if a row is in the database
             userFound = true;
             log.debug("User Found");
-            suspendedUntil = userResult.getTimestamp(1);
+            suspended = userResult.getBoolean(1);
           } else {
             userFound = false;
           }
@@ -297,10 +297,7 @@ public class Getter {
 
         log.debug("Getting suspension data");
 
-        // Get current system time
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-
-        if (suspendedUntil.after(currentTime)) {
+        if (suspended) {
           // User is suspended
           log.debug("User is suspended");
 
@@ -346,11 +343,11 @@ public class Getter {
       result[0] = userID;
       result[1] = userName; // userName
       result[2] = userRole; // role
-      result[5] = "false"; // sso logins can't change password
+      result[3] = "false"; // tempPassword: SSO logins have no password to change
       result[4] = classId; // classId
       result[5] = Boolean.toString(isTempUsername);
 
-      log.debug("$$$ End authUser $$$");
+      log.debug("$$$ End authUserSSO $$$");
       return result;
     } catch (SQLException e) {
       log.fatal("authUserSSO failed: " + e.toString());
