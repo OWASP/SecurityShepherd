@@ -1,6 +1,6 @@
 package servlets;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import dbProcs.Constants;
 import dbProcs.Database;
 import dbProcs.MongoDatabase;
