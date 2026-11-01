@@ -26,8 +26,8 @@ on:
       - '.env'
       - 'pom.xml'
 
-# Nothing here writes to the repository. Docker Hub is reached with its own credentials, so the
-# GITHUB_TOKEN only needs to read the code.
+# Nothing here writes to the repository. Docker Hub is reached through its OIDC connection or its
+# own credentials, so the GITHUB_TOKEN only needs to read the code.
 permissions:
   contents: read
 
@@ -45,19 +45,18 @@ jobs:
     uses: ./.github/workflows/release-build.yml
     permissions:
       contents: read
-      # Only release-build.yml's attest and attest-vex jobs use these, to sign the provenance and
-      # VEX attestations
+      # Only release-build.yml's push, attest and attest-vex jobs use id-token, to log in to Docker
+      # Hub through its OIDC connection and to sign the provenance and VEX attestations. Only
+      # attest and attest-vex use attestations.
       id-token: write
       attestations: write
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   # Publishes docs/docker-hub-overview.md as the Docker Hub repository overview on release tags,
   # once the release images are pushed, so the page never describes a release that isn't there.
   # It changes only the repository's description, not an image, so it stays out of
-  # release-build.yml. The Docker Hub account needs Admin on the repository, and the token
-  # read/write/delete scope.
+  # release-build.yml. It is the only job that still uses a stored Docker Hub token, because
+  # Docker Hub's OIDC tokens only reach the registry, not the Hub API. The Docker Hub account needs
+  # Admin on the repository, and the token read/write/delete scope.
   docker-hub-description:
     needs: release
     if: github.repository == 'OWASP/SecurityShepherd' && startsWith(github.ref, 'refs/tags/')
