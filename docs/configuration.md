@@ -23,7 +23,7 @@ Some values are copied into an image or a volume when it's created, so changing 
 | `CONTAINER_TOMCAT`, `CONTAINER_MARIADB`, `CONTAINER_MONGO` | `secshep_tomcat`, `secshep_mariadb`, `secshep_mongo` | The container names. Tomcat reaches the databases by these names. | Image rebuild, because the Tomcat image's `database.properties` and `mongo.properties` use them |
 | `TOMCAT_DOCKER_VERSION` | `11.0-jre17-temurin` | The tag of the official `tomcat` base image | Image rebuild |
 | `DB_VERSION` | `12.3` | The MariaDB version | Image rebuild |
-| `MONGODB_VERSION` | `4.1.13` | The MongoDB version | Image rebuild |
+| `MONGODB_VERSION` | `8.0.32` | The MongoDB version | Image rebuild |
 | `DB_USER` | `root` | The database user written into the Tomcat image's `database.properties` | Image rebuild, and only for a new `conf` volume |
 | `DB_PASS` | `CowSaysMoo` | MariaDB's root password, and the password in the Tomcat image's `database.properties` | MariaDB applies it only when it creates the `data` volume, and the Tomcat image copies it when it's built. See [Change the database password](deploying-into-production.md#change-the-database-password). |
 | `DB_SERVER_MAPPED_HOST`, `DB_PORT_MAPPED_HOST` | `127.0.0.1`, `3306` | The host address and port MariaDB is published on | Container recreate |

@@ -10,7 +10,7 @@ These steps were tested with Tomcat 11.0.27 on Java 17 and MariaDB 12.3, on Ubun
 - **Tomcat 11.** Tomcat 10 and older won't run Security Shepherd 4.0.
 - **MariaDB, on the same machine as Tomcat.** Each level's database account is created for `localhost` only, so Tomcat must connect to MariaDB as `localhost`.
 - **The Argon2 library,** which hashes passwords: `libargon2-1` on Debian and Ubuntu.
-- **MongoDB,** only if you want the NoSQL injection level. The Docker setup uses MongoDB 4.1.13. The steps below leave it out.
+- **MongoDB,** only if you want the NoSQL injection level. The Docker setup uses MongoDB 8.0.32. The steps below leave it out.
 
 On Ubuntu:
 

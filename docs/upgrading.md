@@ -76,6 +76,18 @@ If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, por
 
 Log in, open a lesson, and check the scoreboard. Then delete `$HOME/shepherd-conf-backup` and `$HOME/shepherd-db-backup`, or move them somewhere safe. On Linux hosts the archives are owned by root, but you can still delete them because you own the directories.
 
+### MongoDB 8.0
+
+The MongoDB image now runs MongoDB 8.0 instead of 4.1, an unsupported development release. MongoDB 8.0 can't open a 4.1 data directory: the `mongo` container exits on start with `UPGRADE PROBLEM: Found an invalid featureCompatibilityVersion document`. The `mongodata` volume only holds the NoSQL challenge's seed data, which the image recreates on first start, so remove the volume instead of upgrading it. Players' progress and scores are kept in MariaDB and aren't affected. On x86-64 hosts, MongoDB 5.0 and later also need a CPU with AVX support, which some older machines and virtual machines lack.
+
+```bash
+docker compose down
+# The volume is named <project>_mongodata; check with: docker volume ls
+docker volume rm securityshepherd_mongodata
+mvn -Pdocker clean package -DskipTests
+docker compose up -d --build
+```
+
 ## From the 3.1 virtual machine or a manual installation
 
 The 3.1 virtual machine and the manual installation packs aren't maintained for 4.0, and there's no tested way to move their data across. Set up a new Docker installation as described in [Getting started](getting-started.md), then create the classes and players again.

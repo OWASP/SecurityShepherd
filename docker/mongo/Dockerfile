@@ -11,8 +11,6 @@ COPY target/moduleSchemas.js moduleSchemas.js
 RUN { \
     		echo 'storage:'; \
     		echo '  dbPath: /var/lib/mongodb'; \
-    		echo '    journal:'; \
-    		echo '    enabled: true'; \
             echo 'systemLog:'; \
             echo '  destination: file'; \
             echo '  logAppend: true'; \
