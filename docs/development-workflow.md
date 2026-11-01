@@ -38,6 +38,23 @@ This generates:
 - The WAR file in `target/`
 - HTTPS certificates for Docker
 
+Each Maven command runs every step before it, so `install` includes `verify`, and `verify` includes `package`:
+
+| Step | What it does in this project | `package` | `verify` | `install` |
+|---|---|---|---|---|
+| `validate` | Checks the Maven version and dependency signatures; with `-Pdocker`, copies the SQL and Mongo scripts | ✅ | ✅ | ✅ |
+| `generate-sources` | With `-Pdocker`, uncomments `DELIMITER` in the SQL scripts | ✅ | ✅ | ✅ |
+| `compile` | Compiles the code for Java 17 | ✅ | ✅ | ✅ |
+| `test` | Runs unit tests | ✅ | ✅ | ✅ |
+| `package` | Builds `target/owaspSecurityShepherd.war` | ✅ | ✅ | ✅ |
+| `integration-test` | Runs integration tests | — | ✅ | ✅ |
+| `verify` | Runs the Spotless format check | — | ✅ | ✅ |
+| `install` | Copies the WAR into your local Maven cache, `~/.m2` | — | — | ✅ |
+
+`package` works on JDK 17 or newer. `verify` and `install` need JDK 17, because they run the Spotless format check, which fails on JDK 25 or newer.
+
+`-DskipTests` skips the two test steps, but not Spotless.
+
 ## 4. Test in Runtime Environment
 
 Start the full application stack using Docker Compose:
