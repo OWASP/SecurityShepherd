@@ -1,5 +1,6 @@
 package dbProcs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -86,6 +87,23 @@ public class GetterAuthIT {
     assertNotNull(
         Getter.authUser(applicationRoot, userName, userName),
         "User should be able to authenticate after unsuspension");
+  }
+
+  /** authUserSSO fills the result array the same way as authUser (#820) */
+  @Test
+  public void ssoLoginResultFollowsAuthUserContract() {
+    requireDatabase();
+    String userName = "authContractSSOUser Lastname";
+    String ssoName = "authcontractssouser@example.com";
+
+    String[] user = Getter.authUserSSO(applicationRoot, null, userName, ssoName, "player");
+
+    assertNotNull(user, "SSO login did not succeed");
+    assertEquals("player", user[2], "role");
+    assertEquals("false", user[3], "tempPassword: SSO users have no password to change");
+    assertTrue(
+        "true".equals(user[5]) || "false".equals(user[5]),
+        "tempUsername should be a boolean string, was " + user[5]);
   }
 
   @Test

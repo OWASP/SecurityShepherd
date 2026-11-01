@@ -83,7 +83,7 @@ Sessions are Tomcat's own HTTP sessions. Every form and request that changes som
 | Command | What it makes |
 | --- | --- |
 | `mvn clean package -DskipTests` | `target/owaspSecurityShepherd.war`, for your own Tomcat. See [Manual setup](manual-setup.md). |
-| `mvn -Pdocker clean install -DskipTests` | The WAR, plus the SQL and MongoDB scripts the Docker images need |
+| `mvn -Pdocker clean package -DskipTests` | The WAR, plus the SQL and MongoDB scripts the Docker images need |
 | `docker compose up -d --build` | The three containers described in [Getting started](getting-started.md#whats-running) |
 
 [Development workflow](development-workflow.md) and [Running tests](testing.md) cover the rest of the development cycle.

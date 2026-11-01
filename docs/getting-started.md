@@ -4,16 +4,36 @@ Security Shepherd is a capture-the-flag (CTF) platform for learning web and mobi
 
 This page gets Security Shepherd running on your own machine with Docker, takes you through the first login, and shows you how to try the levels. To run an event for other people, continue with [Running a CTF](running-a-ctf.md).
 
+## Prerequisites
+
+Check you have these before you start:
+
+| You need | To run it | To contribute | Check with |
+|---|---|---|---|
+| Git | Any | Any | `git --version` |
+| Docker with Docker Compose | Compose v2 or newer | Compose v2 or newer | `docker compose version` |
+| JDK | 17 or newer | 17 | `mvn -v` shows "Java version" |
+| Maven | 3.9.2 or newer | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
+
+Contributing needs JDK 17 specifically, because `mvn verify` and `mvn spotless:check` fail with a formatting error on JDK 25 or newer. [Development workflow](development-workflow.md) covers the rest.
+
+If `mvn -v` shows a JDK you can't use, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
+
+You also need:
+
+- about 3 GB of free disk space
+- ports 80, 443, 3306 and 27017 free
+
 ## Run it with Docker
 
-You need Git, JDK 17, Maven 3.9.2 or newer, and Docker with Docker Compose.
+Build and start Security Shepherd:
 
 ```bash
 git clone https://github.com/OWASP/SecurityShepherd.git
 cd SecurityShepherd
 
 # Build the WAR and generate the database scripts the images need
-mvn -Pdocker clean install -DskipTests
+mvn -Pdocker clean package -DskipTests
 
 # Build the images and start the containers
 docker compose up -d --build
