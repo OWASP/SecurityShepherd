@@ -288,12 +288,9 @@ public class InsufficientCryptoLessonFragment extends Fragment {
             if (isValid) {
                 progressTracker.markCompleted(KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON);
                 binding.headerCard.setVisibility(View.GONE);
-                int completionCount = progressTracker.getCompletionCount(KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON);
-                String completionText = completionCount > 1
-                        ? getString(R.string.crypto_completed_times, completionCount) : "";
                 new AlertDialog.Builder(requireContext())
                         .setTitle(R.string.crypto_success_title)
-                        .setMessage(getString(R.string.crypto_success_message, currentKey, completionText))
+                        .setMessage(getString(R.string.crypto_success_message, currentKey, ""))
                         .setPositiveButton(R.string.csi_ok, null)
                         .show();
             } else {
