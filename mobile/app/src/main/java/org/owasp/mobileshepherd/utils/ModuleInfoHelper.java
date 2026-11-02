@@ -48,6 +48,12 @@ public final class ModuleInfoHelper {
 
     static {
         // Each lesson/challenge PR registers its module info here.
+        REGISTRY.put(KeyValidator.Module.INSUFFICIENT_CRYPTO_LESSON,
+                new ModuleInfo("lesson", "Insufficient Cryptography", "M10",
+                        "org.owasp.mobileshepherd.ui.lessons.crypto"));
+        REGISTRY.put(KeyValidator.Module.INSUFFICIENT_CRYPTO_CHALLENGE,
+                new ModuleInfo("challenge", "Insufficient Cryptography 1", "M10",
+                        "org.owasp.mobileshepherd.ui.challenges.crypto"));
     }
 
     public static void showDialog(Context context, KeyValidator.Module module) {

@@ -33,7 +33,8 @@ public class KeyValidator {
 
     // Module identifiers. Each lesson/challenge PR adds its own entries here.
     public enum Module {
-        ;
+        INSUFFICIENT_CRYPTO_LESSON("insufficient_crypto_lesson", TYPE_LESSON),
+        INSUFFICIENT_CRYPTO_CHALLENGE("insufficient_crypto_challenge", TYPE_CHALLENGE);
 
         private final String id;
         private final String type;
