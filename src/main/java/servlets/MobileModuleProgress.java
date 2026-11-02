@@ -46,6 +46,12 @@ final class MobileModuleProgress {
   /** Minimum time between opening a module and a correct flag submission being scored. */
   static final long MIN_SOLVE_MS = 30_000L;
 
+  /**
+   * Correct submissions faster than this (but past the minimum) are accepted and logged at WARN so
+   * an admin can spot scripted completion that only just waited out the minimum.
+   */
+  static final long SUSPICIOUS_SOLVE_MS = 2 * MIN_SOLVE_MS;
+
   private static final ConcurrentHashMap<String, Long> STARTED = new ConcurrentHashMap<>();
 
   /**

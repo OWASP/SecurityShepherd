@@ -45,6 +45,11 @@ import utils.ShepherdLogManager;
  * design, so a deliberate client can wait out the minimum and score without solving. Closing that
  * gap needs a server-side challenge per module and is planned for a later release.
  *
+ * <p>Suspicious timing is logged at WARN with the user, module and elapsed time: both the rejected
+ * too-soon submissions and accepted ones faster than {@link
+ * MobileModuleProgress#SUSPICIOUS_SOLVE_MS}. Search the server log for "Suspicious flag timing" to
+ * review them.
+ *
  * <p>This file is part of the Security Shepherd Project.
  *
  * <p>The Security Shepherd project is free software: you can redistribute it and/or modify it under
@@ -127,14 +132,18 @@ public class MobileFlagSubmit extends HttpServlet {
       long sinceStart = MobileModuleProgress.elapsedSinceStartMs(userId, moduleId);
       if (sinceStart >= 0 && sinceStart < MobileModuleProgress.MIN_SOLVE_MS) {
         long waitSeconds = (MobileModuleProgress.MIN_SOLVE_MS - sinceStart + 999) / 1000;
-        log.debug(
-            "Correct flag for "
+        log.warn(
+            "Suspicious flag timing: correct flag for "
                 + MobileModuleFlags.sanitize(moduleId)
                 + " by "
                 + MobileModuleFlags.sanitize(userName)
-                + " submitted "
+                + " (userId "
+                + MobileModuleFlags.sanitize(userId)
+                + ") arrived "
                 + sinceStart
-                + "ms after start, below the minimum; not scored");
+                + "ms after module start, below the "
+                + MobileModuleProgress.MIN_SOLVE_MS
+                + "ms minimum; rejected, not scored");
         response.setStatus(429);
         response.setHeader("Retry-After", Long.toString(waitSeconds));
         out.write(
@@ -142,6 +151,20 @@ public class MobileFlagSubmit extends HttpServlet {
                 "Flag is correct but was submitted too soon after opening the module. Wait a"
                     + " moment and try again."));
         return;
+      }
+      if (sinceStart >= 0 && sinceStart < MobileModuleProgress.SUSPICIOUS_SOLVE_MS) {
+        log.warn(
+            "Suspicious flag timing: correct flag for "
+                + MobileModuleFlags.sanitize(moduleId)
+                + " by "
+                + MobileModuleFlags.sanitize(userName)
+                + " (userId "
+                + MobileModuleFlags.sanitize(userId)
+                + ") arrived "
+                + sinceStart
+                + "ms after module start, below the "
+                + MobileModuleProgress.SUSPICIOUS_SOLVE_MS
+                + "ms review threshold; accepted");
       }
       // Record completion and award points if this module has a DB entry
       String dbModuleId = MobileModuleFlags.MODULE_DB_IDS.get(moduleId);
