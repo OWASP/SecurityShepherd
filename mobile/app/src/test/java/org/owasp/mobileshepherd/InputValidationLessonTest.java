@@ -1,0 +1,39 @@
+package org.owasp.mobileshepherd;
+
+import org.owasp.mobileshepherd.ui.lessons.InputValidationLessonFragment;
+import org.junit.Test;
+import java.lang.reflect.Method;
+import static org.junit.Assert.*;
+
+/**
+ * Unit tests for InputValidationLessonFragment - testing deep link URL handling.
+ * The key is issued by the server, so only the validation structure is checked here.
+ */
+public class InputValidationLessonTest {
+
+    @Test
+    public void testProcessDeepLinkMethodExists() throws Exception {
+        Method method = InputValidationLessonFragment.class.getDeclaredMethod("processDeepLink", String.class);
+        assertNotNull("processDeepLink method should exist", method);
+    }
+
+    @Test
+    public void testUrlAllowListCheckExists() throws Exception {
+        Method method = InputValidationLessonFragment.class.getDeclaredMethod("isUrlAllowed", String.class);
+        assertEquals("isUrlAllowed should return boolean", boolean.class, method.getReturnType());
+    }
+
+    @Test
+    public void testAdminHostCheckExists() throws Exception {
+        Method method = InputValidationLessonFragment.class.getDeclaredMethod("isAdminHost", String.class);
+        assertEquals("isAdminHost should return boolean", boolean.class, method.getReturnType());
+    }
+
+    @Test
+    public void testNoHardcodedKeyField() {
+        for (java.lang.reflect.Field f : InputValidationLessonFragment.class.getDeclaredFields()) {
+            assertFalse("Key must be server-issued, not a hardcoded field: " + f.getName(),
+                    f.getName().equals("ADMIN_KEY") || f.getName().equals("SECRET_KEY"));
+        }
+    }
+}

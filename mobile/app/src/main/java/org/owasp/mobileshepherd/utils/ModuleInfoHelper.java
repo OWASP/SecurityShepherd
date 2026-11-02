@@ -48,6 +48,10 @@ public final class ModuleInfoHelper {
 
     static {
         // Each lesson/challenge PR registers its module info here.
+        REGISTRY.put(KeyValidator.Module.INSECURE_AUTH_LESSON, new ModuleInfo("lesson", "Insecure Authorization", "M3", "org.owasp.mobileshepherd.ui.lessons.insecureauthorization"));
+        REGISTRY.put(KeyValidator.Module.SUPPLY_CHAIN_LESSON, new ModuleInfo("lesson", "Supply Chain Security", "M2", "org.owasp.mobileshepherd.ui.lessons.supplychain"));
+        REGISTRY.put(KeyValidator.Module.INPUT_VALIDATION_LESSON, new ModuleInfo("lesson", "Input Validation", "M4", "org.owasp.mobileshepherd.ui.lessons"));
+        REGISTRY.put(KeyValidator.Module.PRIVACY_LESSON, new ModuleInfo("lesson", "Privacy Controls", "M6", "org.owasp.mobileshepherd.ui.lessons.privacycontrols"));
     }
 
     public static void showDialog(Context context, KeyValidator.Module module) {

@@ -191,4 +191,53 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="password_title">Password</string>
     <string name="challenge">Challenge</string>
 
+
+    <!-- Lesson-only modules -->
+    <string name="menu_insecure_authorization_lesson">Insecure Authorization Lesson</string>
+    <string name="menu_supply_chain_lesson">Supply Chain Security Lesson</string>
+    <string name="menu_input_validation_lesson">Input Validation Lesson</string>
+    <string name="menu_privacy_lesson">Privacy Controls Lesson</string>
+    <string name="escalate_from_basic_user_to_admin_login">This app has two privilege levels. A standard user account is available to log in with, but the key is only accessible to admins. Find a way to escalate your privileges.</string>
+    <string name="login_to_app">Login to App</string>
+    <string name="user_dashboard">User Dashboard</string>
+    <string name="welcome_user">Welcome, User!</string>
+    <string name="current_role_user">Current Role: user</string>
+    <string name="access_admin_panel">Access Admin Panel</string>
+    <string name="admin_panel">Admin Panel</string>
+    <string name="access_deniednnyou_do_not_have_admin_pri">Access Denied\n\nYou do not have admin privileges.\n\nHint: Authorization is checked client-side using SharedPreferences.</string>
+    <string name="this_app_accepts_deep_links_to_load_exte">This app loads external content via deep links, but only permits a set of trusted domains. Find a way to bypass this restriction.</string>
+    <string name="adb_exploitation_command">ADB Exploitation Command:</string>
+    <string name="adb_shell_am_start_a_view_d_myappopenurlt">adb shell am start -a android.intent.action.VIEW -d "myapp://open?url=&lt;TARGET_URL&gt;"</string>
+    <string name="craft_a_target_url_whose_host_satisfies">Craft a TARGET_URL whose host satisfies both the allow-list check and the hidden admin check at the same time.</string>
+    <string name="quick_links">Quick Links</string>
+    <string name="examplecom">Example.com</string>
+    <string name="trusted_site">Trusted Site</string>
+    <string name="owasporg">OWASP.org</string>
+    <string name="custom_deep_link">Custom Deep Link</string>
+    <string name="format_myappopenurllttargeturlgt">Format: myapp://open?url=&lt;target_url&gt;</string>
+    <string name="enter_target_url">Enter target URL</string>
+    <string name="open_deep_link">Open Deep Link</string>
+    <string name="loaded_content">Loaded Content</string>
+    <string name="no_content_loaded">No content loaded</string>
+    <string name="use_the_buttons_above_or_enter_a_custom">Use the buttons above or enter a custom deep link to load content.</string>
+    <string name="privacy_lesson_description">A photo is accessible within this app. It was shared without being properly sanitised first. Examine it carefully to find the key.</string>
+    <string name="extract_exif_metadata_from_images_to_dis">Extract EXIF metadata from images to discover location coordinates. Use ADB to pull the photo and examine its metadata.</string>
+    <string name="photo_viewer">Photo Viewer</string>
+    <string name="privacy_photo_description">Photo with metadata</string>
+    <string name="privacy_no_image_text">No image loaded. Tap \"Load Sample Image\" to begin.</string>
+    <string name="privacy_btn_load_sample">Load Sample Image</string>
+    <string name="privacy_btn_take_photo">Take New Photo</string>
+    <string name="this_application_uses_several_thirdparty">This app bundles a third-party library that has a known vulnerability. Identify the vulnerable dependency and exploit it to retrieve the key.</string>
+    <string name="thirdparty_dependencies">Third-Party Dependencies</string>
+    <string name="androidxappcompatappcompat161">androidx.appcompat:appcompat:1.6.1</string>
+    <string name="comgoogleandroidmaterialmaterial1110">com.google.android.material:material:1.11.0</string>
+    <string name="androidxnavigationnavigationfragment277">androidx.navigation:navigation-fragment:2.7.7</string>
+    <string name="androidxexifinterfaceexifinterface137">androidx.exifinterface:exifinterface:1.3.7</string>
+    <string name="androidxconstraintlayoutconstraintlayout">androidx.constraintlayout:constraintlayout:2.1.4</string>
+    <string name="input_validation_lesson_intro">Input/Output validation vulnerabilities occur when applications fail to properly validate, sanitize, or encode data at trust boundaries. This includes both data coming into the app (user input, API responses, intents) and data going out (WebView content, logs, broadcasts). Insufficient validation can lead to injection attacks, data corruption, security bypasses, and unintended application behavior.</string>
+    <string name="input_validation_lesson_vulnerabilities">Common Input/Output Validation Issues:\n\n- SQL Injection: Unsanitized input in database queries allows data extraction\n- Path Traversal: Unvalidated file paths enable access to unauthorized files\n- WebView XSS: Unescaped user data rendered in WebViews enables script injection\n- Intent Injection: Malicious data in Android Intents bypasses security checks\n- Command Injection: User input passed to system commands enables arbitrary execution\n- XML/JSON Injection: Malformed data breaks parsers and logic\n- Log Injection: Unvalidated data in logs creates fake entries or leaks data\n- URL Validation Bypass: Weak URL checks allow access to unauthorized resources\n- Format String Attacks: User input in format strings causes crashes or leaks\n- Deep Link Exploits: Improperly validated deep link parameters bypass authentication</string>
+    <string name="supply_chain_intro">Inadequate supply chain security occurs when mobile apps use vulnerable third-party libraries, SDKs, or dependencies. Attackers exploit these weak links to compromise entire applications, affecting millions of users.</string>
+    <string name="supply_chain_vulnerabilities">Common Issues:\n\n- Using dependencies with known vulnerabilities\n- Not verifying SDK authenticity\n- Hardcoded API keys in libraries\n- Insecure data collection by third parties\n- Excessive permissions requested by SDKs\n- Outdated dependencies not updated for years</string>
+    <string name="insecure_authorization_intro">Insecure authorization occurs when apps fail to properly enforce access controls after authentication. Even if users authenticate correctly, improper authorization checks allow privilege escalation, access to other users\' data, or unauthorized actions. Client-side authorization flaws can allow role and permission checks to be manipulated.</string>
+    <string name="once_youve_exploited_the_supply_chain_vu">Once you\'ve exploited the supply chain vulnerability, enter the key below:</string>
 </resources>

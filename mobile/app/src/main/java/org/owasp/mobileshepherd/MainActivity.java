@@ -3,6 +3,7 @@ package org.owasp.mobileshepherd;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -49,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
     static {
         // Each lesson/challenge PR registers its nav destination here.
+        NAV_TO_MODULE_MAP.put(R.id.nav_insecure_authorization_lesson, KeyValidator.Module.INSECURE_AUTH_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_supply_chain_lesson, KeyValidator.Module.SUPPLY_CHAIN_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_input_validation_lesson, KeyValidator.Module.INPUT_VALIDATION_LESSON);
+        NAV_TO_MODULE_MAP.put(R.id.nav_privacy_lesson, KeyValidator.Module.PRIVACY_LESSON);
     }
 
     @Override
@@ -177,7 +182,9 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_adb_reference, R.id.nav_scoreboard
+                R.id.nav_home, R.id.nav_adb_reference, R.id.nav_scoreboard,
+                R.id.nav_insecure_authorization_lesson, R.id.nav_supply_chain_lesson,
+                R.id.nav_input_validation_lesson, R.id.nav_privacy_lesson
         ).setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -192,6 +199,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        handleDeepLinkIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleDeepLinkIntent(intent);
+    }
+
+    private void handleDeepLinkIntent(Intent intent) {
+        if (intent == null) return;
+        Uri data = intent.getData();
+        if (data == null) return;
+        if ("myapp".equals(data.getScheme()) && "open".equals(data.getHost())) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+            navController.navigate(R.id.nav_input_validation_lesson);
+        }
     }
 
     private List<NavigationItem> createNavigationItems() {
@@ -200,7 +225,15 @@ public class MainActivity extends AppCompatActivity {
         // Home
         items.add(new NavigationItem(1, "Home", R.drawable.ic_menu_home, R.id.nav_home));
         
-        // Lessons and challenges are added per category.
+        // Lessons group
+        NavigationItem lessonsGroup = new NavigationItem(2, "Lessons", R.drawable.ic_menu_camera);
+        addChildIfNotCompleted(lessonsGroup, new NavigationItem(24, "Insecure Authorization", 0, R.id.nav_insecure_authorization_lesson));
+        addChildIfNotCompleted(lessonsGroup, new NavigationItem(25, "Supply Chain Security", 0, R.id.nav_supply_chain_lesson));
+        addChildIfNotCompleted(lessonsGroup, new NavigationItem(29, "Input Validation", 0, R.id.nav_input_validation_lesson));
+        addChildIfNotCompleted(lessonsGroup, new NavigationItem(30, "Privacy Controls", 0, R.id.nav_privacy_lesson));
+        if (lessonsGroup.getChildren().size() > 0) {
+            items.add(lessonsGroup);
+        }
 
         // ADB Reference
         items.add(new NavigationItem(4, "ADB Reference", R.drawable.ic_menu_code, R.id.nav_adb_reference));
@@ -231,6 +264,10 @@ public class MainActivity extends AppCompatActivity {
     
     private String getTitleForNavId(int navId) {
         // Map navigation IDs to readable titles
+        if (navId == R.id.nav_insecure_authorization_lesson) return "Insecure Authorization Lesson";
+        if (navId == R.id.nav_supply_chain_lesson) return "Supply Chain Security Lesson";
+        if (navId == R.id.nav_input_validation_lesson) return "Input Validation Lesson";
+        if (navId == R.id.nav_privacy_lesson) return "Privacy Controls Lesson";
         return "Module";
     }
     

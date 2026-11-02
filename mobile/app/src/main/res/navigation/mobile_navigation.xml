@@ -27,4 +27,28 @@
         android:label="@string/menu_scoreboard"
         tools:layout="@layout/fragment_scoreboard" />
 
+    <fragment
+        android:id="@+id/nav_insecure_authorization_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.insecureauthorization.InsecureAuthorizationLessonFragment"
+        android:label="@string/menu_insecure_authorization_lesson"
+        tools:layout="@layout/fragment_insecure_authorization_lesson" />
+
+    <fragment
+        android:id="@+id/nav_supply_chain_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.supplychain.SupplyChainLessonFragment"
+        android:label="@string/menu_supply_chain_lesson"
+        tools:layout="@layout/fragment_supply_chain_lesson" />
+
+    <fragment
+        android:id="@+id/nav_input_validation_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.InputValidationLessonFragment"
+        android:label="@string/menu_input_validation_lesson"
+        tools:layout="@layout/fragment_input_validation_lesson" />
+
+    <fragment
+        android:id="@+id/nav_privacy_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.privacycontrols.PrivacyControlsLessonFragment"
+        android:label="@string/menu_privacy_lesson"
+        tools:layout="@layout/fragment_privacy_controls_lesson" />
+
 </navigation>
