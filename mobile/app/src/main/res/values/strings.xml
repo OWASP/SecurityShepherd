@@ -194,7 +194,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <!-- Insufficient Cryptography -->
     <string name="menu_insufficient_crypto_lesson">Insufficient Cryptography Lesson</string>
     <string name="menu_insufficient_crypto_challenge">Insufficient Cryptography 1</string>
-    <string name="insufficient_crypto_challenge_desc">This app stores your recovery keys in local storage using a custom encoding scheme. Save your keys, then investigate how the data is actually stored on the device. Can you recover the hidden session token from the vault?</string>
+    <string name="insufficient_crypto_challenge_desc">This app stores your recovery keys in local storage using a custom encoding scheme. Save your keys, then investigate how the data is actually stored on the device.</string>
     <string name="enter_key_format">Enter key</string>
     <string name="crypto_vault_title">Recovery Vault</string>
     <string name="crypto_vault_desc">Store your account recovery keys. The app securely encodes them before saving to local storage.</string>
