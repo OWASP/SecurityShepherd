@@ -11,9 +11,19 @@ import java.util.concurrent.ThreadLocalRandom;
  * of flags right after login. It is not a security boundary: a deliberate client can call start
  * then get without opening the module.
  *
+ * <p>{@link MobileFlagSubmit} also uses the start time to enforce a minimum time between opening a
+ * module and a correct submission ({@link #MIN_SOLVE_MS}). This is a deterrent only. The flag is
+ * delivered to the device by design, so a student who scripts start, get and submit and waits out
+ * the minimum can still score a module without solving it.
+ *
+ * <p>Known gap, planned for a later release: closing it needs a server-side challenge per module
+ * (for example, a server-issued value the student can only derive by completing the exercise)
+ * rather than a client-held flag. Until then, mobile scoring is honour-system.
+ *
  * <p>State is ephemeral: it resets on server restart. The app must call {@link MobileModuleStart}
  * again after a restart (it does so whenever a module screen becomes visible) before {@link
- * MobileFlagGet} will return a flag.
+ * MobileFlagGet} will return a flag. A missing or expired record means no minimum-time check is
+ * applied on submit.
  *
  * <p>This file is part of the Security Shepherd Project.
  *
@@ -33,11 +43,20 @@ final class MobileModuleProgress {
   /** Entries expire after this duration to prevent unbounded heap growth. */
   private static final long EXPIRY_MS = 24L * 60 * 60 * 1000;
 
+  /** Minimum time between opening a module and a correct flag submission being scored. */
+  static final long MIN_SOLVE_MS = 30_000L;
+
   private static final ConcurrentHashMap<String, Long> STARTED = new ConcurrentHashMap<>();
 
-  /** Records that {@code userId} has opened {@code moduleId} in the app. */
+  /**
+   * Records that {@code userId} has opened {@code moduleId} in the app. Re-opening a module keeps
+   * the earliest unexpired start so the minimum-solve-time clock cannot be reset by calling start
+   * again.
+   */
   static void recordStart(String userId, String moduleId) {
-    STARTED.put(userId + "|" + moduleId, System.currentTimeMillis());
+    long now = System.currentTimeMillis();
+    STARTED.merge(
+        userId + "|" + moduleId, now, (old, fresh) -> fresh - old > EXPIRY_MS ? fresh : old);
     // Probabilistic cleanup: purge expired entries on ~1% of calls to bound heap usage.
     if (ThreadLocalRandom.current().nextDouble() < 0.01) {
       long cutoff = System.currentTimeMillis() - EXPIRY_MS;
@@ -56,6 +75,17 @@ final class MobileModuleProgress {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Returns milliseconds since {@code userId} first opened {@code moduleId}, or -1 if there is no
+   * unexpired record (never started, expired, or the server restarted).
+   */
+  static long elapsedSinceStartMs(String userId, String moduleId) {
+    Long ts = STARTED.get(userId + "|" + moduleId);
+    if (ts == null) return -1;
+    long elapsed = System.currentTimeMillis() - ts;
+    return elapsed > EXPIRY_MS ? -1 : Math.max(elapsed, 0);
   }
 
   /** Test hook: records a start with an explicit timestamp. */

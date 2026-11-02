@@ -24,6 +24,10 @@ import utils.ShepherdLogManager;
  * after login. It is not a security boundary: start is just an authenticated POST, so a deliberate
  * client can still call start, get and submit without opening or solving the module. The flag is
  * also present on the device by design, so the platform treats mobile scoring as honour-system.
+ * {@link MobileFlagSubmit} adds a minimum time between start and a scoring submission ({@link
+ * MobileModuleProgress#MIN_SOLVE_MS}) as a further deterrent, but a client that waits it out can
+ * still score. A server-side challenge per module would close this and is planned for a later
+ * release.
  *
  * <p>For offline-only modules (e.g. Reverse Engineering) that have no entry in {@link
  * MobileModuleFlags#BASE_FLAGS}, this endpoint silently succeeds — the gate in {@code

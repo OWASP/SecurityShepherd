@@ -39,6 +39,12 @@ import utils.ShepherdLogManager;
  *   {"correct":false,"message":"..."}
  * </pre>
  *
+ * <p>A correct flag submitted less than {@link MobileModuleProgress#MIN_SOLVE_MS} after the module
+ * was opened gets HTTP 429 with a {@code Retry-After} header and is not scored. This is a deterrent
+ * against scripted bulk completion, not a security boundary: the flag is delivered to the device by
+ * design, so a deliberate client can wait out the minimum and score without solving. Closing that
+ * gap needs a server-side challenge per module and is planned for a later release.
+ *
  * <p>This file is part of the Security Shepherd Project.
  *
  * <p>The Security Shepherd project is free software: you can redistribute it and/or modify it under
@@ -118,6 +124,25 @@ public class MobileFlagSubmit extends HttpServlet {
             + (correct ? "correct" : "incorrect"));
 
     if (correct) {
+      long sinceStart = MobileModuleProgress.elapsedSinceStartMs(userId, moduleId);
+      if (sinceStart >= 0 && sinceStart < MobileModuleProgress.MIN_SOLVE_MS) {
+        long waitSeconds = (MobileModuleProgress.MIN_SOLVE_MS - sinceStart + 999) / 1000;
+        log.debug(
+            "Correct flag for "
+                + MobileModuleFlags.sanitize(moduleId)
+                + " by "
+                + MobileModuleFlags.sanitize(userName)
+                + " submitted "
+                + sinceStart
+                + "ms after start, below the minimum; not scored");
+        response.setStatus(429);
+        response.setHeader("Retry-After", Long.toString(waitSeconds));
+        out.write(
+            errorJson(
+                "Flag is correct but was submitted too soon after opening the module. Wait a"
+                    + " moment and try again."));
+        return;
+      }
       // Record completion and award points if this module has a DB entry
       String dbModuleId = MobileModuleFlags.MODULE_DB_IDS.get(moduleId);
       if (dbModuleId != null) {
