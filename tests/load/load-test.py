@@ -53,7 +53,7 @@ ADMIN_NEW_PASS = "LoadTestAdmin1"
 SPIDER_PATHS = [
     "/login.jsp", "/register.jsp", "/index.jsp", "/logout",
     "/admin/", "/challenges/", "/lessons/", "/setup.jsp",
-    "/css/theCss.css", "/js/jquery.js", "/login", "/register",
+    "/css/theCss.css", "/js/jquery-3.7.1.min.js", "/login", "/register",
     "/passwordChange", "/usernameChange", "/refreshMenu",
     "/mobileLogin", "/setup", "/getModule", "/getCheat",
     "/feedbackSubmit", "/solutionSubmit",
