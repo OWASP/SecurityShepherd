@@ -22,7 +22,7 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 | M7: Insufficient Binary Protections | [Reverse engineering](#reverse-engineering) | 4 |
 | M8: Security Misconfiguration | [Content provider leakage](#content-provider-leakage) | 2 |
 | M9: Insecure Data Storage | [Insecure data storage](#insecure-data-storage) | 4 |
-| M10: Insufficient Cryptography | [Broken cryptography](#broken-cryptography) | 4 |
+| M10: Insufficient Cryptography | [Broken cryptography](#broken-cryptography), [Insufficient cryptography](#insufficient-cryptography) | 6 |
 
 ### Insecure data storage
 
@@ -87,5 +87,12 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 | Broken Crypto 1 | Challenge | 60 | Sergeant | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
 | Broken Crypto 2 | Challenge | 75 | Major | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
 | Broken Crypto 3 | Challenge | 180 | Admiral | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
+
+### Insufficient cryptography
+
+| Level | Kind | Points | Tournament band | Top 10 | CWE |
+| --- | --- | --- | --- | --- | --- |
+| Mobile Insufficient Cryptography | Lesson | 35 | Sergeant | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
+| Mobile Insufficient Cryptography Challenge | Challenge | 60 | Sergeant | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
 
 <!-- END GENERATED: level catalogue -->

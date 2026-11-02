@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <PreferenceCategory
+        android:title="Appearance">
+
+        <ListPreference
+            android:key="theme_preference"
+            android:title="Theme"
+            android:summary="Choose app theme"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_values"
+            android:defaultValue="system" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/dialog_based_preferences">
+
+        <EditTextPreference
+            android:dialogTitle="@string/server_dialog_title"
+            android:key="server_preference"
+            android:summary="@string/server_summary"
+            android:title="@string/server_title" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Progress">
+
+        <Preference
+            android:key="reset_progress_preference"
+            android:title="Reset All Progress"
+            android:summary="Mark all lessons and challenges as incomplete" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Support">
+
+        <Preference
+            android:key="submit_issue_preference"
+            android:title="@string/submit_issue_title"
+            android:summary="@string/submit_issue_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="License">
+        <PreferenceScreen
+            android:summary="@string/summary_license" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
