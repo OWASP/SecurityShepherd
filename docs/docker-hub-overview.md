@@ -15,23 +15,7 @@ There are no published database images yet. The simplest way to get all three ru
 
 ## Quick start (Docker Compose)
 
-You need Git, Docker with Compose, Maven and JDK 17.
-
-```bash
-git clone https://github.com/OWASP/SecurityShepherd.git
-cd SecurityShepherd
-# Builds the WAR and generates the database init scripts
-mvn -Pdocker clean install -DskipTests
-docker compose up -d
-```
-
-Then open <http://localhost> and accept the self-signed certificate warning. The setup page asks for an auth token, which you get with:
-
-```bash
-docker exec secshep_tomcat cat /usr/local/tomcat/conf/SecurityShepherd.auth
-```
-
-The [database configuration guide](https://github.com/OWASP/SecurityShepherd/blob/master/docs/database-configuration.md) explains the rest of the setup form. Once it's done, log in as `admin` / `password` (you'll be asked to change it).
+Follow [Getting started](https://owasp.github.io/SecurityShepherd/getting-started/). It lists the [prerequisites](https://owasp.github.io/SecurityShepherd/getting-started/#prerequisites), then builds the images, starts all three containers and takes you through the first login.
 
 The defaults (passwords in `.env`, a self-signed certificate, MongoDB without authentication) are for a quick start, not a long-lived or shared deployment.
 
@@ -60,7 +44,7 @@ The image contains no TLS private key. On first start it generates a self-signed
 
 ## Verifying the image
 
-Every image from 4.0.0 on is built by GitHub Actions from this repository and carries a signed SLSA build provenance, an SPDX SBOM and a VEX document. [Checking the Docker images](https://github.com/OWASP/SecurityShepherd/blob/master/docs/verifying-images.md) shows how to verify them with `gh attestation verify`, Docker Scout or Trivy.
+Every image from 4.0.0 on is built by GitHub Actions from this repository and carries a signed SLSA build provenance, an SPDX SBOM and a VEX document. [Verifying the images](https://github.com/OWASP/SecurityShepherd/blob/master/docs/verifying-images.md) shows how to verify them with `gh attestation verify`, and [Vulnerability management](https://github.com/OWASP/SecurityShepherd/blob/master/docs/vulnerability-management.md) how to scan them with Docker Scout, Grype or Trivy.
 
 ## Links
 

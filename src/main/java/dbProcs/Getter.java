@@ -343,11 +343,11 @@ public class Getter {
       result[0] = userID;
       result[1] = userName; // userName
       result[2] = userRole; // role
-      result[5] = "false"; // sso logins can't change password
+      result[3] = "false"; // tempPassword: SSO logins have no password to change
       result[4] = classId; // classId
       result[5] = Boolean.toString(isTempUsername);
 
-      log.debug("$$$ End authUser $$$");
+      log.debug("$$$ End authUserSSO $$$");
       return result;
     } catch (SQLException e) {
       log.fatal("authUserSSO failed: " + e.toString());
