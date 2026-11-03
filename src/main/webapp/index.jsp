@@ -826,7 +826,7 @@ if (request.getSession() != null)
 								$("#contentDiv").slideDown("slow");
 							} else {
 							$("#contentDiv").empty();
-							var challengeFrame = createModuleFrame("theChallenge", theActualFile, "Security Shepherd challenge module");
+							var challengeFrame = createModuleFrame("theChallenge", theActualFile, "<fmt:message key="generic.text.challengeModuleTitle" />");
 							$(challengeFrame).on("load", function(){
 								<%if (showCheatSheet) {%>
 									$("#submitResult").slideDown("fast", function(){
@@ -889,7 +889,7 @@ if (request.getSession() != null)
 								$("#contentDiv").slideDown("slow");
 							} else {
 							$("#contentDiv").empty();
-							var lessonFrame = createModuleFrame("theLesson", theActualFile, "Security Shepherd lesson module");
+							var lessonFrame = createModuleFrame("theLesson", theActualFile, "<fmt:message key="generic.text.lessonModuleTitle" />");
 							$(lessonFrame).on("load", function(){
 							<%if (showCheatSheet) {%>
 								$("#submitResult").slideDown("fast", function(){
@@ -967,7 +967,7 @@ if (request.getSession() != null)
 								$("#contentDiv").slideDown("slow");
 							} else {
 							$("#contentDiv").empty();
-							var ctfLessonFrame = createModuleFrame("theLesson", theActualFile, "Security Shepherd lesson module");
+							var ctfLessonFrame = createModuleFrame("theLesson", theActualFile, "<fmt:message key="generic.text.lessonModuleTitle" />");
 							$(ctfLessonFrame).on("load", function(){
 								<%if (showCheatSheet) {%>
 									$("#submitResult").slideDown("fast", function(){
