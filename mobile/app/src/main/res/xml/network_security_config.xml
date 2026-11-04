@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- All traffic must use HTTPS. Cleartext is permitted only for the deliberately
+         insecure hosts used by the Insecure Communication modules (added per-module). -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Debug builds additionally trust user-installed CAs, so a local development
+         server with a self-signed certificate can be used. Ignored in release builds. -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

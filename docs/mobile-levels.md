@@ -16,9 +16,10 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 
 | Category | Topics | Levels |
 | --- | --- | --- |
-| M3: Insecure Authentication/Authorization | [Poor authentication](#poor-authentication) | 3 |
-| M4: Insufficient Input/Output Validation | [Security decisions via untrusted input](#security-decisions-via-untrusted-input), [Client-side injection](#client-side-injection) | 4 |
-| M6: Inadequate Privacy Controls | [Data leakage](#data-leakage) | 3 |
+| M2: Inadequate Supply Chain Security | [Supply chain security](#supply-chain-security) | 1 |
+| M3: Insecure Authentication/Authorization | [Poor authentication](#poor-authentication), [Insecure authorization](#insecure-authorization) | 4 |
+| M4: Insufficient Input/Output Validation | [Security decisions via untrusted input](#security-decisions-via-untrusted-input), [Client-side injection](#client-side-injection), [Input/output validation](#inputoutput-validation) | 5 |
+| M6: Inadequate Privacy Controls | [Data leakage](#data-leakage), [Privacy controls](#privacy-controls) | 4 |
 | M7: Insufficient Binary Protections | [Reverse engineering](#reverse-engineering) | 4 |
 | M8: Security Misconfiguration | [Content provider leakage](#content-provider-leakage) | 2 |
 | M9: Insecure Data Storage | [Insecure data storage](#insecure-data-storage) | 4 |
@@ -87,5 +88,29 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 | Broken Crypto 1 | Challenge | 60 | Sergeant | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
 | Broken Crypto 2 | Challenge | 75 | Major | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
 | Broken Crypto 3 | Challenge | 180 | Admiral | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
+
+### Insecure authorization
+
+| Level | Kind | Points | Tournament band | Top 10 | CWE |
+| --- | --- | --- | --- | --- | --- |
+| Mobile Insecure Authorization | Lesson | 35 | Sergeant | M3 | [CWE-285](https://cwe.mitre.org/data/definitions/285.html) |
+
+### Input/output validation
+
+| Level | Kind | Points | Tournament band | Top 10 | CWE |
+| --- | --- | --- | --- | --- | --- |
+| Mobile Input Validation | Lesson | 35 | Sergeant | M4 | [CWE-20](https://cwe.mitre.org/data/definitions/20.html) |
+
+### Privacy controls
+
+| Level | Kind | Points | Tournament band | Top 10 | CWE |
+| --- | --- | --- | --- | --- | --- |
+| Mobile Privacy Controls | Lesson | 35 | Sergeant | M6 | [CWE-359](https://cwe.mitre.org/data/definitions/359.html) |
+
+### Supply chain security
+
+| Level | Kind | Points | Tournament band | Top 10 | CWE |
+| --- | --- | --- | --- | --- | --- |
+| Mobile Supply Chain | Lesson | 35 | Sergeant | M2 | [CWE-1104](https://cwe.mitre.org/data/definitions/1104.html) |
 
 <!-- END GENERATED: level catalogue -->
