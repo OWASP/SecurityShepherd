@@ -1,19 +1,29 @@
 package org.owasp.mobileshepherd.ui.lessons;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.Intent;
-import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import org.owasp.mobileshepherd.R;
 import org.owasp.mobileshepherd.databinding.FragmentInputValidationLessonBinding;
 import org.owasp.mobileshepherd.utils.KeyProvider;
@@ -23,18 +33,25 @@ import org.owasp.mobileshepherd.utils.ProgressTracker;
 
 public class InputValidationLessonFragment extends Fragment {
 
-    private FragmentInputValidationLessonBinding binding;
     private static final String TAG = "DeepLinkLoader";
+    private static final String TRUSTED_HOST = "example.com";
+    private static final String TRUSTED_PREFIX = "https://" + TRUSTED_HOST;
+    private static final String ASSET_DIR = "input_validation/";
+
+    private FragmentInputValidationLessonBinding binding;
     private ProgressTracker progressTracker;
     private String currentKey = "";
     private boolean keyReady = false;
     private String pendingDeepLink = null;
+    private boolean completed = false;
+    private volatile String currentHost = "";
 
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInputValidationLessonBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        
+
         progressTracker = new ProgressTracker(requireContext());
         KeyProvider.getKey(
                 requireContext(),
@@ -49,17 +66,8 @@ public class InputValidationLessonFragment extends Fragment {
                     }
                 });
 
-        // Quick link buttons
-        binding.loadExampleButton.setOnClickListener(v -> 
-            processDeepLink("https://example.com/welcome"));
-        
-        binding.loadTrustedButton.setOnClickListener(v -> 
-            processDeepLink("https://trusted-site.com/home"));
-        
-        binding.loadOwaspButton.setOnClickListener(v -> 
-            processDeepLink("https://owasp.org/about"));
-        
-        // Custom deep link
+        setupWebView();
+
         binding.openLinkButton.setOnClickListener(v -> {
             String url = binding.urlInput.getText().toString().trim();
             if (url.isEmpty()) {
@@ -69,7 +77,6 @@ public class InputValidationLessonFragment extends Fragment {
             processDeepLink(url);
         });
 
-        // Setup expandable FAB
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
@@ -84,8 +91,7 @@ public class InputValidationLessonFragment extends Fragment {
             });
         }
 
-        // Real deep link entry point: myapp://open?url=<target_url>, delivered via
-        // adb shell am start -a android.intent.action.VIEW -d "myapp://open?url=..."
+        // Deep link entry point: myapp://open?url=<target_url>
         Intent launchIntent = requireActivity().getIntent();
         Uri deepLinkData = launchIntent.getData();
         if (deepLinkData != null) {
@@ -104,102 +110,105 @@ public class InputValidationLessonFragment extends Fragment {
         return root;
     }
 
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
+    private void setupWebView() {
+        WebView webView = binding.contentWebview;
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setAllowFileAccess(false);
+        settings.setAllowContentAccess(false);
+
+        // VULNERABLE: this bridge is meant for the trusted partner page, but it is
+        // registered on the WebView and therefore exposed to every page that gets loaded.
+        webView.addJavascriptInterface(new AppBridge(), "Shepherd");
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                Uri uri = request.getUrl();
+                String host = uri.getHost();
+                if (request.isForMainFrame()) {
+                    currentHost = host == null ? "" : host;
+                }
+                if (!request.isForMainFrame()) {
+                    return notFound();
+                }
+                // The lesson runs offline: example.com is served from the trusted asset page,
+                // any other host is served from a page standing in for an attacker's server.
+                String asset = TRUSTED_HOST.equals(host) ? "trusted.html" : "attacker.html";
+                try {
+                    InputStream in = requireContext().getAssets().open(ASSET_DIR + asset);
+                    return new WebResourceResponse("text/html", "UTF-8", in);
+                } catch (IOException | IllegalStateException e) {
+                    Log.e(TAG, "Failed to open asset " + asset, e);
+                    return notFound();
+                }
+            }
+        });
+    }
+
+    private static WebResourceResponse notFound() {
+        return new WebResourceResponse("text/plain", "UTF-8", 404, "Not Found", null,
+                new ByteArrayInputStream(new byte[0]));
+    }
+
     private void processDeepLink(String url) {
         Log.d(TAG, "Processing deep link: myapp://open?url=" + url);
-        
+
         // VULNERABLE: Weak URL validation
         if (!isUrlAllowed(url)) {
-            showError("Security Error", "URL blocked: " + url + "\n\nOnly example.com and trusted-site.com domains are allowed.");
+            binding.contentCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_bg));
+            binding.contentStatus.setText("URL blocked: " + url + "\n\nOnly links to " + TRUSTED_HOST + " are allowed.");
+            binding.contentWebview.setVisibility(View.GONE);
             Log.w(TAG, "URL validation failed: " + url);
             return;
         }
-        
+
         Log.i(TAG, "URL validation passed: " + url);
-        loadContent(url);
-    }
-    
-    /**
-     * VULNERABILITY: Uses contains() on the host instead of proper domain validation
-     * Can be bypassed with a crafted host such as: https://example.com.admin.internal/dashboard
-     * (host "example.com.admin.internal" contains "example.com")
-     */
-    private boolean isUrlAllowed(String url) {
-        String host = Uri.parse(url).getHost();
-        if (host == null) return false;
-        // Weak validation - checks if trusted domain appears anywhere in the host
-        return host.contains("example.com") || host.contains("trusted-site.com") || host.contains("owasp.org");
+        binding.contentCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.card_bg));
+        binding.contentStatus.setText("Loading " + url);
+        binding.contentWebview.setVisibility(View.VISIBLE);
+        binding.contentWebview.loadUrl(url);
     }
 
     /**
-     * VULNERABILITY: Same weak contains()-on-host check guarding the hidden admin content.
-     * A host like "example.com.admin.internal" satisfies both this check and isUrlAllowed().
+     * VULNERABILITY: compares the raw URL string instead of the parsed host.
+     * "https://example.com@attacker.test/" and "https://example.com.attacker.test/"
+     * both start with "https://example.com" but resolve to a different host.
      */
-    private boolean isAdminHost(String url) {
-        String host = Uri.parse(url).getHost();
-        return host != null && host.contains("admin.internal");
+    private static boolean isUrlAllowed(String url) {
+        return url.startsWith(TRUSTED_PREFIX);
     }
-    
-    private void loadContent(String url) {
-        String title;
-        String body;
-        int cardColor = getResources().getColor(R.color.card_bg);
-        
-        // Simulate loading different content based on URL
-        if (url.equals("https://example.com/welcome")) {
-            title = "Example.com - Welcome";
-            body = "Welcome to Example.com!\n\nThis is safe, trusted content from an approved domain.";
-            
-        } else if (url.equals("https://trusted-site.com/home")) {
-            title = "Trusted Site - Home";
-            body = "Trusted Site Homepage\n\nYou are viewing content from an approved source.";
-            
-        } else if (url.equals("https://owasp.org/about")) {
-            title = "OWASP.org - About";
-            body = "About OWASP\n\nThe Open Web Application Security Project (OWASP) is a nonprofit foundation that works to improve the security of software.\n\nThis is approved security education content.";
-            
-        } else if (isAdminHost(url)) {
-            // Hidden admin content - only accessible via validation bypass!
-            String key = currentKey;
-            title = "Admin Dashboard";
-            body = "ACCESS GRANTED\n\n"
-                   + "You successfully bypassed the URL validation!\n\n"
-                   + "The validation only checks if 'example.com' or 'trusted-site.com' appears "
-                   + "anywhere in the host, instead of properly validating the domain.\n\n"
-                   + "This allowed you to access restricted admin.internal content.\n\n"
-                   + "KEY: " + key;
-            cardColor = ContextCompat.getColor(requireContext(), R.color.success_bg);
-            Log.i(TAG, "Admin content accessed via bypass!");
 
+    /** Bridge exposed to page JavaScript. */
+    private class AppBridge {
+        @JavascriptInterface
+        public String getSessionToken() {
+            String host = currentHost;
+            if (!TRUSTED_HOST.equals(host) && keyReady) {
+                Log.i(TAG, "Session token read by untrusted origin: " + host);
+                onUntrustedOriginReadToken();
+            }
+            return currentKey;
+        }
+    }
+
+    private void onUntrustedOriginReadToken() {
+        if (completed || getActivity() == null) return;
+        requireActivity().runOnUiThread(() -> {
+            if (completed || binding == null || !isAdded()) return;
+            completed = true;
             KeyValidator.validateKey(requireContext(), KeyValidator.Module.INPUT_VALIDATION_LESSON,
                     currentKey, correct -> {
                         Log.d(TAG, "Server submission: " + correct);
-                        if (correct) {
+                        if (correct && isAdded()) {
                             progressTracker.markCompleted(KeyValidator.Module.INPUT_VALIDATION_LESSON);
                             Toast.makeText(getContext(), "Lesson complete!", Toast.LENGTH_LONG).show();
+                        } else {
+                            completed = false;
                         }
                     });
-            
-        } else {
-            // Generic external content
-            title = "External Content Loaded";
-            body = "URL: " + url + "\n\n" +
-                   "This URL passed validation and content was loaded.\n\n" +
-                   "Try to find the hidden admin panel at admin.internal domain...";
-        }
-        
-        binding.contentCard.setCardBackgroundColor(cardColor);
-        binding.contentTitle.setText(title);
-        binding.contentBody.setText(body);
-        
-        Toast.makeText(getContext(), "Content loaded successfully", Toast.LENGTH_SHORT).show();
-    }
-    
-    private void showError(String title, String message) {
-        binding.contentCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_bg));
-        binding.contentTitle.setText(title);
-        binding.contentBody.setText(message);
-        
-        Toast.makeText(getContext(), "URL validation failed", Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void collapseFab(FloatingActionButton mainFab, FloatingActionButton fab1, FloatingActionButton fab2) {
@@ -214,29 +223,23 @@ public class InputValidationLessonFragment extends Fragment {
         TextView moduleBanner = dialogView.findViewById(R.id.module_path_banner);
         if (moduleBanner != null) moduleBanner.setVisibility(View.VISIBLE);
         if (moduleBanner != null) moduleBanner.setText("org.owasp.mobileshepherd.input_validation");
-        
+
         TextView introText = dialogView.findViewById(R.id.intro_text);
-        // TextView vulnerabilitiesText = dialogView.findViewById(R.id.vulnerabilities_text);
         View hintsSection = dialogView.findViewById(R.id.hints_section);
-        TextView hintsText = dialogView.findViewById(R.id.hints_text);
-        // View bestPracticesSection = dialogView.findViewById(R.id.best_practices_section);
         View additionalSection = dialogView.findViewById(R.id.additional_section);
-        
+
         introText.setText(R.string.input_validation_lesson_intro);
-        // vulnerabilitiesText.setText(R.string.input_validation_lesson_vulnerabilities);
-        
+
         hintsSection.setVisibility(View.GONE);
-        
-        // bestPracticesSection.setVisibility(View.GONE);
         additionalSection.setVisibility(View.GONE);
-        
+
         new AlertDialog.Builder(requireContext())
                 .setTitle("Input/Output Validation\nOWASP M4: Insufficient Input/Output Validation")
                 .setView(dialogView)
                 .setPositiveButton("Close", null)
                 .show();
     }
-    
+
 
     public void onDestroyView() {
         super.onDestroyView();
@@ -244,6 +247,9 @@ public class InputValidationLessonFragment extends Fragment {
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
         FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
         collapseFab(fab, fabCommandRef, fabOwaspLink);
+        if (binding != null) {
+            binding.contentWebview.destroy();
+        }
         binding = null;
     }
 }

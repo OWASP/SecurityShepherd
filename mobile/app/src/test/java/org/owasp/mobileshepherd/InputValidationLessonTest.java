@@ -23,12 +23,28 @@ public class InputValidationLessonTest {
         assertEquals("isUrlAllowed should return boolean", boolean.class, method.getReturnType());
     }
 
-    @Test
-    public void testAdminHostCheckExists() throws Exception {
-        Method method = InputValidationLessonFragment.class.getDeclaredMethod("isAdminHost", String.class);
-        assertEquals("isAdminHost should return boolean", boolean.class, method.getReturnType());
+    private static boolean allowed(String url) throws Exception {
+        Method method = InputValidationLessonFragment.class.getDeclaredMethod("isUrlAllowed", String.class);
+        method.setAccessible(true);
+        return (Boolean) method.invoke(null, url);
     }
 
+    @Test
+    public void testTrustedUrlAllowed() throws Exception {
+        assertTrue(allowed("https://example.com/"));
+    }
+
+    @Test
+    public void testOtherHostBlocked() throws Exception {
+        assertFalse(allowed("https://attacker.test/"));
+        assertFalse(allowed("http://example.com/"));
+    }
+
+    @Test
+    public void testPrefixCheckCanBeBypassed() throws Exception {
+        assertTrue(allowed("https://example.com@attacker.test/"));
+        assertTrue(allowed("https://example.com.attacker.test/"));
+    }
     @Test
     public void testNoHardcodedKeyField() {
         for (java.lang.reflect.Field f : InputValidationLessonFragment.class.getDeclaredFields()) {
