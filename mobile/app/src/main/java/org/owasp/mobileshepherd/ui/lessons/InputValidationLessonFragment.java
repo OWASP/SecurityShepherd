@@ -175,6 +175,7 @@ public class InputValidationLessonFragment extends Fragment {
                         Log.d(TAG, "Server submission: " + correct);
                         if (correct) {
                             progressTracker.markCompleted(KeyValidator.Module.INPUT_VALIDATION_LESSON);
+                            Toast.makeText(getContext(), "Lesson complete!", Toast.LENGTH_LONG).show();
                         }
                     });
             

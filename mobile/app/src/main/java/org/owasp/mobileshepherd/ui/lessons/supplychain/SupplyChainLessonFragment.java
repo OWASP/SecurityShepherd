@@ -109,13 +109,13 @@ public class SupplyChainLessonFragment extends Fragment {
                         binding.submissionCard.setCardBackgroundColor(
                                 ContextCompat.getColor(requireContext(), R.color.success_bg));
                         binding.resultText.setText(
-                                "SUCCESS!\n\nKey: " + enteredKey + "\n\nYou successfully identified"
+                                "Lesson complete!\n\nKey: " + enteredKey + "\n\nYou successfully identified"
                                 + " the vulnerable dependency (" + VULNERABLE_LIB + ") which had"
                                 + " debug mode enabled, exposing internal processing keys.\n\n"
                                 + "OWASP Mobile Top 10 M2: Inadequate Supply Chain Security");
 
                         binding.resultText.setVisibility(View.VISIBLE);
-                        Toast.makeText(getContext(), "Correct key! Lesson completed!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Lesson complete!", Toast.LENGTH_LONG).show();
                         progressTracker.markCompleted(KeyValidator.Module.SUPPLY_CHAIN_LESSON);
                         binding.keyInput.setEnabled(false);
                     } else {

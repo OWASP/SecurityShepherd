@@ -155,6 +155,7 @@ public class InsecureAuthorizationLessonFragment extends Fragment {
                         if (!isAdded()) return;
                         if (correct) {
                             progressTracker.markCompleted(KeyValidator.Module.INSECURE_AUTH_LESSON);
+                            Toast.makeText(getContext(), "Lesson complete!", Toast.LENGTH_LONG).show();
                         }
                     });
         } else {
