@@ -172,7 +172,7 @@ public class PrivacyControlsLessonFragment extends Fragment {
                     if (binding == null) return;
                     if (correct) {
                         binding.textKeyResult.setVisibility(View.VISIBLE);
-                        binding.textKeyResult.setText("Lesson complete! You found the key hidden in the EXIF metadata.");
+                        binding.textKeyResult.setText("Lesson complete!");
                         binding.textKeyResult.setTextColor(
                                 ContextCompat.getColor(requireContext(), R.color.success_green));
                         progressTracker.markCompleted(KeyValidator.Module.PRIVACY_LESSON);
