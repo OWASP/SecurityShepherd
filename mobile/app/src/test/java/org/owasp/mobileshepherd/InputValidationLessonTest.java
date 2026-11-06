@@ -31,19 +31,19 @@ public class InputValidationLessonTest {
 
     @Test
     public void testTrustedUrlAllowed() throws Exception {
-        assertTrue(allowed("https://example.com/"));
+        assertTrue(allowed("https://toomanysheep.com/"));
     }
 
     @Test
     public void testOtherHostBlocked() throws Exception {
         assertFalse(allowed("https://attacker.test/"));
-        assertFalse(allowed("http://example.com/"));
+        assertFalse(allowed("http://toomanysheep.com/"));
     }
 
     @Test
     public void testPrefixCheckCanBeBypassed() throws Exception {
-        assertTrue(allowed("https://example.com@attacker.test/"));
-        assertTrue(allowed("https://example.com.attacker.test/"));
+        assertTrue(allowed("https://toomanysheep.com@attacker.test/"));
+        assertTrue(allowed("https://toomanysheep.com.attacker.test/"));
     }
     @Test
     public void testNoHardcodedKeyField() {

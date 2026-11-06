@@ -34,7 +34,7 @@ import org.owasp.mobileshepherd.utils.ProgressTracker;
 public class InputValidationLessonFragment extends Fragment {
 
     private static final String TAG = "DeepLinkLoader";
-    private static final String TRUSTED_HOST = "example.com";
+    private static final String TRUSTED_HOST = "toomanysheep.com";
     private static final String TRUSTED_PREFIX = "https://" + TRUSTED_HOST;
     private static final String ASSET_DIR = "input_validation/";
 
@@ -133,7 +133,7 @@ public class InputValidationLessonFragment extends Fragment {
                 if (!request.isForMainFrame()) {
                     return notFound();
                 }
-                // The lesson runs offline: example.com is served from the trusted asset page,
+                // The lesson runs offline: toomanysheep.com is served from the trusted asset page,
                 // any other host is served from a page standing in for an attacker's server.
                 String asset = TRUSTED_HOST.equals(host) ? "trusted.html" : "attacker.html";
                 try {
@@ -173,8 +173,8 @@ public class InputValidationLessonFragment extends Fragment {
 
     /**
      * VULNERABILITY: compares the raw URL string instead of the parsed host.
-     * "https://example.com@attacker.test/" and "https://example.com.attacker.test/"
-     * both start with "https://example.com" but resolve to a different host.
+     * "https://toomanysheep.com@attacker.test/" and "https://toomanysheep.com.attacker.test/"
+     * both start with "https://toomanysheep.com" but resolve to a different host.
      */
     private static boolean isUrlAllowed(String url) {
         return url.startsWith(TRUSTED_PREFIX);

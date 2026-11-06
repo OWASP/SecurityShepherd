@@ -205,7 +205,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="access_admin_panel">Access Admin Panel</string>
     <string name="admin_panel">Admin Panel</string>
     <string name="access_deniednnyou_do_not_have_admin_pri">Access Denied\n\nYou do not have admin privileges.\n\nHint: Authorization is checked client-side using SharedPreferences.</string>
-    <string name="this_app_accepts_deep_links_to_load_exte">This app opens links in an embedded browser, but only allows links to example.com. Find a way to get it to load a page from somewhere else.</string>
+    <string name="this_app_accepts_deep_links_to_load_exte">This app opens links in an embedded browser, but only allows links to toomanysheep.com. Find a way to get it to load a page from somewhere else.</string>
     <string name="custom_deep_link">Custom Deep Link</string>
     <string name="format_myappopenurllttargeturlgt">Format: myapp://open?url=&lt;target_url&gt;</string>
     <string name="enter_target_url">Enter target URL</string>
