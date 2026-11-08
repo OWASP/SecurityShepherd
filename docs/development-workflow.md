@@ -16,7 +16,7 @@ git pull origin dev
 git checkout -b "dev#<issue-number>"
 ```
 
-Branch naming convention: `dev#<issueNumber>` (e.g., `dev#536`)
+Branch naming convention: `dev#<issueNumber>` (e.g., `dev#536`). If an issue needs more than one pull request, add a short suffix (e.g., `dev#1070-sso`).
 
 ## 2. Make Your Changes
 
