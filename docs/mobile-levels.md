@@ -57,13 +57,6 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 | Content Provider Leakage | Lesson | 50 | Private | M8 | [CWE-926](https://cwe.mitre.org/data/definitions/926.html) |
 | Content Provider Leakage 1 | Challenge | 75 | Admiral | M8 | [CWE-926](https://cwe.mitre.org/data/definitions/926.html) |
 
-### Security misconfiguration
-
-| Level | Kind | Points | Tournament band | Top 10 | CWE |
-| --- | --- | --- | --- | --- | --- |
-| Security Misconfiguration | Lesson | 35 | Private | M8 | [CWE-16](https://cwe.mitre.org/data/definitions/16.html) |
-| Security Misconfiguration 1 | Challenge | 65 | Sergeant | M8 | [CWE-16](https://cwe.mitre.org/data/definitions/16.html) |
-
 ### Security decisions via untrusted input
 
 | Level | Kind | Points | Tournament band | Top 10 | CWE |
@@ -94,5 +87,12 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 | Broken Crypto 1 | Challenge | 60 | Sergeant | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
 | Broken Crypto 2 | Challenge | 75 | Major | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
 | Broken Crypto 3 | Challenge | 180 | Admiral | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
+
+### Security misconfiguration
+
+| Level | Kind | Points | Tournament band | Top 10 | CWE |
+| --- | --- | --- | --- | --- | --- |
+| Mobile Security Misconfiguration | Lesson | 35 | Sergeant | M8 | [CWE-16](https://cwe.mitre.org/data/definitions/16.html) |
+| Mobile Security Misconfiguration Challenge | Challenge | 65 | Sergeant | M8 | [CWE-16](https://cwe.mitre.org/data/definitions/16.html) |
 
 <!-- END GENERATED: level catalogue -->
