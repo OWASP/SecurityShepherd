@@ -54,6 +54,12 @@
 
 
 
+        <!-- Intentionally exported for the Security Misconfiguration lesson -->
+        <activity
+            android:name=".ui.lessons.securitymisconfig.MisconfigLessonSecretActivity"
+            android:exported="true"
+            android:label="Configuration Debug Panel" />
+
         <!-- FileProvider for camera image capture -->
         <provider
             android:name="androidx.core.content.FileProvider"

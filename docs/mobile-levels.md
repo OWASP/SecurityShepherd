@@ -20,7 +20,7 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 | M4: Insufficient Input/Output Validation | [Security decisions via untrusted input](#security-decisions-via-untrusted-input), [Client-side injection](#client-side-injection) | 4 |
 | M6: Inadequate Privacy Controls | [Data leakage](#data-leakage) | 3 |
 | M7: Insufficient Binary Protections | [Reverse engineering](#reverse-engineering) | 4 |
-| M8: Security Misconfiguration | [Content provider leakage](#content-provider-leakage) | 2 |
+| M8: Security Misconfiguration | [Content provider leakage](#content-provider-leakage), [Security misconfiguration](#security-misconfiguration) | 4 |
 | M9: Insecure Data Storage | [Insecure data storage](#insecure-data-storage) | 4 |
 | M10: Insufficient Cryptography | [Broken cryptography](#broken-cryptography) | 4 |
 
@@ -56,6 +56,13 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 | --- | --- | --- | --- | --- | --- |
 | Content Provider Leakage | Lesson | 50 | Private | M8 | [CWE-926](https://cwe.mitre.org/data/definitions/926.html) |
 | Content Provider Leakage 1 | Challenge | 75 | Admiral | M8 | [CWE-926](https://cwe.mitre.org/data/definitions/926.html) |
+
+### Security misconfiguration
+
+| Level | Kind | Points | Tournament band | Top 10 | CWE |
+| --- | --- | --- | --- | --- | --- |
+| Security Misconfiguration | Lesson | 35 | Private | M8 | [CWE-16](https://cwe.mitre.org/data/definitions/16.html) |
+| Security Misconfiguration 1 | Challenge | 65 | Sergeant | M8 | [CWE-16](https://cwe.mitre.org/data/definitions/16.html) |
 
 ### Security decisions via untrusted input
 

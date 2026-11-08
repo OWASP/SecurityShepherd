@@ -27,4 +27,16 @@
         android:label="@string/menu_scoreboard"
         tools:layout="@layout/fragment_scoreboard" />
 
+    <fragment
+        android:id="@+id/nav_security_misconfig_lesson"
+        android:name="org.owasp.mobileshepherd.ui.lessons.securitymisconfig.SecurityMisconfigLessonFragment"
+        android:label="@string/menu_security_misconfig_lesson"
+        tools:layout="@layout/fragment_security_misconfig_lesson" />
+
+    <fragment
+        android:id="@+id/nav_security_misconfig_challenge2"
+        android:name="org.owasp.mobileshepherd.ui.challenges.securitymisconfig.SecurityMisconfigChallenge2Fragment"
+        android:label="@string/menu_security_misconfig_challenge2"
+        tools:layout="@layout/fragment_security_misconfig_challenge2" />
+
 </navigation>

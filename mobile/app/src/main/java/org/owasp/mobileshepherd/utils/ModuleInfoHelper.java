@@ -48,6 +48,12 @@ public final class ModuleInfoHelper {
 
     static {
         // Each lesson/challenge PR registers its module info here.
+        REGISTRY.put(KeyValidator.Module.SECURITY_MISCONFIG_LESSON,
+                new ModuleInfo("lesson", "Security Misconfiguration", "M8",
+                        "org.owasp.mobileshepherd.ui.lessons.securitymisconfig"));
+        REGISTRY.put(KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2,
+                new ModuleInfo("challenge", "Security Misconfiguration 1", "M8",
+                        "org.owasp.mobileshepherd.ui.challenges.securitymisconfig"));
     }
 
     public static void showDialog(Context context, KeyValidator.Module module) {

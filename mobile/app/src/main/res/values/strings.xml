@@ -191,4 +191,25 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="password_title">Password</string>
     <string name="challenge">Challenge</string>
 
+    <!-- Security Misconfiguration -->
+    <string name="menu_security_misconfig_lesson">Security Misconfiguration Lesson</string>
+    <string name="menu_security_misconfig_challenge2">Security Misconfiguration 1</string>
+    <string name="adb_exploitation_command">ADB Exploitation Command:</string>
+    <string name="adb_shell_am_start_n_comowaspappactivity">adb shell am start -n org.owasp.mobileshepherd/[ACTIVITY_PATH]</string>
+    <string name="discovered_activities">Discovered Activities:</string>
+    <string name="exploit_exported_component">Exploit Exported Component</string>
+    <string name="exported_component_exploited">Exported Component Exploited!</string>
+    <string name="find_security_misconfigurations_in_andro">Apps declare each screen and service in the manifest. If a component is exported, any other app on the device can launch it directly, skipping the normal UI. Find the exported component that should not be public and launch it with ADB to retrieve the key.</string>
+    <string name="language_english">Language: English</string>
+    <string name="safe_exportedfalse_vulnerable_exportedtr">Safe (exported=false) / Vulnerable (exported=true)</string>
+    <string name="scan_app_components">Scan App Components</string>
+    <string name="scan_components_above_find_the_exported">Scan components above, find the exported one, and replace [ACTIVITY_PATH] with the full class path (e.g., .ui.lessons.securitymisconfig.ClassName)</string>
+    <string name="secret_key_encrypted">Secret Key: [Encrypted]</string>
+    <string name="security_misconfig_challenge2_description">This app has ADB backup enabled. Extract a backup of the app data and examine the contents to find the key stored in plaintext.</string>
+    <string name="security_misconfig_intro">Security misconfiguration occurs when security settings are not properly defined, implemented, maintained, or enforced. This is one of the most common vulnerabilities in mobile applications, often resulting from default configurations, incomplete setups, or overly permissive settings that expose the app to various attack vectors.</string>
+    <string name="stored_user_preferences">Stored User Preferences:</string>
+    <string name="theme_dark_mode">Theme: Dark Mode</string>
+    <string name="this_app_contains_an_exported_component">This app contains an exported activity that is not part of the normal navigation. Scan the app\'s components. The launcher and settings screens are meant to be exported; find the debug screen that should not be, and launch it with ADB.</string>
+    <string name="username_admin">Username: admin</string>
+
 </resources>
