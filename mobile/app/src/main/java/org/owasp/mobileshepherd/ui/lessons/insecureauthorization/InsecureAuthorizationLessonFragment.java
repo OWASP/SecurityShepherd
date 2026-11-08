@@ -147,7 +147,6 @@ public class InsecureAuthorizationLessonFragment extends Fragment {
             binding.keyText.setText("Admin Key: " + key);
             binding.accessDeniedText.setVisibility(View.GONE);
 
-            Toast.makeText(getContext(), "Admin access granted! Key revealed!", Toast.LENGTH_LONG).show();
             Log.i("Authorization", "ADMIN ACCESS GRANTED - Key revealed");
 
             KeyValidator.validateKey(requireContext(), KeyValidator.Module.INSECURE_AUTH_LESSON,
