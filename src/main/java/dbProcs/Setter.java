@@ -63,7 +63,7 @@ public class Setter {
               + " OR moduleCategory = 'Mobile Poor Authentication'"
               + " OR moduleCategory = 'Mobile Reverse Engineering'"
               + " OR moduleCategory = 'Mobile Security Decisions via Untrusted Input'"
-               + " OR moduleCategory = 'Mobile Security Misconfiguration'");
+              + " OR moduleCategory = 'Mobile Security Misconfiguration'");
 
   /**
    * Database procedure just adds this. So this method just prepares the statement
