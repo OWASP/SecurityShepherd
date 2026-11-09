@@ -35,7 +35,7 @@ Some values are copied into an image or a volume when it's created, so changing 
 | `TLS_KEYSTORE_PASS` | `CowSaysMoo` | The keystore's password. If it's empty, a random password is generated with the keystore and kept in `conf/.tls-keystore-pass`. | Container recreate |
 | `ALIAS` | `tomcat` | The key's alias in the keystore | Container recreate |
 | `DNAME` | `cn=OwaspShepherd,…` | The subject of the self-signed certificate generated on the first start | Only when a keystore is generated |
-| `TZ` | `Europe/Dublin` | The containers' time zone, used for log timestamps and the [event times](#event-times) | Container recreate |
+| `TZ` | `UTC` | The containers' time zone, as any IANA zone name such as `Europe/Dublin`. Used for log timestamps, stored database timestamps and the [event times](#event-times) | Container recreate |
 | `DOCKER_NETWORK_NAME` | `securityshepherd_default` | Passed to the MariaDB image build | Image rebuild |
 | `VERSION` | `3.1` | Not used | |
 | `TEST_MYSQL_HOST`, `TEST_MYSQL_PORT`, `TEST_MYSQL_PASSWORD` | | Used only by the tests, see [Running tests](testing.md) | |
