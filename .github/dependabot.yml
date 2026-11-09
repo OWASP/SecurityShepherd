@@ -17,6 +17,13 @@ updates:
       - dependency-name: "com.mysql:mysql-connector-j"
         update-types: ["version-update:semver-major"]
 
+  # Zensical, which builds the documentation site (pyproject.toml and uv.lock)
+  - package-ecosystem: uv
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
