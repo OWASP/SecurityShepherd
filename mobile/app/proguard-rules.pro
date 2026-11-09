@@ -47,10 +47,6 @@
 -keepnames class org.owasp.mobileshepherd.ui.lessons.supplychain.**
 -keepnames class org.owasp.mobileshepherd.ui.challenges.supplychain.**
 
-# Insecure Communication - should be obfuscated
--keepnames class org.owasp.mobileshepherd.ui.lessons.insecurecomm.**
--keepnames class org.owasp.mobileshepherd.ui.challenges.insecurecomm.**
-
 # Cryptography - should be obfuscated
 -keepnames class org.owasp.mobileshepherd.ui.lessons.crypto.**
 -keepnames class org.owasp.mobileshepherd.ui.challenges.crypto.**
