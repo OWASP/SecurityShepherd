@@ -38,22 +38,6 @@
         app:elevation="6dp"
         app:srcCompat="@android:drawable/ic_menu_info_details" />
 
-    <!-- Mini FAB for OWASP Top 10 -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_owasp_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="152dp"
-        android:visibility="gone"
-        android:contentDescription="@string/owasp_mobile_top_10"
-        app:fabSize="mini"
-        app:tint="@color/white"
-        app:backgroundTint="@color/warning_orange"
-        app:elevation="6dp"
-        app:srcCompat="@android:drawable/ic_menu_view" />
-
     <!-- Main FAB with Material 3 styling -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
