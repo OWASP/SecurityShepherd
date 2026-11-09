@@ -36,7 +36,7 @@ import utils.ShepherdLogManager;
  * <p>Request (POST, application/x-www-form-urlencoded):
  *
  * <pre>
- *   moduleId - Mobile module identifier (e.g. "insecure_comm_lesson")
+ *   moduleId - Mobile module identifier (e.g. "client_side_injection_lesson")
  * </pre>
  *
  * <p>Authentication via the Shepherd session cookie (JSESSIONID) set during mobile login.

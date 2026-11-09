@@ -64,10 +64,6 @@ final class MobileModuleFlags {
     // SharedPreferences
     m.put("ids_lesson", "Copper_Bridge_Stands_In_Rain");
     m.put("ids_challenge_1", "Tangled_Rope_Skips_A_Stone");
-    // Insecure Communication (M5) — flag transmitted in HTTP JSON response body; intercept with
-    // proxy
-    m.put("insecure_comm_lesson", "Green_Socks_Float_Past_Reeds");
-    m.put("insecure_comm_challenge", "Empty_Wave_Breaks_On_Shore");
     // Insufficient Cryptography (M6) — flag encrypted with weak DES key
     m.put("insufficient_crypto_lesson", "Dusty_Mirror_Speaks_In_Whispers");
     m.put("insufficient_crypto_challenge", "Blind_Fish_Swims_In_Salt");
@@ -88,8 +84,6 @@ final class MobileModuleFlags {
     ids.put("client_side_injection_challenge_2", "e635fce334aa61fdaa459c21c286d6332eddcdd3");
     // New mobile-specific modules added to the platform
     ids.put("insecure_auth_lesson", "0f40ae03b9339cb88fbd834213ee1c597791274a");
-    ids.put("insecure_comm_lesson", "a76d11ebd575aecfba5d69441cbd90c95e8abe31");
-    ids.put("insecure_comm_challenge", "d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7");
     ids.put("insufficient_crypto_lesson", "3385d879b0da97597e16e5c8a7511a6ec331d1d9");
     ids.put("insufficient_crypto_challenge", "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2");
     ids.put("security_misconfig_lesson", "c85dad7f468a333e53edaca90a435528db76d118");
