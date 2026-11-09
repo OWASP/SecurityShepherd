@@ -183,15 +183,18 @@ public class MongoDatabase {
    * @return A singleton MongoDb Connection
    */
   public static MongoClient getMongoDbConnection(String ApplicationRoot) {
-    if (baseMongoClient == null) {
+    MongoClient client = baseMongoClient;
+    if (client == null) {
       synchronized (lock) {
-        if (baseMongoClient == null) {
-          baseMongoClient = createMongoClient(null);
+        client = baseMongoClient;
+        if (client == null) {
+          client = createMongoClient(null);
           log.info("Created singleton MongoClient instance");
+          baseMongoClient = client;
         }
       }
     }
-    return baseMongoClient;
+    return client;
   }
 
   /**
