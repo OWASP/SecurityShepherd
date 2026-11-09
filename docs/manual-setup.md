@@ -134,6 +134,8 @@ Open `https://<your server>:8443`. You're sent to the **No Database Configuratio
 
 Then log in as `admin` with the password `password`, and change it when asked. [Getting started](getting-started.md#try-the-levels) continues from there, and [Deploying into production](deploying-into-production.md) lists what else to change before other people use it.
 
+Before anyone plays, close **NoSQL Injection One** in **Admin → Module Management → Open and Close Modules**. It can't be solved on a manual installation yet, even with MongoDB installed: setup leaves it open when **Enable NoSQL Challenge** is off ([#526](https://github.com/OWASP/SecurityShepherd/issues/526)) and doesn't load its data when it's on ([#986](https://github.com/OWASP/SecurityShepherd/issues/986)). CTF mode, the default, shows players one level at a time, so they'd get stuck on it.
+
 ## Upgrading
 
 To move to a new version, build its WAR, stop Tomcat, replace `webapps/ROOT.war` and delete the unpacked `webapps/ROOT` folder, then start Tomcat. Back up the database first, with `mariadb-dump` as in [Backups and restore](backups.md#back-up-the-database). `conf/database.properties` and your Tomcat configuration are kept.
