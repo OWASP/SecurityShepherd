@@ -1,6 +1,6 @@
-# Checking the Docker images
+# Verifying the images
 
-The Security Shepherd Tomcat image is published to Docker Hub as [`owasp/security-shepherd`](https://hub.docker.com/r/owasp/security-shepherd). This page shows how to check where an image came from and what's inside it, before you run it.
+The Security Shepherd Tomcat image is published to Docker Hub as [`owasp/security-shepherd`](https://hub.docker.com/r/owasp/security-shepherd). This page shows how to check where an image came from and what's inside it, before you run it. To scan it for known vulnerabilities, see [Vulnerability management](vulnerability-management.md).
 
 ## Image tags
 
@@ -69,65 +69,7 @@ docker buildx imagetools inspect "owasp/security-shepherd:$TAG" \
 docker scout sbom --format list "owasp/security-shepherd:$TAG"
 ```
 
-## 3. Check for known vulnerabilities
-
-```bash
-# Scan the image with Docker Scout
-docker scout cves "owasp/security-shepherd:$TAG"
-
-# Or scan the saved SBOM with Grype (https://github.com/anchore/grype)
-grype "sbom:./shepherd-$TAG.spdx.json"
-```
-
-Security Shepherd is deliberately vulnerable training software. Scanners report on the image's packages and libraries, not on the lessons and challenges, which are vulnerable by design.
-
-Some findings don't affect Security Shepherd, for example a vulnerable binary that comes with the base image but never runs. Each of these is listed, with the reason, in [`.vex/security-shepherd.openvex.json`](https://github.com/OWASP/SecurityShepherd/blob/dev/.vex/security-shepherd.openvex.json), an [OpenVEX](https://openvex.dev/) document. Findings that do affect Security Shepherd are fixed in the image, not listed there. Scanners only apply a VEX document when you pass it to them:
-
-```bash
-curl -sSfLO https://raw.githubusercontent.com/OWASP/SecurityShepherd/dev/.vex/security-shepherd.openvex.json
-
-# Docker Scout trusts only VEX written by Docker unless --vex-author names the author
-docker scout cves "owasp/security-shepherd:$TAG" \
-  --vex-location security-shepherd.openvex.json \
-  --vex-author 'OWASP Security Shepherd maintainers'
-
-# Grype, scanning the image itself so that the VEX document's product matches it
-grype "owasp/security-shepherd:$TAG" --vex security-shepherd.openvex.json
-
-# Trivy (https://trivy.dev/). --show-suppressed lists what the VEX document covers.
-trivy image --vex security-shepherd.openvex.json --show-suppressed "owasp/security-shepherd:$TAG"
-```
-
-Each statement names the vulnerable package and version it covers, such as `pkg:golang/stdlib@1.27.1`. A newer vulnerability in the same binary, or the same vulnerability in another version, is still reported.
-
-Each image is also published with a signed copy of the VEX document as it was when the image was built. It's signed by the same release workflow as the provenance in step 1 and stored next to the image on Docker Hub. Trivy can read it from there, with no download:
-
-```bash
-# Proves the VEX document attached to the image came from this repository's release workflow
-gh attestation verify "oci://docker.io/owasp/security-shepherd:$TAG" \
-  --repo OWASP/SecurityShepherd \
-  --signer-workflow OWASP/SecurityShepherd/.github/workflows/release-build.yml \
-  --source-ref "$REF" \
-  --predicate-type https://openvex.dev/ns/v0.2.0
-
-# Trivy, applying the VEX document attached to the image
-trivy image --vex oci --show-suppressed "owasp/security-shepherd:$TAG"
-
-# Or save the image's own signed copy to use with Docker Scout or Grype, in place of the curl
-# download above. It's the version signed for this image, rather than the latest file on dev.
-gh attestation verify "oci://docker.io/owasp/security-shepherd:$TAG" \
-  --repo OWASP/SecurityShepherd \
-  --signer-workflow OWASP/SecurityShepherd/.github/workflows/release-build.yml \
-  --source-ref "$REF" \
-  --predicate-type https://openvex.dev/ns/v0.2.0 \
-  --format json --jq '.[0].verificationResult.statement.predicate' > security-shepherd.openvex.json
-```
-
-An image's attached VEX never changes after it's published. Statements added to the file later, for vulnerabilities found since, apply only when you pass the file from `dev`. Docker Scout and Grype don't read the attached copy, so pass them a file: the signed copy above, or the latest from `dev`. Older images, including the 3.x releases, have no attached VEX.
-
-If Trivy finds no VEX attached to an image that should have one, you may have an older copy of that tag pulled locally, which Trivy scans in preference. Run `docker pull "owasp/security-shepherd:$TAG"` first, or add `--image-src remote`.
-
-## 4. See how it was built
+## 3. See how it was built
 
 ```bash
 # BuildKit's provenance for the amd64 image: base image, Dockerfile, build arguments.
@@ -137,7 +79,7 @@ docker buildx imagetools inspect "owasp/security-shepherd:$TAG" \
   --format '{{ json (index .Provenance "linux/amd64").SLSA }}'
 ```
 
-## 5. Run exactly what you checked
+## 4. Run exactly what you checked
 
 A tag can move. A digest can't, so verify the digest and run the same one.
 
@@ -154,4 +96,4 @@ gh attestation verify "oci://docker.io/owasp/security-shepherd@$digest" \
 docker run --rm -p 8443:8443 "owasp/security-shepherd@$digest"
 ```
 
-The image ships no TLS key: on its first start it generates its own self-signed certificate, so expect a browser warning at `https://localhost:8443`. For the full stack with its databases, use the `docker compose` quick start in the [README](https://github.com/OWASP/SecurityShepherd/blob/dev/README.md).
+The image ships no TLS key: on its first start it generates its own self-signed certificate, so expect a browser warning at `https://localhost:8443`. For the full stack with its databases, see [Getting started](getting-started.md).

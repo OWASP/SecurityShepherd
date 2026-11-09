@@ -203,6 +203,19 @@ public class Validate {
   }
 
   /**
+   * Checks whether a session belongs to an administrator, without logging anything. Use it on pages
+   * every user may open that only show admins extra options. Admin functions must use {@link
+   * #validateAdminSession(HttpSession, Cookie, Object)}, which alerts when a non-admin calls them.
+   *
+   * @param ses HttpSession from users browser, already checked with {@link
+   *     #validateSession(HttpSession)}
+   * @return Boolean value that reflects whether the session holder is an admin
+   */
+  public static boolean isAdminSession(HttpSession ses) {
+    return ses != null && "admin".equals(ses.getAttribute("userRole"));
+  }
+
+  /**
    * Session is checked for credentials and ensures that they have not been modified and that they
    * are valid for an administrator
    *
