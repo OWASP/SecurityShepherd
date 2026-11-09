@@ -100,15 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 builder.setTitle("About Mobile Shepherd");
                 builder.setCancelable(true);
                 
-                builder.setPositiveButton("OWASP Mobile Top 10", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, 
-                            android.net.Uri.parse("https://owasp.org/www-project-mobile-top-10/"));
-                        startActivity(browserIntent);
-                    }
-                });
-                
                 builder.setNeutralButton("Security Shepherd", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
