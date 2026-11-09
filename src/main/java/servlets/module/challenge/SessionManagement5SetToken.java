@@ -93,34 +93,37 @@ public class SessionManagement5SetToken extends HttpServlet {
         String ApplicationRoot = getServletContext().getRealPath("");
         log.debug("Servlet root = " + ApplicationRoot);
 
-        Connection conn =
-            Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive");
-        log.debug("Checking name");
-        PreparedStatement callstmt;
+        try (Connection conn =
+            Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalFive")) {
+          log.debug("Checking name");
 
-        log.debug("Committing changes made to database");
-        callstmt = conn.prepareStatement("COMMIT");
-        callstmt.execute();
-        log.debug("Changes committed.");
+          log.debug("Committing changes made to database");
+          try (PreparedStatement commitStmt = conn.prepareStatement("COMMIT")) {
+            commitStmt.execute();
+          }
+          log.debug("Changes committed.");
 
-        callstmt = conn.prepareStatement("SELECT userName FROM users WHERE userName = ?");
-        callstmt.setString(1, userName);
-        log.debug("Executing findUser");
-        ResultSet resultSet = callstmt.executeQuery();
-        // Is the username valid?
-        if (resultSet.next()) {
-          log.debug("User found");
-          htmlOutput =
-              bundle.getString("setToken.sentTo.1")
-                  + " '"
-                  + Encode.forHtml(userName)
-                  + "' "
-                  + bundle.getString("setToken.sentTo.2");
-        } else {
-          log.debug("User not Found");
-          htmlOutput = bundle.getString("response.badUser") + "" + Encode.forHtml(userName);
+          try (PreparedStatement callstmt =
+              conn.prepareStatement("SELECT userName FROM users WHERE userName = ?")) {
+            callstmt.setString(1, userName);
+            log.debug("Executing findUser");
+            try (ResultSet resultSet = callstmt.executeQuery()) {
+              // Is the username valid?
+              if (resultSet.next()) {
+                log.debug("User found");
+                htmlOutput =
+                    bundle.getString("setToken.sentTo.1")
+                        + " '"
+                        + Encode.forHtml(userName)
+                        + "' "
+                        + bundle.getString("setToken.sentTo.2");
+              } else {
+                log.debug("User not Found");
+                htmlOutput = bundle.getString("response.badUser") + "" + Encode.forHtml(userName);
+              }
+            }
+          }
         }
-        Database.closeConnection(conn);
         log.debug("Outputting HTML");
         out.write(htmlOutput);
       } catch (Exception e) {
