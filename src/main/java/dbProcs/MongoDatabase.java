@@ -1,17 +1,16 @@
 package dbProcs;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCommandException;
 import com.mongodb.MongoCredential;
 import com.mongodb.MongoException;
 import com.mongodb.MongoSocketException;
 import com.mongodb.MongoSocketOpenException;
 import com.mongodb.MongoTimeoutException;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.connection.ClusterConnectionMode;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,13 +18,15 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bson.Document;
 
 /**
  * Used to create MongoDb connections using a singleton pattern for connection reuse. MongoClient
@@ -229,31 +230,45 @@ public class MongoDatabase {
       throw new RuntimeException(errorBase + "serverSelectionTimeout");
     }
 
-    // Configure connection pool options
-    MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
-    optionsBuilder.connectTimeout(Integer.parseInt(connectTimeout));
-    optionsBuilder.socketTimeout(Integer.parseInt(socketTimeout));
-    optionsBuilder.serverSelectionTimeout(Integer.parseInt(serverSelectionTimeout));
+    int connectTimeoutMs = Integer.parseInt(connectTimeout);
+    int socketTimeoutMs = Integer.parseInt(socketTimeout);
+    int serverSelectionTimeoutMs = Integer.parseInt(serverSelectionTimeout);
 
     // Connection pool settings
     int connectionsPerHost =
         getIntProperty(prop, "pool.connectionsPerHost", DEFAULT_CONNECTIONS_PER_HOST);
     int minConnectionsPerHost =
         getIntProperty(prop, "pool.minConnectionsPerHost", DEFAULT_MIN_CONNECTIONS_PER_HOST);
-    optionsBuilder.connectionsPerHost(connectionsPerHost);
-    optionsBuilder.minConnectionsPerHost(minConnectionsPerHost);
 
-    MongoClientOptions mongoOptions = optionsBuilder.build();
     ServerAddress serverAddress =
         new ServerAddress(connectionHost, Integer.parseInt(connectionPort));
 
+    // A single, directly connected server, as the legacy MongoClient(ServerAddress) constructor
+    // used. A socket (read) timeout of 0 means no timeout.
+    MongoClientSettings.Builder settingsBuilder =
+        MongoClientSettings.builder()
+            .applyToClusterSettings(
+                cluster ->
+                    cluster
+                        .hosts(List.of(serverAddress))
+                        .mode(ClusterConnectionMode.SINGLE)
+                        .serverSelectionTimeout(serverSelectionTimeoutMs, TimeUnit.MILLISECONDS))
+            .applyToSocketSettings(
+                socket ->
+                    socket
+                        .connectTimeout(connectTimeoutMs, TimeUnit.MILLISECONDS)
+                        .readTimeout(socketTimeoutMs, TimeUnit.MILLISECONDS))
+            .applyToConnectionPoolSettings(
+                pool -> pool.maxSize(connectionsPerHost).minSize(minConnectionsPerHost));
+    if (credential != null) {
+      settingsBuilder.credential(credential);
+    }
+
     try {
-      MongoClient mongoClient;
+      MongoClient mongoClient = MongoClients.create(settingsBuilder.build());
       if (credential != null) {
-        mongoClient = new MongoClient(serverAddress, Arrays.asList(credential), mongoOptions);
         log.debug("Created MongoClient with credentials for: " + credential.getSource());
       } else {
-        mongoClient = new MongoClient(serverAddress, mongoOptions);
         log.debug("Created MongoClient without credentials");
       }
       log.debug("Connection Host: " + connectionHost + ", Port: " + connectionPort);
@@ -345,8 +360,8 @@ public class MongoDatabase {
    * @param mongoClient mongoDb connection
    * @return A MongoDb Database
    */
-  public static DB getMongoDatabase(MongoClient mongoClient) {
-    DB mongoDb = null;
+  public static com.mongodb.client.MongoDatabase getMongoDatabase(MongoClient mongoClient) {
+    com.mongodb.client.MongoDatabase mongoDb = null;
 
     Properties prop = loadMongoProperties();
 
@@ -356,7 +371,7 @@ public class MongoDatabase {
     }
 
     try {
-      mongoDb = mongoClient.getDB(dbname);
+      mongoDb = mongoClient.getDatabase(dbname);
     } catch (MongoSocketException | MongoTimeoutException e) {
       log.fatal("Unable to get Mongodb connection (Is it on?): " + e);
     } catch (MongoException e) {
@@ -379,14 +394,18 @@ public class MongoDatabase {
   public static void executeMongoScript(File file, MongoClient mongoClient) throws IOException {
     String data = FileUtils.readFileToString(file, Charset.defaultCharset());
 
-    DB db = MongoDatabase.getMongoDatabase(mongoClient);
+    com.mongodb.client.MongoDatabase db = MongoDatabase.getMongoDatabase(mongoClient);
 
-    DBObject script = new BasicDBObject();
-    script.put("eval", String.format(data));
+    Document script = new Document("eval", String.format(data));
 
-    CommandResult result = db.command(script);
-
-    log.debug("Mongo Result: " + result);
+    try {
+      Document result = db.runCommand(script);
+      log.debug("Mongo Result: " + result);
+    } catch (MongoCommandException e) {
+      // The legacy DB.command() returned a failed command's response instead of throwing, and
+      // Setup relies on that: keep logging the failure rather than failing the whole setup.
+      log.error("Mongo script failed: " + e.getResponse().toJson());
+    }
   }
 
   /**

@@ -1,6 +1,7 @@
 package dbProcs;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -8,9 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
+import com.mongodb.client.MongoClient;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,12 +22,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import testUtils.TestProperties;
 
 public class MongoDatabaseIT {
@@ -45,8 +50,10 @@ public class MongoDatabaseIT {
   }
 
   @AfterEach
-  public void teardownEach() {
+  public void teardownEach() throws IOException {
     MongoDatabase.resetInstance();
+    // Some tests point mongo.properties at another database name; restore the default
+    TestProperties.createMongoResource();
   }
 
   @Test
@@ -96,17 +103,38 @@ public class MongoDatabaseIT {
 
   @Test
   @DisplayName("Must return type (Mongo) DB")
-  @Disabled(
-      "Fongo 2.1.0 is incompatible with mongo-java-driver 3.12.14 (NPE in"
-          + " createOperationExecutor)")
-  public void getMongoDatabase_ShouldReturnTypeDB() {}
+  public void getMongoDatabase_ShouldReturnTypeDB() {
+    MongoClient mongoClient = MongoDatabase.getMongoDbConnection(null);
+    com.mongodb.client.MongoDatabase db = MongoDatabase.getMongoDatabase(mongoClient);
+
+    assertInstanceOf(com.mongodb.client.MongoDatabase.class, db);
+    // getDatabase() is lazy, so also make a round trip to prove the database is usable
+    assertEquals(1.0, db.runCommand(new Document("ping", 1)).get("ok", Number.class).doubleValue());
+  }
 
   @Test
   @DisplayName("Read properties file for db name")
-  @Disabled(
-      "Fongo 2.1.0 is incompatible with mongo-java-driver 3.12.14 (NPE in"
-          + " createOperationExecutor)")
-  public void getMongoDatabase_ReadDbName() {}
+  public void getMongoDatabase_ReadDbName() throws IOException {
+    TestProperties.createMongoResource("0.0.0.0", 27017, "test_shepherdGames", 10000, 0, 30000);
+
+    com.mongodb.client.MongoDatabase db =
+        MongoDatabase.getMongoDatabase(MongoDatabase.getMongoDbConnection(null));
+
+    assertEquals("test_shepherdGames", db.getName());
+  }
+
+  @Test
+  @DisplayName("executeMongoScript should log, not throw, when the server rejects the script")
+  public void executeMongoScript_ServerRejectsScript_ShouldNotThrow(@TempDir Path tempDir)
+      throws IOException {
+    // Driver 3.12's DB.command() returned a failed command's response instead of throwing, and
+    // Setup depends on that. The script is sent with the eval command, which MongoDB no longer has.
+    File script = tempDir.resolve("script.js").toFile();
+    Files.writeString(script.toPath(), "db.getName()");
+
+    assertDoesNotThrow(
+        () -> MongoDatabase.executeMongoScript(script, MongoDatabase.getMongoDbConnection(null)));
+  }
 
   // ============= Singleton Pattern Tests =============
 
