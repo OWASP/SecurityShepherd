@@ -152,7 +152,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="filter_by_tag">Filter by tag</string>
     <string name="adb_logcat_s_tagname">adb logcat -s TAG_NAME</string>
     <string name="search_logs_powershell">Search logs (PowerShell)</string>
-    <string name="adb_logcat_grep_quotsearchtermquot">adb logcat | grep &amp;quot;search_term&amp;quot;</string>
+    <string name="adb_logcat_grep_quotsearchtermquot">adb logcat | grep \"search_term\"</string>
     <string name="clear_logs">Clear logs</string>
     <string name="adb_logcat_c">adb logcat -c</string>
     <string name="basic_adb_commands">Basic ADB Commands</string>
