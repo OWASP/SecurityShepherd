@@ -93,45 +93,47 @@ public class SessionManagement6SecretQuestion extends HttpServlet {
         String ApplicationRoot = getServletContext().getRealPath("");
         try {
           if (Validate.isValidEmailAddress(subEmail) && subAns.length() > 5) {
-            Connection conn =
-                Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalSix");
-            log.debug("Checking Secret Answer");
-            PreparedStatement callstmt =
-                conn.prepareStatement(
-                    "SELECT userName FROM users WHERE userAddress = ? AND secretAnswer = ?");
-            callstmt.setString(1, subEmail);
-            callstmt.setString(2, subAns);
-            log.debug("Running secret Answer Check");
-            ResultSet rs = callstmt.executeQuery();
-            if (rs.next()) {
-              log.debug("Correct Answer Submitted");
-              // Get key and add it to the output
-              String userKey =
-                  Hash.generateUserSolution(
-                      Getter.getModuleResultFromHash(ApplicationRoot, levelHash),
-                      (String) ses.getAttribute("userName"));
-              htmlOutput =
-                  "<h2 class='title'>"
-                      + bundle.getString("response.welcome")
-                      + " "
-                      + Encode.forHtml(rs.getString(1))
-                      + "</h2>"
-                      + "<p>"
-                      + bundle.getString("response.welcome")
-                      + " <a>"
-                      + userKey
-                      + "</a>"
-                      + "</p>";
-            } else {
-              log.debug("Bad Answer Submitted");
-              htmlOutput =
-                  new String(
+            try (Connection conn =
+                    Database.getChallengeConnection(
+                        ApplicationRoot, "BrokenAuthAndSessMangChalSix");
+                PreparedStatement callstmt =
+                    conn.prepareStatement(
+                        "SELECT userName FROM users WHERE userAddress = ? AND secretAnswer = ?")) {
+              log.debug("Checking Secret Answer");
+              callstmt.setString(1, subEmail);
+              callstmt.setString(2, subAns);
+              log.debug("Running secret Answer Check");
+              try (ResultSet rs = callstmt.executeQuery()) {
+                if (rs.next()) {
+                  log.debug("Correct Answer Submitted");
+                  // Get key and add it to the output
+                  String userKey =
+                      Hash.generateUserSolution(
+                          Getter.getModuleResultFromHash(ApplicationRoot, levelHash),
+                          (String) ses.getAttribute("userName"));
+                  htmlOutput =
                       "<h2 class='title'>"
-                          + bundle.getString("question.badAnswer")
-                          + "</h2><p>"
-                          + bundle.getString("question.whoAreYou"));
+                          + bundle.getString("response.welcome")
+                          + " "
+                          + Encode.forHtml(rs.getString(1))
+                          + "</h2>"
+                          + "<p>"
+                          + bundle.getString("response.welcome")
+                          + " <a>"
+                          + userKey
+                          + "</a>"
+                          + "</p>";
+                } else {
+                  log.debug("Bad Answer Submitted");
+                  htmlOutput =
+                      new String(
+                          "<h2 class='title'>"
+                              + bundle.getString("question.badAnswer")
+                              + "</h2><p>"
+                              + bundle.getString("question.whoAreYou"));
+                }
+              }
             }
-            Database.closeConnection(conn);
           } else {
             log.debug("Invalid data submitted");
             htmlOutput = new String("<b>" + bundle.getString("question.invalidData") + ": </b>");
@@ -220,28 +222,28 @@ public class SessionManagement6SecretQuestion extends HttpServlet {
                             + ": </b>"
                             + bundle.getString("question.invalidEmail"));
               } else {
-                Connection conn =
-                    Database.getChallengeConnection(
-                        ApplicationRoot, "BrokenAuthAndSessMangChalSix");
                 log.debug("Getting Secret Question");
-                PreparedStatement callstmt =
-                    conn.prepareStatement(
-                        "SELECT secretQuestion FROM users WHERE userAddress = \""
-                            + subEmail
-                            + "\"");
-                ResultSet rs = callstmt.executeQuery();
-                if (rs.next()) {
-                  log.debug("'Valid' User Detected");
-                  log.debug("Encoding for output: " + rs.getString(1));
-                  // rs.getString(1) contains the question for the user to answer. This question is
-                  // asked in English as it must be answered in English to successfully pass the
-                  // level
-                  htmlOutput = new String(Encode.forHtml(rs.getString(1)));
-                } else {
-                  log.debug("No question found for user");
-                  htmlOutput = bundle.getString("question.noQuestion");
+                try (Connection conn =
+                        Database.getChallengeConnection(
+                            ApplicationRoot, "BrokenAuthAndSessMangChalSix");
+                    PreparedStatement callstmt =
+                        conn.prepareStatement(
+                            "SELECT secretQuestion FROM users WHERE userAddress = \""
+                                + subEmail
+                                + "\"");
+                    ResultSet rs = callstmt.executeQuery()) {
+                  if (rs.next()) {
+                    log.debug("'Valid' User Detected");
+                    log.debug("Encoding for output: " + rs.getString(1));
+                    // rs.getString(1) contains the question for the user to answer. This question
+                    // is asked in English as it must be answered in English to successfully pass
+                    // the level
+                    htmlOutput = new String(Encode.forHtml(rs.getString(1)));
+                  } else {
+                    log.debug("No question found for user");
+                    htmlOutput = bundle.getString("question.noQuestion");
+                  }
                 }
-                Database.closeConnection(conn);
               }
             } catch (SQLException e) {
               log.debug(levelName + " SQL Error: " + e.toString());
