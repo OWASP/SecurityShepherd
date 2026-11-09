@@ -74,7 +74,7 @@ If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, por
 
 ### 3. Update the mobile modules
 
-If your installation uses the mobile app, update its module rows. The setup page only creates module rows on a fresh install, so an existing database keeps its old rows: the web scoring page rejects the flags the app shows, and the Insecure Communication modules are missing. The script `src/main/resources/database/updatev4_mobile_modules.sql` adds the new modules and corrects the flags of the existing ones. It is safe to run more than once. Skip this step if you don't use the mobile app.
+If your installation uses the mobile app, update its module rows. The setup page only creates module rows on a fresh install, so an existing database keeps its old rows: the web scoring page rejects the flags the app shows. The script `src/main/resources/database/updatev4_mobile_modules.sql` corrects the flags of the existing app modules. It is safe to run more than once. Skip this step if you don't use the mobile app.
 
 ```bash
 docker exec -i secshep_mariadb sh -c \

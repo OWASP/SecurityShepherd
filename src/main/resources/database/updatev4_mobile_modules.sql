@@ -1,4 +1,4 @@
--- Upgrade script for existing Security Shepherd installations: mobile module changes.
+-- Upgrade script for existing Security Shepherd installations: mobile module flags.
 --
 -- coreSchema.sql only runs on a fresh install, so an existing database keeps its old
 -- rows. This script brings those rows in line with the mobile app and is safe to run
@@ -6,23 +6,7 @@
 
 USE `core`;
 
--- 1. New modules (Mobile Insecure Communication lesson and challenge).
-INSERT IGNORE INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('a76d11ebd575aecfba5d69441cbd90c95e8abe31', 'Mobile Insecure Communication', 'mobile.insecure.communication', 'lesson', 'Mobile Insecure Communication', 'mobile.insecure.communication', 'Green_Socks_Float_Past_Reeds', '6a7a56237fbedee639dabbae9a3d6a0c069fdcf8dd5c89f45d8f0b0e2f44e7e2', 'open', '106', '35', 0, 0);
-INSERT IGNORE INTO modules (`moduleId`, `moduleName`, `moduleNameLangPointer`, `moduleType`, `moduleCategory`, `moduleCategoryLangPointer`, `moduleResult`, `moduleHash`, `moduleStatus`, `incrementalRank`, `scoreValue`, `hardcodedKey`, `isUnsafe`) VALUES ('d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7', 'Mobile Insecure Communication Challenge', 'mobile.insecure.communication.challenge', 'challenge', 'Mobile Insecure Communication', 'mobile.insecure.communication', 'Empty_Wave_Breaks_On_Shore', 'd8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'open', '107', '60', 0, 0);
-
--- 2. Cheat sheets for the new modules, added only if the module has none yet.
-INSERT INTO cheatsheet (cheatSheetId, moduleId, createDate, solution)
-SELECT SHA(CONCAT('mobile-upgrade-', 'a76d11ebd575aecfba5d69441cbd90c95e8abe31')), 'a76d11ebd575aecfba5d69441cbd90c95e8abe31', NOW(), 'a76d11ebd575aecfba5d69441cbd90c95e8abe31.solution'
-FROM DUAL
-WHERE EXISTS (SELECT 1 FROM modules WHERE moduleId = 'a76d11ebd575aecfba5d69441cbd90c95e8abe31')
-  AND NOT EXISTS (SELECT 1 FROM cheatsheet WHERE moduleId = 'a76d11ebd575aecfba5d69441cbd90c95e8abe31');
-INSERT INTO cheatsheet (cheatSheetId, moduleId, createDate, solution)
-SELECT SHA(CONCAT('mobile-upgrade-', 'd8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7')), 'd8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7', NOW(), 'd8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7.solution'
-FROM DUAL
-WHERE EXISTS (SELECT 1 FROM modules WHERE moduleId = 'd8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7')
-  AND NOT EXISTS (SELECT 1 FROM cheatsheet WHERE moduleId = 'd8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7');
-
--- 3. Flags that the web /solutionSubmit endpoint must accept for the app's modules.
+-- 1. Flags that the web /solutionSubmit endpoint must accept for the app's modules.
 --    hardcodedKey = 0: the module result is a base flag, and each player's flag is derived
 --    from it (the same value the app's /mobileFlagGet endpoint issues).
 --    hardcodedKey = 1: the module result is the key found offline in the app (Reverse Engineering).
