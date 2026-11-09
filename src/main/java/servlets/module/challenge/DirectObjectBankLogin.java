@@ -82,6 +82,7 @@ public class DirectObjectBankLogin extends HttpServlet {
         log.debug("Account Pass - " + accountPass);
         String applicationRoot = getServletContext().getRealPath("");
         String htmlOutput = new String();
+        String accountNumber = null;
 
         try (Connection conn =
                 Database.getChallengeConnection(applicationRoot, "directObjectBank");
@@ -90,13 +91,11 @@ public class DirectObjectBankLogin extends HttpServlet {
           callstmt.setString(2, accountPass);
           try (ResultSet resultSet = callstmt.executeQuery()) {
             if (resultSet.next()) {
-              String accountNumber = resultSet.getString(1);
+              accountNumber = resultSet.getString(1);
               log.debug("Found Account Number: " + accountNumber);
               ses.setAttribute("directObjectBankAccount", accountNumber);
-              htmlOutput += bankForm(accountNumber, applicationRoot, ses, bundle, errors);
             } else {
               log.debug("Authentication Failed");
-
               htmlOutput =
                   bundle.getString("login.authFailedMessage.1")
                       + " '"
@@ -105,6 +104,9 @@ public class DirectObjectBankLogin extends HttpServlet {
                       + bundle.getString("login.authFailedMessage.2");
             }
           }
+        }
+        if (accountNumber != null) {
+          htmlOutput += bankForm(accountNumber, applicationRoot, ses, bundle, errors);
         }
         log.debug("Outputting HTML");
         out.write(htmlOutput);
