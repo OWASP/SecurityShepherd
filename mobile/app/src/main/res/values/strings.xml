@@ -121,7 +121,6 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="about">About</string>
     <string name="hints">Hints</string>
     <string name="command_reference">Command Reference</string>
-    <string name="owasp_mobile_top_10">OWASP Mobile Top 10</string>
     <string name="lesson_key_found">Lesson Key Found:</string>
     <string name="key">KEY{...}</string>
     <string name="what_just_happened">What Just Happened?</string>
