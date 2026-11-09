@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- All traffic must use HTTPS. Cleartext is permitted only for the deliberately
-         insecure hosts used by the Insecure Communication modules (added per-module). -->
+    <!-- All traffic must use HTTPS. -->
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
