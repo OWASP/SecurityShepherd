@@ -8,10 +8,6 @@ Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_insufficient_cryptography." + levelHash, locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
 String translatedLevelName = bundle.getString("title.question.m_insufficient_cryptography");
-ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
-String owaspMoreInfo = generic.getString("module.generic.owasp.more.info");
-String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
-String owaspUrl = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.mobile.m10.insufficientCryptography");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -66,7 +62,7 @@ if (request.getSession() != null)
 			<br /><br />
 			<%= bundle.getString("paragraph.info.5") %>
 			<br /><br />
-			<%= owaspMoreInfo %> <a href="<%= owaspUrl %>" target="_blank"><%= owaspGuideTo %> Insufficient Cryptography (M10)</a>
+			OWASP Mobile Top 10 &ndash; M10: Insufficient Cryptography
 			<br /> <br />
 			<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
 		</div>
