@@ -7,11 +7,7 @@ String levelHash = "1d20d7c58bf71e8014840816e57bdca64ada0a6586a53a76ee23a30a06f7
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_security_misconfiguration." + levelHash, locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
-ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
 String translatedLevelName = bundle.getString("title.question.m_security_misconfiguration");
-String owaspMoreInfo = generic.getString("module.generic.owasp.more.info");
-String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
-String owaspUrl = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.mobile.m8.securityMisconfiguration");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -64,7 +60,7 @@ if (request.getSession() != null)
 			<br /><br />
 			<%= bundle.getString("paragraph.info.4") %>
 			<br /><br />
-			<%= owaspMoreInfo %> <a href="<%= owaspUrl %>" target="_blank"><%= owaspGuideTo %> Security Misconfiguration (M8)</a>
+			OWASP Mobile Top 10 &ndash; M8: Security Misconfiguration
 			<br /> </br> </br>
 			<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
 		</div>
