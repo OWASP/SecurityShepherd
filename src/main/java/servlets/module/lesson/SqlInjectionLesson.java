@@ -129,12 +129,10 @@ public class SqlInjectionLesson extends HttpServlet {
   public static String[][] getSqlInjectionResult(String ApplicationRoot, String username) {
 
     String[][] result = new String[10][3];
-    try {
-      Connection conn = Database.getSqlInjLessonConnection(ApplicationRoot);
-      Statement stmt;
-      stmt = conn.createStatement();
-      ResultSet resultSet =
-          stmt.executeQuery("SELECT * FROM tb_users WHERE username = '" + username + "'");
+    try (Connection conn = Database.getSqlInjLessonConnection(ApplicationRoot);
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet =
+            stmt.executeQuery("SELECT * FROM tb_users WHERE username = '" + username + "'")) {
       log.debug("Opening Result Set from query");
       for (int i = 0; resultSet.next(); i++) {
         log.debug("Row " + i + ": User ID = " + resultSet.getString(1));
