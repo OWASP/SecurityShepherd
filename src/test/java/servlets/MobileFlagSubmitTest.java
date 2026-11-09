@@ -45,13 +45,20 @@ class MobileFlagSubmitTest {
   }
 
   private MobileFlagSubmit run(String flag) throws Exception {
-    HttpSession ses = mock(HttpSession.class);
-    when(ses.getAttribute("userRole")).thenReturn("player");
-    when(ses.getAttribute("userName")).thenReturn(USER);
-    when(ses.getAttribute("userStamp")).thenReturn("stamp-1");
+    return run(MODULE, flag, true);
+  }
+
+  private MobileFlagSubmit run(String moduleId, String flag, boolean loggedIn) throws Exception {
+    HttpSession ses = null;
+    if (loggedIn) {
+      ses = mock(HttpSession.class);
+      when(ses.getAttribute("userRole")).thenReturn("player");
+      when(ses.getAttribute("userName")).thenReturn(USER);
+      when(ses.getAttribute("userStamp")).thenReturn("stamp-1");
+    }
 
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getParameter("moduleId")).thenReturn(MODULE);
+    when(request.getParameter("moduleId")).thenReturn(moduleId);
     when(request.getParameter("flag")).thenReturn(flag);
     when(request.getSession(false)).thenReturn(ses);
     when(request.getRemoteAddr()).thenReturn("127.0.0.1");
@@ -221,6 +228,78 @@ class MobileFlagSubmitTest {
 
       assertEquals(HttpServletResponse.SC_OK, status);
       assertFalse(new JSONObject(body.toString()).getBoolean("correct"));
+    }
+  }
+
+  @Test
+  void notLoggedIn_returns401AndIsNotScored() throws Exception {
+    try (MockedStatic<Getter> getter = mockStatic(Getter.class);
+        MockedStatic<Setter> setter = mockStatic(Setter.class);
+        MockedStatic<CountdownHandler> countdown = mockStatic(CountdownHandler.class)) {
+      countdown.when(CountdownHandler::isRunning).thenReturn(true);
+      getter.when(() -> Getter.isModuleOpen(anyString(), anyString())).thenReturn(true);
+
+      run(MODULE, correctFlag(), false);
+
+      assertEquals(HttpServletResponse.SC_UNAUTHORIZED, status);
+      setter.verifyNoInteractions();
+    }
+  }
+
+  @Test
+  void missingParameters_returns400() throws Exception {
+    run(MODULE, null, true);
+
+    assertEquals(HttpServletResponse.SC_BAD_REQUEST, status);
+  }
+
+  @Test
+  void unknownModuleId_returns404AndIsNotScored() throws Exception {
+    try (MockedStatic<Getter> getter = mockStatic(Getter.class);
+        MockedStatic<Setter> setter = mockStatic(Setter.class);
+        MockedStatic<CountdownHandler> countdown = mockStatic(CountdownHandler.class)) {
+      countdown.when(CountdownHandler::isRunning).thenReturn(true);
+      getter.when(() -> Getter.isModuleOpen(anyString(), anyString())).thenReturn(true);
+
+      run("no_such_module", correctFlag(), true);
+
+      assertEquals(HttpServletResponse.SC_NOT_FOUND, status);
+      setter.verifyNoInteractions();
+    }
+  }
+
+  @Test
+  void closedModule_returns403AndIsNotScored() throws Exception {
+    try (MockedStatic<Getter> getter = mockStatic(Getter.class);
+        MockedStatic<Setter> setter = mockStatic(Setter.class);
+        MockedStatic<CountdownHandler> countdown = mockStatic(CountdownHandler.class)) {
+      countdown.when(CountdownHandler::isRunning).thenReturn(true);
+      getter.when(() -> Getter.isModuleOpen(anyString(), anyString())).thenReturn(false);
+
+      run(correctFlag());
+
+      assertEquals(HttpServletResponse.SC_FORBIDDEN, status);
+      setter.verifyNoInteractions();
+    }
+  }
+
+  @Test
+  void correctFlag_withNoRecordedStart_isStillScored() throws Exception {
+    assertEquals(-1, MobileModuleProgress.elapsedSinceStartMs("stamp-1", MODULE));
+    try (MockedStatic<Getter> getter = mockStatic(Getter.class);
+        MockedStatic<Setter> setter = mockStatic(Setter.class);
+        MockedStatic<CountdownHandler> countdown = mockStatic(CountdownHandler.class)) {
+      countdown.when(CountdownHandler::isRunning).thenReturn(true);
+      getter.when(() -> Getter.isModuleOpen(anyString(), anyString())).thenReturn(true);
+      getter
+          .when(() -> Getter.checkPlayerResult(anyString(), anyString(), anyString()))
+          .thenReturn("module.name");
+      stubUpdatePlayerResult(setter, "module.name");
+
+      run(correctFlag());
+
+      assertEquals(HttpServletResponse.SC_OK, status);
+      assertTrue(new JSONObject(body.toString()).getBoolean("correct"));
     }
   }
 
