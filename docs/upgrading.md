@@ -72,7 +72,17 @@ docker compose restart web
 
 If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, ports, ciphers and so on), re-apply those edits to the new Tomcat 11 files, using the backup as a reference. Don't copy the old files back.
 
-### 3. Check it, then clean up
+### 3. Update the mobile modules
+
+If your installation uses the mobile app, update its module rows. The setup page only creates module rows on a fresh install, so an existing database keeps its old rows: the web scoring page rejects the flags the app shows, and the Insecure Communication modules are missing. The script `src/main/resources/database/updatev4_mobile_modules.sql` adds the new modules and corrects the flags of the existing ones. It is safe to run more than once. Skip this step if you don't use the mobile app.
+
+```bash
+docker exec -i secshep_mariadb sh -c \
+  'export MYSQL_PWD="$MYSQL_ROOT_PASSWORD"; exec mariadb -uroot' \
+  < src/main/resources/database/updatev4_mobile_modules.sql
+```
+
+### 4. Check it, then clean up
 
 Log in, open a lesson, and check the scoreboard. Then delete `$HOME/shepherd-conf-backup` and `$HOME/shepherd-db-backup`, or move them somewhere safe. On Linux hosts the archives are owned by root, but you can still delete them because you own the directories.
 
