@@ -266,13 +266,13 @@ public class Setup extends HttpServlet {
             // Writing db file succeeded
 
             try {
-              if (dbOverride.equalsIgnoreCase("override")) {
+              if ("override".equalsIgnoreCase(dbOverride)) {
                 executeSqlScript();
                 htmlOutput =
                     bundle.getString("generic.text.setup.success")
                         + " "
                         + bundle.getString("generic.text.setup.success.overwrittendb");
-              } else if (dbOverride.equalsIgnoreCase("upgrade")) {
+              } else if ("upgrade".equalsIgnoreCase(dbOverride)) {
                 executeUpdateScript();
                 htmlOutput =
                     bundle.getString("generic.text.setup.success")
@@ -295,7 +295,7 @@ public class Setup extends HttpServlet {
             resetInstalledCache();
           }
 
-          if (enableMongoChallenge.equalsIgnoreCase("enable")) {
+          if ("enable".equalsIgnoreCase(enableMongoChallenge)) {
             if (!Validate.isValidPortNumber(mongodbPort)) {
               htmlOutput = bundle.getString("generic.text.setup.error.valid.port");
               FileUtils.deleteQuietly(new File(Constants.MYSQL_DB_PROP));
@@ -323,7 +323,7 @@ public class Setup extends HttpServlet {
             }
           }
 
-          if (enableUnsafeLevels.equalsIgnoreCase("enable")) {
+          if ("enable".equalsIgnoreCase(enableUnsafeLevels)) {
             openUnsafeLevels();
             if (!executeCreateChallengeFile()) {
               htmlOutput = bundle.getString("generic.text.setup.file.failed");
@@ -465,7 +465,7 @@ public class Setup extends HttpServlet {
     }
   }
 
-  private static void generateAuth() {
+  static void generateAuth() {
     try {
       if (!Files.exists(Paths.get(Constants.SETUP_AUTH), LinkOption.NOFOLLOW_LINKS)) {
         UUID randomUUID = UUID.randomUUID();
@@ -475,7 +475,7 @@ public class Setup extends HttpServlet {
             Paths.get(Constants.SETUP_AUTH),
             randomUUID.toString().getBytes(),
             StandardOpenOption.CREATE);
-        log.info("Generated UUID " + randomUUID + " in " + Constants.SETUP_AUTH);
+        log.info("Generated a new setup auth token in " + Constants.SETUP_AUTH);
       }
     } catch (IOException e) {
       log.fatal("Unable to generate auth: " + e.getMessage());

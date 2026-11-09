@@ -66,7 +66,7 @@ public class ChangeUserPassword extends HttpServlet {
 
           log.debug("Getting Parameters");
           String player = (String) request.getParameter("player");
-          log.debug("player = " + player.toString());
+          log.debug("player = " + player);
           String newPassword = (String) request.getParameter("password");
           log.debug("newPass = " + newPassword);
 
