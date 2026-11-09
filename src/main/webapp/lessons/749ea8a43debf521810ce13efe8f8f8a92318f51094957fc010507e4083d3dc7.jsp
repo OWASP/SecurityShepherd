@@ -6,10 +6,6 @@ String levelName = "What is Mobile Insecure Authorization?";
 String levelHash = "749ea8a43debf521810ce13efe8f8f8a92318f51094957fc010507e4083d3dc7";
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
-ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
-String owaspMoreInfo = generic.getString("module.generic.owasp.more.info");
-String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
-String owaspUrl = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.mobile.m3.insecureAuthentication");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -74,7 +70,7 @@ if (request.getSession() != null)
 			toward client-side checks. All client-side authorization controls must be assumed
 			bypassable.
 			<br /><br />
-			<%= owaspMoreInfo %> <a href="<%= owaspUrl %>" target="_blank"><%= owaspGuideTo %> Insecure Authentication/Authorization (M3)</a>
+			OWASP Mobile Top 10 &ndash; M3: Insecure Authentication/Authorization
 			<br /> </br> </br>
 			<input type="button" value="Hide Lesson Introduction" id="hideLesson" />
 		</div>

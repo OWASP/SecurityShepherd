@@ -6,10 +6,6 @@ String levelName = "What is Mobile Inadequate Supply Chain Controls?";
 String levelHash = "f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d7c6b5a4f3e2";
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
-ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
-String owaspMoreInfo = generic.getString("module.generic.owasp.more.info");
-String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
-String owaspUrl = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.mobile.m2.inadequateSupplyChain");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -74,7 +70,7 @@ if (request.getSession() != null)
 			dependencies, pin them to specific versions, and audit them regularly using tools such as
 			<a href="https://owasp.org/www-project-dependency-check/" target="_blank">OWASP Dependency-Check</a>.
 			<br /><br />
-			<%= owaspMoreInfo %> <a href="<%= owaspUrl %>" target="_blank"><%= owaspGuideTo %> Inadequate Supply Chain Security (M2)</a>
+			OWASP Mobile Top 10 &ndash; M2: Inadequate Supply Chain Security
 			<br /> </br> </br>
 			<input type="button" value="Hide Lesson Introduction" id="hideLesson" />
 		</div>

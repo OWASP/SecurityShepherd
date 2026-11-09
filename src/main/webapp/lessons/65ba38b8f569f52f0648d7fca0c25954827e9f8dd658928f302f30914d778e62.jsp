@@ -7,11 +7,7 @@ String levelHash = "65ba38b8f569f52f0648d7fca0c25954827e9f8dd658928f302f30914d77
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle bundle = ResourceBundle.getBundle("i18n.lessons.m_input_validation." + levelHash, locale);
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
-ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
 String translatedLevelName = bundle.getString("title.question.m_input_validation");
-String owaspMoreInfo = generic.getString("module.generic.owasp.more.info");
-String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
-String owaspUrl = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.mobile.m4.insufficientInputValidation");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -64,7 +60,7 @@ if (request.getSession() != null)
 			<br /><br />
 			<%= bundle.getString("paragraph.info.4") %>
 			<br /><br />
-			<%= owaspMoreInfo %> <a href="<%= owaspUrl %>" target="_blank"><%= owaspGuideTo %> Input/Output Validation (M4)</a>
+			OWASP Mobile Top 10 &ndash; M4: Insufficient Input/Output Validation
 			<br /> </br> </br>
 			<input type="button" value="<%= bundle.getString("button.hideIntro") %>" id="hideLesson" />
 		</div>

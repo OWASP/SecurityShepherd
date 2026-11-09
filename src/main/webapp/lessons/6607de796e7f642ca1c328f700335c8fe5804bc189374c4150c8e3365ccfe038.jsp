@@ -6,10 +6,6 @@ String levelName = "What is Mobile Privacy Controls?";
 String levelHash = "6607de796e7f642ca1c328f700335c8fe5804bc189374c4150c8e3365ccfe038";
 Locale locale = new Locale(Validate.validateLanguage(request.getSession()));
 ResourceBundle mobile = ResourceBundle.getBundle("i18n.moduleGenerics.mobileGenericStrings", locale);
-ResourceBundle generic = ResourceBundle.getBundle("i18n.text", locale);
-String owaspMoreInfo = generic.getString("module.generic.owasp.more.info");
-String owaspGuideTo = generic.getString("module.generic.owasp.guide.to");
-String owaspUrl = FileInputProperties.readPropFileClassLoader("/uri.properties", "owasp.mobile.m6.inadequatePrivacyControls");
 
 /**
  * This file is part of the Security Shepherd Project.
@@ -72,7 +68,7 @@ if (request.getSession() != null)
 			The recommended first step is data minimisation: never collect or retain PII that is not
 			strictly necessary, and strip sensitive metadata before sharing any user-generated files.
 			<br /><br />
-			<%= owaspMoreInfo %> <a href="<%= owaspUrl %>" target="_blank"><%= owaspGuideTo %> Inadequate Privacy Controls (M6)</a>
+			OWASP Mobile Top 10 &ndash; M6: Inadequate Privacy Controls
 			<br /> </br> </br>
 			<input type="button" value="Hide Lesson Introduction" id="hideLesson" />
 		</div>
