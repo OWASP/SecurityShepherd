@@ -917,6 +917,188 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Privacy Controls Lesson Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="@color/warning_orange"
+            app:strokeWidth="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/privacy_lesson_section"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/warning_orange"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Pull sample photo -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pull_sample_photo"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cmd_pull_sample_photo"
+                            android:textSize="12sp"
+                            android:fontFamily="monospace"
+                            android:background="@color/code_bg"
+                            android:padding="8dp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/copyPullSamplePhoto"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+
+                <!-- exiftool -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/read_photo_exif"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cmd_exiftool"
+                            android:textSize="12sp"
+                            android:fontFamily="monospace"
+                            android:background="@color/code_bg"
+                            android:padding="8dp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/copyExiftool"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Input Validation Lesson Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="@color/warning_orange"
+            app:strokeWidth="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/input_validation_lesson_section"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/warning_orange"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Deep link -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/send_deep_link"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/adb_shell_am_start_a_view_d_myappopenurlt"
+                            android:textSize="12sp"
+                            android:fontFamily="monospace"
+                            android:background="@color/code_bg"
+                            android:padding="8dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/craft_a_target_url_that_passes_the_allow_list"
+                            android:textSize="11sp"
+                            android:textStyle="italic"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/copyDeepLink"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
     </LinearLayout>
 
 </ScrollView>

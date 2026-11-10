@@ -2,9 +2,9 @@ package org.owasp.mobileshepherd.ui.lessons.privacycontrols;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -78,16 +78,11 @@ public class PrivacyControlsLessonFragment extends Fragment {
         try {
             imageFile = new File(requireContext().getFilesDir(), SAMPLE_IMAGE_NAME);
 
-            // Build a simple coloured bitmap as the "photo"
-            Bitmap bmp = Bitmap.createBitmap(800, 600, Bitmap.Config.ARGB_8888);
+            Bitmap src = BitmapFactory.decodeResource(getResources(), R.drawable.privacy_sample_photo);
+            Bitmap bmp = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bmp);
-            canvas.drawColor(Color.parseColor("#2C3E50"));
-            Paint paint = new Paint();
-            paint.setColor(Color.WHITE);
-            paint.setTextSize(48f);
-            canvas.drawText("Security Shepherd", 50f, 100f, paint);
-            paint.setTextSize(28f);
-            canvas.drawText("Sample Photo — Analyze the metadata!", 50f, 200f, paint);
+            canvas.drawColor(Color.WHITE);
+            canvas.drawBitmap(src, 0f, 0f, null);
 
             try (FileOutputStream fos = new FileOutputStream(imageFile)) {
                 bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
@@ -134,11 +129,9 @@ public class PrivacyControlsLessonFragment extends Fragment {
               .append(" ").append(nvl(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF))).append("\n");
             sb.append("GPS Lon:     ").append(nvl(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)))
               .append(" ").append(nvl(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF))).append("\n");
-            sb.append("Description: ").append(nvl(exif.getAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION)));
+            sb.append("\nThe viewer only shows some of the metadata. Pull the file off the device to see all of it.");
 
             binding.tvImageInfo.setText(sb.toString());
-            Log.d(TAG, "EXIF data displayed. ImageDescription = " +
-                    exif.getAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION));
 
         } catch (Exception e) {
             Log.e(TAG, "Error reading EXIF: " + e.getMessage());
@@ -163,7 +156,7 @@ public class PrivacyControlsLessonFragment extends Fragment {
         String entered = binding.editKey.getText() != null
                 ? binding.editKey.getText().toString().trim() : "";
         if (entered.isEmpty()) {
-            Toast.makeText(getContext(), "Enter the key from the EXIF Description field", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Enter the key hidden in the image metadata", Toast.LENGTH_SHORT).show();
             return;
         }
         binding.btnSubmitKey.setEnabled(false);
@@ -180,7 +173,7 @@ public class PrivacyControlsLessonFragment extends Fragment {
                     } else {
                         binding.btnSubmitKey.setEnabled(true);
                         binding.textKeyResult.setVisibility(View.VISIBLE);
-                        binding.textKeyResult.setText("Incorrect. Load the sample image and check the ImageDescription tag.");
+                        binding.textKeyResult.setText("Incorrect. Pull the sample photo with ADB and read all of its EXIF tags.");
                         binding.textKeyResult.setTextColor(
                                 ContextCompat.getColor(requireContext(), R.color.error_red));
                         binding.editKey.setText("");

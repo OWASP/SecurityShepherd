@@ -49,6 +49,11 @@ public class AdbReferenceFragment extends Fragment {
         setupCopyButton(binding.copyPullApk, "adb pull /data/app/org.owasp.mobileshepherd-*/base.apk");
         setupCopyButton(binding.copyClearData, "adb shell pm clear org.owasp.mobileshepherd");
 
+        setupCopyButton(binding.copyPullSamplePhoto, "adb exec-out run-as org.owasp.mobileshepherd cat files/sample_photo.jpg > sample_photo.jpg");
+        setupCopyButton(binding.copyExiftool, "exiftool sample_photo.jpg");
+
+        setupCopyButton(binding.copyDeepLink, "adb shell am start -a android.intent.action.VIEW -d \"myapp://open?url=<TARGET_URL>\"");
+
 
         return root;
     }

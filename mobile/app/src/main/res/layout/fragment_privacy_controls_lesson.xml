@@ -94,7 +94,7 @@
                     android:id="@+id/iv_photo"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitCenter"
                     android:background="@color/background_secondary"
                     android:contentDescription="@string/privacy_photo_description"
                     android:visibility="visible" />
@@ -182,7 +182,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Key from EXIF Description field"
+                    android:hint="Key from the image metadata"
                     android:layout_marginBottom="12dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 

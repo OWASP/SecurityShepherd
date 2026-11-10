@@ -186,6 +186,17 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="adb_pull_dataappcomowaspappbaseapk">adb pull /data/app/org.owasp.mobileshepherd-*/base.apk</string>
     <string name="clear_app_data">Clear app data</string>
     <string name="adb_shell_pm_clear_comowaspapp">adb shell pm clear org.owasp.mobileshepherd</string>
+    <!-- Privacy Controls Lesson -->
+    <string name="privacy_lesson_section">Privacy Controls Lesson</string>
+    <string name="pull_sample_photo">Pull the sample photo (run-as)</string>
+    <string name="cmd_pull_sample_photo">adb exec-out run-as org.owasp.mobileshepherd cat files/sample_photo.jpg &gt; sample_photo.jpg</string>
+    <string name="read_photo_exif">Read the photo\'s EXIF metadata</string>
+    <string name="cmd_exiftool">exiftool sample_photo.jpg</string>
+    <!-- Input Validation Lesson -->
+    <string name="input_validation_lesson_section">Input Validation Lesson</string>
+    <string name="send_deep_link">Send a deep link to the app</string>
+    <string name="adb_shell_am_start_a_view_d_myappopenurlt">adb shell am start -a android.intent.action.VIEW -d "myapp://open?url=&lt;TARGET_URL&gt;"</string>
+    <string name="craft_a_target_url_that_passes_the_allow_list">Craft a TARGET_URL that passes the allow-list check but loads a page from a different host.</string>
     <string name="username_title">Username</string>
     <string name="password_title">Password</string>
     <string name="challenge">Challenge</string>
