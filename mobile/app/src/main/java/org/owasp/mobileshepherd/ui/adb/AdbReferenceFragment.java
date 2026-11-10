@@ -49,6 +49,8 @@ public class AdbReferenceFragment extends Fragment {
         setupCopyButton(binding.copyPullApk, "adb pull /data/app/org.owasp.mobileshepherd-*/base.apk");
         setupCopyButton(binding.copyClearData, "adb shell pm clear org.owasp.mobileshepherd");
 
+        setupCopyButton(binding.copyLaunchActivity, "adb shell am start -n org.owasp.mobileshepherd/[ACTIVITY_PATH]");
+
 
         return root;
     }

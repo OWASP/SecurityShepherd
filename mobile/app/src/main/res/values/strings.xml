@@ -193,7 +193,8 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <!-- Security Misconfiguration -->
     <string name="menu_security_misconfig_lesson">Security Misconfiguration Lesson</string>
     <string name="menu_security_misconfig_challenge2">Security Misconfiguration 1</string>
-    <string name="adb_exploitation_command">ADB Exploitation Command:</string>
+    <string name="security_misconfig_lesson_section">Security Misconfiguration Lesson</string>
+    <string name="launch_exported_activity">Launch an exported activity</string>
     <string name="adb_shell_am_start_n_comowaspappactivity">adb shell am start -n org.owasp.mobileshepherd/[ACTIVITY_PATH]</string>
     <string name="discovered_activities">Discovered Activities:</string>
     <string name="exploit_exported_component">Exploit Exported Component</string>

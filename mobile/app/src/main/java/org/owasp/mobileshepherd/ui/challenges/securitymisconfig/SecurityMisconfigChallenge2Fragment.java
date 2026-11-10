@@ -44,10 +44,9 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
 
         progressTracker = new ProgressTracker(requireContext());
 
-        // Setup expandable FAB with command reference and OWASP link
+        // Setup expandable FAB with command reference
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
             fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.SECURITY_MISCONFIG_CHALLENGE_2));
@@ -55,7 +54,7 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
                 showVulnerabilityInfo();
-                collapseFab(fab, fabCommandRef, fabOwaspLink);
+                collapseFab(fab, fabCommandRef);
             });
         }
 
@@ -75,20 +74,19 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
         return root;
     }
 
-    private void toggleFabExpansion(FloatingActionButton mainFab, FloatingActionButton fab1, FloatingActionButton fab2) {
+    private void toggleFabExpansion(FloatingActionButton mainFab, FloatingActionButton fab1) {
         fabExpanded = !fabExpanded;
         if (fabExpanded) {
             if (fab1 != null) fab1.setVisibility(View.VISIBLE);
             if (mainFab != null) mainFab.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         } else {
-            collapseFab(mainFab, fab1, fab2);
+            collapseFab(mainFab, fab1);
         }
     }
 
-    private void collapseFab(FloatingActionButton mainFab, FloatingActionButton fab1, FloatingActionButton fab2) {
+    private void collapseFab(FloatingActionButton mainFab, FloatingActionButton fab1) {
         fabExpanded = false;
         if (fab1 != null) fab1.setVisibility(View.GONE);
-        if (fab2 != null) fab2.setVisibility(View.GONE);
         if (mainFab != null) mainFab.setImageResource(android.R.drawable.ic_menu_help);
     }
 
@@ -171,7 +169,6 @@ public class SecurityMisconfigChallenge2Fragment extends Fragment {
         super.onDestroyView();
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
-        collapseFab(fab, fabCommandRef, fabOwaspLink);
+        collapseFab(fab, fabCommandRef);
     }
 }
