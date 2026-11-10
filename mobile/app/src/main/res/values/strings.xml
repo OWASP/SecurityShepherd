@@ -220,6 +220,10 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="reset_token_hint">Reset Token</string>
     <string name="verify_token">Verify Token</string>
     <string name="poor_auth_account_recovered">Account Recovered</string>
+    <string name="poor_auth_avatar_name">Jack</string>
+    <string name="poor_auth_avatar_status">Account locked</string>
+    <string name="poor_auth_avatar_description">Profile picture of the locked account</string>
+    <string name="poor_auth_escape_description">A sheep jumping over a fence</string>
     <string name="poor_auth_empty_fields">Please fill in all fields</string>
     <string name="poor_auth_invalid_token">Invalid reset token</string>
     <string name="poor_auth_token_generated">A password reset token has been generated for this account.</string>
