@@ -74,7 +74,11 @@ If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, por
 
 ### 3. Update the mobile modules
 
-If your installation uses the mobile app, update its module rows. The setup page only creates module rows on a fresh install, so an existing database keeps its old rows: the web scoring page rejects the flags the app shows. The script `src/main/resources/database/updatev4_mobile_modules.sql` corrects the flags of the existing app modules. It is safe to run more than once. Skip this step if you don't use the mobile app.
+If your installation uses the mobile app, update its module rows. The setup page only creates module rows on a fresh install, so an existing database keeps its old rows. Do this in two parts, in this order. Skip this step if you don't use the mobile app.
+
+First, open the setup page (`/setup.jsp`) and run the **upgrade-mobile** option. It renames the surviving mobile modules and removes the modules the app no longer has, together with their cheatsheet, medal and result rows. Without it, the challenge list fails to load because the database still names modules that have no text any more.
+
+Second, run the script `src/main/resources/database/updatev4_mobile_modules.sql`. The web scoring page rejects the flags the app shows until this corrects the flags of the existing app modules. It is safe to run more than once.
 
 ```bash
 docker exec -i secshep_mariadb sh -c \
