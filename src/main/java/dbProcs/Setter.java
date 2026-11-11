@@ -59,6 +59,7 @@ public class Setter {
               + " OR moduleCategory = 'Mobile Content Provider'"
               + " OR moduleCategory = 'Mobile Data Leakage'"
               + " OR moduleCategory = 'Mobile Injection'"
+              + " OR moduleCategory = 'Mobile Insufficient Cryptography'"
               + " OR moduleCategory = 'Mobile Insecure Data Storage'"
               + " OR moduleCategory = 'Mobile Poor Authentication'"
               + " OR moduleCategory = 'Mobile Reverse Engineering'"
