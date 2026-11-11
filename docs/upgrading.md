@@ -72,7 +72,21 @@ docker compose restart web
 
 If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, ports, ciphers and so on), re-apply those edits to the new Tomcat 11 files, using the backup as a reference. Don't copy the old files back.
 
-### 3. Check it, then clean up
+### 3. Update the mobile modules
+
+If your installation uses the mobile app, update its module rows. The setup page only creates module rows on a fresh install, so an existing database keeps its old rows. Do this in two parts, in this order. Skip this step if you don't use the mobile app.
+
+First, open the setup page (`/setup.jsp`) and run the **upgrade-mobile** option. It renames the surviving mobile modules and removes the modules the app no longer has, together with their cheatsheet, medal and result rows. Without it, the challenge list fails to load because the database still names modules that have no text any more.
+
+Second, run the script `src/main/resources/database/updatev4_mobile_modules.sql`. The web scoring page rejects the flags the app shows until this corrects the flags of the existing app modules. It is safe to run more than once.
+
+```bash
+docker exec -i secshep_mariadb sh -c \
+  'export MYSQL_PWD="$MYSQL_ROOT_PASSWORD"; exec mariadb -uroot' \
+  < src/main/resources/database/updatev4_mobile_modules.sql
+```
+
+### 4. Check it, then clean up
 
 Log in, open a lesson, and check the scoreboard. Then delete `$HOME/shepherd-conf-backup` and `$HOME/shepherd-db-backup`, or move them somewhere safe. On Linux hosts the archives are owned by root, but you can still delete them because you own the directories.
 
