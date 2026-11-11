@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "org.owasp.mobileshepherd"
-        minSdk 21
+        minSdk 24
         targetSdk 34
         versionCode 1
         versionName "1.0"
