@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   Auto Backup rules for API 30 and below (API 31+ uses data_extraction_rules.xml).
+   The default shared preferences hold the server URL, username and session cookies,
+   so they must never leave the device.
+-->
+<full-backup-content>
+    <exclude domain="sharedpref" path="org.owasp.mobileshepherd_preferences.xml"/>
+</full-backup-content>
