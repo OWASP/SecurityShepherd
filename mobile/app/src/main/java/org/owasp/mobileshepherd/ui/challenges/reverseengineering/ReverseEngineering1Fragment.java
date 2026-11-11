@@ -42,10 +42,9 @@ public class ReverseEngineering1Fragment extends Fragment {
         
         progressTracker = new ProgressTracker(requireContext());
 
-        // Setup expandable FAB with command reference and OWASP link
+        // Setup expandable FAB with command reference
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
             fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.RE_CHALLENGE_1));
@@ -53,7 +52,7 @@ public class ReverseEngineering1Fragment extends Fragment {
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
                 showVulnerabilityInfo();
-                collapseFab(fab, fabCommandRef, fabOwaspLink);
+                collapseFab(fab, fabCommandRef, null);
             });
         }
 
@@ -145,8 +144,7 @@ public class ReverseEngineering1Fragment extends Fragment {
         super.onDestroyView();
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
-        collapseFab(fab, fabCommandRef, fabOwaspLink);
+        collapseFab(fab, fabCommandRef, null);
         binding = null;
     }
 }
