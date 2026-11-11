@@ -37,7 +37,7 @@ public class GetterIT {
   private static String lang = "en_GB";
   private static Locale locale = new Locale(lang);
   private static String applicationRoot = new String();
-  private static final int totalNumberOfModulesInShepherd = 58;
+  private static final int totalNumberOfModulesInShepherd = 55;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
   @BeforeAll
@@ -614,7 +614,7 @@ public class GetterIT {
   @Test
   public void testCheckPlayerResultWhenModuleNotComplete() {
     String userName = new String("userHasModulesOpened");
-    String contentProviderLeakage = new String("5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a");
+    String insecureDirectObjectLesson = new String("0dbea4cb5811fff0527184f99bd5034ca9286f11");
     try {
       if (verifyTestUser(applicationRoot, userName, userName)) {
         if (Setter.openAllModules(applicationRoot, false)
@@ -622,13 +622,13 @@ public class GetterIT {
           // Simulate user Opening Level
           if (!Getter.getModuleAddress(
                   applicationRoot,
-                  contentProviderLeakage,
+                  insecureDirectObjectLesson,
                   Getter.getUserIdFromName(applicationRoot, userName))
               .isEmpty()) {
             String checkPlayerResultTest =
                 Getter.checkPlayerResult(
                     applicationRoot,
-                    contentProviderLeakage,
+                    insecureDirectObjectLesson,
                     Getter.getUserIdFromName(applicationRoot, userName));
             if (checkPlayerResultTest != null) {
               return; // Pass
@@ -636,7 +636,7 @@ public class GetterIT {
               fail("Function says user has not opened challenge or has completed challenge before");
             }
           } else {
-            fail("Could not Content Provider Leakage Lesson as Opened by user");
+            fail("Could not mark Insecure Direct Object References Lesson as Opened by user");
           }
         } else {
           fail("Could not Mark Modules As Opened");

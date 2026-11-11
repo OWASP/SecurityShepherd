@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Security Shepherd Theme Colors for Dark Mode (Material 3) -->
+    <!-- Primary colors for dark mode - lighter purples -->
+    <color name="primary_light_blue_dark">#BA68C8</color>
+    <color name="primary_blue_dark">#AB47BC</color>
+    
+    <!-- Accent colors for dark mode -->
+    <color name="shepherd_green_dark">#4CAF50</color>
+    <color name="shepherd_light_green_dark">#81C784</color>
+    <color name="security_red_light_dark">#EF9A9A</color>
+    <color name="warning_orange_light_dark">#FFB74D</color>
+    <color name="info_blue_light_dark">#90CAF9</color>
+    
+    <!-- Theme-aware colors for dark mode -->
+    <color name="background_primary">#FF121212</color>
+    <color name="background_secondary">#FF1E1E1E</color>
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#FFE0E0E0</color>
+    <color name="text_on_button">#FFFFFFFF</color>
+    
+    <!-- Card background colors for dark mode -->
+    <color name="card_info_bg">#1E3A5F</color>
+    <color name="card_info_text">#90CAF9</color>
+    <color name="card_info_stroke">#42A5F5</color>
+    <color name="card_info_accent">#90CAF9</color>
+    
+    <color name="card_error_bg">#4A1A1A</color>
+    <color name="card_error_text">#EF9A9A</color>
+
+    <color name="progress_box_bg">#1B5E20</color>
+    
+    <color name="card_warning_bg">#4A3A1A</color>
+    <color name="card_warning_text">#FFB74D</color>
+    <color name="card_warning_stroke">#FFB74D</color>
+    <color name="card_warning_accent">#FFB74D</color>
+    
+    <color name="card_success_bg">#1A3A1A</color>
+    <color name="card_success_text">#81C784</color>
+    <color name="card_success_stroke">#66BB6A</color>
+
+    <!-- Code / monospace path banner -->
+    <color name="card_code_bg">#0D1117</color>
+    <color name="card_code_text">#7EE787</color>
+    <color name="card_success_accent">#81C784</color>
+    
+    <color name="card_danger_bg">#4A1A2A</color>
+    <color name="card_danger_stroke">#EC407A</color>
+    <color name="card_danger_accent">#F06292</color>
+    
+    <color name="card_background">#FF2C2C2C</color>
+    <color name="card_bg">#FF2C2C2C</color>
+    <color name="card_stroke">#FF616161</color>
+    <color name="card_lesson_bg">#3A2E42</color>
+    
+    <color name="code_bg">#FF2C2C2C</color>
+    <color name="error_bg">#4A1A1A</color>
+    <color name="error_text">#EF9A9A</color>
+    <color name="success_bg">#1A3A1A</color>
+    <color name="success_text">#81C784</color>
+    
+    <!-- Button colors (same as light mode) -->
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorAccent">#FF9800</color>
+    <color name="colorSecondary">#BA68C8</color>
+</resources>
