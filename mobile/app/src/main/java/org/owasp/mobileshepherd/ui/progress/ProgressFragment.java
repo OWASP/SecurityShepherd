@@ -1,5 +1,6 @@
 package org.owasp.mobileshepherd.ui.progress;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -151,6 +153,7 @@ public class ProgressFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             ModuleItem item = modules.get(position);
+            Context context = holder.itemView.getContext();
 
             holder.nameText.setText(item.displayName);
             holder.typeText.setText(item.type.toUpperCase());
@@ -158,11 +161,10 @@ public class ProgressFragment extends Fragment {
             if (item.isCompleted) {
                 holder.statusIcon.setImageResource(R.drawable.ic_status_complete);
                 holder.statusIcon.setImageTintList(ColorStateList.valueOf(
-                        holder.itemView.getContext().getColor(R.color.success_green)));
+                        ContextCompat.getColor(context, R.color.success_green)));
                 holder.statusIcon.setContentDescription("Completed");
                 holder.statusText.setText("Completed");
-                holder.statusText.setTextColor(holder.itemView.getContext()
-                        .getColor(R.color.success_green));
+                holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.success_green));
 
                 String completionInfo = dateFormat.format(new Date(item.completionTime));
                 if (item.completionCount > 1) {
@@ -176,22 +178,19 @@ public class ProgressFragment extends Fragment {
                         unavailable ? R.string.module_unavailable : R.string.not_started);
                 holder.statusIcon.setImageResource(R.drawable.ic_status_incomplete);
                 holder.statusIcon.setImageTintList(ColorStateList.valueOf(
-                        holder.itemView.getContext().getColor(R.color.text_secondary)));
+                        ContextCompat.getColor(context, R.color.text_secondary)));
                 holder.statusIcon.setContentDescription(statusLabel);
                 holder.statusText.setText(statusLabel);
-                holder.statusText.setTextColor(holder.itemView.getContext()
-                        .getColor(R.color.text_secondary));
+                holder.statusText.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
                 holder.dateText.setVisibility(View.GONE);
                 holder.itemView.setAlpha(unavailable ? 0.5f : 1f);
             }
 
             // Set background for challenge vs lesson
             if (item.type.equals(KeyValidator.TYPE_CHALLENGE)) {
-                holder.typeText.setBackgroundColor(holder.itemView.getContext()
-                        .getColor(R.color.challenge_badge));
+                holder.typeText.setBackgroundColor(ContextCompat.getColor(context, R.color.challenge_badge));
             } else {
-                holder.typeText.setBackgroundColor(holder.itemView.getContext()
-                        .getColor(R.color.lesson_badge));
+                holder.typeText.setBackgroundColor(ContextCompat.getColor(context, R.color.lesson_badge));
             }
         }
 

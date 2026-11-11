@@ -44,7 +44,7 @@ public class AdbReferenceFragment extends Fragment {
         setupCopyButton(binding.copySqliteQuery, "sqlite> SELECT * FROM users;");
         setupCopyButton(binding.copyCat, "adb shell cat /data/data/org.owasp.mobileshepherd/shared_prefs/UserCredentials.xml");
         
-        setupCopyButton(binding.copyGetPackages, "adb shell pm list packages | grep reverser");
+        setupCopyButton(binding.copyGetPackages, "adb shell pm list packages | grep mobileshepherd");
         setupCopyButton(binding.copyPackagePath, "adb shell pm path org.owasp.mobileshepherd");
         setupCopyButton(binding.copyPullApk, "adb pull /data/app/org.owasp.mobileshepherd-*/base.apk");
         setupCopyButton(binding.copyClearData, "adb shell pm clear org.owasp.mobileshepherd");

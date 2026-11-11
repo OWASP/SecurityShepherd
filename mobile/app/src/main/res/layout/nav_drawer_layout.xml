@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="start"
-    android:background="@color/background_primary"
-    android:fitsSystemWindows="true">
+    android:background="@color/background_primary">
 
     <include layout="@layout/nav_header_main" />
 

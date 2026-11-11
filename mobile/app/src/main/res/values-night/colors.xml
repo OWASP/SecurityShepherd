@@ -6,14 +6,26 @@
     <color name="primary_blue_dark">#AB47BC</color>
     
     <!-- Accent colors for dark mode -->
-    <color name="shepherd_green_dark">#4CAF50</color>
-    <color name="shepherd_light_green_dark">#81C784</color>
     <color name="security_red_light_dark">#EF9A9A</color>
     <color name="warning_orange_light_dark">#FFB74D</color>
-    <color name="info_blue_light_dark">#90CAF9</color>
     
+    <!-- Overrides of the light-mode names used directly by layouts/Java -->
+    <color name="primary_blue">#AB47BC</color>
+    <color name="primary_light_blue">#BA68C8</color>
+    <color name="info_blue">#90CAF9</color>
+    <color name="security_red">#EF9A9A</color>
+    <color name="warning_orange">#FFB74D</color>
+
     <!-- Theme-aware colors for dark mode -->
     <color name="background_primary">#FF121212</color>
+    <color name="background_scrim">#8C000000</color>
+    <color name="card_lesson_stroke">#CE93D8</color>
+    <color name="success_green">#81C784</color>
+    <color name="success_background">#1B3A1F</color>
+    <color name="progress_background">#424242</color>
+    <color name="challenge_badge">#FF8A65</color>
+    <color name="lesson_badge">#64B5F6</color>
+    <color name="scoreboard_header_purple">#D1B3FF</color>
     <color name="background_secondary">#FF1E1E1E</color>
     <color name="text_primary">#FFFFFFFF</color>
     <color name="text_secondary">#FFE0E0E0</color>

@@ -33,6 +33,7 @@
     
     <!-- Theme-aware colors for light mode -->
     <color name="background_primary">#FFFFFFFF</color>
+    <color name="background_scrim">#00000000</color>
     <color name="background_secondary">#FFF5F5F5</color>
     <color name="text_primary">#FF212121</color>
     <color name="text_secondary">#FF424242</color>
