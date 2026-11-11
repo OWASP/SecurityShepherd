@@ -15,6 +15,9 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -115,6 +118,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         DrawerLayout drawer = binding.drawerLayout;
+
+        // Edge-to-edge (targetSdk 35): let the drawer header draw under the status bar.
+        View navHeader = findViewById(R.id.nav_header_root);
+        View navList = findViewById(R.id.nav_recycler_view);
+        final int headerHeight = navHeader.getLayoutParams().height;
+        final int listBottomPadding = navList.getPaddingBottom();
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.nav_drawer), (v, windowInsets) -> {
+            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            navHeader.getLayoutParams().height = headerHeight + bars.top;
+            navHeader.setPadding(navHeader.getPaddingLeft(), bars.top,
+                    navHeader.getPaddingRight(), navHeader.getPaddingBottom());
+            navList.setPadding(navList.getPaddingLeft(), navList.getPaddingTop(),
+                    navList.getPaddingRight(), listBottomPadding + bars.bottom);
+            navHeader.requestLayout();
+            return windowInsets;
+        });
 
         // Wire up nav header auth UI (header is included directly in nav_drawer_layout)
         TextView authStatus = findViewById(R.id.nav_header_auth_status);
