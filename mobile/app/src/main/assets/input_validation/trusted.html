@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TooManySheep.com Partner Portal</title>
+<style>
+body{font-family:sans-serif;margin:0;padding:16px;background:#f4f8fb;color:#1b2a38}
+h1{font-size:20px;margin:0 0 8px}
+.card{background:#fff;border:1px solid #c9d8e4;border-radius:10px;padding:12px;margin-top:12px}
+code{background:#eef3f7;padding:2px 4px;border-radius:4px}
+</style></head><body>
+<h1>TooManySheep.com Partner Portal</h1>
+<p>Welcome back. This is a trusted partner page.</p>
+<div class="card">Signed in as <b>partner@toomanysheep.com</b><br>
+Session token: <code id="token">loading...</code></div>
+<script>
+(function () {
+  var el = document.getElementById('token');
+  if (window.Shepherd) {
+    el.textContent = '*'.repeat(window.Shepherd.getSessionToken().length) + ' (hidden)';
+  } else {
+    el.textContent = 'unavailable';
+  }
+})();
+</script>
+</body></html>
