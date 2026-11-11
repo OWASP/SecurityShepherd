@@ -64,7 +64,11 @@ public class ScoreboardFragment extends Fragment {
         MaterialButton signInButton = root.findViewById(R.id.scoreboard_sign_in_button);
         signInButton.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).openAuthDialog();
+                ((MainActivity) getActivity()).openAuthDialog(() -> {
+                    if (isAdded() && AuthManager.isAuthenticated(requireContext())) {
+                        fetchScoreboard();
+                    }
+                });
             }
         });
 

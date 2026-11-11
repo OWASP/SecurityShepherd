@@ -19,4 +19,9 @@
             android:src="@drawable/shepherd_and_sheep_v2"
             android:gravity="top|right" />
     </item>
+
+    <!-- Dims the artwork in dark mode (transparent in light mode) -->
+    <item>
+        <color android:color="@color/background_scrim" />
+    </item>
 </layer-list>

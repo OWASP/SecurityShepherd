@@ -2,7 +2,6 @@ package org.owasp.mobileshepherd;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -16,14 +15,15 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,9 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Apply saved theme before calling super.onCreate
-        applyTheme();
-        
+        ThemeHelper.apply(this);
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -122,6 +120,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         DrawerLayout drawer = binding.drawerLayout;
+
+        // Edge-to-edge (targetSdk 35): let the drawer header draw under the status bar.
+        View navHeader = findViewById(R.id.nav_header_root);
+        View navList = findViewById(R.id.nav_recycler_view);
+        final int headerHeight = navHeader.getLayoutParams().height;
+        final int listBottomPadding = navList.getPaddingBottom();
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.nav_drawer), (v, windowInsets) -> {
+            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            navHeader.getLayoutParams().height = headerHeight + bars.top;
+            navHeader.setPadding(navHeader.getPaddingLeft(), bars.top,
+                    navHeader.getPaddingRight(), navHeader.getPaddingBottom());
+            navList.setPadding(navList.getPaddingLeft(), navList.getPaddingTop(),
+                    navList.getPaddingRight(), listBottomPadding + bars.bottom);
+            navHeader.requestLayout();
+            return windowInsets;
+        });
 
         // Wire up nav header auth UI (header is included directly in nav_drawer_layout)
         TextView authStatus = findViewById(R.id.nav_header_auth_status);
@@ -316,14 +330,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Called by HomeFragment to open the sign-in dialog from the home screen card. */
-    public void openAuthDialog() {
+    /** Called by fragments after the auth state changed so the drawer header and items follow it. */
+    public void onAuthStateChanged() {
         TextView authStatus = findViewById(R.id.nav_header_auth_status);
         Button authButton = findViewById(R.id.nav_header_auth_button);
-        showAuthDialog(authStatus, authButton);
+        if (authStatus != null && authButton != null) {
+            updateNavHeader(authStatus, authButton);
+        }
+        refreshNavigation();
+        ModuleAvailability.refresh(this, this::refreshNavigation);
+    }
+
+    /** Called by HomeFragment to open the sign-in dialog from the home screen card. */
+    public void openAuthDialog() {
+        openAuthDialog(null);
+    }
+
+    /** Opens the sign-in dialog; {@code onSuccess} runs after a successful sign-in or registration. */
+    public void openAuthDialog(Runnable onSuccess) {
+        TextView authStatus = findViewById(R.id.nav_header_auth_status);
+        Button authButton = findViewById(R.id.nav_header_auth_button);
+        showAuthDialog(authStatus, authButton, onSuccess);
     }
 
     private void showAuthDialog(TextView statusView, Button button) {
+        showAuthDialog(statusView, button, null);
+    }
+
+    private void showAuthDialog(TextView statusView, Button button, Runnable onSuccess) {
         final boolean[] isRegisterMode = {false};
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_auth, null);
@@ -374,9 +408,13 @@ public class MainActivity extends AppCompatActivity {
                 AuthManager.AuthCallback callback = (success, message) -> {
                     if (success) {
                         updateNavHeader(statusView, button);
+                        refreshNavigation();
                         ModuleAvailability.refresh(this, this::refreshNavigation);
                         dialog.dismiss();
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                        if (onSuccess != null) {
+                            onSuccess.run();
+                        }
                     } else {
                         positive.setEnabled(true);
                         neutral.setEnabled(true);
@@ -413,21 +451,4 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void applyTheme() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String themeValue = preferences.getString("theme_preference", "system");
-        
-        switch (themeValue) {
-            case "light":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case "dark":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            case "system":
-            default:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-        }
-    }
 }
