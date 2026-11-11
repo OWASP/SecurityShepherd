@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -136,8 +137,8 @@ public class LoginActivity extends AppCompatActivity {
     private void showStatus(String message, boolean isError) {
         statusText.setText(message);
         statusText.setTextColor(isError
-                ? getResources().getColor(android.R.color.holo_red_dark, getTheme())
-                : getResources().getColor(android.R.color.darker_gray, getTheme()));
+                ? ContextCompat.getColor(this, android.R.color.holo_red_dark)
+                : ContextCompat.getColor(this, android.R.color.darker_gray));
         statusText.setVisibility(View.VISIBLE);
     }
 

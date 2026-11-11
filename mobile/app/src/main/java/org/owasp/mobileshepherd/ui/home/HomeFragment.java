@@ -50,6 +50,9 @@ public class HomeFragment extends Fragment {
             authButton.setOnClickListener(v -> {
                 AuthManager.logout(requireContext());
                 updateAuthCard();
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).onAuthStateChanged();
+                }
             });
         } else {
             statusText.setText("Offline mode — sign in for server-validated keys");

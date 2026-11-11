@@ -179,7 +179,7 @@ https://www.owasp.org/index.php/OWASP_Security_Shepherd </string>
     <string name="adb_shell_cat_datadatacomowaspappsharedp">adb shell cat /data/data/org.owasp.mobileshepherd/shared_prefs/UserCredentials.xml</string>
     <string name="package_management">Package Management</string>
     <string name="find_package_name">Find package name</string>
-    <string name="adb_shell_pm_list_packages_grep_reverser">adb shell pm list packages | grep reverser</string>
+    <string name="adb_shell_pm_list_packages_grep_reverser">adb shell pm list packages | grep mobileshepherd</string>
     <string name="get_apk_path">Get APK path</string>
     <string name="adb_shell_pm_path_comowaspapp">adb shell pm path org.owasp.mobileshepherd</string>
     <string name="pull_apk_file">Pull APK file</string>

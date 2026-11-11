@@ -288,14 +288,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Called by HomeFragment to open the sign-in dialog from the home screen card. */
-    public void openAuthDialog() {
+    /** Called by fragments after the auth state changed so the drawer header and items follow it. */
+    public void onAuthStateChanged() {
         TextView authStatus = findViewById(R.id.nav_header_auth_status);
         Button authButton = findViewById(R.id.nav_header_auth_button);
-        showAuthDialog(authStatus, authButton);
+        if (authStatus != null && authButton != null) {
+            updateNavHeader(authStatus, authButton);
+        }
+        refreshNavigation();
+        ModuleAvailability.refresh(this, this::refreshNavigation);
+    }
+
+    /** Called by HomeFragment to open the sign-in dialog from the home screen card. */
+    public void openAuthDialog() {
+        openAuthDialog(null);
+    }
+
+    /** Opens the sign-in dialog; {@code onSuccess} runs after a successful sign-in or registration. */
+    public void openAuthDialog(Runnable onSuccess) {
+        TextView authStatus = findViewById(R.id.nav_header_auth_status);
+        Button authButton = findViewById(R.id.nav_header_auth_button);
+        showAuthDialog(authStatus, authButton, onSuccess);
     }
 
     private void showAuthDialog(TextView statusView, Button button) {
+        showAuthDialog(statusView, button, null);
+    }
+
+    private void showAuthDialog(TextView statusView, Button button, Runnable onSuccess) {
         final boolean[] isRegisterMode = {false};
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_auth, null);
@@ -346,9 +366,13 @@ public class MainActivity extends AppCompatActivity {
                 AuthManager.AuthCallback callback = (success, message) -> {
                     if (success) {
                         updateNavHeader(statusView, button);
+                        refreshNavigation();
                         ModuleAvailability.refresh(this, this::refreshNavigation);
                         dialog.dismiss();
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                        if (onSuccess != null) {
+                            onSuccess.run();
+                        }
                     } else {
                         positive.setEnabled(true);
                         neutral.setEnabled(true);
