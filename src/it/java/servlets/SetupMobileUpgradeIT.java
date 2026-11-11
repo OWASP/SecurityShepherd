@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test;
 import testUtils.TestProperties;
 
 /**
- * An existing database keeps the Mobile Insecure Data Storage 2 and 3 and Mobile Poor
- * Authentication 2 modules that coreSchema.sql no longer creates, and their lang pointers are gone
- * from moduleNames.properties. The "upgrade-mobile" Setup option must remove them and rename the
- * surviving mobile modules, and must be safe to run again.
+ * An existing database keeps the mobile modules that coreSchema.sql no longer creates (Mobile
+ * Insecure Data Storage 2 and 3, Mobile Poor Authentication 2 and the legacy mobile modules), and
+ * their cheatsheet solution keys are gone from solutions.properties. The "upgrade-mobile" Setup
+ * option must remove them and rename the surviving mobile modules, and must be safe to run again.
  */
 public class SetupMobileUpgradeIT {
 
@@ -40,10 +40,22 @@ public class SetupMobileUpgradeIT {
 
   /** Removed modules: moduleId -> lang pointer left behind in an old database. */
   private static final Map<String, String> REMOVED =
-      Map.of(
-          "da3de2e556494a9c2fb7308a98454cf55f3a4911", "insecure.data.storage.2",
-          "cb7d696bdf88899e8077063d911fc8da14176702", "insecure.data.storage.3",
-          "064e28ea4b2f7708b8cb4495d9db1a5e05decdb8", "poor.authentication.2");
+      Map.ofEntries(
+          Map.entry("da3de2e556494a9c2fb7308a98454cf55f3a4911", "insecure.data.storage.2"),
+          Map.entry("cb7d696bdf88899e8077063d911fc8da14176702", "insecure.data.storage.3"),
+          Map.entry("064e28ea4b2f7708b8cb4495d9db1a5e05decdb8", "poor.authentication.2"),
+          Map.entry("1506f22cd73d14d8a73e0ee32006f35d4f234799", "unintended.data.leakage"),
+          Map.entry("5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a", "content.provider.leakage"),
+          Map.entry("6f5db377c28da4179bca1a43ede8d6bcf7bd322e", "untrusted.input"),
+          Map.entry("ef6496892b8e48ac2f349cdd7c8ecb889fc982af", "broken.crypto"),
+          Map.entry("f16bf2ab1c1bf400d36330f91e9ac6045edcd003", "reverse.engineering.2"),
+          Map.entry("3f010a976bcbd6a37fba4a10e4a057acc80bdc09", "broken.crypto.1"),
+          Map.entry("9e46e3c8bde42dc16b9131c0547eedbf265e8f16", "reverse.engineering.3"),
+          Map.entry("f40b0cd5d45327c9426675313f581cf70c7c7c28", "unintended.data.leakage.1"),
+          Map.entry("1e3c02ad49fa9a9e396a3b268d7da8f0b647d8f9", "unintended.data.leakage.2"),
+          Map.entry("63bc4811a2e72a7c833962e5d47a41251cd90de3", "broken.crypto.2"),
+          Map.entry("6a411618a05e3cef8ccb6f3d7914412d27782a88", "content.provider.leakage.1"),
+          Map.entry("3b1af0ad239325bf494c6e606585320b31612e72", "broken.crypto.3"));
 
   /** Renamed modules: moduleId -> {old name, new name}. */
   private static final Map<String, String[]> RENAMED =

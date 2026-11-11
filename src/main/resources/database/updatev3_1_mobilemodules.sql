@@ -2,24 +2,74 @@
 -- Safe to run more than once: every statement is a DELETE or UPDATE keyed on a fixed module ID.
 use core;
 
--- Mobile Insecure Data Storage 2 and 3, and Mobile Poor Authentication 2, no longer exist.
+-- These mobile modules no longer exist: Mobile Insecure Data Storage 2 and 3, Mobile Poor
+-- Authentication 2, and the legacy mobile modules (Broken Crypto, Reverse Engineering 2 and 3,
+-- Unintended Data Leakage, Content Provider Leakage, Untrusted Input) replaced by the new app.
 -- Their rows go from the dependent tables first, then the modules themselves.
 DELETE FROM medals WHERE moduleId IN (
   'da3de2e556494a9c2fb7308a98454cf55f3a4911',
   'cb7d696bdf88899e8077063d911fc8da14176702',
-  '064e28ea4b2f7708b8cb4495d9db1a5e05decdb8');
+  '064e28ea4b2f7708b8cb4495d9db1a5e05decdb8',
+  '1506f22cd73d14d8a73e0ee32006f35d4f234799',
+  '5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a',
+  '6f5db377c28da4179bca1a43ede8d6bcf7bd322e',
+  'ef6496892b8e48ac2f349cdd7c8ecb889fc982af',
+  'f16bf2ab1c1bf400d36330f91e9ac6045edcd003',
+  '3f010a976bcbd6a37fba4a10e4a057acc80bdc09',
+  '9e46e3c8bde42dc16b9131c0547eedbf265e8f16',
+  'f40b0cd5d45327c9426675313f581cf70c7c7c28',
+  '1e3c02ad49fa9a9e396a3b268d7da8f0b647d8f9',
+  '63bc4811a2e72a7c833962e5d47a41251cd90de3',
+  '6a411618a05e3cef8ccb6f3d7914412d27782a88',
+  '3b1af0ad239325bf494c6e606585320b31612e72');
 DELETE FROM results WHERE moduleId IN (
   'da3de2e556494a9c2fb7308a98454cf55f3a4911',
   'cb7d696bdf88899e8077063d911fc8da14176702',
-  '064e28ea4b2f7708b8cb4495d9db1a5e05decdb8');
+  '064e28ea4b2f7708b8cb4495d9db1a5e05decdb8',
+  '1506f22cd73d14d8a73e0ee32006f35d4f234799',
+  '5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a',
+  '6f5db377c28da4179bca1a43ede8d6bcf7bd322e',
+  'ef6496892b8e48ac2f349cdd7c8ecb889fc982af',
+  'f16bf2ab1c1bf400d36330f91e9ac6045edcd003',
+  '3f010a976bcbd6a37fba4a10e4a057acc80bdc09',
+  '9e46e3c8bde42dc16b9131c0547eedbf265e8f16',
+  'f40b0cd5d45327c9426675313f581cf70c7c7c28',
+  '1e3c02ad49fa9a9e396a3b268d7da8f0b647d8f9',
+  '63bc4811a2e72a7c833962e5d47a41251cd90de3',
+  '6a411618a05e3cef8ccb6f3d7914412d27782a88',
+  '3b1af0ad239325bf494c6e606585320b31612e72');
 DELETE FROM cheatsheet WHERE moduleId IN (
   'da3de2e556494a9c2fb7308a98454cf55f3a4911',
   'cb7d696bdf88899e8077063d911fc8da14176702',
-  '064e28ea4b2f7708b8cb4495d9db1a5e05decdb8');
+  '064e28ea4b2f7708b8cb4495d9db1a5e05decdb8',
+  '1506f22cd73d14d8a73e0ee32006f35d4f234799',
+  '5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a',
+  '6f5db377c28da4179bca1a43ede8d6bcf7bd322e',
+  'ef6496892b8e48ac2f349cdd7c8ecb889fc982af',
+  'f16bf2ab1c1bf400d36330f91e9ac6045edcd003',
+  '3f010a976bcbd6a37fba4a10e4a057acc80bdc09',
+  '9e46e3c8bde42dc16b9131c0547eedbf265e8f16',
+  'f40b0cd5d45327c9426675313f581cf70c7c7c28',
+  '1e3c02ad49fa9a9e396a3b268d7da8f0b647d8f9',
+  '63bc4811a2e72a7c833962e5d47a41251cd90de3',
+  '6a411618a05e3cef8ccb6f3d7914412d27782a88',
+  '3b1af0ad239325bf494c6e606585320b31612e72');
 DELETE FROM modules WHERE moduleId IN (
   'da3de2e556494a9c2fb7308a98454cf55f3a4911',
   'cb7d696bdf88899e8077063d911fc8da14176702',
-  '064e28ea4b2f7708b8cb4495d9db1a5e05decdb8');
+  '064e28ea4b2f7708b8cb4495d9db1a5e05decdb8',
+  '1506f22cd73d14d8a73e0ee32006f35d4f234799',
+  '5b461ebe2e5e2797740cb3e9c7e3f93449a93e3a',
+  '6f5db377c28da4179bca1a43ede8d6bcf7bd322e',
+  'ef6496892b8e48ac2f349cdd7c8ecb889fc982af',
+  'f16bf2ab1c1bf400d36330f91e9ac6045edcd003',
+  '3f010a976bcbd6a37fba4a10e4a057acc80bdc09',
+  '9e46e3c8bde42dc16b9131c0547eedbf265e8f16',
+  'f40b0cd5d45327c9426675313f581cf70c7c7c28',
+  '1e3c02ad49fa9a9e396a3b268d7da8f0b647d8f9',
+  '63bc4811a2e72a7c833962e5d47a41251cd90de3',
+  '6a411618a05e3cef8ccb6f3d7914412d27782a88',
+  '3b1af0ad239325bf494c6e606585320b31612e72');
 
 -- The remaining mobile modules gain a "Mobile" prefix.
 UPDATE modules SET moduleName = 'Mobile Insecure Data Storage' WHERE moduleId = '53a53a66cb3bf3e4c665c442425ca90e29536edd';
