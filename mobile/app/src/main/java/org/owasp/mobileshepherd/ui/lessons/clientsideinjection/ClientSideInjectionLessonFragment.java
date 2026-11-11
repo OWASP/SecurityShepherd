@@ -2,7 +2,7 @@ package org.owasp.mobileshepherd.ui.lessons.clientsideinjection;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,7 +46,6 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         View root = binding.getRoot();
 
         // Initialize database
-        dbHelper = new DatabaseHelper(requireContext());
         progressTracker = new ProgressTracker(requireContext());
 
         // Search stays disabled until the key has arrived and the database is seeded.
@@ -58,6 +57,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
                     if (!isAdded() || binding == null) return;
                     currentKey = key;
                     dbKey = key;
+                    dbHelper = new DatabaseHelper(requireContext(), key);
                     try {
                         initializeDatabase(key);
                         binding.searchButton.setEnabled(true);
@@ -68,10 +68,9 @@ public class ClientSideInjectionLessonFragment extends Fragment {
                     }
                 });
 
-        // Setup expandable FAB with command reference and OWASP link
+        // Setup expandable FAB with command reference
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
             fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.CLIENT_SIDE_INJECTION_LESSON));
@@ -79,7 +78,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
                 showDetailedInfo();
-                collapseFab(fab, fabCommandRef, fabOwaspLink);
+                collapseFab(fab, fabCommandRef, null);
             });
         }
 
@@ -93,14 +92,14 @@ public class ClientSideInjectionLessonFragment extends Fragment {
     private void initializeDatabase(String keyValue) {
         SQLiteDatabase db;
         try {
-            db = dbHelper.getWritableDatabase(dbKey);
+            db = dbHelper.getWritableDatabase();
         } catch (android.database.sqlite.SQLiteException e) {
             // Key no longer matches the previously-encrypted file (e.g. key changed
             // between offline and server-fetched values). The data here is regenerated
             // on every open, so just recreate the file with the new key.
             Log.w(TAG, "DB key mismatch, recreating database", e);
             requireContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
-            db = dbHelper.getWritableDatabase(dbKey);
+            db = dbHelper.getWritableDatabase();
         }
 
         // Clear existing data
@@ -144,7 +143,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         Cursor cursor = null;
 
         try {
-            db = dbHelper.getReadableDatabase(dbKey);
+            db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(query, null);
 
             int count = 0;
@@ -282,8 +281,7 @@ public class ClientSideInjectionLessonFragment extends Fragment {
         super.onDestroyView();
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
-        collapseFab(fab, fabCommandRef, fabOwaspLink);
+        collapseFab(fab, fabCommandRef, null);
         if (dbHelper != null) {
             dbHelper.close();
         }

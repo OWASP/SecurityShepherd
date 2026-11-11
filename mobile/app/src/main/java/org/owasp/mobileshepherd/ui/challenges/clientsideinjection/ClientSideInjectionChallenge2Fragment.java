@@ -3,7 +3,7 @@ package org.owasp.mobileshepherd.ui.challenges.clientsideinjection;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,7 +48,6 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         progressTracker = new ProgressTracker(requireContext());
 
         // Initialize database
-        dbHelper = new Challenge2DatabaseHelper(requireContext());
         // Search stays disabled until the key has arrived and the database is seeded.
         binding.searchProductButton.setEnabled(false);
         KeyProvider.getKey(
@@ -58,6 +57,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
                     if (!isAdded() || binding == null) return;
                     currentKey = key;
                     dbKey = key;
+                    dbHelper = new Challenge2DatabaseHelper(requireContext(), key);
                     try {
                         initializeDatabase(key);
                         binding.searchProductButton.setEnabled(true);
@@ -68,10 +68,9 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
                     }
                 });
 
-        // Setup expandable FAB with command reference and OWASP link
+        // Setup expandable FAB with command reference
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
 
         if (fab != null) {
             fab.setOnClickListener(v -> ModuleInfoHelper.showDialog(requireContext(), KeyValidator.Module.CLIENT_SIDE_INJECTION_CHALLENGE_2));
@@ -79,7 +78,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         if (fabCommandRef != null) {
             fabCommandRef.setOnClickListener(v -> {
                 showVulnerabilityInfo();
-                collapseFab(fab, fabCommandRef, fabOwaspLink);
+                collapseFab(fab, fabCommandRef, null);
             });
         }
 
@@ -95,13 +94,13 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
     private void initializeDatabase(String keyValue) {
         SQLiteDatabase db;
         try {
-            db = dbHelper.getWritableDatabase(dbKey);
+            db = dbHelper.getWritableDatabase();
         } catch (android.database.sqlite.SQLiteException e) {
             // Key changed (e.g. offline local key vs server-issued per-user key); data is
             // regenerated on every open, so recreate the file with the new key.
             Log.w(TAG, "DB key mismatch, recreating database", e);
             requireContext().deleteDatabase(Challenge2DatabaseHelper.DATABASE_NAME);
-            db = dbHelper.getWritableDatabase(dbKey);
+            db = dbHelper.getWritableDatabase();
         }
 
         // Clear existing data
@@ -155,7 +154,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         Cursor cursor = null;
 
         try {
-            db = dbHelper.getReadableDatabase(dbKey);
+            db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(query, null);
             
             StringBuilder results = new StringBuilder();
@@ -274,8 +273,7 @@ public class ClientSideInjectionChallenge2Fragment extends Fragment {
         super.onDestroyView();
         FloatingActionButton fab = requireActivity().findViewById(R.id.fab);
         FloatingActionButton fabCommandRef = requireActivity().findViewById(R.id.fab_command_reference);
-        FloatingActionButton fabOwaspLink = requireActivity().findViewById(R.id.fab_owasp_link);
-        collapseFab(fab, fabCommandRef, fabOwaspLink);
+        collapseFab(fab, fabCommandRef, null);
         if (dbHelper != null) {
             dbHelper.close();
         }

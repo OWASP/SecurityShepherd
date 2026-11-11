@@ -2,7 +2,7 @@ package org.owasp.mobileshepherd.ui.challenges.clientsideinjection;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +42,6 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(ClientSideInjectionChallenge1Model.class);
         progressTracker = new ProgressTracker(requireContext());
-        dbHelper = new Challenge1DatabaseHelper(requireContext());
 
         // Login stays disabled until the key has arrived and the database is seeded.
         binding.loginButton.setEnabled(false);
@@ -51,6 +50,7 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
                     if (!isAdded() || binding == null) return;
                     currentKey = key;
                     dbKey = key;
+                    dbHelper = new Challenge1DatabaseHelper(requireContext(), key);
                     try {
                         seedDatabase(key);
                         binding.loginButton.setEnabled(true);
@@ -75,13 +75,13 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
     private void seedDatabase(String keyValue) {
         SQLiteDatabase db;
         try {
-            db = dbHelper.getWritableDatabase(dbKey);
+            db = dbHelper.getWritableDatabase();
         } catch (android.database.sqlite.SQLiteException e) {
             // Key changed (e.g. offline local key vs server-issued per-user key); data is
             // regenerated on every open, so recreate the file with the new key.
             Log.w(TAG, "DB key mismatch, recreating database", e);
             requireContext().deleteDatabase(Challenge1DatabaseHelper.DATABASE_NAME);
-            db = dbHelper.getWritableDatabase(dbKey);
+            db = dbHelper.getWritableDatabase();
         }
         db.execSQL("DELETE FROM accounts");
         insertAccount(db, "admin",   keyValue,     "admin",  9999);
@@ -150,7 +150,7 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
         SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
-            db = dbHelper.getReadableDatabase(dbKey);
+            db = dbHelper.getReadableDatabase();
             cursor = db.rawQuery(query, null);
             if (cursor.moveToFirst()) {
                 String loggedInUser = cursor.getString(0);
@@ -177,7 +177,7 @@ public class ClientSideInjectionChallenge1Fragment extends Fragment {
                 Log.d(TAG, "Login failed for input: " + rawUser);
                 binding.resultText.setText(R.string.csi_c1_login_failed);
                 binding.resultText.setTextColor(
-                        ContextCompat.getColor(requireContext(), R.color.error_red));
+                        ContextCompat.getColor(requireContext(), R.color.error_text));
             }
         } catch (Exception e) {
             Log.e(TAG, "Query error: " + e.getMessage());

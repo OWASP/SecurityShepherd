@@ -1,17 +1,20 @@
 package org.owasp.mobileshepherd.ui.lessons.clientsideinjection.helpers;
 
 import android.content.Context;
-import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteOpenHelper;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "client_injection.db";
     private static final int DATABASE_VERSION = 1;
 
-    public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        SQLiteDatabase.loadLibs(context);
+    static {
+        System.loadLibrary("sqlcipher");
+    }
+
+    public DatabaseHelper(Context context, String password) {
+        super(context, DATABASE_NAME, password, null, DATABASE_VERSION, 0, null, null, false);
     }
 
     @Override
