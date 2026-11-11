@@ -17,22 +17,18 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 | Category | Topics | Levels |
 | --- | --- | --- |
 | M2: Inadequate Supply Chain Security | [Supply chain security](#supply-chain-security) | 1 |
-| M3: Insecure Authentication/Authorization | [Poor authentication](#poor-authentication), [Insecure authorization](#insecure-authorization) | 4 |
-| M4: Insufficient Input/Output Validation | [Security decisions via untrusted input](#security-decisions-via-untrusted-input), [Client-side injection](#client-side-injection), [Input/output validation](#inputoutput-validation) | 5 |
-| M6: Inadequate Privacy Controls | [Data leakage](#data-leakage), [Privacy controls](#privacy-controls) | 4 |
-| M7: Insufficient Binary Protections | [Reverse engineering](#reverse-engineering) | 4 |
-| M8: Security Misconfiguration | [Content provider leakage](#content-provider-leakage) | 2 |
-| M9: Insecure Data Storage | [Insecure data storage](#insecure-data-storage) | 4 |
-| M10: Insufficient Cryptography | [Broken cryptography](#broken-cryptography) | 4 |
+| M3: Insecure Authentication/Authorization | [Poor authentication](#poor-authentication), [Insecure authorization](#insecure-authorization) | 3 |
+| M4: Insufficient Input/Output Validation | [Client-side injection](#client-side-injection), [Input/output validation](#inputoutput-validation) | 4 |
+| M6: Inadequate Privacy Controls | [Privacy controls](#privacy-controls) | 1 |
+| M7: Insufficient Binary Protections | [Reverse engineering](#reverse-engineering) | 2 |
+| M9: Insecure Data Storage | [Insecure data storage](#insecure-data-storage) | 2 |
 
 ### Insecure data storage
 
 | Level | Kind | Points | Tournament band | Top 10 | CWE |
 | --- | --- | --- | --- | --- | --- |
-| Insecure Data Storage | Lesson | 25 | Private | M9 | [CWE-922](https://cwe.mitre.org/data/definitions/922.html) |
-| Insecure Data Storage 1 | Challenge | 60 | Sergeant | M9 | [CWE-922](https://cwe.mitre.org/data/definitions/922.html) |
-| Insecure Data Storage 2 | Challenge | 65 | Sergeant | M9 | [CWE-922](https://cwe.mitre.org/data/definitions/922.html) |
-| Insecure Data Storage 3 | Challenge | 60 | Lieutenant | M9 | [CWE-922](https://cwe.mitre.org/data/definitions/922.html) |
+| Mobile Insecure Data Storage | Lesson | 25 | Private | M9 | [CWE-922](https://cwe.mitre.org/data/definitions/922.html) |
+| Mobile Insecure Data Storage 1 | Challenge | 60 | Sergeant | M9 | [CWE-922](https://cwe.mitre.org/data/definitions/922.html) |
 
 ### Reverse engineering
 
@@ -40,54 +36,21 @@ Each level shows its OWASP Mobile Top 10 2024 risk and a CWE (Common Weakness En
 | --- | --- | --- | --- | --- | --- |
 | Reverse Engineering | Lesson | 40 | Private | M7 | [CWE-656](https://cwe.mitre.org/data/definitions/656.html) |
 | Reverse Engineering 1 | Challenge | 50 | Corporal | M7 | [CWE-656](https://cwe.mitre.org/data/definitions/656.html) |
-| Reverse Engineering 2 | Challenge | 50 | Corporal | M7 | [CWE-656](https://cwe.mitre.org/data/definitions/656.html) |
-| Reverse Engineering 3 | Challenge | 76 | Sergeant | M7 | [CWE-656](https://cwe.mitre.org/data/definitions/656.html) |
-
-### Data leakage
-
-| Level | Kind | Points | Tournament band | Top 10 | CWE |
-| --- | --- | --- | --- | --- | --- |
-| Unintended Data Leakage | Lesson | 40 | Private | M6 | [CWE-200](https://cwe.mitre.org/data/definitions/200.html) |
-| Unintended Data Leakage 1 | Challenge | 60 | Lieutenant | M6 | [CWE-200](https://cwe.mitre.org/data/definitions/200.html) |
-| Unintended Data Leakage 2 | Challenge | 70 | Lieutenant | M6 | [CWE-200](https://cwe.mitre.org/data/definitions/200.html) |
-
-### Content provider leakage
-
-| Level | Kind | Points | Tournament band | Top 10 | CWE |
-| --- | --- | --- | --- | --- | --- |
-| Content Provider Leakage | Lesson | 50 | Private | M8 | [CWE-926](https://cwe.mitre.org/data/definitions/926.html) |
-| Content Provider Leakage 1 | Challenge | 75 | Admiral | M8 | [CWE-926](https://cwe.mitre.org/data/definitions/926.html) |
-
-### Security decisions via untrusted input
-
-| Level | Kind | Points | Tournament band | Top 10 | CWE |
-| --- | --- | --- | --- | --- | --- |
-| Untrusted Input | Lesson | 50 | Corporal | M4 | [CWE-807](https://cwe.mitre.org/data/definitions/807.html) |
 
 ### Client-side injection
 
 | Level | Kind | Points | Tournament band | Top 10 | CWE |
 | --- | --- | --- | --- | --- | --- |
-| Client Side Injection | Lesson | 50 | Corporal | M4 | [CWE-89](https://cwe.mitre.org/data/definitions/89.html) |
-| Client Side Injection 1 | Challenge | 70 | Lieutenant | M4 | [CWE-89](https://cwe.mitre.org/data/definitions/89.html) |
-| Client Side Injection 2 | Challenge | 80 | Major | M4 | [CWE-89](https://cwe.mitre.org/data/definitions/89.html) |
+| Mobile Client Side Injection | Lesson | 50 | Corporal | M4 | [CWE-89](https://cwe.mitre.org/data/definitions/89.html) |
+| Mobile Client Side Injection 1 | Challenge | 70 | Lieutenant | M4 | [CWE-89](https://cwe.mitre.org/data/definitions/89.html) |
+| Mobile Client Side Injection 2 | Challenge | 80 | Major | M4 | [CWE-89](https://cwe.mitre.org/data/definitions/89.html) |
 
 ### Poor authentication
 
 | Level | Kind | Points | Tournament band | Top 10 | CWE |
 | --- | --- | --- | --- | --- | --- |
-| Poor Authentication | Lesson | 50 | Corporal | M3 | [CWE-287](https://cwe.mitre.org/data/definitions/287.html) |
-| Poor Authentication 1 | Challenge | 60 | Major | M3 | [CWE-287](https://cwe.mitre.org/data/definitions/287.html) |
-| Poor Authentication 2 | Challenge | 70 | Major | M3 | [CWE-287](https://cwe.mitre.org/data/definitions/287.html) |
-
-### Broken cryptography
-
-| Level | Kind | Points | Tournament band | Top 10 | CWE |
-| --- | --- | --- | --- | --- | --- |
-| Broken Crypto | Lesson | 50 | Corporal | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
-| Broken Crypto 1 | Challenge | 60 | Sergeant | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
-| Broken Crypto 2 | Challenge | 75 | Major | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
-| Broken Crypto 3 | Challenge | 180 | Admiral | M10 | [CWE-327](https://cwe.mitre.org/data/definitions/327.html) |
+| Mobile Poor Authentication | Lesson | 50 | Corporal | M3 | [CWE-287](https://cwe.mitre.org/data/definitions/287.html) |
+| Mobile Poor Authentication 1 | Challenge | 60 | Major | M3 | [CWE-287](https://cwe.mitre.org/data/definitions/287.html) |
 
 ### Insecure authorization
 
