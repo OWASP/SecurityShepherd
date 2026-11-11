@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@drawable/shepherd_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Welcome Title -->
+        <TextView
+            android:id="@+id/landing_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/landing_title"
+            android:layout_marginTop="240dp"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/landing_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/owasp_security_shepherd_project"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Warning Box -->
+        <LinearLayout
+            android:id="@+id/landing_warning_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/card_warning_bg"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/landing_warning"
+                android:textSize="14sp"
+                android:textColor="@color/card_warning_text"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/landing_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/this_application_is_designed_for_educati"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/text_primary"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Continue Button -->
+        <Button
+            android:id="@+id/enter_app_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/landing_button"
+            android:textSize="18sp"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- License Info -->
+        <TextView
+            android:id="@+id/landing_license"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/licensed_under_gnu_gpl_v3"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="24dp" />
+    </LinearLayout>
+</ScrollView>
