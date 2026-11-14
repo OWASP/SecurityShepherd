@@ -236,7 +236,7 @@ public class Setup extends HttpServlet {
         }
 
         if (!connectionSuccess) {
-          htmlOutput += bundle.getString("generic.text.setup.connection.failed");
+          // htmlOutput already set by the catch block above; do not append again
         } else {
           // Write the user's entered mysql database properties to file
 
