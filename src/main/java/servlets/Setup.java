@@ -281,7 +281,7 @@ public class Setup extends HttpServlet {
                     bundle.getString("generic.text.setup.success")
                         + " "
                         + bundle.getString("generic.text.setup.success.updatedb");
-              } else if (dbOverride.equalsIgnoreCase("upgrade-mobile")) {
+              } else if ("upgrade-mobile".equalsIgnoreCase(dbOverride)) {
                 executeUpdateScript(UPGRADE_MOBILE_MODULES_SCRIPT);
                 htmlOutput =
                     bundle.getString("generic.text.setup.success")
