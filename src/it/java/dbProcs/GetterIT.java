@@ -37,7 +37,7 @@ public class GetterIT {
   private static String lang = "en_GB";
   private static Locale locale = new Locale(lang);
   private static String applicationRoot = new String();
-  private static final int totalNumberOfModulesInShepherd = 55;
+  private static final int totalNumberOfModulesInShepherd = 51;
 
   /** Creates DB or Restores DB to Factory Defaults before running tests */
   @BeforeAll
@@ -790,14 +790,14 @@ public class GetterIT {
   public void testGetAllModuleInfo() {
     ArrayList<String[]> modules = Getter.getAllModuleInfo(applicationRoot);
     if (modules.size()
-        > 75) // Shepherd v3.0 has 76 Modules. If less than All are Returned, then there is a
+        > 66) // Shepherd has 67 Modules. If less than All are Returned, then there is a
     // problem with the Open Modules Function or the Retrieve data function
     {
       log.debug("PASS: Found " + modules.size() + " modules");
       return;
     } else {
       log.fatal("Too Few Modules Returned to Pass Test: " + modules.size());
-      fail("Only " + modules.size() + "/~76 modules returned from function");
+      fail("Only " + modules.size() + "/67 modules returned from function");
     }
   }
 
