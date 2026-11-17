@@ -125,6 +125,11 @@ name = "Broken cryptography"
 top10 = "M10"
 cwe = 327
 
+[topics."Mobile Insufficient Cryptography"]
+name = "Insufficient cryptography"
+top10 = "M10"
+cwe = 327
+
 # Levels whose vulnerability differs from their topic's
 
 [levels."XXE Injection"]
