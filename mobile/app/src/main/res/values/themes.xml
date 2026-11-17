@@ -1,0 +1,31 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme with Material 3 and balanced color scheme -->
+    <style name="Theme.Reverser" parent="Theme.Material3.DayNight">
+        <!-- Primary brand color (Deep Blue for professionalism) -->
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryVariant">@color/primary_dark_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color (Purple to match primary palette) -->
+        <item name="colorSecondary">@color/primary_light_blue</item>
+        <item name="colorSecondaryVariant">@color/primary_dark_blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Tertiary brand color (Warning Orange) -->
+        <item name="colorTertiary">@color/warning_orange</item>
+        <item name="colorOnTertiary">@color/white</item>
+        <!-- Error color (Security Red) -->
+        <item name="colorError">@color/security_red</item>
+        <item name="colorOnError">@color/white</item>
+        <!-- Status bar color (subtle purple) -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/status_bar_light</item>
+        <!-- Customize your theme here -->
+    </style>
+
+    <style name="Theme.Reverser.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Reverser.AppBarOverlay" parent="ThemeOverlay.Material3.Dark.ActionBar" />
+
+    <style name="Theme.Reverser.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
+</resources>
