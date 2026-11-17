@@ -105,6 +105,11 @@ name = "Content provider leakage"
 top10 = "M8"
 cwe = 926
 
+[topics."Mobile Security Misconfiguration"]
+name = "Security misconfiguration"
+top10 = "M8"
+cwe = 16
+
 [topics."Mobile Security Decisions via Untrusted Input"]
 name = "Security decisions via untrusted input"
 top10 = "M4"
