@@ -3,16 +3,14 @@ package servlets.module.challenge;
 import static dbProcs.MongoDatabase.getMongoDatabase;
 import static dbProcs.MongoDatabase.getMongoDbConnection;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.MongoException;
 import com.mongodb.MongoSocketException;
 import com.mongodb.MongoTimeoutException;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import dbProcs.MongoDatabase;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -25,6 +23,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bson.Document;
 import org.owasp.encoder.Encode;
 import utils.ShepherdLogManager;
 import utils.Validate;
@@ -86,12 +85,13 @@ public class NoSqlInjection1 extends HttpServlet {
       out.print(getServletInfo());
       String htmlOutput = new String();
 
-      DBCollection dbCollection;
+      MongoCollection<Document> dbCollection;
       MongoCredential credential;
       MongoClient mongoClient = null;
-      DB mongoDb;
+      com.mongodb.client.MongoDatabase mongoDb;
       String dbCollectionName;
-      DBCursor cursor;
+      FindIterable<Document> results;
+      MongoCursor<Document> cursor = null;
       Object id;
       Object name;
       Object address;
@@ -113,8 +113,8 @@ public class NoSqlInjection1 extends HttpServlet {
         String gamerId = request.getParameter("theGamerName");
         log.debug("User Submitted: " + gamerId);
 
-        DBObject whereQuery = new BasicDBObject("$where", "this._id == '" + gamerId + "'");
-        cursor = dbCollection.find(whereQuery);
+        Document whereQuery = new Document("$where", "this._id == '" + gamerId + "'");
+        results = dbCollection.find(whereQuery);
 
         try {
           int i = 0;
@@ -123,8 +123,10 @@ public class NoSqlInjection1 extends HttpServlet {
 
           log.debug("Opening Result Set from query");
 
+          // The query runs here, when the cursor is opened, as the legacy DBCursor did on hasNext()
+          cursor = results.iterator();
           while (cursor.hasNext()) {
-            DBObject result = cursor.next();
+            Document result = cursor.next();
             id = result.get("_id");
             name = result.get("name");
             address = result.get("address");
@@ -157,7 +159,9 @@ public class NoSqlInjection1 extends HttpServlet {
           out.write("An Error Occurred! You must be getting funky!");
           log.fatal(levelName + " - " + e.toString());
         } finally {
-          cursor.close();
+          if (cursor != null) {
+            cursor.close();
+          }
           mongoClient.close();
         }
       } catch (MongoSocketException e) {
