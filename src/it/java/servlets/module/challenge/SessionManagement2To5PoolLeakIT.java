@@ -3,18 +3,22 @@ package servlets.module.challenge;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import dbProcs.Database;
 import dbProcs.GetterIT;
 import dbProcs.Setter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +38,11 @@ import testUtils.TestProperties;
  *
  * <p>Each test calls a servlet more times than the pool holds and checks every response came from
  * the database. The inputs name users that do not exist, so no challenge data is changed.
+ *
+ * <p>Those tests only run the success path. The "OnFailure" tests cover the exception path: they
+ * make the level's queries fail after the servlet has borrowed its connection, call the servlet
+ * more times than the pool holds, then restore the table and check a normal request still reaches
+ * the database. A servlet that returns its connection only when no exception was thrown fails them.
  */
 public class SessionManagement2To5PoolLeakIT {
 
@@ -104,6 +113,44 @@ public class SessionManagement2To5PoolLeakIT {
     assertTrue(
         output.contains(expected),
         "Request " + request + " did not get a database result (\"" + expected + "\"): " + output);
+  }
+
+  /** One request to a level servlet, returning what it wrote. */
+  private interface Call {
+    String send() throws Exception;
+  }
+
+  /**
+   * Makes every query a level runs fail after its servlet has borrowed a connection, by hiding the
+   * level's users table, sends more requests than the pool holds, restores the table, and checks
+   * that a normal request still reaches the database.
+   */
+  private static void assertReturnsConnectionsWhenQueriesFail(
+      String schema, Call call, Predicate<String> reachedDatabase) throws Exception {
+    String users = "`" + schema + "`.users";
+    String hidden = "`" + schema + "`.usersHidden";
+    try (Connection conn = Database.getCoreConnection(applicationRoot);
+        Statement stmt = conn.createStatement()) {
+      stmt.executeUpdate("RENAME TABLE " + users + " TO " + hidden);
+      try {
+        for (int i = 1; i <= REQUESTS; i++) {
+          try {
+            call.send();
+          } catch (Exception e) {
+            log.debug("Expected failure while the table is missing: " + e);
+          }
+        }
+      } finally {
+        stmt.executeUpdate("RENAME TABLE " + hidden + " TO " + users);
+      }
+    }
+    String output = call.send();
+    assertTrue(
+        reachedDatabase.test(output),
+        "A normal request did not reach the database after "
+            + REQUESTS
+            + " failed ones, so the servlet is keeping its connections: "
+            + output);
   }
 
   @Test
@@ -192,5 +239,98 @@ public class SessionManagement2To5PoolLeakIT {
       String output = doPost(new SessionManagement5SetToken(), null, "subUserName", noSuchUser);
       assertReachedDatabase(text(5, "response.badUser"), output, i);
     }
+  }
+
+  @Test
+  public void sessionManagement2LoginReturnsConnectionsOnFailure() throws Exception {
+    String badUser = text(2, "response.badUser");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalTwo",
+        () ->
+            doPost(
+                new SessionManagement2(), null, "subName", noSuchUser, "subPassword", "password"),
+        output -> output.contains(badUser));
+  }
+
+  @Test
+  public void sessionManagement2ChangePasswordReturnsConnectionsOnFailure() throws Exception {
+    Pattern changed = Pattern.compile(Pattern.quote(text(2, "response.changedTo")) + " \\S+");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalTwo",
+        () ->
+            doPost(new SessionManagement2ChangePassword(), null, "subEmail", "nobody@example.com"),
+        output -> changed.matcher(output).find());
+  }
+
+  @Test
+  public void sessionManagement3LoginReturnsConnectionsOnFailure() throws Exception {
+    String badUser = text(3, "response.badUser");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalThree",
+        () ->
+            doPost(
+                new SessionManagement3(),
+                null,
+                "subUserName",
+                noSuchUser,
+                "subUserPassword",
+                "password"),
+        output -> output.contains(badUser));
+  }
+
+  @Test
+  public void sessionManagement3ChangePasswordReturnsConnectionsOnFailure() throws Exception {
+    Cookie current = new Cookie("current", base64(base64(noSuchUser)));
+    String changed = text(3, "reset.password");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalThree",
+        () ->
+            doPost(
+                new SessionManagement3ChangePassword(), current, "newPassword", "newPassword123"),
+        output -> output.contains(changed));
+  }
+
+  @Test
+  public void sessionManagement5LoginReturnsConnectionsOnFailure() throws Exception {
+    String badUser = text(5, "response.badUser");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalFive",
+        () ->
+            doPost(
+                new SessionManagement5(),
+                null,
+                "subUserName",
+                noSuchUser,
+                "subUserPassword",
+                "password"),
+        output -> output.contains(badUser));
+  }
+
+  @Test
+  public void sessionManagement5ChangePasswordReturnsConnectionsOnFailure() throws Exception {
+    String token = base64(new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy").format(new Date()));
+    String changed = text(5, "changePass.success");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalFive",
+        () ->
+            doPost(
+                new SessionManagement5ChangePassword(),
+                null,
+                "userName",
+                noSuchUser,
+                "newPassword",
+                "aLongEnoughNewPassword",
+                "resetPasswordToken",
+                token),
+        output -> output.contains(changed));
+  }
+
+  @Test
+  public void sessionManagement5SetTokenReturnsConnectionsOnFailure() throws Exception {
+    String badUser = text(5, "response.badUser");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalFive",
+        () -> doPost(new SessionManagement5SetToken(), null, "subUserName", noSuchUser),
+        output -> output.contains(badUser));
   }
 }
