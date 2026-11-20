@@ -85,6 +85,8 @@ sudo openssl pkcs12 -export \
 
 Let's Encrypt certificates last 90 days. Each time Certbot renews it, build the keystore again, copy it into the volume, and restart Tomcat.
 
+Instead, you can run Security Shepherd behind a reverse proxy that terminates TLS.
+
 ## Admin accounts
 
 - The default `admin` password is public, and you're asked to change it at the first login. Do that before the server is reachable by anyone else.

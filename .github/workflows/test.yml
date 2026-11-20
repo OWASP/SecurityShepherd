@@ -118,8 +118,6 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-      - name: Start MYSQL Server
-        run: sudo /etc/init.d/mysql start
       - name: Modify MySQL Connection Variables
         run: |
           sed -i "s/'@'localhost'/'@'%'/g" "${GITHUB_WORKSPACE}/src/main/resources/database/moduleSchemas.sql"
