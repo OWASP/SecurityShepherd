@@ -1,5 +1,6 @@
 package servlets.module.challenge;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,6 +10,11 @@ import dbProcs.ConnectionPool;
 import dbProcs.Getter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
@@ -58,6 +64,45 @@ public class DirectObjectBankPoolLeakIT {
 
   private void requireDatabase() {
     assumeTrue(databaseAvailable, "Database not available");
+  }
+
+  /**
+   * Pool cap is 3; 4 threads run concurrently. Each call holds one connection only for the
+   * duration of the query, so the 4th thread waits briefly for a free slot rather than
+   * deadlocking. This would have failed with the old doPost code, where bankAuth held conn1
+   * while getAccountBalance tried to acquire conn2 from the same 3-connection pool.
+   */
+  @Test
+  public void concurrentBalanceLookupAbovePoolCapDoesNotDeadlock() throws InterruptedException {
+    requireDatabase();
+
+    int threads = 4;
+    CountDownLatch start = new CountDownLatch(1);
+    CountDownLatch done = new CountDownLatch(threads);
+    AtomicInteger failures = new AtomicInteger(0);
+
+    ExecutorService executor = Executors.newFixedThreadPool(threads);
+    for (int i = 0; i < threads; i++) {
+      executor.submit(
+          () -> {
+            try {
+              start.await();
+              DirectObjectBankLogin.getAccountBalance("0", applicationRoot);
+            } catch (Exception e) {
+              failures.incrementAndGet();
+              log.error("Concurrent balance lookup failed: {}", e.getMessage());
+            } finally {
+              done.countDown();
+            }
+          });
+    }
+
+    start.countDown();
+    boolean completed = done.await(30, TimeUnit.SECONDS);
+    executor.shutdownNow();
+
+    assertTrue(completed, "Timed out waiting for concurrent balance lookups to finish");
+    assertEquals(0, failures.get(), "Some balance lookups failed unexpectedly");
   }
 
   /**
