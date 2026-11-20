@@ -3,16 +3,20 @@ package servlets.module.challenge;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import dbProcs.Database;
 import dbProcs.GetterIT;
 import dbProcs.Setter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Base64;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,6 +36,11 @@ import testUtils.TestProperties;
  *
  * <p>Each test calls a servlet more times than the pool holds and checks every response came from
  * the database. The inputs name users that do not exist, so no challenge data is changed.
+ *
+ * <p>Those tests mostly run the success path. The "OnFailure" tests cover the exception path: they
+ * make the level's queries fail after the servlet has borrowed its connection, call the servlet
+ * more times than the pool holds, then restore the table and check a normal request still reaches
+ * the database. A servlet that returns its connection only when no exception was thrown fails them.
  */
 public class SessionManagement6And7PoolLeakIT {
 
@@ -106,6 +115,44 @@ public class SessionManagement6And7PoolLeakIT {
     assertTrue(output.contains(expected), what + " (expected \"" + expected + "\"): " + output);
   }
 
+  /** One request to a level servlet, returning what it wrote. */
+  private interface Call {
+    String send() throws Exception;
+  }
+
+  /**
+   * Makes every query a level runs fail after its servlet has borrowed a connection, by hiding the
+   * level's users table, sends more requests than the pool holds, restores the table, and checks
+   * that a normal request still reaches the database.
+   */
+  private static void assertReturnsConnectionsWhenQueriesFail(
+      String schema, Call call, Predicate<String> reachedDatabase) throws Exception {
+    String users = "`" + schema + "`.users";
+    String hidden = "`" + schema + "`.usersHidden";
+    try (Connection conn = Database.getCoreConnection(applicationRoot);
+        Statement stmt = conn.createStatement()) {
+      stmt.executeUpdate("RENAME TABLE " + users + " TO " + hidden);
+      try {
+        for (int i = 1; i <= REQUESTS; i++) {
+          try {
+            call.send();
+          } catch (Exception e) {
+            log.debug("Expected failure while the table is missing: " + e);
+          }
+        }
+      } finally {
+        stmt.executeUpdate("RENAME TABLE " + hidden + " TO " + users);
+      }
+    }
+    String output = call.send();
+    assertTrue(
+        reachedDatabase.test(output),
+        "A normal request did not reach the database after "
+            + REQUESTS
+            + " failed ones, so the servlet is keeping its connections: "
+            + output);
+  }
+
   @Test
   public void sessionManagement6SecretQuestionSurvivesMalformedEmails() throws Exception {
     for (int i = 1; i <= REQUESTS; i++) {
@@ -169,5 +216,55 @@ public class SessionManagement6And7PoolLeakIT {
               "Jade Vine");
       assertContains(text(7, "question.badAnswer"), output, "Request " + i + " got no result");
     }
+  }
+
+  @Test
+  public void sessionManagement6LoginReturnsConnectionsOnFailure() throws Exception {
+    String badUser = text(6, "response.badUser");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalSix",
+        () -> call(new SessionManagement6(), "POST", "subName", noSuchUser, "subPassword", "x"),
+        output -> output.contains(badUser));
+  }
+
+  @Test
+  public void sessionManagement6SecretAnswerReturnsConnectionsOnFailure() throws Exception {
+    String badAnswer = text(6, "question.badAnswer");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalSix",
+        () ->
+            call(
+                new SessionManagement6SecretQuestion(),
+                "POST",
+                "subEmail",
+                noSuchEmail,
+                "subAnswer",
+                "notTheAnswer"),
+        output -> output.contains(badAnswer));
+  }
+
+  @Test
+  public void sessionManagement7LoginReturnsConnectionsOnFailure() throws Exception {
+    String badUser = text(7, "response.badUser");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalSeven",
+        () -> call(new SessionManagement7(), "POST", "subName", noSuchUser, "subPassword", "x"),
+        output -> output.contains(badUser));
+  }
+
+  @Test
+  public void sessionManagement7SecretAnswerReturnsConnectionsOnFailure() throws Exception {
+    String badAnswer = text(7, "question.badAnswer");
+    assertReturnsConnectionsWhenQueriesFail(
+        "BrokenAuthAndSessMangChalSeven",
+        () ->
+            call(
+                new SessionManagement7SecretQuestion(),
+                "POST",
+                "subEmail",
+                noSuchEmail,
+                "subAnswer",
+                "Jade Vine"),
+        output -> output.contains(badAnswer));
   }
 }
