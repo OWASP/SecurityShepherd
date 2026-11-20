@@ -8,7 +8,7 @@ Some settings are applied only when the containers or volumes are first created,
 
 - **`DB_PASS`:** the database password. See [Change the database password](#change-the-database-password).
 - **`TLS_KEYSTORE_PASS`:** the TLS keystore's password. Leave it empty to have a random one generated.
-- **`TZ`:** the server's time zone, used in the logs and for the [event times](configuration.md#event-times). It defaults to `Europe/Dublin`.
+- **`TZ`:** the server's time zone, used in the logs and for the [event times](configuration.md#event-times). It defaults to `UTC`.
 
 ## Change the database password
 
