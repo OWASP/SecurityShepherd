@@ -201,7 +201,7 @@ else
 	$('#getStarted').slideDown("slow");
 	$('#cantSee').html("<iframe class='levelIframe' frameborder='no' id='theStart' src='readyToPlay.jsp'></iframe>");
 	$('#cantSee').html(function(){
-		$("#theStart").load(function(){
+		$("#theStart").on("load", function(){
 			$("#contentDiv").slideDown("slow");
 		});
 	});
