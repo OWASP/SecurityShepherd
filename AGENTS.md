@@ -110,7 +110,7 @@ TEST_MYSQL_PASSWORD=CowSaysMoo mvn verify -DskipUTs=true -DmongoDocker -B
 
 `image-smoke-test.sh` runs the app from the images that `docker compose build` just built: it runs setup, logs in, changes the admin password (native Argon2) and loads a database-backed lesson. It starts them as a compose project of its own, with its own container names, volumes and host ports (18080, 18443, 13307, 27018; override with `SMOKE_HTTP_PORT`, `SMOKE_HTTPS_PORT`, `SMOKE_DB_PORT`, `SMOKE_MONGO_PORT`), and removes them afterwards, so a running `secshep_*` stack is left alone. On failure it prints Tomcat's output and SEVERE log lines.
 
-Each integration-test run overwrites the local `mongo:4.1.13` tag (see "Integration tests fail building the Mongo image" below). Restore the official image before `docker compose build` and before every integration-test run, not only after a failure.
+Each integration-test run overwrites the local `mongo:8.0.32` tag (see "Integration tests fail building the Mongo image" below). Restore the official image before `docker compose build` and before every integration-test run, not only after a failure.
 
 When a step fails, look at the full Maven output for the root cause. `-q` and filtered output can hide it.
 
@@ -151,7 +151,7 @@ The volume also holds the TLS keystore and `database.properties` / `mongo.proper
 
 ### Integration tests fail building the Mongo image (`chown ... Operation not permitted`)
 
-The `it-test` profile (`-DmongoDocker`) tags the image it builds as `mongo:${MONGODB_VERSION}`. That overwrites the official image's local tag, so the next build uses the previous custom image (which runs as `mongodb`) as its base. Restore the official image with `docker rmi mongo:4.1.13 && docker pull mongo:4.1.13`. CI starts from a clean Docker and is unaffected.
+The `it-test` profile (`-DmongoDocker`) tags the image it builds as `mongo:${MONGODB_VERSION}`. That overwrites the official image's local tag, so the next build uses the previous custom image (which runs as `mongodb`) as its base. Restore the official image with `docker rmi mongo:8.0.32 && docker pull mongo:8.0.32`. CI starts from a clean Docker and is unaffected.
 
 ### First-time app setup
 
@@ -228,7 +228,7 @@ The documentation site is built from `docs/` with [Zensical](https://zensical.or
 ## Database
 
 - MySQL/MariaDB for the core app and SQL-based challenges
-- MongoDB for NoSQL challenges
+- MongoDB for NoSQL challenges: MongoDB 8.0 (`MONGODB_VERSION` in `.env`) with the `mongodb-driver-sync` 5.x driver. NoSQL Injection 1 injects into a `$where` query, so server-side JavaScript must stay enabled. `$where` is deprecated in 8.0 but still works
 - Each challenge uses isolated DB credentials scoped to its own schema — do not consolidate challenge DB users
 - Encoding must be `utf8mb4` (not `utf8`) for full Unicode support
 - Password hashing uses Argon2 (requires `libargon2` native library)

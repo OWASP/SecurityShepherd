@@ -9,7 +9,7 @@
 This image is **only the web application**: Security Shepherd on Tomcat 11 and Java 17. It does not contain a database. To run Security Shepherd you also need:
 
 - **MariaDB** (12.x tested) for the platform and the SQL challenges, with Security Shepherd's schemas and challenge users loaded
-- **MongoDB** (4.1.13 tested) for the NoSQL injection challenges
+- **MongoDB** (8.0.32 tested) for the NoSQL injection challenges
 
 There are no published database images yet. The simplest way to get all three running is the Docker Compose quick start below, which builds the two database images for you.
 

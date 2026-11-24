@@ -10,8 +10,7 @@
 db.createUser({ "user": "gamer1", "pwd": "$ecSh3pdb", "roles": [{"role": "read", "db": "shepherdGames" }] })
 db.createCollection("gamer")
 
-db.gamer.insert
-([
+db.gamer.insertMany([
     { _id : "77b6eab74151d73c2efe561737981a1fbb2291fe3643680f5824e47f69fc9985", name : "Omar", address : "Baltimore" },
     { _id : "fd1b4a1d16714cee9c1320f3e7465792010d0911075b7c1002071d48e68e19b4", name : "Stringer", address : "Baltimore" },
     { _id : "b43c05a8166b5bbc5e2baebbbc84a71f83fd7cac01dd5d23bb6e003a95d60b7c", name : "Jimmy", address : "Baltimore" },
