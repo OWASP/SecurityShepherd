@@ -68,9 +68,13 @@ public class DatabaseLifecycleListener implements ServletContextListener {
     // (#654), so create them on every start
     try {
       XxeLesson.createXxeLessonSolutionFile();
+    } catch (RuntimeException e) {
+      log.error("Could not create the XXE lesson solution file: " + e.getMessage(), e);
+    }
+    try {
       XxeChallenge1.createXxeChallenge1SolutionFile();
     } catch (RuntimeException e) {
-      log.error("Could not create the XXE solution files: " + e.getMessage(), e);
+      log.error("Could not create the XXE challenge 1 solution file: " + e.getMessage(), e);
     }
   }
 
