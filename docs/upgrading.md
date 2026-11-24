@@ -78,7 +78,7 @@ Log in, open a lesson, and check the scoreboard. Then delete `$HOME/shepherd-con
 
 ### The default time zone is now UTC
 
-The database, Tomcat and MongoDB containers run in the time zone set by `TZ` in `.env`, which is now `UTC` by default. Database timestamps (suspensions, level start and finish times) are stored in this zone without an offset, and the CTF start, lock and end times an admin enters on the schedule page are read in it too.
+The database, Tomcat and MongoDB containers run in the time zone set by `TZ` in `.env`, which is now `UTC` by default. Database timestamps (suspensions, level start and finish times) are stored in this zone without an offset, and the CTF start, lock and end times stored in the `settings` table are interpreted in it too. To change these event times, update the database and restart Tomcat as described in [Event times](configuration.md#event-times).
 
 Unless you changed `TZ`, your environment moves to UTC the next time you run `docker compose up`. To keep the old behaviour, set `TZ=Europe/Dublin` in `.env`. Otherwise:
 
