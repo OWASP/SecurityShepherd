@@ -76,17 +76,13 @@ if (request.getSession() != null)
 	media="screen" />
 <link href="css/theResponsiveCss.css" rel="stylesheet" type="text/css"
 	media="screen">
-<link href="css/jquery.mCustomScrollbar.min.css" rel="stylesheet"
-	type="text/css" media="screen">
 <link rel="shortcut icon" href="css/images/flavicon.jpg"
 	type="image/jpeg" />
 
 </head>
 <body>
-	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/jqueryUI.js"></script>
-	<script type="text/javascript"
-		src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.14.2.min.js"></script>
 	<div id="wrapper">
 		<jsp:include page="translation-select.jsp" />
 		<div id="header">
@@ -792,7 +788,7 @@ if (request.getSession() != null)
 						{
 							theActualFile = ajaxCall.responseText;
 							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theChallenge' src='" + theActualFile + "'></iframe>");
-							$("#theChallenge").load(function(){
+							$("#theChallenge").on("load", function(){
 								<%if (showCheatSheet) {%>
 									$("#submitResult").slideDown("fast", function(){
 										$("#cheatSheetButton").slideDown("fast", function(){
@@ -848,7 +844,7 @@ if (request.getSession() != null)
 						{
 							theActualFile = ajaxCall.responseText;
 							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
-							$("#theLesson").load(function(){
+							$("#theLesson").on("load", function(){
 							<%if (showCheatSheet) {%>
 								$("#submitResult").slideDown("fast", function(){
 									$("#cheatSheetButton").slideDown("fast", function(){
@@ -919,7 +915,7 @@ if (request.getSession() != null)
 						if(ajaxCall.status == 200) {
 							theActualFile = ajaxCall.responseText;
 							$('#contentDiv').html("<iframe frameborder='no' class='levelIframe' id='theLesson' src='" + theActualFile + "'></iframe>");
-							$("#theLesson").load(function(){
+							$("#theLesson").on("load", function(){
 								<%if (showCheatSheet) {%>
 									$("#submitResult").slideDown("fast", function(){
 										$("#cheatSheetButton").slideDown("fast", function(){
@@ -1178,29 +1174,6 @@ if (request.getSession() != null)
 						+ $("#contentDiv").height() + "px is too short.");
 				$("#theSidebarWrapper").height("130%");
 			}
-		}
-	</script>
-	<script>
-		(function($) {
-			$(window).load(function() {
-				console.log("Initialising Custom Scrollbars (If Any)");
-				$(".levelList").mCustomScrollbar({
-					theme : "dark-thin",
-					mouseWheel : {
-						scrollAmount : 120
-					}
-				});
-			});
-		})(jQuery);
-
-		function startScrollsBars() {
-			console.log("Initialising Custom Scrollbars Again (If Any)");
-			$(".levelList").mCustomScrollbar({
-				theme : "dark-thin",
-				mouseWheel : {
-					scrollAmount : 120
-				}
-			});
 		}
 	</script>
 	<!-- <fmt:message key="generic.text.commentMessage.1" /> 

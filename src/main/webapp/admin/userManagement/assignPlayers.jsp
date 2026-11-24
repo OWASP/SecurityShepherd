@@ -208,7 +208,7 @@ if(Validate.validateAdminSession(ses, tokenCookie, tokenParmeter))
 		var theCsrfToken = $('#csrfToken').val();
 		var thePlayers = $("#playerId").val();
 		//Validation
-		if (thePlayers == null)
+		if (thePlayers == null || thePlayers.length == 0)
 		{
 			$('#badData').html("<p><strong><font color='red'>All fields are required</font></strong></p>");
 		}
