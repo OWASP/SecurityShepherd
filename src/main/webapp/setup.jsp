@@ -99,7 +99,7 @@
 	media="screen">
 </head>
 <body>
-	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript" src="js/clipboard-js/clipboard.min.js"></script>
 	<script type="text/javascript" src="js/clipboard-js/tooltips.js"></script>
 	<script type="text/javascript"
@@ -263,7 +263,7 @@
 						<script>
 							function uncheck() {
 								$('#enableMongoChallenge')
-										.removeAttr('checked');
+										.prop('checked', false);
 							}
 
 							$(document)
@@ -349,7 +349,7 @@
 
 						<script>
 							function uncheckUnfafe() {
-								$('#unsafeLevels').removeAttr('checked');
+								$('#unsafeLevels').prop('checked', false);
 							}
 
 							$(document).ready(function() {
