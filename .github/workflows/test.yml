@@ -39,6 +39,7 @@ jobs:
               - 'docker-compose.yml'
               - 'docker/**'
               - '.env'
+              - '.github/workflows/test.yml'
 
   dependency-review:
     if: github.event_name == 'pull_request'
@@ -97,10 +98,24 @@ jobs:
       - name: Run Unit Tests
         run: mvn test -B -e
 
-  integration-tests:
+  integration-test-shards:
+    name: integration-tests (${{ matrix.shard.name }})
     needs: detect-changes
     if: needs.detect-changes.outputs.src == 'true'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - name: core
+            # Catch new ITs outside the three package groups below.
+            tests: '**/*IT,!servlets/admin/**/*IT,!servlets/module/lesson/**/*IT,!servlets/api/**/*IT,!servlets/module/*IT,!servlets/module/challenge/**/*IT'
+          - name: admin
+            tests: 'servlets/admin/**/*IT'
+          - name: lessons
+            tests: 'servlets/module/lesson/**/*IT'
+          - name: api-and-challenges
+            tests: 'servlets/api/**/*IT,servlets/module/*IT,servlets/module/challenge/**/*IT'
     services:
       # Keep in step with DB_VERSION in .env, the MariaDB the Docker image runs
       mysql:
@@ -127,5 +142,17 @@ jobs:
           sudo apt-get -y install libargon2-1
           mvn -Pdocker validate
       - name: Run Integration Tests
-        run: |
-          mvn verify -DskipUTs=true -DmongoDocker -B
+        env:
+          IT_TESTS: ${{ matrix.shard.tests }}
+        run: mvn verify -DskipUTs=true -DmongoDocker -B "-Dit.test=$IT_TESTS"
+
+  # Preserve the required check on dev and master when the test job fans out.
+  integration-tests:
+    needs: [detect-changes, integration-test-shards]
+    if: ${{ !cancelled() && needs.detect-changes.outputs.src == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every integration shard to pass
+        env:
+          SHARD_RESULT: ${{ needs.integration-test-shards.result }}
+        run: test "$SHARD_RESULT" = success
