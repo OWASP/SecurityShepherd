@@ -145,17 +145,17 @@ public class ModuleServletTemplate extends HttpServlet {
       String applicationRoot, String username, ResourceBundle bundle) {
 
     String result = new String();
-    try {
-      // You will need to make a schema in the database/moduleSchemas.sql file, and define a user
-      // which can access it.
-      // The details of this user need to be entered in a properties file in WEB-INF/challenges
-      // The Name of that user need to be entered in the following funciton;
-      Connection conn =
-          Database.getChallengeConnection(applicationRoot, "nameOfPropertiesFile.properties");
-      Statement stmt;
-      stmt = conn.createStatement();
-      ResultSet resultSet =
-          stmt.executeQuery("SELECT * FROM tb_users WHERE username = '" + username + "'");
+    // You will need to make a schema in the database/moduleSchemas.sql file, and define a user
+    // which can access it.
+    // The details of this user need to be entered in a properties file in WEB-INF/challenges
+    // The Name of that user need to be entered in the following funciton;
+    // Open the connection, statement and result set in try-with-resources so they are returned to
+    // the challenge's small connection pool even when the query fails.
+    try (Connection conn =
+            Database.getChallengeConnection(applicationRoot, "nameOfPropertiesFile.properties");
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet =
+            stmt.executeQuery("SELECT * FROM tb_users WHERE username = '" + username + "'")) {
       log.debug("Opening Result Set from query");
       for (int i = 0; resultSet.next(); i++) {
         log.debug("Row " + i + ": User ID = " + resultSet.getString(1));
