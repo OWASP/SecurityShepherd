@@ -40,6 +40,7 @@ public class OpenAllModulesIT {
   public static void readyDb() throws SQLException, IOException {
     testUtils.TestProperties.setTestPropertiesFileDirectory(log);
 
+    TestProperties.createMysqlResource();
     TestProperties.ensureSchemaReady(log);
     TestProperties.reseedTestData();
     log.debug("Creating - user: " + testUsers[0] + " password: " + testUsers[0]);
