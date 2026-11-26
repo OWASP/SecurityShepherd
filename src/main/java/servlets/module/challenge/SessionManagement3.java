@@ -102,76 +102,81 @@ public class SessionManagement3 extends HttpServlet {
         String ApplicationRoot = getServletContext().getRealPath("");
         log.debug("Servlet root = " + ApplicationRoot);
 
-        Connection conn =
-            Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalThree");
-        log.debug("Checking credentials");
-        PreparedStatement callstmt;
+        try (Connection conn =
+            Database.getChallengeConnection(ApplicationRoot, "BrokenAuthAndSessMangChalThree")) {
+          log.debug("Checking credentials");
 
-        log.debug("Committing changes made to database");
-        callstmt = conn.prepareStatement("COMMIT");
-        callstmt.execute();
-        log.debug("Changes committed.");
-
-        callstmt =
-            conn.prepareStatement(
-                "SELECT userName, userAddress, userRole FROM users WHERE userName = ?");
-        callstmt.setString(1, subName);
-        log.debug("Executing findUser");
-        ResultSet resultSet = callstmt.executeQuery();
-        if (resultSet.next()) {
-          log.debug("User found");
-          if (resultSet.getString(3).equalsIgnoreCase("admin")) {
-            log.debug("Admin Detected");
-            callstmt =
-                conn.prepareStatement(
-                    "SELECT userName, userAddress, userRole FROM users WHERE userName = ? AND"
-                        + " userPassword = SHA(?)");
-            callstmt.setString(1, subName);
-            callstmt.setString(2, subPass);
-            log.debug("Executing authUser");
-            ResultSet resultSet2 = callstmt.executeQuery();
-            if (resultSet2.next()) {
-              log.debug("Successful Admin Login");
-              // Get key and add it to the output
-              String userKey =
-                  Hash.generateUserSolution(levelResult, (String) ses.getAttribute("userName"));
-
-              htmlOutput =
-                  "<h2 class='title'>"
-                      + bundle.getString("response.welcome")
-                      + " "
-                      + Encode.forHtml(resultSet2.getString(1))
-                      + "</h2>"
-                      + "<p>"
-                      + bundle.getString("response.resultKey")
-                      + " <a>"
-                      + userKey
-                      + "</a>"
-                      + "</p>";
-            } else {
-              userAddress =
-                  bundle.getString("response.badPass")
-                      + " <a>"
-                      + Encode.forHtml(resultSet.getString(1))
-                      + "</a><br/>";
-              htmlOutput = makeTable(userAddress, bundle);
-            }
-          } else {
-            log.debug("Successful Guest Login");
-            htmlOutput =
-                makeTable(bundle)
-                    + "<h2 class='title'>"
-                    + bundle.getString("response.welcomeGuest")
-                    + "</h2>"
-                    + "<p>"
-                    + bundle.getString("response.guestMessage")
-                    + "</p><br/><br/>";
+          log.debug("Committing changes made to database");
+          try (PreparedStatement commitStmt = conn.prepareStatement("COMMIT")) {
+            commitStmt.execute();
           }
-        } else {
-          userAddress = bundle.getString("response.badUser") + "<br/>";
-          htmlOutput = makeTable(userAddress, bundle);
+          log.debug("Changes committed.");
+
+          try (PreparedStatement callstmt =
+              conn.prepareStatement(
+                  "SELECT userName, userAddress, userRole FROM users WHERE userName = ?")) {
+            callstmt.setString(1, subName);
+            log.debug("Executing findUser");
+            try (ResultSet resultSet = callstmt.executeQuery()) {
+              if (resultSet.next()) {
+                log.debug("User found");
+                if (resultSet.getString(3).equalsIgnoreCase("admin")) {
+                  log.debug("Admin Detected");
+                  try (PreparedStatement authStmt =
+                      conn.prepareStatement(
+                          "SELECT userName, userAddress, userRole FROM users WHERE userName = ? AND"
+                              + " userPassword = SHA(?)")) {
+                    authStmt.setString(1, subName);
+                    authStmt.setString(2, subPass);
+                    log.debug("Executing authUser");
+                    try (ResultSet resultSet2 = authStmt.executeQuery()) {
+                      if (resultSet2.next()) {
+                        log.debug("Successful Admin Login");
+                        // Get key and add it to the output
+                        String userKey =
+                            Hash.generateUserSolution(
+                                levelResult, (String) ses.getAttribute("userName"));
+
+                        htmlOutput =
+                            "<h2 class='title'>"
+                                + bundle.getString("response.welcome")
+                                + " "
+                                + Encode.forHtml(resultSet2.getString(1))
+                                + "</h2>"
+                                + "<p>"
+                                + bundle.getString("response.resultKey")
+                                + " <a>"
+                                + userKey
+                                + "</a>"
+                                + "</p>";
+                      } else {
+                        userAddress =
+                            bundle.getString("response.badPass")
+                                + " <a>"
+                                + Encode.forHtml(resultSet.getString(1))
+                                + "</a><br/>";
+                        htmlOutput = makeTable(userAddress, bundle);
+                      }
+                    }
+                  }
+                } else {
+                  log.debug("Successful Guest Login");
+                  htmlOutput =
+                      makeTable(bundle)
+                          + "<h2 class='title'>"
+                          + bundle.getString("response.welcomeGuest")
+                          + "</h2>"
+                          + "<p>"
+                          + bundle.getString("response.guestMessage")
+                          + "</p><br/><br/>";
+                }
+              } else {
+                userAddress = bundle.getString("response.badUser") + "<br/>";
+                htmlOutput = makeTable(userAddress, bundle);
+              }
+            }
+          }
         }
-        Database.closeConnection(conn);
         log.debug("Outputting HTML");
         out.write(htmlOutput);
       } catch (Exception e) {

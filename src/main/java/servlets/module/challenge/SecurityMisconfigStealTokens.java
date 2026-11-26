@@ -161,25 +161,24 @@ public class SecurityMisconfigStealTokens extends HttpServlet {
   public static String getUserToken(String userId, String applicationRoot) throws SQLException {
     String userToken = new String();
     log.debug("Getting user token with id: " + userId);
-    Connection conn =
-        Database.getChallengeConnection(applicationRoot, "SecurityMisconfigStealToken");
-    try {
-      CallableStatement getTokenCs = conn.prepareCall("call getToken(?)");
-      getTokenCs.setString(1, userId);
-      log.debug("Executing getToken procedure...");
-      ResultSet tokenRs = getTokenCs.executeQuery();
-      if (tokenRs.next()) {
-        userToken = tokenRs.getString(1);
-      } else {
-        log.error("No Results From Call");
-        throw new SQLException("No results from getToken Call. Empty Result Set");
+    try (Connection conn =
+        Database.getChallengeConnection(applicationRoot, "SecurityMisconfigStealToken")) {
+      try (CallableStatement getTokenCs = conn.prepareCall("call getToken(?)")) {
+        getTokenCs.setString(1, userId);
+        log.debug("Executing getToken procedure...");
+        try (ResultSet tokenRs = getTokenCs.executeQuery()) {
+          if (tokenRs.next()) {
+            userToken = tokenRs.getString(1);
+          } else {
+            log.error("No Results From Call");
+            throw new SQLException("No results from getToken Call. Empty Result Set");
+          }
+        }
+      } catch (SQLException e) {
+        log.error("Could not get user SecurityMisconfigStealToken token: " + e.toString());
+        throw e;
       }
-      tokenRs.close();
-    } catch (SQLException e) {
-      log.error("Could not get user SecurityMisconfigStealToken token: " + e.toString());
-      throw e;
     }
-    conn.close();
     if (!userToken.isEmpty()) {
       log.debug("Found token: " + userToken);
     }
@@ -201,29 +200,28 @@ public class SecurityMisconfigStealTokens extends HttpServlet {
       throws SQLException {
     boolean validToken = false;
     log.debug("Checking token:" + token);
-    Connection conn =
-        Database.getChallengeConnection(applicationRoot, "SecurityMisconfigStealToken");
-    try {
-      CallableStatement validateTokenCs = conn.prepareCall("call validToken(?, ?)");
-      validateTokenCs.setString(1, userId);
-      validateTokenCs.setString(2, token);
-      log.debug("Executing validToken procedure...");
-      ResultSet tokenRs = validateTokenCs.executeQuery();
-      if (tokenRs.next()) {
-        if (tokenRs.getInt(1) > 0) {
-          log.debug("Valid Token Detected");
-          validToken = true;
+    try (Connection conn =
+        Database.getChallengeConnection(applicationRoot, "SecurityMisconfigStealToken")) {
+      try (CallableStatement validateTokenCs = conn.prepareCall("call validToken(?, ?)")) {
+        validateTokenCs.setString(1, userId);
+        validateTokenCs.setString(2, token);
+        log.debug("Executing validToken procedure...");
+        try (ResultSet tokenRs = validateTokenCs.executeQuery()) {
+          if (tokenRs.next()) {
+            if (tokenRs.getInt(1) > 0) {
+              log.debug("Valid Token Detected");
+              validToken = true;
+            }
+          } else {
+            log.error("No Results From validToken Call");
+            throw new SQLException("No results from validToken Call. Empty Result Set");
+          }
         }
-      } else {
-        log.error("No Results From validToken Call");
-        throw new SQLException("No results from validToken Call. Empty Result Set");
+      } catch (SQLException e) {
+        log.error("Could not verify token: " + e.toString());
+        throw e;
       }
-      tokenRs.close();
-    } catch (SQLException e) {
-      log.error("Could not verify token: " + e.toString());
-      throw e;
     }
-    conn.close();
     return validToken;
   }
 }

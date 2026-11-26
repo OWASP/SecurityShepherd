@@ -88,6 +88,16 @@ mvn -Pdocker clean package -DskipTests
 docker compose up -d --build
 ```
 
+### The default time zone is now UTC
+
+The database, Tomcat and MongoDB containers run in the time zone set by `TZ` in `.env`, which is now `UTC` by default. Database timestamps (suspensions, level start and finish times) are stored in this zone without an offset, and the CTF start, lock and end times stored in the `settings` table are interpreted in it too. To change these event times, update the database and restart Tomcat as described in [Event times](configuration.md#event-times).
+
+Unless you changed `TZ`, your environment moves to UTC the next time you run `docker compose up`. To keep the old behaviour, set `TZ=Europe/Dublin` in `.env`. Otherwise:
+
+- Times stored during Irish summer time read an hour later than they happened. Winter times are unchanged.
+- Suspensions stored during summer time also end an hour later. A player whose suspension ended less than an hour before the switch can be locked out again until that hour has passed.
+- A CTF schedule that is already set is read as UTC: re-enter the times, or keep your old `TZ` until the event is over.
+
 ## From the 3.1 virtual machine or a manual installation
 
 The 3.1 virtual machine and the manual installation packs aren't maintained for 4.0, and there's no tested way to move their data across. Set up a new Docker installation as described in [Getting started](getting-started.md), then create the classes and players again.

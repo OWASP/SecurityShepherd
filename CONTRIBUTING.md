@@ -1,14 +1,44 @@
 
 # OWASP Security Shepherd Contributing
 
-## GitFlow
-Shepherd uses [GitFlow](https://datasift.github.io/gitflow/IntroducingGitFlow.html). That basically means you never directly commit to master / dev.
+## How do I setup my dev environment?
+| You need | Version | Check with |
+|---|---|---|
+| Git | Any | `git --version` |
+| Docker with Docker Compose | Compose v2 or newer | `docker compose version` |
+| JDK | 17 | `mvn -v` shows "Java version" |
+| Maven | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
 
-## Where do I put new code?
-To add a new feature or fix a bug in Shepherd, create a fork or branch from the [dev branch](https://github.com/OWASP/SecurityShepherd/tree/dev). When you're branch is complete and your JUnit's have been created / run clear, create a pull request to merge your branch into dev. Squash your commits if you like, if you don't that will be done be at merge.
+Use JDK 17 specifically: on JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. If `mvn -v` shows another version, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
 
-## Branch Naming Convention
-If you're working on an issue from the backlog, call your branch dev#{issueNumber}
+You also need about 3 GB of free disk space, and ports 80, 443, 3306 and 27017 free.
+
+Then build and start Security Shepherd:
+
+```bash
+git clone https://github.com/OWASP/SecurityShepherd.git
+cd SecurityShepherd
+mvn -Pdocker clean install -DskipTests
+docker compose up -d --build
+```
+
+Then open https://localhost and complete the [first-time setup](docs/getting-started.md#first-time-setup).
+
+## Branches and pull requests
+`dev` and `master` are protected, so nobody pushes to them directly.
+
+Create a fork or a branch from the [dev branch](https://github.com/OWASP/SecurityShepherd/tree/dev). Name it `dev#{issueNumber}`, such as `dev#536`. If an issue needs more than one pull request, add a short suffix, such as `dev#1070-sso`.
+
+New code needs tests. Add JUnit tests for any feature or change you make: unit tests go in `src/test/java/`, and tests that need a database go in `src/it/java/`. When you fix a bug, write a test that reproduces it first, so it fails without your fix and passes with it. [docs/testing.md](docs/testing.md) shows how to run them.
+
+Then open a pull request to `dev`, never to `master`. To merge, it needs:
+
+- an approval (pushing again dismisses earlier approvals)
+- passing CI checks
+- your branch up to date with `dev`
+- all review threads resolved
+
+Pull requests to `dev` are squash merged, so you don't need to squash your commits. `master` only changes at a release, through a pull request from `dev` (see [docs/releasing.md](docs/releasing.md)).
 
 ## Code Format
 Shepherd enforces [Google Java Format](https://github.com/google/google-java-format) via [Spotless](https://github.com/diffplug/spotless), bound to the Maven build. The format version is pinned in `pom.xml`, so local and CI use the exact same formatter. Pull requests with incorrectly formatted Java files will fail the `lint-java` check (`mvn spotless:check`).
@@ -47,29 +77,6 @@ Install ZenHub for your browser and click the ZenHub tab that will appear in thi
 4. *In Progess* - Items that are currently being worked
 5. *QA Review* - Issues that have pull requests and require review / approval
 6. *Closed* - Item is Done
-
-## How do I setup my dev environment?
-| You need | Version | Check with |
-|---|---|---|
-| Git | Any | `git --version` |
-| Docker with Docker Compose | Compose v2 or newer | `docker compose version` |
-| JDK | 17 | `mvn -v` shows "Java version" |
-| Maven | 3.9.2 or newer | `mvn -v` shows "Apache Maven" |
-
-Use JDK 17 specifically: on JDK 25 or newer the build stops at its formatting check with a `google-java-format(jvm-version)` error. If `mvn -v` shows another version, install JDK 17, for example from [Adoptium](https://adoptium.net/), and set `JAVA_HOME` to its folder.
-
-You also need about 3 GB of free disk space, and ports 80, 443, 3306 and 27017 free.
-
-Then build and start Security Shepherd:
-
-```bash
-git clone https://github.com/OWASP/SecurityShepherd.git
-cd SecurityShepherd
-mvn -Pdocker clean install -DskipTests
-docker compose up -d --build
-```
-
-Then open https://localhost and complete the [first-time setup](docs/getting-started.md#first-time-setup).
 
 ## Development Workflow
 See [docs/development-workflow.md](docs/development-workflow.md) for the full development cycle, including how to:
