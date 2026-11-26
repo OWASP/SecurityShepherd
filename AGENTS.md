@@ -4,7 +4,7 @@ Instructions for AI coding agents working on this repository.
 
 ## Project overview
 
-OWASP Security Shepherd is a web and mobile application security training platform. The web app is a Java servlet application built with Maven, deployed as a WAR on Tomcat. The mobile challenges are independent Android apps under `mobile/MobileShepherd/`.
+OWASP Security Shepherd is a web and mobile application security training platform. The web app is a Java servlet application built with Maven, deployed as a WAR on Tomcat. The mobile challenges are an Android app under `mobile/`.
 
 ## Intentionally vulnerable code — DO NOT FIX
 
@@ -12,7 +12,7 @@ The following paths contain **deliberately insecure code** used for security tra
 
 - `src/main/java/servlets/module/lesson/` — lesson servlets with intentional vulnerabilities
 - `src/main/java/servlets/module/challenge/` — challenge servlets with intentional vulnerabilities
-- `mobile/MobileShepherd/` — mobile challenge apps with intentional vulnerabilities
+- `mobile/` — Android app with the mobile challenges and intentional vulnerabilities
 
 Security improvements should only be made to the **platform infrastructure** (authentication, session management, admin functions, DB layer, etc.), never to the training content.
 
@@ -206,7 +206,7 @@ The hostname must be the **Docker container name** (e.g. `secshep_mariadb`), not
 - `src/main/resources/` — config and challenge properties files
 - `src/test/java/` — unit tests
 - `src/it/java/` — integration tests (require running DB containers)
-- `mobile/MobileShepherd/` — independent Android apps (Gradle-based, not part of Maven build)
+- `mobile/` — Android app (Gradle-based, not part of Maven build)
 - `docs/` — documentation, published to https://owasp.github.io/SecurityShepherd/ (see "Documentation site" below)
 
 ### Documentation site
