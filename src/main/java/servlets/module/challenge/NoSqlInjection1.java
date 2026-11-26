@@ -162,7 +162,8 @@ public class NoSqlInjection1 extends HttpServlet {
           if (cursor != null) {
             cursor.close();
           }
-          mongoClient.close();
+          // mongoClient is MongoDatabase's cached client for this credential, shared by every
+          // request: closing it here broke the level for everyone until Tomcat restarted
         }
       } catch (MongoSocketException e) {
         log.error(bundle.getString("result.mongoError") + e.toString());
