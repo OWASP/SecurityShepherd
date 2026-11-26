@@ -416,6 +416,13 @@
 										     after the image (security-shepherd_mongo-1), which the clean-up
 										     command in AGENTS.md doesn't match -->
 										<containerNamePattern>%a-%i</containerNamePattern>
+										<!-- Print mongod's output in the build log: if the container exits
+										     during startup, it is removed before anyone can read its logs -->
+										<log>
+											<enabled>true</enabled>
+											<prefix>mongo&gt;</prefix>
+											<date>none</date>
+										</log>
 										<ports>
 											<port>27017:27017</port>
 										</ports>
