@@ -105,8 +105,8 @@ String ApplicationRoot = getServletContext().getRealPath("");
 					$("#resultDiv").html(ajaxCall.responseText);
 					$("#resultDiv").show("fast");
 					//Update toOpen and toClose lists before showing again
-					$("#toClose option:selected").remove().appendTo('#toOpen').removeAttr("selected");
-					$("#toOpen option:selected").remove().appendTo('#toClose').removeAttr("selected");
+					$("#toClose option:selected").remove().appendTo('#toOpen').prop("selected", false);
+					$("#toOpen option:selected").remove().appendTo('#toClose').prop("selected", false);
 				}
 				else
 				{
