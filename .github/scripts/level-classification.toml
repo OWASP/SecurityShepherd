@@ -23,6 +23,7 @@ A05 = { name = "A05:2025 Injection", url = "https://top10.owasp.org/2025/A05_202
 A07 = { name = "A07:2025 Authentication Failures", url = "https://top10.owasp.org/2025/A07_2025-Authentication_Failures/" }
 
 [top10.mobile]
+M2 = { name = "M2: Inadequate Supply Chain Security" }
 M3 = { name = "M3: Insecure Authentication/Authorization" }
 M4 = { name = "M4: Insufficient Input/Output Validation" }
 M6 = { name = "M6: Inadequate Privacy Controls" }
@@ -124,6 +125,26 @@ cwe = 287
 name = "Broken cryptography"
 top10 = "M10"
 cwe = 327
+
+[topics."Mobile Insecure Authorization"]
+name = "Insecure authorization"
+top10 = "M3"
+cwe = 285
+
+[topics."Mobile Input Validation"]
+name = "Input/output validation"
+top10 = "M4"
+cwe = 20
+
+[topics."Mobile Privacy Controls"]
+name = "Privacy controls"
+top10 = "M6"
+cwe = 359
+
+[topics."Mobile Supply Chain"]
+name = "Supply chain security"
+top10 = "M2"
+cwe = 1104
 
 # Levels whose vulnerability differs from their topic's
 

