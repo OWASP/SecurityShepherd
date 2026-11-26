@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_primary">
+
+    <!-- Scoreboard header, styled after the web scoreboard's #header (grass tile + brand purple) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/grassbackground"
+        android:paddingTop="20dp"
+        android:paddingBottom="12dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scoreboard"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/scoreboard_header_purple" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The OWASP Security Shepherd Project"
+            android:textSize="12sp"
+            android:textColor="@color/scoreboard_header_purple" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/background_primary">
+
+        <!-- Shown when user is not authenticated -->
+        <LinearLayout
+            android:id="@+id/scoreboard_offline_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="32dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign in to view the scoreboard"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:gravity="center"
+                android:layout_marginBottom="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/scoreboard_sign_in_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign In to Server" />
+
+        </LinearLayout>
+
+        <!-- Loading progress bar -->
+        <ProgressBar
+            android:id="@+id/scoreboard_progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="top"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <!-- Scoreboard list, shown when authenticated and data is available -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/scoreboard_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/scoreboard_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="16dp" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <!-- Shown when authenticated but there are no scores yet -->
+        <TextView
+            android:id="@+id/scoreboard_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="32dp"
+            android:text="No scores yet"
+            android:textSize="18sp"
+            android:textColor="@color/text_secondary"
+            android:visibility="gone" />
+
+        <!-- Shown on fetch failure (network error, server error, or not permitted) -->
+        <LinearLayout
+            android:id="@+id/scoreboard_error_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="32dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/scoreboard_error_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Could not load the scoreboard"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary"
+                android:gravity="center"
+                android:layout_marginBottom="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/scoreboard_retry_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retry" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>
