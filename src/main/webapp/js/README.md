@@ -34,5 +34,5 @@ use only `new Clipboard(selector)`, the `success` and `error` events,
 
 | File | Library | Version | Still loaded by |
 |---|---|---|---|
-| `jquery.js` | jQuery | 1.7.1 | lessons and challenges, until they move to `jquery-3.7.1.min.js` |
+| `jquery.js` | jQuery | 1.7.1 | challenges, until they move to `jquery-3.7.1.min.js` |
 | `tinysort.js` | TinySort | 1.3.25 | `scoreboard.jsp` |
