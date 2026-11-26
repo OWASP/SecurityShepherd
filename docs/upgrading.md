@@ -78,7 +78,7 @@ Log in, open a lesson, and check the scoreboard. Then delete `$HOME/shepherd-con
 
 ### MongoDB 8.0
 
-The MongoDB image now runs MongoDB 8.0 instead of 4.1, an unsupported development release. MongoDB 8.0 can't open a 4.1 data directory: the `mongo` container exits on start with `UPGRADE PROBLEM: Found an invalid featureCompatibilityVersion document`. The `mongodata` volume only holds the NoSQL challenge's seed data, which the image recreates on first start, so remove the volume instead of upgrading it. Players' progress and scores are kept in MariaDB and aren't affected. On x86-64 hosts, MongoDB 5.0 and later also need a CPU with AVX support, which some older machines and virtual machines lack.
+The MongoDB image now runs MongoDB 8.0 instead of 4.1, an unsupported development release. MongoDB 8.0 can't open a 4.1 data directory: the `mongo` container exits on start with `UPGRADE PROBLEM: Found an invalid featureCompatibilityVersion document`. The `mongodata` volume only holds the NoSQL challenge's seed data, which the image recreates on first start, so remove the volume instead of upgrading it. Players' progress and scores are kept in MariaDB and aren't affected. On x86-64 hosts, MongoDB 5.0 and later also need a CPU with AVX support, which some older machines and virtual machines lack. If you run MongoDB yourself, use 8.0.37 or later on Linux kernel 6.19 or newer: 8.0.21 to 8.0.36 exit on startup there, and earlier 8.0 releases can crash and corrupt data ([SERVER-121912](https://jira.mongodb.org/browse/SERVER-121912)).
 
 ```bash
 docker compose down
