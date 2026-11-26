@@ -42,6 +42,7 @@ public class XxeLessonIT {
     errors = ResourceBundle.getBundle("i18n.servlets.errors", enLocale);
     TestProperties.setTestPropertiesFileDirectory(log);
     try {
+      TestProperties.createMysqlResource();
       TestProperties.ensureSchemaReady(log);
       TestProperties.reseedTestData();
       TestProperties.createFileSystemKey(log, "xxe.lesson.file", "xxe.lesson.solution");
