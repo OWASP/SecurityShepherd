@@ -30,9 +30,4 @@ database, but it dates from 2015. The current release is 2.0.11. The level pages
 use only `new Clipboard(selector)`, the `success` and `error` events,
 `clearSelection()` and the `data-clipboard-target` attribute, which 2.x keeps.
 
-## Older copies still being replaced (#957)
-
-| File | Library | Version | Still loaded by |
-|---|---|---|---|
-| `jquery.js` | jQuery | 1.7.1 | challenges, until they move to `jquery-3.7.1.min.js` |
-| `tinysort.js` | TinySort | 1.3.25 | `scoreboard.jsp` |
+`adminToggle.js` is Security Shepherd's own code.
