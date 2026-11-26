@@ -76,7 +76,7 @@ if (request.getSession() != null)
 			<br />
 			<%= paragraph1 %>
 			<br /> <br />
-			<%= mobile.getString("mobileBlurb.vmLink.1") + " InsecureData1.apk " + mobile.getString("mobileBlurb.vmLink.2") %>
+			<%= mobile.getString("mobileBlurb.appLink") %>
 
 		</p>
 	</div>
