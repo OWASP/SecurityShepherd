@@ -41,7 +41,7 @@ docker compose up -d --build
 
 [Deploying into production](deploying-into-production.md) covers using your own TLS certificate and the other changes to make before other people use it, and [Upgrading](upgrading.md) covers moving an existing installation to a new version.
 
-This setup is a quick start for a laptop or a classroom lab, not a production deployment. It uses well-known default passwords and a self-signed certificate. [Deploying into production](deploying-into-production.md) lists what to change before other people use it.
+This setup is a quick start for a laptop or a classroom lab, not a production deployment. It uses well-known default passwords and a self-signed certificate, and MongoDB runs without authentication. Security Shepherd is deliberately vulnerable, so never expose this setup to the internet. [Deploying into production](deploying-into-production.md) lists what to change before other people use it.
 
 ### What's running
 
