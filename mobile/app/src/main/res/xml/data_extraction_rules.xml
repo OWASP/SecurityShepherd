@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   Backup and device-transfer rules for API 31+. The default shared preferences hold
+   the server URL, username and session cookies, so they must never leave the device.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="org.owasp.mobileshepherd_preferences.xml"/>
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="org.owasp.mobileshepherd_preferences.xml"/>
+    </device-transfer>
+</data-extraction-rules>
