@@ -4,14 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dbProcs.ConnectionPool;
+import dbProcs.FileInputProperties;
 import dbProcs.MongoDatabase;
 import jakarta.servlet.ServletContextEvent;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -65,6 +69,15 @@ public class DatabaseLifecycleListenerIT {
     TestProperties.createMysqlResource();
     TestProperties.createMongoResource();
     listener = new DatabaseLifecycleListener();
+  }
+
+  /** contextInitialized writes the XXE solution files into the working directory */
+  @AfterEach
+  public void removeXxeSolutionFiles() throws IOException {
+    for (String key : new String[] {"xxe.lesson.file", "xxe.challenge.1.file"}) {
+      FileUtils.deleteQuietly(
+          new File(FileInputProperties.readPropFileClassLoader("fileSystemKeys.properties", key)));
+    }
   }
 
   @Test
