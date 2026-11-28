@@ -55,6 +55,7 @@ import org.opensaml.saml.saml2.core.SessionIndex;
 import org.opensaml.saml.saml2.core.SubjectConfirmationData;
 import org.opensaml.saml.saml2.metadata.SPSSODescriptor;
 import org.opensaml.xmlsec.encryption.support.DecryptionException;
+import org.opensaml.xmlsec.signature.support.SignatureTrustEngine;
 import org.owasp.encoder.Encode;
 import org.pac4j.core.context.CallContext;
 import org.pac4j.core.credentials.Credentials;
@@ -70,6 +71,7 @@ import org.pac4j.saml.config.SAML2Configuration;
 import org.pac4j.saml.context.SAML2MessageContext;
 import org.pac4j.saml.credentials.SAML2Credentials;
 import org.pac4j.saml.exceptions.SAMLAuthnContextClassRefException;
+import org.pac4j.saml.logout.impl.SAML2LogoutValidator;
 import org.pac4j.saml.metadata.SAML2FileSystemMetadataGenerator;
 import org.pac4j.saml.profile.SAML2Profile;
 import org.pac4j.saml.sso.impl.SAML2AuthnResponseValidator;
@@ -416,8 +418,9 @@ public class SamlSso {
         return LogoutMessage.INVALID;
       }
       SAML2MessageContext messageContext = ((SAML2Credentials) credentials.get()).getContext();
-      // pac4j validates an XML signature when one is present, but never requires one and does not
-      // check HTTP-Redirect query-string signatures
+      // pac4j validates an XML signature when one is present, but never requires one. Its own
+      // HTTP-Redirect query-string check is turned off (AlternativeAuthnContextClient), so the
+      // peer is authenticated only by an XML signature, and redirect signatures are checked here
       boolean signed =
           messageContext.getSAMLPeerEntityContext().isAuthenticated()
               || hasValidRedirectSignature(request, config.idpCertificate);
@@ -762,6 +765,37 @@ public class SamlSso {
   private static final class AlternativeAuthnContextClient extends SAML2Client {
     AlternativeAuthnContextClient(SAML2Configuration configuration) {
       super(configuration);
+    }
+
+    /**
+     * Since 6.6.1, pac4j verifies HTTP-Redirect query-string signatures on logout messages and
+     * marks the IdP authenticated when one is valid. It matches parameter names without decoding
+     * them, so a captured signed query with an unsigned message prepended under a percent-encoded
+     * alias (%53AMLRequest, which the container decodes and serves first) passes as signed. It also
+     * verifies ECDSA signatures as DER, where XML-DSig uses raw r || s, so valid ECDSA logouts
+     * fail. processLogoutMessage verifies these signatures itself (hasValidRedirectSignature), so
+     * pac4j's check is turned off and only XML signatures can mark the IdP authenticated.
+     */
+    @Override
+    protected void initSAMLLogoutResponseValidator(boolean forceReinit) {
+      if (logoutValidator == null || forceReinit) {
+        SAML2LogoutValidator validator =
+            new SAML2LogoutValidator(
+                signatureTrustEngineProvider,
+                decrypter,
+                findSessionLogoutHandler(),
+                replayCache,
+                configuration.getUriComparator()) {
+              @Override
+              protected void validateRedirectBindingSignatureIfItExists(
+                  SAML2MessageContext context, SignatureTrustEngine engine) {
+                // Verified by hasValidRedirectSignature instead
+              }
+            };
+        validator.setClockSkewSeconds(configuration.getClockSkewSeconds());
+        validator.setPartialLogoutTreatedAsSuccess(configuration.isPartialLogoutTreatedAsSuccess());
+        logoutValidator = validator;
+      }
     }
 
     @Override
