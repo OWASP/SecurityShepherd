@@ -16,7 +16,7 @@
 		<!-- Spring 7 (Jakarta EE 11 / Servlet 6.1, matching Tomcat 11). Used at runtime by
 		     pac4j-saml and SamlSso (spring-core Resource), and in tests for spring-test's
 		     servlet mocks. -->
-		<spring.version>7.0.10</spring.version>
+		<spring.version>7.1.0</spring.version>
 		<pac4j.version>6.6.0</pac4j.version>
 		<log4j.version>2.26.1</log4j.version>
 		<junit.version>6.1.3</junit.version>
@@ -137,11 +137,12 @@
 		<version>2.0.5</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+		<!-- MongoDB synchronous driver. Replaces the legacy mongo-java-driver 3.12 uber-jar, whose
+		     com.mongodb.DB API was removed in driver 4.0 and which cannot talk to MongoDB 6.0+ -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
-		<version>3.12.14</version>
+			<artifactId>mongodb-driver-sync</artifactId>
+			<version>5.13.0</version>
 		</dependency>
 		<!-- Jakarta Servlet 6.1 (Jakarta EE 11 / Tomcat 11) - was javax.servlet:javax.servlet-api.
 		     The javax:javaee-api umbrella dependency was removed: it pulls the
@@ -220,8 +221,8 @@
 		<!-- spring-mock:2.0.8 removed: javax-era standalone mock (2008).
 		     Spring 7 spring-test provides the Jakarta MockHttpServletRequest /
 		     MockServletConfig that supersedes it.
-		     fongo removed: unmaintained and unused (its only tests are @Disabled);
-		     test rescue tracked in #876. -->
+		     fongo removed: unmaintained, and incompatible with current MongoDB drivers. The Mongo
+		     tests (src/it) run against the real MongoDB that the it-test profile starts. -->
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
@@ -351,7 +352,7 @@
 					</plugin>
 					<plugin>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>3.6.4</version>
+						<version>3.7.0</version>
 						<groupId>org.codehaus.mojo</groupId>
 						<executions>
 							<execution>
@@ -403,17 +404,33 @@
 						<configuration>
 							<images>
 								<image>
-									<name>mongo:${MONGODB_VERSION}</name>
+									<!-- Its own name: tagging it mongo:${MONGODB_VERSION} would overwrite the
+									     official image the Dockerfile builds FROM (#938) -->
+									<name>${IMAGE_MONGO}:it</name>
+									<alias>mongo</alias>
 									<build>
 										<dockerFile>${project.basedir}/docker/mongo/Dockerfile</dockerFile>
 									</build>
 									<run>
+										<!-- Name the container mongo-1, as before: the default pattern names it
+										     after the image (security-shepherd_mongo-1), which the clean-up
+										     command in AGENTS.md doesn't match -->
+										<containerNamePattern>%a-%i</containerNamePattern>
+										<!-- Print mongod's output in the build log: if the container exits
+										     during startup, it is removed before anyone can read its logs -->
+										<log>
+											<enabled>true</enabled>
+											<prefix>mongo&gt;</prefix>
+											<date>none</date>
+										</log>
 										<ports>
 											<port>27017:27017</port>
 										</ports>
 										<wait>
-											<!-- Check for this URL to return a 200 return code .... -->
-											<log>waiting for connections on port 27017</log>
+											<!-- MongoDB 4.4+ logs JSON. The entrypoint first runs a temporary
+											     mongod on 127.0.0.1 for the init scripts, so wait for the final
+											     one, which listens on all interfaces. -->
+											<log>"Listening on".*"0\.0\.0\.0:27017"</log>
 											<time>120000</time>
 										</wait>
 									</run>
@@ -605,7 +622,7 @@
 			<plugin>
 				<groupId>com.diffplug.spotless</groupId>
 				<artifactId>spotless-maven-plugin</artifactId>
-				<version>3.11.0</version>
+				<version>3.12.0</version>
 				<configuration>
 					<java>
 						<includes>
@@ -632,7 +649,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.6.2</version>
+				<version>3.8.0</version>
 				<executions>
 					<execution>
 						<id>add-test-source</id>

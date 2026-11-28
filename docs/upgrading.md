@@ -76,6 +76,18 @@ If you had hand-edited the old `server.xml` or `web.xml` (custom connectors, por
 
 Log in, open a lesson, and check the scoreboard. Then delete `$HOME/shepherd-conf-backup` and `$HOME/shepherd-db-backup`, or move them somewhere safe. On Linux hosts the archives are owned by root, but you can still delete them because you own the directories.
 
+### MongoDB 8.0
+
+The MongoDB image now runs MongoDB 8.0 instead of 4.1, an unsupported development release. MongoDB 8.0 can't open a 4.1 data directory: the `mongo` container exits on start with `UPGRADE PROBLEM: Found an invalid featureCompatibilityVersion document`. The `mongodata` volume only holds the NoSQL challenge's seed data, which the image recreates on first start, so remove the volume instead of upgrading it. Players' progress and scores are kept in MariaDB and aren't affected. On x86-64 hosts, MongoDB 5.0 and later also need a CPU with AVX support, which some older machines and virtual machines lack. If you run MongoDB yourself, use 8.0.37 or later on Linux kernel 6.19 or newer: 8.0.21 to 8.0.36 exit on startup there, and earlier 8.0 releases can crash and corrupt data ([SERVER-121912](https://jira.mongodb.org/browse/SERVER-121912)).
+
+```bash
+docker compose down
+# The volume is named <project>_mongodata; check with: docker volume ls
+docker volume rm securityshepherd_mongodata
+mvn -Pdocker clean package -DskipTests
+docker compose up -d --build
+```
+
 ### The default time zone is now UTC
 
 The database, Tomcat and MongoDB containers run in the time zone set by `TZ` in `.env`, which is now `UTC` by default. Database timestamps (suspensions, level start and finish times) are stored in this zone without an offset, and the CTF start, lock and end times stored in the `settings` table are interpreted in it too. To change these event times, update the database and restart Tomcat as described in [Event times](configuration.md#event-times).

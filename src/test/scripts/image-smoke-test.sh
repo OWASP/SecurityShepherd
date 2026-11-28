@@ -48,6 +48,11 @@ diagnostics() {
   docker logs "$web" 2>&1 | tail -60 || true
   echo "---- Tomcat SEVERE log lines ----"
   tomcat_severe | tail -60
+  local container
+  for container in "$CONTAINER_MONGO" "$CONTAINER_MARIADB"; do
+    echo "---- $container output ($(docker inspect -f '{{.State.Status}}, exit code {{.State.ExitCode}}' "$container" 2>/dev/null || echo 'not found')) ----"
+    docker logs "$container" 2>&1 | tail -60 || true
+  done
 }
 
 reported=false

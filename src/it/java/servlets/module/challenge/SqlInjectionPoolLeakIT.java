@@ -219,4 +219,88 @@ public class SqlInjectionPoolLeakIT {
           "SqlInjectionLesson did not reach the database on search " + (i + 1) + ": " + output);
     }
   }
+
+  @Test
+  public void sqlInjection1SurvivesMalformedQuery() throws Exception {
+    ResourceBundle sqli1 = bundle("i18n.servlets.challenges.sqli.sqli1");
+    String sqlError = errors.getString("error.detected");
+    String noResults = sqli1.getString("response.noResults");
+
+    // Repeatedly trigger SQL syntax errors - as many as the connection pool can hold
+    for (int i = 0; i < BAD_REQUESTS; i++) {
+      String output = doPost(new SqlInjection1(), "aUserId", "\\");
+      assertTrue(output.contains(sqlError), "Malformed SQL did not produce an error: " + output);
+    }
+    // Check that the DB still accepts new connections
+    String output = doPost(new SqlInjection1(), "aUserId", "dummyNoSuchCustomer");
+    assertTrue(
+        output.contains(noResults), "SQL Injection 1 could not access the database: " + output);
+    assertFalse(output.contains(sqlError), "SQL Injection 1 returned an SQL error: " + output);
+  }
+
+  @Test
+  public void sqlInjection3SurvivesMalformedQuery() throws Exception {
+    ResourceBundle sqli3 = bundle("i18n.servlets.challenges.sqli.sqli3");
+    String sqlError = errors.getString("error.detected");
+    String noResults = sqli3.getString("response.noResults");
+
+    // Repeatedly trigger SQL syntax errors - as many as the connection pool can hold
+    for (int i = 0; i < BAD_REQUESTS; i++) {
+      String output = doPost(new SqlInjection3(), "theUserName", "'");
+      assertTrue(output.contains(sqlError), "Malformed SQL did not produce an error: " + output);
+    }
+    // The database must remain accessible
+    String output = doPost(new SqlInjection3(), "theUserName", "Mary Martin");
+    assertTrue(
+        output.contains("Mary Martin"),
+        "SQL Injection 3 could not retrieve an existing customer: " + output);
+    assertFalse(output.contains(sqlError), "SQL Injection 3 returned an SQL error: " + output);
+  }
+
+  @Test
+  public void sqlInjection4SurvivesMalformedQuery() throws Exception {
+    ResourceBundle sqli4 = bundle("i18n.servlets.challenges.sqli.sqli4");
+    String sqlError = errors.getString("error.detected");
+    String loginFailed = sqli4.getString("response.superSecure");
+
+    // Repeatedly submit a malformed password
+    for (int i = 0; i < BAD_REQUESTS; i++) {
+      String output = doPost(new SqlInjection4(), "theUserName", "admin", "thePassword", "\\");
+      assertTrue(output.contains(sqlError), "Malformed SQL did not produce an error: " + output);
+    }
+    // Valid SQL with incorrect credentials
+    String output =
+        doPost(new SqlInjection4(), "theUserName", "admin", "thePassword", "incorrectPassword");
+    assertTrue(
+        output.contains(loginFailed), "SQL Injection 4 could not access the database: " + output);
+    assertFalse(output.contains(sqlError), "SQL Injection 4 returned an SQL error: " + output);
+  }
+
+  @Test
+  public void sqlInjection5SurvivesRepeatedOrders() throws Exception {
+    ResourceBundle sqli5 = bundle("i18n.servlets.challenges.sqli.sqli5");
+    String orderComplete = sqli5.getString("response.orderComplete");
+    String orderFailed = sqli5.getString("response.orderFailed");
+
+    // Execute more orders than the connection pool can hold
+    for (int i = 0; i < BAD_REQUESTS; i++) {
+      String output =
+          doPost(
+              new SqlInjection5(),
+              "pineappleAmount",
+              "1",
+              "orangeAmount",
+              "0",
+              "appleAmount",
+              "0",
+              "bananaAmount",
+              "0",
+              "couponCode",
+              "noSuchCoupon");
+
+      assertTrue(
+          output.contains(orderComplete), "Order " + (i + 1) + " did not complete: " + output);
+      assertFalse(output.contains(orderFailed), "Order " + (i + 1) + " failed: " + output);
+    }
+  }
 }
