@@ -333,11 +333,11 @@ if (request.getSession() != null)
 							
 							if(timeLeft < 0) {
 								
-								$("#" + prefix + "Message").html();
-								$("#" + prefix + "Days").html();
-								$("#" + prefix + "Hours").html();
-								$("#" + prefix + "Minutes").html();
-								$("#" + prefix + "Seconds").html();
+								$("#" + prefix + "Message").html("");
+								$("#" + prefix + "Days").html("");
+								$("#" + prefix + "Hours").html("");
+								$("#" + prefix + "Minutes").html("");
+								$("#" + prefix + "Seconds").html("");
 								
 								return;
 							}
@@ -352,7 +352,7 @@ if (request.getSession() != null)
 							if (days > "0") {
 								$("#" + prefix + "Days").html(days + "<span>Days</span>");
 							} else {
-								$("#" + prefix + "Days").html();								
+								$("#" + prefix + "Days").html("");								
 							}
 							
 							if (hours > "0") {
@@ -361,7 +361,7 @@ if (request.getSession() != null)
 								}
 								$("#" + prefix + "Hours").html(hours + "<span>Hours</span>");
 							} else {
-								$("#" + prefix + "Hours").html();
+								$("#" + prefix + "Hours").html("");
 							}
 							
 							if (minutes > "0") {
@@ -370,7 +370,7 @@ if (request.getSession() != null)
 								}
 								$("#" + prefix + "Minutes").html(minutes + "<span>Minutes</span>");
 							} else {
-								$("#" + prefix + "Minutes").html();								
+								$("#" + prefix + "Minutes").html("");								
 							}
 							
 							if (seconds > "0") {
@@ -379,7 +379,7 @@ if (request.getSession() != null)
 								}
 								$("#" + prefix + "Seconds").html(seconds + "<span>Seconds</span>");		
 							} else {
-								$("#" + prefix + "Seconds").html();		
+								$("#" + prefix + "Seconds").html("");		
 
 							}
 							}
@@ -529,7 +529,7 @@ if (request.getSession() != null)
 			           $("#contentDiv").load("admin/userManagement/deletePlayers.jsp?csrfToken=<%= csrfJsToken %>", function(response, status, xhr) {
 			             if (status == "error") {
 			                   var msg = "<fmt:message key="generic.text.sorryError" />: ";
-			                   $("#contentDiv").html("<p" + msg + xhr.status + " " + xhr.statusText + "</p");
+			                   $("#contentDiv").html("<p>" + msg + xhr.status + " " + xhr.statusText + "</p>");
 			             }
 			             $("#contentDiv").show("fast");
 			           });
@@ -1053,7 +1053,6 @@ if (request.getSession() != null)
 				});
 	<%}%>
 		$(".successAlert").click(function() {
-			alert("successAlert click");
 			$(this).hide("slide", {
 				direction : "left"
 			}, 1000);
